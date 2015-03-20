@@ -1,0 +1,85 @@
+<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
+    
+    <div class="mz-productlisting-image">
+        {% block product-image %}
+        {% if model.mainImage.imageUrl %}
+        <a href="{{model.url}}">
+            <img src="{{model.mainImage.imageUrl}}?max={% block thumbnail-size %}{{ themeSettings.listProductThumbSize }}{% endblock thumbnail-size %}" />
+        </a>
+        {% else %}
+            <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+        {% endif %}
+        {% endblock product-image %}
+    </div>
+    <div class="mz-productlisting-info">
+        <a class="mz-productlisting-title" href="{{model.url}}">{{model.content.productName}}</a>
+        {% if model.content.productShortDescription and themeSettings.listProductShortDesc %}
+        <p class="mz-productlisting-shortdesc">{{ model.content.productShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
+        {% endif %}
+        {% block product-code %}
+        {% if themeSettings.listProductCode %}
+        <div class="mz-productlisting-productcode">{{model.productCode}}</div>
+        {% endif %}
+        {% endblock product-code %}
+        {% include "modules/product/price-stack" %}
+        
+        <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}">
+        
+           <div id="pr-snippet-{{model.productCode}}" class="pr-snippet">
+           
+               <div id="reviewSnippetProduct" style="width:240px; float:left;">
+                   
+                        <div class="pr-snippet-wrapper">
+                                        <div class="pr-snippet-stars" style="width:120px">
+                                            <div id="pr-snippet-star-image" title="That's good stuff">&nbsp;</div>
+                                             <span id="pr-snippet-rating-decimal" class="pr-snippet-rating-decimal pr-rounded"></span>
+                                        </div>
+                                        <p id="pr-snippet-review-count" class="pr-snippet-review-count"></p>
+                                        <div class="pr-snippet-read-write">
+                                                     <div class="pr-snippet-read-reviews">
+                                                             <a href="{{model.url}}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-BlackSkirt">Read <span id="pr-snippet-read-review-count"></span> Reviews</a>
+                                                     </div>
+                                                    <div class="pr-snippet-write-review">
+                                                        <a href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
+                                                    </div>
+                                                    <div class="pr-clear"></div>
+                                        </div>
+                                        <div class="pr-clear"></div>
+                                        <div class="pr-snippet-social-bar">
+                                                <div class="pr-clear"></div>
+                                        </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+         {% block product-extrainfo %}
+        {% if dealOfTheDay %}
+          {% if dealOfTheDay.savings %}
+            {% if model.price.discount.impact %}
+              <p class="mz-productlisting-savings">You save: {{ model.price.discount.impact|currency }}</p>
+            {% endif %}
+          {% endif %}
+          {% if dealOfTheDay.expirationDate %}
+            {% if model.price.discount.discount.expirationDate %}
+              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate.createDate|date("F j, Y") }}</p>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        {% endblock product-extrainfo %}
+    </div>
+   
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
