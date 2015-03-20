@@ -1,0 +1,136 @@
+<div data-mz-pr-config="{%json_attribute model.config%}"></div>
+
+<input type="hidden" id="prProductDetail" value="1">
+
+
+<script type="text/javascript">
+
+    function activateTab(tabName) {
+        {{ model.config.tabCode|safe }}
+    }
+</script>
+
+
+{% if model.config.widgetType == "reviewSnippet" %}
+    <input type="hidden" id="productReviewSnippet" value="1">
+        <div id="reviewSnippetProduct" style="width:272px; float:left;">
+        {% require_script "widgets/powerreviews" %}
+         </div>
+{% endif %}  
+
+{% if model.config.widgetType == "socialAnswerSnippet" %}
+    <input type="hidden" id="productSocialAnswerSnippet" value="1">
+        <div id="socialAnswerSnippet"  style="width:272px; float:left;">
+            {% require_script "widgets/powerreviews" %}
+           
+        </div>
+  
+{% endif %}
+    
+{% if model.config.widgetType == "reviewDisplay" && model.config.isTab == false%}
+     <input type="hidden" id="productReviewDisplay" value="1">
+        <div id="reviewDisplayProduct">
+        {% with "productCode eq '{0}' and pageNumber eq {1}" as qFormat%}
+            {% with pageContext.query.pageNumber|default("1") as pageNum %}
+                {% with qFormat|string_format(pageModel.productCode, pageNum) as q %}
+                   {% include_entities "widgets/PowerReviews/pr-seo-template" listFQN="mozu-powerreviews-seo-ratings@a0842dd"  query=q %}
+                   
+                {% endwith %}   
+            {% endwith %}    
+        {% endwith %}
+            {% require_script "widgets/powerreviews" %}
+           
+        </div>
+  
+{% endif %}
+
+{% if model.config.widgetType == "socialAnswerDisplay" && model.config.isTab == false%}
+  <input type="hidden" id="productSocialAnswerDisplay" value="1">
+        <div id="socialAnswerDisplay">
+          {% with "productCode eq '{0}' and pageNumber eq {1}" as qFormat%}
+            {% with pageContext.query.pageNumber|default("1") as pageNum %}
+                {% with qFormat|string_format(pageModel.productCode, pageNum) as q %}
+                   {% include_entities "widgets/PowerReviews/pr-seo-template" listFQN="mozu-powerreviews-seo-questions@a0842dd"  query=q %}
+                   
+                {% endwith %}   
+            {% endwith %}    
+        {% endwith %}
+            {% require_script "widgets/powerreviews" %}
+           
+        </div>
+  
+{% endif %}
+
+<!-- Code for implementing Tab -->
+ 
+{% if model.config.isTab == true %}
+<input type="hidden" id="reviewSocialAnswerTab" value="1">
+{% endif %}
+    
+
+   
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

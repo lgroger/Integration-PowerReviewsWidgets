@@ -1,0 +1,71 @@
+{
+  "about": {
+    "name": "PowerReviews Theme",
+    "extends": "core6",
+    "isDesktop": true,
+    "isMobile": false,
+    "version": "0.1.0"
+  },
+  
+  "pageTypes": [
+       {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "write-a-review",
+      "template": "write-a-review",
+      "customEditor": "write-a-review@mozu",
+      "title": "Write a Review",
+      "userCreatable": true
+    }
+  ],
+  "widgets": [
+    {
+      "category": "catalog",
+      "id": "pr_product_review",
+      "displayName": "PowerReviews Product Reviews",
+      "displayTemplate": "PowerReviews/pr-product-reviews",
+      "editViewFields": [
+        {
+         "name": "widgetType",
+          "fieldLabel": "Widget Type",
+          "xtype": "combo",
+          "store": [
+            [
+              "reviewSnippet",
+              "Review Snippet"
+            ], [
+              "socialAnswerSnippet",
+              "Q&A Snippet"
+            ],
+            [
+              "reviewDisplay",
+              "Review Display"
+            ],
+            [
+              "socialAnswerDisplay",
+              "Q&A Display"
+            ]
+          ]
+        },        {
+          "name": "isTab",
+          "fieldLabel": "Is Tab Enabled?",
+          "xtype": "checkbox"
+        },
+        {
+          "name": "tabCode",
+          "fieldLabel": "Tab Code"
+        }
+
+       
+      ],
+      "icon": "/resources/admin/widgets/BV_Conversations.png",
+      "validPageTypes": [
+        "product"
+      ]
+    }
+  ]
+}
+
+
+
+
