@@ -37,9 +37,9 @@ require(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mo
                         $('head').append('<link rel="stylesheet" href=\"'+prStylesReview+'\" type="text/css" id="prBaseStylesheet">');
                        $('<script>')
                         .attr('type', 'text/javascript')
-                        .text( 'var pr_locale=\"'+locale+'\";var pr_zip_location=\"'+zip_location+'\"')
+                        .text( 'var pr_locale=\"'+locale+'\";var pr_zip_location=\"'+zip_location+'\";var pr_style_sheet=\"/stylesheets/widgets/pr_product_styles_review_override.css\"')
                         .appendTo('head');
-                       
+                      
                         
                          // POWERREVIEWS.display.snippet({ write : function(content) {
                            //     $("#reviewSnippetProduct").append(content); } },
@@ -94,6 +94,8 @@ require(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mo
                        
                        $('.mz-productlist').append('<link rel="stylesheet" href=\"'+prStylesReview+'\" type="text/css" id="prBaseStylesheet">');
                        $('.mz-productlist').append('<link rel="stylesheet" href=\"'+prMerchantStyles2+'\" type="text/css" id="prMerchantOverrideStylesheet">');
+                       $('.mz-productlist').append('<link rel="stylesheet" href="/stylesheets/modules/product/pr_category.css" type="text/css" id="prCategory">');
+                       $('.mz-productlist').append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category_styles_review_override.css" type="text/css" id="prCategoryBaseStylesheetOverride">');
                        $('.pr-inline-rating').each(function() {
                             var $this = $(this);
                             var productCode = $this.data('mzProductCode');
@@ -136,6 +138,13 @@ require(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mo
 
       
 });
+
+
+
+
+
+
+
 
 
 
