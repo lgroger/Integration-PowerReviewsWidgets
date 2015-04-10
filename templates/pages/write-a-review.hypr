@@ -6,14 +6,12 @@
  <script type="text/javascript">
    //var pr_resize_url = "https://"+document.location.host+"/resize";
    var pr_resize_url = "https://"+document.location.host+"/resources/resize.html";
-  </script>
+  </script> 
 
  <script type="text/javascript">
      var pr_merchant_group_id="{{ pageContext.query.merchantGroupId }}";
      var pr_merchant_id="{{ pageContext.query.merchantId }}";
      var pr_locale="{{pageContext.query.locale }}";
-     var pr_zip_location="{{ pageContext.query.zipLocation }}";
-     var pr_site_id="{{ pageContext.query.siteId }}";
      var pr_page_id="{{pageContext.query.pageId}}";
      var pr_source="web";
 
@@ -21,10 +19,13 @@
 
 
 <script type="text/javascript"
-src="{{  pageContext.query.zipLocation }}pwr/engine/js/appLaunch.js"></script>
+src="/staticContent/pwr/{{ pageContext.query.merchantGroupId }}/pwr/engine/js/appLaunch.js"></script>
 
 
 {% endblock body-content %}
+
+
+
 
 
 

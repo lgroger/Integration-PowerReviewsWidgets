@@ -22,36 +22,8 @@
         {% endif %}
         {% endblock product-code %}
         {% include "modules/product/price-stack" %}
-        
-        <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}">
-        
-           <div id="pr-snippet-{{model.productCode}}" class="pr-snippet">
-           
-               <div id="reviewSnippetProduct" style="width:240px; float:left;">
-                   
-                        <div class="pr-snippet-wrapper">
-                                        <div class="pr-snippet-stars" style="width:120px">
-                                            <div id="pr-snippet-star-image" title="That's good stuff">&nbsp;</div>
-                                             <span id="pr-snippet-rating-decimal" class="pr-snippet-rating-decimal pr-rounded"></span>
-                                        </div>
-                                        <p id="pr-snippet-review-count" class="pr-snippet-review-count"></p>
-                                        <div class="pr-snippet-read-write">
-                                                     <div class="pr-snippet-read-reviews">
-                                                             <a href="{{model.url}}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-BlackSkirt">Read <span id="pr-snippet-read-review-count"></span> Reviews</a>
-                                                     </div>
-                                                    <div class="pr-snippet-write-review">
-                                                        <a href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
-                                                    </div>
-                                                    <div class="pr-clear"></div>
-                                        </div>
-                                        <div class="pr-clear"></div>
-                                        <div class="pr-snippet-social-bar">
-                                                <div class="pr-clear"></div>
-                                        </div>
-                        </div>
-                </div>
-            </div>
-        </div>
+        {% include "modules/product/pr-review-listing" %}
+       
          {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
@@ -69,6 +41,11 @@
     </div>
    
 </div>
+
+
+
+
+
 
 
 

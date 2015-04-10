@@ -26,37 +26,31 @@
   
 {% endif %}
     
-{% if model.config.widgetType == "reviewDisplay" && model.config.isTab == false%}
+{% if model.config.widgetType == "reviewDisplay"  and model.config.isTab == false%}
+
      <input type="hidden" id="productReviewDisplay" value="1">
-        <div id="reviewDisplayProduct">
-        {% with "productCode eq '{0}' and pageNumber eq {1}" as qFormat%}
-            {% with pageContext.query.pageNumber|default("1") as pageNum %}
-                {% with qFormat|string_format(pageModel.productCode, pageNum) as q %}
-                   {% include_entities "widgets/PowerReviews/pr-seo-template" listFQN="mozu-powerreviews-seo-ratings@a0842dd"  query=q %}
-                   
+     <div id="reviewDisplayProduct">
+            {% with "siteId eq '{0}'" as qFormat%}
+                {% with qFormat|string_format(siteContext.siteId) as q %}
+                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN="mozu-powerreviews-sitesettings@a0842dd" query=q %}
                 {% endwith %}   
-            {% endwith %}    
-        {% endwith %}
+             {% endwith %}  
             {% require_script "widgets/powerreviews" %}
            
-        </div>
+     </div>
   
 {% endif %}
 
-{% if model.config.widgetType == "socialAnswerDisplay" && model.config.isTab == false%}
+{% if model.config.widgetType == "socialAnswerDisplay"  and model.config.isTab == false%}
   <input type="hidden" id="productSocialAnswerDisplay" value="1">
-        <div id="socialAnswerDisplay">
-          {% with "productCode eq '{0}' and pageNumber eq {1}" as qFormat%}
-            {% with pageContext.query.pageNumber|default("1") as pageNum %}
-                {% with qFormat|string_format(pageModel.productCode, pageNum) as q %}
-                   {% include_entities "widgets/PowerReviews/pr-seo-template" listFQN="mozu-powerreviews-seo-questions@a0842dd"  query=q %}
-                   
-                {% endwith %}   
-            {% endwith %}    
-        {% endwith %}
-            {% require_script "widgets/powerreviews" %}
-           
-        </div>
+  <div id="socialAnswerDisplay">
+        {% with "siteId eq '{0}'" as qFormat%}
+            {% with qFormat|string_format(siteContext.siteId) as q %}
+                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN="mozu-powerreviews-sitesettings@a0842dd" query=q %}
+            {% endwith %}   
+         {% endwith %}  
+        {% require_script "widgets/powerreviews" %}
+   </div>
   
 {% endif %}
 
@@ -69,6 +63,13 @@
 
    
     
+
+
+
+
+
+
+
 
 
 
