@@ -12,27 +12,20 @@ module.exports = function(grunt) {
     'scripts/**/*.js'
   ],
     filesToArchive = [
-    'compiled/**',
-    'labels/**',
-    'resources/**',
-    'scripts/**',
-    'stylesheets/**',
-    'templates/**',
-    'build.js',
-    'CHANGELOG.md',
-    'Gruntfile.js',
-    'LICENSE',
-    'package.json',
-    'README.md',
-    'theme.json',
-    'theme-ui.json',
-    '*.png'
+    '**',
+    '!node_modules/**',
+    '!references/**',
+    '!tasks/**',
+    '!configure.js',
+    '!Gruntfile.js',
+    "!*.zip"
   ],
 
 versionCmd = ':'; // e.g. 'git describe --tags --always' or 'svn info'
 
 grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+    theme: grunt.file.readJSON('theme.json'),
     jsonlint: {
       theme_json: {
         src: jsonFiles
@@ -62,7 +55,7 @@ grunt.initConfig({
     zubat: {
       main: {
         dir: '.',
-        manualancestry: ['./references/core5'],
+        manualancestry: ['./references/<%= theme.about.extends %>'],
         ignore: ['/references','\\.git','node_modules','^/resources','^/tasks','\\.zip$']
       }
     },
@@ -119,7 +112,7 @@ grunt.initConfig({
 
   grunt.loadTasks('./tasks/');
 
-  grunt.registerTask('build', ['jsonlint', 'jshint', 'checkreferences', 'zubat', 'setver:build', 'compress', 'setver:renamezip']);
+  grunt.registerTask('build', [/*'jsonlint', 'jshint',*/ 'checkreferences', 'zubat', 'setver:build', 'compress', 'setver:renamezip']);
   grunt.registerTask('release', ['jsonlint', 'jshint', 'zubat', 'setver:release', 'compress', 'setver:renamezip']);
   grunt.registerTask('default', ['build']);
 };
