@@ -6,8 +6,9 @@
     "isMobile": false,
     "version": "0.1.0"
   },
+  
   "pageTypes": [
-    {
+       {
       "documentType": "web_page",
       "entityType": "webpage",
       "id": "write-a-review",
@@ -25,15 +26,14 @@
       "displayTemplate": "PowerReviews/pr-product-reviews",
       "editViewFields": [
         {
-          "name": "widgetType",
+         "name": "widgetType",
           "fieldLabel": "Widget Type",
           "xtype": "combo",
           "store": [
             [
               "reviewSnippet",
               "Review Snippet"
-            ],
-            [
+            ], [
               "socialAnswerSnippet",
               "Q&A Snippet"
             ],
@@ -46,8 +46,7 @@
               "Q&A Display"
             ]
           ]
-        },
-        {
+        },        {
           "name": "isTab",
           "fieldLabel": "Is Tab Enabled?",
           "xtype": "checkbox"
@@ -56,6 +55,8 @@
           "name": "tabCode",
           "fieldLabel": "Tab Code"
         }
+
+       
       ],
       "icon": "/resources/admin/widgets/power_review_icon.png",
       "validPageTypes": [
@@ -67,10 +68,14 @@
       "id": "pr_roibeacon",
       "displayName": "PowerReviews ROI Beacon",
       "displayTemplate": "PowerReviews/pr-roi-beacon",
-      "icon": "/resources/admin/widgets/power_review_icon.png",
-      "validPageTypes": [
-        "order"
-      ]
+       "icon": "/resources/admin/widgets/icon-powerreview-beacone.png",
+      "validPageTypes": ["order"]
     }
   ]
 }
+
+
+
+
+
+
