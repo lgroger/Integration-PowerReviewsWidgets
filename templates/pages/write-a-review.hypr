@@ -4,8 +4,7 @@
 
 {% block breadcrumbs %}{% endblock breadcrumbs %}
  <script type="text/javascript">
-   //var pr_resize_url = "https://"+document.location.host+"/resize";
-   var pr_resize_url = "https://"+document.location.host+"/resources/resize.html";
+    var pr_resize_url = "//"+document.location.host+"/resources/resize.html";
   </script> 
 
  <script type="text/javascript">
@@ -23,6 +22,9 @@ src="/staticContent/pwr/{{ pageContext.query.merchantGroupId }}/pwr/engine/js/ap
 
 
 {% endblock body-content %}
+
+
+
 
 
 

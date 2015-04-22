@@ -1,8 +1,0 @@
-{% if model.items %}
-	{% for r in model.items %}
-	   	{{r.html|safe}}
-	{% endfor %}
-{% endif %}
-
-
-
