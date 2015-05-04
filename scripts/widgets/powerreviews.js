@@ -10,7 +10,8 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
 	var prStylesReview;
     var prMerchantStyles2;
     var locale="en_US";
-		
+    var returnUrl;
+    
     function writeProductListBoxes() {
         $('.mz-productlist').append('<link rel="stylesheet" href=\"'+prStylesReview+'\" type="text/css" id="prBaseStylesheet">');
         $('.mz-productlist').append('<link rel="stylesheet" href=\"'+prMerchantStyles2+'\" type="text/css" id="prMerchantOverrideStylesheet">');
@@ -18,8 +19,7 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
         $('.mz-productlist').append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category_styles_review_override.css" type="text/css" id="prCategoryBaseStylesheetOverride">');
         
         var allInlineRatings = $('.pr-inline-rating');
-        
-        
+
         Api.get('entityList', {
             listName: 'mozu-powerreviews-ratings@a0842dd',
             filter: 'productCode  eq ' + allInlineRatings.map(function() { return $(this).data('mzProductCode'); }).get().join(' or productCode  eq ')
@@ -31,22 +31,23 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
             }, {});
         allInlineRatings.each(function() {
             var $this = $(this);
+            returnUrl= document.location;
             var productCode = $this.data('mzProductCode');
             var data = productsMap[productCode];
             if (data) {
     		      var fullReviewCount=data.fullReviews;
     			  var fullReviewCountText;
     			  if(data.fullReviews>1){
-    			       fullReviewCountText="(" +data.fullReviews+"reviews)";
+    			       fullReviewCountText="(" +data.fullReviews+" reviews)";
     			  }else if(data.fullReviews==1){ 
-    			        fullReviewCountText="(" +data.fullReviews+"review)";
+    			        fullReviewCountText="(" +data.fullReviews+" review)";
     			  }
     		
                 	if(data.averageDecimalRating>0 && data.merchantGrpId==merchantGroupId){
                         	$("#PRInlineRating-"+productCode).show();
                         	$("#PRInlineRating-"+productCode).find( ".pr-snippet-write-review").show();
                 		    $("#PRInlineRating-"+productCode).find( ".pr-snippet-read-reviews").show();
-                			$("#PRInlineRating-"+productCode).find(".pr-snippet-write-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId='+productCode+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&zipLocation='+zip_location);
+                			$("#PRInlineRating-"+productCode).find(".pr-snippet-write-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId='+productCode+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&zipLocation='+zip_location+'&returlUrl='+returnUrl);
                 			$("#PRInlineRating-"+productCode).find(".pr-snippet-read-reviews").find("a.pr-snippet-link").find("#pr-snippet-read-review-count").text(fullReviewCount);
                 			$("#PRInlineRating-"+productCode).find("#pr-snippet-rating-decimal").text(data.averageDecimalRating);
                 			$("#PRInlineRating-"+productCode).find("#pr-snippet-review-count").text(fullReviewCountText);
@@ -54,7 +55,7 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
                 	}else{
                 		    $( "#PRInlineRating-"+productCode).show();
                 		    $("#PRInlineRating-"+productCode).find( ".pr-snippet-write-first-review").show();
-                			$("#PRInlineRating-"+productCode).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId='+productCode+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&zipLocation='+zip_location);
+                			$("#PRInlineRating-"+productCode).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId='+productCode+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&zipLocation='+zip_location+'&returlUrl='+returnUrl);
                 			$("#PRInlineRating-"+productCode).find("#pr-snippet-rating-decimal").text("0.0");
                 			$("#PRInlineRating-"+productCode).find("#pr-snippet-review-count").text("(No reviews)");
                 			$("#PRInlineRating-"+productCode).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-0_0-sm");
@@ -62,7 +63,7 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
         		}else {
         		    $("#PRInlineRating-"+productCode).show();
         		    $("#PRInlineRating-"+productCode).find( ".pr-snippet-write-first-review").show();
-        			$("#PRInlineRating-"+productCode).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId='+productCode+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&zipLocation='+zip_location);
+        			$("#PRInlineRating-"+productCode).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId='+productCode+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&zipLocation='+zip_location+'&returlUrl='+returnUrl);
         			$("#PRInlineRating-"+productCode).find("#pr-snippet-rating-decimal").text("0.0");
         			$("#PRInlineRating-"+productCode).find("#pr-snippet-review-count").text("(No reviews)");
         			$("#PRInlineRating-"+productCode).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-0_0-sm");
@@ -85,6 +86,8 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
             var isReviewDisplay = $("#productReviewDisplay").val() == 1;
             var isSocialAnswerDisplay = $("#productSocialAnswerDisplay").val() == 1;
             var isTabEnabled = $("#reviewSocialAnswerTab").val() == 1;
+            returnUrl=document.location;
+            
             if(data.locale!==null)
                 locale=data.locale;
            
@@ -117,13 +120,13 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
                                              POWERREVIEWS.display.snippet({ write : function(content) {
                                                      $("#reviewSnippetProduct").append(content); } },
                                                      { pr_page_id : currentProduct.id,
-                                                     pr_read_review : 'javascript:activateTab(\'reviews\');',
-                                                     pr_write_review : '/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale});
+                                                       pr_read_review : 'javascript:activateTab(\'reviews\');',
+                                                       pr_write_review : '/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl});
                                        }else{
                                             POWERREVIEWS.display.snippet({ write : function(content) {
                                                      $("#reviewSnippetProduct").append(content); } },
                                                      { pr_page_id : currentProduct.id,pr_read_review : '#ReviewHeader',
-                                                     pr_write_review : '/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale});
+                                                       pr_write_review : '/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl});
                                        }
                                 } 
                                 if(isSocialAnswerSnippet)   {
@@ -132,15 +135,15 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
                                                POWERREVIEWS.display.productAnswersSnippet({ write : function(content) {
                                                $("#socialAnswerSnippet").append(content); } }, { 
                                                pr_page_id : currentProduct.id,
-                                               pr_ask_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&appName=askQuestion',
-                                               pr_answer_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
+                                               pr_ask_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl+'&appName=askQuestion',
+                                               pr_answer_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl+'&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
                                                pr_read_qa : 'javascript:activateTab(\'socialAnswer\');'});
                                         }else{
                                              POWERREVIEWS.display.productAnswersSnippet({ write : function(content) {
                                                            $("#socialAnswerSnippet").append(content); } }, { 
                                                            pr_page_id : currentProduct.id,
-                                                           pr_ask_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&appName=askQuestion',
-                                                           pr_answer_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
+                                                           pr_ask_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl+'&appName=askQuestion',
+                                                           pr_answer_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl+'&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
                                                            pr_read_qa : '#QAHeader'});
                                         }
                                                 
@@ -148,14 +151,14 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
                                 if(isReviewDisplay || isTabEnabled)   {
                                            POWERREVIEWS.display.engine({ write : function(content) {
                                                                $("#reviewDisplayProduct").append(content); } }, {pr_page_id : currentProduct.id,
-                                                               pr_write_review : '/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale});
+                                                                pr_write_review : '/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl});
                                  }
                                 if(isSocialAnswerDisplay || isTabEnabled)   {
                                            POWERREVIEWS.display.productAnswers({ write : function(content) {
                                                        $("#socialAnswerDisplay").append(content); } }, { 
                                            pr_page_id : currentProduct.id,
-                                           pr_ask_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&appName=askQuestion',
-                                           pr_answer_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
+                                           pr_ask_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl+'&appName=askQuestion',
+                                           pr_answer_question :'/write-a-review?pageId='+currentProduct.id+'&merchantGroupId='+merchantGroupId+'&merchantId='+merchantId+'&siteId='+siteId+'&locale='+locale+'&returlUrl='+returnUrl+'&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
                                            pr_read_qa : '#QAHeader'});
                                     }
                     }else if(isROIWidget){
@@ -231,6 +234,15 @@ define(['modules/jquery-mozu', 'hyprlive',"modules/backbone-mozu",  "modules/mod
 	};
       
 });
+
+
+
+
+
+
+
+
+
 
 
 
