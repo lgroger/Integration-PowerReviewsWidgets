@@ -32,7 +32,7 @@
      <div id="reviewDisplayProduct">
             {% with "siteId eq '{0}'" as qFormat%}
                 {% with qFormat|string_format(siteContext.siteId) as q %}
-                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN="mozu-powerreviews-sitesettings@a0842dd" query=q %}
+                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN="mozu-powerreviews-sitesettings@mzint" query=q %}
                 {% endwith %}   
              {% endwith %}  
             {% require_script "widgets/powerreviews" %}
@@ -46,7 +46,7 @@
   <div id="socialAnswerDisplay">
         {% with "siteId eq '{0}'" as qFormat%}
             {% with qFormat|string_format(siteContext.siteId) as q %}
-                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN="mozu-powerreviews-sitesettings@a0842dd" query=q %}
+                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN="mozu-powerreviews-sitesettings@mzint" query=q %}
             {% endwith %}   
          {% endwith %}  
         {% require_script "widgets/powerreviews" %}
