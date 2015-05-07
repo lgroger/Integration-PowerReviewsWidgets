@@ -5,7 +5,7 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
     function($, Hypr, Backbone, ProductModels, Api, OrderModels) {
 
         var res = Api.get('entity', {
-            listName: 'mozu-powerreviews-sitesettings@a0842dd',
+            listName: 'mozu-powerreviews-sitesettings@mzint',
             id: Api.context.site
         });
 
@@ -27,7 +27,7 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
             var allInlineRatings = $('.pr-inline-rating');
 
             Api.get('entityList', {
-                listName: 'mozu-powerreviews-ratings@a0842dd',
+                listName: 'mozu-powerreviews-ratings@mzint',
                 filter: 'productCode  eq ' + allInlineRatings.map(function() {
                     return $(this).data('mzProductCode');
                 }).get().join(' or productCode  eq ')
