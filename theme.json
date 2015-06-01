@@ -1,6 +1,6 @@
 {
   "about": {
-    "name": "PowerReviews Theme",
+    "name": "PowerReviews Enterprise Theme",
     "extends": "core6",
     "isDesktop": true,
     "isMobile": false,
