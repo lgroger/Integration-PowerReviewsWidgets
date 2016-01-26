@@ -1,1 +1,119 @@
-define("modules/models-location",["modules/jquery-mozu","modules/backbone-mozu","hyprlive","modules/api"],function(o,t){var e=t.MozuModel.extend({mozuType:"location",idAttribute:"code"}),n=t.MozuModel.extend({mozuType:"locations",relations:{items:t.Collection.extend({model:e})}});return{Location:e,LocationCollection:n}}),require(["modules/jquery-mozu","hyprlive","modules/backbone-mozu","modules/models-location","modules/models-product"],function(o,t,e,n,i){var a=t.getLabel("positionError"),r=e.MozuView.extend({templateName:"modules/location/locations",initialize:function(){var o=this;navigator.geolocation?navigator.geolocation.getCurrentPosition(function(t){delete o.positionError,o.populate(t)},function(t){t.code!==t.PERMISSION_DENIED&&(o.positionError=a),o.populate()},{timeout:1e4}):this.populate()},populate:function(t){var e=this,n=function(){e.render(),o(".mz-locationsearch-pleasewait").fadeOut(),e.$el.noFlickerFadeIn()};t?this.model.apiGetByLatLong({location:t}).then(n):this.model.apiGet().then(n)},getRenderContext:function(){var o=e.MozuView.prototype.getRenderContext.apply(this,arguments);return o.model.positionError=this.positionError,o}}),d=r.extend({templateName:"modules/location/location-search",populate:function(t){var e=this;this.model.apiGetForProduct({productCode:this.product.get("variationProductCode")||this.product.get("productCode"),location:t}).then(function(){e.render(),o(".mz-locationsearch-pleasewait").fadeOut(),e.$el.noFlickerFadeIn()})},addToCartForPickup:function(t){var e=o(t.currentTarget),n=e.data("mzLocation");e.parent().addClass("is-loading"),this.product.addToCartForPickup(n)},setProduct:function(t){var e=this;e.product=t,this.listenTo(e.product,"addedtocart",function(){o(window).on("beforeunload",function(){e.$(".is-loading").removeClass("is-loading")}),window.location.href="/cart"})}});o(document).ready(function(){var t=o("#location-list"),e=i.Product.fromCurrent(),a=!!e.get("productCode"),l=new n.LocationCollection,u=a?d:r,c=new u({model:l,el:t});a&&c.setProduct(e),window.lv=c})}),define("pages/location",function(){});
+
+define('modules/models-location',["modules/jquery-mozu", "modules/backbone-mozu", "hyprlive", "modules/api"], 
+    function ($, Backbone, Hypr, api) {
+
+        var Location = Backbone.MozuModel.extend({
+            mozuType: 'location',
+            idAttribute: 'code'
+        });
+
+        var LocationCollection = Backbone.MozuModel.extend({
+            mozuType: 'locations',
+            relations: {
+                items: Backbone.Collection.extend({
+                    model: Location
+                })
+            }
+        });
+
+        return {
+            Location: Location,
+            LocationCollection: LocationCollection
+        };
+    }
+);
+require(['modules/jquery-mozu', 'hyprlive', 'modules/backbone-mozu', 'modules/models-location', 'modules/models-product'],
+    function($, Hypr, Backbone, LocationModels, ProductModels) {
+
+        var positionErrorLabel = Hypr.getLabel('positionError'),
+
+        LocationsView = Backbone.MozuView.extend({
+            templateName: 'modules/location/locations',
+            initialize: function () {
+                var self = this;
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function (pos) {
+                        delete self.positionError;
+                        self.populate(pos);
+                    }, function (err) {
+                        if (err.code !== err.PERMISSION_DENIED) {
+                            self.positionError = positionErrorLabel;
+                        }
+                        self.populate();
+                    }, {
+                        timeout: 10000
+                    });
+                } else {
+                    this.populate();
+                }
+            },
+            populate: function(location) {
+                var self = this;
+                var show = function() {
+                    self.render();
+                    $('.mz-locationsearch-pleasewait').fadeOut();
+                    self.$el.noFlickerFadeIn();
+                };
+                if (location) {
+                    this.model.apiGetByLatLong({ location: location }).then(show);
+                } else {
+                    this.model.apiGet().then(show);
+                }
+            },
+            getRenderContext: function () {
+                var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+                c.model.positionError = this.positionError;
+                return c;
+            }
+        }),
+
+        LocationsSearchView = LocationsView.extend({
+            templateName: 'modules/location/location-search',
+            populate: function (location) {
+                var self = this;
+                this.model.apiGetForProduct({
+                    productCode: this.product.get('variationProductCode') || this.product.get('productCode'),
+                    location: location
+                }).then(function () {
+                    self.render();
+                    $('.mz-locationsearch-pleasewait').fadeOut();
+                    self.$el.noFlickerFadeIn();
+                });
+            },
+            addToCartForPickup: function (e) {
+                var self = this,
+                    $target = $(e.currentTarget),
+                    loc = $target.data('mzLocation');
+                $target.parent().addClass('is-loading');
+                this.product.addToCartForPickup(loc);
+            },
+            setProduct: function (product) {
+                var me = this;
+                me.product = product;
+                this.listenTo(me.product, 'addedtocart', function() {
+                    $(window).on('beforeunload', function() {
+                        me.$('.is-loading').removeClass('is-loading');
+                    });
+                    window.location.href = "/cart";
+                });
+            }
+        });
+
+        $(document).ready(function() {
+
+            var $locationSearch = $('#location-list'),
+                product = ProductModels.Product.fromCurrent(),
+                productPresent = !!product.get('productCode'),
+                locationsCollection = new LocationModels.LocationCollection(),
+                ViewClass = productPresent ? LocationsSearchView : LocationsView,
+                view = new ViewClass({
+                    model: locationsCollection,
+                    el: $locationSearch
+                });
+
+            if (productPresent) view.setProduct(product);
+            window.lv = view;
+        });
+    }
+);
+define("pages/location", function(){});

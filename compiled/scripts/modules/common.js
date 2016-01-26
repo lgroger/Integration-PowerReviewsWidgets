@@ -1,17 +1,3884 @@
+
+// Placeholder script for the theme packager. Must be present and empty, but can be ignored after that.;
+define("modules/common", function(){});
+
+/**
+ * Creates an interface object to the Mozu store's Web APIs. It pulls in the Mozu
+ * JavaScript SDK and initializes it with the current store's context values
+ * (tenant, catalog and store IDs, and authorization tickets).
+ */
+
+define('modules/api',['sdk', 'jquery', 'hyprlive'], function (Mozu, $, Hypr) {
+    var apiConfig = require.mozuData('apicontext');
+    Mozu.setServiceUrls(apiConfig.urls);
+    var api = Mozu.Store(apiConfig.headers).api();
+
+    var extendedPropertyParameters = Hypr.getThemeSetting('extendedPropertyParameters');
+    if (extendedPropertyParameters && Hypr.getThemeSetting('extendedPropertiesEnabled')) {
+        api.setAffiliateTrackingParameters(extendedPropertyParameters.split(','));
+    }
+
+    if (Hypr.getThemeSetting('useDebugScripts') || require.mozuData('pagecontext').isDebugMode) {
+        api.on('error', function (badPromise, xhr, requestConf) {
+            var e = "Error communicating with Mozu web services";
+            if (requestConf && requestConf.url) e += (" at " + requestConf.url);
+            var correlation = xhr && xhr.getResponseHeader && xhr.getResponseHeader('x-vol-correlation');
+            if (correlation) e += " --- Correlation ID: " + correlation;
+            if (window && window.console) window.console.error(e, badPromise, xhr);
+        });
+    }
+    return api;
+});
+
 //     Underscore.js 1.6.0
 //     http://underscorejs.org
 //     (c) 2009-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
+
+(function() {
+
+  // Baseline setup
+  // --------------
+
+  // Establish the root object, `window` in the browser, or `exports` on the server.
+  var root = this;
+
+  // Save the previous value of the `_` variable.
+  var previousUnderscore = root._;
+
+  // Establish the object that gets returned to break out of a loop iteration.
+  var breaker = {};
+
+  // Save bytes in the minified (but not gzipped) version:
+  var ArrayProto = Array.prototype, ObjProto = Object.prototype, FuncProto = Function.prototype;
+
+  // Create quick reference variables for speed access to core prototypes.
+  var
+    push             = ArrayProto.push,
+    slice            = ArrayProto.slice,
+    concat           = ArrayProto.concat,
+    toString         = ObjProto.toString,
+    hasOwnProperty   = ObjProto.hasOwnProperty;
+
+  // All **ECMAScript 5** native function implementations that we hope to use
+  // are declared here.
+  var
+    nativeForEach      = ArrayProto.forEach,
+    nativeMap          = ArrayProto.map,
+    nativeReduce       = ArrayProto.reduce,
+    nativeReduceRight  = ArrayProto.reduceRight,
+    nativeFilter       = ArrayProto.filter,
+    nativeEvery        = ArrayProto.every,
+    nativeSome         = ArrayProto.some,
+    nativeIndexOf      = ArrayProto.indexOf,
+    nativeLastIndexOf  = ArrayProto.lastIndexOf,
+    nativeIsArray      = Array.isArray,
+    nativeKeys         = Object.keys,
+    nativeBind         = FuncProto.bind;
+
+  // Create a safe reference to the Underscore object for use below.
+  var _ = function(obj) {
+    if (obj instanceof _) return obj;
+    if (!(this instanceof _)) return new _(obj);
+    this._wrapped = obj;
+  };
+
+  // Export the Underscore object for **Node.js**, with
+  // backwards-compatibility for the old `require()` API. If we're in
+  // the browser, add `_` as a global object via a string identifier,
+  // for Closure Compiler "advanced" mode.
+  if (typeof exports !== 'undefined') {
+    if (typeof module !== 'undefined' && module.exports) {
+      exports = module.exports = _;
+    }
+    exports._ = _;
+  } else {
+    root._ = _;
+  }
+
+  // Current version.
+  _.VERSION = '1.6.0';
+
+  // Collection Functions
+  // --------------------
+
+  // The cornerstone, an `each` implementation, aka `forEach`.
+  // Handles objects with the built-in `forEach`, arrays, and raw objects.
+  // Delegates to **ECMAScript 5**'s native `forEach` if available.
+  var each = _.each = _.forEach = function(obj, iterator, context) {
+    if (obj == null) return obj;
+    if (nativeForEach && obj.forEach === nativeForEach) {
+      obj.forEach(iterator, context);
+    } else if (obj.length === +obj.length) {
+      for (var i = 0, length = obj.length; i < length; i++) {
+        if (iterator.call(context, obj[i], i, obj) === breaker) return;
+      }
+    } else {
+      var keys = _.keys(obj);
+      for (var i = 0, length = keys.length; i < length; i++) {
+        if (iterator.call(context, obj[keys[i]], keys[i], obj) === breaker) return;
+      }
+    }
+    return obj;
+  };
+
+  // Return the results of applying the iterator to each element.
+  // Delegates to **ECMAScript 5**'s native `map` if available.
+  _.map = _.collect = function(obj, iterator, context) {
+    var results = [];
+    if (obj == null) return results;
+    if (nativeMap && obj.map === nativeMap) return obj.map(iterator, context);
+    each(obj, function(value, index, list) {
+      results.push(iterator.call(context, value, index, list));
+    });
+    return results;
+  };
+
+  var reduceError = 'Reduce of empty array with no initial value';
+
+  // **Reduce** builds up a single result from a list of values, aka `inject`,
+  // or `foldl`. Delegates to **ECMAScript 5**'s native `reduce` if available.
+  _.reduce = _.foldl = _.inject = function(obj, iterator, memo, context) {
+    var initial = arguments.length > 2;
+    if (obj == null) obj = [];
+    if (nativeReduce && obj.reduce === nativeReduce) {
+      if (context) iterator = _.bind(iterator, context);
+      return initial ? obj.reduce(iterator, memo) : obj.reduce(iterator);
+    }
+    each(obj, function(value, index, list) {
+      if (!initial) {
+        memo = value;
+        initial = true;
+      } else {
+        memo = iterator.call(context, memo, value, index, list);
+      }
+    });
+    if (!initial) throw new TypeError(reduceError);
+    return memo;
+  };
+
+  // The right-associative version of reduce, also known as `foldr`.
+  // Delegates to **ECMAScript 5**'s native `reduceRight` if available.
+  _.reduceRight = _.foldr = function(obj, iterator, memo, context) {
+    var initial = arguments.length > 2;
+    if (obj == null) obj = [];
+    if (nativeReduceRight && obj.reduceRight === nativeReduceRight) {
+      if (context) iterator = _.bind(iterator, context);
+      return initial ? obj.reduceRight(iterator, memo) : obj.reduceRight(iterator);
+    }
+    var length = obj.length;
+    if (length !== +length) {
+      var keys = _.keys(obj);
+      length = keys.length;
+    }
+    each(obj, function(value, index, list) {
+      index = keys ? keys[--length] : --length;
+      if (!initial) {
+        memo = obj[index];
+        initial = true;
+      } else {
+        memo = iterator.call(context, memo, obj[index], index, list);
+      }
+    });
+    if (!initial) throw new TypeError(reduceError);
+    return memo;
+  };
+
+  // Return the first value which passes a truth test. Aliased as `detect`.
+  _.find = _.detect = function(obj, predicate, context) {
+    var result;
+    any(obj, function(value, index, list) {
+      if (predicate.call(context, value, index, list)) {
+        result = value;
+        return true;
+      }
+    });
+    return result;
+  };
+
+  // Return all the elements that pass a truth test.
+  // Delegates to **ECMAScript 5**'s native `filter` if available.
+  // Aliased as `select`.
+  _.filter = _.select = function(obj, predicate, context) {
+    var results = [];
+    if (obj == null) return results;
+    if (nativeFilter && obj.filter === nativeFilter) return obj.filter(predicate, context);
+    each(obj, function(value, index, list) {
+      if (predicate.call(context, value, index, list)) results.push(value);
+    });
+    return results;
+  };
+
+  // Return all the elements for which a truth test fails.
+  _.reject = function(obj, predicate, context) {
+    return _.filter(obj, function(value, index, list) {
+      return !predicate.call(context, value, index, list);
+    }, context);
+  };
+
+  // Determine whether all of the elements match a truth test.
+  // Delegates to **ECMAScript 5**'s native `every` if available.
+  // Aliased as `all`.
+  _.every = _.all = function(obj, predicate, context) {
+    predicate || (predicate = _.identity);
+    var result = true;
+    if (obj == null) return result;
+    if (nativeEvery && obj.every === nativeEvery) return obj.every(predicate, context);
+    each(obj, function(value, index, list) {
+      if (!(result = result && predicate.call(context, value, index, list))) return breaker;
+    });
+    return !!result;
+  };
+
+  // Determine if at least one element in the object matches a truth test.
+  // Delegates to **ECMAScript 5**'s native `some` if available.
+  // Aliased as `any`.
+  var any = _.some = _.any = function(obj, predicate, context) {
+    predicate || (predicate = _.identity);
+    var result = false;
+    if (obj == null) return result;
+    if (nativeSome && obj.some === nativeSome) return obj.some(predicate, context);
+    each(obj, function(value, index, list) {
+      if (result || (result = predicate.call(context, value, index, list))) return breaker;
+    });
+    return !!result;
+  };
+
+  // Determine if the array or object contains a given value (using `===`).
+  // Aliased as `include`.
+  _.contains = _.include = function(obj, target) {
+    if (obj == null) return false;
+    if (nativeIndexOf && obj.indexOf === nativeIndexOf) return obj.indexOf(target) != -1;
+    return any(obj, function(value) {
+      return value === target;
+    });
+  };
+
+  // Invoke a method (with arguments) on every item in a collection.
+  _.invoke = function(obj, method) {
+    var args = slice.call(arguments, 2);
+    var isFunc = _.isFunction(method);
+    return _.map(obj, function(value) {
+      return (isFunc ? method : value[method]).apply(value, args);
+    });
+  };
+
+  // Convenience version of a common use case of `map`: fetching a property.
+  _.pluck = function(obj, key) {
+    return _.map(obj, _.property(key));
+  };
+
+  // Convenience version of a common use case of `filter`: selecting only objects
+  // containing specific `key:value` pairs.
+  _.where = function(obj, attrs) {
+    return _.filter(obj, _.matches(attrs));
+  };
+
+  // Convenience version of a common use case of `find`: getting the first object
+  // containing specific `key:value` pairs.
+  _.findWhere = function(obj, attrs) {
+    return _.find(obj, _.matches(attrs));
+  };
+
+  // Return the maximum element or (element-based computation).
+  // Can't optimize arrays of integers longer than 65,535 elements.
+  // See [WebKit Bug 80797](https://bugs.webkit.org/show_bug.cgi?id=80797)
+  _.max = function(obj, iterator, context) {
+    if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
+      return Math.max.apply(Math, obj);
+    }
+    var result = -Infinity, lastComputed = -Infinity;
+    each(obj, function(value, index, list) {
+      var computed = iterator ? iterator.call(context, value, index, list) : value;
+      if (computed > lastComputed) {
+        result = value;
+        lastComputed = computed;
+      }
+    });
+    return result;
+  };
+
+  // Return the minimum element (or element-based computation).
+  _.min = function(obj, iterator, context) {
+    if (!iterator && _.isArray(obj) && obj[0] === +obj[0] && obj.length < 65535) {
+      return Math.min.apply(Math, obj);
+    }
+    var result = Infinity, lastComputed = Infinity;
+    each(obj, function(value, index, list) {
+      var computed = iterator ? iterator.call(context, value, index, list) : value;
+      if (computed < lastComputed) {
+        result = value;
+        lastComputed = computed;
+      }
+    });
+    return result;
+  };
+
+  // Shuffle an array, using the modern version of the
+  // [Fisher-Yates shuffle](http://en.wikipedia.org/wiki/Fisher–Yates_shuffle).
+  _.shuffle = function(obj) {
+    var rand;
+    var index = 0;
+    var shuffled = [];
+    each(obj, function(value) {
+      rand = _.random(index++);
+      shuffled[index - 1] = shuffled[rand];
+      shuffled[rand] = value;
+    });
+    return shuffled;
+  };
+
+  // Sample **n** random values from a collection.
+  // If **n** is not specified, returns a single random element.
+  // The internal `guard` argument allows it to work with `map`.
+  _.sample = function(obj, n, guard) {
+    if (n == null || guard) {
+      if (obj.length !== +obj.length) obj = _.values(obj);
+      return obj[_.random(obj.length - 1)];
+    }
+    return _.shuffle(obj).slice(0, Math.max(0, n));
+  };
+
+  // An internal function to generate lookup iterators.
+  var lookupIterator = function(value) {
+    if (value == null) return _.identity;
+    if (_.isFunction(value)) return value;
+    return _.property(value);
+  };
+
+  // Sort the object's values by a criterion produced by an iterator.
+  _.sortBy = function(obj, iterator, context) {
+    iterator = lookupIterator(iterator);
+    return _.pluck(_.map(obj, function(value, index, list) {
+      return {
+        value: value,
+        index: index,
+        criteria: iterator.call(context, value, index, list)
+      };
+    }).sort(function(left, right) {
+      var a = left.criteria;
+      var b = right.criteria;
+      if (a !== b) {
+        if (a > b || a === void 0) return 1;
+        if (a < b || b === void 0) return -1;
+      }
+      return left.index - right.index;
+    }), 'value');
+  };
+
+  // An internal function used for aggregate "group by" operations.
+  var group = function(behavior) {
+    return function(obj, iterator, context) {
+      var result = {};
+      iterator = lookupIterator(iterator);
+      each(obj, function(value, index) {
+        var key = iterator.call(context, value, index, obj);
+        behavior(result, key, value);
+      });
+      return result;
+    };
+  };
+
+  // Groups the object's values by a criterion. Pass either a string attribute
+  // to group by, or a function that returns the criterion.
+  _.groupBy = group(function(result, key, value) {
+    _.has(result, key) ? result[key].push(value) : result[key] = [value];
+  });
+
+  // Indexes the object's values by a criterion, similar to `groupBy`, but for
+  // when you know that your index values will be unique.
+  _.indexBy = group(function(result, key, value) {
+    result[key] = value;
+  });
+
+  // Counts instances of an object that group by a certain criterion. Pass
+  // either a string attribute to count by, or a function that returns the
+  // criterion.
+  _.countBy = group(function(result, key) {
+    _.has(result, key) ? result[key]++ : result[key] = 1;
+  });
+
+  // Use a comparator function to figure out the smallest index at which
+  // an object should be inserted so as to maintain order. Uses binary search.
+  _.sortedIndex = function(array, obj, iterator, context) {
+    iterator = lookupIterator(iterator);
+    var value = iterator.call(context, obj);
+    var low = 0, high = array.length;
+    while (low < high) {
+      var mid = (low + high) >>> 1;
+      iterator.call(context, array[mid]) < value ? low = mid + 1 : high = mid;
+    }
+    return low;
+  };
+
+  // Safely create a real, live array from anything iterable.
+  _.toArray = function(obj) {
+    if (!obj) return [];
+    if (_.isArray(obj)) return slice.call(obj);
+    if (obj.length === +obj.length) return _.map(obj, _.identity);
+    return _.values(obj);
+  };
+
+  // Return the number of elements in an object.
+  _.size = function(obj) {
+    if (obj == null) return 0;
+    return (obj.length === +obj.length) ? obj.length : _.keys(obj).length;
+  };
+
+  // Array Functions
+  // ---------------
+
+  // Get the first element of an array. Passing **n** will return the first N
+  // values in the array. Aliased as `head` and `take`. The **guard** check
+  // allows it to work with `_.map`.
+  _.first = _.head = _.take = function(array, n, guard) {
+    if (array == null) return void 0;
+    if ((n == null) || guard) return array[0];
+    if (n < 0) return [];
+    return slice.call(array, 0, n);
+  };
+
+  // Returns everything but the last entry of the array. Especially useful on
+  // the arguments object. Passing **n** will return all the values in
+  // the array, excluding the last N. The **guard** check allows it to work with
+  // `_.map`.
+  _.initial = function(array, n, guard) {
+    return slice.call(array, 0, array.length - ((n == null) || guard ? 1 : n));
+  };
+
+  // Get the last element of an array. Passing **n** will return the last N
+  // values in the array. The **guard** check allows it to work with `_.map`.
+  _.last = function(array, n, guard) {
+    if (array == null) return void 0;
+    if ((n == null) || guard) return array[array.length - 1];
+    return slice.call(array, Math.max(array.length - n, 0));
+  };
+
+  // Returns everything but the first entry of the array. Aliased as `tail` and `drop`.
+  // Especially useful on the arguments object. Passing an **n** will return
+  // the rest N values in the array. The **guard**
+  // check allows it to work with `_.map`.
+  _.rest = _.tail = _.drop = function(array, n, guard) {
+    return slice.call(array, (n == null) || guard ? 1 : n);
+  };
+
+  // Trim out all falsy values from an array.
+  _.compact = function(array) {
+    return _.filter(array, _.identity);
+  };
+
+  // Internal implementation of a recursive `flatten` function.
+  var flatten = function(input, shallow, output) {
+    if (shallow && _.every(input, _.isArray)) {
+      return concat.apply(output, input);
+    }
+    each(input, function(value) {
+      if (_.isArray(value) || _.isArguments(value)) {
+        shallow ? push.apply(output, value) : flatten(value, shallow, output);
+      } else {
+        output.push(value);
+      }
+    });
+    return output;
+  };
+
+  // Flatten out an array, either recursively (by default), or just one level.
+  _.flatten = function(array, shallow) {
+    return flatten(array, shallow, []);
+  };
+
+  // Return a version of the array that does not contain the specified value(s).
+  _.without = function(array) {
+    return _.difference(array, slice.call(arguments, 1));
+  };
+
+  // Split an array into two arrays: one whose elements all satisfy the given
+  // predicate, and one whose elements all do not satisfy the predicate.
+  _.partition = function(array, predicate) {
+    var pass = [], fail = [];
+    each(array, function(elem) {
+      (predicate(elem) ? pass : fail).push(elem);
+    });
+    return [pass, fail];
+  };
+
+  // Produce a duplicate-free version of the array. If the array has already
+  // been sorted, you have the option of using a faster algorithm.
+  // Aliased as `unique`.
+  _.uniq = _.unique = function(array, isSorted, iterator, context) {
+    if (_.isFunction(isSorted)) {
+      context = iterator;
+      iterator = isSorted;
+      isSorted = false;
+    }
+    var initial = iterator ? _.map(array, iterator, context) : array;
+    var results = [];
+    var seen = [];
+    each(initial, function(value, index) {
+      if (isSorted ? (!index || seen[seen.length - 1] !== value) : !_.contains(seen, value)) {
+        seen.push(value);
+        results.push(array[index]);
+      }
+    });
+    return results;
+  };
+
+  // Produce an array that contains the union: each distinct element from all of
+  // the passed-in arrays.
+  _.union = function() {
+    return _.uniq(_.flatten(arguments, true));
+  };
+
+  // Produce an array that contains every item shared between all the
+  // passed-in arrays.
+  _.intersection = function(array) {
+    var rest = slice.call(arguments, 1);
+    return _.filter(_.uniq(array), function(item) {
+      return _.every(rest, function(other) {
+        return _.contains(other, item);
+      });
+    });
+  };
+
+  // Take the difference between one array and a number of other arrays.
+  // Only the elements present in just the first array will remain.
+  _.difference = function(array) {
+    var rest = concat.apply(ArrayProto, slice.call(arguments, 1));
+    return _.filter(array, function(value){ return !_.contains(rest, value); });
+  };
+
+  // Zip together multiple lists into a single array -- elements that share
+  // an index go together.
+  _.zip = function() {
+    var length = _.max(_.pluck(arguments, 'length').concat(0));
+    var results = new Array(length);
+    for (var i = 0; i < length; i++) {
+      results[i] = _.pluck(arguments, '' + i);
+    }
+    return results;
+  };
+
+  // Converts lists into objects. Pass either a single array of `[key, value]`
+  // pairs, or two parallel arrays of the same length -- one of keys, and one of
+  // the corresponding values.
+  _.object = function(list, values) {
+    if (list == null) return {};
+    var result = {};
+    for (var i = 0, length = list.length; i < length; i++) {
+      if (values) {
+        result[list[i]] = values[i];
+      } else {
+        result[list[i][0]] = list[i][1];
+      }
+    }
+    return result;
+  };
+
+  // If the browser doesn't supply us with indexOf (I'm looking at you, **MSIE**),
+  // we need this function. Return the position of the first occurrence of an
+  // item in an array, or -1 if the item is not included in the array.
+  // Delegates to **ECMAScript 5**'s native `indexOf` if available.
+  // If the array is large and already in sort order, pass `true`
+  // for **isSorted** to use binary search.
+  _.indexOf = function(array, item, isSorted) {
+    if (array == null) return -1;
+    var i = 0, length = array.length;
+    if (isSorted) {
+      if (typeof isSorted == 'number') {
+        i = (isSorted < 0 ? Math.max(0, length + isSorted) : isSorted);
+      } else {
+        i = _.sortedIndex(array, item);
+        return array[i] === item ? i : -1;
+      }
+    }
+    if (nativeIndexOf && array.indexOf === nativeIndexOf) return array.indexOf(item, isSorted);
+    for (; i < length; i++) if (array[i] === item) return i;
+    return -1;
+  };
+
+  // Delegates to **ECMAScript 5**'s native `lastIndexOf` if available.
+  _.lastIndexOf = function(array, item, from) {
+    if (array == null) return -1;
+    var hasIndex = from != null;
+    if (nativeLastIndexOf && array.lastIndexOf === nativeLastIndexOf) {
+      return hasIndex ? array.lastIndexOf(item, from) : array.lastIndexOf(item);
+    }
+    var i = (hasIndex ? from : array.length);
+    while (i--) if (array[i] === item) return i;
+    return -1;
+  };
+
+  // Generate an integer Array containing an arithmetic progression. A port of
+  // the native Python `range()` function. See
+  // [the Python documentation](http://docs.python.org/library/functions.html#range).
+  _.range = function(start, stop, step) {
+    if (arguments.length <= 1) {
+      stop = start || 0;
+      start = 0;
+    }
+    step = arguments[2] || 1;
+
+    var length = Math.max(Math.ceil((stop - start) / step), 0);
+    var idx = 0;
+    var range = new Array(length);
+
+    while(idx < length) {
+      range[idx++] = start;
+      start += step;
+    }
+
+    return range;
+  };
+
+  // Function (ahem) Functions
+  // ------------------
+
+  // Reusable constructor function for prototype setting.
+  var ctor = function(){};
+
+  // Create a function bound to a given object (assigning `this`, and arguments,
+  // optionally). Delegates to **ECMAScript 5**'s native `Function.bind` if
+  // available.
+  _.bind = function(func, context) {
+    var args, bound;
+    if (nativeBind && func.bind === nativeBind) return nativeBind.apply(func, slice.call(arguments, 1));
+    if (!_.isFunction(func)) throw new TypeError;
+    args = slice.call(arguments, 2);
+    return bound = function() {
+      if (!(this instanceof bound)) return func.apply(context, args.concat(slice.call(arguments)));
+      ctor.prototype = func.prototype;
+      var self = new ctor;
+      ctor.prototype = null;
+      var result = func.apply(self, args.concat(slice.call(arguments)));
+      if (Object(result) === result) return result;
+      return self;
+    };
+  };
+
+  // Partially apply a function by creating a version that has had some of its
+  // arguments pre-filled, without changing its dynamic `this` context. _ acts
+  // as a placeholder, allowing any combination of arguments to be pre-filled.
+  _.partial = function(func) {
+    var boundArgs = slice.call(arguments, 1);
+    return function() {
+      var position = 0;
+      var args = boundArgs.slice();
+      for (var i = 0, length = args.length; i < length; i++) {
+        if (args[i] === _) args[i] = arguments[position++];
+      }
+      while (position < arguments.length) args.push(arguments[position++]);
+      return func.apply(this, args);
+    };
+  };
+
+  // Bind a number of an object's methods to that object. Remaining arguments
+  // are the method names to be bound. Useful for ensuring that all callbacks
+  // defined on an object belong to it.
+  _.bindAll = function(obj) {
+    var funcs = slice.call(arguments, 1);
+    if (funcs.length === 0) throw new Error('bindAll must be passed function names');
+    each(funcs, function(f) { obj[f] = _.bind(obj[f], obj); });
+    return obj;
+  };
+
+  // Memoize an expensive function by storing its results.
+  _.memoize = function(func, hasher) {
+    var memo = {};
+    hasher || (hasher = _.identity);
+    return function() {
+      var key = hasher.apply(this, arguments);
+      return _.has(memo, key) ? memo[key] : (memo[key] = func.apply(this, arguments));
+    };
+  };
+
+  // Delays a function for the given number of milliseconds, and then calls
+  // it with the arguments supplied.
+  _.delay = function(func, wait) {
+    var args = slice.call(arguments, 2);
+    return setTimeout(function(){ return func.apply(null, args); }, wait);
+  };
+
+  // Defers a function, scheduling it to run after the current call stack has
+  // cleared.
+  _.defer = function(func) {
+    return _.delay.apply(_, [func, 1].concat(slice.call(arguments, 1)));
+  };
+
+  // Returns a function, that, when invoked, will only be triggered at most once
+  // during a given window of time. Normally, the throttled function will run
+  // as much as it can, without ever going more than once per `wait` duration;
+  // but if you'd like to disable the execution on the leading edge, pass
+  // `{leading: false}`. To disable execution on the trailing edge, ditto.
+  _.throttle = function(func, wait, options) {
+    var context, args, result;
+    var timeout = null;
+    var previous = 0;
+    options || (options = {});
+    var later = function() {
+      previous = options.leading === false ? 0 : _.now();
+      timeout = null;
+      result = func.apply(context, args);
+      context = args = null;
+    };
+    return function() {
+      var now = _.now();
+      if (!previous && options.leading === false) previous = now;
+      var remaining = wait - (now - previous);
+      context = this;
+      args = arguments;
+      if (remaining <= 0) {
+        clearTimeout(timeout);
+        timeout = null;
+        previous = now;
+        result = func.apply(context, args);
+        context = args = null;
+      } else if (!timeout && options.trailing !== false) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    };
+  };
+
+  // Returns a function, that, as long as it continues to be invoked, will not
+  // be triggered. The function will be called after it stops being called for
+  // N milliseconds. If `immediate` is passed, trigger the function on the
+  // leading edge, instead of the trailing.
+  _.debounce = function(func, wait, immediate) {
+    var timeout, args, context, timestamp, result;
+
+    var later = function() {
+      var last = _.now() - timestamp;
+      if (last < wait) {
+        timeout = setTimeout(later, wait - last);
+      } else {
+        timeout = null;
+        if (!immediate) {
+          result = func.apply(context, args);
+          context = args = null;
+        }
+      }
+    };
+
+    return function() {
+      context = this;
+      args = arguments;
+      timestamp = _.now();
+      var callNow = immediate && !timeout;
+      if (!timeout) {
+        timeout = setTimeout(later, wait);
+      }
+      if (callNow) {
+        result = func.apply(context, args);
+        context = args = null;
+      }
+
+      return result;
+    };
+  };
+
+  // Returns a function that will be executed at most one time, no matter how
+  // often you call it. Useful for lazy initialization.
+  _.once = function(func) {
+    var ran = false, memo;
+    return function() {
+      if (ran) return memo;
+      ran = true;
+      memo = func.apply(this, arguments);
+      func = null;
+      return memo;
+    };
+  };
+
+  // Returns the first function passed as an argument to the second,
+  // allowing you to adjust arguments, run code before and after, and
+  // conditionally execute the original function.
+  _.wrap = function(func, wrapper) {
+    return _.partial(wrapper, func);
+  };
+
+  // Returns a function that is the composition of a list of functions, each
+  // consuming the return value of the function that follows.
+  _.compose = function() {
+    var funcs = arguments;
+    return function() {
+      var args = arguments;
+      for (var i = funcs.length - 1; i >= 0; i--) {
+        args = [funcs[i].apply(this, args)];
+      }
+      return args[0];
+    };
+  };
+
+  // Returns a function that will only be executed after being called N times.
+  _.after = function(times, func) {
+    return function() {
+      if (--times < 1) {
+        return func.apply(this, arguments);
+      }
+    };
+  };
+
+  // Object Functions
+  // ----------------
+
+  // Retrieve the names of an object's properties.
+  // Delegates to **ECMAScript 5**'s native `Object.keys`
+  _.keys = function(obj) {
+    if (!_.isObject(obj)) return [];
+    if (nativeKeys) return nativeKeys(obj);
+    var keys = [];
+    for (var key in obj) if (_.has(obj, key)) keys.push(key);
+    return keys;
+  };
+
+  // Retrieve the values of an object's properties.
+  _.values = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var values = new Array(length);
+    for (var i = 0; i < length; i++) {
+      values[i] = obj[keys[i]];
+    }
+    return values;
+  };
+
+  // Convert an object into a list of `[key, value]` pairs.
+  _.pairs = function(obj) {
+    var keys = _.keys(obj);
+    var length = keys.length;
+    var pairs = new Array(length);
+    for (var i = 0; i < length; i++) {
+      pairs[i] = [keys[i], obj[keys[i]]];
+    }
+    return pairs;
+  };
+
+  // Invert the keys and values of an object. The values must be serializable.
+  _.invert = function(obj) {
+    var result = {};
+    var keys = _.keys(obj);
+    for (var i = 0, length = keys.length; i < length; i++) {
+      result[obj[keys[i]]] = keys[i];
+    }
+    return result;
+  };
+
+  // Return a sorted list of the function names available on the object.
+  // Aliased as `methods`
+  _.functions = _.methods = function(obj) {
+    var names = [];
+    for (var key in obj) {
+      if (_.isFunction(obj[key])) names.push(key);
+    }
+    return names.sort();
+  };
+
+  // Extend a given object with all the properties in passed-in object(s).
+  _.extend = function(obj) {
+    each(slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) {
+          obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
+  };
+
+  // Return a copy of the object only containing the whitelisted properties.
+  _.pick = function(obj) {
+    var copy = {};
+    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
+    each(keys, function(key) {
+      if (key in obj) copy[key] = obj[key];
+    });
+    return copy;
+  };
+
+   // Return a copy of the object without the blacklisted properties.
+  _.omit = function(obj) {
+    var copy = {};
+    var keys = concat.apply(ArrayProto, slice.call(arguments, 1));
+    for (var key in obj) {
+      if (!_.contains(keys, key)) copy[key] = obj[key];
+    }
+    return copy;
+  };
+
+  // Fill in a given object with default properties.
+  _.defaults = function(obj) {
+    each(slice.call(arguments, 1), function(source) {
+      if (source) {
+        for (var prop in source) {
+          if (obj[prop] === void 0) obj[prop] = source[prop];
+        }
+      }
+    });
+    return obj;
+  };
+
+  // Create a (shallow-cloned) duplicate of an object.
+  _.clone = function(obj) {
+    if (!_.isObject(obj)) return obj;
+    return _.isArray(obj) ? obj.slice() : _.extend({}, obj);
+  };
+
+  // Invokes interceptor with the obj, and then returns obj.
+  // The primary purpose of this method is to "tap into" a method chain, in
+  // order to perform operations on intermediate results within the chain.
+  _.tap = function(obj, interceptor) {
+    interceptor(obj);
+    return obj;
+  };
+
+  // Internal recursive comparison function for `isEqual`.
+  var eq = function(a, b, aStack, bStack) {
+    // Identical objects are equal. `0 === -0`, but they aren't identical.
+    // See the [Harmony `egal` proposal](http://wiki.ecmascript.org/doku.php?id=harmony:egal).
+    if (a === b) return a !== 0 || 1 / a == 1 / b;
+    // A strict comparison is necessary because `null == undefined`.
+    if (a == null || b == null) return a === b;
+    // Unwrap any wrapped objects.
+    if (a instanceof _) a = a._wrapped;
+    if (b instanceof _) b = b._wrapped;
+    // Compare `[[Class]]` names.
+    var className = toString.call(a);
+    if (className != toString.call(b)) return false;
+    switch (className) {
+      // Strings, numbers, dates, and booleans are compared by value.
+      case '[object String]':
+        // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
+        // equivalent to `new String("5")`.
+        return a == String(b);
+      case '[object Number]':
+        // `NaN`s are equivalent, but non-reflexive. An `egal` comparison is performed for
+        // other numeric values.
+        return a != +a ? b != +b : (a == 0 ? 1 / a == 1 / b : a == +b);
+      case '[object Date]':
+      case '[object Boolean]':
+        // Coerce dates and booleans to numeric primitive values. Dates are compared by their
+        // millisecond representations. Note that invalid dates with millisecond representations
+        // of `NaN` are not equivalent.
+        return +a == +b;
+      // RegExps are compared by their source patterns and flags.
+      case '[object RegExp]':
+        return a.source == b.source &&
+               a.global == b.global &&
+               a.multiline == b.multiline &&
+               a.ignoreCase == b.ignoreCase;
+    }
+    if (typeof a != 'object' || typeof b != 'object') return false;
+    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+    var length = aStack.length;
+    while (length--) {
+      // Linear search. Performance is inversely proportional to the number of
+      // unique nested structures.
+      if (aStack[length] == a) return bStack[length] == b;
+    }
+    // Objects with different constructors are not equivalent, but `Object`s
+    // from different frames are.
+    var aCtor = a.constructor, bCtor = b.constructor;
+    if (aCtor !== bCtor && !(_.isFunction(aCtor) && (aCtor instanceof aCtor) &&
+                             _.isFunction(bCtor) && (bCtor instanceof bCtor))
+                        && ('constructor' in a && 'constructor' in b)) {
+      return false;
+    }
+    // Add the first object to the stack of traversed objects.
+    aStack.push(a);
+    bStack.push(b);
+    var size = 0, result = true;
+    // Recursively compare objects and arrays.
+    if (className == '[object Array]') {
+      // Compare array lengths to determine if a deep comparison is necessary.
+      size = a.length;
+      result = size == b.length;
+      if (result) {
+        // Deep compare the contents, ignoring non-numeric properties.
+        while (size--) {
+          if (!(result = eq(a[size], b[size], aStack, bStack))) break;
+        }
+      }
+    } else {
+      // Deep compare objects.
+      for (var key in a) {
+        if (_.has(a, key)) {
+          // Count the expected number of properties.
+          size++;
+          // Deep compare each member.
+          if (!(result = _.has(b, key) && eq(a[key], b[key], aStack, bStack))) break;
+        }
+      }
+      // Ensure that both objects contain the same number of properties.
+      if (result) {
+        for (key in b) {
+          if (_.has(b, key) && !(size--)) break;
+        }
+        result = !size;
+      }
+    }
+    // Remove the first object from the stack of traversed objects.
+    aStack.pop();
+    bStack.pop();
+    return result;
+  };
+
+  // Perform a deep comparison to check if two objects are equal.
+  _.isEqual = function(a, b) {
+    return eq(a, b, [], []);
+  };
+
+  // Is a given array, string, or object empty?
+  // An "empty" object has no enumerable own-properties.
+  _.isEmpty = function(obj) {
+    if (obj == null) return true;
+    if (_.isArray(obj) || _.isString(obj)) return obj.length === 0;
+    for (var key in obj) if (_.has(obj, key)) return false;
+    return true;
+  };
+
+  // Is a given value a DOM element?
+  _.isElement = function(obj) {
+    return !!(obj && obj.nodeType === 1);
+  };
+
+  // Is a given value an array?
+  // Delegates to ECMA5's native Array.isArray
+  _.isArray = nativeIsArray || function(obj) {
+    return toString.call(obj) == '[object Array]';
+  };
+
+  // Is a given variable an object?
+  _.isObject = function(obj) {
+    return obj === Object(obj);
+  };
+
+  // Add some isType methods: isArguments, isFunction, isString, isNumber, isDate, isRegExp.
+  each(['Arguments', 'Function', 'String', 'Number', 'Date', 'RegExp'], function(name) {
+    _['is' + name] = function(obj) {
+      return toString.call(obj) == '[object ' + name + ']';
+    };
+  });
+
+  // Define a fallback version of the method in browsers (ahem, IE), where
+  // there isn't any inspectable "Arguments" type.
+  if (!_.isArguments(arguments)) {
+    _.isArguments = function(obj) {
+      return !!(obj && _.has(obj, 'callee'));
+    };
+  }
+
+  // Optimize `isFunction` if appropriate.
+  if (typeof (/./) !== 'function') {
+    _.isFunction = function(obj) {
+      return typeof obj === 'function';
+    };
+  }
+
+  // Is a given object a finite number?
+  _.isFinite = function(obj) {
+    return isFinite(obj) && !isNaN(parseFloat(obj));
+  };
+
+  // Is the given value `NaN`? (NaN is the only number which does not equal itself).
+  _.isNaN = function(obj) {
+    return _.isNumber(obj) && obj != +obj;
+  };
+
+  // Is a given value a boolean?
+  _.isBoolean = function(obj) {
+    return obj === true || obj === false || toString.call(obj) == '[object Boolean]';
+  };
+
+  // Is a given value equal to null?
+  _.isNull = function(obj) {
+    return obj === null;
+  };
+
+  // Is a given variable undefined?
+  _.isUndefined = function(obj) {
+    return obj === void 0;
+  };
+
+  // Shortcut function for checking if an object has a given property directly
+  // on itself (in other words, not on a prototype).
+  _.has = function(obj, key) {
+    return hasOwnProperty.call(obj, key);
+  };
+
+  // Utility Functions
+  // -----------------
+
+  // Run Underscore.js in *noConflict* mode, returning the `_` variable to its
+  // previous owner. Returns a reference to the Underscore object.
+  _.noConflict = function() {
+    root._ = previousUnderscore;
+    return this;
+  };
+
+  // Keep the identity function around for default iterators.
+  _.identity = function(value) {
+    return value;
+  };
+
+  _.constant = function(value) {
+    return function () {
+      return value;
+    };
+  };
+
+  _.property = function(key) {
+    return function(obj) {
+      return obj[key];
+    };
+  };
+
+  // Returns a predicate for checking whether an object has a given set of `key:value` pairs.
+  _.matches = function(attrs) {
+    return function(obj) {
+      if (obj === attrs) return true; //avoid comparing an object to itself.
+      for (var key in attrs) {
+        if (attrs[key] !== obj[key])
+          return false;
+      }
+      return true;
+    }
+  };
+
+  // Run a function **n** times.
+  _.times = function(n, iterator, context) {
+    var accum = Array(Math.max(0, n));
+    for (var i = 0; i < n; i++) accum[i] = iterator.call(context, i);
+    return accum;
+  };
+
+  // Return a random integer between min and max (inclusive).
+  _.random = function(min, max) {
+    if (max == null) {
+      max = min;
+      min = 0;
+    }
+    return min + Math.floor(Math.random() * (max - min + 1));
+  };
+
+  // A (possibly faster) way to get the current timestamp as an integer.
+  _.now = Date.now || function() { return new Date().getTime(); };
+
+  // List of HTML entities for escaping.
+  var entityMap = {
+    escape: {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#x27;'
+    }
+  };
+  entityMap.unescape = _.invert(entityMap.escape);
+
+  // Regexes containing the keys and values listed immediately above.
+  var entityRegexes = {
+    escape:   new RegExp('[' + _.keys(entityMap.escape).join('') + ']', 'g'),
+    unescape: new RegExp('(' + _.keys(entityMap.unescape).join('|') + ')', 'g')
+  };
+
+  // Functions for escaping and unescaping strings to/from HTML interpolation.
+  _.each(['escape', 'unescape'], function(method) {
+    _[method] = function(string) {
+      if (string == null) return '';
+      return ('' + string).replace(entityRegexes[method], function(match) {
+        return entityMap[method][match];
+      });
+    };
+  });
+
+  // If the value of the named `property` is a function then invoke it with the
+  // `object` as context; otherwise, return it.
+  _.result = function(object, property) {
+    if (object == null) return void 0;
+    var value = object[property];
+    return _.isFunction(value) ? value.call(object) : value;
+  };
+
+  // Add your own custom functions to the Underscore object.
+  _.mixin = function(obj) {
+    each(_.functions(obj), function(name) {
+      var func = _[name] = obj[name];
+      _.prototype[name] = function() {
+        var args = [this._wrapped];
+        push.apply(args, arguments);
+        return result.call(this, func.apply(_, args));
+      };
+    });
+  };
+
+  // Generate a unique integer id (unique within the entire client session).
+  // Useful for temporary DOM ids.
+  var idCounter = 0;
+  _.uniqueId = function(prefix) {
+    var id = ++idCounter + '';
+    return prefix ? prefix + id : id;
+  };
+
+  // By default, Underscore uses ERB-style template delimiters, change the
+  // following template settings to use alternative delimiters.
+  _.templateSettings = {
+    evaluate    : /<%([\s\S]+?)%>/g,
+    interpolate : /<%=([\s\S]+?)%>/g,
+    escape      : /<%-([\s\S]+?)%>/g
+  };
+
+  // When customizing `templateSettings`, if you don't want to define an
+  // interpolation, evaluation or escaping regex, we need one that is
+  // guaranteed not to match.
+  var noMatch = /(.)^/;
+
+  // Certain characters need to be escaped so that they can be put into a
+  // string literal.
+  var escapes = {
+    "'":      "'",
+    '\\':     '\\',
+    '\r':     'r',
+    '\n':     'n',
+    '\t':     't',
+    '\u2028': 'u2028',
+    '\u2029': 'u2029'
+  };
+
+  var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
+
+  // JavaScript micro-templating, similar to John Resig's implementation.
+  // Underscore templating handles arbitrary delimiters, preserves whitespace,
+  // and correctly escapes quotes within interpolated code.
+  _.template = function(text, data, settings) {
+    var render;
+    settings = _.defaults({}, settings, _.templateSettings);
+
+    // Combine delimiters into one regular expression via alternation.
+    var matcher = new RegExp([
+      (settings.escape || noMatch).source,
+      (settings.interpolate || noMatch).source,
+      (settings.evaluate || noMatch).source
+    ].join('|') + '|$', 'g');
+
+    // Compile the template source, escaping string literals appropriately.
+    var index = 0;
+    var source = "__p+='";
+    text.replace(matcher, function(match, escape, interpolate, evaluate, offset) {
+      source += text.slice(index, offset)
+        .replace(escaper, function(match) { return '\\' + escapes[match]; });
+
+      if (escape) {
+        source += "'+\n((__t=(" + escape + "))==null?'':_.escape(__t))+\n'";
+      }
+      if (interpolate) {
+        source += "'+\n((__t=(" + interpolate + "))==null?'':__t)+\n'";
+      }
+      if (evaluate) {
+        source += "';\n" + evaluate + "\n__p+='";
+      }
+      index = offset + match.length;
+      return match;
+    });
+    source += "';\n";
+
+    // If a variable is not specified, place data values in local scope.
+    if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+    source = "var __t,__p='',__j=Array.prototype.join," +
+      "print=function(){__p+=__j.call(arguments,'');};\n" +
+      source + "return __p;\n";
+
+    try {
+      render = new Function(settings.variable || 'obj', '_', source);
+    } catch (e) {
+      e.source = source;
+      throw e;
+    }
+
+    if (data) return render(data, _);
+    var template = function(data) {
+      return render.call(this, data, _);
+    };
+
+    // Provide the compiled function source as a convenience for precompilation.
+    template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
+
+    return template;
+  };
+
+  // Add a "chain" function, which will delegate to the wrapper.
+  _.chain = function(obj) {
+    return _(obj).chain();
+  };
+
+  // OOP
+  // ---------------
+  // If Underscore is called as a function, it returns a wrapped object that
+  // can be used OO-style. This wrapper holds altered versions of all the
+  // underscore functions. Wrapped objects may be chained.
+
+  // Helper function to continue chaining intermediate results.
+  var result = function(obj) {
+    return this._chain ? _(obj).chain() : obj;
+  };
+
+  // Add all of the Underscore functions to the wrapper object.
+  _.mixin(_);
+
+  // Add all mutator Array functions to the wrapper.
+  each(['pop', 'push', 'reverse', 'shift', 'sort', 'splice', 'unshift'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      var obj = this._wrapped;
+      method.apply(obj, arguments);
+      if ((name == 'shift' || name == 'splice') && obj.length === 0) delete obj[0];
+      return result.call(this, obj);
+    };
+  });
+
+  // Add all accessor Array functions to the wrapper.
+  each(['concat', 'join', 'slice'], function(name) {
+    var method = ArrayProto[name];
+    _.prototype[name] = function() {
+      return result.call(this, method.apply(this._wrapped, arguments));
+    };
+  });
+
+  _.extend(_.prototype, {
+
+    // Start chaining a wrapped Underscore object.
+    chain: function() {
+      this._chain = true;
+      return this;
+    },
+
+    // Extracts the result from a wrapped and chained object.
+    value: function() {
+      return this._wrapped;
+    }
+
+  });
+
+  // AMD registration happens at the end for compatibility with AMD loaders
+  // that may not enforce next-turn semantics on modules. Even though general
+  // practice for AMD registration is to be anonymous, underscore registers
+  // as a named module because, like jQuery, it is a base library that is
+  // popular enough to be bundled in a third party lib, but not be part of
+  // an AMD load request. Those cases could generate an error when an
+  // anonymous define() is called outside of a loader request.
+  if (typeof define === 'function' && define.amd) {
+    define('underscore', [], function() {
+      return _;
+    });
+  }
+}).call(this);
+
+//     Backbone.js 1.1.2
 
 //     (c) 2010-2014 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 //     Backbone may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://backbonejs.org
 
-// Copyright (c) 2011-2013 Thomas Pedersen
+(function(root, factory) {
 
-// Documentation and full license available at:
+  // Set up Backbone appropriately for the environment. Start with AMD.
+  if (typeof define === 'function' && define.amd) {
+    define('backbone',['underscore', 'jquery', 'exports'], function(_, $, exports) {
+      // Export global even in AMD case in case this script is loaded with
+      // others that may still expect a global Backbone.
+      root.Backbone = factory(root, exports, _, $);
+    });
 
+  // Next for Node.js or CommonJS. jQuery may not be needed as a module.
+  } else if (typeof exports !== 'undefined') {
+    var _ = require('underscore');
+    factory(root, exports, _);
+
+  // Finally, as a browser global.
+  } else {
+    root.Backbone = factory(root, {}, root._, (root.jQuery || root.Zepto || root.ender || root.$));
+  }
+
+}(this, function(root, Backbone, _, $) {
+
+  // Initial Setup
+  // -------------
+
+  // Save the previous value of the `Backbone` variable, so that it can be
+  // restored later on, if `noConflict` is used.
+  var previousBackbone = root.Backbone;
+
+  // Create local references to array methods we'll want to use later.
+  var array = [];
+  var push = array.push;
+  var slice = array.slice;
+  var splice = array.splice;
+
+  // Current version of the library. Keep in sync with `package.json`.
+  Backbone.VERSION = '1.1.2';
+
+  // For Backbone's purposes, jQuery, Zepto, Ender, or My Library (kidding) owns
+  // the `$` variable.
+  Backbone.$ = $;
+
+  // Runs Backbone.js in *noConflict* mode, returning the `Backbone` variable
+  // to its previous owner. Returns a reference to this Backbone object.
+  Backbone.noConflict = function() {
+    root.Backbone = previousBackbone;
+    return this;
+  };
+
+  // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
+  // will fake `"PATCH"`, `"PUT"` and `"DELETE"` requests via the `_method` parameter and
+  // set a `X-Http-Method-Override` header.
+  Backbone.emulateHTTP = false;
+
+  // Turn on `emulateJSON` to support legacy servers that can't deal with direct
+  // `application/json` requests ... will encode the body as
+  // `application/x-www-form-urlencoded` instead and will send the model in a
+  // form param named `model`.
+  Backbone.emulateJSON = false;
+
+  // Backbone.Events
+  // ---------------
+
+  // A module that can be mixed in to *any object* in order to provide it with
+  // custom events. You may bind with `on` or remove with `off` callback
+  // functions to an event; `trigger`-ing an event fires all callbacks in
+  // succession.
+  //
+  //     var object = {};
+  //     _.extend(object, Backbone.Events);
+  //     object.on('expand', function(){ alert('expanded'); });
+  //     object.trigger('expand');
+  //
+  var Events = Backbone.Events = {
+
+    // Bind an event to a `callback` function. Passing `"all"` will bind
+    // the callback to all events fired.
+    on: function(name, callback, context) {
+      if (!eventsApi(this, 'on', name, [callback, context]) || !callback) return this;
+      this._events || (this._events = {});
+      var events = this._events[name] || (this._events[name] = []);
+      events.push({callback: callback, context: context, ctx: context || this});
+      return this;
+    },
+
+    // Bind an event to only be triggered a single time. After the first time
+    // the callback is invoked, it will be removed.
+    once: function(name, callback, context) {
+      if (!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
+      var self = this;
+      var once = _.once(function() {
+        self.off(name, once);
+        callback.apply(this, arguments);
+      });
+      once._callback = callback;
+      return this.on(name, once, context);
+    },
+
+    // Remove one or many callbacks. If `context` is null, removes all
+    // callbacks with that function. If `callback` is null, removes all
+    // callbacks for the event. If `name` is null, removes all bound
+    // callbacks for all events.
+    off: function(name, callback, context) {
+      var retain, ev, events, names, i, l, j, k;
+      if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
+      if (!name && !callback && !context) {
+        this._events = void 0;
+        return this;
+      }
+      names = name ? [name] : _.keys(this._events);
+      for (i = 0, l = names.length; i < l; i++) {
+        name = names[i];
+        if (events = this._events[name]) {
+          this._events[name] = retain = [];
+          if (callback || context) {
+            for (j = 0, k = events.length; j < k; j++) {
+              ev = events[j];
+              if ((callback && callback !== ev.callback && callback !== ev.callback._callback) ||
+                  (context && context !== ev.context)) {
+                retain.push(ev);
+              }
+            }
+          }
+          if (!retain.length) delete this._events[name];
+        }
+      }
+
+      return this;
+    },
+
+    // Trigger one or many events, firing all bound callbacks. Callbacks are
+    // passed the same arguments as `trigger` is, apart from the event name
+    // (unless you're listening on `"all"`, which will cause your callback to
+    // receive the true name of the event as the first argument).
+    trigger: function(name) {
+      if (!this._events) return this;
+      var args = slice.call(arguments, 1);
+      if (!eventsApi(this, 'trigger', name, args)) return this;
+      var events = this._events[name];
+      var allEvents = this._events.all;
+      if (events) triggerEvents(events, args);
+      if (allEvents) triggerEvents(allEvents, arguments);
+      return this;
+    },
+
+    // Tell this object to stop listening to either specific events ... or
+    // to every object it's currently listening to.
+    stopListening: function(obj, name, callback) {
+      var listeningTo = this._listeningTo;
+      if (!listeningTo) return this;
+      var remove = !name && !callback;
+      if (!callback && typeof name === 'object') callback = this;
+      if (obj) (listeningTo = {})[obj._listenId] = obj;
+      for (var id in listeningTo) {
+        obj = listeningTo[id];
+        obj.off(name, callback, this);
+        if (remove || _.isEmpty(obj._events)) delete this._listeningTo[id];
+      }
+      return this;
+    }
+
+  };
+
+  // Regular expression used to split event strings.
+  var eventSplitter = /\s+/;
+
+  // Implement fancy features of the Events API such as multiple event
+  // names `"change blur"` and jQuery-style event maps `{change: action}`
+  // in terms of the existing API.
+  var eventsApi = function(obj, action, name, rest) {
+    if (!name) return true;
+
+    // Handle event maps.
+    if (typeof name === 'object') {
+      for (var key in name) {
+        obj[action].apply(obj, [key, name[key]].concat(rest));
+      }
+      return false;
+    }
+
+    // Handle space separated event names.
+    if (eventSplitter.test(name)) {
+      var names = name.split(eventSplitter);
+      for (var i = 0, l = names.length; i < l; i++) {
+        obj[action].apply(obj, [names[i]].concat(rest));
+      }
+      return false;
+    }
+
+    return true;
+  };
+
+  // A difficult-to-believe, but optimized internal dispatch function for
+  // triggering events. Tries to keep the usual cases speedy (most internal
+  // Backbone events have 3 arguments).
+  var triggerEvents = function(events, args) {
+    var ev, i = -1, l = events.length, a1 = args[0], a2 = args[1], a3 = args[2];
+    switch (args.length) {
+      case 0: while (++i < l) (ev = events[i]).callback.call(ev.ctx); return;
+      case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1); return;
+      case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2); return;
+      case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, a1, a2, a3); return;
+      default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args); return;
+    }
+  };
+
+  var listenMethods = {listenTo: 'on', listenToOnce: 'once'};
+
+  // Inversion-of-control versions of `on` and `once`. Tell *this* object to
+  // listen to an event in another object ... keeping track of what it's
+  // listening to.
+  _.each(listenMethods, function(implementation, method) {
+    Events[method] = function(obj, name, callback) {
+      var listeningTo = this._listeningTo || (this._listeningTo = {});
+      var id = obj._listenId || (obj._listenId = _.uniqueId('l'));
+      listeningTo[id] = obj;
+      if (!callback && typeof name === 'object') callback = this;
+      obj[implementation](name, callback, this);
+      return this;
+    };
+  });
+
+  // Aliases for backwards compatibility.
+  Events.bind   = Events.on;
+  Events.unbind = Events.off;
+
+  // Allow the `Backbone` object to serve as a global event bus, for folks who
+  // want global "pubsub" in a convenient place.
+  _.extend(Backbone, Events);
+
+  // Backbone.Model
+  // --------------
+
+  // Backbone **Models** are the basic data object in the framework --
+  // frequently representing a row in a table in a database on your server.
+  // A discrete chunk of data and a bunch of useful, related methods for
+  // performing computations and transformations on that data.
+
+  // Create a new model with the specified attributes. A client id (`cid`)
+  // is automatically generated and assigned for you.
+  var Model = Backbone.Model = function(attributes, options) {
+    var attrs = attributes || {};
+    options || (options = {});
+    this.cid = _.uniqueId('c');
+    this.attributes = {};
+    if (options.collection) this.collection = options.collection;
+    if (options.parse) attrs = this.parse(attrs, options) || {};
+    attrs = _.defaults({}, attrs, _.result(this, 'defaults'));
+    this.set(attrs, options);
+    this.changed = {};
+    this.initialize.apply(this, arguments);
+  };
+
+  // Attach all inheritable methods to the Model prototype.
+  _.extend(Model.prototype, Events, {
+
+    // A hash of attributes whose current and previous value differ.
+    changed: null,
+
+    // The value returned during the last failed validation.
+    validationError: null,
+
+    // The default name for the JSON `id` attribute is `"id"`. MongoDB and
+    // CouchDB users may want to set this to `"_id"`.
+    idAttribute: 'id',
+
+    // Initialize is an empty function by default. Override it with your own
+    // initialization logic.
+    initialize: function(){},
+
+    // Return a copy of the model's `attributes` object.
+    toJSON: function(options) {
+      return _.clone(this.attributes);
+    },
+
+    // Proxy `Backbone.sync` by default -- but override this if you need
+    // custom syncing semantics for *this* particular model.
+    sync: function() {
+      return Backbone.sync.apply(this, arguments);
+    },
+
+    // Get the value of an attribute.
+    get: function(attr) {
+      return this.attributes[attr];
+    },
+
+    // Get the HTML-escaped value of an attribute.
+    escape: function(attr) {
+      return _.escape(this.get(attr));
+    },
+
+    // Returns `true` if the attribute contains a value that is not null
+    // or undefined.
+    has: function(attr) {
+      return this.get(attr) != null;
+    },
+
+    // Set a hash of model attributes on the object, firing `"change"`. This is
+    // the core primitive operation of a model, updating the data and notifying
+    // anyone who needs to know about the change in state. The heart of the beast.
+    set: function(key, val, options) {
+      var attr, attrs, unset, changes, silent, changing, prev, current;
+      if (key == null) return this;
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (typeof key === 'object') {
+        attrs = key;
+        options = val;
+      } else {
+        (attrs = {})[key] = val;
+      }
+
+      options || (options = {});
+
+      // Run validation.
+      if (!this._validate(attrs, options)) return false;
+
+      // Extract attributes and options.
+      unset           = options.unset;
+      silent          = options.silent;
+      changes         = [];
+      changing        = this._changing;
+      this._changing  = true;
+
+      if (!changing) {
+        this._previousAttributes = _.clone(this.attributes);
+        this.changed = {};
+      }
+      current = this.attributes, prev = this._previousAttributes;
+
+      // Check for changes of `id`.
+      if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
+
+      // For each `set` attribute, update or delete the current value.
+      for (attr in attrs) {
+        val = attrs[attr];
+        if (!_.isEqual(current[attr], val)) changes.push(attr);
+        if (!_.isEqual(prev[attr], val)) {
+          this.changed[attr] = val;
+        } else {
+          delete this.changed[attr];
+        }
+        unset ? delete current[attr] : current[attr] = val;
+      }
+
+      // Trigger all relevant attribute changes.
+      if (!silent) {
+        if (changes.length) this._pending = options;
+        for (var i = 0, l = changes.length; i < l; i++) {
+          this.trigger('change:' + changes[i], this, current[changes[i]], options);
+        }
+      }
+
+      // You might be wondering why there's a `while` loop here. Changes can
+      // be recursively nested within `"change"` events.
+      if (changing) return this;
+      if (!silent) {
+        while (this._pending) {
+          options = this._pending;
+          this._pending = false;
+          this.trigger('change', this, options);
+        }
+      }
+      this._pending = false;
+      this._changing = false;
+      return this;
+    },
+
+    // Remove an attribute from the model, firing `"change"`. `unset` is a noop
+    // if the attribute doesn't exist.
+    unset: function(attr, options) {
+      return this.set(attr, void 0, _.extend({}, options, {unset: true}));
+    },
+
+    // Clear all attributes on the model, firing `"change"`.
+    clear: function(options) {
+      var attrs = {};
+      for (var key in this.attributes) attrs[key] = void 0;
+      return this.set(attrs, _.extend({}, options, {unset: true}));
+    },
+
+    // Determine if the model has changed since the last `"change"` event.
+    // If you specify an attribute name, determine if that attribute has changed.
+    hasChanged: function(attr) {
+      if (attr == null) return !_.isEmpty(this.changed);
+      return _.has(this.changed, attr);
+    },
+
+    // Return an object containing all the attributes that have changed, or
+    // false if there are no changed attributes. Useful for determining what
+    // parts of a view need to be updated and/or what attributes need to be
+    // persisted to the server. Unset attributes will be set to undefined.
+    // You can also pass an attributes object to diff against the model,
+    // determining if there *would be* a change.
+    changedAttributes: function(diff) {
+      if (!diff) return this.hasChanged() ? _.clone(this.changed) : false;
+      var val, changed = false;
+      var old = this._changing ? this._previousAttributes : this.attributes;
+      for (var attr in diff) {
+        if (_.isEqual(old[attr], (val = diff[attr]))) continue;
+        (changed || (changed = {}))[attr] = val;
+      }
+      return changed;
+    },
+
+    // Get the previous value of an attribute, recorded at the time the last
+    // `"change"` event was fired.
+    previous: function(attr) {
+      if (attr == null || !this._previousAttributes) return null;
+      return this._previousAttributes[attr];
+    },
+
+    // Get all of the attributes of the model at the time of the previous
+    // `"change"` event.
+    previousAttributes: function() {
+      return _.clone(this._previousAttributes);
+    },
+
+    // Fetch the model from the server. If the server's representation of the
+    // model differs from its current attributes, they will be overridden,
+    // triggering a `"change"` event.
+    fetch: function(options) {
+      options = options ? _.clone(options) : {};
+      if (options.parse === void 0) options.parse = true;
+      var model = this;
+      var success = options.success;
+      options.success = function(resp) {
+        if (!model.set(model.parse(resp, options), options)) return false;
+        if (success) success(model, resp, options);
+        model.trigger('sync', model, resp, options);
+      };
+      wrapError(this, options);
+      return this.sync('read', this, options);
+    },
+
+    // Set a hash of model attributes, and sync the model to the server.
+    // If the server returns an attributes hash that differs, the model's
+    // state will be `set` again.
+    save: function(key, val, options) {
+      var attrs, method, xhr, attributes = this.attributes;
+
+      // Handle both `"key", value` and `{key: value}` -style arguments.
+      if (key == null || typeof key === 'object') {
+        attrs = key;
+        options = val;
+      } else {
+        (attrs = {})[key] = val;
+      }
+
+      options = _.extend({validate: true}, options);
+
+      // If we're not waiting and attributes exist, save acts as
+      // `set(attr).save(null, opts)` with validation. Otherwise, check if
+      // the model will be valid when the attributes, if any, are set.
+      if (attrs && !options.wait) {
+        if (!this.set(attrs, options)) return false;
+      } else {
+        if (!this._validate(attrs, options)) return false;
+      }
+
+      // Set temporary attributes if `{wait: true}`.
+      if (attrs && options.wait) {
+        this.attributes = _.extend({}, attributes, attrs);
+      }
+
+      // After a successful server-side save, the client is (optionally)
+      // updated with the server-side state.
+      if (options.parse === void 0) options.parse = true;
+      var model = this;
+      var success = options.success;
+      options.success = function(resp) {
+        // Ensure attributes are restored during synchronous saves.
+        model.attributes = attributes;
+        var serverAttrs = model.parse(resp, options);
+        if (options.wait) serverAttrs = _.extend(attrs || {}, serverAttrs);
+        if (_.isObject(serverAttrs) && !model.set(serverAttrs, options)) {
+          return false;
+        }
+        if (success) success(model, resp, options);
+        model.trigger('sync', model, resp, options);
+      };
+      wrapError(this, options);
+
+      method = this.isNew() ? 'create' : (options.patch ? 'patch' : 'update');
+      if (method === 'patch') options.attrs = attrs;
+      xhr = this.sync(method, this, options);
+
+      // Restore attributes.
+      if (attrs && options.wait) this.attributes = attributes;
+
+      return xhr;
+    },
+
+    // Destroy this model on the server if it was already persisted.
+    // Optimistically removes the model from its collection, if it has one.
+    // If `wait: true` is passed, waits for the server to respond before removal.
+    destroy: function(options) {
+      options = options ? _.clone(options) : {};
+      var model = this;
+      var success = options.success;
+
+      var destroy = function() {
+        model.trigger('destroy', model, model.collection, options);
+      };
+
+      options.success = function(resp) {
+        if (options.wait || model.isNew()) destroy();
+        if (success) success(model, resp, options);
+        if (!model.isNew()) model.trigger('sync', model, resp, options);
+      };
+
+      if (this.isNew()) {
+        options.success();
+        return false;
+      }
+      wrapError(this, options);
+
+      var xhr = this.sync('delete', this, options);
+      if (!options.wait) destroy();
+      return xhr;
+    },
+
+    // Default URL for the model's representation on the server -- if you're
+    // using Backbone's restful methods, override this to change the endpoint
+    // that will be called.
+    url: function() {
+      var base =
+        _.result(this, 'urlRoot') ||
+        _.result(this.collection, 'url') ||
+        urlError();
+      if (this.isNew()) return base;
+      return base.replace(/([^\/])$/, '$1/') + encodeURIComponent(this.id);
+    },
+
+    // **parse** converts a response into the hash of attributes to be `set` on
+    // the model. The default implementation is just to pass the response along.
+    parse: function(resp, options) {
+      return resp;
+    },
+
+    // Create a new model with identical attributes to this one.
+    clone: function() {
+      return new this.constructor(this.attributes);
+    },
+
+    // A model is new if it has never been saved to the server, and lacks an id.
+    isNew: function() {
+      return !this.has(this.idAttribute);
+    },
+
+    // Check if the model is currently in a valid state.
+    isValid: function(options) {
+      return this._validate({}, _.extend(options || {}, { validate: true }));
+    },
+
+    // Run validation against the next complete set of model attributes,
+    // returning `true` if all is well. Otherwise, fire an `"invalid"` event.
+    _validate: function(attrs, options) {
+      if (!options.validate || !this.validate) return true;
+      attrs = _.extend({}, this.attributes, attrs);
+      var error = this.validationError = this.validate(attrs, options) || null;
+      if (!error) return true;
+      this.trigger('invalid', this, error, _.extend(options, {validationError: error}));
+      return false;
+    }
+
+  });
+
+  // Underscore methods that we want to implement on the Model.
+  var modelMethods = ['keys', 'values', 'pairs', 'invert', 'pick', 'omit'];
+
+  // Mix in each Underscore method as a proxy to `Model#attributes`.
+  _.each(modelMethods, function(method) {
+    Model.prototype[method] = function() {
+      var args = slice.call(arguments);
+      args.unshift(this.attributes);
+      return _[method].apply(_, args);
+    };
+  });
+
+  // Backbone.Collection
+  // -------------------
+
+  // If models tend to represent a single row of data, a Backbone Collection is
+  // more analagous to a table full of data ... or a small slice or page of that
+  // table, or a collection of rows that belong together for a particular reason
+  // -- all of the messages in this particular folder, all of the documents
+  // belonging to this particular author, and so on. Collections maintain
+  // indexes of their models, both in order, and for lookup by `id`.
+
+  // Create a new **Collection**, perhaps to contain a specific type of `model`.
+  // If a `comparator` is specified, the Collection will maintain
+  // its models in sort order, as they're added and removed.
+  var Collection = Backbone.Collection = function(models, options) {
+    options || (options = {});
+    if (options.model) this.model = options.model;
+    if (options.comparator !== void 0) this.comparator = options.comparator;
+    this._reset();
+    this.initialize.apply(this, arguments);
+    if (models) this.reset(models, _.extend({silent: true}, options));
+  };
+
+  // Default options for `Collection#set`.
+  var setOptions = {add: true, remove: true, merge: true};
+  var addOptions = {add: true, remove: false};
+
+  // Define the Collection's inheritable methods.
+  _.extend(Collection.prototype, Events, {
+
+    // The default model for a collection is just a **Backbone.Model**.
+    // This should be overridden in most cases.
+    model: Model,
+
+    // Initialize is an empty function by default. Override it with your own
+    // initialization logic.
+    initialize: function(){},
+
+    // The JSON representation of a Collection is an array of the
+    // models' attributes.
+    toJSON: function(options) {
+      return this.map(function(model){ return model.toJSON(options); });
+    },
+
+    // Proxy `Backbone.sync` by default.
+    sync: function() {
+      return Backbone.sync.apply(this, arguments);
+    },
+
+    // Add a model, or list of models to the set.
+    add: function(models, options) {
+      return this.set(models, _.extend({merge: false}, options, addOptions));
+    },
+
+    // Remove a model, or a list of models from the set.
+    remove: function(models, options) {
+      var singular = !_.isArray(models);
+      models = singular ? [models] : _.clone(models);
+      options || (options = {});
+      var i, l, index, model;
+      for (i = 0, l = models.length; i < l; i++) {
+        model = models[i] = this.get(models[i]);
+        if (!model) continue;
+        delete this._byId[model.id];
+        delete this._byId[model.cid];
+        index = this.indexOf(model);
+        this.models.splice(index, 1);
+        this.length--;
+        if (!options.silent) {
+          options.index = index;
+          model.trigger('remove', model, this, options);
+        }
+        this._removeReference(model, options);
+      }
+      return singular ? models[0] : models;
+    },
+
+    // Update a collection by `set`-ing a new list of models, adding new ones,
+    // removing models that are no longer present, and merging models that
+    // already exist in the collection, as necessary. Similar to **Model#set**,
+    // the core operation for updating the data contained by the collection.
+    set: function(models, options) {
+      options = _.defaults({}, options, setOptions);
+      if (options.parse) models = this.parse(models, options);
+      var singular = !_.isArray(models);
+      models = singular ? (models ? [models] : []) : _.clone(models);
+      var i, l, id, model, attrs, existing, sort;
+      var at = options.at;
+      var targetModel = this.model;
+      var sortable = this.comparator && (at == null) && options.sort !== false;
+      var sortAttr = _.isString(this.comparator) ? this.comparator : null;
+      var toAdd = [], toRemove = [], modelMap = {};
+      var add = options.add, merge = options.merge, remove = options.remove;
+      var order = !sortable && add && remove ? [] : false;
+
+      // Turn bare objects into model references, and prevent invalid models
+      // from being added.
+      for (i = 0, l = models.length; i < l; i++) {
+        attrs = models[i] || {};
+        if (attrs instanceof Model) {
+          id = model = attrs;
+        } else {
+          id = attrs[targetModel.prototype.idAttribute || 'id'];
+        }
+
+        // If a duplicate is found, prevent it from being added and
+        // optionally merge it into the existing model.
+        if (existing = this.get(id)) {
+          if (remove) modelMap[existing.cid] = true;
+          if (merge) {
+            attrs = attrs === model ? model.attributes : attrs;
+            if (options.parse) attrs = existing.parse(attrs, options);
+            existing.set(attrs, options);
+            if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
+          }
+          models[i] = existing;
+
+        // If this is a new, valid model, push it to the `toAdd` list.
+        } else if (add) {
+          model = models[i] = this._prepareModel(attrs, options);
+          if (!model) continue;
+          toAdd.push(model);
+          this._addReference(model, options);
+        }
+
+        // Do not add multiple models with the same `id`.
+        model = existing || model;
+        if (order && (model.isNew() || !modelMap[model.id])) order.push(model);
+        modelMap[model.id] = true;
+      }
+
+      // Remove nonexistent models if appropriate.
+      if (remove) {
+        for (i = 0, l = this.length; i < l; ++i) {
+          if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
+        }
+        if (toRemove.length) this.remove(toRemove, options);
+      }
+
+      // See if sorting is needed, update `length` and splice in new models.
+      if (toAdd.length || (order && order.length)) {
+        if (sortable) sort = true;
+        this.length += toAdd.length;
+        if (at != null) {
+          for (i = 0, l = toAdd.length; i < l; i++) {
+            this.models.splice(at + i, 0, toAdd[i]);
+          }
+        } else {
+          if (order) this.models.length = 0;
+          var orderedModels = order || toAdd;
+          for (i = 0, l = orderedModels.length; i < l; i++) {
+            this.models.push(orderedModels[i]);
+          }
+        }
+      }
+
+      // Silently sort the collection if appropriate.
+      if (sort) this.sort({silent: true});
+
+      // Unless silenced, it's time to fire all appropriate add/sort events.
+      if (!options.silent) {
+        for (i = 0, l = toAdd.length; i < l; i++) {
+          (model = toAdd[i]).trigger('add', model, this, options);
+        }
+        if (sort || (order && order.length)) this.trigger('sort', this, options);
+      }
+
+      // Return the added (or merged) model (or models).
+      return singular ? models[0] : models;
+    },
+
+    // When you have more items than you want to add or remove individually,
+    // you can reset the entire set with a new list of models, without firing
+    // any granular `add` or `remove` events. Fires `reset` when finished.
+    // Useful for bulk operations and optimizations.
+    reset: function(models, options) {
+      options || (options = {});
+      for (var i = 0, l = this.models.length; i < l; i++) {
+        this._removeReference(this.models[i], options);
+      }
+      options.previousModels = this.models;
+      this._reset();
+      models = this.add(models, _.extend({silent: true}, options));
+      if (!options.silent) this.trigger('reset', this, options);
+      return models;
+    },
+
+    // Add a model to the end of the collection.
+    push: function(model, options) {
+      return this.add(model, _.extend({at: this.length}, options));
+    },
+
+    // Remove a model from the end of the collection.
+    pop: function(options) {
+      var model = this.at(this.length - 1);
+      this.remove(model, options);
+      return model;
+    },
+
+    // Add a model to the beginning of the collection.
+    unshift: function(model, options) {
+      return this.add(model, _.extend({at: 0}, options));
+    },
+
+    // Remove a model from the beginning of the collection.
+    shift: function(options) {
+      var model = this.at(0);
+      this.remove(model, options);
+      return model;
+    },
+
+    // Slice out a sub-array of models from the collection.
+    slice: function() {
+      return slice.apply(this.models, arguments);
+    },
+
+    // Get a model from the set by id.
+    get: function(obj) {
+      if (obj == null) return void 0;
+      return this._byId[obj] || this._byId[obj.id] || this._byId[obj.cid];
+    },
+
+    // Get the model at the given index.
+    at: function(index) {
+      return this.models[index];
+    },
+
+    // Return models with matching attributes. Useful for simple cases of
+    // `filter`.
+    where: function(attrs, first) {
+      if (_.isEmpty(attrs)) return first ? void 0 : [];
+      return this[first ? 'find' : 'filter'](function(model) {
+        for (var key in attrs) {
+          if (attrs[key] !== model.get(key)) return false;
+        }
+        return true;
+      });
+    },
+
+    // Return the first model with matching attributes. Useful for simple cases
+    // of `find`.
+    findWhere: function(attrs) {
+      return this.where(attrs, true);
+    },
+
+    // Force the collection to re-sort itself. You don't need to call this under
+    // normal circumstances, as the set will maintain sort order as each item
+    // is added.
+    sort: function(options) {
+      if (!this.comparator) throw new Error('Cannot sort a set without a comparator');
+      options || (options = {});
+
+      // Run sort based on type of `comparator`.
+      if (_.isString(this.comparator) || this.comparator.length === 1) {
+        this.models = this.sortBy(this.comparator, this);
+      } else {
+        this.models.sort(_.bind(this.comparator, this));
+      }
+
+      if (!options.silent) this.trigger('sort', this, options);
+      return this;
+    },
+
+    // Pluck an attribute from each model in the collection.
+    pluck: function(attr) {
+      return _.invoke(this.models, 'get', attr);
+    },
+
+    // Fetch the default set of models for this collection, resetting the
+    // collection when they arrive. If `reset: true` is passed, the response
+    // data will be passed through the `reset` method instead of `set`.
+    fetch: function(options) {
+      options = options ? _.clone(options) : {};
+      if (options.parse === void 0) options.parse = true;
+      var success = options.success;
+      var collection = this;
+      options.success = function(resp) {
+        var method = options.reset ? 'reset' : 'set';
+        collection[method](resp, options);
+        if (success) success(collection, resp, options);
+        collection.trigger('sync', collection, resp, options);
+      };
+      wrapError(this, options);
+      return this.sync('read', this, options);
+    },
+
+    // Create a new instance of a model in this collection. Add the model to the
+    // collection immediately, unless `wait: true` is passed, in which case we
+    // wait for the server to agree.
+    create: function(model, options) {
+      options = options ? _.clone(options) : {};
+      if (!(model = this._prepareModel(model, options))) return false;
+      if (!options.wait) this.add(model, options);
+      var collection = this;
+      var success = options.success;
+      options.success = function(model, resp) {
+        if (options.wait) collection.add(model, options);
+        if (success) success(model, resp, options);
+      };
+      model.save(null, options);
+      return model;
+    },
+
+    // **parse** converts a response into a list of models to be added to the
+    // collection. The default implementation is just to pass it through.
+    parse: function(resp, options) {
+      return resp;
+    },
+
+    // Create a new collection with an identical list of models as this one.
+    clone: function() {
+      return new this.constructor(this.models);
+    },
+
+    // Private method to reset all internal state. Called when the collection
+    // is first initialized or reset.
+    _reset: function() {
+      this.length = 0;
+      this.models = [];
+      this._byId  = {};
+    },
+
+    // Prepare a hash of attributes (or other model) to be added to this
+    // collection.
+    _prepareModel: function(attrs, options) {
+      if (attrs instanceof Model) return attrs;
+      options = options ? _.clone(options) : {};
+      options.collection = this;
+      var model = new this.model(attrs, options);
+      if (!model.validationError) return model;
+      this.trigger('invalid', this, model.validationError, options);
+      return false;
+    },
+
+    // Internal method to create a model's ties to a collection.
+    _addReference: function(model, options) {
+      this._byId[model.cid] = model;
+      if (model.id != null) this._byId[model.id] = model;
+      if (!model.collection) model.collection = this;
+      model.on('all', this._onModelEvent, this);
+    },
+
+    // Internal method to sever a model's ties to a collection.
+    _removeReference: function(model, options) {
+      if (this === model.collection) delete model.collection;
+      model.off('all', this._onModelEvent, this);
+    },
+
+    // Internal method called every time a model in the set fires an event.
+    // Sets need to update their indexes when models change ids. All other
+    // events simply proxy through. "add" and "remove" events that originate
+    // in other collections are ignored.
+    _onModelEvent: function(event, model, collection, options) {
+      if ((event === 'add' || event === 'remove') && collection !== this) return;
+      if (event === 'destroy') this.remove(model, options);
+      if (model && event === 'change:' + model.idAttribute) {
+        delete this._byId[model.previous(model.idAttribute)];
+        if (model.id != null) this._byId[model.id] = model;
+      }
+      this.trigger.apply(this, arguments);
+    }
+
+  });
+
+  // Underscore methods that we want to implement on the Collection.
+  // 90% of the core usefulness of Backbone Collections is actually implemented
+  // right here:
+  var methods = ['forEach', 'each', 'map', 'collect', 'reduce', 'foldl',
+    'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
+    'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
+    'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
+    'tail', 'drop', 'last', 'without', 'difference', 'indexOf', 'shuffle',
+    'lastIndexOf', 'isEmpty', 'chain', 'sample'];
+
+  // Mix in each Underscore method as a proxy to `Collection#models`.
+  _.each(methods, function(method) {
+    Collection.prototype[method] = function() {
+      var args = slice.call(arguments);
+      args.unshift(this.models);
+      return _[method].apply(_, args);
+    };
+  });
+
+  // Underscore methods that take a property name as an argument.
+  var attributeMethods = ['groupBy', 'countBy', 'sortBy', 'indexBy'];
+
+  // Use attributes instead of properties.
+  _.each(attributeMethods, function(method) {
+    Collection.prototype[method] = function(value, context) {
+      var iterator = _.isFunction(value) ? value : function(model) {
+        return model.get(value);
+      };
+      return _[method](this.models, iterator, context);
+    };
+  });
+
+  // Backbone.View
+  // -------------
+
+  // Backbone Views are almost more convention than they are actual code. A View
+  // is simply a JavaScript object that represents a logical chunk of UI in the
+  // DOM. This might be a single item, an entire list, a sidebar or panel, or
+  // even the surrounding frame which wraps your whole app. Defining a chunk of
+  // UI as a **View** allows you to define your DOM events declaratively, without
+  // having to worry about render order ... and makes it easy for the view to
+  // react to specific changes in the state of your models.
+
+  // Creating a Backbone.View creates its initial element outside of the DOM,
+  // if an existing element is not provided...
+  var View = Backbone.View = function(options) {
+    this.cid = _.uniqueId('view');
+    options || (options = {});
+    _.extend(this, _.pick(options, viewOptions));
+    this._ensureElement();
+    this.initialize.apply(this, arguments);
+    this.delegateEvents();
+  };
+
+  // Cached regex to split keys for `delegate`.
+  var delegateEventSplitter = /^(\S+)\s*(.*)$/;
+
+  // List of view options to be merged as properties.
+  var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events'];
+
+  // Set up all inheritable **Backbone.View** properties and methods.
+  _.extend(View.prototype, Events, {
+
+    // The default `tagName` of a View's element is `"div"`.
+    tagName: 'div',
+
+    // jQuery delegate for element lookup, scoped to DOM elements within the
+    // current view. This should be preferred to global lookups where possible.
+    $: function(selector) {
+      return this.$el.find(selector);
+    },
+
+    // Initialize is an empty function by default. Override it with your own
+    // initialization logic.
+    initialize: function(){},
+
+    // **render** is the core function that your view should override, in order
+    // to populate its element (`this.el`), with the appropriate HTML. The
+    // convention is for **render** to always return `this`.
+    render: function() {
+      return this;
+    },
+
+    // Remove this view by taking the element out of the DOM, and removing any
+    // applicable Backbone.Events listeners.
+    remove: function() {
+      this.$el.remove();
+      this.stopListening();
+      return this;
+    },
+
+    // Change the view's element (`this.el` property), including event
+    // re-delegation.
+    setElement: function(element, delegate) {
+      if (this.$el) this.undelegateEvents();
+      this.$el = element instanceof Backbone.$ ? element : Backbone.$(element);
+      this.el = this.$el[0];
+      if (delegate !== false) this.delegateEvents();
+      return this;
+    },
+
+    // Set callbacks, where `this.events` is a hash of
+    //
+    // *{"event selector": "callback"}*
+    //
+    //     {
+    //       'mousedown .title':  'edit',
+    //       'click .button':     'save',
+    //       'click .open':       function(e) { ... }
+    //     }
+    //
+    // pairs. Callbacks will be bound to the view, with `this` set properly.
+    // Uses event delegation for efficiency.
+    // Omitting the selector binds the event to `this.el`.
+    // This only works for delegate-able events: not `focus`, `blur`, and
+    // not `change`, `submit`, and `reset` in Internet Explorer.
+    delegateEvents: function(events) {
+      if (!(events || (events = _.result(this, 'events')))) return this;
+      this.undelegateEvents();
+      for (var key in events) {
+        var method = events[key];
+        if (!_.isFunction(method)) method = this[events[key]];
+        if (!method) continue;
+
+        var match = key.match(delegateEventSplitter);
+        var eventName = match[1], selector = match[2];
+        method = _.bind(method, this);
+        eventName += '.delegateEvents' + this.cid;
+        if (selector === '') {
+          this.$el.on(eventName, method);
+        } else {
+          this.$el.on(eventName, selector, method);
+        }
+      }
+      return this;
+    },
+
+    // Clears all callbacks previously bound to the view with `delegateEvents`.
+    // You usually don't need to use this, but may wish to if you have multiple
+    // Backbone views attached to the same DOM element.
+    undelegateEvents: function() {
+      this.$el.off('.delegateEvents' + this.cid);
+      return this;
+    },
+
+    // Ensure that the View has a DOM element to render into.
+    // If `this.el` is a string, pass it through `$()`, take the first
+    // matching element, and re-assign it to `el`. Otherwise, create
+    // an element from the `id`, `className` and `tagName` properties.
+    _ensureElement: function() {
+      if (!this.el) {
+        var attrs = _.extend({}, _.result(this, 'attributes'));
+        if (this.id) attrs.id = _.result(this, 'id');
+        if (this.className) attrs['class'] = _.result(this, 'className');
+        var $el = Backbone.$('<' + _.result(this, 'tagName') + '>').attr(attrs);
+        this.setElement($el, false);
+      } else {
+        this.setElement(_.result(this, 'el'), false);
+      }
+    }
+
+  });
+
+  // Backbone.sync
+  // -------------
+
+  // Override this function to change the manner in which Backbone persists
+  // models to the server. You will be passed the type of request, and the
+  // model in question. By default, makes a RESTful Ajax request
+  // to the model's `url()`. Some possible customizations could be:
+  //
+  // * Use `setTimeout` to batch rapid-fire updates into a single request.
+  // * Send up the models as XML instead of JSON.
+  // * Persist models via WebSockets instead of Ajax.
+  //
+  // Turn on `Backbone.emulateHTTP` in order to send `PUT` and `DELETE` requests
+  // as `POST`, with a `_method` parameter containing the true HTTP method,
+  // as well as all requests with the body as `application/x-www-form-urlencoded`
+  // instead of `application/json` with the model in a param named `model`.
+  // Useful when interfacing with server-side languages like **PHP** that make
+  // it difficult to read the body of `PUT` requests.
+  Backbone.sync = function(method, model, options) {
+    var type = methodMap[method];
+
+    // Default options, unless specified.
+    _.defaults(options || (options = {}), {
+      emulateHTTP: Backbone.emulateHTTP,
+      emulateJSON: Backbone.emulateJSON
+    });
+
+    // Default JSON-request options.
+    var params = {type: type, dataType: 'json'};
+
+    // Ensure that we have a URL.
+    if (!options.url) {
+      params.url = _.result(model, 'url') || urlError();
+    }
+
+    // Ensure that we have the appropriate request data.
+    if (options.data == null && model && (method === 'create' || method === 'update' || method === 'patch')) {
+      params.contentType = 'application/json';
+      params.data = JSON.stringify(options.attrs || model.toJSON(options));
+    }
+
+    // For older servers, emulate JSON by encoding the request into an HTML-form.
+    if (options.emulateJSON) {
+      params.contentType = 'application/x-www-form-urlencoded';
+      params.data = params.data ? {model: params.data} : {};
+    }
+
+    // For older servers, emulate HTTP by mimicking the HTTP method with `_method`
+    // And an `X-HTTP-Method-Override` header.
+    if (options.emulateHTTP && (type === 'PUT' || type === 'DELETE' || type === 'PATCH')) {
+      params.type = 'POST';
+      if (options.emulateJSON) params.data._method = type;
+      var beforeSend = options.beforeSend;
+      options.beforeSend = function(xhr) {
+        xhr.setRequestHeader('X-HTTP-Method-Override', type);
+        if (beforeSend) return beforeSend.apply(this, arguments);
+      };
+    }
+
+    // Don't process data on a non-GET request.
+    if (params.type !== 'GET' && !options.emulateJSON) {
+      params.processData = false;
+    }
+
+    // If we're sending a `PATCH` request, and we're in an old Internet Explorer
+    // that still has ActiveX enabled by default, override jQuery to use that
+    // for XHR instead. Remove this line when jQuery supports `PATCH` on IE8.
+    if (params.type === 'PATCH' && noXhrPatch) {
+      params.xhr = function() {
+        return new ActiveXObject("Microsoft.XMLHTTP");
+      };
+    }
+
+    // Make the request, allowing the user to override any Ajax options.
+    var xhr = options.xhr = Backbone.ajax(_.extend(params, options));
+    model.trigger('request', model, xhr, options);
+    return xhr;
+  };
+
+  var noXhrPatch =
+    typeof window !== 'undefined' && !!window.ActiveXObject &&
+      !(window.XMLHttpRequest && (new XMLHttpRequest).dispatchEvent);
+
+  // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
+  var methodMap = {
+    'create': 'POST',
+    'update': 'PUT',
+    'patch':  'PATCH',
+    'delete': 'DELETE',
+    'read':   'GET'
+  };
+
+  // Set the default implementation of `Backbone.ajax` to proxy through to `$`.
+  // Override this if you'd like to use a different library.
+  Backbone.ajax = function() {
+    return Backbone.$.ajax.apply(Backbone.$, arguments);
+  };
+
+  // Backbone.Router
+  // ---------------
+
+  // Routers map faux-URLs to actions, and fire events when routes are
+  // matched. Creating a new one sets its `routes` hash, if not set statically.
+  var Router = Backbone.Router = function(options) {
+    options || (options = {});
+    if (options.routes) this.routes = options.routes;
+    this._bindRoutes();
+    this.initialize.apply(this, arguments);
+  };
+
+  // Cached regular expressions for matching named param parts and splatted
+  // parts of route strings.
+  var optionalParam = /\((.*?)\)/g;
+  var namedParam    = /(\(\?)?:\w+/g;
+  var splatParam    = /\*\w+/g;
+  var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
+
+  // Set up all inheritable **Backbone.Router** properties and methods.
+  _.extend(Router.prototype, Events, {
+
+    // Initialize is an empty function by default. Override it with your own
+    // initialization logic.
+    initialize: function(){},
+
+    // Manually bind a single named route to a callback. For example:
+    //
+    //     this.route('search/:query/p:num', 'search', function(query, num) {
+    //       ...
+    //     });
+    //
+    route: function(route, name, callback) {
+      if (!_.isRegExp(route)) route = this._routeToRegExp(route);
+      if (_.isFunction(name)) {
+        callback = name;
+        name = '';
+      }
+      if (!callback) callback = this[name];
+      var router = this;
+      Backbone.history.route(route, function(fragment) {
+        var args = router._extractParameters(route, fragment);
+        router.execute(callback, args);
+        router.trigger.apply(router, ['route:' + name].concat(args));
+        router.trigger('route', name, args);
+        Backbone.history.trigger('route', router, name, args);
+      });
+      return this;
+    },
+
+    // Execute a route handler with the provided parameters.  This is an
+    // excellent place to do pre-route setup or post-route cleanup.
+    execute: function(callback, args) {
+      if (callback) callback.apply(this, args);
+    },
+
+    // Simple proxy to `Backbone.history` to save a fragment into the history.
+    navigate: function(fragment, options) {
+      Backbone.history.navigate(fragment, options);
+      return this;
+    },
+
+    // Bind all defined routes to `Backbone.history`. We have to reverse the
+    // order of the routes here to support behavior where the most general
+    // routes can be defined at the bottom of the route map.
+    _bindRoutes: function() {
+      if (!this.routes) return;
+      this.routes = _.result(this, 'routes');
+      var route, routes = _.keys(this.routes);
+      while ((route = routes.pop()) != null) {
+        this.route(route, this.routes[route]);
+      }
+    },
+
+    // Convert a route string into a regular expression, suitable for matching
+    // against the current location hash.
+    _routeToRegExp: function(route) {
+      route = route.replace(escapeRegExp, '\\$&')
+                   .replace(optionalParam, '(?:$1)?')
+                   .replace(namedParam, function(match, optional) {
+                     return optional ? match : '([^/?]+)';
+                   })
+                   .replace(splatParam, '([^?]*?)');
+      return new RegExp('^' + route + '(?:\\?([\\s\\S]*))?$');
+    },
+
+    // Given a route, and a URL fragment that it matches, return the array of
+    // extracted decoded parameters. Empty or unmatched parameters will be
+    // treated as `null` to normalize cross-browser behavior.
+    _extractParameters: function(route, fragment) {
+      var params = route.exec(fragment).slice(1);
+      return _.map(params, function(param, i) {
+        // Don't decode the search params.
+        if (i === params.length - 1) return param || null;
+        return param ? decodeURIComponent(param) : null;
+      });
+    }
+
+  });
+
+  // Backbone.History
+  // ----------------
+
+  // Handles cross-browser history management, based on either
+  // [pushState](http://diveintohtml5.info/history.html) and real URLs, or
+  // [onhashchange](https://developer.mozilla.org/en-US/docs/DOM/window.onhashchange)
+  // and URL fragments. If the browser supports neither (old IE, natch),
+  // falls back to polling.
+  var History = Backbone.History = function() {
+    this.handlers = [];
+    _.bindAll(this, 'checkUrl');
+
+    // Ensure that `History` can be used outside of the browser.
+    if (typeof window !== 'undefined') {
+      this.location = window.location;
+      this.history = window.history;
+    }
+  };
+
+  // Cached regex for stripping a leading hash/slash and trailing space.
+  var routeStripper = /^[#\/]|\s+$/g;
+
+  // Cached regex for stripping leading and trailing slashes.
+  var rootStripper = /^\/+|\/+$/g;
+
+  // Cached regex for detecting MSIE.
+  var isExplorer = /msie [\w.]+/;
+
+  // Cached regex for removing a trailing slash.
+  var trailingSlash = /\/$/;
+
+  // Cached regex for stripping urls of hash.
+  var pathStripper = /#.*$/;
+
+  // Has the history handling already been started?
+  History.started = false;
+
+  // Set up all inheritable **Backbone.History** properties and methods.
+  _.extend(History.prototype, Events, {
+
+    // The default interval to poll for hash changes, if necessary, is
+    // twenty times a second.
+    interval: 50,
+
+    // Are we at the app root?
+    atRoot: function() {
+      return this.location.pathname.replace(/[^\/]$/, '$&/') === this.root;
+    },
+
+    // Gets the true hash value. Cannot use location.hash directly due to bug
+    // in Firefox where location.hash will always be decoded.
+    getHash: function(window) {
+      var match = (window || this).location.href.match(/#(.*)$/);
+      return match ? match[1] : '';
+    },
+
+    // Get the cross-browser normalized URL fragment, either from the URL,
+    // the hash, or the override.
+    getFragment: function(fragment, forcePushState) {
+      if (fragment == null) {
+        if (this._hasPushState || !this._wantsHashChange || forcePushState) {
+          fragment = decodeURI(this.location.pathname + this.location.search);
+          var root = this.root.replace(trailingSlash, '');
+          if (!fragment.indexOf(root)) fragment = fragment.slice(root.length);
+        } else {
+          fragment = this.getHash();
+        }
+      }
+      return fragment.replace(routeStripper, '');
+    },
+
+    // Start the hash change handling, returning `true` if the current URL matches
+    // an existing route, and `false` otherwise.
+    start: function(options) {
+      if (History.started) throw new Error("Backbone.history has already been started");
+      History.started = true;
+
+      // Figure out the initial configuration. Do we need an iframe?
+      // Is pushState desired ... is it available?
+      this.options          = _.extend({root: '/'}, this.options, options);
+      this.root             = this.options.root;
+      this._wantsHashChange = this.options.hashChange !== false;
+      this._wantsPushState  = !!this.options.pushState;
+      this._hasPushState    = !!(this.options.pushState && this.history && this.history.pushState);
+      var fragment          = this.getFragment();
+      var docMode           = document.documentMode;
+      var oldIE             = (isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
+
+      // Normalize root to always include a leading and trailing slash.
+      this.root = ('/' + this.root + '/').replace(rootStripper, '/');
+
+      if (oldIE && this._wantsHashChange) {
+        var frame = Backbone.$('<iframe src="javascript:0" tabindex="-1">');
+        this.iframe = frame.hide().appendTo('body')[0].contentWindow;
+        this.navigate(fragment);
+      }
+
+      // Depending on whether we're using pushState or hashes, and whether
+      // 'onhashchange' is supported, determine how we check the URL state.
+      if (this._hasPushState) {
+        Backbone.$(window).on('popstate', this.checkUrl);
+      } else if (this._wantsHashChange && ('onhashchange' in window) && !oldIE) {
+        Backbone.$(window).on('hashchange', this.checkUrl);
+      } else if (this._wantsHashChange) {
+        this._checkUrlInterval = setInterval(this.checkUrl, this.interval);
+      }
+
+      // Determine if we need to change the base url, for a pushState link
+      // opened by a non-pushState browser.
+      this.fragment = fragment;
+      var loc = this.location;
+
+      // Transition from hashChange to pushState or vice versa if both are
+      // requested.
+      if (this._wantsHashChange && this._wantsPushState) {
+
+        // If we've started off with a route from a `pushState`-enabled
+        // browser, but we're currently in a browser that doesn't support it...
+        if (!this._hasPushState && !this.atRoot()) {
+          this.fragment = this.getFragment(null, true);
+          this.location.replace(this.root + '#' + this.fragment);
+          // Return immediately as browser will do redirect to new url
+          return true;
+
+        // Or if we've started out with a hash-based route, but we're currently
+        // in a browser where it could be `pushState`-based instead...
+        } else if (this._hasPushState && this.atRoot() && loc.hash) {
+          this.fragment = this.getHash().replace(routeStripper, '');
+          this.history.replaceState({}, document.title, this.root + this.fragment);
+        }
+
+      }
+
+      if (!this.options.silent) return this.loadUrl();
+    },
+
+    // Disable Backbone.history, perhaps temporarily. Not useful in a real app,
+    // but possibly useful for unit testing Routers.
+    stop: function() {
+      Backbone.$(window).off('popstate', this.checkUrl).off('hashchange', this.checkUrl);
+      if (this._checkUrlInterval) clearInterval(this._checkUrlInterval);
+      History.started = false;
+    },
+
+    // Add a route to be tested when the fragment changes. Routes added later
+    // may override previous routes.
+    route: function(route, callback) {
+      this.handlers.unshift({route: route, callback: callback});
+    },
+
+    // Checks the current URL to see if it has changed, and if it has,
+    // calls `loadUrl`, normalizing across the hidden iframe.
+    checkUrl: function(e) {
+      var current = this.getFragment();
+      if (current === this.fragment && this.iframe) {
+        current = this.getFragment(this.getHash(this.iframe));
+      }
+      if (current === this.fragment) return false;
+      if (this.iframe) this.navigate(current);
+      this.loadUrl();
+    },
+
+    // Attempt to load the current URL fragment. If a route succeeds with a
+    // match, returns `true`. If no defined routes matches the fragment,
+    // returns `false`.
+    loadUrl: function(fragment) {
+      fragment = this.fragment = this.getFragment(fragment);
+      return _.any(this.handlers, function(handler) {
+        if (handler.route.test(fragment)) {
+          handler.callback(fragment);
+          return true;
+        }
+      });
+    },
+
+    // Save a fragment into the hash history, or replace the URL state if the
+    // 'replace' option is passed. You are responsible for properly URL-encoding
+    // the fragment in advance.
+    //
+    // The options object can contain `trigger: true` if you wish to have the
+    // route callback be fired (not usually desirable), or `replace: true`, if
+    // you wish to modify the current URL without adding an entry to the history.
+    navigate: function(fragment, options) {
+      if (!History.started) return false;
+      if (!options || options === true) options = {trigger: !!options};
+
+      var url = this.root + (fragment = this.getFragment(fragment || ''));
+
+      // Strip the hash for matching.
+      fragment = fragment.replace(pathStripper, '');
+
+      if (this.fragment === fragment) return;
+      this.fragment = fragment;
+
+      // Don't include a trailing slash on the root.
+      if (fragment === '' && url !== '/') url = url.slice(0, -1);
+
+      // If pushState is available, we use it to set the fragment as a real URL.
+      if (this._hasPushState) {
+        this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
+
+      // If hash changes haven't been explicitly disabled, update the hash
+      // fragment to store history.
+      } else if (this._wantsHashChange) {
+        this._updateHash(this.location, fragment, options.replace);
+        if (this.iframe && (fragment !== this.getFragment(this.getHash(this.iframe)))) {
+          // Opening and closing the iframe tricks IE7 and earlier to push a
+          // history entry on hash-tag change.  When replace is true, we don't
+          // want this.
+          if(!options.replace) this.iframe.document.open().close();
+          this._updateHash(this.iframe.location, fragment, options.replace);
+        }
+
+      // If you've told us that you explicitly don't want fallback hashchange-
+      // based history, then `navigate` becomes a page refresh.
+      } else {
+        return this.location.assign(url);
+      }
+      if (options.trigger) return this.loadUrl(fragment);
+    },
+
+    // Update the hash location, either replacing the current entry, or adding
+    // a new one to the browser history.
+    _updateHash: function(location, fragment, replace) {
+      if (replace) {
+        var href = location.href.replace(/(javascript:|#).*$/, '');
+        location.replace(href + '#' + fragment);
+      } else {
+        // Some browsers require that `hash` contains a leading #.
+        location.hash = '#' + fragment;
+      }
+    }
+
+  });
+
+  // Create the default Backbone.history.
+  Backbone.history = new History;
+
+  // Helpers
+  // -------
+
+  // Helper function to correctly set up the prototype chain, for subclasses.
+  // Similar to `goog.inherits`, but uses a hash of prototype properties and
+  // class properties to be extended.
+  var extend = function(protoProps, staticProps) {
+    var parent = this;
+    var child;
+
+    // The constructor function for the new subclass is either defined by you
+    // (the "constructor" property in your `extend` definition), or defaulted
+    // by us to simply call the parent's constructor.
+    if (protoProps && _.has(protoProps, 'constructor')) {
+      child = protoProps.constructor;
+    } else {
+      child = function(){ return parent.apply(this, arguments); };
+    }
+
+    // Add static properties to the constructor function, if supplied.
+    _.extend(child, parent, staticProps);
+
+    // Set the prototype chain to inherit from `parent`, without calling
+    // `parent`'s constructor function.
+    var Surrogate = function(){ this.constructor = child; };
+    Surrogate.prototype = parent.prototype;
+    child.prototype = new Surrogate;
+
+    // Add prototype properties (instance properties) to the subclass,
+    // if supplied.
+    if (protoProps) _.extend(child.prototype, protoProps);
+
+    // Set a convenience property in case the parent's prototype is needed
+    // later.
+    child.__super__ = parent.prototype;
+
+    return child;
+  };
+
+  // Set up inheritance for the model, collection, router, view and history.
+  Model.extend = Collection.extend = Router.extend = View.extend = History.extend = extend;
+
+  // Throw an error when a URL is needed, and none is supplied.
+  var urlError = function() {
+    throw new Error('A "url" property or function must be specified');
+  };
+
+  // Wrap an optional error callback with a fallback error event.
+  var wrapError = function(model, options) {
+    var error = options.error;
+    options.error = function(resp) {
+      if (error) error(model, resp, options);
+      model.trigger('error', model, resp, options);
+    };
+  };
+
+  return Backbone;
+
+}));
+
+/**
+ * Adds builtin validation features to BackboneJS Models, customized to connect
+ * to display internationalized Mozu text labels.
+ */
+define('modules/backbone-mozu-validation',["underscore", "backbone", 'hyprlive'], function (_, Backbone, Hypr) {
+
+    // Adapted from Backbone.Validation v0.8.1
+    //
+    // Copyright (c) 2011-2013 Thomas Pedersen
+    // Modified by Volusion for Mozu, not officially forked (yet)
+    // Distributed under MIT License
+    //
+    // Documentation and full license available at:
+    // http://thedersen.com/projects/backbone-validation
+    Backbone.Validation = (function (_) {
+        
+
+        // Default options
+        // ---------------
+
+        var defaultOptions = {
+            forceUpdate: false,
+            selector: 'name',
+            labelFormatter: 'sentenceCase',
+            valid: Function.prototype,
+            invalid: Function.prototype
+        };
+
+
+        // Helper functions
+        // ----------------
+
+        // Formatting functions used for formatting error messages
+        var formatFunctions = {
+            // Uses the configured label formatter to format the attribute name
+            // to make it more readable for the user
+            formatLabel: function (attrName, model) {
+                return defaultLabelFormatters[defaultOptions.labelFormatter](attrName, model);
+            },
+
+            // Replaces nummeric placeholders like {0} in a string with arguments
+            // passed to the function
+            format: function () {
+                var args = Array.prototype.slice.call(arguments),
+                    text = args.shift();
+                return text.replace(/\{(\d+)\}/g, function (match, number) {
+                    return typeof args[number] !== 'undefined' ? args[number] : match;
+                });
+            }
+        };
+
+        // Flattens an object
+        // eg:
+        //
+        //     var o = {
+        //       address: {
+        //         street: 'Street',
+        //         zip: 1234
+        //       }
+        //     };
+        //
+        // becomes:
+        //
+        //     var o = {
+        //       'address.street': 'Street',
+        //       'address.zip': 1234
+        //     };
+        var maxFlattenDepth = 20;
+        var flatten = function (obj, into, prefix, depth) {
+            if (depth === 0) throw "Cannot flatten circular object.";
+            if (!depth) depth = maxFlattenDepth;
+            into = into || {};
+            prefix = prefix || '';
+
+            if (obj instanceof Backbone.Model) {
+                obj = obj.attributes;
+            }
+
+            _.each(obj, function (val, key) {
+                if (obj.hasOwnProperty(key)) {
+                    if (val && typeof val === 'object' && !(
+                      val instanceof Array ||
+                      val instanceof Date ||
+                      val instanceof RegExp ||
+                      val instanceof Backbone.Collection)
+                    ) {
+                        flatten(val, into, prefix + key + '.', --depth);
+                    }
+                    else {
+                        into[prefix + key] = val;
+                    }
+                }
+            });
+
+            return into;
+        };
+
+        // Validation
+        // ----------
+
+        var Validation = (function () {
+
+            // Returns an object with undefined properties for all
+            // attributes on the model that has defined one or more
+            // validation rules.
+            var getValidatedAttrs = function (model) {
+                return _.reduce(_.keys(model.validation || {}), function (memo, key) {
+                    memo[key] = void 0;
+                    return memo;
+                }, {});
+            };
+
+            // Looks on the model for validations for a specified
+            // attribute. Returns an array of any validators defined,
+            // or an empty array if none is defined.
+            var getValidators = function (model, attr) {
+                var attrValidationSet = model.validation ? model.validation[attr] || {} : {};
+
+                // If the validator is a function or a string, wrap it in a function validator
+                if (_.isFunction(attrValidationSet) || _.isString(attrValidationSet)) {
+                    attrValidationSet = {
+                        fn: attrValidationSet
+                    };
+                }
+
+                // Stick the validator object into an array
+                if (!_.isArray(attrValidationSet)) {
+                    attrValidationSet = [attrValidationSet];
+                }
+
+                // Reduces the array of validators into a new array with objects
+                // with a validation method to call, the value to validate against
+                // and the specified error message, if any
+                return _.reduce(attrValidationSet, function (memo, attrValidation) {
+                    _.each(_.without(_.keys(attrValidation), 'msg'), function (validator) {
+                        memo.push({
+                            fn: defaultValidators[validator],
+                            val: attrValidation[validator],
+                            msg: attrValidation.msg
+                        });
+                    });
+                    return memo;
+                }, []);
+            };
+
+            // Validates an attribute against all validators defined
+            // for that attribute. If one or more errors are found,
+            // the first error message is returned.
+            // If the attribute is valid, an empty string is returned.
+            var validateAttr = function (model, attr, value, computed) {
+                // Reduces the array of validators to an error message by
+                // applying all the validators and returning the first error
+                // message, if any.
+                return _.reduce(getValidators(model, attr), function (memo, validator) {
+                    // Pass the format functions plus the default
+                    // validators as the context to the validator
+                    var ctx = _.extend({}, formatFunctions, defaultValidators),
+                        result = validator.fn.call(ctx, value, attr, validator.val, model, computed);
+
+                    if (result === false || memo === false) {
+                        return false;
+                    }
+                    if (result && !memo) {
+                        return validator.msg || result;
+                    }
+                    return memo;
+                }, '');
+            };
+
+            // Loops through the model's attributes and validates them all.
+            // Returns and object containing names of invalid attributes
+            // as well as error messages.
+            var validateModel = function (model, attrs) {
+                var error,
+                    invalidAttrs = {},
+                    isValid = true,
+                    computed = _.clone(attrs),
+                    flattened = flatten(attrs);
+
+                _.each(flattened, function (val, attr) {
+                    error = validateAttr(model, attr, val, computed);
+                    if (error) {
+                        invalidAttrs[attr] = error;
+                        isValid = false;
+                    }
+                });
+
+                return {
+                    invalidAttrs: invalidAttrs,
+                    isValid: isValid
+                };
+            };
+
+            // Contains the methods that are mixed in on the model when binding
+            var mixin = function (view, options) {
+                return {
+
+                    // Check whether or not a value passes validation
+                    // without updating the model
+                    preValidate: function (attr, value) {
+                        return validateAttr(this, attr, value, _.extend({}, this.attributes));
+                    },
+
+                    // Check to see if an attribute, an array of attributes or the
+                    // entire model is valid. Passing true will force a validation
+                    // of the model.
+                    isValid: function (option) {
+                        var flattened = flatten(this.attributes);
+
+                        if (_.isString(option)) {
+                            return !validateAttr(this, option, flattened[option], _.extend({}, this.attributes));
+                        }
+                        if (_.isArray(option)) {
+                            return _.reduce(option, function (memo, attr) {
+                                return memo && !validateAttr(this, attr, flattened[attr], _.extend({}, this.attributes));
+                            }, true, this);
+                        }
+                        if (option === true) {
+                            this.validate(null, { silent: true });
+                        }
+                        return this.validation ? this._isValid : true;
+                    },
+
+                    // This is called by Backbone when it needs to perform validation.
+                    // You can call it manually without any parameters to validate the
+                    // entire model.
+                    validate: function (attrs, setOptions) {
+                        var model = this,
+                            validateAll = !attrs,
+                            opt = _.extend({}, options, setOptions),
+                            validatedAttrs = getValidatedAttrs(model),
+                            selectedAttrs = attrs;
+
+                        if (typeof attrs == "string") {
+                            selectedAttrs = {};
+                            _.each(validatedAttrs, function (v, k) {
+                                if (k.indexOf(attrs) === 0) {
+                                    selectedAttrs[k] = v;
+                                }
+                            });
+                        }
+
+                        var allAttrs = _.extend({}, validatedAttrs, selectedAttrs, model.attributes),
+                            changedAttrs = flatten(selectedAttrs || allAttrs),
+                            result = validateModel(model, allAttrs);
+
+                        model._isValid = result.isValid;
+
+                        // After validation is performed, loop through all changed attributes
+                        // and call the valid callbacks so the view is updated.
+                        _.each(validatedAttrs, function (val, attr) {
+                            var invalid = result.invalidAttrs.hasOwnProperty(attr);
+                            if (!invalid && !options.silent) {
+                                opt.valid(view, attr, opt.selector);
+                            }
+                        });
+
+                        // After validation is performed, loop through all changed attributes
+                        // and call the invalid callback so the view is updated.
+                        _.each(validatedAttrs, function (val, attr) {
+                            var invalid = result.invalidAttrs.hasOwnProperty(attr),
+                                changed = changedAttrs.hasOwnProperty(attr);
+
+                            if (invalid && (changed || validateAll) && !options.silent) {
+                                opt.invalid(view, attr, result.invalidAttrs[attr], opt.selector);
+                            }
+                        });
+
+                        // Trigger validated events.
+                        // Need to defer this so the model is actually updated before
+                        // the event is triggered.
+                        _.defer(function () {
+                            model.trigger('validated', model._isValid, model, result.invalidAttrs);
+                            model.trigger('validated:' + (model._isValid ? 'valid' : 'invalid'), model, result.invalidAttrs);
+                        });
+
+                        // Return any error messages to Backbone, unless the forceUpdate flag is set.
+                        // Then we do not return anything and fools Backbone to believe the validation was
+                        // a success. That way Backbone will update the model regardless.
+                        if (!opt.forceUpdate && _.intersection(_.keys(result.invalidAttrs), _.keys(changedAttrs)).length > 0) {
+                            return result.invalidAttrs;
+                        }
+                    }
+                };
+            };
+
+            // Helper to mix in validation on a model
+            var bindModel = function (view, model, options) {
+                _.extend(model, mixin(view, options));
+            };
+
+            // Removes the methods added to a model
+            var unbindModel = function (model) {
+                delete model.validate;
+                delete model.preValidate;
+                delete model.isValid;
+            };
+
+            // Mix in validation on a model whenever a model is
+            // added to a collection
+            var collectionAdd = function (model) {
+                bindModel(this.view, model, this.options);
+            };
+
+            // Remove validation from a model whenever a model is
+            // removed from a collection
+            var collectionRemove = function (model) {
+                unbindModel(model);
+            };
+
+            // Returns the public methods on Backbone.Validation
+            return {
+
+                // Current version of the library
+                version: '0.8.1',
+
+                // Called to configure the default options
+                configure: function (options) {
+                    _.extend(defaultOptions, options);
+                },
+
+                // Hooks up validation on a view with a model
+                // or collection
+                bind: function (view, options) {
+                    var model = view.model,
+                        collection = view.collection;
+
+                    options = _.extend({}, defaultOptions, defaultCallbacks, options);
+
+                    if (typeof model === 'undefined' && typeof collection === 'undefined') {
+                        throw 'Before you execute the binding your view must have a model or a collection.\n' +
+                              'See http://thedersen.com/projects/backbone-validation/#using-form-model-validation for more information.';
+                    }
+
+                    if (model) {
+                        bindModel(view, model, options);
+                    }
+                    else if (collection) {
+                        collection.each(function (model) {
+                            bindModel(view, model, options);
+                        });
+                        collection.bind('add', collectionAdd, { view: view, options: options });
+                        collection.bind('remove', collectionRemove);
+                    }
+                },
+
+                // Removes validation from a view with a model
+                // or collection
+                unbind: function (view) {
+                    var model = view.model,
+                        collection = view.collection;
+
+                    if (model) {
+                        unbindModel(view.model);
+                    }
+                    if (collection) {
+                        collection.each(function (model) {
+                            unbindModel(model);
+                        });
+                        collection.unbind('add', collectionAdd);
+                        collection.unbind('remove', collectionRemove);
+                    }
+                },
+
+                // Used to extend the Backbone.Model.prototype
+                // with validation
+                mixin: mixin(null, defaultOptions)
+            };
+        }());
+
+
+        // Callbacks
+        // ---------
+
+        var defaultCallbacks = Validation.callbacks = {
+
+            // Gets called when a previously invalid field in the
+            // view becomes valid. Removes any error message.
+            valid: function (view, attr) {
+                view.$('[data-mz-value="' + attr + '"]').removeClass('is-invalid');
+                view.$('[data-mz-validationmessage-for="' + attr + '"]').text('');
+            },
+
+            // Gets called when a field in the view becomes invalid.
+            // Adds a error message.
+            invalid: function (view, attr, error) {
+                view.$('[data-mz-value="' + attr + '"]').addClass('is-invalid');
+                view.$('[data-mz-validationmessage-for="' + attr + '"]').text(error);
+            }
+        };
+
+
+        // Patterns
+        // --------
+
+        var defaultPatterns = Validation.patterns = {
+            // Matches any digit(s) (i.e. 0-9)
+            digits: /^\d+$/,
+
+            // Matched any number (e.g. 100.000)
+            number: /^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,
+
+            // Matches a valid email address (e.g. mail@example.com)
+            email: /^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,
+
+            // Mathes any valid url (e.g. http://www.xample.com)
+            url: /^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i
+        };
+
+
+        // Error messages
+        // --------------
+
+        // Error message for the build in validators.
+        // {x} gets swapped out with arguments form the validator.
+        var defaultMessages = Validation.messages = {
+            required: Hypr.getLabel('genericRequired'),
+            acceptance: Hypr.getLabel('genericAcceptance'),
+            min: Hypr.getLabel('genericMin'),
+            max: Hypr.getLabel('genericMax'),
+            range: Hypr.getLabel('genericRange'),
+            length: Hypr.getLabel('genericLength'),
+            minLength: Hypr.getLabel('genericMinLength'),
+            maxLength: Hypr.getLabel('genericMaxLength'),
+            rangeLength: Hypr.getLabel('genericRangeLength'),
+            oneOf: Hypr.getLabel('genericOneOf'),
+            equalTo: Hypr.getLabel('genericEqualTo'),
+            pattern: Hypr.getLabel('genericPattern')
+        };
+
+        // Label formatters
+        // ----------------
+
+        // Label formatters are used to convert the attribute name
+        // to a more human friendly label when using the built in
+        // error messages.
+        // Configure which one to use with a call to
+        //
+        //     Backbone.Validation.configure({
+        //       labelFormatter: 'label'
+        //     });
+        var defaultLabelFormatters = Validation.labelFormatters = {
+
+            // Returns the attribute name with applying any formatting
+            none: function (attrName) {
+                return attrName;
+            },
+
+            // Converts attributeName or attribute_name to Attribute name
+            sentenceCase: function (attrName) {
+                return attrName.replace(/(?:^\w|[A-Z]|\b\w)/g, function (match, index) {
+                    return index === 0 ? match.toUpperCase() : ' ' + match.toLowerCase();
+                }).replace(/_/g, ' ');
+            },
+
+            // Looks for a label configured on the model and returns it
+            //
+            //      var Model = Backbone.Model.extend({
+            //        validation: {
+            //          someAttribute: {
+            //            required: true
+            //          }
+            //        },
+            //
+            //        labels: {
+            //          someAttribute: 'Custom label'
+            //        }
+            //      });
+            label: function (attrName, model) {
+                return (model.labels && model.labels[attrName]) || defaultLabelFormatters.sentenceCase(attrName, model);
+            }
+        };
+
+
+        // Built in validators
+        // -------------------
+
+        var defaultValidators = Validation.validators = (function () {
+            // Use native trim when defined
+            var trim = String.prototype.trim ?
+              function (text) {
+                  return text === null ? '' : String.prototype.trim.call(text);
+              } :
+              function (text) {
+                  var trimLeft = /^\s+/,
+                      trimRight = /\s+$/;
+
+                  return text === null ? '' : text.toString().replace(trimLeft, '').replace(trimRight, '');
+              };
+
+            // Determines whether or not a value is a number
+            var isNumber = function (value) {
+                return _.isNumber(value) || (_.isString(value) && value.match(defaultPatterns.number));
+            };
+
+            // Determines whether or not a value is empty
+            var hasValue = function (value) {
+                return !(_.isNull(value) || _.isUndefined(value) || (_.isString(value) && trim(value) === '') || (_.isArray(value) && _.isEmpty(value)));
+            };
+
+            return {
+                // Function validator
+                // Lets you implement a custom function used for validation
+                fn: function (value, attr, fn, model, computed) {
+                    if (_.isString(fn)) {
+                        var hier = attr.split('.');
+                        if (hier.length > 1) {
+                            hier.pop();
+                            model = model.get(hier.join('.'));
+                        }
+                        fn = model[fn];
+                    }
+                    return fn.call(model, value, attr, computed);
+                },
+
+                // Required validator
+                // Validates if the attribute is required or not
+                required: function (value, attr, required, model, computed) {
+                    var isRequired = _.isFunction(required) ? required.call(model, value, attr, computed) : required;
+                    if (!isRequired && !hasValue(value)) {
+                        return false; // overrides all other validators
+                    }
+                    if (isRequired && !hasValue(value)) {
+                        return this.format(defaultMessages.required, this.formatLabel(attr, model));
+                    }
+                },
+
+                // Acceptance validator
+                // Validates that something has to be accepted, e.g. terms of use
+                // `true` or 'true' are valid
+                acceptance: function (value, attr, accept, model) {
+                    if (value !== 'true' && (!_.isBoolean(value) || value === false)) {
+                        return this.format(defaultMessages.acceptance, this.formatLabel(attr, model));
+                    }
+                },
+
+                // Min validator
+                // Validates that the value has to be a number and equal to or greater than
+                // the min value specified
+                min: function (value, attr, minValue, model) {
+                    if (!isNumber(value) || value < minValue) {
+                        return this.format(defaultMessages.min, this.formatLabel(attr, model), minValue);
+                    }
+                },
+
+                // Max validator
+                // Validates that the value has to be a number and equal to or less than
+                // the max value specified
+                max: function (value, attr, maxValue, model) {
+                    if (!isNumber(value) || value > maxValue) {
+                        return this.format(defaultMessages.max, this.formatLabel(attr, model), maxValue);
+                    }
+                },
+
+                // Range validator
+                // Validates that the value has to be a number and equal to or between
+                // the two numbers specified
+                range: function (value, attr, range, model) {
+                    if (!isNumber(value) || value < range[0] || value > range[1]) {
+                        return this.format(defaultMessages.range, this.formatLabel(attr, model), range[0], range[1]);
+                    }
+                },
+
+                // Length validator
+                // Validates that the value has to be a string with length equal to
+                // the length value specified
+                length: function (value, attr, length, model) {
+                    if (!hasValue(value) || trim(value).length !== length) {
+                        return this.format(defaultMessages.length, this.formatLabel(attr, model), length);
+                    }
+                },
+
+                // Min length validator
+                // Validates that the value has to be a string with length equal to or greater than
+                // the min length value specified
+                minLength: function (value, attr, minLength, model) {
+                    if (!hasValue(value) || trim(value).length < minLength) {
+                        return this.format(defaultMessages.minLength, this.formatLabel(attr, model), minLength);
+                    }
+                },
+
+                // Max length validator
+                // Validates that the value has to be a string with length equal to or less than
+                // the max length value specified
+                maxLength: function (value, attr, maxLength, model) {
+                    if (!hasValue(value) || trim(value).length > maxLength) {
+                        return this.format(defaultMessages.maxLength, this.formatLabel(attr, model), maxLength);
+                    }
+                },
+
+                // Range length validator
+                // Validates that the value has to be a string and equal to or between
+                // the two numbers specified
+                rangeLength: function (value, attr, range, model) {
+                    if (!hasValue(value) || trim(value).length < range[0] || trim(value).length > range[1]) {
+                        return this.format(defaultMessages.rangeLength, this.formatLabel(attr, model), range[0], range[1]);
+                    }
+                },
+
+                // One of validator
+                // Validates that the value has to be equal to one of the elements in
+                // the specified array. Case sensitive matching
+                oneOf: function (value, attr, values, model) {
+                    if (!_.include(values, value)) {
+                        return this.format(defaultMessages.oneOf, this.formatLabel(attr, model), values.join(', '));
+                    }
+                },
+
+                // Equal to validator
+                // Validates that the value has to be equal to the value of the attribute
+                // with the name specified
+                equalTo: function (value, attr, equalTo, model, computed) {
+                    if (value !== computed[equalTo]) {
+                        return this.format(defaultMessages.equalTo, this.formatLabel(attr, model), this.formatLabel(equalTo, model));
+                    }
+                },
+
+                // Pattern validator
+                // Validates that the value has to match the pattern specified.
+                // Can be a regular expression or the name of one of the built in patterns
+                pattern: function (value, attr, pattern, model) {
+                    if (!hasValue(value) || !value.toString().match(defaultPatterns[pattern] || pattern)) {
+                        return this.format(defaultMessages.pattern, this.formatLabel(attr, model), pattern);
+                    }
+                }
+            };
+        }());
+
+        return Validation;
+    }(_));
+
+    return Backbone;
+
+});
+/*global define:false require:false */
+(function (name, context, definition) {
+    if (typeof module != 'undefined' && module.exports) module.exports = definition();
+    else if (typeof define == 'function' && define.amd) define('vendor/jquery-scrollto',definition);
+    else context[name] = definition();
+})('jquery-scrollto', this, function (require) {
+    // Prepare
+    var jQuery, $, ScrollTo;
+    jQuery = $ = window.jQuery || require('jquery');
+
+    // Fix scrolling animations on html/body on safari
+    $.propHooks.scrollTop = $.propHooks.scrollLeft = {
+        get: function (elem, prop) {
+            var result = null;
+            if (elem.tagName === 'HTML' || elem.tagName === 'BODY') {
+                if (prop === 'scrollLeft') {
+                    result = window.scrollX;
+                } else if (prop === 'scrollTop') {
+                    result = window.scrollY;
+                }
+            }
+            if (result == null) {
+                result = elem[prop];
+            }
+            return result;
+        }
+    };
+    $.Tween.propHooks.scrollTop = $.Tween.propHooks.scrollLeft = {
+        get: function (tween) {
+            return $.propHooks.scrollTop.get(tween.elem, tween.prop);
+        },
+        set: function (tween) {
+            // Our safari fix
+            if (tween.elem.tagName === 'HTML' || tween.elem.tagName === 'BODY') {
+                // Defaults
+                tween.options.bodyScrollLeft = (tween.options.bodyScrollLeft || window.scrollX);
+                tween.options.bodyScrollTop = (tween.options.bodyScrollTop || window.scrollY);
+
+                // Apply
+                if (tween.prop === 'scrollLeft') {
+                    tween.options.bodyScrollLeft = Math.round(tween.now);
+                }
+                else if (tween.prop === 'scrollTop') {
+                    tween.options.bodyScrollTop = Math.round(tween.now);
+                }
+
+                // Apply
+                window.scrollTo(tween.options.bodyScrollLeft, tween.options.bodyScrollTop);
+            }
+                // jQuery's IE8 Fix
+            else if (tween.elem.nodeType && tween.elem.parentNode) {
+                tween.elem[tween.prop] = tween.now;
+            }
+        }
+    };
+
+    // jQuery ScrollTo
+    ScrollTo = {
+        // Configuration
+        config: {
+            axis: 'xy',
+            duration: 400,
+            easing: 'swing',
+            callback: undefined,
+            durationMode: 'each',
+            offsetTop: 0,
+            offsetLeft: 0
+        },
+
+        // Set Configuration
+        configure: function (options) {
+            // Apply Options to Config
+            $.extend(ScrollTo.config, options || {});
+
+            // Chain
+            return this;
+        },
+
+        // Perform the Scroll Animation for the Collections
+        // We use $inline here, so we can determine the actual offset start for each overflow:scroll item
+        // Each collection is for each overflow:scroll item
+        scroll: function (collections, config) {
+            // Prepare
+            var collection, $container, container, $target, $inline, position, containerTagName,
+				containerScrollTop, containerScrollLeft,
+				containerScrollTopEnd, containerScrollLeftEnd,
+				startOffsetTop, targetOffsetTop, targetOffsetTopAdjusted,
+				startOffsetLeft, targetOffsetLeft, targetOffsetLeftAdjusted,
+				scrollOptions,
+				callback;
+
+            // Determine the Scroll
+            collection = collections.pop();
+            $container = collection.$container;
+            $target = collection.$target;
+            containerTagName = $container.prop('tagName');
+
+            // Prepare the Inline Element of the Container
+            $inline = $('<span/>').css({
+                'position': 'absolute',
+                'top': '0px',
+                'left': '0px'
+            });
+            position = $container.css('position');
+
+            // Insert the Inline Element of the Container
+            $container.css({ position: 'relative' });
+            $inline.appendTo($container);
+
+            // Determine the top offset
+            startOffsetTop = $inline.offset().top;
+            targetOffsetTop = $target.offset().top;
+            targetOffsetTopAdjusted = targetOffsetTop - startOffsetTop - parseInt(config.offsetTop, 10);
+
+            // Determine the left offset
+            startOffsetLeft = $inline.offset().left;
+            targetOffsetLeft = $target.offset().left;
+            targetOffsetLeftAdjusted = targetOffsetLeft - startOffsetLeft - parseInt(config.offsetLeft, 10);
+
+            // Determine current scroll positions
+            containerScrollTop = $container.prop('scrollTop');
+            containerScrollLeft = $container.prop('scrollLeft');
+
+            // Reset the Inline Element of the Container
+            $inline.remove();
+            $container.css({ position: position });
+
+            // Prepare the scroll options
+            scrollOptions = {};
+
+            // Prepare the callback
+            callback = function (event) {
+                // Check
+                if (collections.length === 0) {
+                    // Callback
+                    if (typeof config.callback === 'function') {
+                        config.callback();
+                    }
+                }
+                else {
+                    // Recurse
+                    ScrollTo.scroll(collections, config);
+                }
+                // Return true
+                return true;
+            };
+
+            // Handle if we only want to scroll if we are outside the viewport
+            if (config.onlyIfOutside) {
+                // Determine current scroll positions
+                containerScrollTopEnd = containerScrollTop + $container.height();
+                containerScrollLeftEnd = containerScrollLeft + $container.width();
+
+                // Check if we are in the range of the visible area of the container
+                if (containerScrollTop < targetOffsetTopAdjusted && targetOffsetTopAdjusted < containerScrollTopEnd) {
+                    targetOffsetTopAdjusted = containerScrollTop;
+                }
+                if (containerScrollLeft < targetOffsetLeftAdjusted && targetOffsetLeftAdjusted < containerScrollLeftEnd) {
+                    targetOffsetLeftAdjusted = containerScrollLeft;
+                }
+            }
+
+            // Determine the scroll options
+            if (targetOffsetTopAdjusted !== containerScrollTop) {
+                scrollOptions.scrollTop = targetOffsetTopAdjusted;
+            }
+            if (targetOffsetLeftAdjusted !== containerScrollLeft) {
+                scrollOptions.scrollLeft = targetOffsetLeftAdjusted;
+            }
+
+            // Check to see if the scroll is necessary
+            if ($container.prop('scrollHeight') === $container.width() || config.axis.indexOf('y') === -1) {
+                delete scrollOptions.scrollTop;
+            }
+            if ($container.prop('scrollWidth') === $container.width() || config.axis.indexOf('x') === -1) {
+                delete scrollOptions.scrollLeft;
+            }
+
+            // Perform the scroll
+            if (scrollOptions.scrollTop != null || scrollOptions.scrollLeft != null) {
+                $container.animate(scrollOptions, {
+                    duration: config.duration,
+                    easing: config.easing,
+                    complete: callback
+                });
+            }
+            else {
+                callback();
+            }
+
+            // Return true
+            return true;
+        },
+
+        // ScrollTo the Element using the Options
+        fn: function (options) {
+            // Prepare
+            var collections, config, $container, container;
+            collections = [];
+
+            // Prepare
+            var $target = $(this);
+            if ($target.length === 0) {
+                // Chain
+                return this;
+            }
+
+            // Handle Options
+            config = $.extend({}, ScrollTo.config, options);
+
+            // Fetch
+            $container = $target.parent();
+            container = $container.get(0);
+
+            // Cycle through the containers
+            while (($container.length === 1) && (container !== document.body) && (container !== document)) {
+                // Check Container for scroll differences
+                var containerScrollTop, containerScrollLeft;
+                containerScrollTop = $container.css('overflow-y') !== 'visible' && container.scrollHeight !== container.clientHeight;
+                containerScrollLeft = $container.css('overflow-x') !== 'visible' && container.scrollWidth !== container.clientWidth;
+                if (containerScrollTop || containerScrollLeft) {
+                    // Push the Collection
+                    collections.push({
+                        '$container': $container,
+                        '$target': $target
+                    });
+                    // Update the Target
+                    $target = $container;
+                }
+                // Update the Container
+                $container = $container.parent();
+                container = $container.get(0);
+            }
+
+            // Add the final collection
+            collections.push({
+                '$container': $('html'),
+                // document.body doesn't work in firefox, html works for all
+                // internet explorer starts at the beggining
+                '$target': $target
+            });
+
+            // Adjust the Config
+            if (config.durationMode === 'all') {
+                config.duration /= collections.length;
+            }
+
+            // Handle
+            ScrollTo.scroll(collections, config);
+
+            // Chain
+            return this;
+        }
+    };
+
+    // Apply our extensions to jQuery
+    $.ScrollTo = $.ScrollTo || ScrollTo;
+    $.fn.ScrollTo = $.fn.ScrollTo || ScrollTo.fn;
+
+    // Export
+    return ScrollTo;
+});
 /*!
  * jQuery Cookie Plugin v1.4.1
  * https://github.com/carhartl/jquery-cookie
@@ -19,6 +3886,1248 @@
  * Copyright 2013 Klaus Hartl
  * Released under the MIT license
  */
+(function (factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD
+		define('vendor/jquery.cookie/jquery.cookie',['jquery'], factory);
+	} else if (typeof exports === 'object') {
+		// CommonJS
+		factory(require('jquery'));
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function ($) {
+
+	var pluses = /\+/g;
+
+	function encode(s) {
+		return config.raw ? s : encodeURIComponent(s);
+	}
+
+	function decode(s) {
+		return config.raw ? s : decodeURIComponent(s);
+	}
+
+	function stringifyCookieValue(value) {
+		return encode(config.json ? JSON.stringify(value) : String(value));
+	}
+
+	function parseCookieValue(s) {
+		if (s.indexOf('"') === 0) {
+			// This is a quoted cookie as according to RFC2068, unescape...
+			s = s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\');
+		}
+
+		try {
+			// Replace server-side written pluses with spaces.
+			// If we can't decode the cookie, ignore it, it's unusable.
+			// If we can't parse the cookie, ignore it, it's unusable.
+			s = decodeURIComponent(s.replace(pluses, ' '));
+			return config.json ? JSON.parse(s) : s;
+		} catch(e) {}
+	}
+
+	function read(s, converter) {
+		var value = config.raw ? s : parseCookieValue(s);
+		return $.isFunction(converter) ? converter(value) : value;
+	}
+
+	var config = $.cookie = function (key, value, options) {
+
+		// Write
+
+		if (value !== undefined && !$.isFunction(value)) {
+			options = $.extend({}, config.defaults, options);
+
+			if (typeof options.expires === 'number') {
+				var days = options.expires, t = options.expires = new Date();
+				t.setTime(+t + days * 864e+5);
+			}
+
+			return (document.cookie = [
+				encode(key), '=', stringifyCookieValue(value),
+				options.expires ? '; expires=' + options.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
+				options.path    ? '; path=' + options.path : '',
+				options.domain  ? '; domain=' + options.domain : '',
+				options.secure  ? '; secure' : ''
+			].join(''));
+		}
+
+		// Read
+
+		var result = key ? undefined : {};
+
+		// To prevent the for loop in the first place assign an empty array
+		// in case there are no cookies at all. Also prevents odd result when
+		// calling $.cookie().
+		var cookies = document.cookie ? document.cookie.split('; ') : [];
+
+		for (var i = 0, l = cookies.length; i < l; i++) {
+			var parts = cookies[i].split('=');
+			var name = decode(parts.shift());
+			var cookie = parts.join('=');
+
+			if (key && key === name) {
+				// If second argument (value) is a function it's a converter...
+				result = read(cookie, value);
+				break;
+			}
+
+			// Prevent storing a cookie that we couldn't decode.
+			if (!key && (cookie = read(cookie)) !== undefined) {
+				result[name] = cookie;
+			}
+		}
+
+		return result;
+	};
+
+	config.defaults = {};
+
+	$.removeCookie = function (key, options) {
+		if ($.cookie(key) === undefined) {
+			return false;
+		}
+
+		// Must not alter options, thus extending a fresh object...
+		$.cookie(key, '', $.extend({}, options, { expires: -1 }));
+		return !$.cookie(key);
+	};
+
+}));
+
+/**
+ * This file adds some common plugins to jQuery and then returns jQuery, so you can require it instead of jQuery itself and then you're guaranteed to have these plugins.    * They are:
+ *   **$.cookie** -- Adds cookie management, using normal jQuery overload style: $.cookie('foo') gets foo cookie, $.cookie('foo','bar') sets it. *(This plugin is a separate file, shimmed in using the shim plugin.)*
+ *   **$.fn.jsonData** -- Equivalent to the getter function of  $.fn.data, but without a weird jQuery bug that fails to parse JSON properly if it's been HTML escaped into an attribute.
+ *   **$.fn.noFlickerFadeIn** -- A version of $.fn.fadeIn that operates on visibility:invisible objects, so there's no document reflow.
+ *   **$.fn.ScrollTo** -- A plugin to smoothly scroll any element into view.
+ */
+define('modules/jquery-mozu',["jquery", "vendor/jquery-scrollto", "vendor/jquery.cookie/jquery.cookie"], function ($) {
+
+   
+    $.fn.jsonData = function (dataAttr) {
+        var d = this.attr("data-mz-" + dataAttr);
+        return (typeof d === 'string' && d.charAt(0).match(/[\{\[\(]/)) ? $.parseJSON(d) : d;
+    };
+
+    // use this instead of fadeIn for elements that are set to visibility: hidden instead of display:none
+    // display:none on large elements makes the page look tiny at first, the footer hugging the header
+    $.fn.noFlickerFadeIn = function () {
+        this.css('visibility', 'visible');
+        if (Modernizr.csstransitions) {
+            this.css('opacity', 1);
+        } else {
+            this.animate({ opacity: 1 }, 300);
+        }
+    };
+
+    // get url query parameters
+    $.deparam = function(querystring) {
+        // remove any preceding url and split
+        querystring = querystring || window.location.search;
+        querystring = querystring.substring(querystring.indexOf('?') + 1).split('&');
+        var params = {}, pair, d = decodeURIComponent, i;
+        // march and parse
+        for (i = querystring.length; i > 0;) {
+            pair = querystring[--i].split('=');
+            if (pair && pair.length > 1) params[d(pair[0])] = d(pair[1].replace(/\+/g, '%20'));
+        }
+
+        return params;
+    };//--  fn  deparam
+
+    return $.noConflict();
+
+});
+
+define('modules/models-messages',["backbone", 'hyprlive'], function(Backbone, Hypr) {
+
+    var isDebugMode = require.mozuData('pagecontext').isDebugMode,
+    unexpectedErrorText = Hypr.getLabel('unexpectedError');
+
+    var Message = Backbone.Model.extend({
+        toJSON: function() {
+            var j = Backbone.Model.prototype.toJSON.apply(this);
+            if ((!isDebugMode && j.errorCode === "UNEXPECTED_ERROR") || !j.message) j.message = unexpectedErrorText;
+            return j;
+        }
+    }),
+    MessagesCollection = Backbone.Collection.extend({
+        model: Message
+    });
+    return {
+        Message: Message,
+        MessagesCollection: MessagesCollection
+    };
+
+});
+
+define('modules/backbone-mozu-model',[
+    "modules/jquery-mozu",
+    "underscore",
+    "modules/api",
+    "backbone",
+    "modules/models-messages",
+    "modules/backbone-mozu-validation"], function ($, _, api, Backbone, MessageModels) {
+
+
+        var $window = $(window),
+            Model = Backbone.Model,
+           Collection = Backbone.Collection;
+
+        // Detects dot notation in named properties and deepens a flat object to respect those property names.
+        // Pessimistically, prefers dot-notated properties over properly deep ones
+        function deepen(obj) {
+            var ret = {};
+            _.each(obj, function (val, key) {
+                var ctx = ret, level;
+                key = key.split('.');
+                while (key.length > 1) {
+                    level = key.shift();
+                    ctx = ctx[level] || (ctx[level] = {});
+                }
+                ctx[key[0]] = val;
+            });
+            return ret;
+        }
+
+        var methodMap = {
+            'read': 'get',
+            'delete': 'del'
+        };
+
+        var modelProto = _.extend({}, Backbone.Validation.mixin,
+
+            /** @lends MozuModel.prototype */
+        {
+            /**
+             * @classdesc Extends the BackboneJS Model object to create a Backbone.MozuModel with extra features for model nesting, error handling, validation, and connection to the JavaScript SDK.
+             * @class MozuModel
+             * @param {object} json A JSON representation of the model to preload into the MozuModel. If you create a new MozuModel with no arguments, its attributes will be blank.
+             * @augments external:Backbone.Model
+             */
+
+
+            /**
+             * Array of the names of methods whose return values should be added to the JSON serialization of this model that is sent to the view, when MozuModel#toJSON is called with `{ helpers: true }`, which it is in the default implementation of {@ link MozuView#getRenderContext}.
+             * The base MozuModel has helpers `['isLoading', 'isValid']`. When you subclass a MozuModel, any helpers you specify will be added to this array, rather than replacing it.
+             * @member {string[]} helpers
+             * @memberof MozuModel.prototype
+             * @public
+             */
+
+            /**
+             * If `true`, then this MozuModel will gain a `messages` property that is a {@ link Messages.MessageCollection }. It will also subscribe to the `error` event on its `apiModel` and update the `messages` collection as error messages come in from the service.
+             * If `false`, this MozuModel will traverse up any existing tree of relations to find a parent or ancestor model that does handle messages, and use its `messages` collection instead.
+             * @member {Boolean} handlesMessages
+             * @memberof MozuModel.prototype
+             * @default false
+             */
+
+            /**
+             * Find the nearest parent model that handles error messages and pass all subsequent errors thrown on this model to that model. Run on contruct.
+             * @private
+             */
+            passErrors: function() {
+                var self = this;
+                _.defer(function() {
+                    var ctx = self,
+                        passFn = function(e, c) {
+                            ctx.trigger('error', e, c);
+                        };
+                    do {
+                        if (ctx.handlesMessages) {
+                            self.on('error', passFn);
+                            break;
+                        }
+                        ctx = ctx.parent;
+                    } while (ctx);
+                }, 300);
+            },
+
+
+            /**
+             * Dictionary of related models or collections.
+             * @member {Object} relations
+             * @memberof MozuModel.prototype
+             * @public
+             * @example
+             * var Product = Backbone.MozuModel.extend({
+             *   relations: {
+             *     content: ProductContent, // another Backbone.MozuModel or Backbone.Model class
+             *     options: Backbone.Collection.extend(
+             *       model: ProductOption
+             *     }) // a "has many" relationship
+             *   }
+             * });
+             *
+             * new Product(someJSON).get('content') // --> an instance of ProductContent
+             */
+
+            /**
+             * Get the value of an attribute. Unlike the `get()` method on the plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations}).
+             * @example
+             * // returns the value of Product.ProductContent.ProductName
+             * productModel.get('content.productName');
+             * @param {string} attr The name, or dot-separated path, of the property to return.
+             * @returns {Object} The value of the named attribute, and `undefined` if it was never set.
+             */
+            get: function(attr) {
+                var prop = attr.split('.'), ret = this, level;
+                while (ret && (level = prop.shift())) ret = Backbone.Model.prototype.get.call(ret, level);
+                if (!ret && this.relations && (attr in this.relations)) {
+                    ret = this.setRelation(attr, null, { silent: true });
+                    this.attributes[attr] = ret;
+                }
+                return ret;
+            },
+
+            /** @private */
+            setRelation: function(attr, val, options) {
+                var relation = this.attributes[attr],
+                    id = this.idAttribute || "id";
+
+                if (!("parse" in options)) options.parse = true;
+
+                //if (options.unset && relation) delete relation.parent;
+
+                if (this.relations && _.has(this.relations, attr)) {
+
+                    // If the relation already exists, we don't want to replace it, rather
+                    // update the data within it whether it is a collection or model
+                    if (relation && relation instanceof Collection) {
+
+                        id = relation.model.prototype.idAttribute || id;
+
+                        // If the val that is being set is already a collection, use the models
+                        // within the collection.
+                        if (val instanceof Collection || val instanceof Array) {
+                            val = val.models || val;
+
+                            relation.reset(_.clone(val), options);
+
+                        } else {
+
+                            // The incoming val that is being set is not an array or collection, then it represents
+                            // a single model.  Go through each of the models in the existing relation and remove
+                            // all models that aren't the same as this one (by id). If it is the same, call set on that
+                            // model.
+
+                            relation.each(function(model) {
+                                if (val && val[id] === model[id]) {
+                                    model.set(val, options);
+                                } else {
+                                    relation.remove(model);
+                                }
+                            });
+                        }
+
+                        return relation;
+                    }
+
+                    if (relation && relation instanceof Model) {
+                        if (options.unset) {
+                            relation.clear(options);
+                        } else {
+                            relation.set((val && val.toJSON) ? val.toJSON() : val, options);
+                        }
+                        return relation;
+                    }
+
+                    options._parent = this;
+
+                    if (!(val instanceof this.relations[attr])) val = new this.relations[attr](val, options);
+                    val.parent = this;
+                }
+
+                return val;
+            },
+
+
+            /**
+             * Set the value of an attribute or a hash of attributes. Unlike the `set()` method on he plain `Backbone.Model`, this method accepts a dot-separated path to a property on a child model (child models are defined on {@link Backbone.MozuModel#relations}).
+             * @example
+             * // sets the value of Customer.EditingContact.FirstName
+             * customerModel.set('editingContact.firstName');
+             * @param {string} propName The name, or dot-separated path, of the property to return.
+             * @returns {Object} Returns the value of the named attribute, and `undefined` if it was never set.
+             */
+            set: function(key, val, options) {
+                var attr, attrs, unset, changes, silent, changing, prev, current;
+                if (!key && key !== 0) return this;
+
+                // Handle both `"key", value` and `{key: value}` -style arguments.
+                if (typeof key === 'object') {
+                    attrs = key;
+                    options = val;
+                } else {
+                    (attrs = {})[key] = val;
+                }
+
+                options = options || {};
+
+                // allow for dot notation in setting properties remotely on related models, by shifting context!
+                attrs = deepen(attrs);
+
+                // Run validation.
+                if (!this._validate(attrs, options)) return false;
+
+                // Extract attributes and options.
+                unset = options.unset;
+                silent = options.silent;
+                changes = [];
+                changing = this._changing;
+                this._changing = true;
+
+                if (!changing) {
+                    this._previousAttributes = _.clone(this.attributes);
+                    this.changed = {};
+                }
+                current = this.attributes;
+                prev = this._previousAttributes;
+
+                // Check for changes of `id`.
+                if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
+
+                // For each `set` attribute, update or delete the current value.
+                for (attr in attrs) {
+                    val = attrs[attr];
+
+                    // Inject in the relational lookup
+                    val = this.setRelation(attr, val, options);
+
+                    if (this.dataTypes && attr in this.dataTypes) {
+                        val = this.dataTypes[attr](val);
+                    }
+
+                    if (!_.isEqual(current[attr], val)) changes.push(attr);
+                    if (!_.isEqual(prev[attr], val)) {
+                        this.changed[attr] = val;
+                    } else {
+                        delete this.changed[attr];
+                    }
+                    var isARelation = this.relations && this.relations[attr] && (val instanceof this.relations[attr]);
+                    if (unset && !isARelation) {
+                        delete current[attr];
+                    } else {
+                        current[attr] = val;
+                    }
+                }
+
+                // Trigger all relevant attribute changes.
+                if (!silent) {
+                    if (changes.length) this._pending = true;
+                    for (var i = 0, l = changes.length; i < l; i++) {
+                        this.trigger('change:' + changes[i], this, current[changes[i]], options);
+                    }
+                }
+
+                if (changing) return this;
+                if (!silent) {
+                    while (this._pending) {
+                        this._pending = false;
+                        this.trigger('change', this, options, attrs);
+                    }
+                }
+                this._pending = false;
+                this._changing = false;
+                return this;
+            },
+            initApiModel: function(conf) {
+                var me = this;
+                this.apiModel = api.createSync(this.mozuType, _.extend({}, _.result(this, 'defaults') || {}, conf));
+                if (!this.apiModel || !this.apiModel.on) return;
+                this.apiModel.on('action', function() {
+                    me.isLoading(true);
+                    me.trigger('request');
+                });
+                this.apiModel.on('sync', function(rawJSON) {
+                    me.isLoading(false);
+                    if (rawJSON) {
+                        me._isSyncing = true;
+                        me.set(rawJSON);
+                        me._isSyncing = false;
+                    }
+                    me.trigger('sync', rawJSON);
+                });
+                this.apiModel.on('spawn', function(rawJSON) {
+                    me.isLoading(false);
+                });
+                this.apiModel.on('error', function(err) {
+                    me.isLoading(false);
+                    me.trigger('error', err);
+                });
+                this.on('change', function() {
+                    if (!me._isSyncing) {
+                        var changedAttributes = me.changedAttributes();
+                        _.each(changedAttributes, function(v, k, l) {
+                            if (v && typeof v.toJSON === "function")
+                                l[k] = v.toJSON();
+                        });
+                        me.apiModel.prop(changedAttributes);
+                    }
+                });
+            },
+
+            /**
+             * The type of Mozu API object that this model represents; when you specify a `mozuType`, then an SDK object corresponding to that type is created and exposed at the {@link MozuModel#apiModel} property. Its methods are also added to the MozuModel, all prefixed with "api". For example, the SDK `product` object has a method `addToCart`. A Backbone.MozuModel with mozuType `product` will therefore have a method `apiAddToCart`.
+             * member {string} mozuType
+             * @memberOf MozuModel.prototype
+             */
+
+            /**
+             * The underlying SDK object created if you specified a MozuModel#mozuType.
+             * MozuModels do not use the default Backbone.sync function used by standard Backbone.Models. Instead, MozuModels can communicate with the Mozu API if a {@link MozuModel#mozuType mozuType} is specified.
+             * When a new instance of such a model is created, then it will create an SDK object of its `mozuType`, use event listeners to link up `sync` and `error` events between the SDK object and the MozuModel, and add methods for all the methods provided by the SDK object (see {@link MozuModel#mozuType mozuType}.)
+             *
+             * @member {object} apiModel
+             * @memberOf MozuModel.prototype
+             */
+
+
+            /**
+             * Ensure that the underlying SDK object has exactly the same data as the live Backbone model. In conflicts, Backbone always wins.
+             * The underlying SDK object has event hooks into changes to the Backbone model, but under some circumstances a change may be unnoticed and they'll get out of sync.
+             * For instance, if models are nested several layers deep, or if you changed a model attribute with `{ silent: true }` set. Run this method prior to doing any API action
+             * to ensure that the SDK object is up to date.
+             * @returns {null}
+             */
+            syncApiModel: function() {
+                this.apiModel.prop(this.toJSON());
+            },
+
+            /**
+             * A helper method for use in templates. True if there are one or more messages in this model's `messages` cllection.
+             * Added to the list of {@link MozuModel#helpers } if {@link MozuModel#handlesMessages } is set to `true`.
+             * @returns {boolean} True if there are one or more messages in this model's `messages` collection.
+             * @method hasMessages
+             * @memberof MozuModel.prototype
+             */
+
+            initMessages: function() {
+                var me = this;
+                me.messages = new MessageModels.MessagesCollection();
+                me.hasMessages = function() {
+                    return me.messages.length > 0;
+                };
+                me.helpers.push('hasMessages');
+                me.on('error', function(err) {
+                    if (err.items && err.items.length) {
+                        me.messages.reset(err.items);
+                    } else {
+                        me.messages.reset([err]);
+                    }
+                });
+                me.on('sync', function(raw) {
+                    if (!raw || !raw.messages || raw.messages.length === 0) me.messages.reset();
+                });
+                _.each(this.relations, function(v, key) {
+                    var relInstance = me.get(key);
+                    if (relInstance) me.listenTo(relInstance, 'error', function(err) {
+                        me.trigger('error', err);
+                    });
+                });
+            },
+            fetch: function() {
+                var self = this;
+                return this.apiModel.get().then(function() {
+                    return self;
+                });
+            },
+            sync: function(method, model, options) {
+                method = methodMap[method] || method;
+                model.apiModel[method](model.attributes).then(function(model) {
+                    options.success(model.data);
+                }, function(error) {
+                    options.error(error);
+                });
+            },
+
+            /**
+             * Called whenever an API request begins. You may call this manually to trigger a `loadingchange` event, which {@link MozuView} automatically listens to and displays loading state in the DOM.
+             * Added to the list of {@link MozuModel#helpers } automatically, to provide a boolean `model.isLoading` inside HyprLive templates.
+             * @returns {boolean} True if the model is currently loading.
+             * @param {boolean} flag Set this to true to trigger a `loadingchange` event.
+             */
+            isLoading: function(yes, opts) {
+                if (arguments.length === 0) return !!this._isLoading;
+                this._isLoading = yes;
+                // firefox bfcache fix
+                if (yes) {
+                    this._cleanup = this._cleanup || _.bind(this.isLoading, this, false);
+                    this._isWatchingUnload = true;
+                    $window.on('beforeunload', this._cleanup);
+                } else if (this._isWatchingUnload) {
+                    delete this._isWatchingUnload;
+                    $window.off('beforeunload', this._cleanup);
+                }
+                if (!opts || !opts.silent) this.trigger('loadingchange', yes);
+            },
+            getHelpers: function() {
+                return this.helpers;
+            },
+
+            /**
+             * Calls the provided callback immediately if `isLoading` is false, or queues it to be called the next time `isLoading` becomes false.
+             * Good for queueing user actions while waiting for an API request to complete.
+             * @param {function} callback The function to be called when the `isLoading` is false.
+             */
+            whenReady: function(cb) {
+                var me = this,
+                    isLoading = this.isLoading();
+                if (!isLoading) return cb();
+                var handler = function(yes) {
+                    if (!yes) {
+                        me.off('loadingchange', handler);
+                        cb();
+                    }
+                };
+                me.on('loadingchange', handler);
+            },
+
+            /**
+             * Convert the data in this model to a plain JavaScript object that could be passed to `JSON.stringify`.
+             * MozuModel extends the Backbone.Model#toJSON method with two configuration options.
+             * @param {object} options The configuration options.
+             * @param {boolean} options.helpers Include helper methods specified in the {@link MozuModel#helpers} collection.
+             * @param {boolean} options.ensureCopy Ensure that the returned JSON is a complete in-memory copy of the attributes, with no references. Use this helper if you're going to transform the JSON.
+             * @returns {object}
+             */
+            toJSON: function(options) {
+                var attrs = _.clone(this.attributes);
+                if (options && options.helpers) {
+                    _.each(this.getHelpers(), function(helper) {
+                        attrs[helper] = this[helper]();
+                    }, this);
+                    if (this.hasMessages) attrs.messages = this.messages.toJSON();
+                    if (this.validation) attrs.isValid = this.isValid(options.forceValidation);
+                }
+
+                _.each(this.relations, function(rel, key) {
+                    if (_.has(attrs, key)) {
+                        attrs[key] = attrs[key].toJSON(options);
+                    }
+                });
+
+                return (options && options.ensureCopy) ? JSON.parse(JSON.stringify(attrs)) : attrs;
+            }
+        });
+
+        // we have to attach the constructor to the prototype via direct assignment,
+        // because iterative extend methods don't work on the 'constructor' property
+        // in IE8
+
+        modelProto.constructor = function(conf) {
+            this.helpers = (this.helpers || []).concat(['isLoading', 'isValid']);
+            Backbone.Model.apply(this, arguments);
+            if (this.mozuType) this.initApiModel(conf);
+            if (this.handlesMessages) {
+                this.initMessages();
+            } else {
+                this.passErrors();
+            }
+        };
+
+
+        var MozuModel = Backbone.MozuModel = Backbone.Model.extend(modelProto, {
+            /**
+             * Create a mozuModel from any preloaded JSON present for this type.
+             * @example
+             *     var Product = Backbone.MozuModel.extend({
+             *         mozuType: 'product'
+             *     });
+             *     
+             *     // the fromCurrent static factory method is a shortcut for a common pattern.
+             *     var thisProduct = Product.fromCurrent();
+             *     
+             *     // the above is equivalent to:
+             *     var thisProduct = new Product(require.mozuData('product'));
+             * @memberof MozuModel
+             * @static
+             */
+            fromCurrent: function () {
+                return new this(require.mozuData(this.prototype.mozuType), { silent: true, parse: true });
+            },
+            DataTypes: {
+                "Int": function (val) {
+                    val = parseInt(val, 10);
+                    return isNaN(val) ? 0 : val;
+                },
+                "Float": function (val) {
+                    val = parseFloat(val);
+                    return isNaN(val) ? 0 : val;
+                },
+                "Boolean": function (val) {
+                    return typeof val === "string" ? val.toLowerCase() === "true" : !!val;
+                }
+            }
+        });
+
+        function flattenValidation(proto, into, prefix) {
+            _.each(proto.validation, function (val, key) {
+                into[prefix + key] = val;
+            });
+            if (!proto.__validationFlattened) {
+                _.each(proto.relations, function (val, key) {
+                    flattenValidation(val.prototype, into, key + '.');
+                });
+            }
+            proto.__validationFlattened = true;
+            return into;
+        }
+
+        Backbone.MozuModel.extend = function (conf, statics) {
+            if (conf) conf.validation = flattenValidation(conf, {}, '');
+            if (conf && conf.mozuType) {
+                // reflect all methods
+                var actions = api.getAvailableActionsFor(conf.mozuType);
+                if (actions) _.each(actions, function (actionName) {
+                    var apiActionName = "api" + actionName.charAt(0).toUpperCase() + actionName.substring(1);
+                    if (!(apiActionName in conf)) {
+                        conf[apiActionName] = function (data) {
+                            var self = this;
+                            // include self by default...
+                            if (actionName in { 'create': true, 'update': true }) data = data || this.toJSON();
+                            if (typeof data === "object" && !$.isArray(data) && !$.isPlainObject(data)) data = null;
+                            this.syncApiModel();
+                            this.isLoading(true);
+                            var p = this.apiModel[actionName](data);
+                            p.ensure(function () {
+                                self.isLoading(false);
+                            });
+                            return p;
+                        };
+                    }
+                });
+
+            }
+            var ret = Backbone.Model.extend.call(this, conf, statics);
+            if (conf && conf.helpers && conf.helpers.length > 0 && this.prototype.helpers && this.prototype.helpers.length > 0) ret.prototype.helpers = _.union(this.prototype.helpers, conf.helpers);
+            return ret;
+        };
+
+        Backbone.Collection.prototype.resetRelations = function (options) {
+            _.each(this.models, function(model) {
+                _.each(model.relations, function(rel, key) {
+                    if (model.get(key) instanceof Backbone.Collection) {
+                        model.get(key).trigger('reset', model, options);
+                    }
+                });
+            });
+        };
+
+        Backbone.Collection.prototype.reset = function (models, options) {
+            options = options || {};
+            for (var i = 0, l = this.models.length; i < l; i++) {
+                this._removeReference(this.models[i]);
+            }
+            options.previousModels = this.models;
+            this._reset();
+            this.add(models, _.extend({ silent: true }, options));
+            if (!options.silent) {
+                this.trigger('reset', this, options);
+                this.resetRelations(options);
+            }
+            return this;
+        };
+        return Backbone;
+});
+
+define('modules/backbone-mozu-pagedcollection',[
+    "jquery",
+    "underscore",
+    "hyprlive",
+    "modules/backbone-mozu-model"], function ($, _, Hypr, Backbone) {
+
+        var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
+            defaultSort = Hypr.getThemeSetting('defaultSort'),
+            sorts = [
+            {
+                "text": Hypr.getLabel('default'),
+                "value": defaultSort
+            },
+            {
+                "text": Hypr.getLabel('sortByPriceAsc'),
+                "value": "price asc"
+            },
+            {
+                "text": Hypr.getLabel('sortByPriceDesc'),
+                "value": "price desc"
+            },
+            {
+                "text": Hypr.getLabel('sortByNameAsc'),
+                "value": "productName asc"
+            },
+            {
+                "text": Hypr.getLabel('sortByNameDesc'),
+                "value": "productName desc"
+            },
+            {
+                "text": Hypr.getLabel('sortByDateDesc'),
+                "value": "createDate desc"
+            },
+            {
+                "text": Hypr.getLabel('sortByDateAsc'),
+                "value": "createDate asc"
+            }
+        ];
+
+        var PagedCollection = Backbone.MozuPagedCollection = Backbone.MozuModel.extend({
+            helpers: ['firstIndex', 'lastIndex', 'middlePageNumbers', 'hasPreviousPage', 'hasNextPage', 'currentPage', 'sorts', 'currentSort'],
+            validation: {
+                pageSize: { min: 1 },
+                pageCount: { min: 1 },
+                totalCount: { min: 0 },
+                startIndex: { min: 0 }
+            },
+            dataTypes: {
+                pageSize: Backbone.MozuModel.DataTypes.Int,
+                pageCount: Backbone.MozuModel.DataTypes.Int,
+                startIndex: Backbone.MozuModel.DataTypes.Int,
+                totalCount: Backbone.MozuModel.DataTypes.Int
+            },
+            defaultSort: defaultSort,
+
+            _isPaged: true,
+
+            getQueryParams: function() {
+                var self = this, lrClone = _.clone(this.lastRequest);
+                _.each(lrClone, function(v, p) {
+                    if (self.baseRequestParams && (p in self.baseRequestParams)) delete lrClone[p];
+                });
+                if (parseInt(lrClone.pageSize, 10) === defaultPageSize) delete lrClone.pageSize;
+
+                var startIndex = this.get('startIndex');
+                if (startIndex) lrClone.startIndex = startIndex;
+                return lrClone;
+            },
+
+            getQueryString: function() {
+                var params = this.getQueryParams();
+                if (!params || _.isEmpty(params)) return "";
+                return "?" + $.param(params)
+                              .replace(/\+/g, ' ');
+            },
+
+            buildRequest: function() {
+                var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
+                    pageSize = this.get("pageSize"),
+                    startIndex = this.get("startIndex"),
+                    sortBy = $.deparam().sortBy || this.currentSort() || defaultSort;
+                conf.pageSize = pageSize;
+                if (startIndex) conf.startIndex = startIndex;
+                if (sortBy) conf.sortBy = sortBy;
+                return conf;
+            },
+
+            previousPage: function() {
+                try {
+                    return this.apiModel.prevPage(this.lastRequest);
+                } catch (e) { }
+            },
+
+            nextPage: function() {
+                try {
+                    return this.apiModel.nextPage(this.lastRequest);
+                } catch (e) { }
+            },
+
+            syncIndex: function (currentUriFragment) {
+                try {
+                    var uriStartIndex = parseInt(($.deparam(currentUriFragment).startIndex || 0), 10);
+                    if (!isNaN(uriStartIndex) && uriStartIndex !== this.apiModel.getIndex()) {
+                        this.lastRequest.startIndex = uriStartIndex;
+                        return this.apiModel.setIndex(uriStartIndex, this.lastRequest);
+                    }
+                } catch (e) { }
+            },
+
+            setPage: function(num) {
+                num = parseInt(num, 10);
+                if (num != this.currentPage() && num <= parseInt(this.get('pageCount'), 10)) return this.apiModel.setIndex((num - 1) * parseInt(this.get('pageSize'), 10), this.lastRequest);
+            },
+
+            changePageSize: function() {
+                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize') }));
+            },
+
+            firstIndex: function() {
+                return this.get("startIndex") + 1;
+            },
+
+            lastIndex: function() {
+                return this.get("startIndex") + this.get("items").length;
+            },
+
+            hasPreviousPage: function() {
+                return this.get("startIndex") > 0;
+            },
+
+            hasNextPage: function() {
+                return this.lastIndex() < this.get("totalCount");
+            },
+
+            currentPage: function() {
+                return Math.ceil(this.firstIndex() / (this.get('pageSize') || 1));
+            },
+
+            middlePageNumbers: function() {
+                var current = this.currentPage(),
+                    ret = [],
+                    pageCount = this.get('pageCount'),
+                    i = Math.max(Math.min(current - 2, pageCount - 4), 2),
+                    last = Math.min(i + 5, pageCount);
+                while (i < last) ret.push(i++);
+                return ret;
+            },
+
+            sorts: function() {
+                return sorts;
+            },
+
+            currentSort: function() {
+                return (this.lastRequest && this.lastRequest.sortBy && decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g, ' ')) || '';
+            },
+
+            sortBy: function(sortString) {
+                return this.apiGet($.extend(this.lastRequest, { sortBy: sortString }));
+            },
+            initialize: function() {
+                this.lastRequest = this.buildRequest();
+            }
+        });
+
+
+        return Backbone;
+});
+
+define('modules/views-messages',['modules/jquery-mozu','underscore','backbone','hyprlive'], function($, _, Backbone, Hypr) {
+    // because mozuviews need mozumessageviews and mozumessageviews extend mozuviews, we're risking circular reference problems.
+    // we fix this by making a factory method that extends the mozu message view only when asked.
+    // this avoids the circular reference problem by not asking for backbone-mozuview until we know it's been provided.
+    var MozuMessagesView,
+        offset = parseInt(Hypr.getThemeSetting('gutterWidth'), 10) || 10;
+    return function(opts) {
+        if (!MozuMessagesView) MozuMessagesView = Backbone.MozuView.extend({
+            templateName: 'modules/common/message-bar',
+            initialize: function() {
+                this.model.on('reset', this.render, this);
+            },
+            render: function() {
+                Backbone.MozuView.prototype.render.apply(this, arguments);
+                if (this.model.length > 0) {
+                    this.$el.ScrollTo({
+                        onlyIfOutside: true,
+                        offsetTop: offset,
+                        offsetLeft: offset * 1.5,
+                        axis: 'y'
+                    });
+                }
+            }
+        });
+        return new MozuMessagesView(opts);
+    };
+
+});
+define('modules/backbone-mozu-view',[
+    "modules/jquery-mozu",
+    "underscore",
+    "hyprlive",
+    "backbone",
+    "modules/views-messages"
+], function ($, _, Hypr, Backbone, messageViewFactory) {
+
+    var MozuView = Backbone.MozuView = Backbone.View.extend(
+
+
+        /** @lends MozuView.prototype */
+        {
+
+            /**
+             * Extends the BackboneJS View object to create a Backbone.MozuView with extra features for Hypr integration, queued rendering, simple one-way data binding, and automatic accessor generation.
+             * @class MozuView
+             * @augments external:Backbone.View
+             */
+
+
+            /**
+             * Array of properties of the model to autogenerate update handlers for. The handlers created follow the naming convention `updatePropName` for a property `propName`. They're designed to be attached to an input element using the `events` or `additionalEvents` hash; they expect a jQuery Event from which they determine the original target element, then they try to get that target element's value and set the model property.
+             * @member {Array} autoUpdate
+             * @memberOf MozuView.prototype
+             * @public
+             * @example
+             * var FullNameView = Backbone.MozuView.extend({
+             *  autoUpdate: ['firstName','lastNameOrSurname']
+             * });
+             * var fullNameView = new FullNameView({ model: someModel, el: $someElement });
+             * typeof fullNameView.updateFirstName; // --> "function" that takes a jQuery Event as its argument
+             * typeof fullNameView.updateLastNameOrSurname; // --> same as above
+             */
+
+
+        constructor: function (conf) {
+            Backbone.View.apply(this, arguments);
+            this.template = Hypr.getTemplate(conf.templateName || this.templateName);
+            this.listenTo(this.model, "sync", this.render);
+            this.listenTo(this.model, "loadingchange", this.handleLoadingChange);
+            if (this.model.handlesMessages && conf.messagesEl) {
+                this.messageView = messageViewFactory({
+                    el: conf.messagesEl,
+                    model: this.model.messages
+                });
+            }
+            if (this.renderOnChange) {
+                _.each(this.renderOnChange, function (prop) {
+                    var model = this.model;
+                    if (prop.indexOf('.') !== -1) {
+                        var level, hier = prop.split('.');
+                        while (hier.length > 1) {
+                            level = hier.shift();
+                            model = model[level] || model.get(level);
+                        }
+                        prop = hier[0];
+                    }
+                    this.listenTo(model, 'change', _.debounce(this.dequeueRender, 150), this);
+                    this.listenTo(model, 'change:' + prop, this.enqueueRender, this);
+                }, this);
+            }
+            Backbone.Validation.bind(this);
+            Backbone.MozuView.trigger('create', this);
+
+        },
+            enqueueRender: function () {
+            this.renderQueued = true;
+        },
+        dequeueRender: function () {
+            if (this.renderQueued) {
+                this.render();
+                this.renderQueued = false;
+            }
+        },
+        events: function () {
+            var defaults = _.object(_.flatten(_.map(this.$('[data-mz-value]'), function (el) {
+                var val = el.getAttribute('data-mz-value');
+                return _.map(['change', 'blur', 'keyup'], function (ev) {
+                    return [ev + ' [data-mz-value="' + val + '"]', "update" + val.charAt(0).toUpperCase() + val.substring(1)];
+                });
+            }).concat(_.map(this.$('[data-mz-action]'), function (el) {
+                var action = el.getAttribute('data-mz-action');
+                return _.map(['click'], function (ev) {
+                    return [ev + ' [data-mz-action="' + action + '"]', action];
+                });
+            })), true));
+            return this.additionalEvents ? _.extend(defaults, this.additionalEvents) : defaults;
+        },
+        handleLoadingChange: function (isLoading) {
+            this.$el[isLoading ? 'addClass' : 'removeClass']('is-loading');
+        },
+            /**
+             * Get the context that will be sent to the template by the MozuView#render method. In the base implementation, this returns an object with a single property, `model`, whose value is the JSON representation of the `model` property of this view. This object is sent to Hypr, which extends it on to the global context object always present in every template, which includes `siteContext`, `labels`, etc. 
+             * 
+             * Override this method to add another base-level variable to be available in this template.
+             * @example
+             * // base implementation
+             * productView.getRenderContext(); // --> { model: { [...product data] } }
+             * // an example override
+             * var ViewWithExtraRootVariable = MozuView.extend({
+             *   getRenderContext: function() {
+             *      // first get the parent method's output
+             *      var context = MozuView.prototype.getRenderContext.apply(this, arguments);
+             *      context.foo = "bar";
+             *      return context;
+             *   }
+             * });
+             * var anotherView = new ViewWithExtraRootVariable({
+             *   model: someModel,
+             *   templateName: "path/to/template",
+             *   el: $('some-selector')
+             * });
+             * anotherView.getRenderContext(); // --> { model: { [...model data] }, foo: "bar" }
+             * // now, the template bound to this view can say {{ foo }} to render bar.
+             * @param {MozuModel} substituteModel A model to use, for this render cycle only instead of the view's model.
+             */
+            getRenderContext: function (substituteModel) {
+            var model = (substituteModel || this.model).toJSON({ helpers: true });
+                return {
+                    Model: model,
+                    model: model
+                };
+            },
+            
+            /**
+             * Renders the template into the element specified at the `el` property, using the JSON representation of the `model` and whatever else is added by {@link MozuView#getRenderContext}.
+             */
+            render: function (options) {
+                var thenFocus = this.el && document.activeElement && document.activeElement.type !== "radio" && document.activeElement.type !== "checkbox" && $.contains(this.el, document.activeElement) && {
+                    'id': document.activeElement.id,
+                    'mzvalue': document.activeElement.getAttribute('data-mz-value'),
+                    'mzFocusBookmark': document.activeElement.getAttribute('data-mz-focus-bookmark'),
+                    'value': document.activeElement.value
+                };
+
+                this.storeDropzones();
+
+                Backbone.Validation.unbind(this);
+                this.undelegateEvents();
+                var newHtml = this.template.render(this.getRenderContext());
+                this.$el.html(newHtml);
+
+                this.retrieveDropzones();
+
+                this.delegateEvents();
+                Backbone.Validation.bind(this);
+                if (thenFocus) {
+                    if (thenFocus.id) {
+                        $(document.getElementById(thenFocus.id)).focus();
+                    } else if (thenFocus.mzFocusBookmark) {
+                        this.$('[data-mz-focus-bookmark="' + thenFocus.mzFocusBookmark + '"]').focus();
+                    } else if (thenFocus.mzvalue) {
+                        this.$('[data-mz-value="' + thenFocus.mzvalue + '"]').focus();
+                    }
+                }
+                if (!options || !options.silent) {
+                    this.trigger('render', newHtml);
+                    Backbone.MozuView.trigger('render', this, newHtml);
+                }
+            },
+
+            storeDropzones: function() {
+                var dropzones = this.dropzones = {};
+                this.$('.mz-drop-zone').each(function() {
+                    dropzones[this.id] = this;
+                });
+            },
+
+            retrieveDropzones: function() {
+                var dropzones = this.dropzones;
+                this.$('.mz-drop-zone').each(function() {
+                    if (dropzones[this.id]) $(this).replaceWith(dropzones[this.id]);
+                });
+            }
+
+            /**
+             * Array of properties of the model to autogenerate update handlers for. The handlers created follow the naming convention `updatePropName` for a property `propName`. They're designed to be attached to an input element using the `events` or `additionalEvents` hash; they expect a jQuery Event from which they determine the original target element, then they try to get that target element's value and set the model property.
+             * @member {Array} autoUpdate
+             * @memberOf MozuView.prototype
+             * @public
+             * @example
+             * var FullNameView = Backbone.MozuView.extend({
+             *  autoUpdate: ['firstName','lastNameOrSurname']
+             * });
+             * var fullNameView = new FullNameView({ model: someModel, el: $someElement });
+             * typeof fullNameView.updateFirstName; // --> "function" that takes a jQuery Event as its argument
+             * typeof fullNameView.updateLastNameOrSurname; // --> same as above
+             */
+
+
+        });
+    _.extend(Backbone.MozuView, Backbone.Events, {
+        extend: function (conf, statics) {
+            if (conf.autoUpdate) {
+                _.each(conf.autoUpdate, function (prop) {
+                    var methodName = 'update' + prop.charAt(0).toUpperCase() + prop.substring(1);
+                    conf[methodName] = _.debounce(conf[methodName] || function (e) {
+                        var attrs = {},
+                            $target = $(e.currentTarget),
+                            checked = $target.prop('checked'),
+                            value = e.currentTarget.type === "checkbox" ? checked : $target.val();
+                        if (!(e.currentTarget.type === "radio" && !checked)) {
+                            attrs[prop] = value;
+                            this.model.set(attrs);
+                        }
+                    }, 50);
+                });
+            }
+            return Backbone.View.extend.call(this, conf, statics);
+        }
+    });
+});
+
+/**
+ * This is a convenience script which combines Backbone.MozuModel,
+ * Backbone.MozuView, and Backbone.Validation into a single package, all on the
+ * Backbone object as is BackboneJS convention.
+ */
+define('modules/backbone-mozu',[
+    "modules/backbone-mozu-validation",
+    "modules/backbone-mozu-model",
+    "modules/backbone-mozu-pagedcollection",
+    "modules/backbone-mozu-view"
+], function (Backbone) {
+    return Backbone;
+});
+
+/**
+ * Watches for changes to the quantity of items in the shopping cart, to update
+ * cart count indicators on the storefront.
+ */
+define('modules/cart-monitor',['modules/jquery-mozu', 'modules/api'], function ($, api) {
+
+    var $cartCount,
+        user = require.mozuData('user'),
+        userId = user.userId,
+        $document = $(document),
+        CartMonitor = {
+            setCount: function(count) {
+                this.$el.text(count);
+                savedCounts[userId] = count;
+                $.cookie('mozucartcount', JSON.stringify(savedCounts), { path: '/' });
+            },
+            addToCount: function(count) {
+                this.setCount(this.getCount() + count);
+            },
+            getCount: function() {
+                return parseInt(this.$el.text(), 10) || 0;
+            },
+            update: function() {
+                api.get('cartsummary').then(function(summary) {
+                    $document.ready(function() {
+                        CartMonitor.setCount(summary.count());
+                    });
+                });
+            }
+        },
+        savedCounts,
+        savedCount;
+
+    try {
+        savedCounts = JSON.parse($.cookie('mozucartcount'));
+    } catch(e) {}
+
+    if (!savedCounts) savedCounts = {};
+    savedCount = savedCounts && savedCounts[userId];
+
+    if (isNaN(savedCount)) {
+        CartMonitor.update();
+    }
+
+    $document.ready(function () {
+        CartMonitor.$el = $('[data-mz-role="cartmonitor"]').text(savedCount || 0);
+    });
+
+    return CartMonitor;
+
+});
+define('modules/contextify',['modules/jquery-mozu'], function ($) {
+    $(document).ready(function () {
+        $('[data-mz-contextify]').each(function () {
+            var $this = $(this),
+                config = $this.data();
+
+            $this.find(config.mzContextify).each(function () {
+                var $item = $(this);
+                if (config.mzContextifyAttr === "class") {
+                    $item.addClass(config.mzContextifyVal);
+                } else {
+                    $item.prop(config.mzContextifyAttr, config.mzContextifyVal);
+                }
+            });
+        });
+    });
+});
+define('shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery',['modules/jquery-mozu'], function(jQuery) { 
 
 /* ========================================================================
  * Bootstrap: tooltip.js v3.2.0
@@ -29,6 +5138,466 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
+
++function ($) {
+  
+
+  // TOOLTIP PUBLIC CLASS DEFINITION
+  // ===============================
+
+  var Tooltip = function (element, options) {
+    this.type       =
+    this.options    =
+    this.enabled    =
+    this.timeout    =
+    this.hoverState =
+    this.$element   = null
+
+    this.init('tooltip', element, options)
+  }
+
+  Tooltip.VERSION  = '3.2.0'
+
+  Tooltip.DEFAULTS = {
+    animation: true,
+    placement: 'top',
+    selector: false,
+    template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',
+    trigger: 'hover focus',
+    title: '',
+    delay: 0,
+    html: false,
+    container: false,
+    viewport: {
+      selector: 'body',
+      padding: 0
+    }
+  }
+
+  Tooltip.prototype.init = function (type, element, options) {
+    this.enabled   = true
+    this.type      = type
+    this.$element  = $(element)
+    this.options   = this.getOptions(options)
+    this.$viewport = this.options.viewport && $(this.options.viewport.selector || this.options.viewport)
+
+    var triggers = this.options.trigger.split(' ')
+
+    for (var i = triggers.length; i--;) {
+      var trigger = triggers[i]
+
+      if (trigger == 'click') {
+        this.$element.on('click.' + this.type, this.options.selector, $.proxy(this.toggle, this))
+      } else if (trigger != 'manual') {
+        var eventIn  = trigger == 'hover' ? 'mouseenter' : 'focusin'
+        var eventOut = trigger == 'hover' ? 'mouseleave' : 'focusout'
+
+        this.$element.on(eventIn  + '.' + this.type, this.options.selector, $.proxy(this.enter, this))
+        this.$element.on(eventOut + '.' + this.type, this.options.selector, $.proxy(this.leave, this))
+      }
+    }
+
+    this.options.selector ?
+      (this._options = $.extend({}, this.options, { trigger: 'manual', selector: '' })) :
+      this.fixTitle()
+  }
+
+  Tooltip.prototype.getDefaults = function () {
+    return Tooltip.DEFAULTS
+  }
+
+  Tooltip.prototype.getOptions = function (options) {
+    options = $.extend({}, this.getDefaults(), this.$element.data(), options)
+
+    if (options.delay && typeof options.delay == 'number') {
+      options.delay = {
+        show: options.delay,
+        hide: options.delay
+      }
+    }
+
+    return options
+  }
+
+  Tooltip.prototype.getDelegateOptions = function () {
+    var options  = {}
+    var defaults = this.getDefaults()
+
+    this._options && $.each(this._options, function (key, value) {
+      if (defaults[key] != value) options[key] = value
+    })
+
+    return options
+  }
+
+  Tooltip.prototype.enter = function (obj) {
+    var self = obj instanceof this.constructor ?
+      obj : $(obj.currentTarget).data('bs.' + this.type)
+
+    if (!self) {
+      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+      $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    clearTimeout(self.timeout)
+
+    self.hoverState = 'in'
+
+    if (!self.options.delay || !self.options.delay.show) return self.show()
+
+    self.timeout = setTimeout(function () {
+      if (self.hoverState == 'in') self.show()
+    }, self.options.delay.show)
+  }
+
+  Tooltip.prototype.leave = function (obj) {
+    var self = obj instanceof this.constructor ?
+      obj : $(obj.currentTarget).data('bs.' + this.type)
+
+    if (!self) {
+      self = new this.constructor(obj.currentTarget, this.getDelegateOptions())
+      $(obj.currentTarget).data('bs.' + this.type, self)
+    }
+
+    clearTimeout(self.timeout)
+
+    self.hoverState = 'out'
+
+    if (!self.options.delay || !self.options.delay.hide) return self.hide()
+
+    self.timeout = setTimeout(function () {
+      if (self.hoverState == 'out') self.hide()
+    }, self.options.delay.hide)
+  }
+
+  Tooltip.prototype.show = function () {
+    var e = $.Event('show.bs.' + this.type)
+
+    if (this.hasContent() && this.enabled) {
+      this.$element.trigger(e)
+
+      var inDom = $.contains(document.documentElement, this.$element[0])
+      if (e.isDefaultPrevented() || !inDom) return
+      var that = this
+
+      var $tip = this.tip()
+
+      var tipId = this.getUID(this.type)
+
+      this.setContent()
+      $tip.attr('id', tipId)
+      this.$element.attr('aria-describedby', tipId)
+
+      if (this.options.animation) $tip.addClass('fade')
+
+      var placement = typeof this.options.placement == 'function' ?
+        this.options.placement.call(this, $tip[0], this.$element[0]) :
+        this.options.placement
+
+      var autoToken = /\s?auto?\s?/i
+      var autoPlace = autoToken.test(placement)
+      if (autoPlace) placement = placement.replace(autoToken, '') || 'top'
+
+      $tip
+        .detach()
+        .css({ top: 0, left: 0, display: 'block' })
+        .addClass(placement)
+        .data('bs.' + this.type, this)
+
+      this.options.container ? $tip.appendTo(this.options.container) : $tip.insertAfter(this.$element)
+
+      var pos          = this.getPosition()
+      var actualWidth  = $tip[0].offsetWidth
+      var actualHeight = $tip[0].offsetHeight
+
+      if (autoPlace) {
+        var orgPlacement = placement
+        var $parent      = this.$element.parent()
+        var parentDim    = this.getPosition($parent)
+
+        placement = placement == 'bottom' && pos.top   + pos.height       + actualHeight - parentDim.scroll > parentDim.height ? 'top'    :
+                    placement == 'top'    && pos.top   - parentDim.scroll - actualHeight < 0                                   ? 'bottom' :
+                    placement == 'right'  && pos.right + actualWidth      > parentDim.width                                    ? 'left'   :
+                    placement == 'left'   && pos.left  - actualWidth      < parentDim.left                                     ? 'right'  :
+                    placement
+
+        $tip
+          .removeClass(orgPlacement)
+          .addClass(placement)
+      }
+
+      var calculatedOffset = this.getCalculatedOffset(placement, pos, actualWidth, actualHeight)
+
+      this.applyPlacement(calculatedOffset, placement)
+
+      var complete = function () {
+        that.$element.trigger('shown.bs.' + that.type)
+        that.hoverState = null
+      }
+
+      $.support.transition && this.$tip.hasClass('fade') ?
+        $tip
+          .one('bsTransitionEnd', complete)
+          .emulateTransitionEnd(150) :
+        complete()
+    }
+  }
+
+  Tooltip.prototype.applyPlacement = function (offset, placement) {
+    var $tip   = this.tip()
+    var width  = $tip[0].offsetWidth
+    var height = $tip[0].offsetHeight
+
+    // manually read margins because getBoundingClientRect includes difference
+    var marginTop = parseInt($tip.css('margin-top'), 10)
+    var marginLeft = parseInt($tip.css('margin-left'), 10)
+
+    // we must check for NaN for ie 8/9
+    if (isNaN(marginTop))  marginTop  = 0
+    if (isNaN(marginLeft)) marginLeft = 0
+
+    offset.top  = offset.top  + marginTop
+    offset.left = offset.left + marginLeft
+
+    // $.fn.offset doesn't round pixel values
+    // so we use setOffset directly with our own function B-0
+    $.offset.setOffset($tip[0], $.extend({
+      using: function (props) {
+        $tip.css({
+          top: Math.round(props.top),
+          left: Math.round(props.left)
+        })
+      }
+    }, offset), 0)
+
+    $tip.addClass('in')
+
+    // check to see if placing tip in new offset caused the tip to resize itself
+    var actualWidth  = $tip[0].offsetWidth
+    var actualHeight = $tip[0].offsetHeight
+
+    if (placement == 'top' && actualHeight != height) {
+      offset.top = offset.top + height - actualHeight
+    }
+
+    var delta = this.getViewportAdjustedDelta(placement, offset, actualWidth, actualHeight)
+
+    if (delta.left) offset.left += delta.left
+    else offset.top += delta.top
+
+    var arrowDelta          = delta.left ? delta.left * 2 - width + actualWidth : delta.top * 2 - height + actualHeight
+    var arrowPosition       = delta.left ? 'left'        : 'top'
+    var arrowOffsetPosition = delta.left ? 'offsetWidth' : 'offsetHeight'
+
+    $tip.offset(offset)
+    this.replaceArrow(arrowDelta, $tip[0][arrowOffsetPosition], arrowPosition)
+  }
+
+  Tooltip.prototype.replaceArrow = function (delta, dimension, position) {
+    this.arrow().css(position, delta ? (50 * (1 - delta / dimension) + '%') : '')
+  }
+
+  Tooltip.prototype.setContent = function () {
+    var $tip  = this.tip()
+    var title = this.getTitle()
+
+    $tip.find('.tooltip-inner')[this.options.html ? 'html' : 'text'](title)
+    $tip.removeClass('fade in top bottom left right')
+  }
+
+  Tooltip.prototype.hide = function () {
+    var that = this
+    var $tip = this.tip()
+    var e    = $.Event('hide.bs.' + this.type)
+
+    this.$element.removeAttr('aria-describedby')
+
+    function complete() {
+      if (that.hoverState != 'in') $tip.detach()
+      that.$element.trigger('hidden.bs.' + that.type)
+    }
+
+    this.$element.trigger(e)
+
+    if (e.isDefaultPrevented()) return
+
+    $tip.removeClass('in')
+
+    $.support.transition && this.$tip.hasClass('fade') ?
+      $tip
+        .one('bsTransitionEnd', complete)
+        .emulateTransitionEnd(150) :
+      complete()
+
+    this.hoverState = null
+
+    return this
+  }
+
+  Tooltip.prototype.fixTitle = function () {
+    var $e = this.$element
+    if ($e.attr('title') || typeof ($e.attr('data-original-title')) != 'string') {
+      $e.attr('data-original-title', $e.attr('title') || '').attr('title', '')
+    }
+  }
+
+  Tooltip.prototype.hasContent = function () {
+    return this.getTitle()
+  }
+
+  Tooltip.prototype.getPosition = function ($element) {
+    $element   = $element || this.$element
+    var el     = $element[0]
+    var isBody = el.tagName == 'BODY'
+    return $.extend({}, (typeof el.getBoundingClientRect == 'function') ? el.getBoundingClientRect() : null, {
+      scroll: isBody ? document.documentElement.scrollTop || document.body.scrollTop : $element.scrollTop(),
+      width:  isBody ? $(window).width()  : $element.outerWidth(),
+      height: isBody ? $(window).height() : $element.outerHeight()
+    }, isBody ? { top: 0, left: 0 } : $element.offset())
+  }
+
+  Tooltip.prototype.getCalculatedOffset = function (placement, pos, actualWidth, actualHeight) {
+    return placement == 'bottom' ? { top: pos.top + pos.height,   left: pos.left + pos.width / 2 - actualWidth / 2  } :
+           placement == 'top'    ? { top: pos.top - actualHeight, left: pos.left + pos.width / 2 - actualWidth / 2  } :
+           placement == 'left'   ? { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left - actualWidth } :
+        /* placement == 'right' */ { top: pos.top + pos.height / 2 - actualHeight / 2, left: pos.left + pos.width   }
+
+  }
+
+  Tooltip.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
+    var delta = { top: 0, left: 0 }
+    if (!this.$viewport) return delta
+
+    var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
+    var viewportDimensions = this.getPosition(this.$viewport)
+
+    if (/right|left/.test(placement)) {
+      var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll
+      var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight
+      if (topEdgeOffset < viewportDimensions.top) { // top overflow
+        delta.top = viewportDimensions.top - topEdgeOffset
+      } else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) { // bottom overflow
+        delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset
+      }
+    } else {
+      var leftEdgeOffset  = pos.left - viewportPadding
+      var rightEdgeOffset = pos.left + viewportPadding + actualWidth
+      if (leftEdgeOffset < viewportDimensions.left) { // left overflow
+        delta.left = viewportDimensions.left - leftEdgeOffset
+      } else if (rightEdgeOffset > viewportDimensions.width) { // right overflow
+        delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
+      }
+    }
+
+    return delta
+  }
+
+  Tooltip.prototype.getTitle = function () {
+    var title
+    var $e = this.$element
+    var o  = this.options
+
+    title = $e.attr('data-original-title')
+      || (typeof o.title == 'function' ? o.title.call($e[0]) :  o.title)
+
+    return title
+  }
+
+  Tooltip.prototype.getUID = function (prefix) {
+    do prefix += ~~(Math.random() * 1000000)
+    while (document.getElementById(prefix))
+    return prefix
+  }
+
+  Tooltip.prototype.tip = function () {
+    return (this.$tip = this.$tip || $(this.options.template))
+  }
+
+  Tooltip.prototype.arrow = function () {
+    return (this.$arrow = this.$arrow || this.tip().find('.tooltip-arrow'))
+  }
+
+  Tooltip.prototype.validate = function () {
+    if (!this.$element[0].parentNode) {
+      this.hide()
+      this.$element = null
+      this.options  = null
+    }
+  }
+
+  Tooltip.prototype.enable = function () {
+    this.enabled = true
+  }
+
+  Tooltip.prototype.disable = function () {
+    this.enabled = false
+  }
+
+  Tooltip.prototype.toggleEnabled = function () {
+    this.enabled = !this.enabled
+  }
+
+  Tooltip.prototype.toggle = function (e) {
+    var self = this
+    if (e) {
+      self = $(e.currentTarget).data('bs.' + this.type)
+      if (!self) {
+        self = new this.constructor(e.currentTarget, this.getDelegateOptions())
+        $(e.currentTarget).data('bs.' + this.type, self)
+      }
+    }
+
+    self.tip().hasClass('in') ? self.leave(self) : self.enter(self)
+  }
+
+  Tooltip.prototype.destroy = function () {
+    clearTimeout(this.timeout)
+    this.hide().$element.off('.' + this.type).removeData('bs.' + this.type)
+  }
+
+
+  // TOOLTIP PLUGIN DEFINITION
+  // =========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.tooltip')
+      var options = typeof option == 'object' && option
+
+      if (!data && option == 'destroy') return
+      if (!data) $this.data('bs.tooltip', (data = new Tooltip(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.tooltip
+
+  $.fn.tooltip             = Plugin
+  $.fn.tooltip.Constructor = Tooltip
+
+
+  // TOOLTIP NO CONFLICT
+  // ===================
+
+  $.fn.tooltip.noConflict = function () {
+    $.fn.tooltip = old
+    return this
+  }
+
+}(jQuery);
+ ; 
+
+return jQuery; 
+
+});
+
+
+//@ sourceURL=/vendor/bootstrap/js/tooltip.js
+
+;
+define('shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery',['shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery'], function(jQuery) { 
+
 /* ========================================================================
  * Bootstrap: popover.js v3.2.0
  * http://getbootstrap.com/javascript/#popovers
@@ -37,7 +5606,2185 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
+
++function ($) {
+  
+
+  // POPOVER PUBLIC CLASS DEFINITION
+  // ===============================
+
+  var Popover = function (element, options) {
+    this.init('popover', element, options)
+  }
+
+  if (!$.fn.tooltip) throw new Error('Popover requires tooltip.js')
+
+  Popover.VERSION  = '3.2.0'
+
+  Popover.DEFAULTS = $.extend({}, $.fn.tooltip.Constructor.DEFAULTS, {
+    placement: 'right',
+    trigger: 'click',
+    content: '',
+    template: '<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+  })
+
+
+  // NOTE: POPOVER EXTENDS tooltip.js
+  // ================================
+
+  Popover.prototype = $.extend({}, $.fn.tooltip.Constructor.prototype)
+
+  Popover.prototype.constructor = Popover
+
+  Popover.prototype.getDefaults = function () {
+    return Popover.DEFAULTS
+  }
+
+  Popover.prototype.setContent = function () {
+    var $tip    = this.tip()
+    var title   = this.getTitle()
+    var content = this.getContent()
+
+    $tip.find('.popover-title')[this.options.html ? 'html' : 'text'](title)
+    $tip.find('.popover-content').empty()[ // we use append for html objects to maintain js events
+      this.options.html ? (typeof content == 'string' ? 'html' : 'append') : 'text'
+    ](content)
+
+    $tip.removeClass('fade top bottom left right in')
+
+    // IE8 doesn't accept hiding via the `:empty` pseudo selector, we have to do
+    // this manually by checking the contents.
+    if (!$tip.find('.popover-title').html()) $tip.find('.popover-title').hide()
+  }
+
+  Popover.prototype.hasContent = function () {
+    return this.getTitle() || this.getContent()
+  }
+
+  Popover.prototype.getContent = function () {
+    var $e = this.$element
+    var o  = this.options
+
+    return $e.attr('data-content')
+      || (typeof o.content == 'function' ?
+            o.content.call($e[0]) :
+            o.content)
+  }
+
+  Popover.prototype.arrow = function () {
+    return (this.$arrow = this.$arrow || this.tip().find('.arrow'))
+  }
+
+  Popover.prototype.tip = function () {
+    if (!this.$tip) this.$tip = $(this.options.template)
+    return this.$tip
+  }
+
+
+  // POPOVER PLUGIN DEFINITION
+  // =========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.popover')
+      var options = typeof option == 'object' && option
+
+      if (!data && option == 'destroy') return
+      if (!data) $this.data('bs.popover', (data = new Popover(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.popover
+
+  $.fn.popover             = Plugin
+  $.fn.popover.Constructor = Popover
+
+
+  // POPOVER NO CONFLICT
+  // ===================
+
+  $.fn.popover.noConflict = function () {
+    $.fn.popover = old
+    return this
+  }
+
+}(jQuery);
+ ; 
+
+return jQuery; 
+
+});
+
+
+//@ sourceURL=/vendor/bootstrap/js/popover.js
+
+;
 /*! http://mths.be/placeholder v2.1.0 by @mathias */
+(function(factory) {
+	if (typeof define === 'function' && define.amd) {
+		// AMD
+		define('vendor/jquery-placeholder/jquery.placeholder',['jquery'], factory);
+	} else {
+		// Browser globals
+		factory(jQuery);
+	}
+}(function($) {
+
+	// Opera Mini v7 doesn’t support placeholder although its DOM seems to indicate so
+	var isOperaMini = Object.prototype.toString.call(window.operamini) == '[object OperaMini]';
+	var isInputSupported = 'placeholder' in document.createElement('input') && !isOperaMini;
+	var isTextareaSupported = 'placeholder' in document.createElement('textarea') && !isOperaMini;
+	var valHooks = $.valHooks;
+	var propHooks = $.propHooks;
+	var hooks;
+	var placeholder;
+
+	if (isInputSupported && isTextareaSupported) {
+
+		placeholder = $.fn.placeholder = function() {
+			return this;
+		};
+
+		placeholder.input = placeholder.textarea = true;
+
+	} else {
+
+		var settings = {};
+
+		placeholder = $.fn.placeholder = function(options) {
+
+			var defaults = {customClass: 'placeholder'};
+			settings = $.extend({}, defaults, options);
+
+			var $this = this;
+			$this
+				.filter((isInputSupported ? 'textarea' : ':input') + '[placeholder]')
+				.not('.'+settings.customClass)
+				.bind({
+					'focus.placeholder': clearPlaceholder,
+					'blur.placeholder': setPlaceholder
+				})
+				.data('placeholder-enabled', true)
+				.trigger('blur.placeholder');
+			return $this;
+		};
+
+		placeholder.input = isInputSupported;
+		placeholder.textarea = isTextareaSupported;
+
+		hooks = {
+			'get': function(element) {
+				var $element = $(element);
+
+				var $passwordInput = $element.data('placeholder-password');
+				if ($passwordInput) {
+					return $passwordInput[0].value;
+				}
+
+				return $element.data('placeholder-enabled') && $element.hasClass('placeholder') ? '' : element.value;
+			},
+			'set': function(element, value) {
+				var $element = $(element);
+
+				var $passwordInput = $element.data('placeholder-password');
+				if ($passwordInput) {
+					return $passwordInput[0].value = value;
+				}
+
+				if (!$element.data('placeholder-enabled')) {
+					return element.value = value;
+				}
+				if (value === '') {
+					element.value = value;
+					// Issue #56: Setting the placeholder causes problems if the element continues to have focus.
+					if (element != safeActiveElement()) {
+						// We can't use `triggerHandler` here because of dummy text/password inputs :(
+						setPlaceholder.call(element);
+					}
+				} else if ($element.hasClass(settings.customClass)) {
+					clearPlaceholder.call(element, true, value) || (element.value = value);
+				} else {
+					element.value = value;
+				}
+				// `set` can not return `undefined`; see http://jsapi.info/jquery/1.7.1/val#L2363
+				return $element;
+			}
+		};
+
+		if (!isInputSupported) {
+			valHooks.input = hooks;
+			propHooks.value = hooks;
+		}
+		if (!isTextareaSupported) {
+			valHooks.textarea = hooks;
+			propHooks.value = hooks;
+		}
+
+		$(function() {
+			// Look for forms
+			$(document).delegate('form', 'submit.placeholder', function() {
+				// Clear the placeholder values so they don't get submitted
+				var $inputs = $('.'+settings.customClass, this).each(clearPlaceholder);
+				setTimeout(function() {
+					$inputs.each(setPlaceholder);
+				}, 10);
+			});
+		});
+
+		// Clear placeholder values upon page reload
+		$(window).bind('beforeunload.placeholder', function() {
+			$('.'+settings.customClass).each(function() {
+				this.value = '';
+			});
+		});
+
+	}
+
+	function args(elem) {
+		// Return an object of element attributes
+		var newAttrs = {};
+		var rinlinejQuery = /^jQuery\d+$/;
+		$.each(elem.attributes, function(i, attr) {
+			if (attr.specified && !rinlinejQuery.test(attr.name)) {
+				newAttrs[attr.name] = attr.value;
+			}
+		});
+		return newAttrs;
+	}
+
+	function clearPlaceholder(event, value) {
+		var input = this;
+		var $input = $(input);
+		if (input.value == $input.attr('placeholder') && $input.hasClass(settings.customClass)) {
+			if ($input.data('placeholder-password')) {
+				$input = $input.hide().nextAll('input[type="password"]:first').show().attr('id', $input.removeAttr('id').data('placeholder-id'));
+				// If `clearPlaceholder` was called from `$.valHooks.input.set`
+				if (event === true) {
+					return $input[0].value = value;
+				}
+				$input.focus();
+			} else {
+				input.value = '';
+				$input.removeClass(settings.customClass);
+				input == safeActiveElement() && input.select();
+			}
+		}
+	}
+
+	function setPlaceholder() {
+		var $replacement;
+		var input = this;
+		var $input = $(input);
+		var id = this.id;
+		if (input.value === '') {
+			if (input.type === 'password') {
+			    if (!$input.data('placeholder-textinput')) {
+                    // JBZ 2014, replaced his more optimistic .clone() method with this one because IE8 will silently fail to change the display characters of a password field
+				    $replacement = $('<input>').attr($.extend(args(this), { 'type': 'text' }));
+					$replacement
+						.removeAttr('name')
+						.data({
+							'placeholder-password': $input,
+							'placeholder-id': id
+						})
+						.bind('focus.placeholder', clearPlaceholder);
+					$input
+						.data({
+							'placeholder-textinput': $replacement,
+							'placeholder-id': id
+						})
+						.before($replacement);
+				}
+				$input = $input.removeAttr('id').hide().prevAll('input[type="text"]:first').attr('id', id).show();
+				// Note: `$input[0] != input` now!
+			}
+			$input.addClass(settings.customClass);
+			$input[0].value = $input.attr('placeholder');
+		} else {
+			$input.removeClass(settings.customClass);
+		}
+	}
+
+	function safeActiveElement() {
+		// Avoid IE9 `document.activeElement` of death
+		// https://github.com/mathiasbynens/jquery-placeholder/pull/99
+		try {
+			return document.activeElement;
+		} catch (exception) {}
+	}
+
+}));
+
+/**
+ * Adds a login popover to all login links on a page.
+ */
+define('modules/login-links',['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
+
+    var usePopovers = function() {
+        return !Modernizr.mq('(max-width: 480px)');
+    },
+    isTemplate = function(path) {
+        return require.mozuData('pagecontext').cmsContext.template.path === path;
+    },
+    returnFalse = function () {
+        return false;
+    },
+    $docBody,
+
+    polyfillPlaceholders = !('placeholder' in $('<input>')[0]);
+
+    var DismissablePopover = function () { };
+
+    $.extend(DismissablePopover.prototype, {
+        boundMethods: [],
+        setMethodContext: function () {
+            for (var i = this.boundMethods.length - 1; i >= 0; i--) {
+                this[this.boundMethods[i]] = $.proxy(this[this.boundMethods[i]], this);
+            }
+        },
+        dismisser: function (e) {
+            if (!$.contains(this.popoverInstance.$tip[0], e.target) && !this.loading) {
+                // clicking away from a popped popover should dismiss it
+                this.$el.popover('destroy');
+                this.$el.on('click', this.createPopover);
+                this.$el.off('click', returnFalse);
+                this.bindListeners(false);
+                $docBody.off('click', this.dismisser);
+            }
+        },
+        setLoading: function (yes) {
+            this.loading = yes;
+            this.$parent[yes ? 'addClass' : 'removeClass']('is-loading');
+        },
+        onPopoverShow: function () {
+            var self = this;
+            _.defer(function () {
+                $docBody.on('click', self.dismisser);
+                self.$el.on('click', returnFalse);
+            });
+            this.popoverInstance = this.$el.data('bs.popover');
+            this.$parent = this.popoverInstance.tip();
+            this.bindListeners(true);
+            this.$el.off('click', this.createPopover);
+            if (polyfillPlaceholders) {
+                this.$parent.find('[placeholder]').placeholder({ customClass: 'mz-placeholder' });
+            }
+        },
+        createPopover: function (e) {
+            // in the absence of JS or in a small viewport, these links go to the login page.
+            // Prevent them from going there!
+            var self = this;
+            if (usePopovers()) {
+                e.preventDefault();
+                // If the parent element's not positioned at least relative,
+                // the popover won't move with a window resize
+                //var pos = $parent.css('position');
+                //if (!pos || pos === "static") $parent.css('position', 'relative');
+                this.$el.popover({
+                    //placement: "auto right",
+                    animation: true,
+                    html: true,
+                    trigger: 'manual',
+                    content: this.template,
+                    container: 'body'
+                }).on('shown.bs.popover', this.onPopoverShow)
+                .popover('show');
+
+            }
+        },
+        retrieveErrorLabel: function (xhr) {
+            var message = "";
+            if (xhr.message) {
+                message = Hypr.getLabel(xhr.message);
+            } else if ((xhr && xhr.responseJSON && xhr.responseJSON.message)) {
+                message = Hypr.getLabel(xhr.responseJSON.message);
+            }
+
+            if (!message || message.length === 0) {
+                this.displayApiMessage(xhr);
+            } else {
+                var msgCont = {};
+                msgCont.message = message;
+                this.displayApiMessage(msgCont);
+            }
+        },
+        displayApiMessage: function (xhr) {
+            this.displayMessage(xhr.message ||
+                (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
+                Hypr.getLabel('unexpectedError'));
+        },
+        displayMessage: function (msg) {
+            this.setLoading(false);
+            this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
+        },
+        init: function (el) {
+            this.$el = $(el);
+            this.loading = false;
+            this.setMethodContext();
+            if (!this.pageType){
+                this.$el.on('click', this.createPopover);
+            }
+            else {
+               this.$el.on('click', _.bind(this.doFormSubmit, this));
+            }    
+        },
+        doFormSubmit: function(e){
+            e.preventDefault();
+            this.$parent = this.$el.closest(this.formSelector);
+            this[this.pageType]();
+        }
+    });
+
+    var LoginPopover = function() {
+        DismissablePopover.apply(this, arguments);
+        this.login = _.debounce(this.login, 150);
+        this.retrievePassword = _.debounce(this.retrievePassword, 150);
+    };
+    LoginPopover.prototype = new DismissablePopover();
+    $.extend(LoginPopover.prototype, {
+        boundMethods: ['handleEnterKey', 'handleLoginComplete', 'displayResetPasswordMessage', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'slideRight', 'slideLeft', 'login', 'retrievePassword', 'onPopoverShow'],
+        template: Hypr.getTemplate('modules/common/login-popover').render(),
+        bindListeners: function (on) {
+            var onOrOff = on ? "on" : "off";
+            this.$parent[onOrOff]('click', '[data-mz-action="forgotpasswordform"]', this.slideRight);
+            this.$parent[onOrOff]('click', '[data-mz-action="loginform"]', this.slideLeft);
+            this.$parent[onOrOff]('click', '[data-mz-action="submitlogin"]', this.login);
+            this.$parent[onOrOff]('click', '[data-mz-action="submitforgotpassword"]', this.retrievePassword);
+            this.$parent[onOrOff]('keypress', 'input', this.handleEnterKey);
+        },
+        onPopoverShow: function () {
+            DismissablePopover.prototype.onPopoverShow.apply(this, arguments);
+            this.panelWidth = this.$parent.find('.mz-l-slidebox-panel').first().outerWidth();
+            this.$slideboxOuter = this.$parent.find('.mz-l-slidebox-outer');
+
+            if (this.$el.hasClass('mz-forgot')){
+                this.slideRight();
+            }
+        },
+        handleEnterKey: function (e) {
+            if (e.which === 13) {
+                var $parentForm = $(e.currentTarget).parents('[data-mz-role]');
+                switch ($parentForm.data('mz-role')) {
+                    case "login-form":
+                        this.login();
+                        break;
+                    case "forgotpassword-form":
+                        this.retrievePassword();
+                        break;
+                }
+                return false;
+            }
+        },
+        slideRight: function (e) {
+            if (e) e.preventDefault();
+            this.$slideboxOuter.css('left', -this.panelWidth);
+        },
+        slideLeft: function (e) {
+            if (e) e.preventDefault();
+            this.$slideboxOuter.css('left', 0);
+        },
+        login: function () {
+            this.setLoading(true);
+            api.action('customer', 'loginStorefront', {
+                email: this.$parent.find('[data-mz-login-email]').val(),
+                password: this.$parent.find('[data-mz-login-password]').val()
+            }).then(this.handleLoginComplete, this.displayApiMessage);
+        },
+        anonymousorder: function() {
+            var email = "";
+            var billingZipCode = "";
+            var billingPhoneNumber = "";
+
+            switch (this.$parent.find('[data-mz-verify-with]').val()) {
+                case "zipCode":
+                    {
+                        billingZipCode = this.$parent.find('[data-mz-verification]').val();
+                        email = null;
+                        billingPhoneNumber = null;
+                        break;
+                    }
+                case "phoneNumber":
+                    {
+                        billingZipCode = null;
+                        email = null;
+                        billingPhoneNumber = this.$parent.find('[data-mz-verification]').val();
+                        break;
+                    }
+                case "email":
+                    {
+                        billingZipCode = null;
+                        email = this.$parent.find('[data-mz-verification]').val();
+                        billingPhoneNumber = null;
+                        break;
+                    }
+                default:
+                    {
+                        billingZipCode = null;
+                        email = null;
+                        billingPhoneNumber = null;
+                        break;
+                    }
+
+            }
+
+            this.setLoading(true);
+            // the new handle message needs to take the redirect.
+            api.action('customer', 'orderStatusLogin', {
+                ordernumber: this.$parent.find('[data-mz-order-number]').val(),
+                email: email,
+                billingZipCode: billingZipCode,
+                billingPhoneNumber: billingPhoneNumber
+            }).then(function () { window.location.href = "/my-anonymous-account"; }, _.bind(this.retrieveErrorLabel, this));
+        },
+        retrievePassword: function () {
+            this.setLoading(true);
+            api.action('customer', 'resetPasswordStorefront', {
+                EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
+            }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
+        },
+        handleLoginComplete: function () {
+            window.location.reload();
+        },
+        displayResetPasswordMessage: function () {
+            this.displayMessage(Hypr.getLabel('resetEmailSent'));
+        }
+    });
+
+    var SignupPopover = function() {
+        DismissablePopover.apply(this, arguments);
+        this.signup = _.debounce(this.signup, 150);
+    };
+    SignupPopover.prototype = new DismissablePopover();
+    $.extend(SignupPopover.prototype, LoginPopover.prototype, {
+        boundMethods: ['handleEnterKey', 'dismisser', 'displayMessage', 'displayApiMessage', 'createPopover', 'signup', 'onPopoverShow'],
+        template: Hypr.getTemplate('modules/common/signup-popover').render(),
+        bindListeners: function (on) {
+            var onOrOff = on ? "on" : "off";
+            this.$parent[onOrOff]('click', '[data-mz-action="signup"]', this.signup);
+            this.$parent[onOrOff]('keypress', 'input', this.handleEnterKey);
+        },
+        handleEnterKey: function (e) {
+            if (e.which === 13) { this.signup(); }
+        },
+        validate: function (payload) {
+            if (!payload.account.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
+            if (!payload.password) return this.displayMessage(Hypr.getLabel('passwordMissing')), false;
+            if (payload.password !== this.$parent.find('[data-mz-signup-confirmpassword]').val()) return this.displayMessage(Hypr.getLabel('passwordsDoNotMatch')), false;
+            return true;
+        },
+        signup: function () {
+            var self = this,
+                email = this.$parent.find('[data-mz-signup-emailaddress]').val(),
+                firstName = this.$parent.find('[data-mz-signup-firstname]').val(),
+                lastName = this.$parent.find('[data-mz-signup-lastname]').val(),
+                payload = {
+                    account: {
+                        emailAddress: email,
+                        userName: email,
+                        firstName: firstName,
+                        lastName: lastName,
+                        contacts: [{
+                            email: email,
+                            firstName: firstName,
+                            lastNameOrSurname: lastName
+                        }]
+                    },
+                    password: this.$parent.find('[data-mz-signup-password]').val()
+                };
+            if (this.validate(payload)) {   
+                //var user = api.createSync('user', payload);
+                this.setLoading(true);
+                return api.action('customer', 'createStorefront', payload).then(function () {
+                    if (self.redirectTemplate) {
+                        window.location.pathname = self.redirectTemplate;
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                }, self.displayApiMessage);
+            }
+        }
+    });
+
+    $(document).ready(function() {
+        $docBody = $(document.body);
+        $('[data-mz-action="login"]').each(function() {
+            var popover = new LoginPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="signup"]').each(function() {
+            var popover = new SignupPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="launchforgotpassword"]').each(function() {
+            var popover = new LoginPopover();
+            popover.init(this);
+            $(this).data('mz.popover', popover);
+        });
+        $('[data-mz-action="signuppage-submit"]').each(function(){
+            var signupPage = new SignupPopover();
+            signupPage.formSelector = 'form[name="mz-signupform"]';
+            signupPage.pageType = 'signup';
+            signupPage.redirectTemplate = 'myaccount';
+            signupPage.init(this);
+        });
+        $('[data-mz-action="loginpage-submit"]').each(function(){
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-loginform"]';
+            loginPage.pageType = 'login';
+            loginPage.init(this);
+        });
+        $('[data-mz-action="anonymousorder-submit"]').each(function () {
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-anonymousorder"]';
+            loginPage.pageType = 'anonymousorder';
+            loginPage.init(this);
+        });
+        $('[data-mz-action="forgotpasswordpage-submit"]').each(function(){
+            var loginPage = new SignupPopover();
+            loginPage.formSelector = 'form[name="mz-forgotpasswordform"]';
+            loginPage.pageType = 'retrievePassword';
+            loginPage.init(this);
+        });
+
+        $('[data-mz-action="logout"]').each(function(){
+            var el = $(this);
+
+            //if were in edit mode, we override the /logout GET, to preserve the correct referrer/page location | #64822
+            if (require.mozuData('pagecontext').isEditMode) {
+ 
+                 el.on('click', function(e) {
+                    e.preventDefault();
+                    $.ajax({
+                        method: 'GET',
+                        url: '../../logout',
+                        complete: function() { location.reload();}
+                    });
+                });
+            }
+            
+        });
+    });
+
+});
+define(
+    'modules/models-address',["modules/backbone-mozu", 'hyprlive'],
+    function(Backbone, Hypr) {
+
+
+        var countriesRequiringStateAndZip = {
+            US: true,
+            CA: true,
+            JP: true,
+            TW: true
+        },
+            defaultStateProv = "n/a";
+
+        var PhoneNumbers = Backbone.MozuModel.extend({
+            validation: {
+                home: {
+                    required: true,
+                    msg: Hypr.getLabel("phoneMissing")
+                }
+            }
+        }),
+
+        StreetAddress = Backbone.MozuModel.extend({
+            mozuType: 'address',
+            initialize: function() {
+                this.on('change:countryCode', this.clearStateAndZipWhenCountryChanges, this);
+            },
+            clearStateAndZipWhenCountryChanges: function() {
+                this.unset('postalOrZipCode');
+                this.unset('stateOrProvince');
+            },
+            validation: {
+                address1: {
+                    required: true,
+                    msg: Hypr.getLabel("streetMissing")
+                },
+                cityOrTown: {
+                    required: true,
+                    msg: Hypr.getLabel("cityMissing")
+                },
+                countryCode: {
+                    required: true,
+                    msg: Hypr.getLabel("countryMissing")
+                },
+                stateOrProvince: {
+                    fn: "requiresStateAndZip",
+                    msg: Hypr.getLabel("stateProvMissing")
+                },
+                postalOrZipCode: {
+                    fn: "requiresStateAndZip",
+                    msg: Hypr.getLabel("postalCodeMissing")
+                }
+            },
+            requiresStateAndZip: function(value, attr) {
+                if ((this.get('countryCode') in countriesRequiringStateAndZip) && !value) return this.validation[attr.split('.').pop()].msg;
+            },
+            defaults: {
+                candidateValidatedAddresses: null,
+                countryCode: Hypr.getThemeSetting('preselectCountryCode') || '',
+                addressType: 'Residential'
+            },
+            toJSON: function(options) {
+                // workaround for SA
+                var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+                if ((!options || !options.helpers) && !j.stateOrProvince) {
+                    j.stateOrProvince = defaultStateProv;
+                }
+                if (options && options.helpers && j.stateOrProvince === defaultStateProv) {
+                    delete j.stateOrProvince;
+                }
+                return j;
+            },
+            is: function(another) {
+                var s1 = '', s2 = '';
+                for (var k in another) {
+                    if (k === 'isValidated')
+                        continue;
+                    s1 = (another[k] || '').toLowerCase();
+                    s2 = (this.get(k) || '').toLowerCase();
+                    if (s1 != s2) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        });
+
+        return {
+            PhoneNumbers: PhoneNumbers,
+            StreetAddress: StreetAddress
+        };
+    });
+
+define('modules/models-price',["underscore", "modules/backbone-mozu"], function (_, Backbone) {
+
+    var ProductPrice = Backbone.MozuModel.extend({
+        dataTypes: {
+            price: Backbone.MozuModel.DataTypes.Float,
+            salePrice: Backbone.MozuModel.DataTypes.Float,
+            offerPrice: Backbone.MozuModel.DataTypes.Float
+        },
+        helpers: ['onSale'],
+        onSale: function() {
+            var salePrice = this.get('salePrice');
+            return salePrice !== null && !isNaN(salePrice) && salePrice !== this.get("price");
+        }
+    }),
+
+    ProductPriceRange = Backbone.MozuModel.extend({
+        relations: {
+            lower: ProductPrice,
+            upper: ProductPrice
+        }
+    });
+
+    return {
+        ProductPrice: ProductPrice,
+        ProductPriceRange: ProductPriceRange
+    };
+
+});
+define('modules/models-product',["modules/jquery-mozu", "underscore", "modules/backbone-mozu", "hyprlive", "modules/models-price", "modules/api"], function($, _, Backbone, Hypr, PriceModels, api) {
+
+    function zeroPad(str, len) {
+        str = str.toString();
+        while (str.length < 2) str = '0' + str;
+        return str;
+    }
+    function formatDate(d) {
+        var date = new Date(Date.parse(d) + (new Date()).getTimezoneOffset() * 60000);
+        return [zeroPad(date.getFullYear(), 4), zeroPad(date.getMonth() + 1, 2), zeroPad(date.getDate(), 2)].join('-');
+    }
+
+
+    var ProductOption = Backbone.MozuModel.extend({
+        idAttribute: "attributeFQN",
+        helpers: ['isChecked'],
+        initialize: function() {
+            var me = this;
+            _.defer(function() {
+                me.listenTo(me.collection, 'invalidoptionselected', me.handleInvalid, me);
+            });
+
+            var equalsThisValue = function(fvalue, newVal) {
+                return fvalue.value.toString() === newVal.toString();
+            },
+            containsThisValue = function(existingOptionValueListing, newVal) {
+                return _.some(newVal, function(val) {
+                    return equalsThisValue(existingOptionValueListing, val);
+                });
+            },
+            attributeDetail = me.get('attributeDetail');
+            if (attributeDetail) {
+                if (attributeDetail.valueType === ProductOption.Constants.ValueTypes.Predefined) {
+                    this.legalValues = _.chain(this.get('values')).pluck('value').map(function(v) { return !_.isUndefined(v) && !_.isNull(v) ? v.toString() : v; }).value();
+                }
+                if (attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo) {
+                    me.on('change:value', function(model, newVal) {
+                        var values;
+                        if (me.previous('value') !== newVal) {
+                            values = me.get('values');
+                            _.first(values).isSelected = newVal;
+                            me.set({
+                                value: newVal,
+                                shopperEnteredValue: newVal,
+                                values: values
+                            }, {
+                                silent: true
+                            });
+                            me.trigger('optionchange', newVal, me);
+                        }
+                    });
+                } else {
+                    me.on("change:value", function(model, newVal) {
+                        var newValObj, values = me.get("values"),
+                            comparator = this.get('isMultiValue') ? containsThisValue : equalsThisValue;
+                        if (typeof newVal === "string") newVal = $.trim(newVal);
+                        if (newVal || newVal === false || newVal === 0 || newVal === '') {
+                            _.each(values, function(fvalue) {
+                                if (comparator(fvalue, newVal)) {
+                                    newValObj = fvalue;
+                                    fvalue.isSelected = true;
+                                    me.set("value", newVal, { silent: true });
+                                } else {
+                                    fvalue.isSelected = false;
+                                }
+                            });
+                            me.set("values", values);
+                            if (me.get("attributeDetail").valueType === ProductOption.Constants.ValueTypes.ShopperEntered) {
+                                me.set("shopperEnteredValue", newVal, { silent: true });
+                            }
+                        } else {
+                            me.unset('value');
+                            me.unset("shopperEnteredValue");
+                        }
+                        if (newValObj && !newValObj.isEnabled) me.collection.trigger('invalidoptionselected', newValObj, me);
+                        me.trigger('optionchange', newVal, me);
+                    });
+                }
+            }
+        },
+        handleInvalid: function(newValObj, opt) {
+            if (this !== opt) {
+                this.unset("value");
+                _.each(this.get("values"), function(value) {
+                    value.isSelected = false;
+                });
+            }
+        },
+        parse: function(raw) {
+            var selectedValue, vals, storedShopperValue;
+            if (raw.isMultiValue) {
+                vals = _.pluck(_.where(raw.values, { isSelected: true }), 'value');
+                if (vals && vals.length > 0) raw.value = vals;
+            } else {
+                selectedValue = _.findWhere(raw.values, { isSelected: true });
+                if (selectedValue) raw.value = selectedValue.value;
+            }
+            if (raw.attributeDetail) {
+                if (raw.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined) {
+                    storedShopperValue = raw.values[0] && raw.values[0].shopperEnteredValue;
+                    if (storedShopperValue || storedShopperValue === 0) {
+                        raw.shopperEnteredValue = storedShopperValue;
+                        raw.value = storedShopperValue;
+                    }
+                }
+                if (raw.attributeDetail.inputType === ProductOption.Constants.InputTypes.Date && raw.attributeDetail.validation) {
+                    raw.minDate = formatDate(raw.attributeDetail.validation.minDateValue);
+                    raw.maxDate = formatDate(raw.attributeDetail.validation.maxDateValue);
+                }
+            }
+            return raw;
+        },
+        isChecked: function() {
+            var attributeDetail = this.get('attributeDetail'),
+                values = this.get('values');
+
+            return !!(attributeDetail && attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo && values && this.get('shopperEnteredValue'));
+        },
+        isValidValue: function() {
+            var value = this.getValueOrShopperEnteredValue();
+            return value !== undefined && value !== '' && (this.get('attributeDetail').valueType !== ProductOption.Constants.ValueTypes.Predefined || (this.get('isMultiValue') ? !_.difference(_.map(value, function(v) { return v.toString(); }), this.legalValues).length : _.contains(this.legalValues, value.toString())));
+        },
+        getValueOrShopperEnteredValue: function() {
+            return this.get('value') || (this.get('value') === 0) ? this.get('value') : this.get('shopperEnteredValue');
+        },
+        isConfigured: function() {
+            var attributeDetail = this.get('attributeDetail');
+            if (!attributeDetail) return true; // if attributeDetail is missing, this is a preconfigured product
+            return attributeDetail.inputType === ProductOption.Constants.InputTypes.YesNo ? this.isChecked() : this.isValidValue();
+        },
+        toJSON: function(options) {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (j && j.attributeDetail && j.attributeDetail.valueType !== ProductOption.Constants.ValueTypes.Predefined && this.isConfigured()) {
+                var val = j.value || j.shopperEnteredValue;
+                if (j.attributeDetail.dataType === "Number") val = parseFloat(val);
+                j.shopperEnteredValue = j.value = val;
+            }
+
+            return j;
+        },
+        addConfiguration: function(biscuit, options) {
+            var fqn, value, attributeDetail, valueKey, pushConfigObject;
+            if (this.isConfigured()) {
+                if (options && options.unabridged) {
+                    biscuit.push(this.toJSON());
+                } else {
+                    fqn = this.get('attributeFQN');
+                    value = this.getValueOrShopperEnteredValue();
+                    attributeDetail = this.get('attributeDetail');
+                    valueKey = attributeDetail.valueType === ProductOption.Constants.ValueTypes.ShopperEntered ? "shopperEnteredValue" : "value";
+                    if (attributeDetail.dataType === "Number") value = parseFloat(value);
+                    pushConfigObject = function(val) {
+                        var o = {
+                            attributeFQN: fqn
+                        };
+                        o[valueKey] = val;
+                        biscuit.push(o);
+                    };
+                    if (_.isArray(value)) {
+                        _.each(value, pushConfigObject);
+                    } else {
+                        pushConfigObject(value);
+                    }
+                }
+            }
+        }
+    }, {
+        Constants: {
+            ValueTypes: {
+                Predefined: "Predefined",
+                ShopperEntered: "ShopperEntered",
+                AdminEntered: "AdminEntered"
+            },
+            InputTypes: {
+                List: "List",
+                YesNo: "YesNo",
+                Date: "Date"
+            }
+        }
+    }),
+
+    ProductContent = Backbone.MozuModel.extend({}),
+
+    Product = Backbone.MozuModel.extend({
+        mozuType: 'product',
+        idAttribute: 'productCode',
+        handlesMessages: true,
+        helpers: ['mainImage', 'notDoneConfiguring', 'hasPriceRange', 'supportsInStorePickup'],
+        defaults: {
+            purchasableState: {},
+            quantity: 1
+        },
+        dataTypes: {
+            quantity: Backbone.MozuModel.DataTypes.Int
+        },
+        validation: {
+            quantity: {
+                min: 1,
+                msg: Hypr.getLabel('enterProductQuantity')
+            }
+        },
+        relations: {
+            content: ProductContent,
+            price: PriceModels.ProductPrice,
+            priceRange: PriceModels.ProductPriceRange,
+            options: Backbone.Collection.extend({
+                model: ProductOption
+            })
+        },
+        getBundledProductProperties: function(opts) {
+            var self = this,
+                loud = !opts || !opts.silent;
+            if (loud) {
+                this.isLoading(true);
+                this.trigger('request');
+            }
+
+            var bundledProducts = this.get('bundledProducts'),
+                numReqs = bundledProducts.length,
+                deferred = api.defer();
+            _.each(bundledProducts, function(bp) {
+                var op = api.get('product', bp.productCode);
+                op.ensure(function() {
+                    if (--numReqs === 0) {
+                        _.defer(function() {
+                            self.set('bundledProducts', bundledProducts);
+                            if (loud) {
+                                this.trigger('sync', bundledProducts);
+                                this.isLoading(false);
+                            }
+                            deferred.resolve(bundledProducts);
+                        });
+                    }
+                });
+                op.then(function(p) {
+                    _.each(p.prop('properties'), function(prop) {
+                        if (!prop.values || prop.values.length === 0 || prop.values[0].value === '' || prop.values[0].stringValue === '') {
+                            prop.isEmpty = true;
+                        }
+                    });
+                    _.extend(bp, p.data);
+                });
+            });
+
+            return deferred.promise;
+        },
+        hasPriceRange: function() {
+            return this._hasPriceRange;
+        },
+        calculateHasPriceRange: function(json) {
+            this._hasPriceRange = json && !!json.priceRange;
+        },
+        initialize: function(conf) {
+            var slug = this.get('content').get('seoFriendlyUrl');
+            _.bindAll(this, 'calculateHasPriceRange', 'onOptionChange');
+            this.listenTo(this.get("options"), "optionchange", this.onOptionChange);
+            this.updateConfiguration = _.debounce(this.updateConfiguration, 300);
+            this.set({ url: slug ? "/" + slug + "/p/" + this.get("productCode") : "/p/" + this.get("productCode") });
+            this.lastConfiguration = [];
+            this.calculateHasPriceRange(conf);
+            this.on('sync', this.calculateHasPriceRange);
+        },
+        mainImage: function() {
+            var productImages = this.get('content.productImages');
+            return productImages && productImages[0];
+        },
+        notDoneConfiguring: function() {
+            return this.get('productUsage') === Product.Constants.ProductUsage.Configurable && !this.get('variationProductCode');
+        },
+        supportsInStorePickup: function() {
+            return _.contains(this.get('fulfillmentTypesSupported'), Product.Constants.FulfillmentTypes.IN_STORE_PICKUP);
+        },
+        getConfiguredOptions: function(options) {
+            return this.get('options').reduce(function(biscuit, opt) {
+                opt.addConfiguration(biscuit, options);
+                return biscuit;
+            }, []);
+        },
+
+
+        addToCart: function () {
+            var me = this;
+            this.whenReady(function () {
+                if (!me.validate()) {
+                    var fulfillMethod = me.get('fulfillmentMethod');
+                    if (!fulfillMethod) {
+                        fulfillMethod = (me.get('goodsType') === 'Physical') ? Product.Constants.FulfillmentMethods.SHIP : Product.Constants.FulfillmentMethods.DIGITAL;
+                    }
+                    me.apiAddToCart({
+                        options: me.getConfiguredOptions(),
+                        fulfillmentMethod: fulfillMethod,
+                        quantity: me.get("quantity")
+                    }).then(function (item) {
+                        me.trigger('addedtocart', item);
+                    });
+                }
+            });
+        },
+        addToWishlist: function() {
+            var me = this;
+            this.whenReady(function() {
+                if (!me.validate()) {
+                    me.apiAddToWishlist({
+                        customerAccountId: require.mozuData('user').accountId,
+                        quantity: me.get("quantity")
+                    }).then(function(item) {
+                        me.trigger('addedtowishlist', item);
+                    });
+                }
+            });
+        },
+        addToCartForPickup: function(locationCode, quantity) {
+            var me = this;
+            this.whenReady(function() {
+                return me.apiAddToCartForPickup({
+                    fulfillmentLocationCode: locationCode,
+                    fulfillmentMethod: Product.Constants.FulfillmentMethods.PICKUP,
+                    quantity: quantity || 1
+                }).then(function(item) {
+                    me.trigger('addedtocart', item);
+                });
+            });
+        },
+        onOptionChange: function() {
+            this.isLoading(true);
+            this.updateConfiguration();
+        },
+        updateConfiguration: function() {
+            var newConfiguration = this.getConfiguredOptions();
+            if (JSON.stringify(this.lastConfiguration) !== JSON.stringify(newConfiguration)) {
+                this.lastConfiguration = newConfiguration;
+                this.apiConfigure({ options: newConfiguration }, { useExistingInstances: true });
+            } else {
+                this.isLoading(false);
+            }
+        },
+        parse: function(prodJSON) {
+            if (prodJSON && prodJSON.productCode && !prodJSON.variationProductCode) {
+                this.unset('variationProductCode');
+            }
+            return prodJSON;
+        },
+        toJSON: function(options) {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (!options || !options.helpers) {
+                j.options = this.getConfiguredOptions({ unabridged: true });
+            }
+            if (options && options.helpers) {
+                if (typeof j.mfgPartNumber == "string") j.mfgPartNumber = [j.mfgPartNumber];
+                if (typeof j.upc == "string") j.upc = [j.upc];
+                if (j.bundledProducts && j.bundledProducts.length === 0) delete j.bundledProducts;
+            }
+            return j;
+        }
+    }, {
+        Constants: {
+            FulfillmentMethods: {
+                SHIP: "Ship",
+                PICKUP: "Pickup",
+                DIGITAL: "Digital"
+            },
+            // for catalog instead of commerce
+            FulfillmentTypes: {
+                IN_STORE_PICKUP: "InStorePickup"
+            },
+            ProductUsage: {
+                Configurable: 'Configurable'
+            }
+        }
+    }),
+
+    ProductCollection = Backbone.MozuModel.extend({
+        relations: {
+            items: Backbone.Collection.extend({
+                model: Product
+            })
+        }
+    });
+
+    return {
+        Product: Product,
+        Option: ProductOption,
+        ProductCollection: ProductCollection
+    };
+
+});
+
+
+
+define('modules/models-orders',['underscore', "modules/backbone-mozu", "hyprlive", "modules/models-product"], function (_, Backbone, Hypr, ProductModels) {
+
+    var OrderItem = Backbone.MozuModel.extend({
+        relations: {
+            product: ProductModels.Product
+        }
+    }),
+
+    OrderItemsList = Backbone.Collection.extend({
+        model: OrderItem
+    }),
+
+    RMA = Backbone.MozuModel.extend({
+        mozuType: 'rma',
+        relations: {
+            items: OrderItemsList
+        },
+        dataTypes: {
+            quantity: Backbone.MozuModel.DataTypes.Int
+        },
+        defaults: {
+            returnType: 'Refund'
+        },
+        validation: {
+            reason: {
+                required: true,
+                msg: Hypr.getLabel('enterReturnReason')
+            },
+            quantity: {
+                min: 1,
+                msg: Hypr.getLabel('enterReturnQuantity')
+            },
+            comments: {
+                fn: function (value) {
+                    if (this.attributes.reason === "Other" && !value) return Hypr.getLabel('enterOtherComments');
+                }
+            }
+        },
+        // in GA you can only return one item at a time, but this will have to change at some point
+        toJSON: function () {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (j.reason && j.quantity && j.items && j.items[0] && !j.items[0].reason) {
+                j.items[0].reasons = [
+                    {
+                        reason: j.reason,
+                        quantity: j.quantity
+                    }
+                ];
+                if (j.comments) j.items[0].notes = [
+                    {
+                        text: j.comments
+                    }
+                ];
+            }
+            delete j.reason;
+            delete j.quantity;
+            delete j.comments;
+            return j;
+        }
+    }),
+
+    RMACollection = Backbone.MozuPagedCollection.extend({
+        mozuType: 'rmas',
+        defaults: {
+            pageSize: 5
+        },
+        relations: {
+            items: Backbone.Collection.extend({
+                model: RMA
+            })
+        }
+    }),
+
+    Order = Backbone.MozuModel.extend({
+        mozuType: 'order',
+        relations: {
+            items: OrderItemsList
+        }
+    }),
+
+    OrderCollection = Backbone.MozuPagedCollection.extend({
+        mozuType: 'orders',
+        defaults: {
+            pageSize: 5
+        },
+        relations: {
+            items: Backbone.Collection.extend({
+                model: Order
+            }),
+            rma: RMA
+        },
+        startReturn: function (orderId, itemId) {
+            var rma = this.get('rma');
+            var item = this.get('items').get(orderId).get('items').get(itemId);
+            if (item) {
+                item = item.toJSON();
+                item.orderItemId = item.id;
+                rma.get('items').reset([item]);
+                rma.set({
+                    originalOrderId: orderId,
+                    returnType: 'Refund'
+                });
+            }
+        },
+        clearReturn: function() {
+            var rma = this.get('rma');
+            rma.clear();
+        },
+        finishReturn: function (id) {
+            var self = this, op;
+            if (!this.validate()) {
+                this.isLoading(true);
+                op = this.get('rma').apiCreate();
+                if (op) return op.then(function (rma) {
+                    self.isLoading(false);
+                    self.trigger('returncreated', rma.prop('id'));
+                    self.clearReturn();
+                    return rma;
+                }, function () {
+                    self.isLoading(false);
+                });
+            }
+        }
+    });
+
+    return {
+        OrderItem: OrderItem,
+        RMA: RMA,
+        RMACollection: RMACollection,
+        Order: Order,
+        OrderCollection: OrderCollection
+    };
+
+});
+
+
+
+define('modules/models-paymentmethods',['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+    // payment methods only validate if they are selected!
+    var PaymentMethod = Backbone.MozuModel.extend({
+        present: function (value, attr) {
+            if (!this.selected) return undefined;
+            if (this.get('isSavedCard')) return false;
+            if (!value) return this.validation[attr.split('.').pop()].msg || Hypr.getLabel('genericRequired');
+        }
+    });
+
+    var twoWayCardShapeMapping = {
+        "cardNumber": "cardNumberPartOrMask",
+        "cardNumberPart": "cardNumberPartOrMask",
+        "cardType": "paymentOrCardType",
+        "id": "paymentServiceCardId"
+    };
+
+    var firstDigitMap = {
+        "3": "AMEX",
+        "4": "VISA",
+        "5": "MC",
+        "6": "DISCOVER"
+    };
+
+    var CreditCard = PaymentMethod.extend({
+        mozuType: 'creditcard',
+        defaults: {
+            isCvvOptional: false,
+            isDefaultPayMethod: false,
+            isSavedCard: false,
+            isVisaCheckout: false
+        },
+        validation: {
+            paymentOrCardType: {
+                fn: "present",
+                msg: Hypr.getLabel('cardTypeMissing')
+            },
+            cardNumberPartOrMask: {
+                fn: "present",
+                msg: Hypr.getLabel('cardNumberMissing')
+            },
+            expireMonth: {
+                fn: 'expirationDateInPast'
+            },
+            expireYear: {
+                fn: 'expirationDateInPast'
+            },
+            nameOnCard: {
+                fn: "present",
+                msg: Hypr.getLabel('cardNameMissing')
+            }
+        },
+        initialize: function () {
+            var self = this;
+            _.each(twoWayCardShapeMapping, function (k, v) {
+                self.on('change:' + k, function (m, val) {
+                    self.set(v, val, { silent: true });
+                });
+                self.on('change:' + v, function (m, val) {
+                    self.set(v, val, { silent: true });
+                });
+            });
+
+            if (this.detectCardType) {
+                this.on('change:cardNumberPartOrMask', _.debounce(function(self, newValue) {
+                    var firstDigit;
+                    if (newValue && newValue.toString) {
+                        firstDigit = newValue.toString().charAt(0);
+                    }
+                    if (firstDigit && firstDigit in firstDigitMap) {
+                        self.set({ paymentOrCardType: firstDigitMap[firstDigit] });
+                    }
+                }, 500));
+            }
+        },
+        dataTypes: {
+            expireMonth: Backbone.MozuModel.DataTypes.Int,
+            expireYear: Backbone.MozuModel.DataTypes.Int,
+            isCardInfoSaved: Backbone.MozuModel.DataTypes.Boolean,
+            isDefaultPayMethod: Backbone.MozuModel.DataTypes.Boolean
+        },
+        expirationDateInPast: function (value, attr, computedState) {
+            if (!this.selected) return undefined;
+            var expMonth = this.get('expireMonth'),
+                expYear = this.get('expireYear'),
+                exp,
+                thisMonth,
+                isValid;
+
+            if (isNaN(expMonth) || isNaN(expYear)) return false;
+
+            exp = new Date(expYear, expMonth - 1, 1, 0, 0, 0, 0);
+            thisMonth = new Date();
+            thisMonth.setDate(1);
+            thisMonth.setHours(0, 0, 0, 0);
+
+            isValid = exp >= thisMonth;
+            if (!isValid) return Hypr.getLabel('cardExpInvalid');
+        },
+        // the toJSON method should omit the CVV so it is not sent to the wrong API
+        toJSON: function (options) {
+            var j = PaymentMethod.prototype.toJSON.apply(this);
+            _.each(twoWayCardShapeMapping, function (k, v) {
+                if (!(k in j) && (v in j)) j[k] = j[v];
+                if (!(v in j) && (k in j)) j[v] = j[k];
+            });
+            if (j && (!options || !options.helpers) && j.cvv && j.cvv.toString().indexOf('*') !== -1) delete j.cvv;
+            return j;
+        }
+    });
+
+    var CreditCardWithCVV = CreditCard.extend({
+        validation: _.extend({}, CreditCard.prototype.validation, {
+            cvv: {
+                fn: function(value, attr) {
+                    var cardType = attr.split('.')[0],
+                        card = this.get(cardType),
+                        isSavedCard = card.get('isSavedCard'),
+                        isVisaCheckout = card.get('isVisaCheckout');
+
+                    var skipValidationSaved = Hypr.getThemeSetting('isCvvSuppressed') && isSavedCard;
+                    var skipValidationVisaCheckout = Hypr.getThemeSetting('isCvvSuppressed') && isVisaCheckout;
+
+                    // If card is not selected or cvv is not required, no need to validate
+                    if (!card.selected || skipValidationVisaCheckout || skipValidationSaved) {
+                        return;
+                    }
+
+                    if (!value) {
+                        return Hypr.getLabel('securityCodeMissing') || Hypr.getLabel('genericRequired');
+                    }
+
+                }
+            }
+        })
+    });
+
+    
+    var Check = PaymentMethod.extend({
+        validation: {
+            nameOnCheck: {
+                fn: "present"
+            },
+            routingNumber: {
+                fn: "present"
+            },
+            checkNumber: {
+                fn: "present"
+            }
+        }
+    });
+
+    var DigitalCredit = PaymentMethod.extend({
+
+        isEnabled: false,
+        creditAmountApplied: null,
+        remainingBalance: null,
+        isTiedToCustomer: true,
+        addRemainderToCustomer: false,
+
+        initialize: function() {
+            this.set({ isEnabled: this.isEnabled });
+            this.set({ creditAmountApplied: this.creditAmountApplied });
+            this.set({ remainingBalance: this.remainingBalance });
+            this.set({ isTiedToCustomer: this.isTiedToCustomer });
+            this.set({ addRemainderToCustomer: this.addRemainderToCustomer });
+        },
+
+        helpers: ['calculateRemainingBalance'],
+
+        calculateRemainingBalance: function () {
+            return (! this.get('creditAmountApplied')) ? this.get('currentBalance') : this.get('currentBalance') - this.get('creditAmountApplied');
+        },
+
+        validate: function(attrs, options) {
+            if ( (attrs.creditAmountApplied) && (attrs.creditAmountApplied > attrs.currentBalance)) {
+                return "Exceeds card balance.";
+            }
+        }
+    });
+
+    return {
+        CreditCard: CreditCard,
+        CreditCardWithCVV: CreditCardWithCVV,
+        Check: Check,
+        DigitalCredit: DigitalCredit
+    };
+});
+define('modules/models-customer',['modules/backbone-mozu', 'underscore', 'modules/models-address', 'modules/models-orders', 'modules/models-paymentmethods', 'modules/models-product', 'hyprlive'], function (Backbone, _, AddressModels, OrderModels, PaymentMethods, ProductModels, Hypr) {
+
+
+    var pageContext = require.mozuData('pagecontext'),
+        validShippingCountryCodes,
+        validBillingCountryCodes,
+        validShippingAndBillingCountryCodes;
+    if (pageContext && pageContext.shippingCountries && pageContext.billingCountries) {
+        validShippingCountryCodes = _.pluck(pageContext.shippingCountries, 'value');
+        validBillingCountryCodes = _.pluck(pageContext.billingCountries, 'value');
+        validShippingAndBillingCountryCodes = _.intersection(validShippingCountryCodes, validBillingCountryCodes);
+    }
+
+
+    var contactTypes = ["Billing", "Shipping"],
+        contactTypeListeners = {};
+    _.each(contactTypes, function(contactType) {
+        contactTypeListeners['change:is'+contactType+'Contact'] = function(model, yes) {
+            // cheap copy to avoid accidental persistence
+            var types = this.get('types');
+            types = types ? JSON.parse(JSON.stringify(types)) : [];
+            var newType = { name: contactType },
+                isAlready = _.findWhere(types, newType);
+            if (yes && !isAlready) {
+                types.push(newType);
+                this.set('types', types, { silent: true });
+            }
+            if (!yes && isAlready) {
+                this.set('types', _.without(types, isAlready), { silent: true});
+            }
+        };
+        contactTypeListeners['change:isPrimary' + contactType + 'Contact'] = function(model, yes) {
+            var types = this.get('types'),
+                typeConf = { name: contactType },
+                type = _.findWhere(types, typeConf);
+            if (type) {
+                type.isPrimary = yes;
+                this.set('types', types, { silent: true });
+            }
+        };
+    });
+
+    var CustomerAttribute = Backbone.MozuModel.extend({
+        mozuType: 'customerattribute',
+        validation: {
+            values: {
+                fn: function (values, fieldName, fields) {
+                    var inputType = fields.inputType;
+                    var messages = Backbone.Validation.messages;
+                    var rules = fields.validation;
+                    var value = values[0];
+
+                    function format () {
+                        var args = Array.prototype.slice.call(arguments),
+                            text = args.shift();
+                        return text.replace(/\{(\d+)\}/g, function (match, number) {
+                            return typeof args[number] !== 'undefined' ? args[number] : match;
+                        });
+                    }
+
+                    if (inputType === 'TextBox') {
+                        if (rules.maxStringLength && value.length > rules.maxStringLength) return format(messages.maxLength, fields.adminName, rules.maxStringLength);
+                        if (rules.minStringLength && value.length < rules.minStringLength) return format(messages.minLength, fields.adminName, rules.minStringLength);
+                        if (rules.maxNumericValue && value > rules.maxNumericValue) return format(messages.max, fields.adminName, rules.maxNumericValue);
+                        if (rules.minNumericValue && value < rules.minNumericValue) return format(messages.min, fields.adminName, rules.minNumericValue);
+                    } else if (inputType === 'TextArea') {
+                        if (rules.maxStringLength && value.length > rules.maxStringLength) return format(messages.maxLength, fields.adminName, rules.maxStringLength);
+                        if (rules.minStringLength && value.length < rules.minStringLength) return format(messages.minLength, fields.adminName, rules.minStringLength);
+                    } else if (inputType === 'Date') {
+                        if (rules.maxDateTime && Date.parse(value) > Date.parse(rules.maxDateTime)) return format(messages.max, fields.adminName, Date.parse(rules.maxDateTime));
+                        if (rules.minDateTime && Date.parse(value) < Date.parse(rules.minDateTime)) return format(messages.min, fields.adminName, Date.parse(rules.minDateTime));
+                    }
+
+                }
+            }
+        }
+    });
+
+    var CustomerContact = Backbone.MozuModel.extend({
+        mozuType: 'contact',
+        relations: {
+            address: AddressModels.StreetAddress,
+            phoneNumbers: AddressModels.PhoneNumbers
+        },
+        validation: {
+            firstName: {
+                required: true,
+                msg: Hypr.getLabel('firstNameMissing')
+            },
+            lastNameOrSurname: {
+                required: true,
+                msg: Hypr.getLabel('lastNameMissing')
+            },
+            "address.countryCode": {
+                fn: function (value) {
+                    if (!validShippingCountryCodes) return undefined;
+                    var isBillingContact = this.attributes.isBillingContact || this.attributes.editingContact.attributes.isBillingContact,
+                        isShippingContact = this.attributes.isShippingContact || this.attributes.editingContact.attributes.isShippingContact,
+                        validCodes = ((isBillingContact && isShippingContact && validShippingAndBillingCountryCodes) ||
+                                      (isBillingContact && validBillingCountryCodes) ||
+                                      (isShippingContact && validShippingCountryCodes));
+                    if (validCodes && !_.contains(validCodes, value)) return Hypr.getLabel("wrongCountryForType");
+                }
+            }
+        },
+
+        toJSON: function(options) {
+            var j = Backbone.MozuModel.prototype.toJSON.apply(this, arguments);
+            if (!options || !options.helpers) {
+                _.each(contactTypes, function(contactType) {
+                    delete j['is'+contactType+'Contact'];
+                    delete j['isPrimary'+contactType+'Contact'];
+                });
+            }
+            if (j.id === "new") delete j.id;
+            return j;
+        },
+        save: function () {
+            if (!this.parent.validate("editingContact")) {
+                var id = this.get('id');
+
+                if (!this.get('email')) this.set({ email: this.parent.get('emailAddress') }, { silent: true });
+                if (!id) return this.apiCreate();
+                return this.apiUpdate();
+            }
+        },
+        setTypeHelpers: function(model, types) {
+            var self = this;
+            _.each(contactTypes, function (contactType) {
+                self.unset('is' + contactType + 'Contact');
+                self.unset('isPrimary' + contactType + 'Contact');
+                _.each(types, function (type) {
+                    var toSet = {};
+                    if (type.name === contactType) {
+                        toSet['is' + contactType + 'Contact'] = true;
+                        if (type.isPrimary) toSet['isPrimary' + contactType + 'Contact'] = true;
+                        self.set(toSet, { silent: true });
+                    }
+                });
+            });
+        },
+        initialize: function () {
+            var self = this,
+                types = this.get('types');
+            if (types) this.setTypeHelpers(null, types);
+            this.on(contactTypeListeners);
+            this.on('change:types', this.setTypeHelpers, this);
+        }
+    }),
+
+    WishlistItem = Backbone.MozuModel.extend({
+        relations: {
+            product: ProductModels.Product
+        }
+    }),
+
+    Wishlist = Backbone.MozuModel.extend({
+        mozuType: 'wishlist',
+        helpers: ['hasItems'],
+        hasItems: function() {
+            return this.get('items').length > 0;
+        },
+        relations: {
+            items: Backbone.Collection.extend({
+                model: WishlistItem
+            })
+        },
+        addItemToCart: function (id) {
+            var self = this;
+            return this.apiAddItemToCartById(id).then(function (item) {
+                self.trigger('addedtocart', item, id);
+                return item;
+            });
+        }
+    }),
+
+    Customer = Backbone.MozuModel.extend({
+        mozuType: 'customer',
+        helpers: ['hasSavedCards', 'hasSavedContacts'],
+        hasSavedCards: function() {
+            var cards = this.get('cards');
+            return cards && cards.length > 0;
+        },
+        hasSavedContacts: function() {
+            var contacts = this.get('contacts');
+            return contacts && contacts.length > 0;
+        },
+        relations: {
+            attributes: Backbone.Collection.extend({
+                model: CustomerAttribute
+            }),
+            contacts: Backbone.Collection.extend({
+                model: CustomerContact
+            }),
+            cards: Backbone.Collection.extend({
+                model: PaymentMethods.CreditCard
+            }),
+            credits: Backbone.Collection.extend({
+                model: PaymentMethods.DigitalCredit
+            })
+        },
+        getAttributes: function () {
+            var self = this;
+            var attributesCollection = this.get('attributes');
+
+            return this.apiGetAttributes({pageSize:100}).then(function (cc) {
+                // transform attributes into key-value pairs, to avoid multiple lookups
+                var values = _.reduce(cc.data.items, function (a, b) {
+                    a[b.fullyQualifiedName] = {
+                        values: b.values,
+                        attributeDefinitionId: b.attributeDefinitionId
+                    };
+                    return a;
+                }, {});
+
+                // get all attribute definitions
+                return self.apiGetAttributeDefinitions().then(function (defs) {
+                    // merge attribute values into definitions
+                    _.each(defs.data.items, function (def) {
+                        var fqn = def.attributeFQN;
+
+                        if (values[fqn]) {
+                            def.values = values[fqn].values;
+                            def.attributeDefinitionId = values[fqn].attributeDefinitionId;
+                        }
+                    });
+                    // sort attributes, putting checkboxes first
+                    defs.data.items.sort(function (a, b) {
+                        if (a.inputType === 'YesNo') return -1;
+                        else if (b.inputType === 'YesNo') return 1;
+                        else return 0;
+                    });
+                    // write fully-hydrated attributes to the model
+                    attributesCollection.reset(defs.data.items);
+                    self.trigger('sync', cc.data);
+                    return self;
+                });
+            });
+        },
+        getPrimaryContactOfType: function (typeName) {
+            return this.get('contacts').find(function (contact) {
+                return !!_.findWhere(contact.get('types'), { name: typeName, isPrimary: true });
+            });
+        },
+        getPrimaryBillingContact: function () {
+            return this.getPrimaryContactOfType("Billing");
+        },
+        getPrimaryShippingContact: function () {
+            return this.getPrimaryContactOfType("Shipping");
+        },
+        getContacts: function () {
+            var self = this;
+            var contactsCollection = this.get('contacts');
+            return this.apiGetContacts().then(function (cc) {
+                contactsCollection.reset(cc.data.items);
+                self.trigger('sync', cc.data);
+                return self;
+            });
+        },
+        getStoreCredits: function() {
+            var self = this;
+            return this.apiGetCredits().then(function (credits) {
+                self.set('credits', credits.data.items);
+                self.trigger('sync', credits);
+                return self;
+            });
+        },
+        addStoreCredit: function (id) {
+            return this.apiAddStoreCredit(id);
+        }
+    }),
+
+    CustomerCardWithContact = PaymentMethods.CreditCard.extend({
+        validation: _.extend({
+            contactId: {
+                fn: function(value, property, model) {
+                    if (!value && model.contacts && model.contacts.length > 0) return Hypr.getLabel('cardBillingMissing');
+                }
+            }
+        }, PaymentMethods.CreditCard.prototype.validation),
+        selected: true, // so that validation rules always run,
+        isCvvOptional: true
+    }),
+
+    EditableCustomer = Customer.extend({
+        
+        handlesMessages: true,
+        relations: _.extend({
+            editingCard: CustomerCardWithContact,
+            editingContact: CustomerContact,
+            wishlist: Wishlist,
+            orderHistory: OrderModels.OrderCollection,
+            returnHistory: OrderModels.RMACollection
+        }, Customer.prototype.relations),
+        validation: {
+            password: {
+                fn: function(value) {
+                    if (this.validatePassword && !value) return Hypr.getLabel('passwordMissing');
+                }
+            },
+            confirmPassword: {
+                fn: function(value) {
+                    if (this.validatePassword && value !== this.get('password')) return Hypr.getLabel('passwordsDoNotMatch');
+                }
+            }
+        },
+        defaults: function () {
+            return {
+                editingCard: {},
+                editingContact: {}
+            };
+        },
+        initialize: function() {
+            var self = this,
+                orderHistory = this.get('orderHistory'),
+                returnHistory = this.get('returnHistory');
+            this.get('editingContact').set('accountId', this.get('id'));
+            orderHistory.lastRequest = {
+                pageSize: 5
+            };
+            returnHistory.lastRequest = {
+                pageSize: 5
+            };
+            orderHistory.on('returncreated', function(id) {
+                returnHistory.apiGet(returnHistory.lastRequest).then(function () {
+                    returnHistory.trigger('returndisplayed', id);
+                });
+            });
+
+            _.defer(function (cust) {
+                cust.getCards();
+            }, self);
+        },
+        changePassword: function () {
+            var self = this;
+            self.validatePassword = true;
+            if (this.validate('password') || this.validate('confirmPassword')) return false;
+            return this.apiChangePassword({
+                oldPassword: this.get('oldPassword'),
+                newPassword: this.get('password')
+            }).ensure(function () {
+                self.validatePassword = false;
+            });
+        },
+        beginEditCard: function(id) {
+            var toEdit = this.get('cards').get(id),
+                contacts = this.get('contacts').toJSON(),
+                editingCardModel = {
+                    contacts: contacts,
+                    hasSavedContacts: this.hasSavedContacts()
+                };
+            if (toEdit) {
+                _.extend(editingCardModel, toEdit.toJSON({ helpers: true }), { isCvvOptional: true });
+            }
+            this.get('editingCard').set(editingCardModel);
+        },
+        endEditCard: function() {
+            this.get('editingCard').clear({ silent: true });
+        },
+        saveCard: function() {
+            if (!this.validate('editingCard')) {
+                var self = this,
+                    saveContactOp,
+                    editingCard = this.get('editingCard').toJSON(),
+                    doSaveCard = function() {
+                        return self.apiSavePaymentCard(editingCard).then(function() {
+                            return self.getCards();
+                        }).then(function() {
+                            return self.get('editingCard').clear({ silent: true });
+                        });
+                    },
+                    saveContactFirst = function() {
+                        self.get('editingContact').set('isBillingContact', true);
+                        var op = self.get('editingContact').save();
+                        if (op) return op.then(function(contact) {
+                            editingCard.contactId = contact.prop('id');
+                            self.endEditContact();
+                            self.getContacts();
+                            return true;
+                        });
+                    };
+                if (!editingCard.contactId || editingCard.contactId === "new") {
+                    saveContactOp = saveContactFirst();
+                    if (saveContactOp) return saveContactOp.then(doSaveCard);
+                } else {
+                    return doSaveCard();
+                }
+            }
+        },
+        deleteCard: function (id) {
+            var self = this;
+            return this.apiModel.deletePaymentCard(id).then(function () {
+                return self.getCards();
+            });
+        },
+        deleteMultipleCards: function(ids) {
+            return this.apiModel.api.all.apply(this.apiModel.api, ids.map(_.bind(this.apiModel.deletePaymentCard, this.apiModel))).then(_.bind(this.getCards, this));
+        },
+        getCards: function () {
+            var self = this;
+            var cardsCollection = this.get('cards');
+            this.syncApiModel();
+            return this.apiModel.getCards().then(function (cc) {
+                cardsCollection.set(cc.data.items);
+                return self;
+            });
+        },
+        beginEditContact: function (id) {
+            var toEdit = this.get('contacts').get(id);
+            if (toEdit)
+                this.get('editingContact').set(toEdit.toJSON({ helpers: true, ensureCopy: true }), { silent: true });
+        },
+        endEditContact: function() {
+            var editingContact = this.get('editingContact');
+            editingContact.clear();
+            editingContact.set('accountId', this.get('id'));
+        },
+        saveContact: function (options) {
+            var self = this,
+                editingContact = this.get('editingContact'),
+                apiContact;
+            
+            if (options && options.forceIsValid) {
+                editingContact.set('address.isValidated', true);
+            }
+
+            var op = editingContact.save();
+            if (op) return op.then(function (contact) {
+                apiContact = contact;
+                self.endEditContact();
+                return self.getContacts();
+            }).then(function () {
+                return apiContact;
+            });
+        },
+        deleteContact: function (id) {
+            var self = this;
+            return this.apiModel.deleteContact(id).then(function () {
+                return self.getContacts();
+            });
+        },
+        updateName: function () {
+            return this.apiUpdate({
+                firstName: this.get('firstName'),
+                lastName: this.get('lastName')
+            });
+        },
+        updateAcceptsMarketing: function(yes) {
+            return this.apiUpdate({
+                acceptsMarketing: yes
+            });
+        },
+        updateAttribute: function (attributeFQN, attributeDefinitionId, values) {
+            this.apiUpdateAttribute({
+                attributeFQN: attributeFQN,
+                attributeDefinitionId: attributeDefinitionId,
+                values: values
+            });
+        },
+        toJSON: function (options) {
+            var j = Customer.prototype.toJSON.apply(this, arguments);
+            if (!options || !options.helpers)
+                delete j.customer;
+            delete j.password;
+            delete j.confirmPassword;
+            delete j.oldPassword;
+            return j;
+        }
+    });
+
+    return {
+        Contact: CustomerContact,
+        Customer: Customer,
+        EditableCustomer: EditableCustomer
+    };
+});
+
+define(
+    'modules/models-documents',["modules/backbone-mozu", "underscore", "hyprlivecontext"],
+    function (Backbone, _, PagingMixin, context) {
+        
+        var locals = context.locals;
+
+        var Document = Backbone.MozuModel.extend({
+            helpers: ['url'],
+            url: function() {
+                // attributes available through this.get, theme settings and sitecontext available through "locals.themeSettings" and "locals.siteContext"
+                return "/cms/" + this.get('id');
+            }
+        }),
+
+        DocumentCollection = Backbone.MozuPagedCollection.extend({
+            relations: {
+                items: Backbone.Collection.extend({
+                    model: Document
+                })
+            },
+            buildPagingRequest: function() {
+                var conf = this.baseRequestParams ? _.clone(this.baseRequestParams) : {},
+                pageSize = this.get("pageSize"),
+                startIndex = this.get("startIndex"),
+                filter = this.filter,
+                query = this.query;
+                conf.pageSize = pageSize;
+                if (startIndex) conf.startIndex = startIndex;
+                if (filter) conf.filter = filter;
+                if (query) conf.query = this.query;
+                return conf;
+            },
+            initialize: function() {
+                this.lastRequest = this.buildPagingRequest();
+            }
+        });
+
+        return {
+            Document: Document,
+            DocumentCollection: DocumentCollection
+        };
+
+});
+
+define('modules/models-faceting',['modules/jquery-mozu', 'underscore', "hyprlive", "modules/backbone-mozu", "modules/models-product"], function($, _, Hypr, Backbone, ProductModels) {
+
+    var FacetValue = Backbone.MozuModel.extend({
+        idAttribute: 'value'
+    }),
+
+    Facet = Backbone.MozuModel.extend({
+        idAttribute: 'field',
+        helpers: ['isFaceted'],
+        defaults: {
+            facetType: '',
+            field: '',
+            label: ''
+        },
+        relations: {
+            values: Backbone.Collection.extend({
+                model: FacetValue
+            })
+        },
+        isFaceted: function() {
+            return !!this.get("values").findWhere({ "isApplied": true });
+        },
+        empty: function() {
+            this.set("values", { isApplied: false });
+            this.collection.parent.updateFacets({ resetIndex: true });
+        },
+        getAppliedValues: function() {
+            return _.invoke(this.get("values").where({ isApplied: true }), 'get', 'filterValue').join(',');
+        }
+
+    }),
+
+    FacetedProductCollection = Backbone.MozuPagedCollection.extend({
+        mozuType: 'search',
+        relations: {
+            facets: Backbone.Collection.extend({
+                model: Facet
+            }),
+            items: Backbone.Collection.extend({
+                model: ProductModels.Product
+            })
+        },
+        helpers: ['hasValueFacets'],
+        hierarchyDepth: 2,
+        hierarchyField: 'categoryId',
+        getQueryParams: function() {
+            var params = Backbone.MozuPagedCollection.prototype.getQueryParams.apply(this, arguments);
+            if (this.hierarchyValue) {
+                params[window.encodeURIComponent(this.hierarchyField)] = window.encodeURIComponent(this.hierarchyValue);
+            }
+            return params;
+        },
+        buildRequest: function(filterValue) {
+            var conf = Backbone.MozuPagedCollection.prototype.buildRequest.apply(this, arguments);
+            filterValue = filterValue || this.getFacetValueFilter();
+            if (filterValue) conf.facetValueFilter = filterValue;
+            return conf;
+        },
+        setQuery: function(query) {
+            this.query = query;
+            if (!this.hierarchyValue && !this.baseRequestParams) {
+                this.baseRequestParams = {
+                    facet: this.hierarchyField,
+                    facetHierDepth: this.hierarchyField + ":" + this.hierarchyDepth,
+                    query: query
+                };
+            }
+            this.lastRequest = this.buildRequest();
+        },
+        setHierarchy: function(hierarchyField, hierarchyValue) {
+            this.hierarchyField = hierarchyField;
+            this.hierarchyValue = hierarchyValue;
+            this.baseRequestParams = this.baseRequestParams || {};
+            if (hierarchyValue || hierarchyValue === 0) {
+                this.baseRequestParams = _.extend(this.baseRequestParams, {
+                    filter: hierarchyField + ' req ' + hierarchyValue,
+                    facetTemplate: hierarchyField + ':' + hierarchyValue,
+                    facetHierValue: hierarchyField + ':' + hierarchyValue,
+                    facetHierDepth: hierarchyField + ':' + this.hierarchyDepth
+                });
+            } else {
+                this.baseRequestParams = _.omit(this.baseRequestParams, 'filter', 'facetTemplate', 'facetHierValue', 'facetHierDepth');
+            }
+            if (this.query) this.baseRequestParams.query = this.query;
+            this.lastRequest = this.buildRequest();
+        },
+        hasValueFacets: function() {
+            return !!this.get('facets').findWhere({ facetType: 'Value' });
+        },
+        clearAllFacets: function() {
+            this.get("facets").invoke("empty");
+        },
+        getFacetValueFilter: function() {
+            return _.compact(this.get("facets").invoke("getAppliedValues")).join(',');
+        },
+        setFacetValue: function(field, value, yes) {
+            var thisFacetValues = this.get('facets').findWhere({ field: field }).get('values'),
+                // jQuery.data attempts to detect type, but the facet value might be a string anyway
+                newValue = thisFacetValues.findWhere({ value: value }) || thisFacetValues.findWhere({
+                    value: value.toString()
+                });
+            newValue.set("isApplied", yes);
+            this.updateFacets({ resetIndex: true });
+        },
+        updateFacets: function(options) {
+            var me = this,
+                conf;
+            options = options || {};
+            if (options.resetIndex) this.set("startIndex", 0);
+            conf = this.buildRequest(options.facetValueFilter);
+            if (options.force || !_.isEqual(conf, this.lastRequest)) {
+                this.lastRequest = conf;
+                this.isLoading(true);
+                // wipe current data set, since the server will give us our entire state
+                this.get('facets').reset(null, { silent: true });
+                this.get('items').reset(null, { silent: true });
+                this.apiModel.get(conf).ensure(function() {
+                    me.isLoading(false);
+                });
+            }
+        },
+        initialize: function() {
+            var me = this;
+            Backbone.MozuPagedCollection.prototype.initialize.apply(this, arguments);
+            this.updateFacets = _.debounce(this.updateFacets, 300);
+            this.on('sync', function() {
+                me.trigger('facetchange', me.getQueryString());
+            });
+        }
+    }),
+
+    Category = FacetedProductCollection.extend({}),
+
+    SearchResult = FacetedProductCollection.extend({
+        defaultSort: '', // relevance rather than createdate
+        buildRequest: function() {
+            var conf = FacetedProductCollection.prototype.buildRequest.apply(this, arguments);
+            if (this.query) conf.query = this.query;
+            return conf;
+        },
+        getQueryParams: function() {
+            var params = FacetedProductCollection.prototype.getQueryParams.apply(this, arguments);
+            if (this.query) params.query = this.query;
+            return params;
+        }
+    });
+
+    return {
+        Facet: Facet,
+        FacetValue: FacetValue,
+        FacetedProductCollection: FacetedProductCollection,
+        Category: Category,
+        SearchResult: SearchResult
+    };
+
+});
+
+define('shim!vendor/bootstrap/js/affix[jquery=jQuery]',['jquery'], function(jQuery) { 
 
 /* ========================================================================
  * Bootstrap: affix.js v3.2.0
@@ -47,6 +7794,152 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
+
++function ($) {
+  
+
+  // AFFIX CLASS DEFINITION
+  // ======================
+
+  var Affix = function (element, options) {
+    this.options = $.extend({}, Affix.DEFAULTS, options)
+
+    this.$target = $(this.options.target)
+      .on('scroll.bs.affix.data-api', $.proxy(this.checkPosition, this))
+      .on('click.bs.affix.data-api',  $.proxy(this.checkPositionWithEventLoop, this))
+
+    this.$element     = $(element)
+    this.affixed      =
+    this.unpin        =
+    this.pinnedOffset = null
+
+    this.checkPosition()
+  }
+
+  Affix.VERSION  = '3.2.0'
+
+  Affix.RESET    = 'affix affix-top affix-bottom'
+
+  Affix.DEFAULTS = {
+    offset: 0,
+    target: window
+  }
+
+  Affix.prototype.getPinnedOffset = function () {
+    if (this.pinnedOffset) return this.pinnedOffset
+    this.$element.removeClass(Affix.RESET).addClass('affix')
+    var scrollTop = this.$target.scrollTop()
+    var position  = this.$element.offset()
+    return (this.pinnedOffset = position.top - scrollTop)
+  }
+
+  Affix.prototype.checkPositionWithEventLoop = function () {
+    setTimeout($.proxy(this.checkPosition, this), 1)
+  }
+
+  Affix.prototype.checkPosition = function () {
+    if (!this.$element.is(':visible')) return
+
+    var scrollHeight = $(document).height()
+    var scrollTop    = this.$target.scrollTop()
+    var position     = this.$element.offset()
+    var offset       = this.options.offset
+    var offsetTop    = offset.top
+    var offsetBottom = offset.bottom
+
+    if (typeof offset != 'object')         offsetBottom = offsetTop = offset
+    if (typeof offsetTop == 'function')    offsetTop    = offset.top(this.$element)
+    if (typeof offsetBottom == 'function') offsetBottom = offset.bottom(this.$element)
+
+    var affix = this.unpin   != null && (scrollTop + this.unpin <= position.top) ? false :
+                offsetBottom != null && (position.top + this.$element.height() >= scrollHeight - offsetBottom) ? 'bottom' :
+                offsetTop    != null && (scrollTop <= offsetTop) ? 'top' : false
+
+    if (this.affixed === affix) return
+    if (this.unpin != null) this.$element.css('top', '')
+
+    var affixType = 'affix' + (affix ? '-' + affix : '')
+    var e         = $.Event(affixType + '.bs.affix')
+
+    this.$element.trigger(e)
+
+    if (e.isDefaultPrevented()) return
+
+    this.affixed = affix
+    this.unpin = affix == 'bottom' ? this.getPinnedOffset() : null
+
+    this.$element
+      .removeClass(Affix.RESET)
+      .addClass(affixType)
+      .trigger($.Event(affixType.replace('affix', 'affixed')))
+
+    if (affix == 'bottom') {
+      this.$element.offset({
+        top: scrollHeight - this.$element.height() - offsetBottom
+      })
+    }
+  }
+
+
+  // AFFIX PLUGIN DEFINITION
+  // =======================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.affix')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.affix', (data = new Affix(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.affix
+
+  $.fn.affix             = Plugin
+  $.fn.affix.Constructor = Affix
+
+
+  // AFFIX NO CONFLICT
+  // =================
+
+  $.fn.affix.noConflict = function () {
+    $.fn.affix = old
+    return this
+  }
+
+
+  // AFFIX DATA-API
+  // ==============
+
+  $(window).on('load', function () {
+    $('[data-spy="affix"]').each(function () {
+      var $spy = $(this)
+      var data = $spy.data()
+
+      data.offset = data.offset || {}
+
+      if (data.offsetBottom) data.offset.bottom = data.offsetBottom
+      if (data.offsetTop)    data.offset.top    = data.offsetTop
+
+      Plugin.call($spy, data)
+    })
+  })
+
+}(jQuery);
+ ; 
+
+return null; 
+
+});
+
+
+//@ sourceURL=/vendor/bootstrap/js/affix.js
+
+;
+define('shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]',['jquery'], function(jQuery) { 
+
 /* ========================================================================
  * Bootstrap: scrollspy.js v3.2.0
  * http://getbootstrap.com/javascript/#scrollspy
@@ -55,14 +7948,2474 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  * ======================================================================== */
 
+
++function ($) {
+  
+
+  // SCROLLSPY CLASS DEFINITION
+  // ==========================
+
+  function ScrollSpy(element, options) {
+    var process  = $.proxy(this.process, this)
+
+    this.$body          = $('body')
+    this.$scrollElement = $(element).is('body') ? $(window) : $(element)
+    this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+    this.selector       = (this.options.target || '') + ' .nav li > a'
+    this.offsets        = []
+    this.targets        = []
+    this.activeTarget   = null
+    this.scrollHeight   = 0
+
+    this.$scrollElement.on('scroll.bs.scrollspy', process)
+    this.refresh()
+    this.process()
+  }
+
+  ScrollSpy.VERSION  = '3.2.0'
+
+  ScrollSpy.DEFAULTS = {
+    offset: 10
+  }
+
+  ScrollSpy.prototype.getScrollHeight = function () {
+    return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+  }
+
+  ScrollSpy.prototype.refresh = function () {
+    var offsetMethod = 'offset'
+    var offsetBase   = 0
+
+    if (!$.isWindow(this.$scrollElement[0])) {
+      offsetMethod = 'position'
+      offsetBase   = this.$scrollElement.scrollTop()
+    }
+
+    this.offsets = []
+    this.targets = []
+    this.scrollHeight = this.getScrollHeight()
+
+    var self     = this
+
+    this.$body
+      .find(this.selector)
+      .map(function () {
+        var $el   = $(this)
+        var href  = $el.data('target') || $el.attr('href')
+        var $href = /^#./.test(href) && $(href)
+
+        return ($href
+          && $href.length
+          && $href.is(':visible')
+          && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+      })
+      .sort(function (a, b) { return a[0] - b[0] })
+      .each(function () {
+        self.offsets.push(this[0])
+        self.targets.push(this[1])
+      })
+  }
+
+  ScrollSpy.prototype.process = function () {
+    var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+    var scrollHeight = this.getScrollHeight()
+    var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+    var offsets      = this.offsets
+    var targets      = this.targets
+    var activeTarget = this.activeTarget
+    var i
+
+    if (this.scrollHeight != scrollHeight) {
+      this.refresh()
+    }
+
+    if (scrollTop >= maxScroll) {
+      return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+    }
+
+    if (activeTarget && scrollTop <= offsets[0]) {
+      return activeTarget != (i = targets[0]) && this.activate(i)
+    }
+
+    for (i = offsets.length; i--;) {
+      activeTarget != targets[i]
+        && scrollTop >= offsets[i]
+        && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+        && this.activate(targets[i])
+    }
+  }
+
+  ScrollSpy.prototype.activate = function (target) {
+    this.activeTarget = target
+
+    $(this.selector)
+      .parentsUntil(this.options.target, '.active')
+      .removeClass('active')
+
+    var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+    var active = $(selector)
+      .parents('li')
+      .addClass('active')
+
+    if (active.parent('.dropdown-menu').length) {
+      active = active
+        .closest('li.dropdown')
+        .addClass('active')
+    }
+
+    active.trigger('activate.bs.scrollspy')
+  }
+
+
+  // SCROLLSPY PLUGIN DEFINITION
+  // ===========================
+
+  function Plugin(option) {
+    return this.each(function () {
+      var $this   = $(this)
+      var data    = $this.data('bs.scrollspy')
+      var options = typeof option == 'object' && option
+
+      if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+      if (typeof option == 'string') data[option]()
+    })
+  }
+
+  var old = $.fn.scrollspy
+
+  $.fn.scrollspy             = Plugin
+  $.fn.scrollspy.Constructor = ScrollSpy
+
+
+  // SCROLLSPY NO CONFLICT
+  // =====================
+
+  $.fn.scrollspy.noConflict = function () {
+    $.fn.scrollspy = old
+    return this
+  }
+
+
+  // SCROLLSPY DATA-API
+  // ==================
+
+  $(window).on('load.bs.scrollspy.data-api', function () {
+    $('[data-spy="scroll"]').each(function () {
+      var $spy = $(this)
+      Plugin.call($spy, $spy.data())
+    })
+  })
+
+}(jQuery);
+ ; 
+
+return null; 
+
+});
+
+
+//@ sourceURL=/vendor/bootstrap/js/scrollspy.js
+
+;
+define('modules/scroll-nav',['modules/jquery-mozu', 'hyprlive', 'underscore', 'modules/api', 'shim!vendor/bootstrap/js/affix[jquery=jQuery]', 'shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]'], function ($, Hypr, _, api) {
+    if (!Modernizr.mq('(max-width: 800px)')) {
+        var gutterWidth = parseInt(Hypr.getThemeSetting('gutterWidth'), 10);
+        $(document).ready(function () {
+            $('[data-mz-scrollnav]').each(function () {
+                var $this = $(this),
+                    $nav = $($this.data('mzScrollnav')),
+                    refreshFn = _.debounce(function () {
+                        $nav.scrollspy('refresh');
+                    }, 500);
+                $this.on('click', 'a', function (e) {
+                    e.preventDefault();
+                    $(this.getAttribute('href')).ScrollTo({ axis: 'y', offsetTop: gutterWidth });
+                }).affix({
+                    offset: {
+                        top: $this.offset().top - gutterWidth,
+                        bottom: 0
+                    }
+                });
+                $(window).on('resize', refreshFn);
+                api.on('sync', refreshFn);
+                api.on('spawn', refreshFn);
+                var id = $this.attr('id');
+                if (!id) {
+                    id = "scrollnav-" + new Date().getTime();
+                    $this.attr('id', id);
+                }
+                $nav.scrollspy({ target: '#' + id, offset: gutterWidth*1.2 });
+            });
+        });
+    }
+});
+
+define('shim!vendor/typeahead.js/dist/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery',['modules/jquery-mozu'], function(jQuery) { 
+
 /*!
  * typeahead.js 0.10.5
  * https://github.com/twitter/typeahead.js
  * Copyright 2013-2014 Twitter, Inc. and other contributors; Licensed MIT
  */
 
-define("modules/common",function(){}),define("modules/api",["sdk","jquery","hyprlive"],function(t,e,n){var i=require.mozuData("apicontext");t.setServiceUrls(i.urls);var r=t.Store(i.headers).api();return(n.getThemeSetting("useDebugScripts")||require.mozuData("pagecontext").isDebugMode)&&r.on("error",function(t,e,n){var i="Error communicating with Mozu web services";n&&n.url&&(i+=" at "+n.url);var r=e&&e.getResponseHeader&&e.getResponseHeader("x-vol-correlation");r&&(i+=" --- Correlation ID: "+r),window&&window.console&&console.error(i,t,e)}),r}),function(){var t=this,e=t._,n={},i=Array.prototype,r=Object.prototype,s=Function.prototype,o=i.push,a=i.slice,u=i.concat,l=r.toString,c=r.hasOwnProperty,d=i.forEach,h=i.map,p=i.reduce,f=i.reduceRight,g=i.filter,m=i.every,v=i.some,y=i.indexOf,b=i.lastIndexOf,w=Array.isArray,x=Object.keys,C=s.bind,_=function(t){return t instanceof _?t:this instanceof _?(this._wrapped=t,void 0):new _(t)};"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=_),exports._=_):t._=_,_.VERSION="1.6.0";var F=_.each=_.forEach=function(t,e,i){if(null==t)return t;if(d&&t.forEach===d)t.forEach(e,i);else if(t.length===+t.length){for(var r=0,s=t.length;s>r;r++)if(e.call(i,t[r],r,t)===n)return}else for(var o=_.keys(t),r=0,s=o.length;s>r;r++)if(e.call(i,t[o[r]],o[r],t)===n)return;return t};_.map=_.collect=function(t,e,n){var i=[];return null==t?i:h&&t.map===h?t.map(e,n):(F(t,function(t,r,s){i.push(e.call(n,t,r,s))}),i)};var S="Reduce of empty array with no initial value";_.reduce=_.foldl=_.inject=function(t,e,n,i){var r=arguments.length>2;if(null==t&&(t=[]),p&&t.reduce===p)return i&&(e=_.bind(e,i)),r?t.reduce(e,n):t.reduce(e);if(F(t,function(t,s,o){r?n=e.call(i,n,t,s,o):(n=t,r=!0)}),!r)throw new TypeError(S);return n},_.reduceRight=_.foldr=function(t,e,n,i){var r=arguments.length>2;if(null==t&&(t=[]),f&&t.reduceRight===f)return i&&(e=_.bind(e,i)),r?t.reduceRight(e,n):t.reduceRight(e);var s=t.length;if(s!==+s){var o=_.keys(t);s=o.length}if(F(t,function(a,u,l){u=o?o[--s]:--s,r?n=e.call(i,n,t[u],u,l):(n=t[u],r=!0)}),!r)throw new TypeError(S);return n},_.find=_.detect=function(t,e,n){var i;return T(t,function(t,r,s){return e.call(n,t,r,s)?(i=t,!0):void 0}),i},_.filter=_.select=function(t,e,n){var i=[];return null==t?i:g&&t.filter===g?t.filter(e,n):(F(t,function(t,r,s){e.call(n,t,r,s)&&i.push(t)}),i)},_.reject=function(t,e,n){return _.filter(t,function(t,i,r){return!e.call(n,t,i,r)},n)},_.every=_.all=function(t,e,i){e||(e=_.identity);var r=!0;return null==t?r:m&&t.every===m?t.every(e,i):(F(t,function(t,s,o){return(r=r&&e.call(i,t,s,o))?void 0:n}),!!r)};var T=_.some=_.any=function(t,e,i){e||(e=_.identity);var r=!1;return null==t?r:v&&t.some===v?t.some(e,i):(F(t,function(t,s,o){return r||(r=e.call(i,t,s,o))?n:void 0}),!!r)};_.contains=_.include=function(t,e){return null==t?!1:y&&t.indexOf===y?-1!=t.indexOf(e):T(t,function(t){return t===e})},_.invoke=function(t,e){var n=a.call(arguments,2),i=_.isFunction(e);return _.map(t,function(t){return(i?e:t[e]).apply(t,n)})},_.pluck=function(t,e){return _.map(t,_.property(e))},_.where=function(t,e){return _.filter(t,_.matches(e))},_.findWhere=function(t,e){return _.find(t,_.matches(e))},_.max=function(t,e,n){if(!e&&_.isArray(t)&&t[0]===+t[0]&&t.length<65535)return Math.max.apply(Math,t);var i=-1/0,r=-1/0;return F(t,function(t,s,o){var a=e?e.call(n,t,s,o):t;a>r&&(i=t,r=a)}),i},_.min=function(t,e,n){if(!e&&_.isArray(t)&&t[0]===+t[0]&&t.length<65535)return Math.min.apply(Math,t);var i=1/0,r=1/0;return F(t,function(t,s,o){var a=e?e.call(n,t,s,o):t;r>a&&(i=t,r=a)}),i},_.shuffle=function(t){var e,n=0,i=[];return F(t,function(t){e=_.random(n++),i[n-1]=i[e],i[e]=t}),i},_.sample=function(t,e,n){return null==e||n?(t.length!==+t.length&&(t=_.values(t)),t[_.random(t.length-1)]):_.shuffle(t).slice(0,Math.max(0,e))};var z=function(t){return null==t?_.identity:_.isFunction(t)?t:_.property(t)};_.sortBy=function(t,e,n){return e=z(e),_.pluck(_.map(t,function(t,i,r){return{value:t,index:i,criteria:e.call(n,t,i,r)}}).sort(function(t,e){var n=t.criteria,i=e.criteria;if(n!==i){if(n>i||void 0===n)return 1;if(i>n||void 0===i)return-1}return t.index-e.index}),"value")};var I=function(t){return function(e,n,i){var r={};return n=z(n),F(e,function(s,o){var a=n.call(i,s,o,e);t(r,a,s)}),r}};_.groupBy=I(function(t,e,n){_.has(t,e)?t[e].push(n):t[e]=[n]}),_.indexBy=I(function(t,e,n){t[e]=n}),_.countBy=I(function(t,e){_.has(t,e)?t[e]++:t[e]=1}),_.sortedIndex=function(t,e,n,i){n=z(n);for(var r=n.call(i,e),s=0,o=t.length;o>s;){var a=s+o>>>1;n.call(i,t[a])<r?s=a+1:o=a}return s},_.toArray=function(t){return t?_.isArray(t)?a.call(t):t.length===+t.length?_.map(t,_.identity):_.values(t):[]},_.size=function(t){return null==t?0:t.length===+t.length?t.length:_.keys(t).length},_.first=_.head=_.take=function(t,e,n){return null==t?void 0:null==e||n?t[0]:0>e?[]:a.call(t,0,e)},_.initial=function(t,e,n){return a.call(t,0,t.length-(null==e||n?1:e))},_.last=function(t,e,n){return null==t?void 0:null==e||n?t[t.length-1]:a.call(t,Math.max(t.length-e,0))},_.rest=_.tail=_.drop=function(t,e,n){return a.call(t,null==e||n?1:e)},_.compact=function(t){return _.filter(t,_.identity)};var P=function(t,e,n){return e&&_.every(t,_.isArray)?u.apply(n,t):(F(t,function(t){_.isArray(t)||_.isArguments(t)?e?o.apply(n,t):P(t,e,n):n.push(t)}),n)};_.flatten=function(t,e){return P(t,e,[])},_.without=function(t){return _.difference(t,a.call(arguments,1))},_.partition=function(t,e){var n=[],i=[];return F(t,function(t){(e(t)?n:i).push(t)}),[n,i]},_.uniq=_.unique=function(t,e,n,i){_.isFunction(e)&&(i=n,n=e,e=!1);var r=n?_.map(t,n,i):t,s=[],o=[];return F(r,function(n,i){(e?i&&o[o.length-1]===n:_.contains(o,n))||(o.push(n),s.push(t[i]))}),s},_.union=function(){return _.uniq(_.flatten(arguments,!0))},_.intersection=function(t){var e=a.call(arguments,1);return _.filter(_.uniq(t),function(t){return _.every(e,function(e){return _.contains(e,t)})})},_.difference=function(t){var e=u.apply(i,a.call(arguments,1));return _.filter(t,function(t){return!_.contains(e,t)})},_.zip=function(){for(var t=_.max(_.pluck(arguments,"length").concat(0)),e=new Array(t),n=0;t>n;n++)e[n]=_.pluck(arguments,""+n);return e},_.object=function(t,e){if(null==t)return{};for(var n={},i=0,r=t.length;r>i;i++)e?n[t[i]]=e[i]:n[t[i][0]]=t[i][1];return n},_.indexOf=function(t,e,n){if(null==t)return-1;var i=0,r=t.length;if(n){if("number"!=typeof n)return i=_.sortedIndex(t,e),t[i]===e?i:-1;i=0>n?Math.max(0,r+n):n}if(y&&t.indexOf===y)return t.indexOf(e,n);for(;r>i;i++)if(t[i]===e)return i;return-1},_.lastIndexOf=function(t,e,n){if(null==t)return-1;var i=null!=n;if(b&&t.lastIndexOf===b)return i?t.lastIndexOf(e,n):t.lastIndexOf(e);for(var r=i?n:t.length;r--;)if(t[r]===e)return r;return-1},_.range=function(t,e,n){arguments.length<=1&&(e=t||0,t=0),n=arguments[2]||1;for(var i=Math.max(Math.ceil((e-t)/n),0),r=0,s=new Array(i);i>r;)s[r++]=t,t+=n;return s};var D=function(){};_.bind=function(t,e){var n,i;if(C&&t.bind===C)return C.apply(t,a.call(arguments,1));if(!_.isFunction(t))throw new TypeError;return n=a.call(arguments,2),i=function(){if(!(this instanceof i))return t.apply(e,n.concat(a.call(arguments)));D.prototype=t.prototype;var r=new D;D.prototype=null;var s=t.apply(r,n.concat(a.call(arguments)));return Object(s)===s?s:r}},_.partial=function(t){var e=a.call(arguments,1);return function(){for(var n=0,i=e.slice(),r=0,s=i.length;s>r;r++)i[r]===_&&(i[r]=arguments[n++]);for(;n<arguments.length;)i.push(arguments[n++]);return t.apply(this,i)}},_.bindAll=function(t){var e=a.call(arguments,1);if(0===e.length)throw new Error("bindAll must be passed function names");return F(e,function(e){t[e]=_.bind(t[e],t)}),t},_.memoize=function(t,e){var n={};return e||(e=_.identity),function(){var i=e.apply(this,arguments);return _.has(n,i)?n[i]:n[i]=t.apply(this,arguments)}},_.delay=function(t,e){var n=a.call(arguments,2);return setTimeout(function(){return t.apply(null,n)},e)},_.defer=function(t){return _.delay.apply(_,[t,1].concat(a.call(arguments,1)))},_.throttle=function(t,e,n){var i,r,s,o=null,a=0;n||(n={});var u=function(){a=n.leading===!1?0:_.now(),o=null,s=t.apply(i,r),i=r=null};return function(){var l=_.now();a||n.leading!==!1||(a=l);var c=e-(l-a);return i=this,r=arguments,0>=c?(clearTimeout(o),o=null,a=l,s=t.apply(i,r),i=r=null):o||n.trailing===!1||(o=setTimeout(u,c)),s}},_.debounce=function(t,e,n){var i,r,s,o,a,u=function(){var l=_.now()-o;e>l?i=setTimeout(u,e-l):(i=null,n||(a=t.apply(s,r),s=r=null))};return function(){s=this,r=arguments,o=_.now();var l=n&&!i;return i||(i=setTimeout(u,e)),l&&(a=t.apply(s,r),s=r=null),a}},_.once=function(t){var e,n=!1;return function(){return n?e:(n=!0,e=t.apply(this,arguments),t=null,e)}},_.wrap=function(t,e){return _.partial(e,t)},_.compose=function(){var t=arguments;return function(){for(var e=arguments,n=t.length-1;n>=0;n--)e=[t[n].apply(this,e)];return e[0]}},_.after=function(t,e){return function(){return--t<1?e.apply(this,arguments):void 0}},_.keys=function(t){if(!_.isObject(t))return[];if(x)return x(t);var e=[];for(var n in t)_.has(t,n)&&e.push(n);return e},_.values=function(t){for(var e=_.keys(t),n=e.length,i=new Array(n),r=0;n>r;r++)i[r]=t[e[r]];return i},_.pairs=function(t){for(var e=_.keys(t),n=e.length,i=new Array(n),r=0;n>r;r++)i[r]=[e[r],t[e[r]]];return i},_.invert=function(t){for(var e={},n=_.keys(t),i=0,r=n.length;r>i;i++)e[t[n[i]]]=n[i];return e},_.functions=_.methods=function(t){var e=[];for(var n in t)_.isFunction(t[n])&&e.push(n);return e.sort()},_.extend=function(t){return F(a.call(arguments,1),function(e){if(e)for(var n in e)t[n]=e[n]}),t},_.pick=function(t){var e={},n=u.apply(i,a.call(arguments,1));return F(n,function(n){n in t&&(e[n]=t[n])}),e},_.omit=function(t){var e={},n=u.apply(i,a.call(arguments,1));for(var r in t)_.contains(n,r)||(e[r]=t[r]);return e},_.defaults=function(t){return F(a.call(arguments,1),function(e){if(e)for(var n in e)void 0===t[n]&&(t[n]=e[n])}),t},_.clone=function(t){return _.isObject(t)?_.isArray(t)?t.slice():_.extend({},t):t},_.tap=function(t,e){return e(t),t};var k=function(t,e,n,i){if(t===e)return 0!==t||1/t==1/e;if(null==t||null==e)return t===e;t instanceof _&&(t=t._wrapped),e instanceof _&&(e=e._wrapped);var r=l.call(t);if(r!=l.call(e))return!1;switch(r){case"[object String]":return t==String(e);case"[object Number]":return t!=+t?e!=+e:0==t?1/t==1/e:t==+e;case"[object Date]":case"[object Boolean]":return+t==+e;case"[object RegExp]":return t.source==e.source&&t.global==e.global&&t.multiline==e.multiline&&t.ignoreCase==e.ignoreCase}if("object"!=typeof t||"object"!=typeof e)return!1;for(var s=n.length;s--;)if(n[s]==t)return i[s]==e;var o=t.constructor,a=e.constructor;if(o!==a&&!(_.isFunction(o)&&o instanceof o&&_.isFunction(a)&&a instanceof a)&&"constructor"in t&&"constructor"in e)return!1;n.push(t),i.push(e);var u=0,c=!0;if("[object Array]"==r){if(u=t.length,c=u==e.length)for(;u--&&(c=k(t[u],e[u],n,i)););}else{for(var d in t)if(_.has(t,d)&&(u++,!(c=_.has(e,d)&&k(t[d],e[d],n,i))))break;if(c){for(d in e)if(_.has(e,d)&&!u--)break;c=!u}}return n.pop(),i.pop(),c};_.isEqual=function(t,e){return k(t,e,[],[])},_.isEmpty=function(t){if(null==t)return!0;if(_.isArray(t)||_.isString(t))return 0===t.length;for(var e in t)if(_.has(t,e))return!1;return!0},_.isElement=function(t){return!(!t||1!==t.nodeType)},_.isArray=w||function(t){return"[object Array]"==l.call(t)},_.isObject=function(t){return t===Object(t)},F(["Arguments","Function","String","Number","Date","RegExp"],function(t){_["is"+t]=function(e){return l.call(e)=="[object "+t+"]"}}),_.isArguments(arguments)||(_.isArguments=function(t){return!(!t||!_.has(t,"callee"))}),"function"!=typeof/./&&(_.isFunction=function(t){return"function"==typeof t}),_.isFinite=function(t){return isFinite(t)&&!isNaN(parseFloat(t))},_.isNaN=function(t){return _.isNumber(t)&&t!=+t},_.isBoolean=function(t){return t===!0||t===!1||"[object Boolean]"==l.call(t)},_.isNull=function(t){return null===t},_.isUndefined=function(t){return void 0===t},_.has=function(t,e){return c.call(t,e)},_.noConflict=function(){return t._=e,this},_.identity=function(t){return t},_.constant=function(t){return function(){return t}},_.property=function(t){return function(e){return e[t]}},_.matches=function(t){return function(e){if(e===t)return!0;for(var n in t)if(t[n]!==e[n])return!1;return!0}},_.times=function(t,e,n){for(var i=Array(Math.max(0,t)),r=0;t>r;r++)i[r]=e.call(n,r);return i},_.random=function(t,e){return null==e&&(e=t,t=0),t+Math.floor(Math.random()*(e-t+1))},_.now=Date.now||function(){return(new Date).getTime()};var M={escape:{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#x27;"}};M.unescape=_.invert(M.escape);var A={escape:new RegExp("["+_.keys(M.escape).join("")+"]","g"),unescape:new RegExp("("+_.keys(M.unescape).join("|")+")","g")};_.each(["escape","unescape"],function(t){_[t]=function(e){return null==e?"":(""+e).replace(A[t],function(e){return M[t][e]})}}),_.result=function(t,e){if(null==t)return void 0;var n=t[e];return _.isFunction(n)?n.call(t):n},_.mixin=function(t){F(_.functions(t),function(e){var n=_[e]=t[e];_.prototype[e]=function(){var t=[this._wrapped];return o.apply(t,arguments),q.call(this,n.apply(_,t))}})};var E=0;_.uniqueId=function(t){var e=++E+"";return t?t+e:e},_.templateSettings={evaluate:/<%([\s\S]+?)%>/g,interpolate:/<%=([\s\S]+?)%>/g,escape:/<%-([\s\S]+?)%>/g};var R=/(.)^/,N={"'":"'","\\":"\\","\r":"r","\n":"n","	":"t","\u2028":"u2028","\u2029":"u2029"},$=/\\|'|\r|\n|\t|\u2028|\u2029/g;_.template=function(t,e,n){var i;n=_.defaults({},n,_.templateSettings);var r=new RegExp([(n.escape||R).source,(n.interpolate||R).source,(n.evaluate||R).source].join("|")+"|$","g"),s=0,o="__p+='";t.replace(r,function(e,n,i,r,a){return o+=t.slice(s,a).replace($,function(t){return"\\"+N[t]}),n&&(o+="'+\n((__t=("+n+"))==null?'':_.escape(__t))+\n'"),i&&(o+="'+\n((__t=("+i+"))==null?'':__t)+\n'"),r&&(o+="';\n"+r+"\n__p+='"),s=a+e.length,e}),o+="';\n",n.variable||(o="with(obj||{}){\n"+o+"}\n"),o="var __t,__p='',__j=Array.prototype.join,print=function(){__p+=__j.call(arguments,'');};\n"+o+"return __p;\n";try{i=new Function(n.variable||"obj","_",o)}catch(a){throw a.source=o,a}if(e)return i(e,_);var u=function(t){return i.call(this,t,_)};return u.source="function("+(n.variable||"obj")+"){\n"+o+"}",u},_.chain=function(t){return _(t).chain()};var q=function(t){return this._chain?_(t).chain():t};_.mixin(_),F(["pop","push","reverse","shift","sort","splice","unshift"],function(t){var e=i[t];_.prototype[t]=function(){var n=this._wrapped;return e.apply(n,arguments),"shift"!=t&&"splice"!=t||0!==n.length||delete n[0],q.call(this,n)}}),F(["concat","join","slice"],function(t){var e=i[t];_.prototype[t]=function(){return q.call(this,e.apply(this._wrapped,arguments))}}),_.extend(_.prototype,{chain:function(){return this._chain=!0,this},value:function(){return this._wrapped}}),"function"==typeof define&&define.amd&&define("underscore",[],function(){return _})}.call(this),function(t,e){if("function"==typeof define&&define.amd)define("backbone",["underscore","jquery","exports"],function(n,i,r){t.Backbone=e(t,r,n,i)});else if("undefined"!=typeof exports){var n=require("underscore");e(t,exports,n)}else t.Backbone=e(t,{},t._,t.jQuery||t.Zepto||t.ender||t.$)}(this,function(t,e,n,i){{var r=t.Backbone,s=[],o=(s.push,s.slice);s.splice}e.VERSION="1.1.2",e.$=i,e.noConflict=function(){return t.Backbone=r,this},e.emulateHTTP=!1,e.emulateJSON=!1;var a=e.Events={on:function(t,e,n){if(!l(this,"on",t,[e,n])||!e)return this;this._events||(this._events={});var i=this._events[t]||(this._events[t]=[]);return i.push({callback:e,context:n,ctx:n||this}),this},once:function(t,e,i){if(!l(this,"once",t,[e,i])||!e)return this;var r=this,s=n.once(function(){r.off(t,s),e.apply(this,arguments)});return s._callback=e,this.on(t,s,i)},off:function(t,e,i){var r,s,o,a,u,c,d,h;if(!this._events||!l(this,"off",t,[e,i]))return this;if(!t&&!e&&!i)return this._events=void 0,this;for(a=t?[t]:n.keys(this._events),u=0,c=a.length;c>u;u++)if(t=a[u],o=this._events[t]){if(this._events[t]=r=[],e||i)for(d=0,h=o.length;h>d;d++)s=o[d],(e&&e!==s.callback&&e!==s.callback._callback||i&&i!==s.context)&&r.push(s);r.length||delete this._events[t]}return this},trigger:function(t){if(!this._events)return this;var e=o.call(arguments,1);if(!l(this,"trigger",t,e))return this;var n=this._events[t],i=this._events.all;return n&&c(n,e),i&&c(i,arguments),this},stopListening:function(t,e,i){var r=this._listeningTo;if(!r)return this;var s=!e&&!i;i||"object"!=typeof e||(i=this),t&&((r={})[t._listenId]=t);for(var o in r)t=r[o],t.off(e,i,this),(s||n.isEmpty(t._events))&&delete this._listeningTo[o];return this}},u=/\s+/,l=function(t,e,n,i){if(!n)return!0;if("object"==typeof n){for(var r in n)t[e].apply(t,[r,n[r]].concat(i));return!1}if(u.test(n)){for(var s=n.split(u),o=0,a=s.length;a>o;o++)t[e].apply(t,[s[o]].concat(i));return!1}return!0},c=function(t,e){var n,i=-1,r=t.length,s=e[0],o=e[1],a=e[2];switch(e.length){case 0:for(;++i<r;)(n=t[i]).callback.call(n.ctx);return;case 1:for(;++i<r;)(n=t[i]).callback.call(n.ctx,s);return;case 2:for(;++i<r;)(n=t[i]).callback.call(n.ctx,s,o);return;case 3:for(;++i<r;)(n=t[i]).callback.call(n.ctx,s,o,a);return;default:for(;++i<r;)(n=t[i]).callback.apply(n.ctx,e);return}},d={listenTo:"on",listenToOnce:"once"};n.each(d,function(t,e){a[e]=function(e,i,r){var s=this._listeningTo||(this._listeningTo={}),o=e._listenId||(e._listenId=n.uniqueId("l"));return s[o]=e,r||"object"!=typeof i||(r=this),e[t](i,r,this),this}}),a.bind=a.on,a.unbind=a.off,n.extend(e,a);var h=e.Model=function(t,e){var i=t||{};e||(e={}),this.cid=n.uniqueId("c"),this.attributes={},e.collection&&(this.collection=e.collection),e.parse&&(i=this.parse(i,e)||{}),i=n.defaults({},i,n.result(this,"defaults")),this.set(i,e),this.changed={},this.initialize.apply(this,arguments)};n.extend(h.prototype,a,{changed:null,validationError:null,idAttribute:"id",initialize:function(){},toJSON:function(){return n.clone(this.attributes)},sync:function(){return e.sync.apply(this,arguments)},get:function(t){return this.attributes[t]},escape:function(t){return n.escape(this.get(t))},has:function(t){return null!=this.get(t)},set:function(t,e,i){var r,s,o,a,u,l,c,d;if(null==t)return this;if("object"==typeof t?(s=t,i=e):(s={})[t]=e,i||(i={}),!this._validate(s,i))return!1;o=i.unset,u=i.silent,a=[],l=this._changing,this._changing=!0,l||(this._previousAttributes=n.clone(this.attributes),this.changed={}),d=this.attributes,c=this._previousAttributes,this.idAttribute in s&&(this.id=s[this.idAttribute]);for(r in s)e=s[r],n.isEqual(d[r],e)||a.push(r),n.isEqual(c[r],e)?delete this.changed[r]:this.changed[r]=e,o?delete d[r]:d[r]=e;if(!u){a.length&&(this._pending=i);for(var h=0,p=a.length;p>h;h++)this.trigger("change:"+a[h],this,d[a[h]],i)}if(l)return this;if(!u)for(;this._pending;)i=this._pending,this._pending=!1,this.trigger("change",this,i);return this._pending=!1,this._changing=!1,this},unset:function(t,e){return this.set(t,void 0,n.extend({},e,{unset:!0}))},clear:function(t){var e={};for(var i in this.attributes)e[i]=void 0;return this.set(e,n.extend({},t,{unset:!0}))},hasChanged:function(t){return null==t?!n.isEmpty(this.changed):n.has(this.changed,t)},changedAttributes:function(t){if(!t)return this.hasChanged()?n.clone(this.changed):!1;var e,i=!1,r=this._changing?this._previousAttributes:this.attributes;for(var s in t)n.isEqual(r[s],e=t[s])||((i||(i={}))[s]=e);return i},previous:function(t){return null!=t&&this._previousAttributes?this._previousAttributes[t]:null},previousAttributes:function(){return n.clone(this._previousAttributes)},fetch:function(t){t=t?n.clone(t):{},void 0===t.parse&&(t.parse=!0);var e=this,i=t.success;return t.success=function(n){return e.set(e.parse(n,t),t)?(i&&i(e,n,t),e.trigger("sync",e,n,t),void 0):!1},$(this,t),this.sync("read",this,t)},save:function(t,e,i){var r,s,o,a=this.attributes;if(null==t||"object"==typeof t?(r=t,i=e):(r={})[t]=e,i=n.extend({validate:!0},i),r&&!i.wait){if(!this.set(r,i))return!1}else if(!this._validate(r,i))return!1;r&&i.wait&&(this.attributes=n.extend({},a,r)),void 0===i.parse&&(i.parse=!0);var u=this,l=i.success;return i.success=function(t){u.attributes=a;var e=u.parse(t,i);return i.wait&&(e=n.extend(r||{},e)),n.isObject(e)&&!u.set(e,i)?!1:(l&&l(u,t,i),u.trigger("sync",u,t,i),void 0)},$(this,i),s=this.isNew()?"create":i.patch?"patch":"update","patch"===s&&(i.attrs=r),o=this.sync(s,this,i),r&&i.wait&&(this.attributes=a),o},destroy:function(t){t=t?n.clone(t):{};var e=this,i=t.success,r=function(){e.trigger("destroy",e,e.collection,t)};if(t.success=function(n){(t.wait||e.isNew())&&r(),i&&i(e,n,t),e.isNew()||e.trigger("sync",e,n,t)},this.isNew())return t.success(),!1;$(this,t);var s=this.sync("delete",this,t);return t.wait||r(),s},url:function(){var t=n.result(this,"urlRoot")||n.result(this.collection,"url")||N();return this.isNew()?t:t.replace(/([^\/])$/,"$1/")+encodeURIComponent(this.id)},parse:function(t){return t},clone:function(){return new this.constructor(this.attributes)},isNew:function(){return!this.has(this.idAttribute)},isValid:function(t){return this._validate({},n.extend(t||{},{validate:!0}))},_validate:function(t,e){if(!e.validate||!this.validate)return!0;t=n.extend({},this.attributes,t);var i=this.validationError=this.validate(t,e)||null;return i?(this.trigger("invalid",this,i,n.extend(e,{validationError:i})),!1):!0}});var p=["keys","values","pairs","invert","pick","omit"];n.each(p,function(t){h.prototype[t]=function(){var e=o.call(arguments);return e.unshift(this.attributes),n[t].apply(n,e)}});var f=e.Collection=function(t,e){e||(e={}),e.model&&(this.model=e.model),void 0!==e.comparator&&(this.comparator=e.comparator),this._reset(),this.initialize.apply(this,arguments),t&&this.reset(t,n.extend({silent:!0},e))},g={add:!0,remove:!0,merge:!0},m={add:!0,remove:!1};n.extend(f.prototype,a,{model:h,initialize:function(){},toJSON:function(t){return this.map(function(e){return e.toJSON(t)})},sync:function(){return e.sync.apply(this,arguments)},add:function(t,e){return this.set(t,n.extend({merge:!1},e,m))},remove:function(t,e){var i=!n.isArray(t);t=i?[t]:n.clone(t),e||(e={});var r,s,o,a;for(r=0,s=t.length;s>r;r++)a=t[r]=this.get(t[r]),a&&(delete this._byId[a.id],delete this._byId[a.cid],o=this.indexOf(a),this.models.splice(o,1),this.length--,e.silent||(e.index=o,a.trigger("remove",a,this,e)),this._removeReference(a,e));return i?t[0]:t},set:function(t,e){e=n.defaults({},e,g),e.parse&&(t=this.parse(t,e));var i=!n.isArray(t);t=i?t?[t]:[]:n.clone(t);var r,s,o,a,u,l,c,d=e.at,p=this.model,f=this.comparator&&null==d&&e.sort!==!1,m=n.isString(this.comparator)?this.comparator:null,v=[],y=[],b={},w=e.add,x=e.merge,C=e.remove,_=!f&&w&&C?[]:!1;for(r=0,s=t.length;s>r;r++){if(u=t[r]||{},o=u instanceof h?a=u:u[p.prototype.idAttribute||"id"],l=this.get(o))C&&(b[l.cid]=!0),x&&(u=u===a?a.attributes:u,e.parse&&(u=l.parse(u,e)),l.set(u,e),f&&!c&&l.hasChanged(m)&&(c=!0)),t[r]=l;else if(w){if(a=t[r]=this._prepareModel(u,e),!a)continue;v.push(a),this._addReference(a,e)}a=l||a,!_||!a.isNew()&&b[a.id]||_.push(a),b[a.id]=!0}if(C){for(r=0,s=this.length;s>r;++r)b[(a=this.models[r]).cid]||y.push(a);y.length&&this.remove(y,e)}if(v.length||_&&_.length)if(f&&(c=!0),this.length+=v.length,null!=d)for(r=0,s=v.length;s>r;r++)this.models.splice(d+r,0,v[r]);else{_&&(this.models.length=0);var F=_||v;for(r=0,s=F.length;s>r;r++)this.models.push(F[r])}if(c&&this.sort({silent:!0}),!e.silent){for(r=0,s=v.length;s>r;r++)(a=v[r]).trigger("add",a,this,e);(c||_&&_.length)&&this.trigger("sort",this,e)}return i?t[0]:t},reset:function(t,e){e||(e={});for(var i=0,r=this.models.length;r>i;i++)this._removeReference(this.models[i],e);return e.previousModels=this.models,this._reset(),t=this.add(t,n.extend({silent:!0},e)),e.silent||this.trigger("reset",this,e),t},push:function(t,e){return this.add(t,n.extend({at:this.length},e))},pop:function(t){var e=this.at(this.length-1);return this.remove(e,t),e},unshift:function(t,e){return this.add(t,n.extend({at:0},e))},shift:function(t){var e=this.at(0);return this.remove(e,t),e},slice:function(){return o.apply(this.models,arguments)},get:function(t){return null==t?void 0:this._byId[t]||this._byId[t.id]||this._byId[t.cid]},at:function(t){return this.models[t]},where:function(t,e){return n.isEmpty(t)?e?void 0:[]:this[e?"find":"filter"](function(e){for(var n in t)if(t[n]!==e.get(n))return!1;return!0})},findWhere:function(t){return this.where(t,!0)},sort:function(t){if(!this.comparator)throw new Error("Cannot sort a set without a comparator");return t||(t={}),n.isString(this.comparator)||1===this.comparator.length?this.models=this.sortBy(this.comparator,this):this.models.sort(n.bind(this.comparator,this)),t.silent||this.trigger("sort",this,t),this},pluck:function(t){return n.invoke(this.models,"get",t)},fetch:function(t){t=t?n.clone(t):{},void 0===t.parse&&(t.parse=!0);var e=t.success,i=this;return t.success=function(n){var r=t.reset?"reset":"set";i[r](n,t),e&&e(i,n,t),i.trigger("sync",i,n,t)},$(this,t),this.sync("read",this,t)},create:function(t,e){if(e=e?n.clone(e):{},!(t=this._prepareModel(t,e)))return!1;e.wait||this.add(t,e);var i=this,r=e.success;return e.success=function(t,n){e.wait&&i.add(t,e),r&&r(t,n,e)},t.save(null,e),t},parse:function(t){return t},clone:function(){return new this.constructor(this.models)},_reset:function(){this.length=0,this.models=[],this._byId={}},_prepareModel:function(t,e){if(t instanceof h)return t;e=e?n.clone(e):{},e.collection=this;var i=new this.model(t,e);return i.validationError?(this.trigger("invalid",this,i.validationError,e),!1):i},_addReference:function(t){this._byId[t.cid]=t,null!=t.id&&(this._byId[t.id]=t),t.collection||(t.collection=this),t.on("all",this._onModelEvent,this)},_removeReference:function(t){this===t.collection&&delete t.collection,t.off("all",this._onModelEvent,this)},_onModelEvent:function(t,e,n,i){("add"!==t&&"remove"!==t||n===this)&&("destroy"===t&&this.remove(e,i),e&&t==="change:"+e.idAttribute&&(delete this._byId[e.previous(e.idAttribute)],null!=e.id&&(this._byId[e.id]=e)),this.trigger.apply(this,arguments))}});var v=["forEach","each","map","collect","reduce","foldl","inject","reduceRight","foldr","find","detect","filter","select","reject","every","all","some","any","include","contains","invoke","max","min","toArray","size","first","head","take","initial","rest","tail","drop","last","without","difference","indexOf","shuffle","lastIndexOf","isEmpty","chain","sample"];n.each(v,function(t){f.prototype[t]=function(){var e=o.call(arguments);return e.unshift(this.models),n[t].apply(n,e)}});var y=["groupBy","countBy","sortBy","indexBy"];n.each(y,function(t){f.prototype[t]=function(e,i){var r=n.isFunction(e)?e:function(t){return t.get(e)};return n[t](this.models,r,i)}});var b=e.View=function(t){this.cid=n.uniqueId("view"),t||(t={}),n.extend(this,n.pick(t,x)),this._ensureElement(),this.initialize.apply(this,arguments),this.delegateEvents()},w=/^(\S+)\s*(.*)$/,x=["model","collection","el","id","attributes","className","tagName","events"];n.extend(b.prototype,a,{tagName:"div",$:function(t){return this.$el.find(t)},initialize:function(){},render:function(){return this},remove:function(){return this.$el.remove(),this.stopListening(),this},setElement:function(t,n){return this.$el&&this.undelegateEvents(),this.$el=t instanceof e.$?t:e.$(t),this.el=this.$el[0],n!==!1&&this.delegateEvents(),this},delegateEvents:function(t){if(!t&&!(t=n.result(this,"events")))return this;this.undelegateEvents();for(var e in t){var i=t[e];if(n.isFunction(i)||(i=this[t[e]]),i){var r=e.match(w),s=r[1],o=r[2];i=n.bind(i,this),s+=".delegateEvents"+this.cid,""===o?this.$el.on(s,i):this.$el.on(s,o,i)}}return this},undelegateEvents:function(){return this.$el.off(".delegateEvents"+this.cid),this},_ensureElement:function(){if(this.el)this.setElement(n.result(this,"el"),!1);else{var t=n.extend({},n.result(this,"attributes"));this.id&&(t.id=n.result(this,"id")),this.className&&(t["class"]=n.result(this,"className"));var i=e.$("<"+n.result(this,"tagName")+">").attr(t);this.setElement(i,!1)}}}),e.sync=function(t,i,r){var s=_[t];n.defaults(r||(r={}),{emulateHTTP:e.emulateHTTP,emulateJSON:e.emulateJSON});var o={type:s,dataType:"json"};if(r.url||(o.url=n.result(i,"url")||N()),null!=r.data||!i||"create"!==t&&"update"!==t&&"patch"!==t||(o.contentType="application/json",o.data=JSON.stringify(r.attrs||i.toJSON(r))),r.emulateJSON&&(o.contentType="application/x-www-form-urlencoded",o.data=o.data?{model:o.data}:{}),r.emulateHTTP&&("PUT"===s||"DELETE"===s||"PATCH"===s)){o.type="POST",r.emulateJSON&&(o.data._method=s);var a=r.beforeSend;r.beforeSend=function(t){return t.setRequestHeader("X-HTTP-Method-Override",s),a?a.apply(this,arguments):void 0}}"GET"===o.type||r.emulateJSON||(o.processData=!1),"PATCH"===o.type&&C&&(o.xhr=function(){return new ActiveXObject("Microsoft.XMLHTTP")});var u=r.xhr=e.ajax(n.extend(o,r));return i.trigger("request",i,u,r),u};var C=!("undefined"==typeof window||!window.ActiveXObject||window.XMLHttpRequest&&(new XMLHttpRequest).dispatchEvent),_={create:"POST",update:"PUT",patch:"PATCH","delete":"DELETE",read:"GET"};e.ajax=function(){return e.$.ajax.apply(e.$,arguments)};var F=e.Router=function(t){t||(t={}),t.routes&&(this.routes=t.routes),this._bindRoutes(),this.initialize.apply(this,arguments)},S=/\((.*?)\)/g,T=/(\(\?)?:\w+/g,z=/\*\w+/g,I=/[\-{}\[\]+?.,\\\^$|#\s]/g;n.extend(F.prototype,a,{initialize:function(){},route:function(t,i,r){n.isRegExp(t)||(t=this._routeToRegExp(t)),n.isFunction(i)&&(r=i,i=""),r||(r=this[i]);var s=this;return e.history.route(t,function(n){var o=s._extractParameters(t,n);s.execute(r,o),s.trigger.apply(s,["route:"+i].concat(o)),s.trigger("route",i,o),e.history.trigger("route",s,i,o)}),this},execute:function(t,e){t&&t.apply(this,e)},navigate:function(t,n){return e.history.navigate(t,n),this},_bindRoutes:function(){if(this.routes){this.routes=n.result(this,"routes");for(var t,e=n.keys(this.routes);null!=(t=e.pop());)this.route(t,this.routes[t])}},_routeToRegExp:function(t){return t=t.replace(I,"\\$&").replace(S,"(?:$1)?").replace(T,function(t,e){return e?t:"([^/?]+)"}).replace(z,"([^?]*?)"),new RegExp("^"+t+"(?:\\?([\\s\\S]*))?$")},_extractParameters:function(t,e){var i=t.exec(e).slice(1);return n.map(i,function(t,e){return e===i.length-1?t||null:t?decodeURIComponent(t):null})}});var P=e.History=function(){this.handlers=[],n.bindAll(this,"checkUrl"),"undefined"!=typeof window&&(this.location=window.location,this.history=window.history)},D=/^[#\/]|\s+$/g,k=/^\/+|\/+$/g,M=/msie [\w.]+/,A=/\/$/,E=/#.*$/;P.started=!1,n.extend(P.prototype,a,{interval:50,atRoot:function(){return this.location.pathname.replace(/[^\/]$/,"$&/")===this.root},getHash:function(t){var e=(t||this).location.href.match(/#(.*)$/);return e?e[1]:""},getFragment:function(t,e){if(null==t)if(this._hasPushState||!this._wantsHashChange||e){t=decodeURI(this.location.pathname+this.location.search);var n=this.root.replace(A,"");t.indexOf(n)||(t=t.slice(n.length))}else t=this.getHash();return t.replace(D,"")},start:function(t){if(P.started)throw new Error("Backbone.history has already been started");P.started=!0,this.options=n.extend({root:"/"},this.options,t),this.root=this.options.root,this._wantsHashChange=this.options.hashChange!==!1,this._wantsPushState=!!this.options.pushState,this._hasPushState=!!(this.options.pushState&&this.history&&this.history.pushState);var i=this.getFragment(),r=document.documentMode,s=M.exec(navigator.userAgent.toLowerCase())&&(!r||7>=r);if(this.root=("/"+this.root+"/").replace(k,"/"),s&&this._wantsHashChange){var o=e.$('<iframe src="javascript:0" tabindex="-1">');this.iframe=o.hide().appendTo("body")[0].contentWindow,this.navigate(i)}this._hasPushState?e.$(window).on("popstate",this.checkUrl):this._wantsHashChange&&"onhashchange"in window&&!s?e.$(window).on("hashchange",this.checkUrl):this._wantsHashChange&&(this._checkUrlInterval=setInterval(this.checkUrl,this.interval)),this.fragment=i;var a=this.location;
-if(this._wantsHashChange&&this._wantsPushState){if(!this._hasPushState&&!this.atRoot())return this.fragment=this.getFragment(null,!0),this.location.replace(this.root+"#"+this.fragment),!0;this._hasPushState&&this.atRoot()&&a.hash&&(this.fragment=this.getHash().replace(D,""),this.history.replaceState({},document.title,this.root+this.fragment))}return this.options.silent?void 0:this.loadUrl()},stop:function(){e.$(window).off("popstate",this.checkUrl).off("hashchange",this.checkUrl),this._checkUrlInterval&&clearInterval(this._checkUrlInterval),P.started=!1},route:function(t,e){this.handlers.unshift({route:t,callback:e})},checkUrl:function(){var t=this.getFragment();return t===this.fragment&&this.iframe&&(t=this.getFragment(this.getHash(this.iframe))),t===this.fragment?!1:(this.iframe&&this.navigate(t),this.loadUrl(),void 0)},loadUrl:function(t){return t=this.fragment=this.getFragment(t),n.any(this.handlers,function(e){return e.route.test(t)?(e.callback(t),!0):void 0})},navigate:function(t,e){if(!P.started)return!1;e&&e!==!0||(e={trigger:!!e});var n=this.root+(t=this.getFragment(t||""));if(t=t.replace(E,""),this.fragment!==t){if(this.fragment=t,""===t&&"/"!==n&&(n=n.slice(0,-1)),this._hasPushState)this.history[e.replace?"replaceState":"pushState"]({},document.title,n);else{if(!this._wantsHashChange)return this.location.assign(n);this._updateHash(this.location,t,e.replace),this.iframe&&t!==this.getFragment(this.getHash(this.iframe))&&(e.replace||this.iframe.document.open().close(),this._updateHash(this.iframe.location,t,e.replace))}return e.trigger?this.loadUrl(t):void 0}},_updateHash:function(t,e,n){if(n){var i=t.href.replace(/(javascript:|#).*$/,"");t.replace(i+"#"+e)}else t.hash="#"+e}}),e.history=new P;var R=function(t,e){var i,r=this;i=t&&n.has(t,"constructor")?t.constructor:function(){return r.apply(this,arguments)},n.extend(i,r,e);var s=function(){this.constructor=i};return s.prototype=r.prototype,i.prototype=new s,t&&n.extend(i.prototype,t),i.__super__=r.prototype,i};h.extend=f.extend=F.extend=b.extend=P.extend=R;var N=function(){throw new Error('A "url" property or function must be specified')},$=function(t,e){var n=e.error;e.error=function(i){n&&n(t,i,e),t.trigger("error",t,i,e)}};return e}),define("modules/backbone-mozu-validation",["underscore","backbone","hyprlive"],function(t,e,n){return e.Validation=function(t){var i={forceUpdate:!1,selector:"name",labelFormatter:"sentenceCase",valid:Function.prototype,invalid:Function.prototype},r={formatLabel:function(t,e){return d[i.labelFormatter](t,e)},format:function(){var t=Array.prototype.slice.call(arguments),e=t.shift();return e.replace(/\{(\d+)\}/g,function(e,n){return"undefined"!=typeof t[n]?t[n]:e})}},s=20,o=function(n,i,r,a){if(0===a)throw"Cannot flatten circular object.";return a||(a=s),i=i||{},r=r||"",n instanceof e.Model&&(n=n.attributes),t.each(n,function(t,s){n.hasOwnProperty(s)&&(t&&"object"==typeof t&&!(t instanceof Array||t instanceof Date||t instanceof RegExp||t instanceof e.Collection)?o(t,i,r+s+".",--a):i[r+s]=t)}),i},a=function(){var e=function(e){return t.reduce(t.keys(e.validation||{}),function(t,e){return t[e]=void 0,t},{})},n=function(e,n){var i=e.validation?e.validation[n]||{}:{};return(t.isFunction(i)||t.isString(i))&&(i={fn:i}),t.isArray(i)||(i=[i]),t.reduce(i,function(e,n){return t.each(t.without(t.keys(n),"msg"),function(t){e.push({fn:h[t],val:n[t],msg:n.msg})}),e},[])},s=function(e,i,s,o){return t.reduce(n(e,i),function(n,a){var u=t.extend({},r,h),l=a.fn.call(u,s,i,a.val,e,o);return l===!1||n===!1?!1:l&&!n?a.msg||l:n},"")},a=function(e,n){var i,r={},a=!0,u=t.clone(n),l=o(n);return t.each(l,function(t,n){i=s(e,n,t,u),i&&(r[n]=i,a=!1)}),{invalidAttrs:r,isValid:a}},l=function(n,i){return{preValidate:function(e,n){return s(this,e,n,t.extend({},this.attributes))},isValid:function(e){var n=o(this.attributes);return t.isString(e)?!s(this,e,n[e],t.extend({},this.attributes)):t.isArray(e)?t.reduce(e,function(e,i){return e&&!s(this,i,n[i],t.extend({},this.attributes))},!0,this):(e===!0&&this.validate(null,{silent:!0}),this.validation?this._isValid:!0)},validate:function(r,s){var u=this,l=!r,c=t.extend({},i,s),d=e(u),h=r;"string"==typeof r&&(h={},t.each(d,function(t,e){0===e.indexOf(r)&&(h[e]=t)}));var p=t.extend({},d,h,u.attributes),f=o(h||p),g=a(u,p);return u._isValid=g.isValid,t.each(d,function(t,e){var r=g.invalidAttrs.hasOwnProperty(e);r||i.silent||c.valid(n,e,c.selector)}),t.each(d,function(t,e){var r=g.invalidAttrs.hasOwnProperty(e),s=f.hasOwnProperty(e);r&&(s||l)&&!i.silent&&c.invalid(n,e,g.invalidAttrs[e],c.selector)}),t.defer(function(){u.trigger("validated",u._isValid,u,g.invalidAttrs),u.trigger("validated:"+(u._isValid?"valid":"invalid"),u,g.invalidAttrs)}),!c.forceUpdate&&t.intersection(t.keys(g.invalidAttrs),t.keys(f)).length>0?g.invalidAttrs:void 0}}},c=function(e,n,i){t.extend(n,l(e,i))},d=function(t){delete t.validate,delete t.preValidate,delete t.isValid},p=function(t){c(this.view,t,this.options)},f=function(t){d(t)};return{version:"0.8.1",configure:function(e){t.extend(i,e)},bind:function(e,n){var r=e.model,s=e.collection;if(n=t.extend({},i,u,n),"undefined"==typeof r&&"undefined"==typeof s)throw"Before you execute the binding your view must have a model or a collection.\nSee http://thedersen.com/projects/backbone-validation/#using-form-model-validation for more information.";r?c(e,r,n):s&&(s.each(function(t){c(e,t,n)}),s.bind("add",p,{view:e,options:n}),s.bind("remove",f))},unbind:function(t){var e=t.model,n=t.collection;e&&d(t.model),n&&(n.each(function(t){d(t)}),n.unbind("add",p),n.unbind("remove",f))},mixin:l(null,i)}}(),u=a.callbacks={valid:function(t,e){t.$('[data-mz-value="'+e+'"]').removeClass("is-invalid"),t.$('[data-mz-validationmessage-for="'+e+'"]').text("")},invalid:function(t,e,n){t.$('[data-mz-value="'+e+'"]').addClass("is-invalid"),t.$('[data-mz-validationmessage-for="'+e+'"]').text(n)}},l=a.patterns={digits:/^\d+$/,number:/^-?(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/,email:/^((([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z]|\d|[!#\$%&'\*\+\-\/=\?\^_`{\|}~]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*)|((\x22)((((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(([\x01-\x08\x0b\x0c\x0e-\x1f\x7f]|\x21|[\x23-\x5b]|[\x5d-\x7e]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(\\([\x01-\x09\x0b\x0c\x0d-\x7f]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]))))*(((\x20|\x09)*(\x0d\x0a))?(\x20|\x09)+)?(\x22)))@((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))$/i,url:/^(https?|ftp):\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i},c=a.messages={required:n.getLabel("genericRequired"),acceptance:n.getLabel("genericAcceptance"),min:n.getLabel("genericMin"),max:n.getLabel("genericMax"),range:n.getLabel("genericRange"),length:n.getLabel("genericLength"),minLength:n.getLabel("genericMinLength"),maxLength:n.getLabel("genericMaxLength"),rangeLength:n.getLabel("genericRangeLength"),oneOf:n.getLabel("genericOneOf"),equalTo:n.getLabel("genericEqualTo"),pattern:n.getLabel("genericPattern")},d=a.labelFormatters={none:function(t){return t},sentenceCase:function(t){return t.replace(/(?:^\w|[A-Z]|\b\w)/g,function(t,e){return 0===e?t.toUpperCase():" "+t.toLowerCase()}).replace(/_/g," ")},label:function(t,e){return e.labels&&e.labels[t]||d.sentenceCase(t,e)}},h=a.validators=function(){var e=String.prototype.trim?function(t){return null===t?"":String.prototype.trim.call(t)}:function(t){var e=/^\s+/,n=/\s+$/;return null===t?"":t.toString().replace(e,"").replace(n,"")},n=function(e){return t.isNumber(e)||t.isString(e)&&e.match(l.number)},i=function(n){return!(t.isNull(n)||t.isUndefined(n)||t.isString(n)&&""===e(n)||t.isArray(n)&&t.isEmpty(n))};return{fn:function(e,n,i,r,s){if(t.isString(i)){var o=n.split(".");o.length>1&&(o.pop(),r=r.get(o.join("."))),i=r[i]}return i.call(r,e,n,s)},required:function(e,n,r,s,o){var a=t.isFunction(r)?r.call(s,e,n,o):r;return a||i(e)?a&&!i(e)?this.format(c.required,this.formatLabel(n,s)):void 0:!1},acceptance:function(e,n,i,r){return"true"===e||t.isBoolean(e)&&e!==!1?void 0:this.format(c.acceptance,this.formatLabel(n,r))},min:function(t,e,i,r){return!n(t)||i>t?this.format(c.min,this.formatLabel(e,r),i):void 0},max:function(t,e,i,r){return!n(t)||t>i?this.format(c.max,this.formatLabel(e,r),i):void 0},range:function(t,e,i,r){return!n(t)||t<i[0]||t>i[1]?this.format(c.range,this.formatLabel(e,r),i[0],i[1]):void 0},length:function(t,n,r,s){return i(t)&&e(t).length===r?void 0:this.format(c.length,this.formatLabel(n,s),r)},minLength:function(t,n,r,s){return!i(t)||e(t).length<r?this.format(c.minLength,this.formatLabel(n,s),r):void 0},maxLength:function(t,n,r,s){return!i(t)||e(t).length>r?this.format(c.maxLength,this.formatLabel(n,s),r):void 0},rangeLength:function(t,n,r,s){return!i(t)||e(t).length<r[0]||e(t).length>r[1]?this.format(c.rangeLength,this.formatLabel(n,s),r[0],r[1]):void 0},oneOf:function(e,n,i,r){return t.include(i,e)?void 0:this.format(c.oneOf,this.formatLabel(n,r),i.join(", "))},equalTo:function(t,e,n,i,r){return t!==r[n]?this.format(c.equalTo,this.formatLabel(e,i),this.formatLabel(n,i)):void 0},pattern:function(t,e,n,r){return i(t)&&t.toString().match(l[n]||n)?void 0:this.format(c.pattern,this.formatLabel(e,r),n)}}}();return a}(t),e}),function(t,e,n){"undefined"!=typeof module&&module.exports?module.exports=n():"function"==typeof define&&define.amd?define("vendor/jquery-scrollto",n):e[t]=n()}("jquery-scrollto",this,function(t){var e,n,i;return e=n=window.jQuery||t("jquery"),n.propHooks.scrollTop=n.propHooks.scrollLeft={get:function(t,e){var n=null;return("HTML"===t.tagName||"BODY"===t.tagName)&&("scrollLeft"===e?n=window.scrollX:"scrollTop"===e&&(n=window.scrollY)),null==n&&(n=t[e]),n}},n.Tween.propHooks.scrollTop=n.Tween.propHooks.scrollLeft={get:function(t){return n.propHooks.scrollTop.get(t.elem,t.prop)},set:function(t){"HTML"===t.elem.tagName||"BODY"===t.elem.tagName?(t.options.bodyScrollLeft=t.options.bodyScrollLeft||window.scrollX,t.options.bodyScrollTop=t.options.bodyScrollTop||window.scrollY,"scrollLeft"===t.prop?t.options.bodyScrollLeft=Math.round(t.now):"scrollTop"===t.prop&&(t.options.bodyScrollTop=Math.round(t.now)),window.scrollTo(t.options.bodyScrollLeft,t.options.bodyScrollTop)):t.elem.nodeType&&t.elem.parentNode&&(t.elem[t.prop]=t.now)}},i={config:{axis:"xy",duration:400,easing:"swing",callback:void 0,durationMode:"each",offsetTop:0,offsetLeft:0},configure:function(t){return n.extend(i.config,t||{}),this},scroll:function(t,e){var r,s,o,a,u,l,c,d,h,p,f,g,m,v,y,b,w,x;return r=t.pop(),s=r.$container,o=r.$target,l=s.prop("tagName"),a=n("<span/>").css({position:"absolute",top:"0px",left:"0px"}),u=s.css("position"),s.css({position:"relative"}),a.appendTo(s),f=a.offset().top,g=o.offset().top,m=g-f-parseInt(e.offsetTop,10),v=a.offset().left,y=o.offset().left,b=y-v-parseInt(e.offsetLeft,10),c=s.prop("scrollTop"),d=s.prop("scrollLeft"),a.remove(),s.css({position:u}),w={},x=function(){return 0===t.length?"function"==typeof e.callback&&e.callback():i.scroll(t,e),!0},e.onlyIfOutside&&(h=c+s.height(),p=d+s.width(),m>c&&h>m&&(m=c),b>d&&p>b&&(b=d)),m!==c&&(w.scrollTop=m),b!==d&&(w.scrollLeft=b),(s.prop("scrollHeight")===s.width()||-1===e.axis.indexOf("y"))&&delete w.scrollTop,(s.prop("scrollWidth")===s.width()||-1===e.axis.indexOf("x"))&&delete w.scrollLeft,null!=w.scrollTop||null!=w.scrollLeft?s.animate(w,{duration:e.duration,easing:e.easing,complete:x}):x(),!0},fn:function(t){var e,r,s,o;e=[];var a=n(this);if(0===a.length)return this;for(r=n.extend({},i.config,t),s=a.parent(),o=s.get(0);1===s.length&&o!==document.body&&o!==document;){var u,l;u="visible"!==s.css("overflow-y")&&o.scrollHeight!==o.clientHeight,l="visible"!==s.css("overflow-x")&&o.scrollWidth!==o.clientWidth,(u||l)&&(e.push({$container:s,$target:a}),a=s),s=s.parent(),o=s.get(0)}return e.push({$container:n("html"),$target:a}),"all"===r.durationMode&&(r.duration/=e.length),i.scroll(e,r),this}},n.ScrollTo=n.ScrollTo||i,n.fn.ScrollTo=n.fn.ScrollTo||i.fn,i}),function(t){"function"==typeof define&&define.amd?define("vendor/jquery.cookie/jquery.cookie",["jquery"],t):"object"==typeof exports?t(require("jquery")):t(jQuery)}(function(t){function e(t){return a.raw?t:encodeURIComponent(t)}function n(t){return a.raw?t:decodeURIComponent(t)}function i(t){return e(a.json?JSON.stringify(t):String(t))}function r(t){0===t.indexOf('"')&&(t=t.slice(1,-1).replace(/\\"/g,'"').replace(/\\\\/g,"\\"));try{return t=decodeURIComponent(t.replace(o," ")),a.json?JSON.parse(t):t}catch(e){}}function s(e,n){var i=a.raw?e:r(e);return t.isFunction(n)?n(i):i}var o=/\+/g,a=t.cookie=function(r,o,u){if(void 0!==o&&!t.isFunction(o)){if(u=t.extend({},a.defaults,u),"number"==typeof u.expires){var l=u.expires,c=u.expires=new Date;c.setTime(+c+864e5*l)}return document.cookie=[e(r),"=",i(o),u.expires?"; expires="+u.expires.toUTCString():"",u.path?"; path="+u.path:"",u.domain?"; domain="+u.domain:"",u.secure?"; secure":""].join("")}for(var d=r?void 0:{},h=document.cookie?document.cookie.split("; "):[],p=0,f=h.length;f>p;p++){var g=h[p].split("="),m=n(g.shift()),v=g.join("=");if(r&&r===m){d=s(v,o);break}r||void 0===(v=s(v))||(d[m]=v)}return d};a.defaults={},t.removeCookie=function(e,n){return void 0===t.cookie(e)?!1:(t.cookie(e,"",t.extend({},n,{expires:-1})),!t.cookie(e))}}),define("modules/jquery-mozu",["jquery","vendor/jquery-scrollto","vendor/jquery.cookie/jquery.cookie"],function(t){return t.fn.jsonData=function(e){var n=this.attr("data-mz-"+e);return"string"==typeof n&&n.charAt(0).match(/[\{\[\(]/)?t.parseJSON(n):n},t.fn.noFlickerFadeIn=function(){this.css("visibility","visible"),Modernizr.csstransitions?this.css("opacity",1):this.animate({opacity:1},300)},t.deparam=function(t){t=t||window.location.search,t=t.substring(t.indexOf("?")+1).split("&");var e,n,i={},r=decodeURIComponent;for(n=t.length;n>0;)e=t[--n].split("="),e&&e.length>1&&(i[r(e[0])]=r(e[1].replace(/\+/g,"%20")));return i},t.noConflict()}),define("modules/models-messages",["backbone","hyprlive"],function(t,e){var n=require.mozuData("pagecontext").isDebugMode,i=e.getLabel("unexpectedError"),r=t.Model.extend({toJSON:function(){var e=t.Model.prototype.toJSON.apply(this);return(!n&&"UNEXPECTED_ERROR"===e.errorCode||!e.message)&&(e.message=i),e}}),s=t.Collection.extend({model:r});return{Message:r,MessagesCollection:s}}),define("modules/backbone-mozu-model",["modules/jquery-mozu","underscore","modules/api","backbone","modules/models-messages","modules/backbone-mozu-validation"],function(t,e,n,i,r){function s(t){var n={};return e.each(t,function(t,e){var i,r=n;for(e=e.split(".");e.length>1;)i=e.shift(),r=r[i]||(r[i]={});r[e[0]]=t}),n}function o(t,n,i){return e.each(t.validation,function(t,e){n[i+e]=t}),t.__validationFlattened||e.each(t.relations,function(t,e){o(t.prototype,n,e+".")}),t.__validationFlattened=!0,n}var a=t(window),u=i.Model,l=i.Collection,c={read:"get","delete":"del"},d=e.extend({},i.Validation.mixin,{passErrors:function(){var t=this;e.defer(function(){var e=t,n=function(t,n){e.trigger("error",t,n)};do{if(e.handlesMessages){t.on("error",n);break}e=e.parent}while(e)},300)},get:function(t){for(var e,n=t.split("."),r=this;r&&(e=n.shift());)r=i.Model.prototype.get.call(r,e);return!r&&this.relations&&t in this.relations&&(r=this.setRelation(t,null,{silent:!0}),this.attributes[t]=r),r},setRelation:function(t,n,i){var r=this.attributes[t],s=this.idAttribute||"id";if("parse"in i||(i.parse=!0),this.relations&&e.has(this.relations,t)){if(r&&r instanceof l)return s=r.model.prototype.idAttribute||s,n instanceof l||n instanceof Array?(n=n.models||n,r.reset(e.clone(n),i)):r.each(function(t){n&&n[s]===t[s]?t.set(n,i):r.remove(t)}),r;if(r&&r instanceof u)return i.unset?r.clear(i):r.set(n&&n.toJSON?n.toJSON():n,i),r;i._parent=this,n instanceof this.relations[t]||(n=new this.relations[t](n,i)),n.parent=this}return n},set:function(t,n,i){var r,o,a,u,l,c,d,h;if(!t&&0!==t)return this;if("object"==typeof t?(o=t,i=n):(o={})[t]=n,i=i||{},o=s(o),!this._validate(o,i))return!1;a=i.unset,l=i.silent,u=[],c=this._changing,this._changing=!0,c||(this._previousAttributes=e.clone(this.attributes),this.changed={}),h=this.attributes,d=this._previousAttributes,this.idAttribute in o&&(this.id=o[this.idAttribute]);for(r in o){n=o[r],n=this.setRelation(r,n,i),this.dataTypes&&r in this.dataTypes&&(n=this.dataTypes[r](n)),e.isEqual(h[r],n)||u.push(r),e.isEqual(d[r],n)?delete this.changed[r]:this.changed[r]=n;var p=this.relations&&this.relations[r]&&n instanceof this.relations[r];a&&!p?delete h[r]:h[r]=n}if(!l){u.length&&(this._pending=!0);for(var f=0,g=u.length;g>f;f++)this.trigger("change:"+u[f],this,h[u[f]],i)}if(c)return this;if(!l)for(;this._pending;)this._pending=!1,this.trigger("change",this,i,o);return this._pending=!1,this._changing=!1,this},initApiModel:function(t){var i=this;this.apiModel=n.createSync(this.mozuType,e.extend({},e.result(this,"defaults")||{},t)),this.apiModel&&this.apiModel.on&&(this.apiModel.on("action",function(){i.isLoading(!0),i.trigger("request")}),this.apiModel.on("sync",function(t){i.isLoading(!1),t&&(i._isSyncing=!0,i.set(t),i._isSyncing=!1),i.trigger("sync",t)}),this.apiModel.on("spawn",function(){i.isLoading(!1)}),this.apiModel.on("error",function(t){i.isLoading(!1),i.trigger("error",t)}),this.on("change",function(){if(!i._isSyncing){var t=i.changedAttributes();e.each(t,function(t,e,n){t&&"function"==typeof t.toJSON&&(n[e]=t.toJSON())}),i.apiModel.prop(t)}}))},syncApiModel:function(){this.apiModel.prop(this.toJSON())},initMessages:function(){var t=this;t.messages=new r.MessagesCollection,t.hasMessages=function(){return t.messages.length>0},t.helpers.push("hasMessages"),t.on("error",function(e){e.items&&e.items.length?t.messages.reset(e.items):t.messages.reset([e])}),t.on("sync",function(e){e&&e.messages&&0!==e.messages.length||t.messages.reset()}),e.each(this.relations,function(e,n){var i=t.get(n);i&&t.listenTo(i,"error",function(e){t.trigger("error",e)})})},fetch:function(){var t=this;return this.apiModel.get().then(function(){return t})},sync:function(t,e,n){t=c[t]||t,e.apiModel[t](e.attributes).then(function(t){n.success(t.data)},function(t){n.error(t)})},isLoading:function(t,n){return 0===arguments.length?!!this._isLoading:(this._isLoading=t,t?(this._cleanup=this._cleanup||e.bind(this.isLoading,this,!1),this._isWatchingUnload=!0,a.on("beforeunload",this._cleanup)):this._isWatchingUnload&&(delete this._isWatchingUnload,a.off("beforeunload",this._cleanup)),n&&n.silent||this.trigger("loadingchange",t),void 0)},getHelpers:function(){return this.helpers},whenReady:function(t){var e=this,n=this.isLoading();if(!n)return t();var i=function(n){n||(e.off("loadingchange",i),t())};e.on("loadingchange",i)},toJSON:function(t){var n=e.clone(this.attributes);return t&&t.helpers&&(e.each(this.getHelpers(),function(t){n[t]=this[t]()},this),this.hasMessages&&(n.messages=this.messages.toJSON()),this.validation&&(n.isValid=this.isValid(t.forceValidation))),e.each(this.relations,function(i,r){e.has(n,r)&&(n[r]=n[r].toJSON(t))}),t&&t.ensureCopy?JSON.parse(JSON.stringify(n)):n}});d.constructor=function(t){this.helpers=(this.helpers||[]).concat(["isLoading","isValid"]),i.Model.apply(this,arguments),this.mozuType&&this.initApiModel(t),this.handlesMessages?this.initMessages():this.passErrors()};i.MozuModel=i.Model.extend(d,{fromCurrent:function(){return new this(require.mozuData(this.prototype.mozuType),{silent:!0,parse:!0})},DataTypes:{Int:function(t){return t=parseInt(t,10),isNaN(t)?0:t},Float:function(t){return t=parseFloat(t),isNaN(t)?0:t},Boolean:function(t){return"string"==typeof t?"true"===t.toLowerCase():!!t}}});return i.MozuModel.extend=function(r,s){if(r&&(r.validation=o(r,{},"")),r&&r.mozuType){var a=n.getAvailableActionsFor(r.mozuType);a&&e.each(a,function(e){var n="api"+e.charAt(0).toUpperCase()+e.substring(1);n in r||(r[n]=function(n){var i=this;e in{create:!0,update:!0}&&(n=n||this.toJSON()),"object"!=typeof n||t.isArray(n)||t.isPlainObject(n)||(n=null),this.syncApiModel(),this.isLoading(!0);var r=this.apiModel[e](n);return r.ensure(function(){i.isLoading(!1)}),r})})}var u=i.Model.extend.call(this,r,s);return r&&r.helpers&&r.helpers.length>0&&this.prototype.helpers&&this.prototype.helpers.length>0&&(u.prototype.helpers=e.union(this.prototype.helpers,r.helpers)),u},i.Collection.prototype.resetRelations=function(t){e.each(this.models,function(n){e.each(n.relations,function(e,r){n.get(r)instanceof i.Collection&&n.get(r).trigger("reset",n,t)})})},i.Collection.prototype.reset=function(t,n){n=n||{};for(var i=0,r=this.models.length;r>i;i++)this._removeReference(this.models[i]);return n.previousModels=this.models,this._reset(),this.add(t,e.extend({silent:!0},n)),n.silent||(this.trigger("reset",this,n),this.resetRelations(n)),this},i}),define("modules/backbone-mozu-pagedcollection",["jquery","underscore","hyprlive","modules/backbone-mozu-model"],function(t,e,n,i){{var r=n.getThemeSetting("defaultPageSize"),s=n.getThemeSetting("defaultSort"),o=[{text:n.getLabel("default"),value:s},{text:n.getLabel("sortByPriceAsc"),value:"price asc"},{text:n.getLabel("sortByPriceDesc"),value:"price desc"},{text:n.getLabel("sortByNameAsc"),value:"productName asc"},{text:n.getLabel("sortByNameDesc"),value:"productName desc"},{text:n.getLabel("sortByDateDesc"),value:"createDate desc"},{text:n.getLabel("sortByDateAsc"),value:"createDate asc"}];i.MozuPagedCollection=i.MozuModel.extend({helpers:["firstIndex","lastIndex","middlePageNumbers","hasPreviousPage","hasNextPage","currentPage","sorts","currentSort"],validation:{pageSize:{min:1},pageCount:{min:1},totalCount:{min:0},startIndex:{min:0}},dataTypes:{pageSize:i.MozuModel.DataTypes.Int,pageCount:i.MozuModel.DataTypes.Int,startIndex:i.MozuModel.DataTypes.Int,totalCount:i.MozuModel.DataTypes.Int},defaultSort:s,_isPaged:!0,getQueryParams:function(){var t=this,n=e.clone(this.lastRequest);e.each(n,function(e,i){t.baseRequestParams&&i in t.baseRequestParams&&delete n[i]}),parseInt(n.pageSize,10)===r&&delete n.pageSize;var i=this.get("startIndex");return i&&(n.startIndex=i),n},getQueryString:function(){var n=this.getQueryParams();return!n||e.isEmpty(n)?"":"?"+t.param(n).replace(/\+/g," ")},buildRequest:function(){var n=this.baseRequestParams?e.clone(this.baseRequestParams):{},i=this.get("pageSize"),r=this.get("startIndex"),o=t.deparam().sortBy||this.currentSort()||s;return n.pageSize=i,r&&(n.startIndex=r),o&&(n.sortBy=o),n},previousPage:function(){try{return this.apiModel.prevPage(this.lastRequest)}catch(t){}},nextPage:function(){try{return this.apiModel.nextPage(this.lastRequest)}catch(t){}},syncIndex:function(e){try{var n=parseInt(t.deparam(e).startIndex||0,10);if(!isNaN(n)&&n!==this.apiModel.getIndex())return this.lastRequest.startIndex=n,this.apiModel.setIndex(n,this.lastRequest)}catch(i){}},setPage:function(t){return t=parseInt(t,10),t!=this.currentPage()&&t<=parseInt(this.get("pageCount"),10)?this.apiModel.setIndex((t-1)*parseInt(this.get("pageSize"),10),this.lastRequest):void 0},changePageSize:function(){return this.apiGet(t.extend(this.lastRequest,{pageSize:this.get("pageSize")}))},firstIndex:function(){return this.get("startIndex")+1},lastIndex:function(){return this.get("startIndex")+this.get("items").length},hasPreviousPage:function(){return this.get("startIndex")>0},hasNextPage:function(){return this.lastIndex()<this.get("totalCount")},currentPage:function(){return Math.ceil(this.firstIndex()/(this.get("pageSize")||1))},middlePageNumbers:function(){for(var t=this.currentPage(),e=[],n=this.get("pageCount"),i=Math.max(Math.min(t-2,n-4),2),r=Math.min(i+5,n);r>i;)e.push(i++);return e},sorts:function(){return o},currentSort:function(){return this.lastRequest&&this.lastRequest.sortBy&&decodeURIComponent(this.lastRequest.sortBy).replace(/\+/g," ")||""},sortBy:function(e){return this.apiGet(t.extend(this.lastRequest,{sortBy:e}))},initialize:function(){this.lastRequest=this.buildRequest()}})}return i}),define("modules/views-messages",["modules/jquery-mozu","underscore","backbone","hyprlive"],function(t,e,n,i){var r,s=parseInt(i.getThemeSetting("gutterWidth"),10)||10;return function(t){return r||(r=n.MozuView.extend({templateName:"modules/common/message-bar",initialize:function(){this.model.on("reset",this.render,this)},render:function(){n.MozuView.prototype.render.apply(this,arguments),this.model.length>0&&this.$el.ScrollTo({onlyIfOutside:!0,offsetTop:s,offsetLeft:1.5*s,axis:"y"})}})),new r(t)}}),define("modules/backbone-mozu-view",["modules/jquery-mozu","underscore","hyprlive","backbone","modules/views-messages"],function(t,e,n,i,r){i.MozuView=i.View.extend({constructor:function(t){i.View.apply(this,arguments),this.template=n.getTemplate(t.templateName||this.templateName),this.listenTo(this.model,"sync",this.render),this.listenTo(this.model,"loadingchange",this.handleLoadingChange),this.model.handlesMessages&&t.messagesEl&&(this.messageView=r({el:t.messagesEl,model:this.model.messages})),this.renderOnChange&&e.each(this.renderOnChange,function(t){var n=this.model;if(-1!==t.indexOf(".")){for(var i,r=t.split(".");r.length>1;)i=r.shift(),n=n[i]||n.get(i);t=r[0]}this.listenTo(n,"change",e.debounce(this.dequeueRender,150),this),this.listenTo(n,"change:"+t,this.enqueueRender,this)},this),i.Validation.bind(this),i.MozuView.trigger("create",this)},enqueueRender:function(){this.renderQueued=!0},dequeueRender:function(){this.renderQueued&&(this.render(),this.renderQueued=!1)},events:function(){var t=e.object(e.flatten(e.map(this.$("[data-mz-value]"),function(t){var n=t.getAttribute("data-mz-value");return e.map(["change","blur","keyup"],function(t){return[t+' [data-mz-value="'+n+'"]',"update"+n.charAt(0).toUpperCase()+n.substring(1)]})}).concat(e.map(this.$("[data-mz-action]"),function(t){var n=t.getAttribute("data-mz-action");return e.map(["click"],function(t){return[t+' [data-mz-action="'+n+'"]',n]})})),!0));return this.additionalEvents?e.extend(t,this.additionalEvents):t},handleLoadingChange:function(t){this.$el[t?"addClass":"removeClass"]("is-loading")},getRenderContext:function(t){var e=(t||this.model).toJSON({helpers:!0});return{Model:e,model:e}},render:function(e){var n=this.el&&document.activeElement&&"radio"!==document.activeElement.type&&"checkbox"!==document.activeElement.type&&t.contains(this.el,document.activeElement)&&{id:document.activeElement.id,mzvalue:document.activeElement.getAttribute("data-mz-value"),mzFocusBookmark:document.activeElement.getAttribute("data-mz-focus-bookmark"),value:document.activeElement.value};this.storeDropzones(),i.Validation.unbind(this),this.undelegateEvents();var r=this.template.render(this.getRenderContext());this.$el.html(r),this.retrieveDropzones(),this.delegateEvents(),i.Validation.bind(this),n&&(n.id?t(document.getElementById(n.id)).focus():n.mzFocusBookmark?this.$('[data-mz-focus-bookmark="'+n.mzFocusBookmark+'"]').focus():n.mzvalue&&this.$('[data-mz-value="'+n.mzvalue+'"]').focus()),e&&e.silent||(this.trigger("render",r),i.MozuView.trigger("render",this,r))},storeDropzones:function(){var t=this.dropzones={};this.$(".mz-drop-zone").each(function(){t[this.id]=this})},retrieveDropzones:function(){var e=this.dropzones;this.$(".mz-drop-zone").each(function(){e[this.id]&&t(this).replaceWith(e[this.id])})}});e.extend(i.MozuView,i.Events,{extend:function(n,r){return n.autoUpdate&&e.each(n.autoUpdate,function(i){var r="update"+i.charAt(0).toUpperCase()+i.substring(1);n[r]=e.debounce(n[r]||function(e){var n={},r=t(e.currentTarget),s=r.prop("checked"),o="checkbox"===e.currentTarget.type?s:r.val();("radio"!==e.currentTarget.type||s)&&(n[i]=o,this.model.set(n))},50)}),i.View.extend.call(this,n,r)}})}),define("modules/backbone-mozu",["modules/backbone-mozu-validation","modules/backbone-mozu-model","modules/backbone-mozu-pagedcollection","modules/backbone-mozu-view"],function(t){return t}),define("modules/cart-monitor",["modules/jquery-mozu","modules/api"],function(t,e){var n,i,r=require.mozuData("user"),s=r.userId,o=t(document),a={setCount:function(e){this.$el.text(e),n[s]=e,t.cookie("mozucartcount",JSON.stringify(n),{path:"/"})},addToCount:function(t){this.setCount(this.getCount()+t)},getCount:function(){return parseInt(this.$el.text(),10)||0},update:function(){e.get("cartsummary").then(function(t){o.ready(function(){a.setCount(t.count())})})}};try{n=JSON.parse(t.cookie("mozucartcount"))}catch(u){}return n||(n={}),i=n&&n[s],isNaN(i)&&a.update(),o.ready(function(){a.$el=t('[data-mz-role="cartmonitor"]').text(i||0)}),a}),define("modules/contextify",["modules/jquery-mozu"],function(t){t(document).ready(function(){t("[data-mz-contextify]").each(function(){var e=t(this),n=e.data();e.find(n.mzContextify).each(function(){var e=t(this);"class"===n.mzContextifyAttr?e.addClass(n.mzContextifyVal):e.prop(n.mzContextifyAttr,n.mzContextifyVal)})})})}),define("shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery",["modules/jquery-mozu"],function(t){return+function(t){function e(e){return this.each(function(){var i=t(this),r=i.data("bs.tooltip"),s="object"==typeof e&&e;(r||"destroy"!=e)&&(r||i.data("bs.tooltip",r=new n(this,s)),"string"==typeof e&&r[e]())})}var n=function(t,e){this.type=this.options=this.enabled=this.timeout=this.hoverState=this.$element=null,this.init("tooltip",t,e)};n.VERSION="3.2.0",n.DEFAULTS={animation:!0,placement:"top",selector:!1,template:'<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>',trigger:"hover focus",title:"",delay:0,html:!1,container:!1,viewport:{selector:"body",padding:0}},n.prototype.init=function(e,n,i){this.enabled=!0,this.type=e,this.$element=t(n),this.options=this.getOptions(i),this.$viewport=this.options.viewport&&t(this.options.viewport.selector||this.options.viewport);for(var r=this.options.trigger.split(" "),s=r.length;s--;){var o=r[s];if("click"==o)this.$element.on("click."+this.type,this.options.selector,t.proxy(this.toggle,this));else if("manual"!=o){var a="hover"==o?"mouseenter":"focusin",u="hover"==o?"mouseleave":"focusout";this.$element.on(a+"."+this.type,this.options.selector,t.proxy(this.enter,this)),this.$element.on(u+"."+this.type,this.options.selector,t.proxy(this.leave,this))}}this.options.selector?this._options=t.extend({},this.options,{trigger:"manual",selector:""}):this.fixTitle()},n.prototype.getDefaults=function(){return n.DEFAULTS},n.prototype.getOptions=function(e){return e=t.extend({},this.getDefaults(),this.$element.data(),e),e.delay&&"number"==typeof e.delay&&(e.delay={show:e.delay,hide:e.delay}),e},n.prototype.getDelegateOptions=function(){var e={},n=this.getDefaults();
-return this._options&&t.each(this._options,function(t,i){n[t]!=i&&(e[t]=i)}),e},n.prototype.enter=function(e){var n=e instanceof this.constructor?e:t(e.currentTarget).data("bs."+this.type);return n||(n=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,n)),clearTimeout(n.timeout),n.hoverState="in",n.options.delay&&n.options.delay.show?(n.timeout=setTimeout(function(){"in"==n.hoverState&&n.show()},n.options.delay.show),void 0):n.show()},n.prototype.leave=function(e){var n=e instanceof this.constructor?e:t(e.currentTarget).data("bs."+this.type);return n||(n=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,n)),clearTimeout(n.timeout),n.hoverState="out",n.options.delay&&n.options.delay.hide?(n.timeout=setTimeout(function(){"out"==n.hoverState&&n.hide()},n.options.delay.hide),void 0):n.hide()},n.prototype.show=function(){var e=t.Event("show.bs."+this.type);if(this.hasContent()&&this.enabled){this.$element.trigger(e);var n=t.contains(document.documentElement,this.$element[0]);if(e.isDefaultPrevented()||!n)return;var i=this,r=this.tip(),s=this.getUID(this.type);this.setContent(),r.attr("id",s),this.$element.attr("aria-describedby",s),this.options.animation&&r.addClass("fade");var o="function"==typeof this.options.placement?this.options.placement.call(this,r[0],this.$element[0]):this.options.placement,a=/\s?auto?\s?/i,u=a.test(o);u&&(o=o.replace(a,"")||"top"),r.detach().css({top:0,left:0,display:"block"}).addClass(o).data("bs."+this.type,this),this.options.container?r.appendTo(this.options.container):r.insertAfter(this.$element);var l=this.getPosition(),c=r[0].offsetWidth,d=r[0].offsetHeight;if(u){var h=o,p=this.$element.parent(),f=this.getPosition(p);o="bottom"==o&&l.top+l.height+d-f.scroll>f.height?"top":"top"==o&&l.top-f.scroll-d<0?"bottom":"right"==o&&l.right+c>f.width?"left":"left"==o&&l.left-c<f.left?"right":o,r.removeClass(h).addClass(o)}var g=this.getCalculatedOffset(o,l,c,d);this.applyPlacement(g,o);var m=function(){i.$element.trigger("shown.bs."+i.type),i.hoverState=null};t.support.transition&&this.$tip.hasClass("fade")?r.one("bsTransitionEnd",m).emulateTransitionEnd(150):m()}},n.prototype.applyPlacement=function(e,n){var i=this.tip(),r=i[0].offsetWidth,s=i[0].offsetHeight,o=parseInt(i.css("margin-top"),10),a=parseInt(i.css("margin-left"),10);isNaN(o)&&(o=0),isNaN(a)&&(a=0),e.top=e.top+o,e.left=e.left+a,t.offset.setOffset(i[0],t.extend({using:function(t){i.css({top:Math.round(t.top),left:Math.round(t.left)})}},e),0),i.addClass("in");var u=i[0].offsetWidth,l=i[0].offsetHeight;"top"==n&&l!=s&&(e.top=e.top+s-l);var c=this.getViewportAdjustedDelta(n,e,u,l);c.left?e.left+=c.left:e.top+=c.top;var d=c.left?2*c.left-r+u:2*c.top-s+l,h=c.left?"left":"top",p=c.left?"offsetWidth":"offsetHeight";i.offset(e),this.replaceArrow(d,i[0][p],h)},n.prototype.replaceArrow=function(t,e,n){this.arrow().css(n,t?50*(1-t/e)+"%":"")},n.prototype.setContent=function(){var t=this.tip(),e=this.getTitle();t.find(".tooltip-inner")[this.options.html?"html":"text"](e),t.removeClass("fade in top bottom left right")},n.prototype.hide=function(){function e(){"in"!=n.hoverState&&i.detach(),n.$element.trigger("hidden.bs."+n.type)}var n=this,i=this.tip(),r=t.Event("hide.bs."+this.type);return this.$element.removeAttr("aria-describedby"),this.$element.trigger(r),r.isDefaultPrevented()?void 0:(i.removeClass("in"),t.support.transition&&this.$tip.hasClass("fade")?i.one("bsTransitionEnd",e).emulateTransitionEnd(150):e(),this.hoverState=null,this)},n.prototype.fixTitle=function(){var t=this.$element;(t.attr("title")||"string"!=typeof t.attr("data-original-title"))&&t.attr("data-original-title",t.attr("title")||"").attr("title","")},n.prototype.hasContent=function(){return this.getTitle()},n.prototype.getPosition=function(e){e=e||this.$element;var n=e[0],i="BODY"==n.tagName;return t.extend({},"function"==typeof n.getBoundingClientRect?n.getBoundingClientRect():null,{scroll:i?document.documentElement.scrollTop||document.body.scrollTop:e.scrollTop(),width:i?t(window).width():e.outerWidth(),height:i?t(window).height():e.outerHeight()},i?{top:0,left:0}:e.offset())},n.prototype.getCalculatedOffset=function(t,e,n,i){return"bottom"==t?{top:e.top+e.height,left:e.left+e.width/2-n/2}:"top"==t?{top:e.top-i,left:e.left+e.width/2-n/2}:"left"==t?{top:e.top+e.height/2-i/2,left:e.left-n}:{top:e.top+e.height/2-i/2,left:e.left+e.width}},n.prototype.getViewportAdjustedDelta=function(t,e,n,i){var r={top:0,left:0};if(!this.$viewport)return r;var s=this.options.viewport&&this.options.viewport.padding||0,o=this.getPosition(this.$viewport);if(/right|left/.test(t)){var a=e.top-s-o.scroll,u=e.top+s-o.scroll+i;a<o.top?r.top=o.top-a:u>o.top+o.height&&(r.top=o.top+o.height-u)}else{var l=e.left-s,c=e.left+s+n;l<o.left?r.left=o.left-l:c>o.width&&(r.left=o.left+o.width-c)}return r},n.prototype.getTitle=function(){var t,e=this.$element,n=this.options;return t=e.attr("data-original-title")||("function"==typeof n.title?n.title.call(e[0]):n.title)},n.prototype.getUID=function(t){do t+=~~(1e6*Math.random());while(document.getElementById(t));return t},n.prototype.tip=function(){return this.$tip=this.$tip||t(this.options.template)},n.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".tooltip-arrow")},n.prototype.validate=function(){this.$element[0].parentNode||(this.hide(),this.$element=null,this.options=null)},n.prototype.enable=function(){this.enabled=!0},n.prototype.disable=function(){this.enabled=!1},n.prototype.toggleEnabled=function(){this.enabled=!this.enabled},n.prototype.toggle=function(e){var n=this;e&&(n=t(e.currentTarget).data("bs."+this.type),n||(n=new this.constructor(e.currentTarget,this.getDelegateOptions()),t(e.currentTarget).data("bs."+this.type,n))),n.tip().hasClass("in")?n.leave(n):n.enter(n)},n.prototype.destroy=function(){clearTimeout(this.timeout),this.hide().$element.off("."+this.type).removeData("bs."+this.type)};var i=t.fn.tooltip;t.fn.tooltip=e,t.fn.tooltip.Constructor=n,t.fn.tooltip.noConflict=function(){return t.fn.tooltip=i,this}}(t),t}),define("shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery",["shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery"],function(t){return+function(t){function e(e){return this.each(function(){var i=t(this),r=i.data("bs.popover"),s="object"==typeof e&&e;(r||"destroy"!=e)&&(r||i.data("bs.popover",r=new n(this,s)),"string"==typeof e&&r[e]())})}var n=function(t,e){this.init("popover",t,e)};if(!t.fn.tooltip)throw new Error("Popover requires tooltip.js");n.VERSION="3.2.0",n.DEFAULTS=t.extend({},t.fn.tooltip.Constructor.DEFAULTS,{placement:"right",trigger:"click",content:"",template:'<div class="popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'}),n.prototype=t.extend({},t.fn.tooltip.Constructor.prototype),n.prototype.constructor=n,n.prototype.getDefaults=function(){return n.DEFAULTS},n.prototype.setContent=function(){var t=this.tip(),e=this.getTitle(),n=this.getContent();t.find(".popover-title")[this.options.html?"html":"text"](e),t.find(".popover-content").empty()[this.options.html?"string"==typeof n?"html":"append":"text"](n),t.removeClass("fade top bottom left right in"),t.find(".popover-title").html()||t.find(".popover-title").hide()},n.prototype.hasContent=function(){return this.getTitle()||this.getContent()},n.prototype.getContent=function(){var t=this.$element,e=this.options;return t.attr("data-content")||("function"==typeof e.content?e.content.call(t[0]):e.content)},n.prototype.arrow=function(){return this.$arrow=this.$arrow||this.tip().find(".arrow")},n.prototype.tip=function(){return this.$tip||(this.$tip=t(this.options.template)),this.$tip};var i=t.fn.popover;t.fn.popover=e,t.fn.popover.Constructor=n,t.fn.popover.noConflict=function(){return t.fn.popover=i,this}}(t),t}),function(t){"function"==typeof define&&define.amd?define("vendor/jquery-placeholder/jquery.placeholder",["jquery"],t):t(jQuery)}(function(t){function e(e){var n={},i=/^jQuery\d+$/;return t.each(e.attributes,function(t,e){e.specified&&!i.test(e.name)&&(n[e.name]=e.value)}),n}function n(e,n){var i=this,s=t(i);if(i.value==s.attr("placeholder")&&s.hasClass(h.customClass))if(s.data("placeholder-password")){if(s=s.hide().nextAll('input[type="password"]:first').show().attr("id",s.removeAttr("id").data("placeholder-id")),e===!0)return s[0].value=n;s.focus()}else i.value="",s.removeClass(h.customClass),i==r()&&i.select()}function i(){var i,r=this,s=t(r),o=this.id;""===r.value?("password"===r.type&&(s.data("placeholder-textinput")||(i=t("<input>").attr(t.extend(e(this),{type:"text"})),i.removeAttr("name").data({"placeholder-password":s,"placeholder-id":o}).bind("focus.placeholder",n),s.data({"placeholder-textinput":i,"placeholder-id":o}).before(i)),s=s.removeAttr("id").hide().prevAll('input[type="text"]:first').attr("id",o).show()),s.addClass(h.customClass),s[0].value=s.attr("placeholder")):s.removeClass(h.customClass)}function r(){try{return document.activeElement}catch(t){}}var s,o,a="[object OperaMini]"==Object.prototype.toString.call(window.operamini),u="placeholder"in document.createElement("input")&&!a,l="placeholder"in document.createElement("textarea")&&!a,c=t.valHooks,d=t.propHooks;if(u&&l)o=t.fn.placeholder=function(){return this},o.input=o.textarea=!0;else{var h={};o=t.fn.placeholder=function(e){var r={customClass:"placeholder"};h=t.extend({},r,e);var s=this;return s.filter((u?"textarea":":input")+"[placeholder]").not("."+h.customClass).bind({"focus.placeholder":n,"blur.placeholder":i}).data("placeholder-enabled",!0).trigger("blur.placeholder"),s},o.input=u,o.textarea=l,s={get:function(e){var n=t(e),i=n.data("placeholder-password");return i?i[0].value:n.data("placeholder-enabled")&&n.hasClass("placeholder")?"":e.value},set:function(e,s){var o=t(e),a=o.data("placeholder-password");return a?a[0].value=s:o.data("placeholder-enabled")?(""===s?(e.value=s,e!=r()&&i.call(e)):o.hasClass(h.customClass)?n.call(e,!0,s)||(e.value=s):e.value=s,o):e.value=s}},u||(c.input=s,d.value=s),l||(c.textarea=s,d.value=s),t(function(){t(document).delegate("form","submit.placeholder",function(){var e=t("."+h.customClass,this).each(n);setTimeout(function(){e.each(i)},10)})}),t(window).bind("beforeunload.placeholder",function(){t("."+h.customClass).each(function(){this.value=""})})}}),define("modules/login-links",["shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery","modules/api","hyprlive","underscore","vendor/jquery-placeholder/jquery.placeholder"],function(t,e,n,i){var r,s=function(){return!Modernizr.mq("(max-width: 480px)")},o=function(){return!1},a=!("placeholder"in t("<input>")[0]),u=function(){};t.extend(u.prototype,{boundMethods:[],setMethodContext:function(){for(var e=this.boundMethods.length-1;e>=0;e--)this[this.boundMethods[e]]=t.proxy(this[this.boundMethods[e]],this)},dismisser:function(e){t.contains(this.popoverInstance.$tip[0],e.target)||this.loading||(this.$el.popover("destroy"),this.$el.on("click",this.createPopover),this.$el.off("click",o),this.bindListeners(!1),r.off("click",this.dismisser))},setLoading:function(t){this.loading=t,this.$parent[t?"addClass":"removeClass"]("is-loading")},onPopoverShow:function(){var t=this;i.defer(function(){r.on("click",t.dismisser),t.$el.on("click",o)}),this.popoverInstance=this.$el.data("bs.popover"),this.$parent=this.popoverInstance.tip(),this.bindListeners(!0),this.$el.off("click",this.createPopover),a&&this.$parent.find("[placeholder]").placeholder({customClass:"mz-placeholder"})},createPopover:function(t){s()&&(t.preventDefault(),this.$el.popover({animation:!0,html:!0,trigger:"manual",content:this.template,container:"body"}).on("shown.bs.popover",this.onPopoverShow).popover("show"))},displayApiMessage:function(t){this.displayMessage(t.message||t&&t.responseJSON&&t.responseJSON.message||n.getLabel("unexpectedError"))},displayMessage:function(t){this.setLoading(!1),this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">'+t+"</span>")},init:function(e){this.$el=t(e),this.loading=!1,this.setMethodContext(),this.pageType?this.$el.on("click",this.doFormSubmit.bind(this)):this.$el.on("click",this.createPopover)},doFormSubmit:function(t){t.preventDefault(),this.$parent=this.$el.closest(this.formSelector),this[this.pageType]()}});var l=function(){u.apply(this,arguments),this.login=i.debounce(this.login,150),this.retrievePassword=i.debounce(this.retrievePassword,150)};l.prototype=new u,t.extend(l.prototype,{boundMethods:["handleEnterKey","handleLoginComplete","displayResetPasswordMessage","dismisser","displayMessage","displayApiMessage","createPopover","slideRight","slideLeft","login","retrievePassword","onPopoverShow"],template:n.getTemplate("modules/common/login-popover").render(),bindListeners:function(t){var e=t?"on":"off";this.$parent[e]("click",'[data-mz-action="forgotpasswordform"]',this.slideRight),this.$parent[e]("click",'[data-mz-action="loginform"]',this.slideLeft),this.$parent[e]("click",'[data-mz-action="submitlogin"]',this.login),this.$parent[e]("click",'[data-mz-action="submitforgotpassword"]',this.retrievePassword),this.$parent[e]("keypress","input",this.handleEnterKey)},onPopoverShow:function(){u.prototype.onPopoverShow.apply(this,arguments),this.panelWidth=this.$parent.find(".mz-l-slidebox-panel").first().outerWidth(),this.$slideboxOuter=this.$parent.find(".mz-l-slidebox-outer"),this.$el.hasClass("mz-forgot")&&this.slideRight()},handleEnterKey:function(e){if(13===e.which){var n=t(e.currentTarget).parents("[data-mz-role]");switch(n.data("mz-role")){case"login-form":this.login();break;case"forgotpassword-form":this.retrievePassword()}return!1}},slideRight:function(t){t&&t.preventDefault(),this.$slideboxOuter.css("left",-this.panelWidth)},slideLeft:function(t){t&&t.preventDefault(),this.$slideboxOuter.css("left",0)},login:function(){this.setLoading(!0),e.action("customer","loginStorefront",{email:this.$parent.find("[data-mz-login-email]").val(),password:this.$parent.find("[data-mz-login-password]").val()}).then(this.handleLoginComplete,this.displayApiMessage)},retrievePassword:function(){this.setLoading(!0),e.action("customer","resetPasswordStorefront",{EmailAddress:this.$parent.find("[data-mz-forgotpassword-email]").val()}).then(this.displayResetPasswordMessage.bind(this),this.displayApiMessage)},handleLoginComplete:function(){window.location.reload()},displayResetPasswordMessage:function(){this.displayMessage(n.getLabel("resetEmailSent"))}});var c=function(){u.apply(this,arguments),this.signup=i.debounce(this.signup,150)};c.prototype=new u,t.extend(c.prototype,l.prototype,{boundMethods:["handleEnterKey","dismisser","displayMessage","displayApiMessage","createPopover","signup","onPopoverShow"],template:n.getTemplate("modules/common/signup-popover").render(),bindListeners:function(t){var e=t?"on":"off";this.$parent[e]("click",'[data-mz-action="signup"]',this.signup),this.$parent[e]("keypress","input",this.handleEnterKey)},handleEnterKey:function(t){13===t.which&&this.signup()},validate:function(t){return t.account.emailAddress?t.password?t.password!==this.$parent.find("[data-mz-signup-confirmpassword]").val()?(this.displayMessage(n.getLabel("passwordsDoNotMatch")),!1):!0:(this.displayMessage(n.getLabel("passwordMissing")),!1):(this.displayMessage(n.getLabel("emailMissing")),!1)},signup:function(){var t=this,n=this.$parent.find("[data-mz-signup-emailaddress]").val(),i=this.$parent.find("[data-mz-signup-firstname]").val(),r=this.$parent.find("[data-mz-signup-lastname]").val(),s={account:{emailAddress:n,userName:n,firstName:i,lastName:r,contacts:[{email:n,firstName:i,lastNameOrSurname:r}]},password:this.$parent.find("[data-mz-signup-password]").val()};return this.validate(s)?(this.setLoading(!0),e.action("customer","createStorefront",s).then(function(){t.redirectTemplate?window.location.pathname=t.redirectTemplate:window.location.reload()},t.displayApiMessage)):void 0}}),t(document).ready(function(){r=t(document.body),t('[data-mz-action="login"]').each(function(){var e=new l;e.init(this),t(this).data("mz.popover",e)}),t('[data-mz-action="signup"]').each(function(){var e=new c;e.init(this),t(this).data("mz.popover",e)}),t('[data-mz-action="launchforgotpassword"]').each(function(){var e=new l;e.init(this),t(this).data("mz.popover",e)}),t('[data-mz-action="signuppage-submit"]').each(function(){var t=new c;t.formSelector='form[name="mz-signupform"]',t.pageType="signup",t.redirectTemplate="myaccount",t.init(this)}),t('[data-mz-action="loginpage-submit"]').each(function(){var t=new c;t.formSelector='form[name="mz-loginform"]',t.pageType="login",t.init(this)}),t('[data-mz-action="forgotpasswordpage-submit"]').each(function(){var t=new c;t.formSelector='form[name="mz-forgotpasswordform"]',t.pageType="retrievePassword",t.init(this)})})}),define("modules/models-address",["modules/backbone-mozu","hyprlive"],function(t,e){var n={US:!0,CA:!0,JP:!0,TW:!0},i="n/a",r=t.MozuModel.extend({validation:{home:{required:!0,msg:e.getLabel("phoneMissing")}}}),s=t.MozuModel.extend({mozuType:"address",initialize:function(){this.on("change:countryCode",this.clearStateAndZipWhenCountryChanges,this)},clearStateAndZipWhenCountryChanges:function(){this.unset("postalOrZipCode"),this.unset("stateOrProvince")},validation:{address1:{required:!0,msg:e.getLabel("streetMissing")},cityOrTown:{required:!0,msg:e.getLabel("cityMissing")},countryCode:{required:!0,msg:e.getLabel("countryMissing")},stateOrProvince:{fn:"requiresStateAndZip",msg:e.getLabel("stateProvMissing")},postalOrZipCode:{fn:"requiresStateAndZip",msg:e.getLabel("postalCodeMissing")}},requiresStateAndZip:function(t,e){return this.get("countryCode")in n&&!t?this.validation[e.split(".").pop()].msg:void 0},defaults:{candidateValidatedAddresses:null,countryCode:e.getThemeSetting("preselectCountryCode")||"",addressType:"Residential"},toJSON:function(e){var n=t.MozuModel.prototype.toJSON.apply(this,arguments);return e&&e.helpers||n.stateOrProvince||(n.stateOrProvince=i),e&&e.helpers&&n.stateOrProvince===i&&delete n.stateOrProvince,n},is:function(t){var e="",n="";for(var i in t)if("isValidated"!==i&&(e=(t[i]||"").toLowerCase(),n=(this.get(i)||"").toLowerCase(),e!=n))return!1;return!0}});return{PhoneNumbers:r,StreetAddress:s}}),define("modules/models-price",["underscore","modules/backbone-mozu"],function(t,e){var n=e.MozuModel.extend({dataTypes:{price:e.MozuModel.DataTypes.Float,salePrice:e.MozuModel.DataTypes.Float,offerPrice:e.MozuModel.DataTypes.Float},helpers:["onSale"],onSale:function(){var t=this.get("salePrice");return null!==t&&!isNaN(t)&&t!==this.get("price")}}),i=e.MozuModel.extend({relations:{lower:n,upper:n}});return{ProductPrice:n,ProductPriceRange:i}}),define("modules/models-product",["modules/jquery-mozu","underscore","modules/backbone-mozu","hyprlive","modules/models-price","modules/api"],function(t,e,n,i,r,s){function o(t){for(t=t.toString();t.length<2;)t="0"+t;return t}function a(t){var e=new Date(Date.parse(t)+6e4*(new Date).getTimezoneOffset());return[o(e.getFullYear(),4),o(e.getMonth()+1,2),o(e.getDate(),2)].join("-")}var u=n.MozuModel.extend({idAttribute:"attributeFQN",helpers:["isChecked"],initialize:function(){var n=this;e.defer(function(){n.listenTo(n.collection,"invalidoptionselected",n.handleInvalid,n)});var i=function(t,e){return t.value.toString()===e.toString()},r=function(t,n){return e.some(n,function(e){return i(t,e)})},s=n.get("attributeDetail");s&&(s.valueType===u.Constants.ValueTypes.Predefined&&(this.legalValues=e.chain(this.get("values")).pluck("value").map(function(t){return e.isUndefined(t)||e.isNull(t)?t:t.toString()}).value()),s.inputType===u.Constants.InputTypes.YesNo?n.on("change:value",function(t,i){var r;n.previous("value")!==i&&(r=n.get("values"),e.first(r).isSelected=i,n.set({value:i,shopperEnteredValue:i,values:r},{silent:!0}),n.trigger("optionchange",i,n))}):n.on("change:value",function(s,o){var a,l=n.get("values"),c=this.get("isMultiValue")?r:i;"string"==typeof o&&(o=t.trim(o)),o||o===!1||0===o||""===o?(e.each(l,function(t){c(t,o)?(a=t,t.isSelected=!0,n.set("value",o,{silent:!0})):t.isSelected=!1}),n.set("values",l),n.get("attributeDetail").valueType===u.Constants.ValueTypes.ShopperEntered&&n.set("shopperEnteredValue",o,{silent:!0})):(n.unset("value"),n.unset("shopperEnteredValue")),a&&!a.isEnabled&&n.collection.trigger("invalidoptionselected",a,n),n.trigger("optionchange",o,n)}))},handleInvalid:function(t,n){this!==n&&(this.unset("value"),e.each(this.get("values"),function(t){t.isSelected=!1}))},parse:function(t){var n,i,r;return t.isMultiValue?(i=e.pluck(e.where(t.values,{isSelected:!0}),"value"),i&&i.length>0&&(t.value=i)):(n=e.findWhere(t.values,{isSelected:!0}),n&&(t.value=n.value)),t.attributeDetail&&(t.attributeDetail.valueType!==u.Constants.ValueTypes.Predefined&&(r=t.values[0]&&t.values[0].shopperEnteredValue,(r||0===r)&&(t.shopperEnteredValue=r,t.value=r)),t.attributeDetail.inputType===u.Constants.InputTypes.Date&&t.attributeDetail.validation&&(t.minDate=a(t.attributeDetail.validation.minDateValue),t.maxDate=a(t.attributeDetail.validation.maxDateValue))),t},isChecked:function(){var t=this.get("attributeDetail"),e=this.get("values");return!!(t&&t.inputType===u.Constants.InputTypes.YesNo&&e&&this.get("shopperEnteredValue"))},isValidValue:function(){var t=this.getValueOrShopperEnteredValue();return void 0!==t&&""!==t&&(this.get("attributeDetail").valueType!==u.Constants.ValueTypes.Predefined||(this.get("isMultiValue")?!e.difference(e.map(t,function(t){return t.toString()}),this.legalValues).length:e.contains(this.legalValues,t.toString())))},getValueOrShopperEnteredValue:function(){return this.get("value")||0===this.get("value")?this.get("value"):this.get("shopperEnteredValue")},isConfigured:function(){var t=this.get("attributeDetail");return t?t.inputType===u.Constants.InputTypes.YesNo?this.isChecked():this.isValidValue():!0},toJSON:function(){var t=n.MozuModel.prototype.toJSON.apply(this,arguments);if(t&&t.attributeDetail&&t.attributeDetail.valueType!==u.Constants.ValueTypes.Predefined&&this.isConfigured()){var e=t.value||t.shopperEnteredValue;"Number"===t.attributeDetail.dataType&&(e=parseFloat(e)),t.shopperEnteredValue=t.value=e}return t},addConfiguration:function(t,n){var i,r,s,o,a;this.isConfigured()&&(n&&n.unabridged?t.push(this.toJSON()):(i=this.get("attributeFQN"),r=this.getValueOrShopperEnteredValue(),s=this.get("attributeDetail"),o=s.valueType===u.Constants.ValueTypes.ShopperEntered?"shopperEnteredValue":"value","Number"===s.dataType&&(r=parseFloat(r)),a=function(e){var n={attributeFQN:i};n[o]=e,t.push(n)},e.isArray(r)?e.each(r,a):a(r)))}},{Constants:{ValueTypes:{Predefined:"Predefined",ShopperEntered:"ShopperEntered",AdminEntered:"AdminEntered"},InputTypes:{List:"List",YesNo:"YesNo",Date:"Date"}}}),l=n.MozuModel.extend({}),c=n.MozuModel.extend({mozuType:"product",idAttribute:"productCode",handlesMessages:!0,helpers:["mainImage","notDoneConfiguring","hasPriceRange","supportsInStorePickup"],defaults:{purchasableState:{},quantity:1},dataTypes:{quantity:n.MozuModel.DataTypes.Int},validation:{quantity:{min:1,msg:i.getLabel("enterProductQuantity")}},relations:{content:l,price:r.ProductPrice,priceRange:r.ProductPriceRange,options:n.Collection.extend({model:u})},getBundledProductProperties:function(t){var n=this,i=!t||!t.silent;i&&(this.isLoading(!0),this.trigger("request"));var r=this.get("bundledProducts"),o=r.length,a=s.defer();return e.each(r,function(t){var u=s.get("product",t.productCode);u.ensure(function(){0===--o&&e.defer(function(){n.set("bundledProducts",r),i&&(this.trigger("sync",r),this.isLoading(!1)),a.resolve(r)})}),u.then(function(n){e.each(n.prop("properties"),function(t){t.values&&0!==t.values.length&&""!==t.values[0].value&&""!==t.values[0].stringValue||(t.isEmpty=!0)}),e.extend(t,n.data)})}),a.promise},hasPriceRange:function(){return this._hasPriceRange},calculateHasPriceRange:function(t){this._hasPriceRange=t&&!!t.priceRange},initialize:function(t){var n=this.get("content").get("seoFriendlyUrl");e.bindAll(this,"calculateHasPriceRange","onOptionChange"),this.listenTo(this.get("options"),"optionchange",this.onOptionChange),this.updateConfiguration=e.debounce(this.updateConfiguration,300),this.set({url:n?"/"+n+"/p/"+this.get("productCode"):"/p/"+this.get("productCode")}),this.lastConfiguration=[],this.calculateHasPriceRange(t),this.on("sync",this.calculateHasPriceRange)},mainImage:function(){var t=this.get("content.productImages");return t&&t[0]},notDoneConfiguring:function(){return this.get("productUsage")===c.Constants.ProductUsage.Configurable&&!this.get("variationProductCode")},supportsInStorePickup:function(){return e.contains(this.get("fulfillmentTypesSupported"),c.Constants.FulfillmentTypes.IN_STORE_PICKUP)},getConfiguredOptions:function(t){return this.get("options").reduce(function(e,n){return n.addConfiguration(e,t),e},[])},addToCart:function(){var t=this;this.whenReady(function(){if(!t.validate()){var e=t.get("fulfillmentMethod");e||(e="Physical"===t.get("goodsType")?c.Constants.FulfillmentMethods.SHIP:c.Constants.FulfillmentMethods.DIGITAL),t.apiAddToCart({options:t.getConfiguredOptions(),fulfillmentMethod:e,quantity:t.get("quantity")}).then(function(e){t.trigger("addedtocart",e)})}})},addToWishlist:function(){var t=this;this.whenReady(function(){t.validate()||t.apiAddToWishlist({customerAccountId:require.mozuData("user").accountId,quantity:t.get("quantity")}).then(function(e){t.trigger("addedtowishlist",e)})})},addToCartForPickup:function(t,e){var n=this;this.whenReady(function(){return n.apiAddToCartForPickup({fulfillmentLocationCode:t,fulfillmentMethod:c.Constants.FulfillmentMethods.PICKUP,quantity:e||1}).then(function(t){n.trigger("addedtocart",t)})})},onOptionChange:function(){this.isLoading(!0),this.updateConfiguration()},updateConfiguration:function(){var t=this.getConfiguredOptions();JSON.stringify(this.lastConfiguration)!==JSON.stringify(t)?(this.lastConfiguration=t,this.apiConfigure({options:t},{useExistingInstances:!0})):this.isLoading(!1)},parse:function(t){return t&&t.productCode&&!t.variationProductCode&&this.unset("variationProductCode"),t},toJSON:function(t){var e=n.MozuModel.prototype.toJSON.apply(this,arguments);return t&&t.helpers||(e.options=this.getConfiguredOptions({unabridged:!0})),t&&t.helpers&&("string"==typeof e.mfgPartNumber&&(e.mfgPartNumber=[e.mfgPartNumber]),"string"==typeof e.upc&&(e.upc=[e.upc]),e.bundledProducts&&0===e.bundledProducts.length&&delete e.bundledProducts),e}},{Constants:{FulfillmentMethods:{SHIP:"Ship",PICKUP:"Pickup",DIGITAL:"Digital"},FulfillmentTypes:{IN_STORE_PICKUP:"InStorePickup"},ProductUsage:{Configurable:"Configurable"}}}),d=n.MozuModel.extend({relations:{items:n.Collection.extend({model:c})}});return{Product:c,Option:u,ProductCollection:d}}),define("modules/models-orders",["underscore","modules/backbone-mozu","hyprlive","modules/models-product"],function(t,e,n,i){var r=e.MozuModel.extend({relations:{product:i.Product}}),s=e.Collection.extend({model:r}),o=e.MozuModel.extend({mozuType:"rma",relations:{items:s},dataTypes:{quantity:e.MozuModel.DataTypes.Int},defaults:{returnType:"Refund"},validation:{reason:{required:!0,msg:n.getLabel("enterReturnReason")},quantity:{min:1,msg:n.getLabel("enterReturnQuantity")},comments:{fn:function(t){return"Other"!==this.attributes.reason||t?void 0:n.getLabel("enterOtherComments")}}},toJSON:function(){var t=e.MozuModel.prototype.toJSON.apply(this,arguments);return t.reason&&t.quantity&&t.items&&t.items[0]&&!t.items[0].reason&&(t.items[0].reasons=[{reason:t.reason,quantity:t.quantity}],t.comments&&(t.items[0].notes=[{text:t.comments}])),delete t.reason,delete t.quantity,delete t.comments,t}}),a=e.MozuPagedCollection.extend({mozuType:"rmas",defaults:{pageSize:5},relations:{items:e.Collection.extend({model:o})}}),u=e.MozuModel.extend({mozuType:"order",relations:{items:s}}),l=e.MozuPagedCollection.extend({mozuType:"orders",defaults:{pageSize:5},relations:{items:e.Collection.extend({model:u}),rma:o},startReturn:function(t,e){var n=this.get("rma"),i=this.get("items").get(t).get("items").get(e);i&&(i=i.toJSON(),i.orderItemId=i.id,n.get("items").reset([i]),n.set({originalOrderId:t,returnType:"Refund"}))},clearReturn:function(){var t=this.get("rma");t.clear()},finishReturn:function(){var t,e=this;return!this.validate()&&(this.isLoading(!0),t=this.get("rma").apiCreate())?t.then(function(t){return e.isLoading(!1),e.trigger("returncreated",t.prop("id")),e.clearReturn(),t},function(){e.isLoading(!1)}):void 0}});return{OrderItem:r,RMA:o,RMACollection:a,Order:u,OrderCollection:l}}),define("modules/models-paymentmethods",["jquery","underscore","modules/backbone-mozu","hyprlive"],function(t,e,n,i){var r=n.MozuModel.extend({present:function(t,e){return this.selected?t?void 0:this.validation[e.split(".").pop()].msg||i.getLabel("genericRequired"):void 0}}),s={cardNumber:"cardNumberPartOrMask",cardNumberPart:"cardNumberPartOrMask",cardType:"paymentOrCardType",id:"paymentServiceCardId"},o={3:"AMEX",4:"VISA",5:"MC",6:"DISCOVER"},a=r.extend({mozuType:"creditcard",isCvvOptional:!1,validation:{paymentOrCardType:{fn:"present",msg:i.getLabel("cardTypeMissing")},cardNumberPartOrMask:{fn:"present",msg:i.getLabel("cardNumberMissing")},expireMonth:{fn:"expirationDateInPast"},expireYear:{fn:"expirationDateInPast"},nameOnCard:{fn:"present",msg:i.getLabel("cardNameMissing")},cvv:{fn:function(t,e){var n=e.split(".")[0],r=this.get(n);return r.get("isCvvOptional")?"":this.selected?t?void 0:i.getLabel("securityCodeMissing")||i.getLabel("genericRequired"):void 0}}},initialize:function(){var t=this;e.each(s,function(e,n){t.on("change:"+e,function(e,i){t.set(n,i,{silent:!0})}),t.on("change:"+n,function(e,i){t.set(n,i,{silent:!0})})}),this.detectCardType&&this.on("change:cardNumberPartOrMask",e.debounce(function(t,e){var n;e&&e.toString&&(n=e.toString().charAt(0)),n&&n in o&&t.set({paymentOrCardType:o[n]})},500))},dataTypes:{expireMonth:n.MozuModel.DataTypes.Int,expireYear:n.MozuModel.DataTypes.Int,isCardInfoSaved:n.MozuModel.DataTypes.Boolean},expirationDateInPast:function(){if(!this.selected)return void 0;var t,e,n,r=this.get("expireMonth"),s=this.get("expireYear");return isNaN(r)||isNaN(s)?!1:(t=new Date(s,r-1,1,0,0,0,0),e=new Date,e.setDate(1),e.setHours(0,0,0,0),n=t>=e,n?void 0:i.getLabel("cardExpInvalid"))},toJSON:function(t){var n=r.prototype.toJSON.apply(this);return!n.card||t&&t.helpers||delete n.card.cvv,e.each(s,function(t,e){!(t in n)&&e in n&&(n[t]=n[e]),!(e in n)&&t in n&&(n[e]=n[t])}),n}}),u=(r.extend({mozuType:"paypalpayment"}),r.extend({validation:{nameOnCheck:{fn:"present"},routingNumber:{fn:"present"},checkNumber:{fn:"present"}}})),l=r.extend({isEnabled:!1,creditAmountApplied:null,remainingBalance:null,isTiedToCustomer:!0,addRemainderToCustomer:!1,initialize:function(){this.set({isEnabled:this.isEnabled}),this.set({creditAmountApplied:this.creditAmountApplied}),this.set({remainingBalance:this.remainingBalance}),this.set({isTiedToCustomer:this.isTiedToCustomer}),this.set({addRemainderToCustomer:this.addRemainderToCustomer})},helpers:["calculateRemainingBalance"],calculateRemainingBalance:function(){return this.get("creditAmountApplied")?this.get("currentBalance")-this.get("creditAmountApplied"):this.get("currentBalance")},validate:function(t){return t.creditAmountApplied&&t.creditAmountApplied>t.currentBalance?"Exceeds card balance.":void 0}});return{CreditCard:a,Check:u,DigitalCredit:l}}),define("modules/models-customer",["modules/backbone-mozu","underscore","modules/models-address","modules/models-orders","modules/models-paymentmethods","modules/models-product","hyprlive"],function(t,e,n,i,r,s,o){var a,u,l,c=require.mozuData("pagecontext");c&&c.shippingCountries&&c.billingCountries&&(a=e.pluck(c.shippingCountries,"value"),u=e.pluck(c.billingCountries,"value"),l=e.intersection(a,u));
-var d=["Billing","Shipping"],h={};e.each(d,function(t){h["change:is"+t+"Contact"]=function(n,i){var r=this.get("types");r=r?JSON.parse(JSON.stringify(r)):[];var s={name:t},o=e.findWhere(r,s);i&&!o&&(r.push(s),this.set("types",r,{silent:!0})),!i&&o&&this.set("types",e.without(r,o),{silent:!0})},h["change:isPrimary"+t+"Contact"]=function(n,i){var r=this.get("types"),s={name:t},o=e.findWhere(r,s);o&&(o.isPrimary=i,this.set("types",r,{silent:!0}))}});var p=t.MozuModel.extend({mozuType:"customerattribute",validation:{values:{fn:function(e,n,i){function r(){var t=Array.prototype.slice.call(arguments),e=t.shift();return e.replace(/\{(\d+)\}/g,function(e,n){return"undefined"!=typeof t[n]?t[n]:e})}var s=i.inputType,o=t.Validation.messages,a=i.validation,u=e[0];if("TextBox"===s){if(a.maxStringLength&&u.length>a.maxStringLength)return r(o.maxLength,i.adminName,a.maxStringLength);if(a.minStringLength&&u.length<a.minStringLength)return r(o.minLength,i.adminName,a.minStringLength);if(a.maxNumericValue&&u>a.maxNumericValue)return r(o.max,i.adminName,a.maxNumericValue);if(a.minNumericValue&&u<a.minNumericValue)return r(o.min,i.adminName,a.minNumericValue)}else if("TextArea"===s){if(a.maxStringLength&&u.length>a.maxStringLength)return r(o.maxLength,i.adminName,a.maxStringLength);if(a.minStringLength&&u.length<a.minStringLength)return r(o.minLength,i.adminName,a.minStringLength)}else if("Date"===s){if(a.maxDateTime&&Date.parse(u)>Date.parse(a.maxDateTime))return r(o.max,i.adminName,Date.parse(a.maxDateTime));if(a.minDateTime&&Date.parse(u)<Date.parse(a.minDateTime))return r(o.min,i.adminName,Date.parse(a.minDateTime))}}}}}),f=t.MozuModel.extend({mozuType:"contact",relations:{address:n.StreetAddress,phoneNumbers:n.PhoneNumbers},validation:{firstName:{required:!0,msg:o.getLabel("firstNameMissing")},lastNameOrSurname:{required:!0,msg:o.getLabel("lastNameMissing")},"address.countryCode":{fn:function(t){if(!a)return void 0;var n=this.attributes.isBillingContact||this.attributes.editingContact.attributes.isBillingContact,i=this.attributes.isShippingContact||this.attributes.editingContact.attributes.isShippingContact,r=n&&i&&l||n&&u||i&&a;return r&&!e.contains(r,t)?o.getLabel("wrongCountryForType"):void 0}}},toJSON:function(n){var i=t.MozuModel.prototype.toJSON.apply(this,arguments);return n&&n.helpers||e.each(d,function(t){delete i["is"+t+"Contact"],delete i["isPrimary"+t+"Contact"]}),"new"===i.id&&delete i.id,i},save:function(){if(!this.parent.validate("editingContact")){var t=this.get("id");return this.get("email")||this.set({email:this.parent.get("emailAddress")},{silent:!0}),t?this.apiUpdate():this.apiCreate()}},setTypeHelpers:function(t,n){var i=this;e.each(d,function(t){i.unset("is"+t+"Contact"),i.unset("isPrimary"+t+"Contact"),e.each(n,function(e){var n={};e.name===t&&(n["is"+t+"Contact"]=!0,e.isPrimary&&(n["isPrimary"+t+"Contact"]=!0),i.set(n,{silent:!0}))})})},initialize:function(){var t=this.get("types");t&&this.setTypeHelpers(null,t),this.on(h),this.on("change:types",this.setTypeHelpers,this)}}),g=t.MozuModel.extend({relations:{product:s.Product}}),m=t.MozuModel.extend({mozuType:"wishlist",helpers:["hasItems"],hasItems:function(){return this.get("items").length>0},relations:{items:t.Collection.extend({model:g})},addItemToCart:function(t){var e=this;return this.apiAddItemToCartById(t).then(function(n){return e.trigger("addedtocart",n,t),n})}}),v=t.MozuModel.extend({mozuType:"customer",helpers:["hasSavedCards","hasSavedContacts"],hasSavedCards:function(){var t=this.get("cards");return t&&t.length>0},hasSavedContacts:function(){var t=this.get("contacts");return t&&t.length>0},relations:{attributes:t.Collection.extend({model:p}),contacts:t.Collection.extend({model:f}),cards:t.Collection.extend({model:r.CreditCard}),credits:t.Collection.extend({model:r.DigitalCredit})},getAttributes:function(){var t=this,n=this.get("attributes");return this.apiGetAttributes({pageSize:100}).then(function(i){var r=e.reduce(i.data.items,function(t,e){return t[e.fullyQualifiedName]={values:e.values,attributeDefinitionId:e.attributeDefinitionId},t},{});return t.apiGetAttributeDefinitions().then(function(s){return e.each(s.data.items,function(t){var e=t.attributeFQN;r[e]&&(t.values=r[e].values,t.attributeDefinitionId=r[e].attributeDefinitionId)}),s.data.items.sort(function(t,e){return"YesNo"===t.inputType?-1:"YesNo"===e.inputType?1:0}),n.reset(s.data.items),t.trigger("sync",i.data),t})})},getPrimaryContactOfType:function(t){return this.get("contacts").find(function(n){return!!e.findWhere(n.get("types"),{name:t,isPrimary:!0})})},getPrimaryBillingContact:function(){return this.getPrimaryContactOfType("Billing")},getPrimaryShippingContact:function(){return this.getPrimaryContactOfType("Shipping")},getContacts:function(){var t=this,e=this.get("contacts");return this.apiGetContacts().then(function(n){return e.reset(n.data.items),t.trigger("sync",n.data),t})},getStoreCredits:function(){var t=this;return this.apiGetCredits().then(function(e){return t.set("credits",e.data.items),t.trigger("sync",e),t})},addStoreCredit:function(t){return this.apiAddStoreCredit(t)}}),y=r.CreditCard.extend({validation:e.extend({contactId:{required:!0,msg:o.getLabel("cardBillingMissing")}},r.CreditCard.prototype.validation),selected:!0,isCvvOptional:!0}),b=v.extend({handlesMessages:!0,relations:e.extend({editingCard:y,editingContact:f,wishlist:m,orderHistory:i.OrderCollection,returnHistory:i.RMACollection},v.prototype.relations),validation:{password:{fn:function(t){return this.validatePassword&&!t?o.getLabel("passwordMissing"):void 0}},confirmPassword:{fn:function(t){return this.validatePassword&&t!==this.get("password")?o.getLabel("passwordsDoNotMatch"):void 0}}},defaults:{editingCard:{},editingContact:{}},initialize:function(){var t=this.get("orderHistory"),e=this.get("returnHistory");this.get("editingContact").set("accountId",this.get("id")),t.lastRequest={pageSize:5},e.lastRequest={pageSize:5},t.on("returncreated",function(t){e.apiGet(e.lastRequest).then(function(){e.trigger("returndisplayed",t)})})},changePassword:function(){var t=this;return t.validatePassword=!0,this.validate("password")||this.validate("confirmPassword")?!1:this.apiChangePassword({oldPassword:this.get("oldPassword"),newPassword:this.get("password")}).ensure(function(){t.validatePassword=!1})},beginEditCard:function(t){var n=this.get("cards").get(t),i=this.get("contacts").toJSON(),r={contacts:i,hasSavedContacts:this.hasSavedContacts(),isCvvOptional:!0};n&&e.extend(r,n.toJSON({helpers:!0})),this.get("editingCard").set(r)},endEditCard:function(){this.get("editingCard").clear({silent:!0})},saveCard:function(){if(!this.validate("editingCard")){var t=this,e=this.get("editingCard").toJSON(),n=function(){return t.apiSavePaymentCard(e).then(function(){return t.getCards()}).then(function(){return t.get("editingCard").clear({silent:!0})})},i=function(){t.get("editingContact").set("isBillingContact",!0);var n=t.get("editingContact").save();if(!n)throw new Error("Could not save contact!");return n.then(function(n){return e.contactId=n.prop("id"),t.endEditContact(),t.getContacts(),!0})};return e.contactId&&"new"!==e.contactId?n():i().then(n)}},deleteCard:function(t){var e=this;return this.apiModel.deletePaymentCard(t).then(function(){return e.getCards()})},deleteMultipleCards:function(t){return this.apiModel.api.all.apply(this.apiModel.api,t.map(e.bind(this.apiModel.deletePaymentCard,this.apiModel))).then(e.bind(this.getCards,this))},getCards:function(){var t=this,e=this.get("cards");return this.syncApiModel(),this.apiModel.getCards().then(function(n){return e.set(n.data.items),t})},beginEditContact:function(t){var e=this.get("contacts").get(t);e&&this.get("editingContact").set(e.toJSON({helpers:!0,ensureCopy:!0}),{silent:!0})},endEditContact:function(){var t=this.get("editingContact");t.clear(),t.set("accountId",this.get("id"))},saveContact:function(t){var e,n=this,i=this.get("editingContact");t&&t.forceIsValid&&i.set("address.isValidated",!0);var r=i.save();return r?r.then(function(t){return e=t,n.endEditContact(),n.getContacts()}).then(function(){return e}):void 0},deleteContact:function(t){var e=this;return this.apiModel.deleteContact(t).then(function(){return e.getContacts()})},updateName:function(){return this.apiUpdate({firstName:this.get("firstName"),lastName:this.get("lastName")})},updateAcceptsMarketing:function(t){return this.apiUpdate({acceptsMarketing:t})},updateAttribute:function(t,e,n){this.apiUpdateAttribute({attributeFQN:t,attributeDefinitionId:e,values:n})},toJSON:function(t){var e=v.prototype.toJSON.apply(this,arguments);return t&&t.helpers||delete e.customer,delete e.password,delete e.confirmPassword,delete e.oldPassword,e}});return{Contact:f,Customer:v,EditableCustomer:b}}),define("modules/models-documents",["modules/backbone-mozu","underscore","hyprlivecontext"],function(t,e,n,i){var r=(i.locals,t.MozuModel.extend({helpers:["url"],url:function(){return"/cms/"+this.get("id")}})),s=t.MozuPagedCollection.extend({relations:{items:t.Collection.extend({model:r})},buildPagingRequest:function(){var t=this.baseRequestParams?e.clone(this.baseRequestParams):{},n=this.get("pageSize"),i=this.get("startIndex"),r=this.filter,s=this.query;return t.pageSize=n,i&&(t.startIndex=i),r&&(t.filter=r),s&&(t.query=this.query),t},initialize:function(){this.lastRequest=this.buildPagingRequest()}});return{Document:r,DocumentCollection:s}}),define("modules/models-faceting",["modules/jquery-mozu","underscore","hyprlive","modules/backbone-mozu","modules/models-product"],function(t,e,n,i,r){var s=i.MozuModel.extend({idAttribute:"value"}),o=i.MozuModel.extend({idAttribute:"field",helpers:["isFaceted"],defaults:{facetType:"",field:"",label:""},relations:{values:i.Collection.extend({model:s})},isFaceted:function(){return!!this.get("values").findWhere({isApplied:!0})},empty:function(){this.set("values",{isApplied:!1}),this.collection.parent.updateFacets({resetIndex:!0})},getAppliedValues:function(){return e.invoke(this.get("values").where({isApplied:!0}),"get","filterValue").join(",")}}),a=i.MozuPagedCollection.extend({mozuType:"search",relations:{facets:i.Collection.extend({model:o}),items:i.Collection.extend({model:r.Product})},helpers:["hasValueFacets"],hierarchyDepth:2,hierarchyField:"categoryId",getQueryParams:function(){var t=i.MozuPagedCollection.prototype.getQueryParams.apply(this,arguments);return this.hierarchyValue&&(t[window.encodeURIComponent(this.hierarchyField)]=window.encodeURIComponent(this.hierarchyValue)),t},buildRequest:function(t){var e=i.MozuPagedCollection.prototype.buildRequest.apply(this,arguments);return t=t||this.getFacetValueFilter(),t&&(e.facetValueFilter=t),e},setQuery:function(t){this.query=t,this.hierarchyValue||this.baseRequestParams||(this.baseRequestParams={facet:this.hierarchyField,facetHierDepth:this.hierarchyField+":"+this.hierarchyDepth,query:t}),this.lastRequest=this.buildRequest()},setHierarchy:function(t,n){this.hierarchyField=t,this.hierarchyValue=n,this.baseRequestParams=this.baseRequestParams||{},this.baseRequestParams=n||0===n?e.extend(this.baseRequestParams,{filter:t+" req "+n,facetTemplate:t+":"+n,facetHierValue:t+":"+n,facetHierDepth:t+":"+this.hierarchyDepth}):e.omit(this.baseRequestParams,"filter","facetTemplate","facetHierValue","facetHierDepth"),this.query&&(this.baseRequestParams.query=this.query),this.lastRequest=this.buildRequest()},hasValueFacets:function(){return!!this.get("facets").findWhere({facetType:"Value"})},clearAllFacets:function(){this.get("facets").invoke("empty")},getFacetValueFilter:function(){return e.compact(this.get("facets").invoke("getAppliedValues")).join(",")},setFacetValue:function(t,e,n){var i=this.get("facets").findWhere({field:t}).get("values"),r=i.findWhere({value:e})||i.findWhere({value:e.toString()});r.set("isApplied",n),this.updateFacets({resetIndex:!0})},updateFacets:function(t){var n,i=this;t=t||{},t.resetIndex&&this.set("startIndex",0),n=this.buildRequest(t.facetValueFilter),(t.force||!e.isEqual(n,this.lastRequest))&&(this.lastRequest=n,this.isLoading(!0),this.get("facets").reset(null,{silent:!0}),this.get("items").reset(null,{silent:!0}),this.apiModel.get(n).ensure(function(){i.isLoading(!1)}))},initialize:function(){var t=this;i.MozuPagedCollection.prototype.initialize.apply(this,arguments),this.updateFacets=e.debounce(this.updateFacets,300),this.on("sync",function(){t.trigger("facetchange",t.getQueryString())})}}),u=a.extend({}),l=a.extend({defaultSort:"",buildRequest:function(){var t=a.prototype.buildRequest.apply(this,arguments);return this.query&&(t.query=this.query),t},getQueryParams:function(){var t=a.prototype.getQueryParams.apply(this,arguments);return this.query&&(t.query=this.query),t}});return{Facet:o,FacetValue:s,FacetedProductCollection:a,Category:u,SearchResult:l}}),define("shim!vendor/bootstrap/js/affix[jquery=jQuery]",["jquery"],function(t){return+function(t){function e(e){return this.each(function(){var i=t(this),r=i.data("bs.affix"),s="object"==typeof e&&e;r||i.data("bs.affix",r=new n(this,s)),"string"==typeof e&&r[e]()})}var n=function(e,i){this.options=t.extend({},n.DEFAULTS,i),this.$target=t(this.options.target).on("scroll.bs.affix.data-api",t.proxy(this.checkPosition,this)).on("click.bs.affix.data-api",t.proxy(this.checkPositionWithEventLoop,this)),this.$element=t(e),this.affixed=this.unpin=this.pinnedOffset=null,this.checkPosition()};n.VERSION="3.2.0",n.RESET="affix affix-top affix-bottom",n.DEFAULTS={offset:0,target:window},n.prototype.getPinnedOffset=function(){if(this.pinnedOffset)return this.pinnedOffset;this.$element.removeClass(n.RESET).addClass("affix");var t=this.$target.scrollTop(),e=this.$element.offset();return this.pinnedOffset=e.top-t},n.prototype.checkPositionWithEventLoop=function(){setTimeout(t.proxy(this.checkPosition,this),1)},n.prototype.checkPosition=function(){if(this.$element.is(":visible")){var e=t(document).height(),i=this.$target.scrollTop(),r=this.$element.offset(),s=this.options.offset,o=s.top,a=s.bottom;"object"!=typeof s&&(a=o=s),"function"==typeof o&&(o=s.top(this.$element)),"function"==typeof a&&(a=s.bottom(this.$element));var u=null!=this.unpin&&i+this.unpin<=r.top?!1:null!=a&&r.top+this.$element.height()>=e-a?"bottom":null!=o&&o>=i?"top":!1;if(this.affixed!==u){null!=this.unpin&&this.$element.css("top","");var l="affix"+(u?"-"+u:""),c=t.Event(l+".bs.affix");this.$element.trigger(c),c.isDefaultPrevented()||(this.affixed=u,this.unpin="bottom"==u?this.getPinnedOffset():null,this.$element.removeClass(n.RESET).addClass(l).trigger(t.Event(l.replace("affix","affixed"))),"bottom"==u&&this.$element.offset({top:e-this.$element.height()-a}))}}};var i=t.fn.affix;t.fn.affix=e,t.fn.affix.Constructor=n,t.fn.affix.noConflict=function(){return t.fn.affix=i,this},t(window).on("load",function(){t('[data-spy="affix"]').each(function(){var n=t(this),i=n.data();i.offset=i.offset||{},i.offsetBottom&&(i.offset.bottom=i.offsetBottom),i.offsetTop&&(i.offset.top=i.offsetTop),e.call(n,i)})})}(t),null}),define("shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]",["jquery"],function(t){return+function(t){function e(n,i){var r=t.proxy(this.process,this);this.$body=t("body"),this.$scrollElement=t(n).is("body")?t(window):t(n),this.options=t.extend({},e.DEFAULTS,i),this.selector=(this.options.target||"")+" .nav li > a",this.offsets=[],this.targets=[],this.activeTarget=null,this.scrollHeight=0,this.$scrollElement.on("scroll.bs.scrollspy",r),this.refresh(),this.process()}function n(n){return this.each(function(){var i=t(this),r=i.data("bs.scrollspy"),s="object"==typeof n&&n;r||i.data("bs.scrollspy",r=new e(this,s)),"string"==typeof n&&r[n]()})}e.VERSION="3.2.0",e.DEFAULTS={offset:10},e.prototype.getScrollHeight=function(){return this.$scrollElement[0].scrollHeight||Math.max(this.$body[0].scrollHeight,document.documentElement.scrollHeight)},e.prototype.refresh=function(){var e="offset",n=0;t.isWindow(this.$scrollElement[0])||(e="position",n=this.$scrollElement.scrollTop()),this.offsets=[],this.targets=[],this.scrollHeight=this.getScrollHeight();var i=this;this.$body.find(this.selector).map(function(){var i=t(this),r=i.data("target")||i.attr("href"),s=/^#./.test(r)&&t(r);return s&&s.length&&s.is(":visible")&&[[s[e]().top+n,r]]||null}).sort(function(t,e){return t[0]-e[0]}).each(function(){i.offsets.push(this[0]),i.targets.push(this[1])})},e.prototype.process=function(){var t,e=this.$scrollElement.scrollTop()+this.options.offset,n=this.getScrollHeight(),i=this.options.offset+n-this.$scrollElement.height(),r=this.offsets,s=this.targets,o=this.activeTarget;if(this.scrollHeight!=n&&this.refresh(),e>=i)return o!=(t=s[s.length-1])&&this.activate(t);if(o&&e<=r[0])return o!=(t=s[0])&&this.activate(t);for(t=r.length;t--;)o!=s[t]&&e>=r[t]&&(!r[t+1]||e<=r[t+1])&&this.activate(s[t])},e.prototype.activate=function(e){this.activeTarget=e,t(this.selector).parentsUntil(this.options.target,".active").removeClass("active");var n=this.selector+'[data-target="'+e+'"],'+this.selector+'[href="'+e+'"]',i=t(n).parents("li").addClass("active");i.parent(".dropdown-menu").length&&(i=i.closest("li.dropdown").addClass("active")),i.trigger("activate.bs.scrollspy")};var i=t.fn.scrollspy;t.fn.scrollspy=n,t.fn.scrollspy.Constructor=e,t.fn.scrollspy.noConflict=function(){return t.fn.scrollspy=i,this},t(window).on("load.bs.scrollspy.data-api",function(){t('[data-spy="scroll"]').each(function(){var e=t(this);n.call(e,e.data())})})}(t),null}),define("modules/scroll-nav",["modules/jquery-mozu","hyprlive","underscore","modules/api","shim!vendor/bootstrap/js/affix[jquery=jQuery]","shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]"],function(t,e,n,i){if(!Modernizr.mq("(max-width: 800px)")){var r=parseInt(e.getThemeSetting("gutterWidth"),10);t(document).ready(function(){t("[data-mz-scrollnav]").each(function(){var e=t(this),s=t(e.data("mzScrollnav")),o=n.debounce(function(){s.scrollspy("refresh")},500);e.on("click","a",function(e){e.preventDefault(),t(this.getAttribute("href")).ScrollTo({axis:"y",offsetTop:r})}).affix({offset:{top:e.offset().top-r,bottom:0}}),t(window).on("resize",o),i.on("sync",o),i.on("spawn",o);var a=e.attr("id");a||(a="scrollnav-"+(new Date).getTime(),e.attr("id",a)),s.scrollspy({target:"#"+a,offset:1.2*r})})})}}),define("shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery",["modules/jquery-mozu"],function(t){return function(t){var e=function(){return{isMsie:function(){return/(msie|trident)/i.test(navigator.userAgent)?navigator.userAgent.match(/(msie |rv:)(\d+(.\d+)?)/i)[2]:!1},isBlankString:function(t){return!t||/^\s*$/.test(t)},escapeRegExChars:function(t){return t.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g,"\\$&")},isString:function(t){return"string"==typeof t},isNumber:function(t){return"number"==typeof t},isArray:t.isArray,isFunction:t.isFunction,isObject:t.isPlainObject,isUndefined:function(t){return"undefined"==typeof t},toStr:function(t){return e.isUndefined(t)||null===t?"":t+""},bind:t.proxy,each:function(e,n){function i(t,e){return n(e,t)}t.each(e,i)},map:t.map,filter:t.grep,every:function(e,n){var i=!0;return e?(t.each(e,function(t,r){return(i=n.call(null,r,t,e))?void 0:!1}),!!i):i},some:function(e,n){var i=!1;return e?(t.each(e,function(t,r){return(i=n.call(null,r,t,e))?!1:void 0}),!!i):i},mixin:t.extend,getUniqueId:function(){var t=0;return function(){return t++}}(),templatify:function(e){function n(){return String(e)}return t.isFunction(e)?e:n},defer:function(t){setTimeout(t,0)},debounce:function(t,e,n){var i,r;return function(){var s,o,a=this,u=arguments;return s=function(){i=null,n||(r=t.apply(a,u))},o=n&&!i,clearTimeout(i),i=setTimeout(s,e),o&&(r=t.apply(a,u)),r}},throttle:function(t,e){var n,i,r,s,o,a;return o=0,a=function(){o=new Date,r=null,s=t.apply(n,i)},function(){var u=new Date,l=e-(u-o);return n=this,i=arguments,0>=l?(clearTimeout(r),r=null,o=u,s=t.apply(n,i)):r||(r=setTimeout(a,l)),s}},noop:function(){}}}(),n="0.10.5",i=function(){function t(t){return t=e.toStr(t),t?t.split(/\s+/):[]}function n(t){return t=e.toStr(t),t?t.split(/\W+/):[]}function i(t){return function(){var n=[].slice.call(arguments,0);return function(i){var r=[];return e.each(n,function(n){r=r.concat(t(e.toStr(i[n])))}),r}}}return{nonword:n,whitespace:t,obj:{nonword:i(n),whitespace:i(t)}}}(),r=function(){function n(n){this.maxSize=e.isNumber(n)?n:100,this.reset(),this.maxSize<=0&&(this.set=this.get=t.noop)}function i(){this.head=this.tail=null}function r(t,e){this.key=t,this.val=e,this.prev=this.next=null}return e.mixin(n.prototype,{set:function(t,e){var n,i=this.list.tail;this.size>=this.maxSize&&(this.list.remove(i),delete this.hash[i.key]),(n=this.hash[t])?(n.val=e,this.list.moveToFront(n)):(n=new r(t,e),this.list.add(n),this.hash[t]=n,this.size++)},get:function(t){var e=this.hash[t];return e?(this.list.moveToFront(e),e.val):void 0},reset:function(){this.size=0,this.hash={},this.list=new i}}),e.mixin(i.prototype,{add:function(t){this.head&&(t.next=this.head,this.head.prev=t),this.head=t,this.tail=this.tail||t},remove:function(t){t.prev?t.prev.next=t.next:this.head=t.next,t.next?t.next.prev=t.prev:this.tail=t.prev},moveToFront:function(t){this.remove(t),this.add(t)}}),n}(),s=function(){function t(t){this.prefix=["__",t,"__"].join(""),this.ttlKey="__ttl__",this.keyMatcher=new RegExp("^"+e.escapeRegExChars(this.prefix))}function n(){return(new Date).getTime()}function i(t){return JSON.stringify(e.isUndefined(t)?null:t)}function r(t){return JSON.parse(t)}var s,o;try{s=window.localStorage,s.setItem("~~~","!"),s.removeItem("~~~")}catch(a){s=null}return o=s&&window.JSON?{_prefix:function(t){return this.prefix+t},_ttlKey:function(t){return this._prefix(t)+this.ttlKey},get:function(t){return this.isExpired(t)&&this.remove(t),r(s.getItem(this._prefix(t)))},set:function(t,r,o){return e.isNumber(o)?s.setItem(this._ttlKey(t),i(n()+o)):s.removeItem(this._ttlKey(t)),s.setItem(this._prefix(t),i(r))},remove:function(t){return s.removeItem(this._ttlKey(t)),s.removeItem(this._prefix(t)),this},clear:function(){var t,e,n=[],i=s.length;for(t=0;i>t;t++)(e=s.key(t)).match(this.keyMatcher)&&n.push(e.replace(this.keyMatcher,""));for(t=n.length;t--;)this.remove(n[t]);return this},isExpired:function(t){var i=r(s.getItem(this._ttlKey(t)));return e.isNumber(i)&&n()>i?!0:!1}}:{get:e.noop,set:e.noop,remove:e.noop,clear:e.noop,isExpired:e.noop},e.mixin(t.prototype,o),t}(),o=function(){function n(e){e=e||{},this.cancelled=!1,this.lastUrl=null,this._send=e.transport?i(e.transport):t.ajax,this._get=e.rateLimiter?e.rateLimiter(this._get):this._get,this._cache=e.cache===!1?new r(0):u}function i(n){return function(i,r){function s(t){e.defer(function(){a.resolve(t)})}function o(t){e.defer(function(){a.reject(t)})}var a=t.Deferred();return n(i,r,s,o),a}}var s=0,o={},a=6,u=new r(10);return n.setMaxPendingRequests=function(t){a=t},n.resetCache=function(){u.reset()},e.mixin(n.prototype,{_get:function(t,e,n){function i(e){n&&n(null,e),c._cache.set(t,e)}function r(){n&&n(!0)}function u(){s--,delete o[t],c.onDeckRequestArgs&&(c._get.apply(c,c.onDeckRequestArgs),c.onDeckRequestArgs=null)}var l,c=this;this.cancelled||t!==this.lastUrl||((l=o[t])?l.done(i).fail(r):a>s?(s++,o[t]=this._send(t,e).done(i).fail(r).always(u)):this.onDeckRequestArgs=[].slice.call(arguments,0))},get:function(t,n,i){var r;return e.isFunction(n)&&(i=n,n={}),this.cancelled=!1,this.lastUrl=t,(r=this._cache.get(t))?e.defer(function(){i&&i(null,r)}):this._get(t,n,i),!!r},cancel:function(){this.cancelled=!0}}),n}(),a=function(){function n(e){e=e||{},e.datumTokenizer&&e.queryTokenizer||t.error("datumTokenizer and queryTokenizer are both required"),this.datumTokenizer=e.datumTokenizer,this.queryTokenizer=e.queryTokenizer,this.reset()}function i(t){return t=e.filter(t,function(t){return!!t}),t=e.map(t,function(t){return t.toLowerCase()})}function r(){return{ids:[],children:{}}}function s(t){for(var e={},n=[],i=0,r=t.length;r>i;i++)e[t[i]]||(e[t[i]]=!0,n.push(t[i]));return n}function o(t,e){function n(t,e){return t-e}var i=0,r=0,s=[];t=t.sort(n),e=e.sort(n);for(var o=t.length,a=e.length;o>i&&a>r;)t[i]<e[r]?i++:t[i]>e[r]?r++:(s.push(t[i]),i++,r++);return s}return e.mixin(n.prototype,{bootstrap:function(t){this.datums=t.datums,this.trie=t.trie},add:function(t){var n=this;t=e.isArray(t)?t:[t],e.each(t,function(t){var s,o;s=n.datums.push(t)-1,o=i(n.datumTokenizer(t)),e.each(o,function(t){var e,i,o;for(e=n.trie,i=t.split("");o=i.shift();)e=e.children[o]||(e.children[o]=r()),e.ids.push(s)})})},get:function(t){var n,r,a=this;return n=i(this.queryTokenizer(t)),e.each(n,function(t){var e,n,i,s;if(r&&0===r.length)return!1;for(e=a.trie,n=t.split("");e&&(i=n.shift());)e=e.children[i];return e&&0===n.length?(s=e.ids.slice(0),r=r?o(r,s):s,void 0):(r=[],!1)}),r?e.map(s(r),function(t){return a.datums[t]}):[]},reset:function(){this.datums=[],this.trie=r()},serialize:function(){return{datums:this.datums,trie:this.trie}}}),n}(),u=function(){function i(t){return t.local||null}function r(i){var r,s;return s={url:null,thumbprint:"",ttl:864e5,filter:null,ajax:{}},(r=i.prefetch||null)&&(r=e.isString(r)?{url:r}:r,r=e.mixin(s,r),r.thumbprint=n+r.thumbprint,r.ajax.type=r.ajax.type||"GET",r.ajax.dataType=r.ajax.dataType||"json",!r.url&&t.error("prefetch requires url to be set")),r}function s(n){function i(t){return function(n){return e.debounce(n,t)}}function r(t){return function(n){return e.throttle(n,t)}}var s,o;return o={url:null,cache:!0,wildcard:"%QUERY",replace:null,rateLimitBy:"debounce",rateLimitWait:300,send:null,filter:null,ajax:{}},(s=n.remote||null)&&(s=e.isString(s)?{url:s}:s,s=e.mixin(o,s),s.rateLimiter=/^throttle$/i.test(s.rateLimitBy)?r(s.rateLimitWait):i(s.rateLimitWait),s.ajax.type=s.ajax.type||"GET",s.ajax.dataType=s.ajax.dataType||"json",delete s.rateLimitBy,delete s.rateLimitWait,!s.url&&t.error("remote requires url to be set")),s}return{local:i,prefetch:r,remote:s}}();!function(n){function r(e){e&&(e.local||e.prefetch||e.remote)||t.error("one of local, prefetch, or remote is required"),this.limit=e.limit||5,this.sorter=l(e.sorter),this.dupDetector=e.dupDetector||c,this.local=u.local(e),this.prefetch=u.prefetch(e),this.remote=u.remote(e),this.cacheKey=this.prefetch?this.prefetch.cacheKey||this.prefetch.url:null,this.index=new a({datumTokenizer:e.datumTokenizer,queryTokenizer:e.queryTokenizer}),this.storage=this.cacheKey?new s(this.cacheKey):null}function l(t){function n(e){return e.sort(t)}function i(t){return t}return e.isFunction(t)?n:i}function c(){return!1}var d,h;return d=n.Bloodhound,h={data:"data",protocol:"protocol",thumbprint:"thumbprint"},n.Bloodhound=r,r.noConflict=function(){return n.Bloodhound=d,r},r.tokenizers=i,e.mixin(r.prototype,{_loadPrefetch:function(e){function n(t){s.clear(),s.add(e.filter?e.filter(t):t),s._saveToStorage(s.index.serialize(),e.thumbprint,e.ttl)}var i,r,s=this;return(i=this._readFromStorage(e.thumbprint))?(this.index.bootstrap(i),r=t.Deferred().resolve()):r=t.ajax(e.url,e.ajax).done(n),r},_getFromRemote:function(t,e){function n(t,n){t?e([]):e(s.remote.filter?s.remote.filter(n):n)}var i,r,s=this;if(this.transport)return t=t||"",r=encodeURIComponent(t),i=this.remote.replace?this.remote.replace(this.remote.url,t):this.remote.url.replace(this.remote.wildcard,r),this.transport.get(i,this.remote.ajax,n)},_cancelLastRemoteRequest:function(){this.transport&&this.transport.cancel()},_saveToStorage:function(t,e,n){this.storage&&(this.storage.set(h.data,t,n),this.storage.set(h.protocol,location.protocol,n),this.storage.set(h.thumbprint,e,n))},_readFromStorage:function(t){var e,n={};return this.storage&&(n.data=this.storage.get(h.data),n.protocol=this.storage.get(h.protocol),n.thumbprint=this.storage.get(h.thumbprint)),e=n.thumbprint!==t||n.protocol!==location.protocol,n.data&&!e?n.data:null},_initialize:function(){function n(){r.add(e.isFunction(s)?s():s)}var i,r=this,s=this.local;return i=this.prefetch?this._loadPrefetch(this.prefetch):t.Deferred().resolve(),s&&i.done(n),this.transport=this.remote?new o(this.remote):null,this.initPromise=i.promise()},initialize:function(t){return!this.initPromise||t?this._initialize():this.initPromise},add:function(t){this.index.add(t)},get:function(t,n){function i(t){var i=s.slice(0);e.each(t,function(t){var n;return n=e.some(i,function(e){return r.dupDetector(t,e)}),!n&&i.push(t),i.length<r.limit}),n&&n(r.sorter(i))}var r=this,s=[],o=!1;s=this.index.get(t),s=this.sorter(s).slice(0,this.limit),s.length<this.limit?o=this._getFromRemote(t,i):this._cancelLastRemoteRequest(),o||(s.length>0||!this.transport)&&n&&n(s)},clear:function(){this.index.reset()},clearPrefetchCache:function(){this.storage&&this.storage.clear()},clearRemoteCache:function(){this.transport&&o.resetCache()},ttAdapter:function(){return e.bind(this.get,this)}}),r}(this);var l=function(){return{wrapper:'<span class="twitter-typeahead"></span>',dropdown:'<span class="tt-dropdown-menu"></span>',dataset:'<div class="tt-dataset-%CLASS%"></div>',suggestions:'<span class="tt-suggestions"></span>',suggestion:'<div class="tt-suggestion"></div>'}}(),c=function(){var t={wrapper:{position:"relative",display:"inline-block"},hint:{position:"absolute",top:"0",left:"0",borderColor:"transparent",boxShadow:"none",opacity:"1"},input:{position:"relative",verticalAlign:"top",backgroundColor:"transparent"},inputWithNoHint:{position:"relative",verticalAlign:"top"},dropdown:{position:"absolute",top:"100%",left:"0",zIndex:"100",display:"none"},suggestions:{display:"block"},suggestion:{whiteSpace:"nowrap",cursor:"pointer"},suggestionChild:{whiteSpace:"normal"},ltr:{left:"0",right:"auto"},rtl:{left:"auto",right:" 0"}};return e.isMsie()&&e.mixin(t.input,{backgroundImage:"url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)"}),e.isMsie()&&e.isMsie()<=7&&e.mixin(t.input,{marginTop:"-1px"}),t}(),d=function(){function n(e){e&&e.el||t.error("EventBus initialized without el"),this.$el=t(e.el)}var i="typeahead:";return e.mixin(n.prototype,{trigger:function(t){var e=[].slice.call(arguments,1);this.$el.trigger(i+t,e)}}),n}(),h=function(){function t(t,e,n,i){var r;if(!n)return this;for(e=e.split(u),n=i?a(n,i):n,this._callbacks=this._callbacks||{};r=e.shift();)this._callbacks[r]=this._callbacks[r]||{sync:[],async:[]},this._callbacks[r][t].push(n);return this}function e(e,n,i){return t.call(this,"async",e,n,i)}function n(e,n,i){return t.call(this,"sync",e,n,i)}function i(t){var e;if(!this._callbacks)return this;for(t=t.split(u);e=t.shift();)delete this._callbacks[e];return this}function r(t){var e,n,i,r,o;if(!this._callbacks)return this;for(t=t.split(u),i=[].slice.call(arguments,1);(e=t.shift())&&(n=this._callbacks[e]);)r=s(n.sync,this,[e].concat(i)),o=s(n.async,this,[e].concat(i)),r()&&l(o);return this}function s(t,e,n){function i(){for(var i,r=0,s=t.length;!i&&s>r;r+=1)i=t[r].apply(e,n)===!1;return!i}return i}function o(){var t;return t=window.setImmediate?function(t){setImmediate(function(){t()})}:function(t){setTimeout(function(){t()},0)}}function a(t,e){return t.bind?t.bind(e):function(){t.apply(e,[].slice.call(arguments,0))}}var u=/\s+/,l=o();return{onSync:n,onAsync:e,off:i,trigger:r}}(),p=function(t){function n(t,n,i){for(var r,s=[],o=0,a=t.length;a>o;o++)s.push(e.escapeRegExChars(t[o]));return r=i?"\\b("+s.join("|")+")\\b":"("+s.join("|")+")",n?new RegExp(r):new RegExp(r,"i")}var i={node:null,pattern:null,tagName:"strong",className:null,wordsOnly:!1,caseSensitive:!1};return function(r){function s(e){var n,i,s;return(n=a.exec(e.data))&&(s=t.createElement(r.tagName),r.className&&(s.className=r.className),i=e.splitText(n.index),i.splitText(n[0].length),s.appendChild(i.cloneNode(!0)),e.parentNode.replaceChild(s,i)),!!n}function o(t,e){for(var n,i=3,r=0;r<t.childNodes.length;r++)n=t.childNodes[r],n.nodeType===i?r+=e(n)?1:0:o(n,e)}var a;r=e.mixin({},i,r),r.node&&r.pattern&&(r.pattern=e.isArray(r.pattern)?r.pattern:[r.pattern],a=n(r.pattern,r.caseSensitive,r.wordsOnly),o(r.node,s))}}(window.document),f=function(){function n(n){var r,s,a,u,l=this;n=n||{},n.input||t.error("input is missing"),r=e.bind(this._onBlur,this),s=e.bind(this._onFocus,this),a=e.bind(this._onKeydown,this),u=e.bind(this._onInput,this),this.$hint=t(n.hint),this.$input=t(n.input).on("blur.tt",r).on("focus.tt",s).on("keydown.tt",a),0===this.$hint.length&&(this.setHint=this.getHint=this.clearHint=this.clearHintIfInvalid=e.noop),e.isMsie()?this.$input.on("keydown.tt keypress.tt cut.tt paste.tt",function(t){o[t.which||t.keyCode]||e.defer(e.bind(l._onInput,l,t))
-}):this.$input.on("input.tt",u),this.query=this.$input.val(),this.$overflowHelper=i(this.$input)}function i(e){return t('<pre aria-hidden="true"></pre>').css({position:"absolute",visibility:"hidden",whiteSpace:"pre",fontFamily:e.css("font-family"),fontSize:e.css("font-size"),fontStyle:e.css("font-style"),fontVariant:e.css("font-variant"),fontWeight:e.css("font-weight"),wordSpacing:e.css("word-spacing"),letterSpacing:e.css("letter-spacing"),textIndent:e.css("text-indent"),textRendering:e.css("text-rendering"),textTransform:e.css("text-transform")}).insertAfter(e)}function r(t,e){return n.normalizeQuery(t)===n.normalizeQuery(e)}function s(t){return t.altKey||t.ctrlKey||t.metaKey||t.shiftKey}var o;return o={9:"tab",27:"esc",37:"left",39:"right",13:"enter",38:"up",40:"down"},n.normalizeQuery=function(t){return(t||"").replace(/^\s*/g,"").replace(/\s{2,}/g," ")},e.mixin(n.prototype,h,{_onBlur:function(){this.resetInputValue(),this.trigger("blurred")},_onFocus:function(){this.trigger("focused")},_onKeydown:function(t){var e=o[t.which||t.keyCode];this._managePreventDefault(e,t),e&&this._shouldTrigger(e,t)&&this.trigger(e+"Keyed",t)},_onInput:function(){this._checkInputValue()},_managePreventDefault:function(t,e){var n,i,r;switch(t){case"tab":i=this.getHint(),r=this.getInputValue(),n=i&&i!==r&&!s(e);break;case"up":case"down":n=!s(e);break;default:n=!1}n&&e.preventDefault()},_shouldTrigger:function(t,e){var n;switch(t){case"tab":n=!s(e);break;default:n=!0}return n},_checkInputValue:function(){var t,e,n;t=this.getInputValue(),e=r(t,this.query),n=e?this.query.length!==t.length:!1,this.query=t,e?n&&this.trigger("whitespaceChanged",this.query):this.trigger("queryChanged",this.query)},focus:function(){this.$input.focus()},blur:function(){this.$input.blur()},getQuery:function(){return this.query},setQuery:function(t){this.query=t},getInputValue:function(){return this.$input.val()},setInputValue:function(t,e){this.$input.val(t),e?this.clearHint():this._checkInputValue()},resetInputValue:function(){this.setInputValue(this.query,!0)},getHint:function(){return this.$hint.val()},setHint:function(t){this.$hint.val(t)},clearHint:function(){this.setHint("")},clearHintIfInvalid:function(){var t,e,n,i;t=this.getInputValue(),e=this.getHint(),n=t!==e&&0===e.indexOf(t),i=""!==t&&n&&!this.hasOverflow(),!i&&this.clearHint()},getLanguageDirection:function(){return(this.$input.css("direction")||"ltr").toLowerCase()},hasOverflow:function(){var t=this.$input.width()-2;return this.$overflowHelper.text(this.getInputValue()),this.$overflowHelper.width()>=t},isCursorAtEnd:function(){var t,n,i;return t=this.$input.val().length,n=this.$input[0].selectionStart,e.isNumber(n)?n===t:document.selection?(i=document.selection.createRange(),i.moveStart("character",-t),t===i.text.length):!0},destroy:function(){this.$hint.off(".tt"),this.$input.off(".tt"),this.$hint=this.$input=this.$overflowHelper=null}}),n}(),g=function(){function n(n){n=n||{},n.templates=n.templates||{},n.source||t.error("missing source"),n.name&&!s(n.name)&&t.error("invalid dataset name: "+n.name),this.query=null,this.highlight=!!n.highlight,this.name=n.name||e.getUniqueId(),this.source=n.source,this.displayFn=i(n.display||n.displayKey),this.templates=r(n.templates,this.displayFn),this.$el=t(l.dataset.replace("%CLASS%",this.name))}function i(t){function n(e){return e[t]}return t=t||"value",e.isFunction(t)?t:n}function r(t,n){function i(t){return"<p>"+n(t)+"</p>"}return{empty:t.empty&&e.templatify(t.empty),header:t.header&&e.templatify(t.header),footer:t.footer&&e.templatify(t.footer),suggestion:t.suggestion||i}}function s(t){return/^[_a-zA-Z0-9-]+$/.test(t)}var o="ttDataset",a="ttValue",u="ttDatum";return n.extractDatasetName=function(e){return t(e).data(o)},n.extractValue=function(e){return t(e).data(a)},n.extractDatum=function(e){return t(e).data(u)},e.mixin(n.prototype,h,{_render:function(n,i){function r(){return g.templates.empty({query:n,isEmpty:!0})}function s(){function r(e){var n;return n=t(l.suggestion).append(g.templates.suggestion(e)).data(o,g.name).data(a,g.displayFn(e)).data(u,e),n.children().each(function(){t(this).css(c.suggestionChild)}),n}var s,d;return s=t(l.suggestions).css(c.suggestions),d=e.map(i,r),s.append.apply(s,d),g.highlight&&p({className:"tt-highlight",node:s[0],pattern:n}),s}function d(){return g.templates.header({query:n,isEmpty:!f})}function h(){return g.templates.footer({query:n,isEmpty:!f})}if(this.$el){var f,g=this;this.$el.empty(),f=i&&i.length,!f&&this.templates.empty?this.$el.html(r()).prepend(g.templates.header?d():null).append(g.templates.footer?h():null):f&&this.$el.html(s()).prepend(g.templates.header?d():null).append(g.templates.footer?h():null),this.trigger("rendered")}},getRoot:function(){return this.$el},update:function(t){function e(e){n.canceled||t!==n.query||n._render(t,e)}var n=this;this.query=t,this.canceled=!1,this.source(t,e)},cancel:function(){this.canceled=!0},clear:function(){this.cancel(),this.$el.empty(),this.trigger("rendered")},isEmpty:function(){return this.$el.is(":empty")},destroy:function(){this.$el=null}}),n}(),m=function(){function n(n){var r,s,o,a=this;n=n||{},n.menu||t.error("menu is required"),this.isOpen=!1,this.isEmpty=!0,this.datasets=e.map(n.datasets,i),r=e.bind(this._onSuggestionClick,this),s=e.bind(this._onSuggestionMouseEnter,this),o=e.bind(this._onSuggestionMouseLeave,this),this.$menu=t(n.menu).on("click.tt",".tt-suggestion",r).on("mouseenter.tt",".tt-suggestion",s).on("mouseleave.tt",".tt-suggestion",o),e.each(this.datasets,function(t){a.$menu.append(t.getRoot()),t.onSync("rendered",a._onRendered,a)})}function i(t){return new g(t)}return e.mixin(n.prototype,h,{_onSuggestionClick:function(e){this.trigger("suggestionClicked",t(e.currentTarget))},_onSuggestionMouseEnter:function(e){this._removeCursor(),this._setCursor(t(e.currentTarget),!0)},_onSuggestionMouseLeave:function(){this._removeCursor()},_onRendered:function(){function t(t){return t.isEmpty()}this.isEmpty=e.every(this.datasets,t),this.isEmpty?this._hide():this.isOpen&&this._show(),this.trigger("datasetRendered")},_hide:function(){this.$menu.hide()},_show:function(){this.$menu.css("display","block")},_getSuggestions:function(){return this.$menu.find(".tt-suggestion")},_getCursor:function(){return this.$menu.find(".tt-cursor").first()},_setCursor:function(t,e){t.first().addClass("tt-cursor"),!e&&this.trigger("cursorMoved")},_removeCursor:function(){this._getCursor().removeClass("tt-cursor")},_moveCursor:function(t){var e,n,i,r;if(this.isOpen){if(n=this._getCursor(),e=this._getSuggestions(),this._removeCursor(),i=e.index(n)+t,i=(i+1)%(e.length+1)-1,-1===i)return this.trigger("cursorRemoved"),void 0;-1>i&&(i=e.length-1),this._setCursor(r=e.eq(i)),this._ensureVisible(r)}},_ensureVisible:function(t){var e,n,i,r;e=t.position().top,n=e+t.outerHeight(!0),i=this.$menu.scrollTop(),r=this.$menu.height()+parseInt(this.$menu.css("paddingTop"),10)+parseInt(this.$menu.css("paddingBottom"),10),0>e?this.$menu.scrollTop(i+e):n>r&&this.$menu.scrollTop(i+(n-r))},close:function(){this.isOpen&&(this.isOpen=!1,this._removeCursor(),this._hide(),this.trigger("closed"))},open:function(){this.isOpen||(this.isOpen=!0,!this.isEmpty&&this._show(),this.trigger("opened"))},setLanguageDirection:function(t){this.$menu.css("ltr"===t?c.ltr:c.rtl)},moveCursorUp:function(){this._moveCursor(-1)},moveCursorDown:function(){this._moveCursor(1)},getDatumForSuggestion:function(t){var e=null;return t.length&&(e={raw:g.extractDatum(t),value:g.extractValue(t),datasetName:g.extractDatasetName(t)}),e},getDatumForCursor:function(){return this.getDatumForSuggestion(this._getCursor().first())},getDatumForTopSuggestion:function(){return this.getDatumForSuggestion(this._getSuggestions().first())},update:function(t){function n(e){e.update(t)}e.each(this.datasets,n)},empty:function(){function t(t){t.clear()}e.each(this.datasets,t),this.isEmpty=!0},isVisible:function(){return this.isOpen&&!this.isEmpty},destroy:function(){function t(t){t.destroy()}this.$menu.off(".tt"),this.$menu=null,e.each(this.datasets,t)}}),n}(),v=function(){function n(n){var r,s,o;n=n||{},n.input||t.error("missing input"),this.isActivated=!1,this.autoselect=!!n.autoselect,this.minLength=e.isNumber(n.minLength)?n.minLength:1,this.$node=i(n.input,n.withHint),r=this.$node.find(".tt-dropdown-menu"),s=this.$node.find(".tt-input"),o=this.$node.find(".tt-hint"),s.on("blur.tt",function(t){var n,i,o;n=document.activeElement,i=r.is(n),o=r.has(n).length>0,e.isMsie()&&(i||o)&&(t.preventDefault(),t.stopImmediatePropagation(),e.defer(function(){s.focus()}))}),r.on("mousedown.tt",function(t){t.preventDefault()}),this.eventBus=n.eventBus||new d({el:s}),this.dropdown=new m({menu:r,datasets:n.datasets}).onSync("suggestionClicked",this._onSuggestionClicked,this).onSync("cursorMoved",this._onCursorMoved,this).onSync("cursorRemoved",this._onCursorRemoved,this).onSync("opened",this._onOpened,this).onSync("closed",this._onClosed,this).onAsync("datasetRendered",this._onDatasetRendered,this),this.input=new f({input:s,hint:o}).onSync("focused",this._onFocused,this).onSync("blurred",this._onBlurred,this).onSync("enterKeyed",this._onEnterKeyed,this).onSync("tabKeyed",this._onTabKeyed,this).onSync("escKeyed",this._onEscKeyed,this).onSync("upKeyed",this._onUpKeyed,this).onSync("downKeyed",this._onDownKeyed,this).onSync("leftKeyed",this._onLeftKeyed,this).onSync("rightKeyed",this._onRightKeyed,this).onSync("queryChanged",this._onQueryChanged,this).onSync("whitespaceChanged",this._onWhitespaceChanged,this),this._setLanguageDirection()}function i(e,n){var i,s,a,u;i=t(e),s=t(l.wrapper).css(c.wrapper),a=t(l.dropdown).css(c.dropdown),u=i.clone().css(c.hint).css(r(i)),u.val("").removeData().addClass("tt-hint").removeAttr("id name placeholder required").prop("readonly",!0).attr({autocomplete:"off",spellcheck:"false",tabindex:-1}),i.data(o,{dir:i.attr("dir"),autocomplete:i.attr("autocomplete"),spellcheck:i.attr("spellcheck"),style:i.attr("style")}),i.addClass("tt-input").attr({autocomplete:"off",spellcheck:!1}).css(n?c.input:c.inputWithNoHint);try{!i.attr("dir")&&i.attr("dir","auto")}catch(d){}return i.wrap(s).parent().prepend(n?u:null).append(a)}function r(t){return{backgroundAttachment:t.css("background-attachment"),backgroundClip:t.css("background-clip"),backgroundColor:t.css("background-color"),backgroundImage:t.css("background-image"),backgroundOrigin:t.css("background-origin"),backgroundPosition:t.css("background-position"),backgroundRepeat:t.css("background-repeat"),backgroundSize:t.css("background-size")}}function s(t){var n=t.find(".tt-input");e.each(n.data(o),function(t,i){e.isUndefined(t)?n.removeAttr(i):n.attr(i,t)}),n.detach().removeData(o).removeClass("tt-input").insertAfter(t),t.remove()}var o="ttAttrs";return e.mixin(n.prototype,{_onSuggestionClicked:function(t,e){var n;(n=this.dropdown.getDatumForSuggestion(e))&&this._select(n)},_onCursorMoved:function(){var t=this.dropdown.getDatumForCursor();this.input.setInputValue(t.value,!0),this.eventBus.trigger("cursorchanged",t.raw,t.datasetName)},_onCursorRemoved:function(){this.input.resetInputValue(),this._updateHint()},_onDatasetRendered:function(){this._updateHint()},_onOpened:function(){this._updateHint(),this.eventBus.trigger("opened")},_onClosed:function(){this.input.clearHint(),this.eventBus.trigger("closed")},_onFocused:function(){this.isActivated=!0,this.dropdown.open()},_onBlurred:function(){this.isActivated=!1,this.dropdown.empty(),this.dropdown.close()},_onEnterKeyed:function(t,e){var n,i;n=this.dropdown.getDatumForCursor(),i=this.dropdown.getDatumForTopSuggestion(),n?(this._select(n),e.preventDefault()):this.autoselect&&i&&(this._select(i),e.preventDefault())},_onTabKeyed:function(t,e){var n;(n=this.dropdown.getDatumForCursor())?(this._select(n),e.preventDefault()):this._autocomplete(!0)},_onEscKeyed:function(){this.dropdown.close(),this.input.resetInputValue()},_onUpKeyed:function(){var t=this.input.getQuery();this.dropdown.isEmpty&&t.length>=this.minLength?this.dropdown.update(t):this.dropdown.moveCursorUp(),this.dropdown.open()},_onDownKeyed:function(){var t=this.input.getQuery();this.dropdown.isEmpty&&t.length>=this.minLength?this.dropdown.update(t):this.dropdown.moveCursorDown(),this.dropdown.open()},_onLeftKeyed:function(){"rtl"===this.dir&&this._autocomplete()},_onRightKeyed:function(){"ltr"===this.dir&&this._autocomplete()},_onQueryChanged:function(t,e){this.input.clearHintIfInvalid(),e.length>=this.minLength?this.dropdown.update(e):this.dropdown.empty(),this.dropdown.open(),this._setLanguageDirection()},_onWhitespaceChanged:function(){this._updateHint(),this.dropdown.open()},_setLanguageDirection:function(){var t;this.dir!==(t=this.input.getLanguageDirection())&&(this.dir=t,this.$node.css("direction",t),this.dropdown.setLanguageDirection(t))},_updateHint:function(){var t,n,i,r,s,o;t=this.dropdown.getDatumForTopSuggestion(),t&&this.dropdown.isVisible()&&!this.input.hasOverflow()?(n=this.input.getInputValue(),i=f.normalizeQuery(n),r=e.escapeRegExChars(i),s=new RegExp("^(?:"+r+")(.+$)","i"),o=s.exec(t.value),o?this.input.setHint(n+o[1]):this.input.clearHint()):this.input.clearHint()},_autocomplete:function(t){var e,n,i,r;e=this.input.getHint(),n=this.input.getQuery(),i=t||this.input.isCursorAtEnd(),e&&n!==e&&i&&(r=this.dropdown.getDatumForTopSuggestion(),r&&this.input.setInputValue(r.value),this.eventBus.trigger("autocompleted",r.raw,r.datasetName))},_select:function(t){this.input.setQuery(t.value),this.input.setInputValue(t.value,!0),this._setLanguageDirection(),this.eventBus.trigger("selected",t.raw,t.datasetName),this.dropdown.close(),e.defer(e.bind(this.dropdown.empty,this.dropdown))},open:function(){this.dropdown.open()},close:function(){this.dropdown.close()},setVal:function(t){t=e.toStr(t),this.isActivated?this.input.setInputValue(t):(this.input.setQuery(t),this.input.setInputValue(t,!0)),this._setLanguageDirection()},getVal:function(){return this.input.getQuery()},destroy:function(){this.input.destroy(),this.dropdown.destroy(),s(this.$node),this.$node=null}}),n}();!function(){var n,i,r;n=t.fn.typeahead,i="ttTypeahead",r={initialize:function(n,r){function s(){var s,o,a=t(this);e.each(r,function(t){t.highlight=!!n.highlight}),o=new v({input:a,eventBus:s=new d({el:a}),withHint:e.isUndefined(n.hint)?!0:!!n.hint,minLength:n.minLength,autoselect:n.autoselect,datasets:r}),a.data(i,o)}return r=e.isArray(r)?r:[].slice.call(arguments,1),n=n||{},this.each(s)},open:function(){function e(){var e,n=t(this);(e=n.data(i))&&e.open()}return this.each(e)},close:function(){function e(){var e,n=t(this);(e=n.data(i))&&e.close()}return this.each(e)},val:function(e){function n(){var n,r=t(this);(n=r.data(i))&&n.setVal(e)}function r(t){var e,n;return(e=t.data(i))&&(n=e.getVal()),n}return arguments.length?this.each(n):r(this.first())},destroy:function(){function e(){var e,n=t(this);(e=n.data(i))&&(e.destroy(),n.removeData(i))}return this.each(e)}},t.fn.typeahead=function(e){var n;return r[e]&&"initialize"!==e?(n=this.filter(function(){return!!t(this).data(i)}),r[e].apply(n,[].slice.call(arguments,1))):r.initialize.apply(this,arguments)},t.fn.typeahead.noConflict=function(){return t.fn.typeahead=n,this}}()}(window.jQuery),t}),define("modules/search-autocomplete",["shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery","hyprlive","modules/api"],function(t,e,n){var i,r=window.Bloodhound.noConflict(),s="%QUERY",o=encodeURIComponent(s),a=e.getThemeSetting("suggestPriorSearchTerms"),u=function(t){return n.getActionConfig("suggest","get",{query:s,groups:t}).url},l=u("terms"),c=u("pages"),d={headers:n.getRequestHeaders()},h=/\W+/,p=function(t){return function(e){var n,r=e.suggestionGroups;for(i=r.length-1;i>=0;i--)if(r[i].name===t){n=r[i];break}return n.suggestions}},f=function(t){var n=e.getTemplate(t);return function(t){return n.render(t)}},g={datasets:{pages:new r({datumTokenizer:function(t){return t.suggestion.term.split(h)},queryTokenizer:r.tokenizers.whitespace,remote:{url:c,wildcard:o,filter:p("Pages"),rateLimitWait:400,ajax:d}})}};t.each(g.datasets,function(t,e){e.initialize()});var m=[{name:"pages",displayKey:function(t){return t.suggestion.productCode},templates:{suggestion:f("modules/search/autocomplete-page-result")},source:g.datasets.pages.ttAdapter()}];return a&&(g.datasets.terms=new r({datumTokenizer:function(t){return t.suggestion.term.split(h)},queryTokenizer:r.tokenizers.whitespace,remote:{url:l,wildcard:o,filter:p("Terms"),rateLimitWait:100,ajax:d}}),g.datasets.terms.initialize(),m.push({name:"terms",displayKey:function(t){return t.suggestion.term},source:g.datasets.terms.ttAdapter()})),t(document).ready(function(){var e=g.$typeaheadField=t('[data-mz-role="searchquery"]');g.typeaheadInstance=e.typeahead({minLength:3},m).data("ttTypeahead"),e.on("typeahead:selected",function(t,e){e.suggestion.productCode&&(window.location="/p/"+e.suggestion.productCode)})}),g}),define("modules/views-productlists",["modules/jquery-mozu","underscore","modules/backbone-mozu","hyprlive"],function(t,e,n){var i=n.MozuView.extend({templateName:"modules/product/product-list-tiled"}),r=n.MozuView.extend({additionalEvents:{"change [data-mz-facet-value]":"setFacetValue"},templateName:"modules/product/faceting-form",initialize:function(){this.listenTo(this.model,"loadingchange",function(t){this.$el.find("input").prop("disabled",t)})},clearFacets:function(){this.model.clearAllFacets()},clearFacet:function(e){this.model.get("facets").findWhere({field:t(e.currentTarget).data("mz-facet")}).empty()},drillDown:function(e){var n=t(e.currentTarget),i=n.data("mz-hierarchy-id"),r=n.data("mz-facet");this.model.setHierarchy(r,i),this.model.updateFacets({force:!0,resetIndex:!0}),e.preventDefault()},setFacetValue:function(e){var n=t(e.currentTarget);this.model.setFacetValue(n.data("mz-facet"),n.data("mz-facet-value"),n.is(":checked"))}});return{List:i,FacetingPanel:r}}),define("modules/views-paging",["modules/jquery-mozu","underscore","modules/backbone-mozu"],function(t,e,n){var i=n.MozuView.extend({initialize:function(){var t=this;if(!this.model._isPaged)throw"Cannot bind a Paging view to a model that does not have the Paging mixin!";n.history.on("route",function(){t.model.syncIndex(n.history.fragment)})},render:function(){n.MozuView.prototype.render.apply(this,arguments),this.$("select").each(function(){var e=t(this);e.val(e.find("option[selected]").val())})}}),r=i.extend({templateName:"modules/common/paging-controls",autoUpdate:["pageSize"],updatePageSize:function(e){var n=parseInt(t(e.currentTarget).val(),10),i=this.model.get("pageSize");if(isNaN(n))throw new SyntaxError("Cannot set page size to a non-number!");n!==i&&(this.model.set("pageSize",n),this.model.set("startIndex",0))}}),s=i.extend({templateName:"modules/common/page-numbers",previous:function(t){return t.preventDefault(),this.model.previousPage()},next:function(t){return t.preventDefault(),this.model.nextPage()},page:function(e){return e.preventDefault(),this.model.setPage(parseInt(t(e.currentTarget).data("mz-page-num"),10)||1)}}),o=function(){t("body").ScrollTo({duration:200})},a=s.extend({previous:function(){return s.prototype.previous.apply(this,arguments).then(o)},next:function(){return s.prototype.next.apply(this,arguments).then(o)},page:function(){return s.prototype.page.apply(this,arguments).then(o)}}),u=i.extend({templateName:"modules/common/page-sort",updateSortBy:function(e){return this.model.sortBy(t(e.currentTarget).val())}});return{PagingControls:r,PageNumbers:s,TopScrollingPageNumbers:a,PageSortView:u}}),define("widgets/powerreviews",["modules/jquery-mozu","hyprlive","modules/backbone-mozu","modules/models-product","modules/api","modules/models-orders"],function(t,e,n,i,r,s){function o(){t(".mz-productlist").append('<link rel="stylesheet" href="'+c+'" type="text/css" id="prBaseStylesheet">'),t(".mz-productlist").append('<link rel="stylesheet" href="'+d+'" type="text/css" id="prMerchantOverrideStylesheet">'),t(".mz-productlist").append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category.css" type="text/css" id="prCategory">'),t(".mz-productlist").append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category_styles_review_override.css" type="text/css" id="prCategoryBaseStylesheetOverride">');var e=t(".pr-inline-rating");r.get("entityList",{listName:"mozu-powerreviews-ratings@mzint",filter:"productCode  eq "+e.map(function(){return t(this).data("mzProductCode")}).get().join(" or productCode  eq ")}).then(function(n){var i=n.data.items.reduce(function(t,e){return t[e.productCode]=e,t},{});e.each(function(){var e=t(this);h=document.location;var n=e.data("mzProductCode"),r=i[n];if(r){var s,o=r.fullReviews;r.fullReviews>1?s="("+r.fullReviews+" reviews)":1==r.fullReviews&&(s="("+r.fullReviews+" review)"),r.averageDecimalRating>0&&r.merchantGrpId==a?(t("#PRInlineRating-"+n).show(),t("#PRInlineRating-"+n).find(".pr-snippet-write-review").show(),t("#PRInlineRating-"+n).find(".pr-snippet-read-reviews").show(),t("#PRInlineRating-"+n).find(".pr-snippet-write-review").find("a.pr-snippet-link").attr("href","/write-a-review?pageId="+n+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&zipLocation="+l+"&returlUrl="+h),t("#PRInlineRating-"+n).find(".pr-snippet-read-reviews").find("a.pr-snippet-link").find("#pr-snippet-read-review-count").text(o),t("#PRInlineRating-"+n).find("#pr-snippet-rating-decimal").text(r.averageDecimalRating),t("#PRInlineRating-"+n).find("#pr-snippet-review-count").text(s),t("#PRInlineRating-"+n).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-"+r.averageOverallRating+"-sm")):(t("#PRInlineRating-"+n).show(),t("#PRInlineRating-"+n).find(".pr-snippet-write-first-review").show(),t("#PRInlineRating-"+n).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href","/write-a-review?pageId="+n+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&zipLocation="+l+"&returlUrl="+h),t("#PRInlineRating-"+n).find("#pr-snippet-rating-decimal").text("0.0"),t("#PRInlineRating-"+n).find("#pr-snippet-review-count").text("(No reviews)"),t("#PRInlineRating-"+n).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-0_0-sm"))}else t("#PRInlineRating-"+n).show(),t("#PRInlineRating-"+n).find(".pr-snippet-write-first-review").show(),t("#PRInlineRating-"+n).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href","/write-a-review?pageId="+n+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&zipLocation="+l+"&returlUrl="+h),t("#PRInlineRating-"+n).find("#pr-snippet-rating-decimal").text("0.0"),t("#PRInlineRating-"+n).find("#pr-snippet-review-count").text("(No reviews)"),t("#PRInlineRating-"+n).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-0_0-sm")})})}var a,u,l,c,d,h,p=r.get("entity",{listName:"mozu-powerreviews-sitesettings@mzint",id:r.context.site}),f="",g="en_US";return t(document).ready(function(){p.then(function(e){var n=e.data,r=1==t("#prProductDetail").val(),p=1==t("#prROIWidget").val(),m=1==t("#productReviewSnippet").val(),v=1==t("#productSocialAnswerSnippet").val(),y=1==t("#productReviewDisplay").val(),b=1==t("#productSocialAnswerDisplay").val(),w=1==t("#reviewSocialAnswerTab").val();h=document.location,null!==n.locale&&(g=n.locale),a=n.merchantGrpId,u=n.merchantId,null!==n.merchantSiteId&&(f=n.merchantSiteId),l="/staticContent/pwr/"+a+"/";var x=l+"pwr/engine/js/full.js";c=l+"pwr/engine/pr_styles_review.css",d=l+"pwr/engine/merchant_styles2.css",t.getScript(x).done(function(){var e=i.Product.fromCurrent();if(r)t("head").append('<link rel="stylesheet" href="'+c+'" type="text/css" id="prBaseStylesheet">'),t("<script>").attr("type","text/javascript").text('var pr_locale="'+g+'";var pr_zip_location="'+l+'";var pr_style_sheet="/stylesheets/widgets/pr_product_styles_review_override.css"').appendTo("head"),m&&(w?POWERREVIEWS.display.snippet({write:function(e){t("#reviewSnippetProduct").append(e)}},{pr_page_id:e.id,pr_read_review:"javascript:activateTab('reviews');",pr_write_review:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h}):POWERREVIEWS.display.snippet({write:function(e){t("#reviewSnippetProduct").append(e)}},{pr_page_id:e.id,pr_read_review:"#ReviewHeader",pr_write_review:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h})),v&&(w?POWERREVIEWS.display.productAnswersSnippet({write:function(e){t("#socialAnswerSnippet").append(e)}},{pr_page_id:e.id,pr_ask_question:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h+"&appName=askQuestion",pr_answer_question:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h+"&appName=answerQuestion&questionId=@@@QUESTION_ID@@@",pr_read_qa:"javascript:activateTab('socialAnswer');"}):POWERREVIEWS.display.productAnswersSnippet({write:function(e){t("#socialAnswerSnippet").append(e)}},{pr_page_id:e.id,pr_ask_question:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h+"&appName=askQuestion",pr_answer_question:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h+"&appName=answerQuestion&questionId=@@@QUESTION_ID@@@",pr_read_qa:"#QAHeader"})),(y||w)&&POWERREVIEWS.display.engine({write:function(e){t("#reviewDisplayProduct").append(e)}},{pr_page_id:e.id,pr_write_review:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h}),(b||w)&&POWERREVIEWS.display.productAnswers({write:function(e){t("#socialAnswerDisplay").append(e)}},{pr_page_id:e.id,pr_ask_question:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h+"&appName=askQuestion",pr_answer_question:"/write-a-review?pageId="+e.id+"&merchantGroupId="+a+"&merchantId="+u+"&siteId="+f+"&locale="+g+"&returlUrl="+h+"&appName=answerQuestion&questionId=@@@QUESTION_ID@@@",pr_read_qa:"#QAHeader"});else if(p){var n="//static.powerreviews.com/t/v1/tracker.js";t.getScript(n).done(function(){var t,e,n=POWERREVIEWS.tracker.createTracker({merchantGroupId:a}),i=s.Order.fromCurrent().attributes,r="";null!==i.customerAccountId&&(r=i.customerAccountId),null!==i.fulfillmentInfo&&null!==i.fulfillmentInfo.fulfillmentContact?(t=i.fulfillmentInfo.fulfillmentContact.firstName,e=i.fulfillmentInfo.fulfillmentContact.lastNameOrSurname):(t=i.billingInfo.billingContact.firstName,e=i.billingInfo.billingContact.lastNameOrSurname);for(var o=[],l={},c=0;c<i.items.models.length;c++){var d=i.items.models[c].attributes;l.pageId=d.product.attributes.productCode,l.unitPrice=d.total,l.qty=d.quantity,l.name=d.product.attributes.name,null!==d.product.attributes.imageUrl&&(l.imageURL=d.product.attributes.imageUrl),o[c]=l}n.trackPageview("c",{merchantId:u,locale:g,merchantUserId:r,marketingOptIn:i.acceptsMarketing,userEmail:i.email,userFirstName:t,userLastName:e,orderId:i.orderNumber,orderSubtotal:i.total,orderNumberOfItems:o.length,orderItems:o}),console.log("sent order data to PowerReviews")}).fail(function(t){console.log(t)})}else o()}).fail(function(t){console.log(t)})})}),{writeProductListBoxes:function(){return p.then(o)}}}),define("modules/views-collections",["modules/jquery-mozu","underscore","hyprlive","modules/backbone-mozu","modules/models-faceting","modules/views-productlists","modules/views-paging","widgets/powerreviews"],function(t,e,n,i,r,s,o,a){function u(u){var l,c={},d=u.$body.data("mz-category"),h=u.$body.data("mz-search");h?(l=new r.SearchResult(u.data),l.setQuery(h)):l=new r.Category(u.data),d&&l.setHierarchy("categoryId",d),e.extend(c,{pagingControls:new o.PagingControls({el:u.$body.find("[data-mz-pagingcontrols]"),model:l}),pageNumbers:new o.PageNumbers({el:u.$body.find("[data-mz-pagenumbers]"),model:l}),pageSort:new o.PageSortView({el:u.$body.find("[data-mz-pagesort]"),model:l}),productList:new s.List({el:u.$body.find("[data-mz-productlist]"),model:l})}),u.$facets.length>0&&(c.facetPanel=new s.FacetingPanel({el:u.$facets,model:l})),i.history.start({pushState:!0,root:window.location.pathname});var p=new i.Router,f=!1;l.on("facetchange",function(t){f||p.navigate(t),f=!1},p),l.on("change:pageSize",l.updateFacets,l),e.invoke(c,"delegateEvents");var g=n.getThemeSetting("defaultPageSize");return p.route("*all","filter",function(){{var n=t.extend({pageSize:g},t.deparam()),i={};l.lastRequest}n.startIndex||(i.resetIndex=!0),l.hierarchyField&&n[l.hierarchyField]!==l.hierarchyValue&&(l.setHierarchy(l.hierarchyField,n[l.hierarchyField]||d),i.force=!0),l.set(e.pick(n,"pageSize","startIndex","facetValueFilter","sortBy"),{silent:!0}),f=!0,l.updateFacets(i)}),c.productList.on("render",a.writeProductListBoxes),c}return{createFacetedCollectionViews:u}});
+(function($) {
+    var _ = function() {
+        
+        return {
+            isMsie: function() {
+                return /(msie|trident)/i.test(navigator.userAgent) ? navigator.userAgent.match(/(msie |rv:)(\d+(.\d+)?)/i)[2] : false;
+            },
+            isBlankString: function(str) {
+                return !str || /^\s*$/.test(str);
+            },
+            escapeRegExChars: function(str) {
+                return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+            },
+            isString: function(obj) {
+                return typeof obj === "string";
+            },
+            isNumber: function(obj) {
+                return typeof obj === "number";
+            },
+            isArray: $.isArray,
+            isFunction: $.isFunction,
+            isObject: $.isPlainObject,
+            isUndefined: function(obj) {
+                return typeof obj === "undefined";
+            },
+            toStr: function toStr(s) {
+                return _.isUndefined(s) || s === null ? "" : s + "";
+            },
+            bind: $.proxy,
+            each: function(collection, cb) {
+                $.each(collection, reverseArgs);
+                function reverseArgs(index, value) {
+                    return cb(value, index);
+                }
+            },
+            map: $.map,
+            filter: $.grep,
+            every: function(obj, test) {
+                var result = true;
+                if (!obj) {
+                    return result;
+                }
+                $.each(obj, function(key, val) {
+                    if (!(result = test.call(null, val, key, obj))) {
+                        return false;
+                    }
+                });
+                return !!result;
+            },
+            some: function(obj, test) {
+                var result = false;
+                if (!obj) {
+                    return result;
+                }
+                $.each(obj, function(key, val) {
+                    if (result = test.call(null, val, key, obj)) {
+                        return false;
+                    }
+                });
+                return !!result;
+            },
+            mixin: $.extend,
+            getUniqueId: function() {
+                var counter = 0;
+                return function() {
+                    return counter++;
+                };
+            }(),
+            templatify: function templatify(obj) {
+                return $.isFunction(obj) ? obj : template;
+                function template() {
+                    return String(obj);
+                }
+            },
+            defer: function(fn) {
+                setTimeout(fn, 0);
+            },
+            debounce: function(func, wait, immediate) {
+                var timeout, result;
+                return function() {
+                    var context = this, args = arguments, later, callNow;
+                    later = function() {
+                        timeout = null;
+                        if (!immediate) {
+                            result = func.apply(context, args);
+                        }
+                    };
+                    callNow = immediate && !timeout;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                    if (callNow) {
+                        result = func.apply(context, args);
+                    }
+                    return result;
+                };
+            },
+            throttle: function(func, wait) {
+                var context, args, timeout, result, previous, later;
+                previous = 0;
+                later = function() {
+                    previous = new Date();
+                    timeout = null;
+                    result = func.apply(context, args);
+                };
+                return function() {
+                    var now = new Date(), remaining = wait - (now - previous);
+                    context = this;
+                    args = arguments;
+                    if (remaining <= 0) {
+                        clearTimeout(timeout);
+                        timeout = null;
+                        previous = now;
+                        result = func.apply(context, args);
+                    } else if (!timeout) {
+                        timeout = setTimeout(later, remaining);
+                    }
+                    return result;
+                };
+            },
+            noop: function() {}
+        };
+    }();
+    var VERSION = "0.10.5";
+    var tokenizers = function() {
+        
+        return {
+            nonword: nonword,
+            whitespace: whitespace,
+            obj: {
+                nonword: getObjTokenizer(nonword),
+                whitespace: getObjTokenizer(whitespace)
+            }
+        };
+        function whitespace(str) {
+            str = _.toStr(str);
+            return str ? str.split(/\s+/) : [];
+        }
+        function nonword(str) {
+            str = _.toStr(str);
+            return str ? str.split(/\W+/) : [];
+        }
+        function getObjTokenizer(tokenizer) {
+            return function setKey() {
+                var args = [].slice.call(arguments, 0);
+                return function tokenize(o) {
+                    var tokens = [];
+                    _.each(args, function(k) {
+                        tokens = tokens.concat(tokenizer(_.toStr(o[k])));
+                    });
+                    return tokens;
+                };
+            };
+        }
+    }();
+    var LruCache = function() {
+        
+        function LruCache(maxSize) {
+            this.maxSize = _.isNumber(maxSize) ? maxSize : 100;
+            this.reset();
+            if (this.maxSize <= 0) {
+                this.set = this.get = $.noop;
+            }
+        }
+        _.mixin(LruCache.prototype, {
+            set: function set(key, val) {
+                var tailItem = this.list.tail, node;
+                if (this.size >= this.maxSize) {
+                    this.list.remove(tailItem);
+                    delete this.hash[tailItem.key];
+                }
+                if (node = this.hash[key]) {
+                    node.val = val;
+                    this.list.moveToFront(node);
+                } else {
+                    node = new Node(key, val);
+                    this.list.add(node);
+                    this.hash[key] = node;
+                    this.size++;
+                }
+            },
+            get: function get(key) {
+                var node = this.hash[key];
+                if (node) {
+                    this.list.moveToFront(node);
+                    return node.val;
+                }
+            },
+            reset: function reset() {
+                this.size = 0;
+                this.hash = {};
+                this.list = new List();
+            }
+        });
+        function List() {
+            this.head = this.tail = null;
+        }
+        _.mixin(List.prototype, {
+            add: function add(node) {
+                if (this.head) {
+                    node.next = this.head;
+                    this.head.prev = node;
+                }
+                this.head = node;
+                this.tail = this.tail || node;
+            },
+            remove: function remove(node) {
+                node.prev ? node.prev.next = node.next : this.head = node.next;
+                node.next ? node.next.prev = node.prev : this.tail = node.prev;
+            },
+            moveToFront: function(node) {
+                this.remove(node);
+                this.add(node);
+            }
+        });
+        function Node(key, val) {
+            this.key = key;
+            this.val = val;
+            this.prev = this.next = null;
+        }
+        return LruCache;
+    }();
+    var PersistentStorage = function() {
+        
+        var ls, methods;
+        try {
+            ls = window.localStorage;
+            ls.setItem("~~~", "!");
+            ls.removeItem("~~~");
+        } catch (err) {
+            ls = null;
+        }
+        function PersistentStorage(namespace) {
+            this.prefix = [ "__", namespace, "__" ].join("");
+            this.ttlKey = "__ttl__";
+            this.keyMatcher = new RegExp("^" + _.escapeRegExChars(this.prefix));
+        }
+        if (ls && window.JSON) {
+            methods = {
+                _prefix: function(key) {
+                    return this.prefix + key;
+                },
+                _ttlKey: function(key) {
+                    return this._prefix(key) + this.ttlKey;
+                },
+                get: function(key) {
+                    if (this.isExpired(key)) {
+                        this.remove(key);
+                    }
+                    return decode(ls.getItem(this._prefix(key)));
+                },
+                set: function(key, val, ttl) {
+                    if (_.isNumber(ttl)) {
+                        ls.setItem(this._ttlKey(key), encode(now() + ttl));
+                    } else {
+                        ls.removeItem(this._ttlKey(key));
+                    }
+                    return ls.setItem(this._prefix(key), encode(val));
+                },
+                remove: function(key) {
+                    ls.removeItem(this._ttlKey(key));
+                    ls.removeItem(this._prefix(key));
+                    return this;
+                },
+                clear: function() {
+                    var i, key, keys = [], len = ls.length;
+                    for (i = 0; i < len; i++) {
+                        if ((key = ls.key(i)).match(this.keyMatcher)) {
+                            keys.push(key.replace(this.keyMatcher, ""));
+                        }
+                    }
+                    for (i = keys.length; i--; ) {
+                        this.remove(keys[i]);
+                    }
+                    return this;
+                },
+                isExpired: function(key) {
+                    var ttl = decode(ls.getItem(this._ttlKey(key)));
+                    return _.isNumber(ttl) && now() > ttl ? true : false;
+                }
+            };
+        } else {
+            methods = {
+                get: _.noop,
+                set: _.noop,
+                remove: _.noop,
+                clear: _.noop,
+                isExpired: _.noop
+            };
+        }
+        _.mixin(PersistentStorage.prototype, methods);
+        return PersistentStorage;
+        function now() {
+            return new Date().getTime();
+        }
+        function encode(val) {
+            return JSON.stringify(_.isUndefined(val) ? null : val);
+        }
+        function decode(val) {
+            return JSON.parse(val);
+        }
+    }();
+    var Transport = function() {
+        
+        var pendingRequestsCount = 0, pendingRequests = {}, maxPendingRequests = 6, sharedCache = new LruCache(10);
+        function Transport(o) {
+            o = o || {};
+            this.cancelled = false;
+            this.lastUrl = null;
+            this._send = o.transport ? callbackToDeferred(o.transport) : $.ajax;
+            this._get = o.rateLimiter ? o.rateLimiter(this._get) : this._get;
+            this._cache = o.cache === false ? new LruCache(0) : sharedCache;
+        }
+        Transport.setMaxPendingRequests = function setMaxPendingRequests(num) {
+            maxPendingRequests = num;
+        };
+        Transport.resetCache = function resetCache() {
+            sharedCache.reset();
+        };
+        _.mixin(Transport.prototype, {
+            _get: function(url, o, cb) {
+                var that = this, jqXhr;
+                if (this.cancelled || url !== this.lastUrl) {
+                    return;
+                }
+                if (jqXhr = pendingRequests[url]) {
+                    jqXhr.done(done).fail(fail);
+                } else if (pendingRequestsCount < maxPendingRequests) {
+                    pendingRequestsCount++;
+                    pendingRequests[url] = this._send(url, o).done(done).fail(fail).always(always);
+                } else {
+                    this.onDeckRequestArgs = [].slice.call(arguments, 0);
+                }
+                function done(resp) {
+                    cb && cb(null, resp);
+                    that._cache.set(url, resp);
+                }
+                function fail() {
+                    cb && cb(true);
+                }
+                function always() {
+                    pendingRequestsCount--;
+                    delete pendingRequests[url];
+                    if (that.onDeckRequestArgs) {
+                        that._get.apply(that, that.onDeckRequestArgs);
+                        that.onDeckRequestArgs = null;
+                    }
+                }
+            },
+            get: function(url, o, cb) {
+                var resp;
+                if (_.isFunction(o)) {
+                    cb = o;
+                    o = {};
+                }
+                this.cancelled = false;
+                this.lastUrl = url;
+                if (resp = this._cache.get(url)) {
+                    _.defer(function() {
+                        cb && cb(null, resp);
+                    });
+                } else {
+                    this._get(url, o, cb);
+                }
+                return !!resp;
+            },
+            cancel: function() {
+                this.cancelled = true;
+            }
+        });
+        return Transport;
+        function callbackToDeferred(fn) {
+            return function customSendWrapper(url, o) {
+                var deferred = $.Deferred();
+                fn(url, o, onSuccess, onError);
+                return deferred;
+                function onSuccess(resp) {
+                    _.defer(function() {
+                        deferred.resolve(resp);
+                    });
+                }
+                function onError(err) {
+                    _.defer(function() {
+                        deferred.reject(err);
+                    });
+                }
+            };
+        }
+    }();
+    var SearchIndex = function() {
+        
+        function SearchIndex(o) {
+            o = o || {};
+            if (!o.datumTokenizer || !o.queryTokenizer) {
+                $.error("datumTokenizer and queryTokenizer are both required");
+            }
+            this.datumTokenizer = o.datumTokenizer;
+            this.queryTokenizer = o.queryTokenizer;
+            this.reset();
+        }
+        _.mixin(SearchIndex.prototype, {
+            bootstrap: function bootstrap(o) {
+                this.datums = o.datums;
+                this.trie = o.trie;
+            },
+            add: function(data) {
+                var that = this;
+                data = _.isArray(data) ? data : [ data ];
+                _.each(data, function(datum) {
+                    var id, tokens;
+                    id = that.datums.push(datum) - 1;
+                    tokens = normalizeTokens(that.datumTokenizer(datum));
+                    _.each(tokens, function(token) {
+                        var node, chars, ch;
+                        node = that.trie;
+                        chars = token.split("");
+                        while (ch = chars.shift()) {
+                            node = node.children[ch] || (node.children[ch] = newNode());
+                            node.ids.push(id);
+                        }
+                    });
+                });
+            },
+            get: function get(query) {
+                var that = this, tokens, matches;
+                tokens = normalizeTokens(this.queryTokenizer(query));
+                _.each(tokens, function(token) {
+                    var node, chars, ch, ids;
+                    if (matches && matches.length === 0) {
+                        return false;
+                    }
+                    node = that.trie;
+                    chars = token.split("");
+                    while (node && (ch = chars.shift())) {
+                        node = node.children[ch];
+                    }
+                    if (node && chars.length === 0) {
+                        ids = node.ids.slice(0);
+                        matches = matches ? getIntersection(matches, ids) : ids;
+                    } else {
+                        matches = [];
+                        return false;
+                    }
+                });
+                return matches ? _.map(unique(matches), function(id) {
+                    return that.datums[id];
+                }) : [];
+            },
+            reset: function reset() {
+                this.datums = [];
+                this.trie = newNode();
+            },
+            serialize: function serialize() {
+                return {
+                    datums: this.datums,
+                    trie: this.trie
+                };
+            }
+        });
+        return SearchIndex;
+        function normalizeTokens(tokens) {
+            tokens = _.filter(tokens, function(token) {
+                return !!token;
+            });
+            tokens = _.map(tokens, function(token) {
+                return token.toLowerCase();
+            });
+            return tokens;
+        }
+        function newNode() {
+            return {
+                ids: [],
+                children: {}
+            };
+        }
+        function unique(array) {
+            var seen = {}, uniques = [];
+            for (var i = 0, len = array.length; i < len; i++) {
+                if (!seen[array[i]]) {
+                    seen[array[i]] = true;
+                    uniques.push(array[i]);
+                }
+            }
+            return uniques;
+        }
+        function getIntersection(arrayA, arrayB) {
+            var ai = 0, bi = 0, intersection = [];
+            arrayA = arrayA.sort(compare);
+            arrayB = arrayB.sort(compare);
+            var lenArrayA = arrayA.length, lenArrayB = arrayB.length;
+            while (ai < lenArrayA && bi < lenArrayB) {
+                if (arrayA[ai] < arrayB[bi]) {
+                    ai++;
+                } else if (arrayA[ai] > arrayB[bi]) {
+                    bi++;
+                } else {
+                    intersection.push(arrayA[ai]);
+                    ai++;
+                    bi++;
+                }
+            }
+            return intersection;
+            function compare(a, b) {
+                return a - b;
+            }
+        }
+    }();
+    var oParser = function() {
+        
+        return {
+            local: getLocal,
+            prefetch: getPrefetch,
+            remote: getRemote
+        };
+        function getLocal(o) {
+            return o.local || null;
+        }
+        function getPrefetch(o) {
+            var prefetch, defaults;
+            defaults = {
+                url: null,
+                thumbprint: "",
+                ttl: 24 * 60 * 60 * 1e3,
+                filter: null,
+                ajax: {}
+            };
+            if (prefetch = o.prefetch || null) {
+                prefetch = _.isString(prefetch) ? {
+                    url: prefetch
+                } : prefetch;
+                prefetch = _.mixin(defaults, prefetch);
+                prefetch.thumbprint = VERSION + prefetch.thumbprint;
+                prefetch.ajax.type = prefetch.ajax.type || "GET";
+                prefetch.ajax.dataType = prefetch.ajax.dataType || "json";
+                !prefetch.url && $.error("prefetch requires url to be set");
+            }
+            return prefetch;
+        }
+        function getRemote(o) {
+            var remote, defaults;
+            defaults = {
+                url: null,
+                cache: true,
+                wildcard: "%QUERY",
+                replace: null,
+                rateLimitBy: "debounce",
+                rateLimitWait: 300,
+                send: null,
+                filter: null,
+                ajax: {}
+            };
+            if (remote = o.remote || null) {
+                remote = _.isString(remote) ? {
+                    url: remote
+                } : remote;
+                remote = _.mixin(defaults, remote);
+                remote.rateLimiter = /^throttle$/i.test(remote.rateLimitBy) ? byThrottle(remote.rateLimitWait) : byDebounce(remote.rateLimitWait);
+                remote.ajax.type = remote.ajax.type || "GET";
+                remote.ajax.dataType = remote.ajax.dataType || "json";
+                delete remote.rateLimitBy;
+                delete remote.rateLimitWait;
+                !remote.url && $.error("remote requires url to be set");
+            }
+            return remote;
+            function byDebounce(wait) {
+                return function(fn) {
+                    return _.debounce(fn, wait);
+                };
+            }
+            function byThrottle(wait) {
+                return function(fn) {
+                    return _.throttle(fn, wait);
+                };
+            }
+        }
+    }();
+    (function(root) {
+        
+        var old, keys;
+        old = root.Bloodhound;
+        keys = {
+            data: "data",
+            protocol: "protocol",
+            thumbprint: "thumbprint"
+        };
+        root.Bloodhound = Bloodhound;
+        function Bloodhound(o) {
+            if (!o || !o.local && !o.prefetch && !o.remote) {
+                $.error("one of local, prefetch, or remote is required");
+            }
+            this.limit = o.limit || 5;
+            this.sorter = getSorter(o.sorter);
+            this.dupDetector = o.dupDetector || ignoreDuplicates;
+            this.local = oParser.local(o);
+            this.prefetch = oParser.prefetch(o);
+            this.remote = oParser.remote(o);
+            this.cacheKey = this.prefetch ? this.prefetch.cacheKey || this.prefetch.url : null;
+            this.index = new SearchIndex({
+                datumTokenizer: o.datumTokenizer,
+                queryTokenizer: o.queryTokenizer
+            });
+            this.storage = this.cacheKey ? new PersistentStorage(this.cacheKey) : null;
+        }
+        Bloodhound.noConflict = function noConflict() {
+            root.Bloodhound = old;
+            return Bloodhound;
+        };
+        Bloodhound.tokenizers = tokenizers;
+        _.mixin(Bloodhound.prototype, {
+            _loadPrefetch: function loadPrefetch(o) {
+                var that = this, serialized, deferred;
+                if (serialized = this._readFromStorage(o.thumbprint)) {
+                    this.index.bootstrap(serialized);
+                    deferred = $.Deferred().resolve();
+                } else {
+                    deferred = $.ajax(o.url, o.ajax).done(handlePrefetchResponse);
+                }
+                return deferred;
+                function handlePrefetchResponse(resp) {
+                    that.clear();
+                    that.add(o.filter ? o.filter(resp) : resp);
+                    that._saveToStorage(that.index.serialize(), o.thumbprint, o.ttl);
+                }
+            },
+            _getFromRemote: function getFromRemote(query, cb) {
+                var that = this, url, uriEncodedQuery;
+                if (!this.transport) {
+                    return;
+                }
+                query = query || "";
+                uriEncodedQuery = encodeURIComponent(query);
+                url = this.remote.replace ? this.remote.replace(this.remote.url, query) : this.remote.url.replace(this.remote.wildcard, uriEncodedQuery);
+                return this.transport.get(url, this.remote.ajax, handleRemoteResponse);
+                function handleRemoteResponse(err, resp) {
+                    err ? cb([]) : cb(that.remote.filter ? that.remote.filter(resp) : resp);
+                }
+            },
+            _cancelLastRemoteRequest: function cancelLastRemoteRequest() {
+                this.transport && this.transport.cancel();
+            },
+            _saveToStorage: function saveToStorage(data, thumbprint, ttl) {
+                if (this.storage) {
+                    this.storage.set(keys.data, data, ttl);
+                    this.storage.set(keys.protocol, location.protocol, ttl);
+                    this.storage.set(keys.thumbprint, thumbprint, ttl);
+                }
+            },
+            _readFromStorage: function readFromStorage(thumbprint) {
+                var stored = {}, isExpired;
+                if (this.storage) {
+                    stored.data = this.storage.get(keys.data);
+                    stored.protocol = this.storage.get(keys.protocol);
+                    stored.thumbprint = this.storage.get(keys.thumbprint);
+                }
+                isExpired = stored.thumbprint !== thumbprint || stored.protocol !== location.protocol;
+                return stored.data && !isExpired ? stored.data : null;
+            },
+            _initialize: function initialize() {
+                var that = this, local = this.local, deferred;
+                deferred = this.prefetch ? this._loadPrefetch(this.prefetch) : $.Deferred().resolve();
+                local && deferred.done(addLocalToIndex);
+                this.transport = this.remote ? new Transport(this.remote) : null;
+                return this.initPromise = deferred.promise();
+                function addLocalToIndex() {
+                    that.add(_.isFunction(local) ? local() : local);
+                }
+            },
+            initialize: function initialize(force) {
+                return !this.initPromise || force ? this._initialize() : this.initPromise;
+            },
+            add: function add(data) {
+                this.index.add(data);
+            },
+            get: function get(query, cb) {
+                var that = this, matches = [], cacheHit = false;
+                matches = this.index.get(query);
+                matches = this.sorter(matches).slice(0, this.limit);
+                matches.length < this.limit ? cacheHit = this._getFromRemote(query, returnRemoteMatches) : this._cancelLastRemoteRequest();
+                if (!cacheHit) {
+                    (matches.length > 0 || !this.transport) && cb && cb(matches);
+                }
+                function returnRemoteMatches(remoteMatches) {
+                    var matchesWithBackfill = matches.slice(0);
+                    _.each(remoteMatches, function(remoteMatch) {
+                        var isDuplicate;
+                        isDuplicate = _.some(matchesWithBackfill, function(match) {
+                            return that.dupDetector(remoteMatch, match);
+                        });
+                        !isDuplicate && matchesWithBackfill.push(remoteMatch);
+                        return matchesWithBackfill.length < that.limit;
+                    });
+                    cb && cb(that.sorter(matchesWithBackfill));
+                }
+            },
+            clear: function clear() {
+                this.index.reset();
+            },
+            clearPrefetchCache: function clearPrefetchCache() {
+                this.storage && this.storage.clear();
+            },
+            clearRemoteCache: function clearRemoteCache() {
+                this.transport && Transport.resetCache();
+            },
+            ttAdapter: function ttAdapter() {
+                return _.bind(this.get, this);
+            }
+        });
+        return Bloodhound;
+        function getSorter(sortFn) {
+            return _.isFunction(sortFn) ? sort : noSort;
+            function sort(array) {
+                return array.sort(sortFn);
+            }
+            function noSort(array) {
+                return array;
+            }
+        }
+        function ignoreDuplicates() {
+            return false;
+        }
+    })(this);
+    var html = function() {
+        return {
+            wrapper: '<span class="twitter-typeahead"></span>',
+            dropdown: '<span class="tt-dropdown-menu"></span>',
+            dataset: '<div class="tt-dataset-%CLASS%"></div>',
+            suggestions: '<span class="tt-suggestions"></span>',
+            suggestion: '<div class="tt-suggestion"></div>'
+        };
+    }();
+    var css = function() {
+        
+        var css = {
+            wrapper: {
+                position: "relative",
+                display: "inline-block"
+            },
+            hint: {
+                position: "absolute",
+                top: "0",
+                left: "0",
+                borderColor: "transparent",
+                boxShadow: "none",
+                opacity: "1"
+            },
+            input: {
+                position: "relative",
+                verticalAlign: "top",
+                backgroundColor: "transparent"
+            },
+            inputWithNoHint: {
+                position: "relative",
+                verticalAlign: "top"
+            },
+            dropdown: {
+                position: "absolute",
+                top: "100%",
+                left: "0",
+                zIndex: "100",
+                display: "none"
+            },
+            suggestions: {
+                display: "block"
+            },
+            suggestion: {
+                whiteSpace: "nowrap",
+                cursor: "pointer"
+            },
+            suggestionChild: {
+                whiteSpace: "normal"
+            },
+            ltr: {
+                left: "0",
+                right: "auto"
+            },
+            rtl: {
+                left: "auto",
+                right: " 0"
+            }
+        };
+        if (_.isMsie()) {
+            _.mixin(css.input, {
+                backgroundImage: "url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7)"
+            });
+        }
+        if (_.isMsie() && _.isMsie() <= 7) {
+            _.mixin(css.input, {
+                marginTop: "-1px"
+            });
+        }
+        return css;
+    }();
+    var EventBus = function() {
+        
+        var namespace = "typeahead:";
+        function EventBus(o) {
+            if (!o || !o.el) {
+                $.error("EventBus initialized without el");
+            }
+            this.$el = $(o.el);
+        }
+        _.mixin(EventBus.prototype, {
+            trigger: function(type) {
+                var args = [].slice.call(arguments, 1);
+                this.$el.trigger(namespace + type, args);
+            }
+        });
+        return EventBus;
+    }();
+    var EventEmitter = function() {
+        
+        var splitter = /\s+/, nextTick = getNextTick();
+        return {
+            onSync: onSync,
+            onAsync: onAsync,
+            off: off,
+            trigger: trigger
+        };
+        function on(method, types, cb, context) {
+            var type;
+            if (!cb) {
+                return this;
+            }
+            types = types.split(splitter);
+            cb = context ? bindContext(cb, context) : cb;
+            this._callbacks = this._callbacks || {};
+            while (type = types.shift()) {
+                this._callbacks[type] = this._callbacks[type] || {
+                    sync: [],
+                    async: []
+                };
+                this._callbacks[type][method].push(cb);
+            }
+            return this;
+        }
+        function onAsync(types, cb, context) {
+            return on.call(this, "async", types, cb, context);
+        }
+        function onSync(types, cb, context) {
+            return on.call(this, "sync", types, cb, context);
+        }
+        function off(types) {
+            var type;
+            if (!this._callbacks) {
+                return this;
+            }
+            types = types.split(splitter);
+            while (type = types.shift()) {
+                delete this._callbacks[type];
+            }
+            return this;
+        }
+        function trigger(types) {
+            var type, callbacks, args, syncFlush, asyncFlush;
+            if (!this._callbacks) {
+                return this;
+            }
+            types = types.split(splitter);
+            args = [].slice.call(arguments, 1);
+            while ((type = types.shift()) && (callbacks = this._callbacks[type])) {
+                syncFlush = getFlush(callbacks.sync, this, [ type ].concat(args));
+                asyncFlush = getFlush(callbacks.async, this, [ type ].concat(args));
+                syncFlush() && nextTick(asyncFlush);
+            }
+            return this;
+        }
+        function getFlush(callbacks, context, args) {
+            return flush;
+            function flush() {
+                var cancelled;
+                for (var i = 0, len = callbacks.length; !cancelled && i < len; i += 1) {
+                    cancelled = callbacks[i].apply(context, args) === false;
+                }
+                return !cancelled;
+            }
+        }
+        function getNextTick() {
+            var nextTickFn;
+            if (window.setImmediate) {
+                nextTickFn = function nextTickSetImmediate(fn) {
+                    setImmediate(function() {
+                        fn();
+                    });
+                };
+            } else {
+                nextTickFn = function nextTickSetTimeout(fn) {
+                    setTimeout(function() {
+                        fn();
+                    }, 0);
+                };
+            }
+            return nextTickFn;
+        }
+        function bindContext(fn, context) {
+            return fn.bind ? fn.bind(context) : function() {
+                fn.apply(context, [].slice.call(arguments, 0));
+            };
+        }
+    }();
+    var highlight = function(doc) {
+        
+        var defaults = {
+            node: null,
+            pattern: null,
+            tagName: "strong",
+            className: null,
+            wordsOnly: false,
+            caseSensitive: false
+        };
+        return function hightlight(o) {
+            var regex;
+            o = _.mixin({}, defaults, o);
+            if (!o.node || !o.pattern) {
+                return;
+            }
+            o.pattern = _.isArray(o.pattern) ? o.pattern : [ o.pattern ];
+            regex = getRegex(o.pattern, o.caseSensitive, o.wordsOnly);
+            traverse(o.node, hightlightTextNode);
+            function hightlightTextNode(textNode) {
+                var match, patternNode, wrapperNode;
+                if (match = regex.exec(textNode.data)) {
+                    wrapperNode = doc.createElement(o.tagName);
+                    o.className && (wrapperNode.className = o.className);
+                    patternNode = textNode.splitText(match.index);
+                    patternNode.splitText(match[0].length);
+                    wrapperNode.appendChild(patternNode.cloneNode(true));
+                    textNode.parentNode.replaceChild(wrapperNode, patternNode);
+                }
+                return !!match;
+            }
+            function traverse(el, hightlightTextNode) {
+                var childNode, TEXT_NODE_TYPE = 3;
+                for (var i = 0; i < el.childNodes.length; i++) {
+                    childNode = el.childNodes[i];
+                    if (childNode.nodeType === TEXT_NODE_TYPE) {
+                        i += hightlightTextNode(childNode) ? 1 : 0;
+                    } else {
+                        traverse(childNode, hightlightTextNode);
+                    }
+                }
+            }
+        };
+        function getRegex(patterns, caseSensitive, wordsOnly) {
+            var escapedPatterns = [], regexStr;
+            for (var i = 0, len = patterns.length; i < len; i++) {
+                escapedPatterns.push(_.escapeRegExChars(patterns[i]));
+            }
+            regexStr = wordsOnly ? "\\b(" + escapedPatterns.join("|") + ")\\b" : "(" + escapedPatterns.join("|") + ")";
+            return caseSensitive ? new RegExp(regexStr) : new RegExp(regexStr, "i");
+        }
+    }(window.document);
+    var Input = function() {
+        
+        var specialKeyCodeMap;
+        specialKeyCodeMap = {
+            9: "tab",
+            27: "esc",
+            37: "left",
+            39: "right",
+            13: "enter",
+            38: "up",
+            40: "down"
+        };
+        function Input(o) {
+            var that = this, onBlur, onFocus, onKeydown, onInput;
+            o = o || {};
+            if (!o.input) {
+                $.error("input is missing");
+            }
+            onBlur = _.bind(this._onBlur, this);
+            onFocus = _.bind(this._onFocus, this);
+            onKeydown = _.bind(this._onKeydown, this);
+            onInput = _.bind(this._onInput, this);
+            this.$hint = $(o.hint);
+            this.$input = $(o.input).on("blur.tt", onBlur).on("focus.tt", onFocus).on("keydown.tt", onKeydown);
+            if (this.$hint.length === 0) {
+                this.setHint = this.getHint = this.clearHint = this.clearHintIfInvalid = _.noop;
+            }
+            if (!_.isMsie()) {
+                this.$input.on("input.tt", onInput);
+            } else {
+                this.$input.on("keydown.tt keypress.tt cut.tt paste.tt", function($e) {
+                    if (specialKeyCodeMap[$e.which || $e.keyCode]) {
+                        return;
+                    }
+                    _.defer(_.bind(that._onInput, that, $e));
+                });
+            }
+            this.query = this.$input.val();
+            this.$overflowHelper = buildOverflowHelper(this.$input);
+        }
+        Input.normalizeQuery = function(str) {
+            return (str || "").replace(/^\s*/g, "").replace(/\s{2,}/g, " ");
+        };
+        _.mixin(Input.prototype, EventEmitter, {
+            _onBlur: function onBlur() {
+                this.resetInputValue();
+                this.trigger("blurred");
+            },
+            _onFocus: function onFocus() {
+                this.trigger("focused");
+            },
+            _onKeydown: function onKeydown($e) {
+                var keyName = specialKeyCodeMap[$e.which || $e.keyCode];
+                this._managePreventDefault(keyName, $e);
+                if (keyName && this._shouldTrigger(keyName, $e)) {
+                    this.trigger(keyName + "Keyed", $e);
+                }
+            },
+            _onInput: function onInput() {
+                this._checkInputValue();
+            },
+            _managePreventDefault: function managePreventDefault(keyName, $e) {
+                var preventDefault, hintValue, inputValue;
+                switch (keyName) {
+                  case "tab":
+                    hintValue = this.getHint();
+                    inputValue = this.getInputValue();
+                    preventDefault = hintValue && hintValue !== inputValue && !withModifier($e);
+                    break;
+
+                  case "up":
+                  case "down":
+                    preventDefault = !withModifier($e);
+                    break;
+
+                  default:
+                    preventDefault = false;
+                }
+                preventDefault && $e.preventDefault();
+            },
+            _shouldTrigger: function shouldTrigger(keyName, $e) {
+                var trigger;
+                switch (keyName) {
+                  case "tab":
+                    trigger = !withModifier($e);
+                    break;
+
+                  default:
+                    trigger = true;
+                }
+                return trigger;
+            },
+            _checkInputValue: function checkInputValue() {
+                var inputValue, areEquivalent, hasDifferentWhitespace;
+                inputValue = this.getInputValue();
+                areEquivalent = areQueriesEquivalent(inputValue, this.query);
+                hasDifferentWhitespace = areEquivalent ? this.query.length !== inputValue.length : false;
+                this.query = inputValue;
+                if (!areEquivalent) {
+                    this.trigger("queryChanged", this.query);
+                } else if (hasDifferentWhitespace) {
+                    this.trigger("whitespaceChanged", this.query);
+                }
+            },
+            focus: function focus() {
+                this.$input.focus();
+            },
+            blur: function blur() {
+                this.$input.blur();
+            },
+            getQuery: function getQuery() {
+                return this.query;
+            },
+            setQuery: function setQuery(query) {
+                this.query = query;
+            },
+            getInputValue: function getInputValue() {
+                return this.$input.val();
+            },
+            setInputValue: function setInputValue(value, silent) {
+                this.$input.val(value);
+                silent ? this.clearHint() : this._checkInputValue();
+            },
+            resetInputValue: function resetInputValue() {
+                this.setInputValue(this.query, true);
+            },
+            getHint: function getHint() {
+                return this.$hint.val();
+            },
+            setHint: function setHint(value) {
+                this.$hint.val(value);
+            },
+            clearHint: function clearHint() {
+                this.setHint("");
+            },
+            clearHintIfInvalid: function clearHintIfInvalid() {
+                var val, hint, valIsPrefixOfHint, isValid;
+                val = this.getInputValue();
+                hint = this.getHint();
+                valIsPrefixOfHint = val !== hint && hint.indexOf(val) === 0;
+                isValid = val !== "" && valIsPrefixOfHint && !this.hasOverflow();
+                !isValid && this.clearHint();
+            },
+            getLanguageDirection: function getLanguageDirection() {
+                return (this.$input.css("direction") || "ltr").toLowerCase();
+            },
+            hasOverflow: function hasOverflow() {
+                var constraint = this.$input.width() - 2;
+                this.$overflowHelper.text(this.getInputValue());
+                return this.$overflowHelper.width() >= constraint;
+            },
+            isCursorAtEnd: function() {
+                var valueLength, selectionStart, range;
+                valueLength = this.$input.val().length;
+                selectionStart = this.$input[0].selectionStart;
+                if (_.isNumber(selectionStart)) {
+                    return selectionStart === valueLength;
+                } else if (document.selection) {
+                    range = document.selection.createRange();
+                    range.moveStart("character", -valueLength);
+                    return valueLength === range.text.length;
+                }
+                return true;
+            },
+            destroy: function destroy() {
+                this.$hint.off(".tt");
+                this.$input.off(".tt");
+                this.$hint = this.$input = this.$overflowHelper = null;
+            }
+        });
+        return Input;
+        function buildOverflowHelper($input) {
+            return $('<pre aria-hidden="true"></pre>').css({
+                position: "absolute",
+                visibility: "hidden",
+                whiteSpace: "pre",
+                fontFamily: $input.css("font-family"),
+                fontSize: $input.css("font-size"),
+                fontStyle: $input.css("font-style"),
+                fontVariant: $input.css("font-variant"),
+                fontWeight: $input.css("font-weight"),
+                wordSpacing: $input.css("word-spacing"),
+                letterSpacing: $input.css("letter-spacing"),
+                textIndent: $input.css("text-indent"),
+                textRendering: $input.css("text-rendering"),
+                textTransform: $input.css("text-transform")
+            }).insertAfter($input);
+        }
+        function areQueriesEquivalent(a, b) {
+            return Input.normalizeQuery(a) === Input.normalizeQuery(b);
+        }
+        function withModifier($e) {
+            return $e.altKey || $e.ctrlKey || $e.metaKey || $e.shiftKey;
+        }
+    }();
+    var Dataset = function() {
+        
+        var datasetKey = "ttDataset", valueKey = "ttValue", datumKey = "ttDatum";
+        function Dataset(o) {
+            o = o || {};
+            o.templates = o.templates || {};
+            if (!o.source) {
+                $.error("missing source");
+            }
+            if (o.name && !isValidName(o.name)) {
+                $.error("invalid dataset name: " + o.name);
+            }
+            this.query = null;
+            this.highlight = !!o.highlight;
+            this.name = o.name || _.getUniqueId();
+            this.source = o.source;
+            this.displayFn = getDisplayFn(o.display || o.displayKey);
+            this.templates = getTemplates(o.templates, this.displayFn);
+            this.$el = $(html.dataset.replace("%CLASS%", this.name));
+        }
+        Dataset.extractDatasetName = function extractDatasetName(el) {
+            return $(el).data(datasetKey);
+        };
+        Dataset.extractValue = function extractDatum(el) {
+            return $(el).data(valueKey);
+        };
+        Dataset.extractDatum = function extractDatum(el) {
+            return $(el).data(datumKey);
+        };
+        _.mixin(Dataset.prototype, EventEmitter, {
+            _render: function render(query, suggestions) {
+                if (!this.$el) {
+                    return;
+                }
+                var that = this, hasSuggestions;
+                this.$el.empty();
+                hasSuggestions = suggestions && suggestions.length;
+                if (!hasSuggestions && this.templates.empty) {
+                    this.$el.html(getEmptyHtml()).prepend(that.templates.header ? getHeaderHtml() : null).append(that.templates.footer ? getFooterHtml() : null);
+                } else if (hasSuggestions) {
+                    this.$el.html(getSuggestionsHtml()).prepend(that.templates.header ? getHeaderHtml() : null).append(that.templates.footer ? getFooterHtml() : null);
+                }
+                this.trigger("rendered");
+                function getEmptyHtml() {
+                    return that.templates.empty({
+                        query: query,
+                        isEmpty: true
+                    });
+                }
+                function getSuggestionsHtml() {
+                    var $suggestions, nodes;
+                    $suggestions = $(html.suggestions).css(css.suggestions);
+                    nodes = _.map(suggestions, getSuggestionNode);
+                    $suggestions.append.apply($suggestions, nodes);
+                    that.highlight && highlight({
+                        className: "tt-highlight",
+                        node: $suggestions[0],
+                        pattern: query
+                    });
+                    return $suggestions;
+                    function getSuggestionNode(suggestion) {
+                        var $el;
+                        $el = $(html.suggestion).append(that.templates.suggestion(suggestion)).data(datasetKey, that.name).data(valueKey, that.displayFn(suggestion)).data(datumKey, suggestion);
+                        $el.children().each(function() {
+                            $(this).css(css.suggestionChild);
+                        });
+                        return $el;
+                    }
+                }
+                function getHeaderHtml() {
+                    return that.templates.header({
+                        query: query,
+                        isEmpty: !hasSuggestions
+                    });
+                }
+                function getFooterHtml() {
+                    return that.templates.footer({
+                        query: query,
+                        isEmpty: !hasSuggestions
+                    });
+                }
+            },
+            getRoot: function getRoot() {
+                return this.$el;
+            },
+            update: function update(query) {
+                var that = this;
+                this.query = query;
+                this.canceled = false;
+                this.source(query, render);
+                function render(suggestions) {
+                    if (!that.canceled && query === that.query) {
+                        that._render(query, suggestions);
+                    }
+                }
+            },
+            cancel: function cancel() {
+                this.canceled = true;
+            },
+            clear: function clear() {
+                this.cancel();
+                this.$el.empty();
+                this.trigger("rendered");
+            },
+            isEmpty: function isEmpty() {
+                return this.$el.is(":empty");
+            },
+            destroy: function destroy() {
+                this.$el = null;
+            }
+        });
+        return Dataset;
+        function getDisplayFn(display) {
+            display = display || "value";
+            return _.isFunction(display) ? display : displayFn;
+            function displayFn(obj) {
+                return obj[display];
+            }
+        }
+        function getTemplates(templates, displayFn) {
+            return {
+                empty: templates.empty && _.templatify(templates.empty),
+                header: templates.header && _.templatify(templates.header),
+                footer: templates.footer && _.templatify(templates.footer),
+                suggestion: templates.suggestion || suggestionTemplate
+            };
+            function suggestionTemplate(context) {
+                return "<p>" + displayFn(context) + "</p>";
+            }
+        }
+        function isValidName(str) {
+            return /^[_a-zA-Z0-9-]+$/.test(str);
+        }
+    }();
+    var Dropdown = function() {
+        
+        function Dropdown(o) {
+            var that = this, onSuggestionClick, onSuggestionMouseEnter, onSuggestionMouseLeave;
+            o = o || {};
+            if (!o.menu) {
+                $.error("menu is required");
+            }
+            this.isOpen = false;
+            this.isEmpty = true;
+            this.datasets = _.map(o.datasets, initializeDataset);
+            onSuggestionClick = _.bind(this._onSuggestionClick, this);
+            onSuggestionMouseEnter = _.bind(this._onSuggestionMouseEnter, this);
+            onSuggestionMouseLeave = _.bind(this._onSuggestionMouseLeave, this);
+            this.$menu = $(o.menu).on("click.tt", ".tt-suggestion", onSuggestionClick).on("mouseenter.tt", ".tt-suggestion", onSuggestionMouseEnter).on("mouseleave.tt", ".tt-suggestion", onSuggestionMouseLeave);
+            _.each(this.datasets, function(dataset) {
+                that.$menu.append(dataset.getRoot());
+                dataset.onSync("rendered", that._onRendered, that);
+            });
+        }
+        _.mixin(Dropdown.prototype, EventEmitter, {
+            _onSuggestionClick: function onSuggestionClick($e) {
+                this.trigger("suggestionClicked", $($e.currentTarget));
+            },
+            _onSuggestionMouseEnter: function onSuggestionMouseEnter($e) {
+                this._removeCursor();
+                this._setCursor($($e.currentTarget), true);
+            },
+            _onSuggestionMouseLeave: function onSuggestionMouseLeave() {
+                this._removeCursor();
+            },
+            _onRendered: function onRendered() {
+                this.isEmpty = _.every(this.datasets, isDatasetEmpty);
+                this.isEmpty ? this._hide() : this.isOpen && this._show();
+                this.trigger("datasetRendered");
+                function isDatasetEmpty(dataset) {
+                    return dataset.isEmpty();
+                }
+            },
+            _hide: function() {
+                this.$menu.hide();
+            },
+            _show: function() {
+                this.$menu.css("display", "block");
+            },
+            _getSuggestions: function getSuggestions() {
+                return this.$menu.find(".tt-suggestion");
+            },
+            _getCursor: function getCursor() {
+                return this.$menu.find(".tt-cursor").first();
+            },
+            _setCursor: function setCursor($el, silent) {
+                $el.first().addClass("tt-cursor");
+                !silent && this.trigger("cursorMoved");
+            },
+            _removeCursor: function removeCursor() {
+                this._getCursor().removeClass("tt-cursor");
+            },
+            _moveCursor: function moveCursor(increment) {
+                var $suggestions, $oldCursor, newCursorIndex, $newCursor;
+                if (!this.isOpen) {
+                    return;
+                }
+                $oldCursor = this._getCursor();
+                $suggestions = this._getSuggestions();
+                this._removeCursor();
+                newCursorIndex = $suggestions.index($oldCursor) + increment;
+                newCursorIndex = (newCursorIndex + 1) % ($suggestions.length + 1) - 1;
+                if (newCursorIndex === -1) {
+                    this.trigger("cursorRemoved");
+                    return;
+                } else if (newCursorIndex < -1) {
+                    newCursorIndex = $suggestions.length - 1;
+                }
+                this._setCursor($newCursor = $suggestions.eq(newCursorIndex));
+                this._ensureVisible($newCursor);
+            },
+            _ensureVisible: function ensureVisible($el) {
+                var elTop, elBottom, menuScrollTop, menuHeight;
+                elTop = $el.position().top;
+                elBottom = elTop + $el.outerHeight(true);
+                menuScrollTop = this.$menu.scrollTop();
+                menuHeight = this.$menu.height() + parseInt(this.$menu.css("paddingTop"), 10) + parseInt(this.$menu.css("paddingBottom"), 10);
+                if (elTop < 0) {
+                    this.$menu.scrollTop(menuScrollTop + elTop);
+                } else if (menuHeight < elBottom) {
+                    this.$menu.scrollTop(menuScrollTop + (elBottom - menuHeight));
+                }
+            },
+            close: function close() {
+                if (this.isOpen) {
+                    this.isOpen = false;
+                    this._removeCursor();
+                    this._hide();
+                    this.trigger("closed");
+                }
+            },
+            open: function open() {
+                if (!this.isOpen) {
+                    this.isOpen = true;
+                    !this.isEmpty && this._show();
+                    this.trigger("opened");
+                }
+            },
+            setLanguageDirection: function setLanguageDirection(dir) {
+                this.$menu.css(dir === "ltr" ? css.ltr : css.rtl);
+            },
+            moveCursorUp: function moveCursorUp() {
+                this._moveCursor(-1);
+            },
+            moveCursorDown: function moveCursorDown() {
+                this._moveCursor(+1);
+            },
+            getDatumForSuggestion: function getDatumForSuggestion($el) {
+                var datum = null;
+                if ($el.length) {
+                    datum = {
+                        raw: Dataset.extractDatum($el),
+                        value: Dataset.extractValue($el),
+                        datasetName: Dataset.extractDatasetName($el)
+                    };
+                }
+                return datum;
+            },
+            getDatumForCursor: function getDatumForCursor() {
+                return this.getDatumForSuggestion(this._getCursor().first());
+            },
+            getDatumForTopSuggestion: function getDatumForTopSuggestion() {
+                return this.getDatumForSuggestion(this._getSuggestions().first());
+            },
+            update: function update(query) {
+                _.each(this.datasets, updateDataset);
+                function updateDataset(dataset) {
+                    dataset.update(query);
+                }
+            },
+            empty: function empty() {
+                _.each(this.datasets, clearDataset);
+                this.isEmpty = true;
+                function clearDataset(dataset) {
+                    dataset.clear();
+                }
+            },
+            isVisible: function isVisible() {
+                return this.isOpen && !this.isEmpty;
+            },
+            destroy: function destroy() {
+                this.$menu.off(".tt");
+                this.$menu = null;
+                _.each(this.datasets, destroyDataset);
+                function destroyDataset(dataset) {
+                    dataset.destroy();
+                }
+            }
+        });
+        return Dropdown;
+        function initializeDataset(oDataset) {
+            return new Dataset(oDataset);
+        }
+    }();
+    var Typeahead = function() {
+        
+        var attrsKey = "ttAttrs";
+        function Typeahead(o) {
+            var $menu, $input, $hint;
+            o = o || {};
+            if (!o.input) {
+                $.error("missing input");
+            }
+            this.isActivated = false;
+            this.autoselect = !!o.autoselect;
+            this.minLength = _.isNumber(o.minLength) ? o.minLength : 1;
+            this.$node = buildDom(o.input, o.withHint);
+            $menu = this.$node.find(".tt-dropdown-menu");
+            $input = this.$node.find(".tt-input");
+            $hint = this.$node.find(".tt-hint");
+            $input.on("blur.tt", function($e) {
+                var active, isActive, hasActive;
+                active = document.activeElement;
+                isActive = $menu.is(active);
+                hasActive = $menu.has(active).length > 0;
+                if (_.isMsie() && (isActive || hasActive)) {
+                    $e.preventDefault();
+                    $e.stopImmediatePropagation();
+                    _.defer(function() {
+                        $input.focus();
+                    });
+                }
+            });
+            $menu.on("mousedown.tt", function($e) {
+                $e.preventDefault();
+            });
+            this.eventBus = o.eventBus || new EventBus({
+                el: $input
+            });
+            this.dropdown = new Dropdown({
+                menu: $menu,
+                datasets: o.datasets
+            }).onSync("suggestionClicked", this._onSuggestionClicked, this).onSync("cursorMoved", this._onCursorMoved, this).onSync("cursorRemoved", this._onCursorRemoved, this).onSync("opened", this._onOpened, this).onSync("closed", this._onClosed, this).onAsync("datasetRendered", this._onDatasetRendered, this);
+            this.input = new Input({
+                input: $input,
+                hint: $hint
+            }).onSync("focused", this._onFocused, this).onSync("blurred", this._onBlurred, this).onSync("enterKeyed", this._onEnterKeyed, this).onSync("tabKeyed", this._onTabKeyed, this).onSync("escKeyed", this._onEscKeyed, this).onSync("upKeyed", this._onUpKeyed, this).onSync("downKeyed", this._onDownKeyed, this).onSync("leftKeyed", this._onLeftKeyed, this).onSync("rightKeyed", this._onRightKeyed, this).onSync("queryChanged", this._onQueryChanged, this).onSync("whitespaceChanged", this._onWhitespaceChanged, this);
+            this._setLanguageDirection();
+        }
+        _.mixin(Typeahead.prototype, {
+            _onSuggestionClicked: function onSuggestionClicked(type, $el) {
+                var datum;
+                if (datum = this.dropdown.getDatumForSuggestion($el)) {
+                    this._select(datum);
+                }
+            },
+            _onCursorMoved: function onCursorMoved() {
+                var datum = this.dropdown.getDatumForCursor();
+                this.input.setInputValue(datum.value, true);
+                this.eventBus.trigger("cursorchanged", datum.raw, datum.datasetName);
+            },
+            _onCursorRemoved: function onCursorRemoved() {
+                this.input.resetInputValue();
+                this._updateHint();
+            },
+            _onDatasetRendered: function onDatasetRendered() {
+                this._updateHint();
+            },
+            _onOpened: function onOpened() {
+                this._updateHint();
+                this.eventBus.trigger("opened");
+            },
+            _onClosed: function onClosed() {
+                this.input.clearHint();
+                this.eventBus.trigger("closed");
+            },
+            _onFocused: function onFocused() {
+                this.isActivated = true;
+                this.dropdown.open();
+            },
+            _onBlurred: function onBlurred() {
+                this.isActivated = false;
+                this.dropdown.empty();
+                this.dropdown.close();
+            },
+            _onEnterKeyed: function onEnterKeyed(type, $e) {
+                var cursorDatum, topSuggestionDatum;
+                cursorDatum = this.dropdown.getDatumForCursor();
+                topSuggestionDatum = this.dropdown.getDatumForTopSuggestion();
+                if (cursorDatum) {
+                    this._select(cursorDatum);
+                    $e.preventDefault();
+                } else if (this.autoselect && topSuggestionDatum) {
+                    this._select(topSuggestionDatum);
+                    $e.preventDefault();
+                }
+            },
+            _onTabKeyed: function onTabKeyed(type, $e) {
+                var datum;
+                if (datum = this.dropdown.getDatumForCursor()) {
+                    this._select(datum);
+                    $e.preventDefault();
+                } else {
+                    this._autocomplete(true);
+                }
+            },
+            _onEscKeyed: function onEscKeyed() {
+                this.dropdown.close();
+                this.input.resetInputValue();
+            },
+            _onUpKeyed: function onUpKeyed() {
+                var query = this.input.getQuery();
+                this.dropdown.isEmpty && query.length >= this.minLength ? this.dropdown.update(query) : this.dropdown.moveCursorUp();
+                this.dropdown.open();
+            },
+            _onDownKeyed: function onDownKeyed() {
+                var query = this.input.getQuery();
+                this.dropdown.isEmpty && query.length >= this.minLength ? this.dropdown.update(query) : this.dropdown.moveCursorDown();
+                this.dropdown.open();
+            },
+            _onLeftKeyed: function onLeftKeyed() {
+                this.dir === "rtl" && this._autocomplete();
+            },
+            _onRightKeyed: function onRightKeyed() {
+                this.dir === "ltr" && this._autocomplete();
+            },
+            _onQueryChanged: function onQueryChanged(e, query) {
+                this.input.clearHintIfInvalid();
+                query.length >= this.minLength ? this.dropdown.update(query) : this.dropdown.empty();
+                this.dropdown.open();
+                this._setLanguageDirection();
+            },
+            _onWhitespaceChanged: function onWhitespaceChanged() {
+                this._updateHint();
+                this.dropdown.open();
+            },
+            _setLanguageDirection: function setLanguageDirection() {
+                var dir;
+                if (this.dir !== (dir = this.input.getLanguageDirection())) {
+                    this.dir = dir;
+                    this.$node.css("direction", dir);
+                    this.dropdown.setLanguageDirection(dir);
+                }
+            },
+            _updateHint: function updateHint() {
+                var datum, val, query, escapedQuery, frontMatchRegEx, match;
+                datum = this.dropdown.getDatumForTopSuggestion();
+                if (datum && this.dropdown.isVisible() && !this.input.hasOverflow()) {
+                    val = this.input.getInputValue();
+                    query = Input.normalizeQuery(val);
+                    escapedQuery = _.escapeRegExChars(query);
+                    frontMatchRegEx = new RegExp("^(?:" + escapedQuery + ")(.+$)", "i");
+                    match = frontMatchRegEx.exec(datum.value);
+                    match ? this.input.setHint(val + match[1]) : this.input.clearHint();
+                } else {
+                    this.input.clearHint();
+                }
+            },
+            _autocomplete: function autocomplete(laxCursor) {
+                var hint, query, isCursorAtEnd, datum;
+                hint = this.input.getHint();
+                query = this.input.getQuery();
+                isCursorAtEnd = laxCursor || this.input.isCursorAtEnd();
+                if (hint && query !== hint && isCursorAtEnd) {
+                    datum = this.dropdown.getDatumForTopSuggestion();
+                    datum && this.input.setInputValue(datum.value);
+                    this.eventBus.trigger("autocompleted", datum.raw, datum.datasetName);
+                }
+            },
+            _select: function select(datum) {
+                this.input.setQuery(datum.value);
+                this.input.setInputValue(datum.value, true);
+                this._setLanguageDirection();
+                this.eventBus.trigger("selected", datum.raw, datum.datasetName);
+                this.dropdown.close();
+                _.defer(_.bind(this.dropdown.empty, this.dropdown));
+            },
+            open: function open() {
+                this.dropdown.open();
+            },
+            close: function close() {
+                this.dropdown.close();
+            },
+            setVal: function setVal(val) {
+                val = _.toStr(val);
+                if (this.isActivated) {
+                    this.input.setInputValue(val);
+                } else {
+                    this.input.setQuery(val);
+                    this.input.setInputValue(val, true);
+                }
+                this._setLanguageDirection();
+            },
+            getVal: function getVal() {
+                return this.input.getQuery();
+            },
+            destroy: function destroy() {
+                this.input.destroy();
+                this.dropdown.destroy();
+                destroyDomStructure(this.$node);
+                this.$node = null;
+            }
+        });
+        return Typeahead;
+        function buildDom(input, withHint) {
+            var $input, $wrapper, $dropdown, $hint;
+            $input = $(input);
+            $wrapper = $(html.wrapper).css(css.wrapper);
+            $dropdown = $(html.dropdown).css(css.dropdown);
+            $hint = $input.clone().css(css.hint).css(getBackgroundStyles($input));
+            $hint.val("").removeData().addClass("tt-hint").removeAttr("id name placeholder required").prop("readonly", true).attr({
+                autocomplete: "off",
+                spellcheck: "false",
+                tabindex: -1
+            });
+            $input.data(attrsKey, {
+                dir: $input.attr("dir"),
+                autocomplete: $input.attr("autocomplete"),
+                spellcheck: $input.attr("spellcheck"),
+                style: $input.attr("style")
+            });
+            $input.addClass("tt-input").attr({
+                autocomplete: "off",
+                spellcheck: false
+            }).css(withHint ? css.input : css.inputWithNoHint);
+            try {
+                !$input.attr("dir") && $input.attr("dir", "auto");
+            } catch (e) {}
+            return $input.wrap($wrapper).parent().prepend(withHint ? $hint : null).append($dropdown);
+        }
+        function getBackgroundStyles($el) {
+            return {
+                backgroundAttachment: $el.css("background-attachment"),
+                backgroundClip: $el.css("background-clip"),
+                backgroundColor: $el.css("background-color"),
+                backgroundImage: $el.css("background-image"),
+                backgroundOrigin: $el.css("background-origin"),
+                backgroundPosition: $el.css("background-position"),
+                backgroundRepeat: $el.css("background-repeat"),
+                backgroundSize: $el.css("background-size")
+            };
+        }
+        function destroyDomStructure($node) {
+            var $input = $node.find(".tt-input");
+            _.each($input.data(attrsKey), function(val, key) {
+                _.isUndefined(val) ? $input.removeAttr(key) : $input.attr(key, val);
+            });
+            $input.detach().removeData(attrsKey).removeClass("tt-input").insertAfter($node);
+            $node.remove();
+        }
+    }();
+    (function() {
+        
+        var old, typeaheadKey, methods;
+        old = $.fn.typeahead;
+        typeaheadKey = "ttTypeahead";
+        methods = {
+            initialize: function initialize(o, datasets) {
+                datasets = _.isArray(datasets) ? datasets : [].slice.call(arguments, 1);
+                o = o || {};
+                return this.each(attach);
+                function attach() {
+                    var $input = $(this), eventBus, typeahead;
+                    _.each(datasets, function(d) {
+                        d.highlight = !!o.highlight;
+                    });
+                    typeahead = new Typeahead({
+                        input: $input,
+                        eventBus: eventBus = new EventBus({
+                            el: $input
+                        }),
+                        withHint: _.isUndefined(o.hint) ? true : !!o.hint,
+                        minLength: o.minLength,
+                        autoselect: o.autoselect,
+                        datasets: datasets
+                    });
+                    $input.data(typeaheadKey, typeahead);
+                }
+            },
+            open: function open() {
+                return this.each(openTypeahead);
+                function openTypeahead() {
+                    var $input = $(this), typeahead;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        typeahead.open();
+                    }
+                }
+            },
+            close: function close() {
+                return this.each(closeTypeahead);
+                function closeTypeahead() {
+                    var $input = $(this), typeahead;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        typeahead.close();
+                    }
+                }
+            },
+            val: function val(newVal) {
+                return !arguments.length ? getVal(this.first()) : this.each(setVal);
+                function setVal() {
+                    var $input = $(this), typeahead;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        typeahead.setVal(newVal);
+                    }
+                }
+                function getVal($input) {
+                    var typeahead, query;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        query = typeahead.getVal();
+                    }
+                    return query;
+                }
+            },
+            destroy: function destroy() {
+                return this.each(unattach);
+                function unattach() {
+                    var $input = $(this), typeahead;
+                    if (typeahead = $input.data(typeaheadKey)) {
+                        typeahead.destroy();
+                        $input.removeData(typeaheadKey);
+                    }
+                }
+            }
+        };
+        $.fn.typeahead = function(method) {
+            var tts;
+            if (methods[method] && method !== "initialize") {
+                tts = this.filter(function() {
+                    return !!$(this).data(typeaheadKey);
+                });
+                return methods[method].apply(tts, [].slice.call(arguments, 1));
+            } else {
+                return methods.initialize.apply(this, arguments);
+            }
+        };
+        $.fn.typeahead.noConflict = function noConflict() {
+            $.fn.typeahead = old;
+            return this;
+        };
+    })();
+})(window.jQuery); ; 
+
+return jQuery; 
+
+});
+
+
+//@ sourceURL=/vendor/typeahead.js/dist/typeahead.bundle.js
+
+;
+define('modules/search-autocomplete',['shim!vendor/typeahead.js/dist/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery', 'hyprlive', 'modules/api'], function($, Hypr, api) {
+
+    // bundled typeahead saves a lot of space but exports bloodhound to the root object, let's lose it
+    var Bloodhound = window.Bloodhound.noConflict();
+
+    // bloodhound wants to make its own AJAX requests, and since it's got such good caching and tokenizing algorithms, i'm happy to help it
+    // so instead of using the SDK to place the request, we just use it to get the URL configs and the required API headers
+    var qs = '%QUERY',
+        eqs = encodeURIComponent(qs),
+        suggestPriorSearchTerms = Hypr.getThemeSetting('suggestPriorSearchTerms'),
+        getApiUrl = function(groups) {
+            return api.getActionConfig('suggest', 'get', { query: qs, groups: groups }).url;
+        },
+        termsUrl = getApiUrl('terms'),
+        productsUrl = getApiUrl('pages'),
+        ajaxConfig = {
+            headers: api.getRequestHeaders()
+        },
+        i,
+        nonWordRe = /\W+/,
+        makeSuggestionGroupFilter = function(name) {
+            return function(res) {
+                var suggestionGroups = res.suggestionGroups,
+                    thisGroup;
+                for (i = suggestionGroups.length - 1; i >= 0; i--) {
+                    if (suggestionGroups[i].name === name) {
+                        thisGroup = suggestionGroups[i];
+                        break;
+                    }
+                }
+                return thisGroup.suggestions;
+            };
+        },
+
+        makeTemplateFn = function(name) {
+            var tpt = Hypr.getTemplate(name);
+            return function(obj) {
+                return tpt.render(obj);
+            };
+        },
+
+    // create bloodhound instances for each type of suggestion
+
+    AutocompleteManager = {
+        datasets: {
+            pages: new Bloodhound({
+                datumTokenizer: function(datum) {
+                    return datum.suggestion.term.split(nonWordRe);
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: {
+                    url: productsUrl,
+                    wildcard: eqs,
+                    filter: makeSuggestionGroupFilter("Pages"),
+                    rateLimitWait: 400,
+                    ajax: ajaxConfig
+                }
+            })
+        }
+    };
+
+    $.each(AutocompleteManager.datasets, function(name, set) {
+        set.initialize();
+    });
+
+    var dataSetConfigs = [
+        {
+            name: 'pages',
+            displayKey: function(datum) {
+                return datum.suggestion.productCode;
+            },
+            templates: {
+                suggestion: makeTemplateFn('modules/search/autocomplete-page-result')
+            },
+            source: AutocompleteManager.datasets.pages.ttAdapter()
+        }
+    ];
+
+    if (suggestPriorSearchTerms) {
+        AutocompleteManager.datasets.terms = new Bloodhound({
+            datumTokenizer: function(datum) {
+                return datum.suggestion.term.split(nonWordRe);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: termsUrl,
+                wildcard: eqs,
+                filter: makeSuggestionGroupFilter("Terms"),
+                rateLimitWait: 100,
+                ajax: ajaxConfig
+            }
+        });
+        AutocompleteManager.datasets.terms.initialize();
+        dataSetConfigs.push({
+            name: 'terms',
+            displayKey: function(datum) {
+                return datum.suggestion.term;
+            },
+            source: AutocompleteManager.datasets.terms.ttAdapter()
+        });
+    }
+
+    $(document).ready(function() {
+        var $field = AutocompleteManager.$typeaheadField = $('[data-mz-role="searchquery"]');
+        AutocompleteManager.typeaheadInstance = $field.typeahead({
+            minLength: 3
+        }, dataSetConfigs).data('ttTypeahead');
+        // user hits enter key while menu item is selected;
+        $field.on('typeahead:selected', function (e, data, set) {
+            if (data.suggestion.productCode) window.location = "/p/" + data.suggestion.productCode;
+        });
+    });
+
+    return AutocompleteManager;
+});
+
+/**
+ * Abstract dispatcher for routed applications in storefront.
+ * Register a callback that will be called with a parsed URL.
+ * @method onUrlChange(handler:function(e, uri)) -> undefined
+ *         Add a handler to be called when the URL changes.
+ */
+
+define('modules/url-dispatcher',['backbone'], function(Backbone) {
+
+    var Dispatcher;
+    var proto;
+
+    if (Modernizr.history) {
+        Backbone.history.start({ pushState: true });
+
+        proto = Backbone.Router.prototype;
+
+        // using a backbone router ONLY for its event emitter capability
+        Dispatcher = new Backbone.Router();
+
+        // register catchall route so it fires event
+        Dispatcher.route('*all', 'all', function() { });
+
+        // hiding the implementation of the particular event emitter
+        Dispatcher.onChange = function(cb) {
+            Dispatcher.on('route:all', function() {
+                cb(window.location.pathname + window.location.search + window.location.hash);
+            });
+        };
+
+        Dispatcher.send = function(url) {
+            return proto.navigate.call(this, url, { trigger: true });
+        };
+
+        Dispatcher.replace = function(url) {
+            return proto.navigate.call(this, url, { replace: true });
+        };
+
+    } else {
+        // if the browser does not support the HTML5 History API,
+        // the dispatcher should simply default to full page navigation.
+        Dispatcher = {
+            send: function(url) {
+                window.location = url;
+            },
+            replace: function(url) {
+                window.location.replace(url);
+            },
+            onChange: function() { } // let the browser do its thing instead
+        };
+    }
+
+    
+
+    return Dispatcher;
+
+});
+/**
+ * A bit like an RxJS observable stream, but using Backbone
+ * (a preexisting dependency), aggregates user input into
+ * a stream of intents, based on the mapping function
+ * that you supply to turn an event into an intent.
+ */
+
+define('modules/intent-emitter',['underscore', 'backbone'], function(_, Backbone) {
+
+	return function(element, subscriptions, processor, eventName) {
+		var emitter = _.extend({}, Backbone.Events);
+		var handler = function(e) {
+			emitter.trigger(eventName || 'data', processor.apply(this, arguments), e);
+		};
+		var View = Backbone.View.extend({
+			events: _.reduce(subscriptions, function(memo, subscription) {
+				memo[subscription] = handler;
+				return memo;
+			}, {})
+		});
+		var view = new View({
+			el: element
+		});
+		emitter.view = view;
+		return emitter;
+	};
+
+});
+/**
+ * What if I told you that server-side Hypr can be client-side Hypr.
+ * Only depends on jquery for AJAX, so that can be subbed in later
+ * with something smaller.
+ * Only depends on modules/api to turn jQuery deferred promises into
+ * actually composable promises.
+ * Only depends on modules/api to get access to compliant promises.
+ * Later when we shim ES6/promise that can also go away.
+ */
+
+define('modules/get-partial-view',['modules/jquery-mozu', 'modules/api'], function($, api) {
+    
+    var PARTIAL_PARAM_NAME = "_mz_partial";
+
+    function setPartialTrue(url) {
+        var prefixChar = !~url.indexOf('?') ? '?' : '&';
+        return url + prefixChar + PARTIAL_PARAM_NAME + "=true";
+    }
+
+    function removePartialParam(url) {
+        return url.replace(
+            RegExp('[&\\?]' + PARTIAL_PARAM_NAME + '=true', 'g'),
+            '');
+    }
+
+    return function getPartialView(url, partialTemplate) {
+
+        var deferred = api.defer();
+
+        function handleSuccess(body, __, res) {
+            var canonical = res.getResponseHeader('x-vol-canonical-url');
+            if (canonical) {
+                canonical = removePartialParam(canonical);
+            }
+            deferred.resolve({
+                canonicalUrl: canonical,
+                body: body
+            });
+        }
+
+        function handleError(error) {
+            deferred.reject(error);
+        }
+
+        $.ajax({
+            method: 'GET',
+            url: setPartialTrue(removePartialParam(url)),
+            dataType: 'html',
+            headers: {
+                'x-vol-alternative-view': partialTemplate
+            }
+        }).then(handleSuccess, handleError);
+
+        return deferred.promise;
+
+    };
+
+});
+/**
+ * Unidirectional dispatch-driven collection views, for your pleasure.
+ */
+
+
+define('modules/views-collections',[
+    'backbone',
+    'underscore',
+    'modules/url-dispatcher',
+    'modules/intent-emitter',
+    'modules/get-partial-view'
+], function(Backbone, _, UrlDispatcher, IntentEmitter, getPartialView) {
+
+    function factory(conf) {
+
+        var _$body = conf.$body;
+        var _dispatcher = UrlDispatcher;
+        var ROUTE_NOT_FOUND = 'ROUTE_NOT_FOUND';
+
+        function updateUi(response) {
+            var url = response.canonicalUrl;
+            _$body.html(response.body);
+            if (url) _dispatcher.replace(url);
+            _$body.removeClass('mz-loading');
+        }
+
+        function showError(error) {
+            // if (error.message === ROUTE_NOT_FOUND) {
+            //     window.location.href = url;
+            // }
+            _$body.find('[data-mz-messages]').text(error.message);
+        }
+
+        function intentToUrl(e) {
+            var elm = e.target;
+            var url;
+            if (elm.tagName.toLowerCase() === "select") {
+                elm = elm.options[elm.selectedIndex];
+            }
+            url = elm.getAttribute('data-mz-url') || elm.getAttribute('href') || '';
+            if (url && url[0] != "/") {
+                var parser = document.createElement('a');
+                parser.href = url;
+                url = parser.pathname + parser.search;
+            }
+            return url;
+        }
+
+        var navigationIntents = IntentEmitter(
+            _$body,
+            [
+                'click [data-mz-pagingcontrols] a',
+                'click [data-mz-pagenumbers] a',
+                'click a[data-mz-facet-value]',
+                'click [data-mz-action="clearFacets"]',
+                'change input[data-mz-facet-value]',
+                'change [data-mz-value="pageSize"]',
+                'change [data-mz-value="sortBy"]'
+            ],
+            intentToUrl
+        );
+
+        navigationIntents.on('data', function(url, e) {
+            if (url && _dispatcher.send(url)) {
+                _$body.addClass('mz-loading');
+                e.preventDefault();
+            }
+        });
+
+        _dispatcher.onChange(function(url) {
+            getPartialView(url, conf.template).then(updateUi, showError);
+        });
+
+    }
+
+    return {
+        createFacetedCollectionViews: factory
+    };
+
+});
+/**
+ * Can be used on any Backbone.MozuModel that has had the paging mixin in mixins-paging added to it.
+ */
+define('modules/views-paging',['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu'], function($, _, Backbone) {
+
+    var PagingBaseView = Backbone.MozuView.extend({
+        initialize: function() {
+            var me = this;
+            if (!this.model._isPaged) {
+                throw "Cannot bind a Paging view to a model that does not have the Paging mixin!";
+            }
+
+            //handle browser's back button to make sure startIndex is updated.
+            Backbone.history.on('route', function () {
+                me.model.syncIndex(Backbone.history.fragment);
+            });
+        },
+        render: function() {
+            Backbone.MozuView.prototype.render.apply(this, arguments);
+            this.$('select').each(function() {
+                var $this = $(this);
+                $this.val($this.find('option[selected]').val());
+            });
+        }
+    });
+
+    var PagingControlsView = PagingBaseView.extend({
+        templateName: 'modules/common/paging-controls',
+        autoUpdate: ['pageSize'],
+        updatePageSize: function(e) {
+            var newSize = parseInt($(e.currentTarget).val(), 10),
+            currentSize = this.model.get('pageSize');
+            if (isNaN(newSize)) throw new SyntaxError("Cannot set page size to a non-number!");
+            if (newSize !== currentSize) {
+                this.model.set('pageSize', newSize);
+                this.model.set("startIndex", 0);
+            }
+        }
+    });
+
+    var PageNumbersView = PagingBaseView.extend({
+        templateName: 'modules/common/page-numbers',
+        previous: function(e) {
+            e.preventDefault();
+            return this.model.previousPage();
+        },
+        next: function(e) {
+            e.preventDefault();
+            return this.model.nextPage();
+        },
+        page: function(e) {
+            e.preventDefault();
+            return this.model.setPage(parseInt($(e.currentTarget).data('mz-page-num'), 10) || 1);
+        }
+    });
+
+    var scrollToTop = function() {
+        $('body').ScrollTo({ duration: 200 });
+    };
+
+    var TopScrollingPageNumbersView = PageNumbersView.extend({
+        previous: function() {
+            return PageNumbersView.prototype.previous.apply(this, arguments).then(scrollToTop);
+        },
+        next: function() {
+            return PageNumbersView.prototype.next.apply(this, arguments).then(scrollToTop);
+        },
+        page: function() {
+            return PageNumbersView.prototype.page.apply(this, arguments).then(scrollToTop);
+        }
+    });
+
+    var PageSortView = PagingBaseView.extend({
+        templateName: 'modules/common/page-sort',
+        updateSortBy: function(e) {
+            return this.model.sortBy($(e.currentTarget).val());
+        }
+    });
+
+    return {
+        PagingControls: PagingControlsView,
+        PageNumbers: PageNumbersView,
+        TopScrollingPageNumbers: TopScrollingPageNumbersView,
+        PageSortView: PageSortView
+    };
+
+});
+define('modules/views-productlists',['modules/jquery-mozu', 'underscore', 'modules/backbone-mozu', 'hyprlive'], function ($, _, Backbone, Hypr) {
+    
+    var ProductListView = Backbone.MozuView.extend({
+            templateName: 'modules/product/product-list-tiled'
+        }),
+
+    FacetingPanel = Backbone.MozuView.extend({
+        additionalEvents: {
+            "change [data-mz-facet-value]": "setFacetValue",
+            "click [data-mz-facet-link]": "handleFacetLink"
+        },
+        templateName: "modules/product/faceting-form",
+        initialize: function () {
+            this.listenTo(this.model, 'loadingchange', function (isLoading) {
+                this.$el.find('input').prop('disabled', isLoading);
+            });
+        },
+        clearFacets: function () {
+            this.model.clearAllFacets();
+        },
+        clearFacet: function (e) {
+            this.model.get("facets").findWhere({ field: $(e.currentTarget).data('mz-facet') }).empty();
+        },
+        drillDown: function(e) {
+            var $target = $(e.currentTarget),
+                id = $target.data('mz-hierarchy-id'),
+                field = $target.data('mz-facet');
+            this.model.setHierarchy(field, id);
+            this.model.updateFacets({ force: true, resetIndex: true });
+            e.preventDefault();
+        },
+        setFacetValue: function (e) {
+            var $box = $(e.currentTarget);
+            this.model.setFacetValue($box.data('mz-facet'), $box.data('mz-facet-value'), $box.is(':checked'));
+        },
+        handleFacetLink: function (e) {
+            e.stopImmediatePropagation();
+        }
+    });
+
+
+
+    return {
+        List: ProductListView,
+        FacetingPanel: FacetingPanel
+    };
+});

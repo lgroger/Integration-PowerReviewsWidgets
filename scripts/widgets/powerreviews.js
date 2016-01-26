@@ -5,7 +5,7 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
     function($, Hypr, Backbone, ProductModels, Api, OrderModels) {
 
         var res = Api.get('entity', {
-            listName: 'mozu-powerreviews-sitesettings@mzint',
+            listName: 'mozu-powerreviews-sitesettings@a0842dd',
             id: Api.context.site
         });
 
@@ -19,15 +19,15 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
         var returnUrl;
 
         function writeProductListBoxes() {
-            $('.mz-productlist').append('<link rel="stylesheet" href=\"' + prStylesReview + '\" type="text/css" id="prBaseStylesheet">');
-            $('.mz-productlist').append('<link rel="stylesheet" href=\"' + prMerchantStyles2 + '\" type="text/css" id="prMerchantOverrideStylesheet">');
-            $('.mz-productlist').append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category.css" type="text/css" id="prCategory">');
-            $('.mz-productlist').append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category_styles_review_override.css" type="text/css" id="prCategoryBaseStylesheetOverride">');
+            $(document.body).append('<link rel="stylesheet" href=\"' + prStylesReview + '\" type="text/css" id="prBaseStylesheet">');
+            $(document.body).append('<link rel="stylesheet" href=\"' + prMerchantStyles2 + '\" type="text/css" id="prMerchantOverrideStylesheet">');
+            $(document.body).append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category.css" type="text/css" id="prCategory">');
+            $(document.body).append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category_styles_review_override.css" type="text/css" id="prCategoryBaseStylesheetOverride">');
 
             var allInlineRatings = $('.pr-inline-rating');
 
             Api.get('entityList', {
-                listName: 'mozu-powerreviews-ratings@mzint',
+                listName: 'mozu-powerreviews-ratings@a0842dd',
                 filter: 'productCode  eq ' + allInlineRatings.map(function() {
                     return $(this).data('mzProductCode');
                 }).get().join(' or productCode  eq ')
@@ -261,6 +261,8 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
                         console.log(jqxhr);
                     });
             });
+            
+            writeProductListBoxes();
         });
 
         return {

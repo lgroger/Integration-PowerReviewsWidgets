@@ -1,20 +1,20 @@
-<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
+﻿<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
     
     <div class="mz-productlisting-image">
         {% block product-image %}
-        {% if model.mainImage.imageUrl %}
-        <a href="{{model.url}}">
-            <img src="{{model.mainImage.imageUrl}}?max={% block thumbnail-size %}{{ themeSettings.listProductThumbSize }}{% endblock thumbnail-size %}" />
+        <a href="{% make_url "product" model %}">
+            {% if model.mainImage.imageUrl %}
+                <img src="{% make_url "image" model.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% endif %} />
+            {% else %}
+                <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+            {% endif %}
         </a>
-        {% else %}
-            <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
-        {% endif %}
         {% endblock product-image %}
     </div>
     <div class="mz-productlisting-info">
-        <a class="mz-productlisting-title" href="{{model.url}}">{{model.content.productName}}</a>
+        <a class="mz-productlisting-title" href="{% make_url "product" model %}">{{model.content.productName}}</a>
         {% if model.content.productShortDescription and themeSettings.listProductShortDesc %}
-        <p class="mz-productlisting-shortdesc">{{ model.content.productShortDescription|striptags|truncatewords(themeSettings.maxProductSummaryWords) }}</p>
+        <p class="mz-productlisting-shortdesc">{{ model.content.productShortDescription|truncatewords(themeSettings.maxProductSummaryWords)|safe }}</p>
         {% endif %}
         {% block product-code %}
         {% if themeSettings.listProductCode %}
@@ -22,9 +22,8 @@
         {% endif %}
         {% endblock product-code %}
         {% include "modules/product/price-stack" %}
-        {% include "modules/product/pr-review-listing" %}
-       
-         {% block product-extrainfo %}
+	{% include "modules/product/pr-review-listing" %}
+        {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
             {% if model.price.discount.impact %}
@@ -33,30 +32,10 @@
           {% endif %}
           {% if dealOfTheDay.expirationDate %}
             {% if model.price.discount.discount.expirationDate %}
-              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate.createDate|date("F j, Y") }}</p>
+              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate|date("F j, Y") }}</p>
             {% endif %}
           {% endif %}
         {% endif %}
         {% endblock product-extrainfo %}
     </div>
-   
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

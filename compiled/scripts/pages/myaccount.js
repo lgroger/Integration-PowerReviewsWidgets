@@ -1,1 +1,497 @@
-define("pages/myaccount",["modules/backbone-mozu","hyprlive","hyprlivecontext","modules/jquery-mozu","underscore","modules/models-customer","modules/views-paging"],function(t,e,i,n,a,d,r){var o=t.MozuView.extend({constructor:function(){t.MozuView.apply(this,arguments),this.editing={}},getRenderContext:function(){var e=t.MozuView.prototype.getRenderContext.apply(this,arguments);return e.editing=this.editing,e},doModelAction:function(t,e){var i=this,n=function(){i.render()},a=this.model[t](e);return a&&a.then?(a.then(n,n),a):void 0}}),s=o.extend({templateName:"modules/my-account/my-account-settings",autoUpdate:["firstName","lastName","emailAddress","acceptsMarketing"],constructor:function(){o.apply(this,arguments),this.editing=!1,this.invalidFields={}},initialize:function(){return this.model.getAttributes().then(function(t){return t.get("attributes").each(function(t){t.set("attributeDefinitionId",t.get("id"))}),t})},updateAttribute:function(t){var e=this,i=t.currentTarget.getAttribute("data-mz-attribute"),a=this.model.get("attributes").findWhere({attributeFQN:i}),d="YesNo"===a.get("inputType")?n(t.currentTarget).prop("checked"):n(t.currentTarget).val();a.set("values",[d]),a.validate("values",{valid:function(t,n){e.$('[data-mz-attribute="'+i+'"]').removeClass("is-invalid").next('[data-mz-validationmessage-for="'+n+'"]').text("")},invalid:function(t,n,a){e.$('[data-mz-attribute="'+i+'"]').addClass("is-invalid").next('[data-mz-validationmessage-for="'+n+'"]').text(a)}})},startEdit:function(t){t.preventDefault(),this.editing=!0,this.render()},cancelEdit:function(){this.editing=!1,this.afterEdit()},finishEdit:function(){var t=this;this.doModelAction("apiUpdate").then(function(){t.editing=!1}).otherwise(function(){t.editing=!0}).ensure(function(){t.afterEdit()})},afterEdit:function(){var t=this;t.initialize().ensure(function(){t.render()})}}),c=o.extend({templateName:"modules/my-account/my-account-password",autoUpdate:["oldPassword","password","confirmPassword"],startEditPassword:function(){this.editing.password=!0,this.render()},finishEditPassword:function(){var t=this;this.doModelAction("changePassword").then(function(){a.delay(function(){t.$('[data-mz-validationmessage-for="passwordChanged"]').show().text(e.getLabel("passwordChanged")).fadeOut(3e3)},250)},function(){t.editing.password=!0}),this.editing.password=!1},cancelEditPassword:function(){this.editing.password=!1,this.render()}}),u=o.extend({templateName:"modules/my-account/my-account-wishlist",addItemToCart:function(t){var e=n(t.currentTarget),i=e.data("mzItemId");return i?(this.editing.added=i,this.doModelAction("addItemToCart",i)):void 0},doNotRemove:function(){this.editing.added=!1,this.editing.remove=!1,this.render()},beginRemoveItem:function(t){var e=n(t.currentTarget).data("mzItemId");e&&(this.editing.remove=e,this.render())},finishRemoveItem:function(t){var e=this,i=n(t.currentTarget).data("mzItemId");if(i){var a=i;return this.model.apiDeleteItem(i).then(function(){e.editing.remove=!1;var t=e.model.get("items").where({id:a});t&&(e.model.get("items").remove(t),e.render())})}}}),g=t.MozuView.extend({templateName:"modules/my-account/order-history-list",autoUpdate:["rma.returnType","rma.reason","rma.quantity","rma.comments"],initialize:function(){this.listenTo(this.model,"change:pageSize",a.bind(this.model.changePageSize,this.model))},getRenderContext:function(){var e=t.MozuView.prototype.getRenderContext.apply(this,arguments);return e.returning=this.returning,e},startReturnItem:function(t){var e=n(t.currentTarget),i=e.data("mzStartReturn"),a=e.data("mzOrderId");i&&a&&(this.returning=i,this.model.startReturn(a,i)),this.render()},cancelReturnItem:function(){delete this.returning,this.model.clearReturn(),this.render()},finishReturnItem:function(){var t=this,e=this.model.finishReturn();return e?e.then(function(){delete t.returning,t.render()}):void 0}}),m=t.MozuView.extend({templateName:"modules/my-account/return-history-list",initialize:function(){var t=this;this.listenTo(this.model,"change:pageSize",a.bind(this.model.changePageSize,this.model)),this.listenTo(this.model,"returndisplayed",function(e){var i=t.$('[data-mz-id="'+e+'"]');0===i.length&&(i=t.$el),i.ScrollTo({axis:"y"})})}}),l=o.extend({templateName:"modules/my-account/my-account-paymentmethods",autoUpdate:["editingCard.paymentOrCardType","editingCard.nameOnCard","editingCard.cardNumberPartOrMask","editingCard.expireMonth","editingCard.expireYear","editingCard.cvv","editingCard.isCvvOptional","editingCard.contactId","editingContact.firstName","editingContact.lastNameOrSurname","editingContact.address.address1","editingContact.address.address2","editingContact.address.address3","editingContact.address.cityOrTown","editingContact.address.countryCode","editingContact.address.stateOrProvince","editingContact.address.postalOrZipCode","editingContact.address.addressType","editingContact.phoneNumbers.home","editingContact.isBillingContact","editingContact.isPrimaryBillingContact","editingContact.isShippingContact","editingContact.isPrimaryShippingContact"],renderOnChange:["editingCard.contactId","editingContact.address.countryCode"],beginEditCard:function(t){var e=this.editing.card=t.currentTarget.getAttribute("data-mz-card");this.model.beginEditCard(e),this.render()},finishEditCard:function(){var t=this,e=this.doModelAction("saveCard");e&&(e.otherwise(function(){t.editing.card=!0}),this.editing.card=!1)},cancelEditCard:function(){this.editing.card=!1,this.model.endEditCard(),this.render()},beginDeleteCard:function(t){var i=t.currentTarget.getAttribute("data-mz-card"),n=this.model.get("cards").get(i);window.confirm(e.getLabel("confirmDeleteCard",n.get("cardNumberPart")))&&this.doModelAction("deleteCard",i)}}),h=o.extend({templateName:"modules/my-account/my-account-addressbook",autoUpdate:["editingContact.firstName","editingContact.lastNameOrSurname","editingContact.address.address1","editingContact.address.address2","editingContact.address.address3","editingContact.address.cityOrTown","editingContact.address.countryCode","editingContact.address.stateOrProvince","editingContact.address.postalOrZipCode","editingContact.address.addressType","editingContact.phoneNumbers.home","editingContact.isBillingContact","editingContact.isPrimaryBillingContact","editingContact.isShippingContact","editingContact.isPrimaryShippingContact"],renderOnChange:["editingContact.address.countryCode","editingContact.isBillingContact","editingContact.isShippingContact"],beginAddContact:function(){this.editing.contact="new",this.render()},beginEditContact:function(t){var e=this.editing.contact=t.currentTarget.getAttribute("data-mz-contact");this.model.beginEditContact(e),this.render()},finishEditContact:function(){var t=this,e=i.locals.siteContext.generalSettings.isAddressValidationEnabled,n=this.doModelAction("saveContact",{forceIsValid:e});n&&(n.otherwise(function(){t.editing.contact=!0}),this.editing.contact=!1)},cancelEditContact:function(){this.editing.contact=!1,this.model.endEditContact(),this.render()},beginDeleteContact:function(t){var i=this,n=this.model.get("contacts").get(t.currentTarget.getAttribute("data-mz-contact")),d=this.model.get("cards").where({contactId:n.id}),r=e.getLabel("confirmDeleteContact",n.get("address").get("address1")),o=function(){return i.doModelAction("deleteContact",n.id)},s=o;return d.length>0&&(r+=" "+e.getLabel("confirmDeleteContact2"),s=function(){return i.doModelAction("deleteMultipleCards",a.pluck(d,"id")).then(o)}),window.confirm(r)?s():void 0}}),C=t.MozuView.extend({templateName:"modules/my-account/my-account-storecredit",addStoreCredit:function(){var t=this,e=this.$("[data-mz-entering-credit]").val();return e?this.model.addStoreCredit(e).then(function(){return t.model.getStoreCredits()}):void 0}});n(document).ready(function(){var t=window.accountModel=d.EditableCustomer.fromCurrent(),e=n("#account-settings"),o=n("#password-section"),f=n("#account-orderhistory"),p=n("#account-returnhistory"),v=n("#account-paymentmethods"),y=n("#account-addressbook"),w=n("#account-wishlist"),b=n("#account-messages"),z=n("#account-storecredit"),E=t.get("orderHistory"),N=t.get("returnHistory"),x=window.accountViews={settings:new s({el:e,model:t,messagesEl:b}),password:new c({el:o,model:t,messagesEl:b}),orderHistory:new g({el:f.find("[data-mz-orderlist]"),model:E}),orderHistoryPagingControls:new r.PagingControls({templateName:"modules/my-account/order-history-paging-controls",el:f.find("[data-mz-pagingcontrols]"),model:E}),orderHistoryPageNumbers:new r.PageNumbers({el:f.find("[data-mz-pagenumbers]"),model:E}),returnHistory:new m({el:p.find("[data-mz-orderlist]"),model:N}),returnHistoryPagingControls:new r.PagingControls({templateName:"modules/my-account/order-history-paging-controls",el:p.find("[data-mz-pagingcontrols]"),model:N}),returnHistoryPageNumbers:new r.PageNumbers({el:p.find("[data-mz-pagenumbers]"),model:N}),paymentMethods:new l({el:v,model:t,messagesEl:b}),addressBook:new h({el:y,model:t,messagesEl:b}),storeCredit:new C({el:z,model:t,messagesEl:b})};i.locals.siteContext.generalSettings.isWishlistCreationEnabled&&(x.wishList=new u({el:w,model:t.get("wishlist"),messagesEl:b})),a.invoke(window.accountViews,"render")})});
+
+/**
+ * Simple extension to Backbone.MozuView that adds an `editing` object in the
+ * template evaluation context. Update this `editing` object to indicate which
+ * model is in mid-edit.
+ */
+
+define('modules/editable-view',['modules/backbone-mozu'], function(Backbone) {
+
+  var EditableView = Backbone.MozuView.extend({
+    constructor: function EditableMozuView() {
+        Backbone.MozuView.apply(this, arguments);
+        this.editing = {};
+    },
+    getRenderContext: function () {
+        var c = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+        c.editing = this.editing;
+        return c;
+    },
+    doModelAction: function (action, payload) {
+        var self = this,
+            renderAlways = function () {
+                self.render();
+            };
+        var operation = this.model[action](payload);
+        if (operation && operation.then) {
+            operation.then(renderAlways, renderAlways);
+            return operation;
+        }
+    },
+    handleLoadingChange: function(isLoading) {
+      Backbone.MozuView.prototype.handleLoadingChange.apply(this, arguments);
+      var allInputElements = this.$('input,select,button,textarea');
+      if (!this.alreadyDisabled && isLoading) {
+        this.alreadyDisabled = allInputElements.filter(':disabled');
+        allInputElements.prop('disabled',true);
+      } else {
+        if (this.alreadyDisabled) {
+            allInputElements.not(this.alreadyDisabled).removeProp('disabled');
+            this.alreadyDisabled = false;
+        } else {
+          allInputElements.removeProp('disabled');
+        }
+      }
+    }
+  });
+
+  return EditableView;
+
+});
+
+define('pages/myaccount',['modules/backbone-mozu', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view'], function(Backbone, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews, EditableView) {
+
+    var AccountSettingsView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-settings',
+        autoUpdate: [
+            'firstName',
+            'lastName',
+            'emailAddress',
+            'acceptsMarketing'
+        ],
+        constructor: function () {
+            EditableView.apply(this, arguments);
+            this.editing = false;
+            this.invalidFields = {};
+        },
+        initialize: function () {
+            return this.model.getAttributes().then(function (customer) {
+                customer.get('attributes').each(function (attribute) {
+                    attribute.set('attributeDefinitionId', attribute.get('id'));
+                });
+
+                return customer;
+            });
+        },
+        updateAttribute: function (e) {
+            var self = this;
+            var attributeFQN = e.currentTarget.getAttribute('data-mz-attribute');
+            var attribute = this.model.get('attributes').findWhere({ attributeFQN: attributeFQN });
+            var nextValue = attribute.get('inputType') === 'YesNo' ? $(e.currentTarget).prop('checked') : $(e.currentTarget).val();
+
+            attribute.set('values', [nextValue]);
+            attribute.validate('values', {
+                valid: function (view, attr, error) {
+                    self.$('[data-mz-attribute="' + attributeFQN + '"]').removeClass('is-invalid')
+                        .next('[data-mz-validationmessage-for="' + attr + '"]').text('');
+                },
+                invalid: function (view, attr, error) {
+                    self.$('[data-mz-attribute="' + attributeFQN + '"]').addClass('is-invalid')
+                        .next('[data-mz-validationmessage-for="' + attr + '"]').text(error);
+                }
+            });
+        },
+        startEdit: function (event) {
+            event.preventDefault();
+            this.editing = true;
+            this.render();
+        },
+        cancelEdit: function () {
+            this.editing = false;
+            this.afterEdit();
+        },
+        finishEdit: function () {
+            var self = this;
+
+            this.doModelAction('apiUpdate').then(function () {
+                self.editing = false;
+            }).otherwise(function () {
+                self.editing = true;
+            }).ensure(function () {
+                self.afterEdit();
+            });
+        },
+        afterEdit: function () {
+            var self = this;
+
+            self.initialize().ensure(function () {
+                self.render();
+            });
+        }
+    });
+
+    var PasswordView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-password',
+        autoUpdate: [
+            'oldPassword',
+            'password',
+            'confirmPassword'
+        ],
+        startEditPassword: function () {
+            this.editing.password = true;
+            this.render();
+        },
+        finishEditPassword: function() {
+            var self = this;
+            this.doModelAction('changePassword').then(function() {
+                _.delay(function() {
+                    self.$('[data-mz-validationmessage-for="passwordChanged"]').show().text(Hypr.getLabel('passwordChanged')).fadeOut(3000);
+                }, 250);
+            }, function() {
+                self.editing.password = true;
+        });
+        this.editing.password = false;
+    },
+    cancelEditPassword: function() {
+        this.editing.password = false;
+        this.render();
+    }
+    });
+
+    var WishListView = EditableView.extend({
+        templateName: 'modules/my-account/my-account-wishlist',
+        addItemToCart: function (e) {
+            var self = this, $target = $(e.currentTarget),
+                id = $target.data('mzItemId');
+            if (id) {
+                this.editing.added = id;
+                return this.doModelAction('addItemToCart', id);
+            }
+        },
+        doNotRemove: function() {
+            this.editing.added = false;
+            this.editing.remove = false;
+            this.render();
+        },
+        beginRemoveItem: function (e) {
+            var self = this;
+            var id = $(e.currentTarget).data('mzItemId');
+            if (id) {
+                this.editing.remove = id;
+                this.render();
+            }
+        },
+        finishRemoveItem: function(e) {
+            var self = this;
+            var id = $(e.currentTarget).data('mzItemId');
+            if (id) {
+                var removeWishId = id;
+                return this.model.apiDeleteItem(id).then(function () {
+                    self.editing.remove = false;
+                    var itemToRemove = self.model.get('items').where({ id: removeWishId });
+                    if (itemToRemove) {
+                        self.model.get('items').remove(itemToRemove);
+                        self.render();
+                    }
+                });
+            }
+        }
+    });
+
+
+    var OrderHistoryView = Backbone.MozuView.extend({
+        templateName: "modules/my-account/order-history-list",
+        autoUpdate: [
+            'rma.returnType',
+            'rma.reason',
+            'rma.quantity',
+            'rma.comments'
+        ],
+        initialize: function () {
+            this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
+        },
+        getRenderContext: function () {
+            var context = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+            context.returning = this.returning;
+            return context;
+        },
+        startReturnItem: function (e) {
+            var $target = $(e.currentTarget),
+                itemId = $target.data('mzStartReturn'),
+                orderId = $target.data('mzOrderId');
+            if (itemId && orderId) {
+                this.returning = itemId;
+                this.model.startReturn(orderId, itemId);
+            }
+            this.render();
+        },
+        cancelReturnItem: function () {
+            delete this.returning;
+            this.model.clearReturn();
+            this.render();
+        },
+        finishReturnItem: function () {
+            var self = this,
+                op = this.model.finishReturn();
+            if (op) {
+                return op.then(function () {
+                    delete self.returning;
+                    self.render();
+                });
+            }
+        }
+    }),
+
+    ReturnHistoryView = Backbone.MozuView.extend({
+        templateName: "modules/my-account/return-history-list",
+        initialize: function () {
+            var self = this;
+            this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
+            this.listenTo(this.model, 'returndisplayed', function (id) {
+                var $retView = self.$('[data-mz-id="' + id + '"]');
+                if ($retView.length === 0) $retView = self.$el;
+                $retView.ScrollTo({ axis: 'y' });
+            });
+        }
+    });
+
+    //var scrollBackUp = _.debounce(function () {
+    //    $('#orderhistory').ScrollTo({ axis: 'y', offsetTop: Hypr.getThemeSetting('gutterWidth') });
+    //}, 100);
+    //var OrderHistoryPageNumbers = PagingViews.PageNumbers.extend({
+    //    previous: function () {
+    //        var op = PagingViews.PageNumbers.prototype.previous.apply(this, arguments);
+    //        if (op) op.then(scrollBackUp);
+    //    },
+    //    next: function () {
+    //        var op = PagingViews.PageNumbers.prototype.next.apply(this, arguments);
+    //        if (op) op.then(scrollBackUp);
+    //    },
+    //    page: function () {
+    //        var op = PagingViews.PageNumbers.prototype.page.apply(this, arguments);
+    //        if (op) op.then(scrollBackUp);
+    //    }
+    //});
+
+    var PaymentMethodsView = EditableView.extend({
+        templateName: "modules/my-account/my-account-paymentmethods",
+        autoUpdate: [
+            'editingCard.isDefaultPayMethod',
+            'editingCard.paymentOrCardType',
+            'editingCard.nameOnCard',
+            'editingCard.cardNumberPartOrMask',
+            'editingCard.expireMonth',
+            'editingCard.expireYear',
+            'editingCard.cvv',
+            'editingCard.isCvvOptional',
+            'editingCard.contactId',
+            'editingContact.firstName',
+            'editingContact.lastNameOrSurname',
+            'editingContact.address.address1',
+            'editingContact.address.address2',
+            'editingContact.address.address3',
+            'editingContact.address.cityOrTown',
+            'editingContact.address.countryCode',
+            'editingContact.address.stateOrProvince',
+            'editingContact.address.postalOrZipCode',
+            'editingContact.address.addressType',
+            'editingContact.phoneNumbers.home',
+            'editingContact.isBillingContact',
+            'editingContact.isPrimaryBillingContact',
+            'editingContact.isShippingContact',
+            'editingContact.isPrimaryShippingContact'
+        ],
+        renderOnChange: [
+            'editingCard.isDefaultPayMethod',
+            'editingCard.contactId',
+            'editingContact.address.countryCode'
+        ],
+        beginEditCard: function (e) {
+            var id = this.editing.card = e.currentTarget.getAttribute('data-mz-card');
+            this.model.beginEditCard(id);
+            this.render();
+        },
+        finishEditCard: function() {
+            var self = this;
+            var operation = this.doModelAction('saveCard');
+            if (operation) {
+                operation.otherwise(function() {
+                    self.editing.card = true;
+                });
+                this.editing.card = false;
+            }
+        },
+        cancelEditCard: function () {
+            this.editing.card = false;
+            this.model.endEditCard();
+            this.render();
+        },
+        beginDeleteCard: function (e) {
+            var self = this,
+                id = e.currentTarget.getAttribute('data-mz-card'),
+                card = this.model.get('cards').get(id);
+            if (window.confirm(Hypr.getLabel('confirmDeleteCard', card.get('cardNumberPart')))) {
+                this.doModelAction('deleteCard', id);
+            }
+        }
+    });
+
+    var AddressBookView = EditableView.extend({
+        templateName: "modules/my-account/my-account-addressbook",
+        autoUpdate: [
+            'editingContact.firstName',
+            'editingContact.lastNameOrSurname',
+            'editingContact.address.address1',
+            'editingContact.address.address2',
+            'editingContact.address.address3',
+            'editingContact.address.cityOrTown',
+            'editingContact.address.countryCode',
+            'editingContact.address.stateOrProvince',
+            'editingContact.address.postalOrZipCode',
+            'editingContact.address.addressType',
+            'editingContact.phoneNumbers.home',
+            'editingContact.isBillingContact',
+            'editingContact.isPrimaryBillingContact',
+            'editingContact.isShippingContact',
+            'editingContact.isPrimaryShippingContact'
+            ],
+        renderOnChange: [
+            'editingContact.address.countryCode',
+            'editingContact.isBillingContact',
+            'editingContact.isShippingContact'
+        ],
+        beginAddContact: function () {
+            this.editing.contact = "new";
+            this.render();
+        },
+        beginEditContact: function (e) {
+            var id = this.editing.contact = e.currentTarget.getAttribute('data-mz-contact');
+            this.model.beginEditContact(id);
+            this.render();
+        },
+        finishEditContact: function () {
+            var self = this,
+                isAddressValidationEnabled = HyprLiveContext.locals.siteContext.generalSettings.isAddressValidationEnabled;
+            var operation = this.doModelAction('saveContact', { forceIsValid: isAddressValidationEnabled }); // hack in advance of doing real validation in the myaccount page, tells the model to add isValidated: true
+            if (operation) {
+                operation.otherwise(function() {
+                    self.editing.contact = true;
+                });
+                this.editing.contact = false;
+            }
+        },
+        cancelEditContact: function () {
+            this.editing.contact = false;
+            this.model.endEditContact();
+            this.render();
+        },
+        beginDeleteContact: function (e) {
+            var self = this,
+                contact = this.model.get('contacts').get(e.currentTarget.getAttribute('data-mz-contact')),
+                associatedCards = this.model.get('cards').where({ contactId: contact.id }),
+                windowMessage = Hypr.getLabel('confirmDeleteContact', contact.get('address').get('address1')),
+                doDeleteContact = function() {
+                    return self.doModelAction('deleteContact', contact.id);
+                },
+                go = doDeleteContact;
+
+
+            if (associatedCards.length > 0) {
+                windowMessage += ' ' + Hypr.getLabel('confirmDeleteContact2');
+                go = function() {
+                    return self.doModelAction('deleteMultipleCards', _.pluck(associatedCards, 'id')).then(doDeleteContact);
+                };
+               
+            }
+
+            if (window.confirm(windowMessage)) {
+                return go();
+            }
+        }
+    });
+
+    var StoreCreditView = Backbone.MozuView.extend({
+        templateName: 'modules/my-account/my-account-storecredit',
+        addStoreCredit: function (e) {
+            var self = this;
+            var id = this.$('[data-mz-entering-credit]').val();
+            if (id) return this.model.addStoreCredit(id).then(function () {
+                return self.model.getStoreCredits();
+            });
+        }
+    });
+
+        
+    $(document).ready(function () {
+
+        var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
+
+        var $accountSettingsEl = $('#account-settings'),
+            $passwordEl = $('#password-section'),
+            $orderHistoryEl = $('#account-orderhistory'),
+            $returnHistoryEl = $('#account-returnhistory'),
+            $paymentMethodsEl = $('#account-paymentmethods'),
+            $addressBookEl = $('#account-addressbook'),
+            $wishListEl = $('#account-wishlist'),
+            $messagesEl = $('#account-messages'),
+            $storeCreditEl = $('#account-storecredit'),
+            orderHistory = accountModel.get('orderHistory'),
+            returnHistory = accountModel.get('returnHistory');
+
+        var accountViews = window.accountViews = {
+            settings: new AccountSettingsView({
+                el: $accountSettingsEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            password: new PasswordView({
+                el: $passwordEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            orderHistory: new OrderHistoryView({
+                el: $orderHistoryEl.find('[data-mz-orderlist]'),
+                model: orderHistory
+            }),
+            orderHistoryPagingControls: new PagingViews.PagingControls({
+                templateName: 'modules/my-account/order-history-paging-controls',
+                el: $orderHistoryEl.find('[data-mz-pagingcontrols]'),
+                model: orderHistory
+            }),
+            orderHistoryPageNumbers: new PagingViews.PageNumbers({
+                el: $orderHistoryEl.find('[data-mz-pagenumbers]'),
+                model: orderHistory
+            }),
+            returnHistory: new ReturnHistoryView({
+                el: $returnHistoryEl.find('[data-mz-orderlist]'),
+                model: returnHistory
+            }),
+            returnHistoryPagingControls: new PagingViews.PagingControls({
+                templateName: 'modules/my-account/order-history-paging-controls',
+                el: $returnHistoryEl.find('[data-mz-pagingcontrols]'),
+                model: returnHistory
+            }),
+            returnHistoryPageNumbers: new PagingViews.PageNumbers({
+                el: $returnHistoryEl.find('[data-mz-pagenumbers]'),
+                model: returnHistory
+            }),
+            paymentMethods: new PaymentMethodsView({
+                el: $paymentMethodsEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            addressBook: new AddressBookView({
+                el: $addressBookEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            }),
+            storeCredit: new StoreCreditView({
+                el: $storeCreditEl,
+                model: accountModel,
+                messagesEl: $messagesEl
+            })
+        };
+            
+        
+        if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled) accountViews.wishList = new WishListView({
+            el: $wishListEl,
+            model: accountModel.get('wishlist'),
+            messagesEl: $messagesEl
+        });
+
+        // TODO: upgrade server-side models enough that there's no delta between server output and this render,
+        // thus making an up-front render unnecessary.
+        _.invoke(window.accountViews, 'render');
+
+    });
+});

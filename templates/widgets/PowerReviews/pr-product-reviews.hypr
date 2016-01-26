@@ -13,14 +13,13 @@
 {% if model.config.widgetType == "reviewSnippet" %}
     <input type="hidden" id="productReviewSnippet" value="1">
         <div id="reviewSnippetProduct" style="width:272px; float:left;">
-        {% require_script "widgets/powerreviews" %}
+
          </div>
 {% endif %}  
 
 {% if model.config.widgetType == "socialAnswerSnippet" %}
     <input type="hidden" id="productSocialAnswerSnippet" value="1">
         <div id="socialAnswerSnippet"  style="width:272px; float:left;">
-            {% require_script "widgets/powerreviews" %}
            
         </div>
   
@@ -32,11 +31,9 @@
      <div id="reviewDisplayProduct">
             {% with "siteId eq '{0}'" as qFormat%}
                 {% with qFormat|string_format(siteContext.siteId) as q %}
-                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN="mozu-powerreviews-sitesettings@mzint" query=q %}
+                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN="mozu-powerreviews-sitesettings@a0842dd" query=q %}
                 {% endwith %}   
-             {% endwith %}  
-            {% require_script "widgets/powerreviews" %}
-           
+             {% endwith %}   
      </div>
   
 {% endif %}
@@ -46,13 +43,14 @@
   <div id="socialAnswerDisplay">
         {% with "siteId eq '{0}'" as qFormat%}
             {% with qFormat|string_format(siteContext.siteId) as q %}
-                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN="mozu-powerreviews-sitesettings@mzint" query=q %}
+                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN="mozu-powerreviews-sitesettings@a0842dd" query=q %}
             {% endwith %}   
          {% endwith %}  
-        {% require_script "widgets/powerreviews" %}
    </div>
   
 {% endif %}
+
+{% require_script "widgets/powerreviews" %}
 
 <!-- Code for implementing Tab -->
  

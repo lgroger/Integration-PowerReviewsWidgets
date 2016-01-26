@@ -32,16 +32,19 @@ modules/models-faceting.js
 shim!vendor/bootstrap/js/affix[jquery=jQuery]
 shim!vendor/bootstrap/js/scrollspy[jquery=jQuery]
 modules/scroll-nav.js
-shim!vendor/typeahead.js/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery
+shim!vendor/typeahead.js/dist/typeahead.bundle[modules/jquery-mozu=jQuery]>jQuery
 modules/search-autocomplete.js
-modules/views-productlists.js
-modules/views-paging.js
-widgets/powerreviews.js
+modules/url-dispatcher.js
+modules/intent-emitter.js
+modules/get-partial-view.js
 modules/views-collections.js
+modules/views-paging.js
+modules/views-productlists.js
 
 pages/cart.js
 ----------------
 modules/models-cart.js
+modules/preserve-element-through-render.js
 pages/cart.js
 
 pages/category.js
@@ -51,6 +54,8 @@ pages/category.js
 pages/checkout.js
 ----------------
 modules/models-checkout.js
+modules/editable-view.js
+modules/preserve-element-through-render.js
 pages/checkout.js
 
 pages/error.js
@@ -64,6 +69,7 @@ pages/location.js
 
 pages/myaccount.js
 ----------------
+modules/editable-view.js
 pages/myaccount.js
 
 pages/product.js

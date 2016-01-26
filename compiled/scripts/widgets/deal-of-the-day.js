@@ -1,1 +1,56 @@
-define(["modules/jquery-mozu","underscore","modules/api","modules/backbone-mozu","modules/models-product"],function(e,t,o,n,d){e(function(){e("[data-mz-deal-of-the-day]").each(function(u,a){a=e(a);var r,i,c=a.data("mzDealOfTheDay");r=o.get("search",{filter:"discountId eq "+c.discountId,pageSize:"product"===c.displayStyle?1:20}),i=n.MozuView.extend({templateName:"modules/product/product-list",getRenderContext:function(){var e=n.MozuView.prototype.getRenderContext.apply(this,arguments);return e.dealOfTheDay=c,e}}),r.then(function(e){var o,n,u=e.data;if(u.items=t.filter(u.items,function(e){var t=e.price.discount;return t&&t.discount.discountId===c.discountId}),u.totalCount=u.items.length,o=new d.ProductCollection(u),0===o.attributes.totalCount)throw"Deal of the Day: there are no products to show for the selected discount.";n=new i({model:o,el:a}),n.render()})})})});
+define(
+    ['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+    function ($, _, api, Backbone, ProductModels) {
+        $(function () {
+            $('[data-mz-deal-of-the-day]').each(function (index, deal) {
+                deal = $(deal);
+
+                var config = deal.data('mzDealOfTheDay'),
+                    products, DealView;
+
+                products = api.get('search', {
+                    filter: 'discountId eq ' + config.discountId,
+                    pageSize: (config.displayStyle === 'product' ? 1 : 20)
+                });
+
+                DealView = Backbone.MozuView.extend({
+                    templateName: 'modules/product/product-list',
+                    getRenderContext: function () {
+                        var context = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
+
+                        context.dealOfTheDay = config;
+
+                        return context;
+                    }
+                });
+
+                products.then(function (collection) {
+                    var data = collection.data,
+                        productCollection, dealView;
+
+                    data.items = _.filter(data.items, function (item) {
+                        var discount = item.price.discount;
+
+                        return discount && discount.discount.discountId === config.discountId;
+                    });
+                    data.totalCount = data.items.length;
+
+                    productCollection = new ProductModels.ProductCollection(data);
+
+                    if (productCollection.attributes.totalCount === 0) {
+                        throw "Deal of the Day: there are no products to show for the selected discount.";
+                    } else {
+                        dealView = new DealView({
+                            model: productCollection,
+                            el: deal
+                        });
+
+                        dealView.render();
+                    }
+                });
+            });
+        });
+    }
+);
+
+// http://services-sandbox-mozu-qa.dev.volusion.com/mozu.ProductRuntime.WebApi/commerce/catalog/storefront/productsearch/search/?query={query}&filter={filter}&facetTemplate={facetTemplate}&facetTemplateSubset={facetTemplateSubset}&facet={facet}&facetFieldRangeQuery={facetFieldRangeQuery}&facetHierPrefix={facetHierPrefix}&facetHierValue={facetHierValue}&facetHierDepth={facetHierDepth}&facetStartIndex={facetStartIndex}&facetPageSize={facetPageSize}&facetSettings={facetSettings}&facetValueFilter={facetValueFilter}&sortBy={sortBy}&pageSize={pageSize}&startIndex={startIndex}

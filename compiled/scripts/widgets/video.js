@@ -1,1 +1,74 @@
-define(["modules/jquery-mozu","//www.youtube.com/iframe_api"],function(e){var i,o;i=function(e){var i=/(youtu\.be\/|[?&]v=)([^&]+)/,o=e.match(i);return o&&o[2]?o[2]:void 0},o=function(){var o,t,a,c,d,n=e(this),u=n.data("url"),r=i(u);(r||!this.data("id"))&&(n.data("id",r),o="'http://img.youtube.com/vi/"+r+"/maxresdefault.jpg'",d=n.find(".mz-cms-video-cover").css({"background-image":"url("+o+")",opacity:1}),c=n.find(".mz-cms-video-player").attr("id","youtube-player-"+r),t=new YT.Player("youtube-player-"+r,{height:"100%",width:"100%",videoId:r}),n.data("edit")||(a=n.find(".mz-cms-video-play").on("click",function(){c=n.find(".mz-cms-video-player").css({opacity:1}),a.css("opacity",0),d.css("opacity",0),setTimeout(function(){c.css("z-index",10)},2200),t.playVideo()})))},e(document).ready(function(){YT.ready(function(){e(".mz-cms-video-placeholder").each(o),e(document).on("mozuwidgetdrop",function(i){e(i.currentTarget).find(".mz-cms-video-placeholder").each(o)})})})});
+/* jshint undef: true */
+/* global YT */
+define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
+    function($) {
+        var parseId,
+            bind;
+
+
+
+        parseId = function(url) {
+            var expr = /(youtu\.be\/|[?&]v=)([^&]+)/,
+                match = url.match(expr);
+
+            if (match && match[2]) return match[2];
+        };
+
+        bind = function() {
+            var $this = $(this),
+                url = $this.data('url'),
+                id = parseId(url),
+                address,
+                player,
+                $button,
+                $player,
+                $cover;
+
+            if (!id && this.data('id')) return;
+
+            $this.data('id', id);
+
+            address = '\'http://img.youtube.com/vi/' + id + '/maxresdefault.jpg\'';
+
+            $cover = $this.find('.mz-cms-video-cover').css({
+                'background-image': 'url(' + address + ')',
+                opacity: 1
+            });
+
+            $player = $this.find('.mz-cms-video-player').attr('id', 'youtube-player-' + id);
+
+            player = new YT.Player('youtube-player-' + id, {
+                height: '100%',
+                width: '100%',
+                videoId: id
+            });
+
+            if ($this.data('edit')) return;
+            
+            $button = $this.find('.mz-cms-video-play').on('click', function() {
+                $player = $this.find('.mz-cms-video-player').css({
+                    opacity: 1
+                });
+
+                $button.css('opacity', 0);
+                $cover.css('opacity', 0);
+
+                setTimeout(function() {
+                    $player.css('z-index', 10);
+                }, 2200);
+
+                player.playVideo();
+            });
+        };
+
+        $(document).ready(function() {
+            YT.ready(function () {
+                $('.mz-cms-video-placeholder').each(bind);
+
+                $(document).on('mozuwidgetdrop', function (e) {
+                    $(e.currentTarget).find('.mz-cms-video-placeholder').each(bind);
+                });
+            });
+        });
+    }
+);

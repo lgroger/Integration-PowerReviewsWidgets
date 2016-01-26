@@ -1,1 +1,96 @@
-define(["modules/jquery-mozu","underscore","modules/api","modules/backbone-mozu","modules/models-product"],function(e,t,r,o,a){var u=function(e,o,a){var u=t.map(o,function(e){return"ProductCode eq "+e}).join(" or "),c="";switch(e){case"product":c=r.get("search",{filter:u});break;case"cart":c=r.get("search",{filter:u,pageSize:a})}return c},c=function(e){return!!e},n=require.mozuData("pagecontext");e(document).ready(function(){var r=[];switch(n.pageType){case"product":r.push(require.mozuData("product"));break;case"cart":var d=require.mozuData("cart").items;e.each(d,function(e,t){r.push(t.product)})}e("[data-mz-related-products]").each(function(d,i){i=e(i);for(var p=i.data("mzRelatedProducts"),s=p.attributeId||"tenant~product-crosssell",l=p.template||"modules/product/product-list-carousel",m=p.title,f=p.count||5,h=[],v=o.MozuView.extend({templateName:l}),g=0;g<r.length;g++){var b=r[g];if(b&&b.properties)for(var z=0;z<b.properties.length;z++)if(b.properties[z].attributeFQN==s){var w=t.pluck(b.properties[z].values,"value");h=h.concat(e.grep(w||[],c))}}return h&&h.length?(u(n.pageType,h,f).then(function(e){var t=new a.ProductCollection(e.data),r=new v({model:t,el:i});r.render(),i.prepend("<h3>"+m+"</h3>")}),void 0):(n.isEditMode&&i.html("<b>tbd preview content</b>"),void 0)})})});
+define(['modules/jquery-mozu', 'underscore', "modules/api", "modules/backbone-mozu", "modules/models-product"],
+    function ($, _, api, Backbone, ProductModels) {
+
+        var getRelatedProducts = function(pageType, codes, pageSize) {
+            var filter = _.map(codes, function(c) { return "ProductCode eq " + c; }).join(' or ');
+            var retval = '';
+
+            switch (pageType) {
+                case 'product': retval = api.get("search", { filter: filter });
+                    break;
+                case 'cart': retval = api.get("search", { filter: filter, pageSize: pageSize });
+                    break;
+            }
+
+            return retval;
+        },
+
+        coerceBoolean = function(x) {
+            return !!x;
+        };
+
+        
+
+        var pageContext = require.mozuData('pagecontext');
+
+        $(document).ready(function() {
+            var productCollection = [];
+
+            switch(pageContext.pageType) {
+                case 'product':
+                    productCollection.push(require.mozuData('product'));
+                    break;
+                case 'cart':
+                    var cartItems = require.mozuData('cart').items;
+                    $.each(cartItems, function(index, value) {
+                        productCollection.push(value.product);
+                    });
+                    break;
+            }
+            
+            $('[data-mz-related-products]').each(function (index, rp) {
+                rp = $(rp);
+             
+                var config = rp.data('mzRelatedProducts');
+                var attId = config.attributeId || 'tenant~product-crosssell';
+                var template = config.template || 'modules/product/product-list-carousel';
+                var title = config.title;
+                var numberToDisplay = config.count || 5;
+                var productCodes = [];// = _.pluck(currentProduct.properties[0].values, "value");
+                
+
+                var RelatedProductsView = Backbone.MozuView.extend({
+                    templateName: template
+                });
+                
+                for (var i = 0; i < productCollection.length; i++) {
+                    var currentProduct = productCollection[i];
+                    
+                    if (currentProduct && currentProduct.properties) {
+                        for (var x = 0; x < currentProduct.properties.length; x++) {
+                            if (currentProduct.properties[x].attributeFQN == attId) {
+                                var temp = _.pluck(currentProduct.properties[x].values, "value");
+                                productCodes = productCodes.concat($.grep(temp || [], coerceBoolean));
+                                
+                            }
+                        }
+                    }
+                }
+
+                if (!productCodes || !productCodes.length) {
+                    if (pageContext.isEditMode) {
+                        rp.html('<b>tbd preview content</b>');
+                    }
+                    return;
+                }
+
+                getRelatedProducts(pageContext.pageType, productCodes, numberToDisplay).then(function (collection) {
+
+                    var relatedProductsCollection = new ProductModels.ProductCollection(collection.data);
+                    var relatedProductsView = new RelatedProductsView({
+                        model: relatedProductsCollection,
+                        el: rp
+                    });
+                    relatedProductsView.render();
+                    rp.prepend('<h3>' + title + '</h3>');
+
+                });
+
+
+                
+            });
+           
+
+        });
+
+    });
