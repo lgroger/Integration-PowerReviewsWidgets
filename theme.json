@@ -353,6 +353,7 @@
         }
     ],
     "settings": {
+        "powerReviewsFQN": "mozu-powerreviews-ratings@a0842dd",
         "backofficeDateTimeFormat": "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
