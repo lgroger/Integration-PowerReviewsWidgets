@@ -218,6 +218,15 @@
           "title": "Blank Splash Page",
           "userCreatable": true
         },
+        { 
+          "documentType": "web_page",
+          "entityType": "webpage",
+          "id": "write-a-review",
+          "template": "write-a-review",
+          "customEditor": "write-a-review@mozu",
+          "title": "Write a Review",
+          "userCreatable": true
+        },
         {
             "documentType": "web_page",
             "editor": "landing-page",
