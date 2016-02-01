@@ -5,7 +5,7 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
     function($, Hypr, Backbone, ProductModels, Api, OrderModels) {
 
         var res = Api.get('entity', {
-            listName: Hypr.getThemeSetting('powerReviewsFQNID'),
+            listName: 'mozu-powerreviews-sitesettings' + Hypr.getThemeSetting('powerReviewsFQNID'),
             id: Api.context.site
         });
 
@@ -27,7 +27,7 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
             var allInlineRatings = $('.pr-inline-rating');
 
             Api.get('entityList', {
-                listName: Hypr.getThemeSetting('powerReviewsFQNID'),
+                listName: 'mozu-powerreviews-ratings' + Hypr.getThemeSetting('powerReviewsFQNID'),
                 filter: 'productCode  eq ' + allInlineRatings.map(function() {
                     return $(this).data('mzProductCode');
                 }).get().join(' or productCode  eq ')
@@ -261,8 +261,6 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
                         console.log(jqxhr);
                     });
             });
-            
-            writeProductListBoxes();
         });
 
         return {

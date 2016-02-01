@@ -22,8 +22,9 @@
         {% endif %}
         {% endblock product-code %}
         {% include "modules/product/price-stack" %}
-	{% include "modules/product/pr-review-listing" %}
-        {% block product-extrainfo %}
+        {% include "modules/product/pr-review-listing" %}
+       
+         {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
             {% if model.price.discount.impact %}

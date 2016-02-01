@@ -8,7 +8,6 @@
 
 {% require_script "pages/category" %}
 
-{% require_script "widgets/powerreviews" %}
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container">
     {% include "pages/category-interior" %}
 </div>
