@@ -7,7 +7,6 @@
                 {% endwith %}    
             {% endwith %}    
         {% endwith %}
-        {% require_script "widgets/powerreviews" %}
 	{% endfor %}
 {% endif %}
 
