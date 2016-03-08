@@ -1,8 +1,8 @@
 /* jshint scripturl: true */
 /* global POWERREVIEWS */
 
-define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/models-product", "modules/api", 'modules/models-orders'],
-    function($, Hypr, Backbone, ProductModels, Api, OrderModels) {
+define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/models-product", "modules/api", 'modules/models-orders', 'hyprlivecontext'],
+    function($, Hypr, Backbone, ProductModels, Api, OrderModels, HyprLiveContext) {
 
         var res = Api.get('entity', {
             listName: 'mozu-powerreviews-sitesettings' + Hypr.getThemeSetting('powerReviewsFQNID'),
@@ -108,12 +108,13 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
 
                 zip_location = "/staticContent/pwr/" + merchantGroupId + "/";
 
-                var prScript = zip_location + "pwr/engine/js/full.js";
-                prStylesReview = zip_location + "pwr/engine/pr_styles_review.css";
-                prMerchantStyles2 = zip_location + "pwr/engine/merchant_styles2.css";
+                var host = HyprLiveContext.locals.siteContext.cdnPrefix,
+                prScript = host + zip_location + "pwr/engine/js/full.js";
+                prStylesReview = host + zip_location + "pwr/engine/pr_styles_review.css";
+                prMerchantStyles2 = host + zip_location + "pwr/engine/merchant_styles2.css";
 
 
-                $.getScript(prScript).done(function(script, textStatus) {
+                $.ajax( { url: prScript } ).done(function(script, textStatus) {
                     var currentProduct = ProductModels.Product.fromCurrent();
                     if (isWidget) {
 
