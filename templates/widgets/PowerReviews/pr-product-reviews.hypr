@@ -31,7 +31,7 @@
      <div id="reviewDisplayProduct">
             {% with "siteId eq '{0}'" as qFormat%}
                 {% with qFormat|string_format(siteContext.siteId) as q %}
-                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN="mozu-powerreviews-sitesettings"Hypr.getThemeSetting('powerReviewsFQNID') query=q %}
+                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN=themeSettings.powerReviewsSettingsList query=q %}
                 {% endwith %}   
              {% endwith %}   
      </div>
@@ -43,7 +43,7 @@
   <div id="socialAnswerDisplay">
         {% with "siteId eq '{0}'" as qFormat%}
             {% with qFormat|string_format(siteContext.siteId) as q %}
-                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN="mozu-powerreviews-sitesettings"Hypr.getThemeSetting('powerReviewsFQNID') query=q %}
+                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN=themeSettings.powerReviewsSettingsList query=q %}
             {% endwith %}   
          {% endwith %}  
    </div>

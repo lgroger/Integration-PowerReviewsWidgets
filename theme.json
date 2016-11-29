@@ -362,7 +362,9 @@
         }
     ],
     "settings": {
-        "powerReviewsFQNID": "@mzint",
+        "powerReviewsSettingsList": "mozu-powerreviews-sitesettings@mzint",
+        "powerReviewsRatingsList": "mozu-powerreviews-seo-ratings@mzint",
+        "powerReviewsQuestionsList": "mozu-powerreviews-seo-questions@mzint",
         "backofficeDateTimeFormat": "m/d/Y H:i:s O",
         "extendedPropertiesEnabled": false,
         "extendedPropertyParameters": "",
