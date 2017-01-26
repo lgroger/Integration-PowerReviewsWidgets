@@ -1,0 +1,14 @@
+{% if model.items %}
+<span>Color: </span>
+	<ul style="text-align: left; display: inline-block;">
+		{% for prod in model.items %}
+			{% if prod|get_product_attribute_values(themeSettings.productAttributes.colorHex) %}
+				<li>
+					{% with prod|get_product_attribute_values(themeSettings.productAttributes.colorHex) as color %}
+						<a href="{% make_url "product" prod %}" alt="{{prod.content.productName}}" class="swatch-color" title="{{prod.content.productName}}" style="background-color: {{ color|first }}"></a>
+					{% endwith %}
+				</li>
+			{% endif %}
+	    {% endfor %}
+	</ul>
+{% endif %}

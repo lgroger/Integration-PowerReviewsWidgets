@@ -1,0 +1,166 @@
+﻿{% extends "email/email" %}
+
+{% block body-content %}
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" style="table-layout: fixed; margin: 0px auto; position: relative; opacity: 1; z-index: 0; background-color: rgb(255, 255, 255);" data-module="Mdl28" data-thumb="http://emailtemplatebuilders.com/Metrospective/03_TBThumbnails/module-27.jpg">
+ <tr>
+  <td align="center">
+   <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" class="table600Min" style=" margin: 0px auto; min-width: 668px; background-color: rgb(255, 255, 255);">
+    <tr>
+     <td align="center" class="table600st" style="min-width:668px;">
+      <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" class="table600Min" style="min-width:629px;">
+       <tr>
+        <td class="table600st" style="min-width:629px;">
+         <table width="100%" bgcolor="#fefefe" data-bgcolor="ModuleBGColor" align="left" cellpadding="0" cellspacing="0" border="0" class="table600" data-border-bottom-color="ModuleBorderColor" style="border-bottom-width: 0px; border-bottom-style: none; border-bottom-color: rgb(255, 255, 255);">
+          <tr>
+           <td align="center">
+            <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table600">
+              <tr>
+                <td width="30" class="wz"></td>
+                <td>
+                  {% set_var quoteFlag=0 %}
+                  {% for attribute in model.attributes %}
+                    {% if attribute.fullyQualifiedName=="tenant~QOFLAG" %}
+                      {% with attribute.values|first as isQuote %}
+                        {% if isQuote %}
+                        {% set_var quoteFlag=1 %}
+                        {% endif %}
+                      {% endwith %}
+                    {% endif %}
+                  {% endfor %}
+
+                  {% if quoteFlag==1 %}
+                    {% with pageContext.cmsContext.page.document.properties.html_5 as  message%}
+                      {% with message|replace('{{bill_firstname}}', model.billingInfo.billingContact.firstName) as message1 %}
+                        {% with message1|replace('{{bill_lastname}}', model.billingInfo.billingContact.lastNameOrSurname) as message2 %}
+                          {% with message2|replace('{{orderNumber}}', model.orderNumber) as message3 %}
+                            {% with "http://{0}"|string_format(domainName) as sitelink %}
+
+                              {% with message3|replace('{{sitelink}}', sitelink) as message4 %}
+                              {{message4|safe}}
+                              {% endwith %}
+                            {% endwith %}  
+                          {% endwith %}
+                        {% endwith %}
+                      {% endwith %}
+                    {% endwith %}
+
+                  {% else %}
+                    {% with pageContext.cmsContext.page.document.properties.html_3 as  message%}
+                      {% with message|replace('{{bill_firstname}}', model.billingInfo.billingContact.firstName) as message1 %}
+                        {% with message1|replace('{{bill_lastname}}', model.billingInfo.billingContact.lastNameOrSurname) as message2 %}
+                          {% with message2|replace('{{orderNumber}}', model.orderNumber) as message3 %}
+                            {% with "http://{0}"|string_format(domainName) as sitelink %}
+
+                              {% with message3|replace('{{sitelink}}', sitelink) as message4 %}
+                              {{message4|safe}}
+                              {% endwith %}
+                            {% endwith %}  
+                          {% endwith %}
+                        {% endwith %}
+                      {% endwith %}
+                    {% endwith %}
+                  {% endif %}
+                </td>
+                <td width="30" class="wz"></td>  
+              </tr>
+              <tr>
+                <td width="30" class="wz"></td>
+                <td>
+                  <table width="100%" cellpadding="1" width="100%" style="text-align: left;border-collapse:collapse;" align="">
+                    <thead>
+                      <tr>
+                        <td bgcolor="#666666">
+                          <font color="#FFFFFF">{{ labels.orderDetails }}</font>
+                        </td>
+                      </tr>   
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>
+                          <b>{{ labels.orderNo }}</b>: {{ model.orderNumber }} <a href="http://{{ domainName }}/user/login">{{ labels.checkOrderStatus }}</a><br/><br/>
+                          <b>{{ labels.shipTo }}</b>:<br><br>{% include "modules/common/email-address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}<br><br>
+                          <b>{{ labels.shippingMethod }}</b>: {{ model.fulfillmentInfo.shippingMethodName }}<br>
+                        </td>
+                      </tr>
+
+                      {% ifnotequal model.total 0 %}
+                      <tr>
+
+                        <td>
+
+                         {% for addresspayment in model.payments %}
+                         {% if addresspayment.status != "Voided" and addresspayment.status != "Declined" %}
+                         <dl class="mz-propertylist">                  
+
+                           {%if addresspayment.billingInfo.billingContact.address.address1 !=='' && addresspayment.billingInfo.paymentType !== "Check" %}
+                           <dt>{{ labels.billingAddress }}</dt>
+                           <dd style="margin: 0;" class="mz-addresssummary">{% include "modules/common/address-summary" with model=addresspayment.billingInfo.billingContact %}</dd>
+                           {% endif %}
+                           {% if addresspayment.billingInfo.paymentType == "CreditCard" %}
+
+                           {% endif %}
+                           {% if addresspayment.billingInfo.paymentType == "Check" %} 
+
+                    <!--dt><strong>{{ labels.mailCheckTo }}</strong></dt>
+                    <dd class="mz-addresssummary">
+                        <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+                        <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+                        {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}
+                      </dd-->
+                      {% endif %}
+                    </dl>
+
+
+                    {% endif %}          
+                    {% endfor %}    
+                    <b>Payment Method:</b>
+                    {% for payment in model.payments %}
+                    {% if payment.status != "Voided" and payment.status != "Declined" %}
+                    {% include "modules/checkout/checkout-payment" with model=payment %}
+                    {% endif %}
+                    {% endfor %} 
+                  </td>
+
+                </tr>
+                <tr style="display:none;">
+
+                </tr>
+
+                {% endifnotequal %}
+              </tbody>
+            </table>
+
+            {% include "modules/common/email-order-summary" %}
+
+
+
+
+          </td>
+          <td width="30" class="wz"></td>
+        </tr>
+        <tr>
+          <td width="30" class="wz"></td>
+          <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+           {% if quoteFlag==1 %}
+           {{pageContext.cmsContext.page.document.properties.html_6|safe}}
+           {% else %}
+           {{pageContext.cmsContext.page.document.properties.html_4|safe}}
+           {% endif %}
+         </td>
+         <td width="30" class="wz"></td>   
+       </tr>
+     </table>
+   </td>
+ </tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+{% endblock body-content %}

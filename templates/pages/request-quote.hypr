@@ -1,0 +1,34 @@
+{% extends "page" %}
+kajsdanskdna
+{% block body-content %}
+	<div class="mz-quote-info-container">
+		<div class="mz-cms-col-8-12">
+			<h1>Quote Information</h1>
+			{% dropzone "request-quote" scope="page" %}
+		</div>
+		<div class="mz-cms-col-3-12">
+			<div class="request-quote-box">
+				<p>To review a previously completed quote, enter your quote number here:</p>
+				<form method="post" class="mz-loginform mz-loginform-page" name="mz-anonymousorder">
+                    <input type="hidden" name="order-returnUrl" value="{{ model.returnUrl }}"/>
+                    <input name="ordernum" value="" type="text" placeholder="{{ labels.orderId }}" data-mz-order-number/>
+                	<!-- <input type="text" placeholder="{{ labels.verifyWithEmail }}" name="verifyemail" value="" data-mz-verify-with/> -->
+                    <select data-mz-verify-with>
+                    	<option value="">{{ labels.verifyWith }}</option>
+                        {% if themeSettings.zipCodeEnabled %}<option value="zipCode">{{ labels.billingPostalCode }}</option>{% endif %}
+                        {% if themeSettings.phoneNumberEnabled %}<option value="phoneNumber">{{ labels.billingPhoneNumber }}</option>{% endif %}
+                        {% if themeSettings.billingEmailEnabled %}<option value="email">{{ labels.billingEmail }}</option>{% endif %}
+                    </select>
+                    <input name="verification" value="" placeholder="{{ labels.verify }}" type="text" data-mz-verification />
+                    <button class="submitQuote" data-mz-action="anonymousorder-submit">
+                    	{{ labels.submit }}
+                    </button>
+                    <span class="errormessage"></span>
+                    <div class="mz-l-formfieldgroup-cell">
+                        <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                    </div>
+                </form>
+			</div>
+		</div>
+	</div>
+{% endblock body-content %}

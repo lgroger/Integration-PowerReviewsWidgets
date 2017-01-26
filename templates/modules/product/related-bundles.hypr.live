@@ -1,0 +1,5 @@
+
+{% with model.items|first as product %}
+{{ product.content.productName }}
+
+{% endwith %}

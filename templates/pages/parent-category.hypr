@@ -1,0 +1,161 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+
+{% block body-tag-classes %} mz-category {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+
+{% require_script "pages/category_listing" %}
+
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+	<div class="mz-category-title">
+    	{% dropzone "category-page-top" scope="page" %}
+    	
+	</div>
+	<style>.mz-breadcrumbs:first-child{display:none;}</style>
+	{% block breadcrumbs %}
+	{% if themeSettings.showBreadcrumbs %}
+	<div class="breadcrumbs-conatiner" style="display:none;">
+		{% include "modules/breadcrumbs" %}
+	</div>
+	{% endif %}
+	{% endblock breadcrumbs %}
+    <!-- <h1 class="mz-pagetitle">{{ model.name }}</h1> -->
+	{% dropzone "parent-category-page-top" scope="page" %}
+	{# todo list of child cats #}
+	{#  MY CODE #} 
+	<div class="mz-cms-col-12-12 cat-pg-head-container border-bottom-dotted" align="center">
+		<h1 class="cat-page-promotion-header service-title">{{ model.name }}</h1>
+		{% dropzone "parent-category-description" scope="page" %}
+		<!-- <p>Get all the party supplies you need for your big event.</p> -->
+	</div>
+		{% if model.childrenCategories.length > 0 %} 
+		<div class="category_list_box list_contaiener">
+				<ul id="catg_list_show">
+					{% for childcategory in model.childrenCategories %}
+						{% if forloop.counter < 10 %}
+							<li class="category_li">
+								<a href="/{{childcategory.content.slug|lower}}/c/{{ childcategory.categoryId }}">
+									<div class="catg_list_img">
+										{% if childcategory.content.categoryImages.length > 0 %}					
+											{% for img in childcategory.content.categoryImages %}
+												{% if forloop.counter == 1 %}
+													<img src="{{img.imageUrl}}?max=330" alt="{{childcategory.content.name}}"/>
+												{% endif %}
+											{% endfor%}
+										{% else %}
+											<div class="mz-productlisting-image">
+										        <span class="mz-productlisting-imageplaceholder">
+										        	<span class="mz-productlisting-imageplaceholdertext">[no image]</span>
+										        </span>
+										    </div>
+									        <!-- <div class="mz-productlisting-image">
+										        <span class="mz-productlisting-imageplaceholder">
+										        	<span class="mz-productlisting-imageplaceholdertext">[no image]</span>
+										        </span>
+									        </div>  --> 
+										{% endif %}
+										<div class="catg_list_name">
+											<!-- catg_list_name -->
+											<p align="center" class="" title="{{childcategory.content.name}}">{{childcategory.content.name}}</p>
+										</div>
+									</div>
+									<!-- <img src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4" width="100" height="100"/> -->
+								</a>
+							</li>
+						{% else %}
+							<li class="category_li more_catgories" style="display:none;">
+								<a href="/c/{{ childcategory.categoryId }}">
+
+									<div class="catg_list_img">
+										{% if childcategory.content.categoryImages.length > 0 %}					
+											{% for img in childcategory.content.categoryImages %}
+												{% if forloop.counter == 1 %}
+													<img src="{{img.imageUrl}}?max=330" alt="{{childcategory.content.name}}"/>
+												{% endif %}
+											{% endfor%}
+										{% else %}
+											 <div class="mz-productlisting-image">
+										        <span class="mz-productlisting-imageplaceholder">
+										        	<span class="mz-productlisting-imageplaceholdertext">[no image]</span>
+										        </span>
+									        </div>
+											<!-- <img src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4?max=330" alt="{{childcategory.content.name}}"/> -->
+										{% endif %}
+										<div class="catg_list_name">
+											<!-- catg_list_name -->
+											<p align="center" class="" title="{{childcategory.content.name}}">{{childcategory.content.name}}</p>
+										</div>
+									</div>
+									<!-- <div class="catg_list_img">
+										<img src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4"/>
+										<div class="catg_list_name">
+											<h3 align="center" title="{{childcategory.content.name}}">{{childcategory.content.name}}</h3>
+										</div>
+									</div> -->
+								</a>
+							</li>
+						{% endif %}
+					{% endfor %}
+				</ul>
+			</div>
+			{% if model.childrenCategories.length > 9 %}
+				<div class="final-cat-bg" align="center">
+					<button id="btn_show_all">SHOW ALL CATEGORIES</button>
+				</div>
+			{% endif %}
+
+		{% endif %}
+		<div class="clear"></div>
+	{#  MY CODE #}	
+	<div class="ech-shi-popular-cat-widget" align="center">
+		{% dropzone "popular-cat-widgets-heading" scope="page" %}
+	</div>
+		{% dropzone "popular-cat-widgets" scope="page" %}
+	<div class="echi-shi-bottom-promo">
+		{% dropzone "bottom-promo" scope="template" %}
+	</div> 	
+	<div class="my-new-class">
+		<div class="category_my_widgets">
+			<div class="cat-pg-head-container border-bottom-dotted" align="center" >
+				{% dropzone "promo-heading" scope="page" %}
+			</div>
+			<div class="mz-cms-col-8-12 dropzone-group-category">
+		      {% dropzone "home-promo-1" scope="page" %}
+		     </div>
+		     <div class="mz-cms-col-4-12 dropzone-group-category">
+		      {% dropzone "home-promo-2" scope="page" %}
+		     </div>
+		    <div class="mz-cms-col-12-12"> 
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-3" scope="page" %}
+		     	</div>
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-4" scope="page" %}
+		     	</div>
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-5" scope="page" %}
+		     	</div>
+		    </div>
+		    <div class="clear"></div>
+		 </div>
+		 </div>
+    <div class="mz-cms-col-12-12 clearning-margin">
+		<div class="mz-category-description">
+		 	<p>
+			  	{% if model.content.description %}
+			  		{{ model.content.description }}
+			  	{% else %}
+			   		{{ model.content.metaTagDescription }}
+			  	{% endif %}
+		 	</p>
+		</div>
+    </div>
+</div>
+{% endblock body-content %}
+
+
+{# include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter #}

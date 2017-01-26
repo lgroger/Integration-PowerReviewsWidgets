@@ -1,0 +1,267 @@
+﻿
+<div class="orders-sec">   
+       <div class="orders mz-cms-col-12-12">
+            <div class="orders-header mz-cms-col-12-12 {% if pageContext.pageType == 'my_anonymous_account'%}remove-extra-margin{% endif %}">
+                <div class="order-blocks1">
+                    ITEM(S)
+                </div> 
+                <div class="order-blocks2"> 
+                  &nbsp;                  
+                </div>
+                <div class="order-blocks3">
+                    QUANTITY
+                </div> 
+                <div class="order-blocks3">
+                    PRICE
+                </div>
+                <div class="order-blocks5">
+                    ORDER DETAILS
+                </div> 
+                <div class="order-blocks5">
+                    
+                </div> 
+            </div>
+                   {% for item in model.items %}             
+             <div class="orders-body order-items-list mz-cms-col-12-12 {% if pageContext.pageType == 'my_anonymous_account'%}remove-extra-margin{% endif %}"> 
+                {% if pageContext.pageType != 'my_anonymous_account'%}
+                    <h3 class="mob-blocks">{{ item.product.name }}</h3>
+                {% endif %}           
+                {% if item.product.imageUrl %}
+                <div class="order-blocks1">
+                   <a href="/p/{{ item.product.productCode }}"> <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} ></a>
+                </div>
+                {% endif %}
+                <div class="order-blocks2">
+                    <p class="product-name"><a href="/p/{{ item.product.productCode }}">{{ item.product.name }} </a></p>
+                   <!--span class="order_color"> Color:</span>
+                   <span class="rounded-cart-color">
+                    <span style="background-color:Blue;"></span>
+                    </span--><br/>
+                    <div class="mob-blocks">
+                      <span class="order_qty">Qty: {{ item.quantity }}</span><br/><br/>
+                      <span class="order-details-font account-order-number11">Order Placed:</span>
+                      <span class="order-details-font1"> {{ model.auditInfo.createDate|date("F j, Y") }} </span><br/>
+                     
+                     {% if pageContext.pageType == 'my_account'%}
+                      <span class="order-details-font account-order-number11">Order Shipped:</span>
+                      <span class="order-details-font1"> 
+                        {% if item.fulfillmentDateBasedOnPackage %}
+                          {{ item.fulfillmentDateBasedOnPackage|date("F j, Y") }}
+                        {% else %}
+                          Not Shipped
+                        {% endif %}
+                      </span><br/><br/>
+                      {% else %}
+
+                       <span class="order-details-font account-order-number11">Status:</span>
+                        <span class="order-details-font1"> 
+                        {% if item.product.fulfillmentStatus == "Fulfilled" %}
+                            Shipped
+                        {% else %}
+                            Not Shipped
+                        {% endif %}
+                      </span><br/><br/>
+                      {% endif %}
+
+
+                      <span class="track-order"><a href="#" class="">Track Order</a></span>
+                      <span class="price-tag">{% include "modules/common/item-total" %}</span>
+                    </div>
+                </div>
+                <div class="order-blocks3 account-order-number">
+                    {{ item.quantity }}
+                </div>
+                <div class="order-blocks3 account-order-number account-price-number">
+                   {% include "modules/common/item-total" %}
+                </div>
+                <div class="order-blocks5"> 
+                    <span> 
+                        <span class="order-details-font account-order-number11">Order Placed:</span>
+                        <span class="order-details-font1"> {{ model.auditInfo.createDate|date("F j, Y") }} </span><br/>
+                        
+                        {% if pageContext.pageType == 'my_account'%}
+                        <span class="order-details-font account-order-number11">Order Shipped:</span>
+                        <span class="order-details-font1"> 
+                        {% if item.fulfillmentDateBasedOnPackage %}
+                            {{ item.fulfillmentDateBasedOnPackage|date("F j, Y") }}
+                        {% else %}
+                            Not Shipped
+                        {% endif %}
+                        </span>
+                        {% else %}
+                            <span class="order-details-font account-order-number11">Status:</span>
+                        <span class="order-details-font1"> 
+                        {% if item.product.fulfillmentStatus == "Fulfilled" %}
+                            Shipped
+                        {% else %}
+                            Not Shipped
+                        {% endif %}
+                        </span>
+                        {% endif %}
+                      
+                            <!--<a class="deleteWishlist1">Track Order</a>-->
+                            <!-- Narvar Integration Start-->                          
+                             {% if model.packages.length > 1 %}
+                            	{% for track in model.packages %}
+                            		{% for items in track.items %}
+                            			{% if items.productCode == item.product.productCode %}
+                            				<a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                            			{% endif %}
+                            		{% endfor %}
+                            	{% endfor %}
+                            {% else %}
+                                {% if model.packages.length == 1 %}
+                                    {% for track in model.packages %}
+                                    <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                        	<!-- Narvar Integration End -->        
+                      
+                    </span>  
+                </div>
+               <br/>
+            </div>
+             {% endfor %}
+       </div><br/>
+       <div class="orders orders-ord mz-cms-col-12-12">
+            <p class="acc-sub-main-heading">Shipping Information</p>
+            <div class="mz-cms-col-3-12">
+                <div class="block1">
+                    <span class="ship-text1"> Ship to:</span>
+                </div>
+                <div class="block2">
+                    <span class="ship-text2" style=""></span>
+                    <span class="ship-address">
+                       {{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}
+                      {{model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}<br>
+                      {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }}<br>
+                      {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}<br>
+                      {{ model.fulfillmentInfo.fulfillmentContact.address.countryCode }}<br>
+                    </span>     
+                </div>
+                <br/>
+            </div>
+
+            <div  class="mz-cms-col-3-12">
+                <div class="block1"><br/>
+                    <span class="ship-text1"> Shipping Method:</span>
+                </div>
+                <div class="block2"><br/>
+                    <span class="ship-text2"></span>  
+                    <span class="ship-text2">{{ model.fulfillmentInfo.shippingMethodName }}</span><br>
+                </div>
+            </div>
+            <p class="acc-sub-main-heading acc-billing-heading">Billing Information</p>
+            <div  class="mz-cms-col-3-12">
+                <div class="block1">
+                    <span class="ship-text1">Billing Email:</span>
+                </div>
+                <div class="block2">
+                    <span class="ship-text2" style="">{{ model.fulfillmentInfo.fulfillmentContact.email }}</span>
+                    <br>
+                </div>
+            </div>
+            <div  class="mz-cms-col-3-12"><br/>
+                <div class="block1">
+                    <span class="ship-text1"> Payment Method:</span>
+                </div>
+                <div class="block2">
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.status != "Declined" %}
+                            {% include "modules/checkout/checkout-payment" with model=payment %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <br/>
+        <div  class="mz-cms-col-3-12">
+            <div class="">
+                {% for addresspayment in model.payments %}
+                    {% if addresspayment.status != "Voided" and addresspayment.status != "Declined" %}
+                    {% with addresspayment as admodel %}             
+                        {%if admodel.billingInfo.billingContact.address.address1 !==''%}
+                        <div class="block1">
+                           <span class="ship-text1">{{ labels.billingAddress }}:</span>
+                        </div>
+                        <div class="block2">
+                            <span class="mz-addresssummary ship-address">
+                                {% include "modules/common/address-summary" with model=admodel.billingInfo.billingContact %}
+                            </span>
+                        </div>
+                        {% endif %}
+                        {% if admodel.billingInfo.paymentType == "CreditCard" %}
+                       
+                        {% endif %}
+                        {% if admodel.billingInfo.paymentType == "Check" %}
+                        <!--div class="block1">
+                           <span class="ship-text1">{{ labels.billingAddress }}:</span>
+                        </div>
+                        <div class="block2">
+                        <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
+                        <dd class="mz-addresssummary">
+                            <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+                            <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+                            {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}
+                        </dd>
+                        </div-->
+                        {% endif %}
+                         {% endwith %}  
+                {% endif %}     
+                {% endfor %}
+                <br>
+            </div>
+       </div>
+
+ </div>
+        <div class="cart-rec"><br/>
+            {% if model.viewtype=="quote" %} <a href="javascript:void(0)" style="text-decoration:underline;cursor:pointer" data-mz-action="reloadThisQuote" currentOrderId="{{order.id}}">Reload this quote</a> {% endif %}
+            <div class="cart-summary mz-cms-col-12-12">
+                <h3 class="cart-head">ORDER SUMMARY</h3>
+            </div>
+            <div class="ordersummary_box">
+              <div class="cart-summary ">
+                  <h3 class="cart-label">SUB TOTAL <span class="cart-num">{{ model.subtotal|currency }}</span></h3>
+              </div>
+              <div class="cart-summary ">
+                  <h3 class="cart-label">SHIPPING <span class="cart-num">{{ model.shippingSubTotal|currency }}</span></h3>
+              </div>
+              
+              {% for shippingDiscount in model.shippingDiscounts %}
+                <div class="cart-summary ">
+                    <h3 class="cart-label">SHIPPING DISCOUNT <span class="cart-num">-{{ shippingDiscount.discount.impact|currency }}</span></h3>
+                </div>
+              {% endfor %}
+
+
+              <div class="cart-summary ">
+                  <h3 class="cart-label">SHIPPING SURCHARGE {% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ( {{ model.handlingAmount|currency }} )</span>{% endif %}</span> <span class="cart-num">{{model.handlingTotal|currency}}</span></h3>
+              </div>
+               
+              {% for discount in model.orderDiscounts %}
+                        {% if not discount.excluded %}
+                  <div class="cart-summary ">
+                  <h3 class="cart-label">DISCOUNT <span class="cart-num">-{{ discount.impact|currency }}</span></h3>
+                  </div>
+                        {% endif %}
+                        {% endfor %}
+              <div class="cart-summary">
+                  <h3 class="cart-label">TAX <span class="cart-num">{{ model.itemTaxTotal|currency }}</span></h3>
+              </div>
+              <hr>
+              <div class="cart-summary ordersummary-total">
+                  <h3 class="cart-label-total">TOTAL <span class="cart-num final-total-val">
+                      {{ model.total|currency }}
+                  </span></h3>
+              </div>
+            </div>
+            {% if themeSettings.supportsection %}    
+              {{ themeSettings.supportsection | safe }}
+            {% endif %}
+            <!-- <div class="help-sec">
+               <h4 class="question_abt_order">Questions about this order?</h4>
+               <div class="support-text">Please call <br> Customer Support at</div> 
+               <div class="support-num support_tollfree">1-800-314-8736</div>  
+            </div> -->
+        </div> 
+       </div>

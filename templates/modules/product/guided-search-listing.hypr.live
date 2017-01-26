@@ -1,0 +1,125 @@
+    
+   <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+      <div class="mz-productlist mz-productlist-tiled">
+         <div class="mz-productlist-list mz-l-tiles">
+            {% for productdetails in model.items %}      
+            <div class="mz-productlist-item" data-mz-product="{{ productdetails.productCode }}">
+               <div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{ productdetails.productCode }}">
+                  <div class="wishlist-icon addToWishlist" data-product_id="{{ productdetails.productCode }}" id="{{ productdetails.productCode }}">
+                     <a href="#" id="{{ productdetails.productCode }}"></a> 
+                  </div>
+                  <div class="mz-productlisting-image">
+                     <a href="/p/{{ productdetails.productCode }}">
+                     <img src="{{productdetails.mainImage.imageUrl}}?max=220">
+                     </a> 
+                     <div class="quick-view">  
+                        <a href="javascript:void(0)" data-pro-id="{{ productdetails.productCode }}">QUICK VIEW</a>
+                     </div>
+                     <div class="compare-btn">  
+                        <a href="javascript:void(0)" data-pro-id="{{ productdetails.productCode }}">ADD TO COMPARE</a>
+                     </div>
+                  </div>
+                  <div class="mz-productlisting-info">
+                     <div class="color-swatch">
+                     </div>
+                     <p class="product-mainname"><a href="/p/{{ productdetails.productCode }}">{{productdetails.content.productName}}</a></p>
+                     <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+                        <span itemprop="price" class="mz-price">
+                        $0.00
+                        </span>
+                     </div>
+                  </div>
+                  <div class="mz-productlisting-rating">
+                     <div class="mz-product-rating">
+                        <div id="PRInlineRating-{{ productdetails.productCode }}" data-mz-product-code="{{ productdetails.productCode }}" data-mz-product-url="/p/ZBS217" style="display:none;"></div>
+                        <div class="pr-snippet-stars">
+                           <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </div>
+   </div>
+
+   {% comment %}
+   {% dump model.currentCat %}
+   {% dump model.startIndex %}
+   {% dump model.pageSize %}
+   {% dump model.pageCount %}
+   {% dump model.totalCount %}
+   {% dump model.allPageNumbers %}
+   {% dump model.lastPageNumbers %}
+   {{ model.rangelevel }}
+    {{ model.currentPage }} 
+     {{ model.NextPage }}
+     {{ model.PrevPage }}
+   {% endcomment %}
+   
+ <input type="hidden" class="categoryid" value={{ model.currentCat }} />     
+
+
+   <div class="mz-l-paginatedlist-footer">
+      <div data-mz-pagenumbers class="mz-pagenumbers">      
+         <span class="">         
+         <a class="mz-pagenumbers-prev  {% if model.startIndex==1 %}is-disabled {% else %}pagination {% endif %}" data-mz-page-num="{{ model.PrevPage }}" data-mz-action="previous"><b>{{ labels.previousPage }}</b>
+         <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            <polygon points="16.4,6.2 7.4,6.2 7.4,8.4 4.4,5.3 7.4,2.2 7.4,4.6 16.4,4.6 "/>
+         </svg>
+         </a>
+      </span>
+         <span class="mz-pagenumbers-number pagination  {% if model.currentPage==1 %}pagination_active{% endif %}" href="{% make_url "paging" model with page=1 %}" data-mz-action="page" data-mz-page-num="1">1</span>
+          {% if model.allPageNumbers.length > 3 %}         
+            {% for  links in model.middlePageNumbers %}
+            {% if links!=1 %}
+            <span class="mz-pagenumbers-number pagination   {% if model.currentPage==links %}pagination_active{% endif %}"  data-mz-action="page" data-mz-page-num="{{links}}">{{ links }}</span>
+            {% endif %}
+            {% endfor %}--
+            
+         {% else %}
+            {% for pages in model.middlePageNumbers %}
+            {% if pages!=1 %}
+            <span class="mz-pagenumbers-number pagination {% if model.currentPage==pages %}pagination_active{% endif %}" data-mz-action="page" data-mz-page-num="{{pages}}">{{ pages }}</span>
+            {% endif %}
+            {% endfor %}
+         {% endif %}          
+         {% if model.pageCount!=1 %}
+         <span class="mz-pagenumbers-number pagination " href="{% make_url "paging" model with page=1 %}" data-mz-action="page" data-mz-page-num="{{ model.pageCount }}">{{ model.pageCount }}</span> 
+         {% endif %}      
+         <a class="mz-pagenumbers-next {% if model.currentPage==model.pageCount %} is-disabled {% else %}pagination {% endif %}" {% if model.currentPage==model.pageCount %}  data-mz-page-num="{{ model.pageCount }}"{% else %} data-mz-page-num="{{ model.NextPage }}" {% endif %} data-mz-action="next"><b>{{ labels.nextPage }}</b>
+         <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            <polygon points="4.4,6.2 13.4,6.2 13.4,8.4 16.4,5.3 13.4,2.2 13.4,4.6 4.4,4.6 "/>
+         </svg>
+         </a>
+      </div>
+      <span class="mz-pagingcontrols-pagestate-label">
+      {% if model.totalCount %}
+         {% if model.totalCount != 1 %}
+            {% if model.rangelevel>model.totalCount %}      
+            {{ labels.pageStatePlural|string_format(model.startIndex,model.totalCount,model.totalCount) }}
+            {% else %}
+             {{ labels.pageStatePlural|string_format(model.startIndex,model.rangelevel,model.totalCount) }}
+            {% endif %}
+         {% endif %}
+      {% else %}
+      {{ labels.pageStateSingular }}
+      {% endif %}
+     
+      </span>
+      <label class="mz-pagingcontrols-pagesize-label">
+         <span class="mz-paging-title">{{ labels.show }} </span>
+         <select  class="pagesizes">
+            {% block page-sizes %}
+            {% for size in themeSettings.pageSizeOptions %}
+            {% if forloop.last %}
+            <option  value="{{ size }}">View all</option>
+            {% else %}
+            <option value="{{ size }}" {% if size==model.pageSize %} selected="selected" {% endif %}>{{ size }} per page</option>
+            {% endif %}
+            {% endfor %}
+            {% endblock page-sizes %}    
+         </select>
+      </label>
+   </div>

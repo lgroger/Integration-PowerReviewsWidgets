@@ -1,0 +1,23 @@
+{% if facetValues and facetValues.length > 0 %}
+    {% for fval in facetValues %}
+    {% if fval.childrenFacetValues.length > 0 %}
+    <li class="filter-level-1"><a>{{ facet.label|safe }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
+    {% endif %}
+    {% endfor %}   
+        <ul  class="filter-level-2">
+            {% for fval in facetValues %}
+            {% if fval.isDisplayed %}
+            {% if themeSettings.showChildCategoriesInFaceting and fval.childrenFacetValues.length > 0 %}
+            {% for child in fval.childrenFacetValues %}
+                {% if child.isDisplayed and not child.isEmpty %}
+                <li>
+                    <a href="{% make_url "facet" child %}" class="mz-facetingform-link" data-mz-action="drillDown" data-mz-hierarchy-id="{{ child.value }}" data-mz-facet-value="{{ child.filterValue }}" data-mz-facet="{{ facet.field }}">{{ child.label|safe }}</a>
+                </li>
+                {% endif %}
+            {% endfor %}
+            {% endif %}
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </li>
+{% endif %}

@@ -1,0 +1,42 @@
+<div class="mz-contactselector">
+{% block contact-selector %}
+    
+  <div class="mz-formstep-shippingaddresses mz-l-formfieldgroup">
+    <div class="mz-l-formfieldgroup-row">
+      <div class="mz-l-formfieldgroup-cell">
+        <label class="steps_subhead">My Saved Shipping Addresses</label>
+      </div>
+      <div class="mz-l-formfieldgroup-cell">
+         <select id="mz--contactselector-savedcontact" class="mz-contactselector" data-mz-value="{{ contactcontext }}contactId" name="contactId" >
+            <option>{{labels.addAddress}}</option>
+            {% for contact in model.contacts %}
+          
+                <option value="{{ contact.id }}"  {% if model.id == contact.id %} selected {% endif %}> {% include "modules/common/address-list" with model=contact %}</option>
+         
+            {% endfor %}
+          </select>
+          
+          <a href="javascript:;" id="shipping-addr-edit-link" class="shipping_edit_address">Edit Address</a> 
+  
+         <!-- <div>
+              <a href="javascript:;" data-mz-action="beginAddContact">{{labels.addAddress}}</a>
+          </div> -->
+
+       </div>
+    </div>
+  </div>
+ 
+  <div class="mz-contactselector-contact mz-contactselector-new mz-checkoutform-shipping" 
+  style="{% if model.isAddressEditing == '1' or model.contactId == 'new' or model.contactId == 0 %} display:table; {% else %} display:none; {% endif %}">
+    <span class="mz-contactselector-summarywrapper">
+          {% block enter-new-form %}
+            {% include "modules/common/address-form" with model=editingContact %}
+          {% endblock enter-new-form %}
+      </span>
+  </div> 
+{% endblock contact-selector %}
+  <!-- or model.contactId=='new' or model.contactId == 0 -->
+    <div class="mz-selected-address mz-checkoutform mz-addresssummary"  style="{% if model.contactId %}display:block;{% else %}display:none;{% endif %}">
+        {% include "modules/common/address-summary" %} 
+    </div>
+</div>

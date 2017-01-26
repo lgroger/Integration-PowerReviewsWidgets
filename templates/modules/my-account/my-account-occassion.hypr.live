@@ -1,0 +1,220 @@
+<div class="personal_others">
+ <p class="acc-sub-main-heading">Other Details</p> 
+      {% for labels in attribute.ocassionObject %}
+         <div class="occ-loop-block">
+            <div class="occ-block-main">
+               <div class="occ-block">
+                  <span class="">Name:</span><span class="ocassion-label">{{ labels.relname }}</span>
+               </div>
+               <div class="occ-block"> 
+                  <span class="mz--label ">Relationship:</span><span class="ocassion-label">{{ labels.relation }}</span>
+               </div>
+            </div>
+
+            <div class="occ-block-main">
+               <div class="occ-block"> 
+                  <span class="mz--label">Date:</span><span class="ocassion-label">{{ labels.dob }}</span>
+               </div>
+               <div class="occ-block"> 
+                  <span class="mz--label ">Type:</span><span class="ocassion-label">{{ labels.rtype }}</span>
+               </div> 
+            </div>
+         </div>  
+         <span class="acc-edit" >{% if not editing 
+         %}<span class="mz-link-edit-accountsettings edit-block" data-id="{{ forloop.index0 }}">Edit{% endif %}</span>
+         <span data-method="{{ forloop.index0 }}" data-status="delete" class=" mz-accountsettings-editdone delete-block" data-mz-action="finishEdit">Delete</span>
+         </span>
+         {% endfor %} 
+   
+<div class=" mz-accountsettings-section mz-accountsettings-name {% if editing %} is-editing {% endif %}">
+   {% if editing %} 
+   <span class="mz-validationmessage" data-mz-validationmessage-for="firstName"></span>
+   <span class="mz-validationmessage" data-mz-validationmessage-for="lastName"></span>
+   {% else %}
+   <div class="attribute-blocks mz-accountsettings-section mz-accountsettings-attributes">
+      {% for attribute in model.attributes %}
+      <div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
+         {% if attribute.inputType === "TextArea" %}         
+         {% if editing and attribute.valueType !== "AdminEntered" %}
+         <textarea cols="60" rows="3" name="account-attribute-{{ attribute.attribute.FQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+            data-mz-value="attribute">{{ attribute.values|first }}</textarea>
+         <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>
+         {% else %}       
+         {% for labels in attribute.ocassionObject %}
+         <div class="occ-loop-block">
+            <div class="occ-block-main">
+               <div class="occ-block"> 
+                  <span class="">Name:</span><span class="ocassion-label">{{ labels.relname }}</span>
+               </div>
+               <div class="occ-block"> 
+                  <span class="mz--label ">Relationship:</span><span class="ocassion-label">{{ labels.relation }}</span>
+               </div>
+            </div>
+
+            <div class="occ-block-main">
+               <div class="occ-block"> 
+                  <span class="mz--label">Date:</span><span class="ocassion-label">{{ labels.dob }}</span>
+               </div>
+               <div class="occ-block"> 
+                  <span class="mz--label ">Type:</span><span class="ocassion-label">{{ labels.rtype }}</span>
+               </div> 
+            </div>
+         </div>
+         <span class="acc-edit" >{% if not editing 
+         %}<span class="mz-link-edit-accountsettings edit-block" data-id="{{ forloop.index0 }}">Edit{% endif %}</span>
+         <span data-method="{{ forloop.index0 }}" data-status="delete" class=" mz-accountsettings-editdone delete-block" data-mz-action="finishEdit">Delete</span>
+         </span>
+         {% endfor %}      
+         {% endif %}
+         {% endif %}
+      </div>
+      {% endfor %}
+   </div>
+   {% endif %} 
+   <div class="account-edit mz-accountsettings-section mz-accountsettings-attributes">
+      {% for attribute in model.attributes %}
+      <div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
+         {% if attribute.inputType === "TextArea" %}
+         {% if editing and attribute.valueType !== "AdminEntered" %}
+         {% if attribute.attributeFQN=="tenant~ocassions" %}         
+         <span class="mz-accountsettings-label" style="display:none" >{{ attribute.adminName }}</span>
+         <textarea class="ocassion-textarea" style="display:none" cols="60" rows="3" name="account-attribute-{{ attribute.attributeFQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+            data-mz-value="attribute">{{ attribute.values|first }}</textarea>
+         <input type="hidden" id="original_obj" value="{{ attribute.ocassionObject }}">
+        
+         {% for ocsssion_objects in attribute.ocassionObject %}           
+         <div class="divsblock divs_{{ forloop.index0 }}" id="{{ forloop.index0 }}">
+            <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>   
+            <div class="my-account-allign1">
+               <input type="hidden" class="state" value="edit" />
+               <input type="hidden" class="index" value="{{ forloop.index0 }}" />
+               <label>Relationship</label><br/>
+               <select id="relationship_{{ forloop.index0 }}" name="relationship">
+                  <option value="">Relationship</option>
+                  {% for rel in themeSettings.occasionRel|split(";") %}
+                  	{% if rel != '' %}
+				 	<option value="{{ rel }}" {% if ocsssion_objects.relation == rel %} selected="selected" {% endif %}>{{ rel }}</option>
+				 	{% endif %}
+				  {% endfor %}
+               </select>
+			   <span class="error-block error-block0"></span>
+            </div> 
+            <div class="my-account-allign1">
+               <label>*Type</label><br/>
+               <select id="r-type_{{ forloop.index0 }}" name="type">
+                  <option value="">*Type</option>
+                  {% for rel in themeSettings.occasionType|split(";") %}
+                  	{% if rel != '' %}
+				 	<option value="{{ rel }}" {% if ocsssion_objects.rtype == rel %} selected="selected" {% endif %}>{{ rel }}</option>
+				 	{% endif %}
+				  {% endfor %}
+               </select>
+               <span class="error-block error-block1"></span>
+            </div>
+            <div class="my-account-allign1 dateDropdown">
+               <label>*Date</label>
+               <input id="dob_{{ forloop.index0 }}" class="date_edit" type="hidden" name="dob" placeholder="*YYYY-DD-MM" data-mz-value="dateOfBirth" value="{{ ocsssion_objects.dob }}" />
+               	<select class='month bd'><option value="0">Month</option></select>
+				<select class='day bd'><option value="0">Day</option></select>
+				<select class='year bd'><option value="0">Year</option></select>
+               <span class="error-block error-block2"></span>
+            
+            </div>
+            <div class="my-account-allign1">
+               <label>*Name</label>
+               <input class="" id="name_{{ forloop.index0 }}" type="text" placeholder="*Name" value="{{ ocsssion_objects.relname }}" />
+               <!-- <button class="add-another mz-button mz-button-small mz-accountsettings-editdone">Add an Occasion</button> -->
+               <span class="error-block error-block3"></span>
+            </div>
+            <div class="clear"></div>  
+           <div class="my-account-allign1 error-block">
+            </div>     
+            {% if editing %}
+            <div>
+               <span class="my-account-require-fileds">*Required fields</span><br/> 
+               <button data-method="{{ forloop.index0 }}" class="prof-cancel btn-cancel mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="cancelEdit">{{ labels.cancel }}</button>
+               <button data-method="{{ forloop.index0 }}" class="prof-save btn-save mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="finishEdit">{{ labels.save }}</button>
+            </div>
+            {% endif %}
+         </div>
+         {% endfor %}  
+         {% endif %}    
+         {% endif %}
+         {% endif %}
+      </div>
+      {% endfor %}
+   </div>
+</div>
+</div>
+
+</div>
+<div class="clear"></div>
+
+ <input type="checkbox" class="check-acc-box " id="other-relation"  nameaccount-preference-sec="check-acc-box">
+ <label class="acc-pre-che relation" for="other-relation" style="display:none">Add an Occasion</label><br/>  
+
+<div class="other-relation personal_others"> 
+{% if not editing %} 
+{% for attribute in model.attributes %}
+<div class="mz-accountsettings-attribute mz-accountsettings-attribute-{{ attribute.inputType|lower }}">
+   {% if attribute.attributeFQN=="tenant~ocassions" %}        
+   <!-- <span class="mz-accountsettings-label">{{ attribute.adminName }}</span> -->
+   <textarea style="display:none;" class="ocassion-textarea" cols="60" rows="3" name="account-attribute-{{ attribute.attribute.FQN }}" data-mz-attribute="{{ attribute.attributeFQN }}"
+      data-mz-value="attribute">{{ attribute.values|first }}</textarea>
+   <span class="mz-validationmessage" data-mz-validationmessage-for="values"></span>   
+   <div class="my-account-allign1">
+      <label>Relationship</label><br/>
+      <input type="hidden" class="state" value="save" />
+      <input type="hidden" class="previous" value="{{ attribute.values|first }}">
+      <select id="relationship" name="relationship">
+         <option value="">Relationship</option>
+         {% for rel in themeSettings.occasionRel|split(";") %}
+		 	{% if rel != '' %}
+		 		<option value="{{ rel }}">{{ rel }}</option>
+		 	{% endif %}
+		 {% endfor %}
+      </select> 
+     <span class="error-block error-block0"></span>
+   </div>
+   <div class="my-account-allign1">
+      <label>*Type</label><br/>
+      <select id="r-type" name="type">
+         <option value="">*Type</option>
+         {% for rel in themeSettings.occasionType|split(";") %}
+		 	{% if rel != '' %}
+		 		<option value="{{ rel }}">{{ rel }}</option>
+		 	{% endif %}
+		 {% endfor %}
+      </select>
+      <span class="error-block error-block1"></span>
+   </div>
+   <div class="clear"></div>
+   <div class="my-account-allign1 dateDropdown">
+      <label>*Date</label>
+      <input id="dob" class="datePicker" type="hidden" name="dob" placeholder="*YYYY-MM-DD" data-mz-value="dateOfBirth" value="" />
+      	<select class='month bd'><option value="0">Month</option></select>
+		<select class='day bd'><option value="0">Day</option></select>
+		<select class='year bd'><option value="0">Year</option></select>
+      <span class="error-block error-block2"></span>
+   </div>
+   <div class="my-account-allign1">
+      <label>*Name</label>
+      <input class="" id="name" type="text" placeholder="*Name" value="" />
+      <!-- <button class="add-another mz-button mz-button-small mz-accountsettings-editdone">Add an Occasion</button> -->
+       <span class="error-block error-block3"></span> 
+   </div>
+   <div class="clear"></div>
+    <div class="my-account-allign1 error-block">
+            </div>
+   <br/>      
+   {% endif %}
+</div>
+{% endfor %}
+<div style="display:block;">
+   <span class="my-account-require-fileds">*Required fields</span><br/> 
+   <button class="prof-cancel btn-cancel mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="cancelEdit">{{ labels.cancel }}</button>
+   <button class="prof-save btn-save mz-button mz-button-small mz-accountsettings-editdone" data-mz-action="finishEdit">{{ labels.save }}</button>
+</div>
+{% endif %}
+</div>
+<button class="occassionbtn">Add an Occasion</button>

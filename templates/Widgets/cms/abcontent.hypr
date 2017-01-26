@@ -1,0 +1,14 @@
+<div class="mz-content-widget-wrap">
+    <div class="mz-content-widget-inner-wrap" >
+        <div class="abtestcontent-a" {% if not pageContext.isEditMode %}style="display:none"{% endif %}>
+            {% if Model.config.bodyA %}
+                {{Model.config.bodyA|default_edit:'add content here'|safe}}
+            {% endif %}
+        </div>
+        <div class="abtestcontent-b" {% if not pageContext.isEditMode %}style="display:none"{% endif %}>
+            {% if Model.config.bodyB %}
+                {{Model.config.bodyB|default_edit:'add content here'|safe}}
+            {% endif %}
+        </div>            
+    </div>
+</div>

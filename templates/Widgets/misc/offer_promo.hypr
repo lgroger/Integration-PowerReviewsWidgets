@@ -1,0 +1,30 @@
+<div class="promo-banner" style="background-image:url('{{model.config.background_image.imageUrl}}?max={{model.config.image_size}}')"> 
+	<div class="wdg-container">
+		<div class="">
+			<span>{{ model.config.offer_title|safe}}
+				<div class="button_promo-sty">
+					{% if model.config.btn_css == '' %}
+						<button class="default_offer_btn" onclick="location.href='{{model.config.offer_url}}'">{{ model.config.offer_btn_title}}</button>
+					{% else %}
+						{% if model.config.offer_url == '' %}
+       						<button class="signup-from-widget" style="{{model.config.btn_css}}">{{ model.config.offer_btn_title}}</button>
+      					{% else %} 
+       						<button style="{{model.config.btn_css}}" onclick="location.href='{{model.config.offer_url}}'">{{ model.config.offer_btn_title}}</button>
+      					{% endif %}
+					{% endif %}
+				</div>
+				<input type="hidden" value="{{ model.config.btn_css}}"/>
+			</span>
+		</div>
+		<div class="">
+			<span>{{ model.config.offer_short_desc|safe}}</span>
+		</div>
+	</div>
+</div>
+<style>
+	.mz-cms-video-placeholder{
+		padding-top: 29%;
+    	height: 182px; 
+	}
+</style>
+

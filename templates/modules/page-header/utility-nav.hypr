@@ -1,0 +1,21 @@
+﻿<nav class="mz-utilitynav">
+    <ul class="mz-utilitynav-list">
+		<li class="mz-utilitynav-item">
+		 {% dropzone "customer-care" scope="site" %}
+	
+		</li>
+		<li class="mz-utilitynav-item promoslot-customer">
+			{% dropzone "customer-support" scope="site" %}
+		</li>
+		<li class="mz-utilitynav-item sb-desktop-only" >			
+			{% dropzone "faq" scope="site" %}
+		</li>
+		<li class="mz-utilitynav-item sb-desktop-only" >
+			{% dropzone "about-us" scope="site" %}
+		</li>
+		<li class="mz-utilitynav-item sb-desktop-only" >
+			{% dropzone "our-services" scope="site" %}
+		</li>		
+       
+    </ul>
+</nav>

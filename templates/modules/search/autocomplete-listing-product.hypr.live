@@ -1,0 +1,81 @@
+﻿{% extends "modules/common/item-listing" %}
+{% block module-classes %}mz-itemlisting-autocomplete mz-itemlisting-autocomplete-product{% endblock module-classes %}
+{% block item-listing-image %}
+<div class="mz-itemlisting-thumb search-img-thumb mz-cms-col-2-12">
+    {% with model.content.productImages|first as image %}
+    {% if image.imageUrl %}
+        <img class="mz-itemlisting-thumb-img" src="{% make_url "image" image with max=80 as_parameters %}" {% if image.altText %}alt="{{ image.altText }}
+    "{% endif %} />
+    {% else %}
+            <img class="mz-itemlisting-thumb-img" src="http://cdn-sb.mozu.com/15849-m1/cms/files/6ad2841d-b826-432a-8be2-da43665d83db?max=80" alt="Image Not Found.">
+        <!-- <a href="/ELIZABETHAN-TIARA-2-1-4-/p/TIAELB" align="center" class="no-image-search"> -->
+            <!-- <span class="mz-productlisting-imageplaceholder search-no-image"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span> -->
+        <!-- </a> -->
+    {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}
+{% block item-name %}
+    <a class="mz-itemlisting-title search-item-name" href="/p/{{ model.productCode }}">{{ model.content.productName }}</a>
+    <span><b>{% include "modules/product/price-stack" %}</b></span>
+{% endblock item-name %}
+{% block item-details %}
+<div class="mz-productlisting-rating">
+    {% block product-rating %}
+        <div class="mz-product-rating">
+            {% comment %}
+                {% include "modules/product/pr-review-listing-custom" %}
+            {% endcomment %}
+            {% if model|get_product_attribute('tenant~rating') %}
+                {% with model|get_product_attribute('tenant~rating') as rating %}
+                    {% if rating.values|first|prop("value") != "" %}
+                    {% with rating.values|first|prop("value")|floatformat as totalRating %}
+                        <div class="pr-snippet-stars">
+                                    {% if totalRating > 4.5 %}
+                                   <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating == 4.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
+                                   {% endif %}                              
+                                   {% if totalRating > 3.5 and totalRating < 4.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating == 3.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 2.5 and totalRating < 3.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating == 2.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 1.5 and totalRating < 2.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
+                                   {% endif %}
+                                    {% if totalRating == 1.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 0.5 and totalRating < 1.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 0 and totalRating <= 0.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
+                                   {% endif %}
+                        </div>
+                    {% endwith %}    
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
+        </div>
+    {% endblock %}
+        <!-- <span><i class="fa fa-star" aria-hidden="true"></i></span>
+        <span><i class="fa fa-star" aria-hidden="true"></i></span>
+        <span class="rated"><i class="fa fa-star" aria-hidden="true"></i></span>
+        <span class="rated"><i class="fa fa-star" aria-hidden="true"></i></span>
+        <span class="rated"><i class="fa fa-star" aria-hidden="true"></i></span> -->
+    </div>
+<!-- <div class="mz-itemlisting-description"> -->
+    <!-- {{ model.content.productFullDescription|truncatewords(20)|safe }} -->
+<!-- </div> -->
+
+{% endblock %}

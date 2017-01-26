@@ -1,0 +1,37 @@
+<div class="categorylanding-breadcum">
+{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
+{% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+{% endpartial_cache %}
+</div>  
+<!-- Make Product Slider Here --> 
+  
+{% dropzone "category-landing-page-bottom" scope="page" %}
+<!-- Make Product Slider Here -->
+<div id="static" class="recommended_products">
+	{% dropzone "category-landing-recommeded-heading" scope="page" %}
+ <!-- <h2>
+    You Might Be Interested In
+ </h2>  -->
+</div>
+
+<div data-mz-recommendedProducts id="recommended_products_slot">
+
+</div>
+
+
+{% dropzone "category-page-bottom" scope="page" %}
+<div class="mz-category-description">
+	<h2>{{ model.name|safe }}</h2>
+	<p id="mz-cat-description-hide-more" >
+		{% if model.content.description %}
+			{{ model.content.description }}
+		{% else %}
+			{{ model.content.metaTagDescription }}
+		{% endif %}
+	</p>
+</div>
+
+
+
+
+

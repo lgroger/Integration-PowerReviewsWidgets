@@ -1,0 +1,28 @@
+
+{% with model.id as model_id %}
+    {% include_products "modules/product/products-shoppable" with  productCodes=model.config.pcodes as_parameter %}
+{% endwith %}
+<div class="shoppable-image-container "  data-id="{{model.id}}">
+{% for data in model.config.data %}
+    {% if forloop.first %}
+        <!-- main image -->
+        <img src="{{data.url}}" alt=""/>
+        <!-- all the hotspots -->
+        {% for hotspot in data.hotspots %}
+            <span id="{{hotspot.id}}"  pcode="{{hotspot.pcode}}" class="hotspot"
+                action="show-modal-popup" data-id="{{model.id}}"
+                style=" left:{{hotspot.x}}%;top:{{hotspot.y}}%;" ><p><i class="fa fa-plus" aria-hidden="true"></i></p></span>
+        {% endfor %}
+        <!-- Modal popup for hotspot_product details -->
+        <!-- and model_id=model.id and hotspot_id=hotspot.id -->
+        {% with model.id as model_id %}
+            {% with hotspot.id as hotspot_id %}
+                {% for hotspot in data.hotspots %}
+                    {% include_products "modules/product/product-shoppable" with  productCodes=hotspot.pcode as_parameter %}
+                {% endfor %}
+            {% endwith %}
+        {% endwith %}
+    {% endif %}
+{% endfor %}
+{% require_script "widgets/shopableimageEditor" %}
+</div>

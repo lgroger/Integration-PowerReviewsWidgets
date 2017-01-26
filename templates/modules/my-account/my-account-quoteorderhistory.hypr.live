@@ -1,0 +1,15 @@
+{% if pageContext.pageType != 'my_anonymous_account' %}
+    <h3 class="mz-l-stack-sectiontitle order-head">My Quotes</h3>
+{% endif %}
+<div class="mz-orderhistory-section mz-l-paginatedlist">  
+
+        
+		<div data-mz-quoteorderlist class="mz-l-paginatedlist-list">
+			{% include "modules/my-account/quote-order-history-list" %}
+		</div>
+    	{% if showPaging %}
+            <div data-mz-pagenumbers class="mz-pagenumbers">
+                {% include "modules/common/page-numbers" %}           
+            </div>
+        {% endif %}
+</div>

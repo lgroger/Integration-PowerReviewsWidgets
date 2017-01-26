@@ -1,0 +1,110 @@
+﻿{% extends "email/email" %}
+{% block body-content %}
+
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" style="margin: 0px auto; background-color: rgb(255, 255, 255);" data-module="Mdl28" data-thumb="http://emailtemplatebuilders.com/Metrospective/03_TBThumbnails/module-27.jpg">
+   <tr>
+      <td width="30" class="wz"></td>
+      <td align="center">
+ {% with pageContext.cmsContext.page.document.properties.html_3 as  message%}
+     {% with message|replace('{{bill_firstname}}', model.billingInfo.billingContact.firstName) as message1 %}
+       {% with message1|replace('{{bill_lastname}}', model.billingInfo.billingContact.lastNameOrSurname) as message2 %}
+       {% with message2|replace('{{orderNumber}}', model.orderNumber) as message3 %}
+             {% with message3|replace('{{domainName}}', domainName) as message4 %}
+               {{message4|safe}}
+             {% endwith %}
+       {% endwith %}
+       {% endwith %}
+   {% endwith %}
+{% endwith %} 
+</td>
+<td width="30" class="wz"></td>
+</tr>
+</table>                                     
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" style="margin: 0px auto; background-color: rgb(255, 255, 255);" data-module="Mdl28" data-thumb="http://emailtemplatebuilders.com/Metrospective/03_TBThumbnails/module-27.jpg">
+   <tr>
+      <td align="center">
+         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" class="table600Min" style="table-layout: fixed; margin: 0px auto; min-width: 668px; background-color: rgb(255, 255, 255);">
+            <tr>
+               <td align="center" class="table600st" style="min-width:668px;">
+                  <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" class="table600Min" style="min-width:629px;">
+                     <tr>
+                        <td class="table600st" style="min-width:629px;">
+                           <table width="100%" bgcolor="#fefefe" data-bgcolor="ModuleBGColor" align="left" cellpadding="0" cellspacing="0" border="0" class="table600" data-border-bottom-color="ModuleBorderColor" style="border-bottom:1px solid #dde5f1;">
+                              <tr>
+                                 <td align="center">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table600">
+                                       <tr>
+                                          <td colspan="3" height="25" style="font-size:0;line-height:0;" class="vrtclAlgn2">&nbsp;</td>
+                                       </tr>
+                                       <tr>
+                                          <td width="30" class="wz"></td>
+                                          <td width="30" class="wz"></td>
+                                       </tr>
+                                       <tr>
+                                          <td colspan="3" height="10" style="font-size:0;line-height:0;">&nbsp;</td>
+                                       </tr>
+                                       <tr>
+                                          <td width="30" class="wz"></td>
+                                          <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+                                             {% for package in model.packages %}
+                                             <table  style="border-collapse: collapse;" width="100%" cellpadding="1" cellspacing="1" width="100%">
+                                                <thead>
+                                                   <tr>
+                                                      <td bgcolor="#fff" colspan="2">
+                                                         {{ labels.orderShippedPkgHeader|string_format(package.fulfillmentDate, package.shippingMethodName) }}
+                                                          <a class="trackorder" style="display:inline-block;margin-left:10px;" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ package.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if package.shippingMethodCode != '' %}&service={{ package.shippingMethodCode }}{% endif %}">Track Order</a>
+                                                         <br/>
+                                                      </td>
+
+                                                   </tr>
+                                                   <tr>
+                                                      <td style="padding: 12.5px 25px;" bgcolor="#d91a60"><font color="#FFFFFF">{{ labels.qty }}</font></td>
+                                                      <td style="padding: 12.5px 25px;" bgcolor="#d91a60"><font color="#FFFFFF">{{ labels.product }}</font></td>
+                                                   </tr>
+                                                </thead>
+                                                {% for packageItem in package.items %}
+                                                <tbody class="mz-ordersummary-package">
+                                                   <tr class="mz-ordersummary-line mz-ordersummary-line-item">
+                                                      <td style="padding: 12.5px 25px;">{{ packageItem.quantity }}</td>
+                                                      <td style="padding: 12.5px 25px;" class="mz-ordersummary-item-product">
+                                         
+                                                         {{ packageItem.product.name }}
+                                                         {% if packageItem.product.productUsage == 'Bundle' %}
+                                                         <dl class="mz-propertylist">
+                                                            {% for bundledProduct in packageItem.product.bundledProducts %}
+                                                            <dt>{{ bundledProduct.productCode }}</dt>
+                                                            &nbsp;
+                                                            <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                                                            {% endfor %}
+                                                         </dl>
+                                                         {% endif %}
+                                                      </td>
+                                                   </tr>
+                                                </tbody>
+                                                {% endfor %}
+                                             </table>
+                                        
+                                             {% endfor %}
+                                          </td>
+                                          <td width="30" class="wz"></td>
+                                       </tr>
+                                       <tr>
+                                            <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+                                               {{pageContext.cmsContext.page.document.properties.html_4|safe}}
+                                             </td>
+                                             <td width="30" class="wz"></td>   
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+         </table>
+      </td>
+   </tr>
+</table>
+{% endblock body-content %}

@@ -1,0 +1,20 @@
+
+<div class="news-main-wrap" {% data_attributes Model %}>
+	{% for newsnetry in Model.config.data %}
+		{% for news in newsnetry.newsEntry %}
+			<div class="news-items-container">
+				<div class="news-item">
+					<div class="news-head">
+						<a href="{{news.link}}" target="_blank">{{news.head}}</a>
+					</div>
+					<div class="news-res">
+						Resource: {{news.res}}
+					</div>
+					<div class="news-date">
+						Published on {{news.date}}
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+	{% endfor %}
+</div>

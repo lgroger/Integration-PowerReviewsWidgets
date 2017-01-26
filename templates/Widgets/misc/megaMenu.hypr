@@ -1,0 +1,76 @@
+<div class="megamu-wrapper MenuCls" {% data_attributes Model %}>
+	<p class="back-direction-icon"><span class="megamenu_cat"><span class="back-to-main-cat">&#10094; Back</span> | <span class="menu_category_heading"></span></span><span class="megamenu-close-btn">&times;</span></p>
+	<ul>
+		{% for mainnav in Model.config.data %} 
+			<li><a {% if mainnav.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ mainnav.mlink }}" {%endif%} {% if {{mainnav.ntab}} %} target="_blank" {% endif %}>{{mainnav.mcap }}</a><span></span>
+			{% if {{mainnav.items.length}} > 0 %}
+				<div class="main-drop-down">
+					<ul>
+						{% for menuLV2 in mainnav.items %}
+						{{menuLV2.length}}
+							<li>
+								<a {% if menuLV2.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV2.mlink }}" {%endif%} {% if {{menuLV2.ntab}} %} target="_blank" {% endif %}>{{menuLV2.mcap }}</a><span></span>
+									<div class="third-level-div">
+										<div class="third-level-wrap {% if  menuLV2.banner.imgUrl %} has-image{% else %} {% endif %} {% if menuLV2.banner.imgAlign %} {{menuLV2.banner.imgAlign}} {% endif %}">
+									{% if {{menuLV2.items.length}} > 0 %}
+											{% for menuLV3 in menuLV2.items %}
+												<div class="final_third_list contains-{{menuLV2.items.length}}">
+													<p class="slideDownLastContent"><a {% if menuLV3.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV3.mlink }}" {%endif%} {% if {{menuLV3.ntab}} %} target="_blank" {% endif %}>{{menuLV3.mcap}}</a><span></span></p>
+													{% if {{menuLV3.items.length}} > 0 %}
+														<ul  {% if menuLV3.rcount %} class="{% if menuLV3.items.length|divide(menuLV3.rcount)|split(".")|length > 1 %} menu-col-{{ menuLV3.items.length|divide(menuLV3.rcount)|split(".")|first|add(1) }}
+											{% else %} menu-col-{{ menuLV3.items.length|divide(menuLV3.rcount)|split(".")|first}}{% endif %} {% endif %}">
+															<div class="menu-last-item-block">
+																{% for menuLV4 in menuLV3.items %}
+																	<li><a {% if menuLV4.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV4.mlink }}" {%endif%} {% if {{menuLV4.ntab}} %} target="_blank" {% endif %}>{{menuLV4.mcap }}</a></li>
+																	{% if menuLV3.rcount %} 
+																	
+																	{% if forloop.index|mod(menuLV3.rcount) == 0 %}
+																	
+																		</div>
+																	<div class="menu-last-item-block">
+																	{% endif %}
+																	{% endif %}
+																{% endfor %}
+															</div>
+														</ul>
+													{% endif %}
+												</div>
+											{% endfor %}
+									{% endif %}
+									</div>
+									<div class="img-panel {% if menuLV2.banner.imgAlign %} {{menuLV2.banner.imgAlign}} {% endif %}">
+
+										{% if menuLV2.banner.imgUrl and not require.mozuData("pagecontext").isMobile %}
+										<a {% if menuLV2.banner.url =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV2.banner.url }}" {%endif%} >
+												{% if menuLV2.banner.imgWidth and  menuLV2.banner.imgAlign == "left-align" %}
+													<div class="img-area"> 
+													<img src="{% make_url "image" menuLV2.banner.imgUrl with max=menuLV2.banner.imgWidth as_parameter %}">
+													</div>
+												{% else %}
+													{% if menuLV2.banner.imgWidth %}
+													<div class="img-area" style="background-image:url('{% make_url "image" menuLV2.banner.imgUrl with max=menuLV2.banner.imgWidth as_parameter %}');max-width:{{menuLV2.banner.imgWidth}}px;">
+													</div>
+													{% else %}
+													<div class="img-area" style="background-image:url('{% make_url "image" menuLV2.banner.imgUrl %}')">
+													</div>
+													{% endif %}
+												{% endif %}
+										</a>
+										{% endif %}		
+										</div>
+									</div>
+							</li>
+						{% endfor %}
+					</ul>
+				</div>	
+			{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+	<div class="cta-mobile-menu-section">
+		{% if Model.config.data.length > 0 %}
+			{{Model.config.data.0.cta | safe }}
+		{% endif %}
+	</div>
+</div>
+{% require_script "modules/megamenu" %}

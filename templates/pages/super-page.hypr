@@ -1,0 +1,86 @@
+{% extends "page" %}
+{% block title-tag-content %} {% firstof pageContext.metaTitle model.name|safe %}  - {% parent %}{% endblock title-tag-content %}
+{% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
+{% block body-content %}
+<div class="loader"> 
+</div>
+{% require_script "modules/my-menu" %}
+{% require_script "modules/filters" %}
+{% require_script "modules/quick-view" %}
+{% require_script "modules/superpage" %}
+{% preload_json model "category" %}
+{% comment %}
+{% require_script "pages/super-page" %}
+
+{% endcomment %}
+
+
+<!--[if IE]>
+<style>
+    .echi-shi-party-packs span input[type="button"] {
+         font-size:15px !important;
+    }
+</style>
+<![endif]--> 
+
+
+{% if model.content.categoryImages|length > 1 %} 
+<div class="super-page">
+   <div class="pdp-banner">  
+         {% for bannerimage in model.content.categoryImages %}
+            {% if forloop.counter0==1 %}
+               <img src= '{{bannerimage.imageUrl}}' alt="{{bannerimage.altText}}">
+                  <div class="super-page-title clearfix">
+                    <h1 class="mz-pagetitle">{{ model.name|safe|upper }}</h1>  
+                  </div>
+               </div>
+            {% endif %}
+         {% endfor %}
+    </div>
+  </div>
+{% else %}
+<div class="super-page">
+   <div class="pdp-banner">  
+<div class="super-page-title clearfix">
+    <h1 class="mz-pagetitle">{{ model.name|safe|upper }}</h1>  
+ </div>
+</div>
+</div>
+{% endif %}
+{% dropzone "super-page-top-seo" scope="page" %}
+ <div  class="super-page-product-wrap" data-mz-category="{{model.categoryCode}}">
+{% include "pages/super-page-view" %}
+ </div> 
+
+<!-- Make Product Slider Here -->
+
+{% dropzone "super-recommended-title" scope="page" %}
+<div id="static">
+  <h2>You Might Be Interested In</h2>
+</div>
+<div data-mz-recommendedProducts id="recommended_products_slot">
+
+</div>
+
+<div class="mz-category-description">
+    <h2>{{ model.name|safe }}</h2>
+    <p id="mz-cat-description-hide-more" >
+      {% if model.content.description %}
+        {{ model.content.description }}
+      {% else %}
+        {{ model.content.metaTagDescription }}
+      {% endif %}
+    </p>
+  </div>
+
+<div class="mz-shi-heading-style clear">
+         {% dropzone "supertheme-theme-slider" scope="page" %}
+       </div>
+{% dropzone "superpage-slider"  scope="page" %}
+
+
+<div class="super_seo_content">
+   {% dropzone "superpage-seo-content" scope="template" %}
+</div>
+
+{% endblock body-content %}

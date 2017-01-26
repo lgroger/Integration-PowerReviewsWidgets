@@ -1,0 +1,48 @@
+{% extends "page" %}
+{% block body-tag-classes %} mz-shopping-info {% endblock body-tag-classes %}
+{% block body-content %}
+{% require_script "pages/shipping-info" %}
+
+<style>.mz-breadcrumbs:first-child{display:none;}</style>	
+{% block breadcrumbs %}
+    {% if themeSettings.showBreadcrumbs %}
+	    <div class="mz-breadcrumbs">   
+		       <a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+		       <span class="mz-breadcrumb-separator"></span> 
+		       <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+		      <span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+		</div> 
+	 {% endif %}
+{% endblock breadcrumbs %}
+
+<div class="mz-category-title header-shipping-info">
+		<h1 class="mz-pagetitle">Shipping Info</h1>
+</div>
+<div class="shipping-page-wrap">	
+	<div class="shipping-select-wrap"> 
+		<label>Please choose your Shipping location:</label>
+		<select class="shipping-location">
+			<option value="usa">Contiguous U.S.</option>
+			<option value="usaak">Alaska, Hawaii and Puerto Rico</option> 
+			<option value="ca">Canada</option>
+			<option value="usaapo">APO/FPO</option>
+			<option value="usat">Other U.S. Territories</option>
+			<option value="global">International</option>
+		</select>
+	</div>
+	<div class="shipping-display-table">
+		<h3>Shindigz Ground</h3>
+		<table class="shipping-info-display">
+			<thead>
+				<tr>
+					<th>Total Amount of Order</th>
+					<th>Standard Delivery</th>
+					<th>2 Days Express</th>
+					<th>Next Day (1 day)</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+</div>
+{% endblock body-content %}

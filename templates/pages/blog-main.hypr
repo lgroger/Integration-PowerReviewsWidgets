@@ -1,0 +1,63 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+{% block breadcrumbs %}
+    {% if themeSettings.showBreadcrumbs %}
+	    <div class="mz-breadcrumbs">   
+		       <a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+		       <span class="mz-breadcrumb-separator"></span> 
+		       <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+		      <span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+		</div> 
+	 {% endif %}
+{% endblock breadcrumbs %}
+
+{% block body-tag-classes %} blog-main-page {% endblock body-tag-classes %}
+
+{% block body-content %}
+	<div class="blog-home-content">
+        {% dropzone "blog-top-header" scope="template" %}
+		<div class="top-blog-post">
+			{% dropzone "blog-top" scope="page" %}
+		</div>
+		<div class="zone-recent-post">
+			{% dropzone "recentpost-zone" scope="page" %}			
+		</div>
+		<div class="featured-post-list">
+			{% dropzone "featured-post-zone" scope="page" %}			
+			<div class="post-wrap">
+    			<div class="post-img-section">
+    				{% dropzone "post1-left" scope="page" %}	
+    			</div>
+    			 <div class="blog-content-section-right">
+    			 		{% dropzone "post1-right" scope="page" %}	
+    			 </div>
+    		</div>
+    		<div class="post-wrap">
+    			<div class="post-img-section">
+    				{% dropzone "post2-left" scope="page" %}	
+    			</div>
+    			 <div class="blog-content-section-right">
+    			 	{% dropzone "post2-right" scope="page" %}	
+    			 </div>
+    		</div>
+    		<div class="post-wrap">
+    			<div class="post-img-section">
+    				{% dropzone "post3-left" scope="page" %}	
+    			</div>
+    			 <div class="blog-content-section-right">
+    			 	{% dropzone "post3-right" scope="page" %}	
+    			 </div>
+    		</div>
+    		<div class="post-wrap">
+    			<div class="post-img-section">
+    				{% dropzone "post4-left" scope="page" %}	
+    			</div>
+    			 <div class="blog-content-section-right">
+    			 	{% dropzone "post4-right" scope="page" %}	
+    			 </div>
+    		</div>
+		</div>
+	</div>
+{% require_script "pages/blogscript" %}
+{% endblock body-content %}

@@ -1,0 +1,20 @@
+<div class="pdp-related-products">
+   <div class="clear"></div>
+   {% if model|get_product_attribute('tenant~product-upsell') %}
+    <div class="mz-shi-heading-style">
+      <div class="related-products-heading">
+        <h2>{{ themeSettings.relatedProductHeading }}</h2>
+      </div>
+      {% comment %}{% dropzone "related-products" scope="template" %}{% endcomment %}
+    </div>
+   <div class="echi-shi-related-products-slider">
+      <div class="owl-carousel"> 
+      {% if model|get_product_attribute('tenant~product-upsell') %}   
+        {% with model|get_product_attribute_values('tenant~product-upsell')|join(",") as upsells %}
+          {% include_products "modules/product/related_products" with productCodes=upsells and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}        
+        {% endwith %}         
+      {% endif %}   
+      </div>
+   </div>
+   {% endif %}
+</div>

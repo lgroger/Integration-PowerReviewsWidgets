@@ -1,0 +1,23 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+{% block breadcrumbs %}
+    {% if themeSettings.showBreadcrumbs %}
+	    <div class="mz-breadcrumbs">   
+		       <a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+		       <span class="mz-breadcrumb-separator"></span> 
+		       <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+		      <span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+		</div> 
+	 {% endif %}
+{% endblock breadcrumbs %}
+
+{% block body-tag-classes %} blog-main-page {% endblock body-tag-classes %}
+
+{% block body-content %}
+	{% dropzone "blog-top" scope="template" %}		
+	<div class="blog-post-content">
+		{% dropzone "single-post-zone" scope="page" %}
+	</div>
+
+{% endblock body-content %}

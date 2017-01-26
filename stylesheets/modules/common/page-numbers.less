@@ -1,0 +1,30 @@
+﻿.mz-pagenumbers {
+    .mz-pagenumbers-prev, 
+    .mz-pagenumbers-next,
+    .mz-pagenumbers-number {
+        display: inline-block;
+        text-decoration: none;
+        padding: 10px;
+        border: 1px solid #A3A7AB;
+        border-radius: 4px;
+        text-decoration: none;
+        font-family: @fontArvo;
+    } 
+    a{
+        color: #4f4f4f;
+        font-size: 15px;
+        &:hover{
+            border: 1px solid #004d9c;
+            background-color: #eaf2f9;
+        }
+        b{
+            font-weight: normal;
+        }
+    }
+    .mz-pagenumbers-number.is-current {
+        border: 1px solid #004D9C;
+    }
+}
+.mz-pagenumbers-prev is-disabled b{
+    font-weight:normal;
+}

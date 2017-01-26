@@ -1,0 +1,98 @@
+<div class="popup" data-popup="popup-{{model.productCode}}">
+    {% comment %}
+    <div class="popup-inner">
+        <h2 style="text-align:center;"><u>QUICK VIEW</u></h2>		
+		<div class="" style="width: 50%;float: left;">
+            {% if model.mainImage.imageUrl %}
+                <img class="magnify-image" src="{% make_url "image" model.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} data-magnify-src="{% make_url "image" model.mainImage  %} />
+            {% else %}
+                <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+            {% endif %}
+        </div>
+		<div style="width: 50%;float: left;">
+		<span><h2>{{model.content.productName}}</h2></span>
+		<div><b>PRICE</b>:{% include "modules/product/price-stack" %}</div><br/>
+		
+			
+		<div><b>Description</b>:<p>{{ model.content.productShortDescription|truncatewords(themeSettings.maxProductSummaryWords)|safe }}</p></div>
+		</div>	
+		<p><a href="{% make_url "product" model %}"><b>View More Details</b></a></p>
+       
+        <a class="popup-close" data-popup-close="popup-{{model.productCode}}" href="#">x</a>
+    </div>
+    {% endcomment %}
+    <div class="mz-quick-view-wrapper">
+        <div class="container-left">
+            <div class="product-image">
+                {% if model.mainImage.imageUrl %}
+                    <img class="magnify-image" src="{% make_url "image" model.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} data-magnify-src="{% make_url "image" model.mainImage  %} />
+                {% else %}
+                    <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+                {% endif %}
+            </div>
+            <div class="product-image-slider"></div>
+            <div class="product-video"></div>
+        </div>
+        <div class="container-right">
+            <div class="product-info">
+                <div class="product-title">
+                    <h2>{{ model.content.productName }}</h2>
+                </div>
+                <div class="product-description">
+                    {{ model.content.productShortDescription }}
+                </div>
+                <div class="product-rating-review">
+                    <div class="product-rating">
+                        <ul>
+                            <li><a class="fa fa-star"></a></li>
+                            <li><a class="fa fa-star"></a></li>
+                            <li><a class="fa fa-star"></a></li>
+                            <li><a class="fa fa-star"></a></li>
+                            <li><a class="fa fa-star"></a></li>
+                        </ul>
+                    </div>
+                    <div class="product-review">
+                        <a href="">10 Review(s)</a> | <a href="">Write Your Review</a>
+                    </div>
+                </div>
+                <div class="product-color-swatch">
+                    <span>Color: </span>
+                    <ul>
+                        <li><a href="#" style="background-color: #000"></a></li>
+                        <li><a href="#" style="background-color: #000"></a></li>
+                        <li><a href="#" style="background-color: #000"></a></li>
+                        <li><a href="#" style="background-color: #000"></a></li>
+                        <li><a href="#" style="background-color: #000"></a></li>
+                        <li><a href="#" style="background-color: #000"></a></li>
+                    </ul>
+                    <a href="#">Sell All Color</a>
+                </div>
+                <div class="product-quantity">
+                    <div class="mz-productdetail-conversion-controls">
+                        <span class="mz-qty-label">Qty</span>
+                        <input class="mz-productdetail-qty" type="number" value="1" min="1" data-mz-value="quantity">
+                        <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
+                    </div>
+                </div>
+                <div class="product-price">
+                    Price: {% include "modules/product/price-stack" %}
+                </div>
+                <div class="product-cart-wishlist">
+                    <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large " data-mz-action="addToCart" onClick="BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': '{{model.productCode}}' });">Add To Cart</button>
+                    <button id="add-to-wishlist" class="mz-productdetail-addtowishlist mz-button " data-mz-action="addToWishlist">&nbsp;</button>
+                </div>
+                <div class="product-share">
+                    <ul>
+                        <li><a class="">a</a></li>
+                        <li><a class="">b</a></li>
+                        <li><a class="">c</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div class="mz-quick-veiw-close-btn">
+            <a href="#" class="popup-close fa fa-remove" data-popup-close="popup-{{model.productCode}}"></a>
+        </div>
+    </div>
+</div>

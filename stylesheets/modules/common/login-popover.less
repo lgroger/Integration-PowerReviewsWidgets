@@ -1,0 +1,366 @@
+﻿.lock-verflow{
+    /*position:fixed;*/
+    overflow: hidden;
+}
+.popover.bottom {
+    margin-top: 0px;
+}
+.mz-popover-login {
+    @popoverWidth: 200px;
+    /*width: @popoverWidth;*/
+/*    max-width: 438px;
+    margin:0 auto;
+    text-align:center;
+    background-color: #fff;
+    border-radius: 3px;*/
+
+    .mz-login-form, .mz-forgot-password {
+        /*min-width: @popoverWidth;*/
+    }
+    ::-webkit-input-placeholder {
+       color: #666666;
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+       color: #666666;
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+       color: #666666;  
+    }
+
+    :-ms-input-placeholder {  
+       color: #666666;
+    }
+    .mz-login-form { 
+        /*padding-right: @gutter;*/
+        input[type="text"],input[type="password"],input[type="email"]{
+            width: 90%;
+            padding: 12px 15px;
+            margin-left: 5px;
+            font-size: 15px;
+            border-radius: 5px;
+            border: 1px solid #E2E2E2;
+            background-color: #F7F7F7;
+            margin-bottom: 8px;
+        }
+        .mz-popover-action {
+            .mz-button {
+                margin-left: 5px;
+                display:block;
+                color: #fff;
+                background-color:#0971CE;
+                width: 90%;
+                padding: 16px;
+                font-size: initial;
+                font-weight: bold;
+                border: none;
+            }
+        }
+    }
+ 
+    a {
+        .permalink(@textColor);
+        font-size: @fontSizeSmall;
+    }
+
+    /*input[type="text"], input[type="email"], input[type="password"] {
+        width: 185px;
+    }*/
+
+    .mz-validationmessage {
+        display: inline-block;
+        margin: @gutter/4 @gutter/2;
+    }
+}
+.popoverLoginForm{
+    top: 0 !important; 
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    max-width: 100%;
+    width: 100%;
+    margin:0 !important;
+    background-color: transparent;
+    border: none;
+    position: fixed;
+    box-shadow: none;
+    overflow-y: auto;
+    .popover-wrap{
+        max-width: 438px;
+        margin:5% auto;
+        background-color: #fff;
+        border-radius: 3px;
+    }
+
+    .popover-content{
+        padding: 9px 18px;
+    }
+    .arrow{
+        display:none;
+        visibility: none;
+    }
+    .mz-popover.mz-popover-login.mz-l-slidebox{
+        width: 100%;
+    }
+    .mz-l-slidebox .mz-l-slidebox-outer>.mz-l-slidebox-inner>section.mz-l-slidebox-panel{
+        /*display:inline;*/
+    }
+    .login-popover-title{
+        padding: 5px;
+        box-sizing: border-box;
+        h2{
+            color: #093863;
+            margin: 0px auto;
+            font-size: 20px;
+        }
+        small{
+            display:block;
+            font-size: inherit; 
+            color: #7B7B7B;
+            margin: 8px 0 12px;
+        }
+    }
+    .mz-l-slidebox-outer{
+        width: 100%;
+        display: inherit;
+
+        .mz-l-slidebox-inner{
+            display: inherit;
+
+            section.mz-login-form.mz-l-slidebox-panel{
+                display: inherit;
+            }
+            section.mz-forgot-password.mz-l-slidebox-panel{
+                display: none;   
+            }
+
+
+        }
+
+
+
+    }
+    .mz-l-slidebox-inner{
+        display: inherit;
+    }
+
+    .sign_up_link_container{
+        text-align: center;
+
+        small{
+            display: block;
+            font-size: inherit !important;
+            color: #7b7b7b;
+        }
+    }
+    .cont-to-signup{
+        border: 1px solid #0B2F60;
+        border-radius: 4px;
+        color:#0B2F60;
+        background-color: white;
+        font-size: large;
+        font-weight: bold;
+        padding: 13px;
+        margin: 5px 5px 20px;
+        float: none;
+        transition: 0.3s ease-in-out;
+    }
+    .cont-to-signup:hover{
+        color: white;
+        background-color: #0B2F60;
+        border:1px solid #0B2F60;
+    }
+
+}
+
+.forgot-password-container{
+        padding: 16px 16px 28px;
+        margin-left: 0px;
+        border: none;
+        text-align: center;
+        border-bottom: 2px dotted lightgrey;
+        margin-bottom: 10px;
+        a{
+            font-size: 15px;
+            color: #093863;
+            font-family: @fontMontserratRegular;
+            &:hover{
+                text-decoration:none;
+                color: #d60057;
+            }
+        }
+}
+.mz-forgot-password {
+    label{
+        color: #666666;
+        margin-left:10px;
+        font-size: larger;
+    }
+    input{
+        width: 90%;
+        padding: 12px 15px;
+        margin-left: 5px !important;
+        font-size: 15px;
+        border: none;
+        border: 1px solid #e2e2e2;
+        background-color: #f7f7f7;
+        border-radius: 4px;
+        margin-bottom: 10px;
+    }
+    .mz-popover-action {
+        .mz-button {
+            margin-left: 10px;
+            color: #fff;
+            background-color:#0971CE;
+            width: 86%;
+            padding: 16px;
+            font-size: initial;
+            font-weight: bold;
+            border: none;
+        }
+        .cancel-reset-container{
+            padding: 16px;
+            margin-left: 0px;
+            border: none;
+            text-align: center;
+            border-bottom: 2px dotted lightgrey;
+        }
+        a{
+            font-size: 15px;
+            color: #093863;
+            text-decoration: none;
+            &:hover{
+                color:#d60057;
+            }
+        }
+    }
+}
+ 
+/*To Hide suignup trigger link*/
+.trigger-signup{
+    display: none;
+}
+/**/
+#login-popover-close{
+    float: right;
+    color: #fff;
+    background-color: #0B3862;
+    padding: 0;
+    font-size: 30px;
+    border-radius: 5px;
+    margin-right: -7%;
+    margin-top: -8%
+}
+@media (max-width: 372px){
+    .mz-forgot-password input{
+        width: 85%;
+    }
+}
+@media only screen and (max-width:1024px){
+    .popoverLoginForm,.popoverSignupForm{
+        -webkit-tap-highlight-color: rgba(0,0,0,0);
+    }
+}
+@media only screen and (min-width:677px){
+    .popoverLoginForm{
+        .mz-popover-login .mz-login-form .mz-popover-action{
+            padding: 0 5px;
+            box-sizing: border-box;
+            .mz-button{
+                width: 100%;
+                padding: 14px 0;
+                margin-left: 0;
+            }
+        }
+        .mz-forgot-password .mz-popover-action{
+            padding: 0 5px;
+            box-sizing: border-box;
+            .mz-button{
+                width: 100%;
+                padding: 14px 0;
+                margin-left: 0;
+            }
+        }
+    }
+}
+@media only screen and (max-width:676px){   
+    .popoverLoginForm{
+        .popover-wrap{
+            margin: 5% auto !important;
+            width:90%;
+            max-width: 300px;
+        }
+        .mz-login-form{
+            .login-popover-title{
+                padding:0px 0px 5px;
+                h2{
+                    font-size:18px;
+                }
+                small{
+                    font-size: 12px !important;
+                    margin: 5px 0 8px;
+                }
+            }
+            input[type="text"], input[type="password"], input[type="email"], .mz-popover-action .mz-button{
+                width: 93% !important;
+                padding: 11px 3%;
+                margin-left: 0;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+            .forgot-password-container{
+                padding: 0px 0 15px;
+                a{
+                    font-size: 14px;
+                }
+            }
+        }
+        .mz-forgot-password{
+            .login-popover-title{
+                padding:0px 0px 10px;
+                h2{
+                    font-size:18px;
+                    margin-bottom: 10px;
+                }
+                small{
+                    font-size: 12px !important;
+                    margin: 5px 0 8px;
+                }
+            }
+            input[type="text"], input[type="password"], input[type="email"], .mz-popover-action .mz-button{
+                width: 93%;
+                padding: 11px 3%;
+                margin-left: 0 !important;
+                font-size: 14px;
+                margin-bottom: 10px;
+            }
+            .cancel-reset-container{
+                padding: 10px 0 15px;
+                margin:0px;
+                a{
+                    font-size: 14px;
+                }
+            }
+        }
+        .sign_up_link_container{
+            small{
+                margin-top:10px;
+                font-size: 12px !important;
+            }
+        }
+        .cont-to-signup{
+            font-size: 14px;
+            padding: 10px 15px;
+        }
+        #login-popover-close{
+            font-size: 23px;
+            width: 35px;
+            height:35px;
+            margin-right: -9%;
+        }
+    }
+
+}
+
+

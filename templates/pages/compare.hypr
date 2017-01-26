@@ -1,0 +1,35 @@
+{% extends "page" %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.content.productName %}  - {% parent %}{% endblock title-tag-content %}
+{% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
+  {% block breadcrumbs %}
+     {% if themeSettings.showBreadcrumbs %}
+        <div class="mz-breadcrumbs">   
+            <a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+            <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+            <span>Comparison</span>
+        </div> 
+    {% endif %}
+{% endblock breadcrumbs %}
+{% block body-content %}
+    {% require_script "pages/compare" %}
+    <div class="mz-container">
+        <div class="mz-cmp-header">
+            <h1 class="mz-page-title">Comparison</h1>
+            <p class="mz-page-subtitle">Comparing <i id="mz-cmp-item-count"></i> items</p>
+            <div class="back-button-top">
+                <a href="javascript:void(0)" class="back-page-btn">RETURN TO PREVIOUS PAGE</a>
+            </div>
+            <div style="clear:both;"></div>
+        </div>
+        <div class="mz-container-items"> 
+            <div class="mz-cmp-col" id="mz-cmp-product-0"></div>
+            <div class="mz-cmp-col" id="mz-cmp-product-1"></div>
+            <div class="mz-cmp-col" id="mz-cmp-product-2"></div>
+        </div>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="back-button-bottom">
+        <a href="javascript:void(0)" class="back-page-btn">RETURN TO PREVIOUS PAGE</a>
+    </div>
+    <div class="mz-border-100"></div>
+{% endblock body-content %}

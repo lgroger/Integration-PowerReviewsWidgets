@@ -1,0 +1,4 @@
+<h2>test</h2>
+<div class="faq-main-wrap">
+{% dump model %}
+</div>

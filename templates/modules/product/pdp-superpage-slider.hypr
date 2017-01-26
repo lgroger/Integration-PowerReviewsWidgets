@@ -1,0 +1,55 @@
+
+	<div class="clear"></div>
+	<!--
+	<div class="mz-shi-heading-style">
+		  <h1>RELATED PRODUCTS</h1>
+		 </div>
+		-->
+	
+	<div class="echi-shi-superpage-slider">		
+		<div class="owl-carousel">
+		{% for subcategories in model.childrenCategories %}	
+			<a href="{{subcategories.url}}">
+				<div class="item">
+					<div data-mz-productlist="" class="mz-l-paginatedlist-list">
+						<div class="mz-productlist mz-productlist-tiled">
+						    <div class="mz-productlist-item" data-mz-product="KSSTOC">
+							    <div class="mz-productlisting mz-productlist-tiled" data-mz-product="KSSTOC">
+							    {% with subcategories.content.categoryImages|first as category-img %}
+							    {% if category-img.imageUrl %}
+								    <img src="{{category-img.imageUrl}}" />	    
+								    {% else %}
+								    <img src="../../resources/images/no-image.png" />
+								    {% endif %}
+								    {% endwith %}
+								    <h3>{{ subcategories.content.name }}</h3>
+								</div>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</a>
+			{% endfor %}
+
+		</div>
+
+	    <div class="fixed-block">
+	        <h2 style="text-align:left;">{{ model.content.name}}</h2> 
+	        <p>Design: {{model.categoryId}}</p>
+	       
+	        <p>{% if model.content.metaTagDescription and themeSettings.showProductDetailShortDesc %}
+                          {{ model.content.description|safe }}
+                           {% endif %}
+                          </p>
+	     
+	        <div class="product-share">
+	            <span>Share: </span>	          
+	            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+	            <div id="addThis-conainer" style="display: inline-block;vertical-align: middle;" class="addthis_sharing_toolbox addthis_32x32_style" data-url="{{ pageContext.url }}" data-title="{{ model.content.name }}">
+	            </div>
+	            <!-- Go to www.addthis.com/dashboard to customize your tools -->
+	            <script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid={{ themeSettings.socialShareAddThis }}"></script>
+	        </div>
+	    </div>
+
+	</div>

@@ -1,0 +1,89 @@
+<div class="pointer"></div>
+<div class="soft-cart{% if model.items.length == 0 %} is-empty{% endif %}">
+  <!-- <h2>{#{ labels.cart }#}</h2> -->
+  <!-- <div class="soft-cart-controls">
+    <a class="soft-cart-control soft-cart-control-checkout" data-mz-action="goToCart" href="/cart">
+      {{ labels.editOrCheckout }} Go to Cart
+    </a>
+  </div> -->
+  <div class="soft-cart-items-label"> 
+   <!-- {{ labels.items }} -->
+   {% if model.items.length === 1 %}
+      {{ model.items.length }} item added in  your cart
+  {% else %}
+     {{ model.items.length }} items added in  your cart
+  {% endif %}    
+    <!-- <a id="soft-cart-close" class="close" href="javascript:void(0);">&times;</a> -->
+  </div> 
+  <ul class="soft-cart-items">
+    {% for item in model.items %}
+    <li class="soft-cart-item" data-mz-cart-item="{{ item.id }}">
+        <div class="item-info-container">
+            <div class="item-img mz-cms-col-3-12">
+              {% if item.product.imageUrl == '' %}
+                <div class="no-img">
+                  <span>
+                    no-image
+                  </span>
+                </div>
+              {% else %}
+                <img class="soft-cart-item-image" src="{{ item.product.imageUrl }}?max=80" alt="{{ item.product.name }}" />
+                {% endif %}
+            </div>
+            <section class="item-name-qty-ops mz-cms-col-8-12">
+                <div class="item-name mz-cms-col-12-12">
+                    <a class="soft-cart-item-title" href="{{ item.product.url }}">{{ item.product.name }}</a>
+                </div>
+                <div class="item-custom-attr mz-cms-col-12-12">
+                  {% for prop in item.product.options %}
+                    {% if prop.name !='dnd-token' %}
+                      {% if prop.name == 'Color' %}
+                        <div class="soft-cart-item-quantity">{{ prop.name }} : <span class="rounded"><span style="background-color:{{prop.value}};"></span></span></div>
+                      {% else %}  
+                        <div class="soft-cart-item-quantity">{{ prop.name }} : {{ prop.stringValue }}</div>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+                <div class="item-qty mz-cms-col-8-12">
+                    <span class="soft-cart-item-quantity">{{ labels.qty }} : <span class="q_number">{{ item.quantity }}</span></span>
+                </div>
+                <div class="item-price mz-cms-col-4-12">
+                    <span class="soft-cart-item-total">{{ item.total|currency }}</span>
+                     <!-- <a class="soft-cart-item-action soft-cart-item-action-remove" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" href="javascript:;" title="Remove">&#x2715;</a> -->
+                </div>
+                <!-- <span class="item-ops">
+                    <a class="soft-cart-item-action soft-cart-item-action-more" data-mz-action="increaseQuantity" data-mz-cart-item="{{ item.id }}" href="javascript:;" title="More">&#xFE3F;</a>
+                    {% if item.quantity > 1 %}
+                        <a class="soft-cart-item-action soft-cart-item-action-less" data-mz-action="decreaseQuantity" data-mz-cart-item="{{ item.id }}" href="javascript:;" title="Less">&#xFE40;</a>
+                    {% endif %}
+                </span> -->
+            </section>
+            <div class="clear"></div>
+        </div>
+    </li>
+    {% endfor %}
+  </ul>
+  <div class="soft-cart-link mz-cms-col-12-12">
+    <div class="soft-cart-total">
+      <span class="soft-cart-total-label mz-cms-col-7-12">
+        {{ labels.subtotal | upper }}
+      </span>
+      <span class="soft-cart-total-amount mz-cms-col-5-12">
+        {{ model.discountedTotal|currency }}
+      </span>
+    </div> 
+    <button class="soft-cart-btn view-minicart-btn" onclick="window.location='{{ pageContext.secureHost}}/cart'">{{ labels.viewCart|upper}}</button>
+
+{% if model.isEmpty %}
+    <input type="button" class="soft-cart-btn chkout-minicart-btn" value="CHECKOUT" />
+{% else %}
+	<form method="post" action="/cart/checkout" id="cartform">
+	    <input type="submit" class="soft-cart-btn chkout-minicart-btn" value="CHECKOUT" />
+	</form>
+{% endif %}
+ <!--   <button class="soft-cart-btn chkout-minicart-btn" data-mz-action="gotoCheckout">CHECKOUT</button>  -->
+
+  </div>
+</div>
+ 

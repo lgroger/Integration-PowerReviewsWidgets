@@ -1,0 +1,7 @@
+{% require_script "widgets/home-page-featuredbrands" %}
+{% with "home_featured_categories_{0}"|string_format(model.config.noWid-inputEl) as preloadID %}
+	{% preload_json Model.config.featured-brand-categories preloadID %}
+{% endwith %}
+<ul class="brand-lister" id="home_featured_categories-{{model.config.noWid-inputEl}}" style="list-style-type:none;" cus-id="{{model.config.noWid-inputEl}}">
+
+</ul> 

@@ -1,0 +1,50 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-category no-box-drop-shadow {% endblock body-tag-classes %}
+
+{% block body-content %}
+{% require_script "pages/category" %}
+<style>
+.mz-breadcrumbs{
+  display:none;
+}
+.breadcrumbs-cat .mz-breadcrumbs{
+  display: block !important;
+}
+.category-landing{
+  .mz-category-title,.mz-breadcrumbs{
+    display: none;
+  } 
+}
+</style>
+  
+
+<div class="mz-category-title">   
+    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
+</div> 
+<div>
+ {% dropzone "category-landing-images" scope="page" %}
+</div>
+ {% include "modules/product/category-landing-slider" %} 
+ <div class="breadcrumbs-cat">
+	{% block breadcrumbs %}
+		{% include "modules/breadcrumbs" %}
+	{% endblock breadcrumbs %}
+ </div>
+
+<div class="categorylanding-promo"> 
+ {% dropzone "category-landing-promo" scope="page" %}
+  {% dropzone "category-landing-promo-temp" scope="template" %}
+ </div> 
+
+
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container category-landing">
+    {% include "pages/categorylanding-interior" %}
+</div>
+{% require_script "modules/filters" %}
+{% require_script "modules/my-menu" %}
+{% require_script "modules/quick-view" %}
+{% require_script "pages/compare-list" %}
+{% endblock body-content %} 

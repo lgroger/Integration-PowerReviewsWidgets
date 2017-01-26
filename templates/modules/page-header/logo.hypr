@@ -1,0 +1,4 @@
+{% dropzone "logo_upload" scope="site" %}
+{% comment %}	
+<a href="/"><img class="logo" src="http://cdn-sb.mozu.com/15637-m1/cms/files/f9cf0beb-c7a0-48b6-b0a7-88e54cdeb69e" /></a>	
+{% endcomment %} 

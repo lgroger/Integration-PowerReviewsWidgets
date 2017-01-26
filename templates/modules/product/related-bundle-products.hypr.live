@@ -1,0 +1,17 @@
+
+{% with model.items|first as product %}
+ <div class="item">
+	<div data-mz-productlist="" class="mz-l-paginatedlist-list">
+	   <div class="mz-productlist mz-productlist-tiled">
+		    <div class="mz-productlist-item" data-mz-product="">
+		    <div class="mz-productlisting mz-productlist-tiled" data-mz-product="">
+		    <a href="{{product.url}}">
+		    <img src="{{product.mainImage.src}}" />
+		    <h3>{{product.content.productName}}</h3></a>
+				</div>
+		   </div>
+		</div>
+	</div>
+ </div> 
+
+{% endwith %}

@@ -1,0 +1,195 @@
+<div class="fixed-top">
+<div class="fixed-top-left">
+	<div class="prodct-image">
+		<div class="img-border">
+		 {% if model.mainImage.imageUrl %}
+			<img src="{% make_url "image" model.mainImage %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %}>
+			{% else %}
+			<img src="../../../resources/images/floating-img.png">
+			  {% endif %}
+		</div>
+	</div>
+	<div class="prodct-name-color">
+		{% if model|get_product_attribute_values(themeSettings.productAttributes.color) %}
+			{% with model|get_product_attribute_values(themeSettings.productAttributes.color) as opt %}
+
+				<h3 class="non-color-head">{{ model.content.productName }}</h3>
+				{% comment %}
+				<p> Color :
+				{% for color in opt %}
+					<span class="rounded">
+						<span style="background-color:{{ color }};"></span>
+					</span>
+				{% endfor %}
+				</p>
+				{% endcomment %}
+			{% endwith %}
+		{% else %}
+			<h3 class="color-head">{{ model.content.productName }}</h3>
+			<h3 class="color-head11">{% include "modules/product/fixed-header-price" %}</h3>
+		{% endif %}
+	</div>
+	<div class="clear"></div>
+</div>
+
+<div class="fixed-top-right">
+	<div class="fixed-right-first">
+		<p>Qty :
+			<span class="custom-qty">
+	              <input type="button" value="-" class="qtyminus" field="quantity">
+	              <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="999" maxlength = "3" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+	              <input type="button" value="+" class="qtyplus" field="quantity">
+	          </span>
+	          <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
+		</p>
+	</div>
+	<div class="fixed-right-second">
+		<div class="box-custom-pad">
+			{% comment %}
+			<div class="indivisual-price">
+				{% include "modules/product/fixed-header-price" %}
+			</div>
+			{% endcomment %}
+			<div class="main-price">{% include "modules/product/fixed-header-price" %}</div>
+		</div>
+	</div>
+	 <div class="fixed-right-button">
+		{% if model|get_product_attribute(themeSettings.productAttributes.dndCode) or model.enablePersonalise %}
+          {% with model|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
+              {% if isPersonalize.values|first|prop("value") != "" or model.enablePersonalise%}
+                      {% if model.inventoryInfo.manageStock == true %}
+                          {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                              <button class="floating-add-to-cart personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
+                          {% else %}
+                              <button class="floating-add-to-cart personalize mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">PERSONALIZE</button>
+                          {% endif %}
+                      {% else %}
+                          <button class="floating-add-to-cart personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
+                      {% endif %}
+              {% else %}
+                  {% if model.inventoryInfo.manageStock == true %}
+                      {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                          <button id="flt-add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</button>
+                      {% else %}
+                          <button id="flt-add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >{% if not model.purchasableState.isPurchasable %} {{ labels.addToCart }} {% else %} 1 Out of Stock {% endif %}</button>
+                      {% endif %}
+                  {% else %}
+                      <button id="flt-add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+                  {% endif %}
+              {% endif %}
+          {% endwith %}
+      {% else %}
+          {% if model.inventoryInfo.manageStock == true %}
+            {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+            	{% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
+                {% else %}
+                <button id="flt-add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</button>
+                {% endif %}
+            {% else %}
+                <button id="flt-add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >{% if not model.purchasableState.isPurchasable %} {{ labels.addToCart }} {% else %} 1 Out of Stock {% endif %}</button>
+            {% endif %}
+        {% else %}
+        {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
+            {% else %}
+            <button id="flt-add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+            {% endif %}
+        {% endif %}
+      {% endif %}
+	</div>
+	<div class="fixed-right-wishlist">
+      {% if siteContext.generalSettings.isWishlistCreationEnabled %}
+          <button id="add-to-wishlist" data-mz-action="addToWishlist"></button>
+      {% endif %}
+	</div>
+	<div class="clear"></div>
+	<h4 class="back-to-top-pdp">Back to Top</h4>
+</div>
+<div class="clear"></div>
+</div>
+
+<div class="fixed-bottom">
+	<ul>
+		<li id="det-btn">DETAILS</li>
+		<li id="rev-btn">REVIEWS</li>
+		<li id="qa-btn">Q&A</li>
+		<li id="shp-btn">SHIPPING</li>
+	</ul>
+</div>
+</div>
+<div class="clear"></div>
+<!-- #Product description fixed header ends here -->
+
+<!-- #Mobile responsive fixed bottom header starts here -->
+<div class="fixed-mob-bottom">
+<div class="fixed-mob-bottom1">
+	<div class="fixed-mob-bottom-left">
+		<div class="box-custom-pad">
+			{% comment %}
+			<p class="main-price tag-1">
+				<span>
+					{% if model.hasPriceRange %}
+					    <span itemprop="minPrice" class="mz-pricestack-price-lower">
+					        {% include "modules/common/price" with model=model.priceRange.lower %}
+					    </span>
+					    <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+					        {% include "modules/common/price" with model=model.priceRange.upper %}
+					    </span>
+				    {% else %}
+				    	{% include "modules/common/price" with model=model.price %}
+				    {% endif %}
+				</span>
+			</p>
+			{% endcomment %}
+			<p class="main-price tag-2">
+				<span>
+					<div class="main-price">{% include "modules/product/fixed-header-price" %}</div>
+				</span>
+			</p>
+		</div>
+	</div>
+	<div class="fixed-mob-bottom-button ">
+		{% if model|get_product_attribute(themeSettings.productAttributes.dndCode) %}
+          {% with model|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
+              {% if isPersonalize.values|first|prop("value") != "" %}
+                      {% if model.inventoryInfo.manageStock == true %}
+                          {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                              <button class="floating-add-to-cart personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
+                          {% else %}
+                              <button class="floating-add-to-cart personalize mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">PERSONALIZE</button>
+                          {% endif %}
+                      {% else %}
+                          <button class="floating-add-to-cart personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
+                      {% endif %}
+              {% else %}
+                  {% if model.inventoryInfo.manageStock == true %}
+                      {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                          <button id="add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+                      {% else %}
+                          <button id="add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >{% if not model.purchasableState.isPurchasable %} {{ labels.addToCart }} {% else %} 1 Out of Stock {% endif %}</button>
+                      {% endif %}
+                  {% else %}
+                      <button id="add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+                  {% endif %}
+              {% endif %}
+          {% endwith %}
+      {% else %}
+          {% if model.inventoryInfo.manageStock == true %}
+            {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                <button id="add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+            {% else %}
+                <button id="add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >{% if not model.purchasableState.isPurchasable %} {{ labels.addToCart }} {% else %} 1 Out of Stock {% endif %}</button>
+            {% endif %}
+        {% else %}
+            <button id="add-to-cart" class="floating-add-to-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+        {% endif %}
+      {% endif %}
+	</div>
+	<div class="fixed-mob-bottom-right">
+		<div class="fixed-wishlist">
+			{% if siteContext.generalSettings.isWishlistCreationEnabled %}
+		        <button id="add-to-wishlist" data-mz-action="addToWishlist"></button>
+		    {% endif %}
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>

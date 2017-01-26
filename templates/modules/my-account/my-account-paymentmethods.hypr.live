@@ -1,0 +1,27 @@
+﻿<h3 class="mz-l-stack-sectiontitle card-head">MY CARDS</h3>
+{% if model.hasSavedCards or editing.card == "new" or model.purchaseOrder and model.purchaseOrder.isEnabled %}
+    <div class="add-card">
+        <ul class="mz-accountpaymentmethods-list mz-l-tiles edit-card">
+            {% if model.purchaseOrder and model.purchaseOrder.isEnabled and siteContext.checkoutSettings.purchaseOrder.isEnabled %}
+            {% include "modules/my-account/my-account-paymentmethod" with model=model.purchaseOrder %}
+            {% endif %}
+            {% for card in model.cards %}
+            {% if editing.card == card.id %}
+            {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
+            {% else %}
+            {% include "modules/my-account/my-account-paymentmethod" with model=card %}
+
+            {% endif %} 
+            {% endfor %}
+            <h3 class="mz-l-stack-sectiontitle card-head">New Card</h3>
+            {% if editing.card == "new" %}
+            {% include "modules/my-account/my-account-credit-card-form" with model=model.editingCard editingContact=model.editingContact %}
+            {% endif %}
+
+        </ul>
+        <p class="account_new_card"><a href="javascript:;" data-mz-card="new" data-mz-action="beginEditCard"><button class="new-card-btn add-new-card">{{ labels.addNewCard }}</button></a></p>
+    </div>
+{% else %}
+<p class="mz-accountpaymentmethods-empty">You have no saved cards.</p>
+<p class="add_newcard_btn"><a href="javascript:;" class="" data-mz-card="new" data-mz-action="beginEditCard"><button class="new-card-btn">{{ labels.addNewCard }}</button></a></p>
+{% endif %}

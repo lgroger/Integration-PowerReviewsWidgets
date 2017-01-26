@@ -1,0 +1,28 @@
+<a id="signup-popover-close" class="close" href="javascript:void(0);">&times;</a>
+<div class="mz-popover mz-popover-signup">
+	<div class="mz-cms-col-12-12 signup-popover-title">
+        <h2 >CREATE YOUR <br/> SHINDIGZ ACCOUNT</h2>
+    </div>
+    <section data-mz-role="popover-message" class="mz-popover-message"></section>
+    <section class="signup-info">
+		<input type="text" class="mz-popover-signup-firstname mz-cms-col-12-12" placeholder="{{ labels.firstName }}" data-mz-signup-firstname />
+		<input type="text" class="mz-popover-signup-lastname mz-cms-col-12-12" placeholder="{{ labels.lastName }}" data-mz-signup-lastname />
+		<input type="email" class="mz-popover-signup-email mz-cms-col-12-12" placeholder="{{ labels.emailAddress }}" data-mz-signup-emailaddress />
+		<input type="password" class="mz-popover-signup-password mz-cms-col-12-12" placeholder="{{ labels.password }}" data-mz-signup-password />
+		<input type="password" class="mz-popover-signup-confirmpassword mz-cms-col-12-12" placeholder="{{ labels.confirmPassword }}" data-mz-signup-confirmpassword />
+    </section>
+    <section class="news-subscription-container">
+    	<input type="checkbox" id="news-sub-chk" data-mz-value="acceptsMarketing" name="news-subscr">
+    	<label for="news-sub-chk">I wish to receive occasional newsletter emails from Shindigz</label>
+    </section>
+    <section class='signup-action'>
+  		<button class="mz-button mz-popover-signup-register mz-cms-col-12-12" data-mz-action="signup">{{ labels.signUp | upper}}</button>    	  
+  		<div class="back-to-container">
+            {% if pageContext.pageType != 'checkout' %} 
+                <a id="back_to_login_link" href="javascript:;" data-mz-action="login">BACK TO LOGIN</a>
+            {% endif %}
+        </div>
+    </section>
+ 
+</div>
+<div class='clear'></div> 

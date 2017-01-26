@@ -1,0 +1,77 @@
+﻿<div class="mz-productoptions">
+{% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
+{% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}
+{% if isProductTypeFlag %}
+            
+     <div class="mz-productoptions-valuecontainer">
+        <select class="mz-productlable-options" mz-banner-type>
+            <option value="">Select Type*</option>
+            {% for option in model.options %}
+                {% if option.attributeFQN|lower != "tenant~outdoor-banner-with-slits"  and option.attributeFQN|lower != "tenant~dnd-token" %}
+                    <option value="{{ option.attributeFQN }}" {% if option.value %}selected="true"{% endif %}>{{ option.attributeDetail.name }}</option>
+                {% endif %} 
+            {% endfor %}
+        </select><br/>
+        {% for option in model.options %}
+            {% if option.attributeFQN|lower != "tenant~outdoor-banner-with-slits" and option.attributeFQN|lower != "tenant~dnd-token" %}
+                <select class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" {% if option.value %}style="display:block"{% else %} style="display:none"{% endif %}>
+                    <option value="">Size*</option>
+                {% for value in option.values %}
+                    <option value="{{value.value}}" {% if value.isSelected %}selected="true"{% endif %}>{{ value.stringValue }}</option>
+                {% endfor %}
+                </select>
+            {% endif %}
+        {% endfor %}
+        {% if model.enableSlitoption %}
+            <div><input type="checkbox" class="needslits" name="slitscheckbox"/> With Wind Slits</div>
+        {% endif %}
+    </div>
+{% else %}
+    {% for option in model.options %}
+    
+    {% if option.isHideExtra == "show" %}
+    <div class="mz-productoptions-optioncontainer">
+        {% if option.attributeDetail.name != "dnd-token" %}
+        <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}{% if option.isRequired %}<strong class="is-required">*</strong>{% endif %}</label>
+        <div class="mz-productoptions-valuecontainer">
+            {% if option.attributeDetail.inputType == "List" %}
+                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" usageType={{option.attributeDetail.usageType}}>
+                    {% if not option.isMultiValue %}<option value="">Select {{ option.attributeDetail.name }}</option>{% endif %}
+                    {% for value in option.values %}
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
+                    {% endfor %}
+                </select>
+            {% else %}
+                {% if option.attributeDetail.inputType == "YesNo" %}
+                    <input class="mz-productoptions-option" type="checkbox" {% if option.shopperEnteredValue %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />
+                {% endif %}
+                {% if option.attributeDetail.inputType == "TextBox" %}
+                    {% if option.attributeDetail.dataType == "Number" %}
+                    <input class="mz-productoptions-option" type="number" min="{{ option.attributeDetail.validation.minNumericValue }}" max="{{ option.attributeDetail.validation.maxNumericValue }}" value="{{ option.shopperEnteredValue }}" data-mz-product-option="{{ option.attributeFQN }}" data-mz-focus-bookmark="{{ option.attributeFQN }}">
+                        {% else %}
+                    <input class="mz-productoptions-option" type="text" value="{{ option.shopperEnteredValue }}" data-mz-product-option="{{ option.attributeFQN }}" data-mz-focus-bookmark="{{ option.attributeFQN }}">
+                        {% endif %}
+                {% endif %}
+                {% if option.attributeDetail.inputType == "TextArea" %}
+                    <textarea class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" data-mz-focus-bookmark="{{ option.attributeFQN }}">{{ option.shopperEnteredValue }}</textarea>
+                {% endif %}
+                {% if option.attributeDetail.inputType == "Date" %}
+                    <input type="text" data-mz-is-datepicker data-mz-focus-bookmark="{{ option.attributeFQN }}" data-mz-product-option="{{ option.attributeFQN }}" class="mz-productoptions-option" style="color:transparent" value="{{ option.shopperEnteredValue }}" data-format="mm/dd/yy" data-max="{{option.maxValue}}" data-min="{{ option.minValue }}">
+                {% endif %}
+                {% if option.values %}
+                  {% for value in option.values %}
+                    {% if forloop.counter0 == 0 and value.deltaPrice > 0 %}
+                      ({{ value.deltaPrice|currency }} {{ labels.more }})
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+            {% endif %}
+            </div>
+        {% endif %}    
+    </div>
+    {% endif %}
+    {% endfor %}
+{% endif %}
+{% endwith %}
+{% endwith %}
+</div>

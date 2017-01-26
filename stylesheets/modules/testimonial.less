@@ -1,0 +1,369 @@
+.echi-shi-testimonials img {
+  max-width: 200px;
+  border-radius: 50%;
+  margin-right: 45px;
+  display: table-cell;
+  vertical-align: center;
+}  
+.echi-shi-testimonials .cd-testimonials-wrapper {
+  position: relative;
+  margin: 2em auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding: 20px 40px;
+  z-index: 1; 
+}
+.echi-shi-testimonials .echi-shi-corousal-content-width{
+    max-width: 800px;
+    margin:0 auto;
+}
+.echi-shi-testimonials .cd-testimonials {
+  text-align: center;
+}
+.echi-shi-testimonials .cd-testimonials::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.echi-shi-testimonials .cd-testimonials > li {
+  position: absolute;
+  opacity: 0;
+}
+.echi-shi-testimonials .cd-testimonials > li:first-child {
+  position: relative;
+  opacity: 1;
+  list-style-type:none;
+}
+.echi-shi-testimonials .cd-testimonials p {
+  font-family: @fontArvo;
+  font-size: 1.2rem;
+  line-height: 1.2;
+  text-align: left;
+  color: #2D2D2D;
+  display: table;
+}
+.echi-shi-testimonials .cd-testimonials p span.testimonial-quotes:before{
+    background-image: url('../resources/images/orange_quotes.svg');
+    background-size: 53px 62px;
+    display: inline-block;
+    width: 50px;
+    height: 51px;
+    content: "";
+}
+.echi-shi-testimonials .echi-shi-testimonial-name{
+    font-family: @fontMontserratRegular;
+    font-size: 1rem;
+    color: #FD8204;
+    letter-spacing: 1.6px;
+}
+.echi-shi-testimonials .echi-shi-testimonial-city{
+    font-family: @fontMontserratRegular;
+    font-size: 1rem;
+    color: #333;
+    letter-spacing: 1.6px;
+}
+
+@media only screen and (min-width: 768px) {
+  .echi-shi-testimonials .cd-testimonials p {
+    font-size: 22px;
+    font-size: 1.2rem;
+  } 
+}
+
+.echi-shi-testimonials .cd-author img, .echi-shi-testimonials .cd-author .cd-author-info {
+  display: inline-block;
+  vertical-align: middle;
+}
+.echi-shi-testimonials .cd-author img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 5px;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+}
+.echi-shi-testimonials .cd-testimonials p span.testimonial-table{
+  display: table-cell;
+  vertical-align: middle; 
+}
+.echi-shi-testimonials .cd-author .cd-author-info {
+  text-align: left;
+  line-height: 1.2;
+}
+.echi-shi-testimonials .cd-author .cd-author-info li:first-child {
+  font-size: 14px;
+  font-size: 0.875rem;
+}
+.echi-shi-testimonials .cd-author .cd-author-info li:last-child {
+  font-size: 12px;
+  font-size: 0.75rem;
+  color: #6b6b70;
+}
+@media only screen and (min-width: 768px) {
+  .echi-shi-testimonials .cd-author img {
+    width: 50px;
+    height: 50px;
+  }
+  .echi-shi-testimonials .cd-author .cd-author-info {
+    line-height: 1.4;
+  }
+  .echi-shi-testimonials .cd-author .cd-author-info li:first-child {
+    font-size: 16px;
+    font-size: 1rem;
+  }
+  .echi-shi-testimonials .cd-author .cd-author-info li:last-child {
+    font-size: 14px;
+    font-size: 0.875rem;
+  }
+}
+
+.echi-shi-testimonials .flex-direction-nav li {
+  position: absolute;
+  height: 100%;
+  width: 40px;
+  top: 0;
+  list-style-type: none;
+}
+.echi-shi-testimonials .flex-direction-nav li:first-child {
+  left: 0;
+}
+.echi-shi-testimonials .flex-direction-nav li:last-child {
+  right: 0;
+}
+.echi-shi-testimonials .flex-direction-nav li a {
+    height: 80px;
+    width: 40px;
+    position: absolute;
+    overflow: hidden;
+    box-shadow: 0px 0px 6px 1px #757575;
+    -moz-border-radius: 90px 0 0 90px;
+    border-radius: 0 90px 90px 0;
+    padding: 3%;
+    top: 32%;
+    background-color: #fff;
+    transition:0.3s ease-in-out;
+}
+.echi-shi-testimonials .flex-direction-nav li a:hover {
+    box-shadow: 0px 5px 24px 4px #757575;
+}
+#mz-drop-zone-testimonial_widget .mz-cms-content{
+    padding: 10px 0px;
+}
+.echi-shi-testimonials .testimonial-heading{
+  margin-top: 2%;
+  text-align: center;
+  font-family: @fontMontserratLight;
+  color: #133963;
+  font-size: 2rem;  
+}
+.echi-shi-testimonials .flex-direction-nav li a span{
+    background-image: url('https://cdn-sb.mozu.com/15637-22709/resources/images/Arrow.svg?max=8');
+    background-size: 45px 31px;
+    height: 90px;
+    width: 90px;
+    position: absolute;
+    overflow: hidden;
+    margin-left: -4px;
+    background-repeat: no-repeat;
+    top: 30%;
+} 
+.echi-shi-testimonials .flex-direction-nav li a.flex-next {
+   -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+    box-shadow: 0px 0px 6px 1px #757575;
+    transition:0.3s ease-in-out;
+}
+.echi-shi-testimonials .flex-direction-nav li a.flex-next:hover {
+  box-shadow: 0px -5px 24px 4px #757575;
+}
+@media only screen and (min-width: 768px) {
+  .echi-shi-testimonials .flex-direction-nav li {
+    width: 43px;
+  }
+}
+@media only screen and (min-width: 1170px) {
+ .echi-shi-testimonials .flex-direction-nav li a::before, .echi-shi-testimonials .flex-direction-nav li a::after {
+    background-color: #5e5e63;
+    -webkit-transition: background-color 0.2s;
+    -moz-transition: background-color 0.2s;
+    transition: background-color 0.2s;
+  }
+  .echi-shi-testimonials .flex-direction-nav li a:hover::before, .echi-shi-testimonials .flex-direction-nav li a:hover::after {
+    background-color: #ffffff;
+  }
+}
+
+.echi-shi-testimonials .cd-see-all {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  background-color: #252527;
+  text-align: center;
+  text-transform: uppercase;
+  color: #6b6b70;
+  font-weight: 700;
+  font-size: 12px;
+  font-size: 0.75rem;
+  -webkit-transition: color, 0.2s;
+  -moz-transition: color, 0.2s;
+  transition: color, 0.2s;
+}
+.echi-shi-testimonials .no-touch .cd-see-all:hover {
+  color: #79b6e4;
+}
+
+.echi-shi-testimonials .cd-testimonials-all {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 2;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: opacity .3s 0s, visibility 0s .3s;
+  -moz-transition: opacity .3s 0s, visibility 0s .3s;
+  transition: opacity .3s 0s, visibility 0s .3s;
+}
+.echi-shi-testimonials .cd-testimonials-all .cd-testimonials-all-wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+}
+.echi-shi-testimonials .cd-testimonials-all .cd-testimonials-all-wrapper > ul {
+  width: 90%;
+  max-width: 1170px;
+  margin: 4em auto;
+}
+.echi-shi-testimonials .cd-testimonials-all .cd-testimonials-all-wrapper > ul::after {
+  clear: both;
+  content: "";
+  display: table;
+}
+.echi-shi-testimonials .cd-testimonials-all .cd-testimonials-item {
+  margin-bottom: 2em;
+  opacity: 0;
+  /* Force Hardware Acceleration in WebKit */
+  -webkit-transform: translate3d(0, 0, 0) scale(0.4);
+  -moz-transform: translate3d(0, 0, 0) scale(0.4);
+  -ms-transform: translate3d(0, 0, 0) scale(0.4);
+  -o-transform: translate3d(0, 0, 0) scale(0.4);
+  transform: translate3d(0, 0, 0) scale(0.4);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-transition: -webkit-transform .3s, opacity .3s;
+  -moz-transition: -moz-transform .3s, opacity .3s;
+  transition: transform .3s, opacity .3s;
+}
+.echi-shi-testimonials ul li, .echi-shi-testimonials ul, .echi-shi-testimonials li{
+  margin:0; 
+  padding: 0;
+}
+.echi-shi-testimonials .cd-testimonials-all p {
+  position: relative;
+  background: #79b6e4;
+  color: #ffffff;
+  padding: 2em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.4;
+  border-radius: 0.25em;
+  margin-bottom: 1em;
+}
+.echi-shi-testimonials .cd-testimonials-all p::after {
+  /* creating the triangle in css */
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 2em;
+  height: 0;
+  width: 0;
+  border: 8px solid transparent;
+  border-top-color: #79b6e4;
+}
+.echi-shi-testimonials .cd-testimonials-all .cd-author {
+  text-align: left;
+  margin-left: 1.5em;
+}
+.echi-shi-testimonials .cd-testimonials-all .cd-author img {
+  box-shadow: 0 0 0 transparent;
+}
+.echi-shi-testimonials .cd-testimonials-all.is-visible {
+  visibility: visible;
+  opacity: 1;
+  -webkit-transition: opacity .3s 0s, visibility 0s 0s;
+  -moz-transition: opacity .3s 0s, visibility 0s 0s;
+  transition: opacity .3s 0s, visibility 0s 0s;
+}
+.echi-shi-testimonials .cd-testimonials-all.is-visible .cd-testimonials-all-wrapper {
+  -webkit-overflow-scrolling: touch;
+}
+.echi-shi-testimonials .cd-testimonials-all.is-visible .cd-testimonials-item {
+  opacity: 1;
+  -webkit-transform: translate3d(0, 0, 0) scale(1);
+  -moz-transform: translate3d(0, 0, 0) scale(1);
+  -ms-transform: translate3d(0, 0, 0) scale(1);
+  -o-transform: translate3d(0, 0, 0) scale(1);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+@media only screen and (min-width: 768px) {
+  .echi-shi-testimonials .cd-testimonials-all .cd-testimonials-item {
+    width: 46%;
+    margin: 0 2% 3em;
+  }
+  .echi-shi-testimonials .cd-testimonials-all .cd-author {
+    margin-left: 1em;
+  }
+}
+@media only screen and (min-width: 1170px) {
+  .echi-shi-testimonials .cd-testimonials-all .cd-testimonials-item {
+    width: 30%;
+    margin: 0 1.6666% 3em;
+  }
+}
+
+.echi-shi-testimonials .close-btn {
+  position: fixed;
+  display: block;
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  right: 5%;
+  /* image replacement */
+  overflow: hidden;
+  text-indent: 100%;
+  white-space: nowrap;
+}
+.echi-shi-testimonials .close-btn::before, .echi-shi-testimonials .close-btn::after {
+  /* close icon in css */
+  content: '';
+  position: absolute;
+  display: inline-block;
+  width: 2px;
+  height: 24px;
+  top: 8px;
+  left: 19px;
+  background-color: #39393c;
+}
+.echi-shi-testimonials .close-btn::before {
+  -webkit-transform: rotate(45deg);
+  -moz-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+.echi-shi-testimonials .close-btn::after {
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}

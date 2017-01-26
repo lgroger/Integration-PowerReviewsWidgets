@@ -1,0 +1,13 @@
+﻿<div class="mz-ordersummary-checkout">
+    <h3 class="mz-formstep-header mz-checkoutform-header">
+        {{ labels.orderSummary }}
+        <span class="summarybox_toggle"><i class="fa fa-plus"></i></span>
+        <a href="{{ pageContext.secureHost}}/cart" class="mz-formstep-edit summary_edit" data-mz-action="editCart">{{ labels.orderchange }}</a>
+    </h3>
+
+    <div class="mz-formstep-body summary_box">
+        {% include "modules/common/order-summary" %}
+    </div>
+    
+    <!-- #order-summary -->
+</div>

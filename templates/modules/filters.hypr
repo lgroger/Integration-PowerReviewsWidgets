@@ -1,0 +1,8 @@
+<div class="mz-filters">
+    <button class="mz-filters-btn"><i>-</i> FILTERS <i>*</i></button>
+    <div class="mz-filter-options">
+        <div class="mz-filter-category">
+        
+        </div>
+    </div>
+</div>

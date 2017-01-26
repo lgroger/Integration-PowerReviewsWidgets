@@ -1,0 +1,60 @@
+{% extends "page" %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-aboutus promo-page {% endblock body-tag-classes %}
+
+  {% block breadcrumbs %}
+     {% if themeSettings.showBreadcrumbs %}
+		<div class="mz-breadcrumbs">   
+			<a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+			<a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+			<span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+		</div> 
+    {% endif %}
+{% endblock breadcrumbs %}
+{% block body-content %}
+
+	
+	<div class="promo-page-title">
+		{% dropzone "promopage-title-main" scope="page" %}
+	</div>
+	<div class="promo-page-title">
+		{% dropzone "promopage-banner" scope="page" %}
+	</div>
+	<div class="promo-page-title">
+		{% dropzone "promopage-wintersale" scope="page" %}
+	</div>
+	<div class="mz-shi-heading-style">
+		{% dropzone "promopage-wintersale-head" scope="template" %}
+	</div>
+	<div class="promo-page-title">
+		{% dropzone "promopage-banner1" scope="page" %}
+	</div><br/>
+
+<div class="my-new-class promo-page-my-new-class"> 
+		<div class="category_my_widgets">
+			<div class="cat-pg-head-container border-bottom-dotted" align="center" >
+				<p class="cat-page-promotion-header service-title">Promotions</p>
+			</div>
+			<div class="mz-cms-col-8-12 dropzone-group-category">
+		      {% dropzone "home-promo-1" scope="page" %}
+		     </div>
+		     <div class="mz-cms-col-4-12 dropzone-group-category">
+		      {% dropzone "home-promo-2" scope="page" %}
+		     </div>
+		    <div class="mz-cms-col-12-12"> 
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-3" scope="page" %}
+		     	</div>
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-4" scope="page" %}
+		     	</div>
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-5" scope="page" %}
+		     	</div>
+		    </div>
+		    <div class="clear"></div>
+		 </div>
+		 </div>
+{% dropzone "body" scope="page" %}
+{% endblock body-content %} 

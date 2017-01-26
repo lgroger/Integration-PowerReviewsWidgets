@@ -1,0 +1,64 @@
+{% extends "page" %}
+{% block body-tag-classes %} wholesale-program-wrap {% endblock body-tag-classes %}
+{% block body-content %}
+{% require_script "pages/wholesaleProgram"%}
+{% preload_json model 'customer' %} 
+<style>.mz-breadcrumbs:first-child{display:none;}</style>
+	
+{% block breadcrumbs %}
+	{% if themeSettings.showBreadcrumbs %}
+		<div class="mz-breadcrumbs">   
+		<a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+		<span class="mz-breadcrumb-separator"></span> 
+		<a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+		<span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+		<div style="display:none;">{% dump navigation.currentNode %} <p>list</p>{% dump navigation.breadcrumbs %} {% dump pageModel.PROPERTIES.LINK_TITLE %}</div>
+		</div> 
+	{% endif %}
+{% endblock breadcrumbs %}
+<div class="mz-category-title header-wholesale-pgm">
+	<div>
+		<h1 class="mz-pagetitle">Shindigz Wholesale Program</h1>
+	</div>
+</div>
+{% dropzone "pgm-desc-text" scope="template" %}
+
+<div class="form-title">
+	{% dropzone "sub-text-header" scope="template" %}
+</div>
+<script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
+<script type="text/javascript">
+	window.MktoForms2 = MktoForms2;
+</script>
+<form id="mktoForm_{{ themeSettings.mktoWholesaleProgram }}"></form>
+<script>
+	MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoWholesaleProgram }},function(form){
+	$('#businessType').attr('type','password');
+		window.formMrk = form;
+		if(form.submittable()){
+			form.submittable(false);
+			//form.submit();
+		}
+
+    $("input[type='text'],input[type='tel'],input[type='number']").not("#Company,#cUSTTYPE,#stateofIncorporation,#FirstName,#LastName,#custAddrLine,#addressLine,#Address,#BillingStreet,#custCity,#City,#custPObox,#pOBox,#PostalCode,#custPostalCode").bind('change keyup keypress blur', function() {
+          $(this).val($(this).val().replace(/[!"#$%&'()*+,-./`¨.₹<>\{\}\[\]\\\Ç¬÷“=?¿;:´'",”?ºª€£¥€••¥£€®©~!¡@#$%^&*()_|+-]/gi, ''));
+    });
+
+    $("input[type='tel'],#daytimePhoneNumber,#dUNSno,#salesTaxExemptNo,#Fax").not('#PostalCode,#pOBox').bind('change keyup keypress blur', function(e) {
+
+        $(this).val($(this).val().replace(/[A-Za-z\s]/gi,''));
+    });
+
+    $("input[type='text']").not("#Company,#cUSTTYPE,#stateofIncorporation,#FirstName,#LastName,#custAddrLine,#addressLine,#Address,#BillingStreet,#custCity,#City,#nameOfOwnerPresident,#custPObox,#pOBox,#PostalCode,#custPostalCode").bind('change keyup keypress blur', function(e) {
+
+        $(this).val($(this).val().replace(/[\s]/gi,''));
+    }); 
+    
+    $("input[type='number'],#nUMBEROFYEARSINBUSINESS,#salesTaxExemptNo,#dUNSno,#Fax,#daytimePhoneNumber").not("#custPostalCode,#PostalCode").bind('change keyup keypress', function() {
+          $(this).val($(this).val().replace(/[^0-9]/g, ''));
+    });
+ 
+	});
+	window.mkto = MktoForms2;
+</script> 
+{% endblock body-content %} 

@@ -1,0 +1,40 @@
+﻿<div class="mz-contactselector {% block module-classes %}{% endblock module-classes %}">
+    {% block contact-selector %}
+    {% for contact in model.contacts %}
+    <label class="mz-contactselector-contact">
+        <span class="mz-contactselector-inputwrapper select-default-radio" style="float:left;width:5%">
+            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="{{ contact.id }}" {% if model.contactId == contact.id %} checked="checked" {% endif %}>
+        </span>
+        <span class="mz-contactselector-summarywrapper" style="float:left; width:40%">
+            <div class="mz-addresssummary">
+                {% include "modules/common/address-summary" with model=contact %}
+            </div>
+        </span>
+    </label>
+  {% endfor %}
+  {% if model.contactId == "new" %}
+  <div class="mz-contactselector-contact mz-contactselector-new">
+        <span class="mz-contactselector-inputwrapper">
+            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact checked="checked">
+        </span>
+        <span class="mz-contactselector-summarywrapper">
+            {% block enter-new-form %}
+            {% include "modules/common/address-form" with model=editingContact %}
+            {% endblock enter-new-form %}
+        </span>
+    </div>
+    {% else %}
+    <label class="mz-contactselector-contact mz-contactselector-new">
+        <span class="mz-contactselector-inputwrapper select-default-radio" style="float:left;width:5%">
+            <input type="radio" data-mz-value="{{ contactcontext }}contactId" name="contactId" value="new" data-mz-enternewcontact>
+        </span>
+        <span class="mz-contactselector-summarywrapper" style="float:left;width:40%">
+            <div class="mz-addresssummary">
+                <span style="float: left;font-size: 18px;color: #000;font-weight: bold;">{{ labels.enterNewAddress }}</span>
+            </div>
+        </span>
+    </label>
+    {% endif %}
+    {% endblock contact-selector %}
+</div>
+<div class="clear"></div>

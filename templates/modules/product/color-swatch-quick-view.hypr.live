@@ -1,0 +1,18 @@
+{% if model.items %}
+ <ul>
+	{% for prod in model.items %}
+		{% if forloop.counter < 8 %}
+       	{% with prod.content.productName|split('-') as productName %}
+	       <li>
+	            <a href="{% make_url "product" prod %}" alt="{{prod.content.productName}}" class="swatch-color" title="{{prod.content.productName}}" style="background-color:{{productName|last}}"></a>
+	        </li>
+       	{% endwith %}
+       	{% else%}
+       		{% set_var MoreColor=true %}
+       	{% endif %}
+    {% endfor %}
+</ul>
+{% if MoreColor %}
+	<span class="product-color-swatch-see-all-colors"><a href="#">See All Colors</a></span>
+{% endif %}
+{% endif %}

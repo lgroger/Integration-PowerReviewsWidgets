@@ -1,0 +1,13 @@
+{% require_script "widgets/similar_themes" %}
+{% preload_json Model.config.similarthemes "similar_themes" %}
+
+<div class="shi_themeslider">
+	<div class="echi-shi-superpage-theme-slider">
+				<div class="brand-lister-similar-cat" id="similar_themes"> 
+
+				</div>			
+	</div>
+</div>
+<!--ul class="brand-lister" id="home_featured_categories" style="list-style-type:none;">
+
+</ul-->

@@ -1,0 +1,11 @@
+<div class="super-page-filter-wrap">
+	<ul {% if model.config.enableSlider %} class="owl-carousel" {% endif %}>
+		<li><a data-prop="*"><span>All Products</span></a></li>
+		{% for val in model.config.productTypedata %}
+		<li><a class="" data-prop="tenantproduct-type_{{val|slugify}}"><span>{{val}}</span></a></li>
+		{% endfor %}
+		{% for sval in model.config.data %}
+		<li><a class="" data-prop="tenantsuper-page-product-type_{{sval|slugify}}"><span>{{sval}}</span></a></li>
+		{% endfor %}
+	</ul>
+</div>

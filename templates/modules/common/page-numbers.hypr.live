@@ -1,0 +1,113 @@
+﻿
+
+{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
+    {% with isguidedsearch.length as isGuidedSearchURL %}
+        {% if isGuidedSearchURL  == 2 %}
+            <!-- guided search paginations -->
+            {% if not model.hasPreviousPage %}
+            <span class="mz-pagenumbers-prev is-disabled">
+            	<svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            	<polygon points="16.4,6.2 7.4,6.2 7.4,8.4 4.4,5.3 7.4,2.2 7.4,4.6 16.4,4.6 "/>
+            	</svg>
+            	<b>{{ labels.previousPage }}</b></span>
+            {% else %}
+            <a class="mz-pagenumbers-prev" href="{% make_url "paging" model with page="previous" %}&isguidedsearch=1" rel="previous" data-mz-action="previous"><b>{{ labels.previousPage }}</b>
+            <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            	<polygon points="16.4,6.2 7.4,6.2 7.4,8.4 4.4,5.3 7.4,2.2 7.4,4.6 16.4,4.6 "/>
+            	</svg>
+            </a>
+            {% endif %}
+            {% if model.currentPage == 1 %}
+            <span class="mz-pagenumbers-number is-current" data-mz-page-num="1">1</span>
+            {% else %}
+            <a class="mz-pagenumbers-number" href="{% make_url "paging" model with page=1 %}&isguidedsearch=1" data-mz-action="page" data-mz-page-num="1">1</a>
+            {% endif %}
+            {% if model.currentPage > 4 and model.middlePageNumbers|first != 2 %}
+                <span class="mz-pagenumbers-break">...</span>
+            {% endif %}
+            {% for pageNumber in model.middlePageNumbers %}
+            {% if model.currentPage == pageNumber %}
+            <span class="mz-pagenumbers-number is-current" data-mz-page-num="{{ pageNumber }}">{{ pageNumber }}</span>
+            {% else %}
+            <a class="mz-pagenumbers-number" href="{% make_url "paging" model with page=pageNumber %}&isguidedsearch=1" data-mz-action="page" data-mz-page-num="{{ pageNumber }}">{{ pageNumber }}</a>
+            {% endif %}
+            {% if forloop.last and pageNumber|add(1) < model.pageCount and model.pageCount > 1 %}
+            <span class="mz-pagenumbers-break mz-pagenumbers-breaklast">...</span>
+            {% endif %}
+            {% endfor %}
+            {% if model.pageCount > 1 %}
+            {% if model.currentPage == model.pageCount %}
+            <span class="mz-pagenumbers-number is-current" data-mz-page-num="{{ model.pageCount }}">{{ model.pageCount }}</span>
+            {% else %}
+            <a class="mz-pagenumbers-number" href="{% make_url "paging" model with page=model.pageCount %}&isguidedsearch=1" data-mz-action="page" data-mz-page-num="{{ model.pageCount }}">{{ model.pageCount }}</a>
+            {% endif %}
+            {% endif %}
+            {% if not model.hasNextPage %}
+            <span class="mz-pagenumbers-next is-disabled"><b>{{ labels.nextPage }}</b>
+            <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            <polygon points="4.4,6.2 13.4,6.2 13.4,8.4 16.4,5.3 13.4,2.2 13.4,4.6 4.4,4.6 "/>
+            </svg>
+            </span>
+            {% else %}
+            <a class="mz-pagenumbers-next" href="{% make_url "paging" model with page="next" %}&isguidedsearch=1" rel="next" data-mz-action="next"><b>{{ labels.nextPage }}</b>
+            <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            <polygon points="4.4,6.2 13.4,6.2 13.4,8.4 16.4,5.3 13.4,2.2 13.4,4.6 4.4,4.6 "/>
+            </svg>
+            </a>
+            {% endif %}
+        {% else %}
+            <!-- deafult pagination with out guided search url -->
+            {% if not model.hasPreviousPage %}
+            <span class="mz-pagenumbers-prev is-disabled">
+            	<svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            	<polygon points="16.4,6.2 7.4,6.2 7.4,8.4 4.4,5.3 7.4,2.2 7.4,4.6 16.4,4.6 "/>
+            	</svg>
+            	<b>{{ labels.previousPage }}</b></span>
+            {% else %}
+            <a class="mz-pagenumbers-prev" href="{% make_url "paging" model with page="previous" %}" rel="previous" data-mz-action="previous"><b>{{ labels.previousPage }}</b>
+            <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            	<polygon points="16.4,6.2 7.4,6.2 7.4,8.4 4.4,5.3 7.4,2.2 7.4,4.6 16.4,4.6 "/>
+            	</svg>
+            </a>
+            {% endif %}
+            {% if model.currentPage == 1 %}
+            <span class="mz-pagenumbers-number is-current" data-mz-page-num="1">1</span>
+            {% else %}
+            <a class="mz-pagenumbers-number" href="{% make_url "paging" model with page=1 %}" data-mz-action="page" data-mz-page-num="1">1</a>
+            {% endif %}
+            {% if model.currentPage > 4 and model.middlePageNumbers|first != 2 %}
+                <span class="mz-pagenumbers-break">...</span>
+            {% endif %}
+            {% for pageNumber in model.middlePageNumbers %}
+            {% if model.currentPage == pageNumber %}
+            <span class="mz-pagenumbers-number is-current" data-mz-page-num="{{ pageNumber }}">{{ pageNumber }}</span>
+            {% else %}
+            <a class="mz-pagenumbers-number" href="{% make_url "paging" model with page=pageNumber %}" data-mz-action="page" data-mz-page-num="{{ pageNumber }}">{{ pageNumber }}</a>
+            {% endif %}
+            {% if forloop.last and pageNumber|add(1) < model.pageCount and model.pageCount > 1 %}
+            <span class="mz-pagenumbers-break mz-pagenumbers-breaklast">...</span>
+            {% endif %}
+            {% endfor %}
+            {% if model.pageCount > 1 %}
+            {% if model.currentPage == model.pageCount %}
+            <span class="mz-pagenumbers-number is-current" data-mz-page-num="{{ model.pageCount }}">{{ model.pageCount }}</span>
+            {% else %}
+            <a class="mz-pagenumbers-number" href="{% make_url "paging" model with page=model.pageCount %}" data-mz-action="page" data-mz-page-num="{{ model.pageCount }}">{{ model.pageCount }}</a>
+            {% endif %}
+            {% endif %}
+            {% if not model.hasNextPage %}
+            <span class="mz-pagenumbers-next is-disabled"><b>{{ labels.nextPage }}</b>
+            <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            <polygon points="4.4,6.2 13.4,6.2 13.4,8.4 16.4,5.3 13.4,2.2 13.4,4.6 4.4,4.6 "/>
+            </svg>
+            </span>
+            {% else %}
+            <a class="mz-pagenumbers-next" href="{% make_url "paging" model with page="next" %}" rel="next" data-mz-action="next"><b>{{ labels.nextPage }}</b>
+            <svg width='20px' height="8px" style="margin-top: 6px; stroke: inherit;">
+            <polygon points="4.4,6.2 13.4,6.2 13.4,8.4 16.4,5.3 13.4,2.2 13.4,4.6 4.4,4.6 "/>
+            </svg>
+            </a>
+            {% endif %}
+        {% endif %}
+    {% endwith %}
+{% endwith %}

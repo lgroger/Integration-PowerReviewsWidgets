@@ -1,0 +1,1366 @@
+{
+    "items": [
+        {
+            "xtype": "panel",
+            "title": "General",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "showAddressTypeDropdown",
+                    "fieldLabel": "Show Address Type dropdown in Address Forms (Residential/Commercial)"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "enablePartialCaching",
+                    "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
+                },{
+                    "xtype":"mz-input-text",
+                    "name":"googleMapApiKey",
+                    "fieldLabel":"Google Map Api Key"
+                },
+                {
+                    "xtype":"mz-input-text",
+                    "name":"userListForDndTotenAccess",
+                    "fieldLabel":"Users List for DND Token access(Values should be comma seperated)"
+                },
+                {
+                    "xtype":"mz-input-text",
+                    "name":"QuoteOrderAttributeId",
+                    "fieldLabel":"Quote Order Id"
+                },
+                {
+                    "xtype":"mz-input-text",
+                    "name":"favicon",
+                    "fieldLabel":"Favicon Url"
+                },{
+                    "xtype":"mz-input-textarea",
+                    "name":"ThirdPartyHeadTag",
+                    "width":"80%",
+                    "fieldLabel":"Third party scripts with in head tag(All Pages)"
+                },{
+                    "xtype":"mz-input-textarea",
+                    "name":"allThirdPartyScriptTags",
+                    "width":"60%",
+                    "fieldLabel":"Third party script tags which is common to all pages"
+                },
+                {
+                    "xtype":"mz-input-text",
+                    "name":"bannerProductTypes",
+                    "width":"60%",
+                    "fieldLabel":"Banner Product Types"
+                }
+
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Extended Properties",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "extendedPropertiesEnabled",
+                    "fieldLabel": "Enable Extended Properties (Tracking Strings)"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name": "extendedPropertyParameters",
+                    "fieldLabel": "Query Parameters (comma separated)"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name": "iframeloadurlafterlogin",
+                    "fieldLabel": "Iframe url to get login user access key"
+                }
+            ]
+        },
+		{
+            "xtype": "panel",
+            "title": "Social Share in QuickView",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-text",
+                    "name": "socialShareAddThis",
+                    "fieldLabel": "Paste Your Add This Acount Code"
+                }
+            ]
+        },
+		{
+            "xtype": "panel",
+            "title": "Guided Search Configuration",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "isEnableGuidedSearch",
+                    "fieldLabel": "Check to Enable Guided Search feature for this site"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "allProductsCategoryCode",
+                    "fieldLabel": "Category Id for Party Supplies"
+                },
+                {
+                    "xtype": "colorfield",
+                    "name" : "guidedSearchFloatingButtonColor",
+                    "fieldLabel" : "Button Text Color"
+                },
+                {
+                    "xtype": "colorfield",
+                    "name" : "guidedSearchFloatingButtonHBg",
+                    "fieldLabel" : "Button Hover Background Color"
+                },
+                {
+                    "xtype": "colorfield",
+                    "name" : "guidedSearchFloatingButtonBg",
+                    "fieldLabel" : "Button Background Color"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "name" : "guidedSearchFloatingButtonText",
+                    "fieldLabel" : "Button Text"
+                },
+                {
+                    "xtype": "panel",
+                    "title": "First Option Details",
+                    "collapsed": false,
+                    "flex": "1",
+                    "items": [
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty1Labelq",
+                            "fieldLabel": "Property label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty1Label",
+                            "fieldLabel": "Selected label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty1Labelopt",
+                            "fieldLabel": "Option label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty1",
+                            "fieldLabel": "Paste your first guided property"
+                        },
+                        {
+                            "height": 100,
+                            "width": "100%",
+                            "mode": "json",
+                            "xtype": "mz-input-code",
+                            "name": "guidedSearchProperty1KeyValues",
+                            "fieldLabel": "Key Value JSON Structure"
+                        }
+                    ]
+                },
+                {
+                    "xtype": "panel",
+                    "title": "Second Option Details",
+                    "collapsed": false,
+                    "flex": "1",
+                    "items": [
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty2Labelq",
+                            "fieldLabel": "Property label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty2Label",
+                            "fieldLabel": "Selected label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty2Labelopt",
+                            "fieldLabel": "Option label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty2",
+                            "fieldLabel": "Paste your first guided property"
+                        },
+                        {
+                            "height": 100,
+                            "width": "100%",
+                            "mode": "json",
+                            "xtype": "mz-input-code",
+                            "name": "guidedSearchProperty2KeyValues",
+                            "fieldLabel": "Key Value JSON Structure"
+                        }
+                    ]
+                },
+                {
+                    "xtype": "panel",
+                    "title": "Third Option Details",
+                    "collapsed": false,
+                    "flex": "1",
+                    "items": [
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty3Labelq",
+                            "fieldLabel": "Paste your first guided property label"
+                        },
+                        {
+                            "xtype": "mz-input-text",
+                            "name": "guidedSearchProperty3",
+                            "fieldLabel": "Paste your first guided property"
+                        },
+                        {
+                            "height": 100,
+                            "width": "100%",
+                            "mode": "json",
+                            "xtype": "mz-input-code",
+                            "name": "guidedSearchProperty3KeyValues",
+                            "fieldLabel": "Key Value JSON Structure"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Image/Color Swatch Property",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-text",
+                    "name": "swatchProperty",
+                    "fieldLabel": "Paste Your Tenent Property For Color/Image Swatch"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Reward Program Config",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardConfigurationDocumentType",
+                    "name": "shippingRewardConfigurationDocumentType",
+                    "fieldLabel": "shippingRewardConfigurationDocumentType"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardHistoryDocumentType",
+                    "name": "shippingRewardHistoryDocumentType",
+                    "fieldLabel": "shippingRewardHistoryDocumentType"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardConfigurationDocumentList",
+                    "name": "shippingRewardConfigurationDocumentList",
+                    "fieldLabel": "shippingRewardConfigurationDocumentList"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardHistoryDocumentList",
+                    "name": "shippingRewardHistoryDocumentList",
+                    "fieldLabel": "shippingRewardHistoryDocumentList"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "shindigz",
+                    "name": "namespace",
+                    "fieldLabel": "namespace"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~enable-shipping-reward-program",
+                    "name": "isEnabledShippingRewardCustomerAttribute",
+                    "fieldLabel": "isEnabledShippingRewardCustomerAttribute"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~shipping-reward-point-1",
+                    "name": "customerRewardPointAttribute",
+                    "fieldLabel": "customerRewardPointAttribute"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~rp-enrolled-on",
+                    "name": "rewardProgramEnrolledAttribute",
+                    "fieldLabel": "rewardProgramEnrolledAttribute"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~post-order-signup",
+                    "name": "postOrderSignupAttribute",
+                    "fieldLabel": "postOrderSignupAttribute"
+                }
+            ]
+        },
+		{
+            "xtype": "panel",
+            "title": "Instagram Config",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-text",
+                    "name": "instaAcountID",
+                    "fieldLabel": "Paste Your Instagram Access Token Here"
+                },
+                {
+                    "xtype": "mz-input-number",
+                    "name": "instaImageCount",
+                    "value":"10",
+                    "fieldLabel": "Paste Your Instagram Access Token Here"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "New Flag Ribbon Days",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-number",
+                    "name": "daysForNewRibbon",
+                    "value":"25",
+                    "fieldLabel": "For How Many Days The Product Should Display As New"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Product Lists",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "listProductCode",
+                    "fieldLabel": "Show product code in product lists"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "listProductShortDesc",
+                    "fieldLabel": "Show product short description in product lists"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Search",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "showChildCategoriesInFaceting",
+                    "fieldLabel": "Show two levels of the category hierarchy in faceting"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "useSearchAutocomplete",
+                    "fieldLabel": "Show search suggestions"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "suggestPriorSearchTerms",
+                    "fieldLabel": "Show search terms others used on this site in search suggestions",
+                    "enableIf": "useSearchAutocomplete"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Layout",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "gutterWidth",
+                    "fieldLabel": "Base Margin Width",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "15px",
+                        "20px",
+                        "25px",
+                        "30px",
+                        "35px"
+                    ]
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Suppress CVV During Express Checkout",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "isCvvSuppressed",
+                    "fieldLabel": "CVV Suppressed"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Anonymous Account Verification Options",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "zipCodeEnabled",
+                    "fieldLabel": "Billing Zip Code"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "phoneNumberEnabled",
+                    "fieldLabel": "Billing Phone Number"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "billingEmailEnabled",
+                    "fieldLabel": "Billing Email"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Text",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-selectmulti",
+                    "name": "loadGoogleFonts",
+                    "fieldLabel": "Load Google Fonts",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "Source Sans Pro",
+                        "Open Sans",
+                        "Raleway",
+                        "Lora",
+                        "Rokkitt"
+                    ]
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "primaryFont",
+                    "fieldLabel": "Primary Font",
+                    "allowBlank": false,
+                    "storeFrom": "loadGoogleFonts",
+                    "forceSelection": true
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "fontSize",
+                    "fieldLabel": "Font Size",
+                    "allowBlank": false,
+                    "editable": false,
+                    "forceSelection": true,
+                    "store": [
+                        "12px",
+                        "14px",
+                        "16px",
+                        "18px",
+                        "20px"
+                    ]
+                },
+                {
+                    "xtype": "mz-input-color",
+                    "name": "textColor",
+                    "fieldLabel": "Text Color"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Paging",
+            "collapsed": false,
+            "items": [
+
+                {
+                    "fieldLabel": "Show these page size options",
+                    "xtype": "mz-input-selectmulti",
+                    "name": "pageSizeOptions",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        20,
+                        40,
+                        60,
+                        80,
+                        100
+                    ]
+                },
+                {
+                    "fieldLabel": "Default items per page",
+                    "xtype": "mz-input-dropdown",
+                    "name": "defaultPageSize",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "storeFrom": "pageSizeOptions"
+                },
+                {
+                    "fieldLabel": "Default Sort Order",
+                    "xtype": "mz-input-text",
+                    "name": "defaultSort",
+                    "allowBlank": true      ,
+                    "allowOnlyWhitespace":true
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Navigation",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Maximum Items In Main Nav",
+                    "xtype": "mz-input-number",
+                    "name": "maxTopLevelNavItems",
+                    "hideTrigger": false,
+                    "allowDecimal": false,
+                    "minValue": 1
+                },
+                {
+                    "fieldLabel": "Maximum Nav Item Label Length",
+                    "xtype": "mz-input-number",
+                    "name": "maxTopLevelNavLabelLength",
+                    "hideTrigger": false,
+                    "allowDecimal": false,
+                    "minValue": 4,
+                    "allowBlank": false
+                },
+				{
+                    "fieldLabel":"Category For Search Dropdown",
+                    "xtype":"boxselect",
+                    "name":"categoryForSearchDropdown",
+                    "width": 500,
+                    "displayField": "name",
+                    "valueField": "id",
+                    "queryMode": "local",
+                    "store": {
+                        "type": "Taco.store.Categories"
+                    }
+
+                }
+            ]
+        },
+        {
+            "fieldLabel":"Categories to Compare Product",
+            "xtype": "panel",
+            "title": "Compare Product",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype":"checkbox",
+                    "name":"compareProductFlag",
+                    "width": 500,
+                    "fieldLabel":"Show/Hide Compare Feature"
+                },
+                {
+                    "xtype":"boxselect",
+                    "name":"compareCategoriesList",
+                    "width": 500,
+                    "displayField": "name",
+                    "valueField": "id",
+                    "queryMode": "local",
+                    "store": {
+                        "type": "Taco.store.Categories"
+                    }
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Custom Settings",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Shipping Tooltip Info",
+                    "xtype": "mz-input-textarea",
+                    "name": "shippingTooltipInfo",
+                    "width":"60%"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name":"CVVtooltipText",
+                    "fieldLabel":"Checkout page ccv popup",
+                    "width":"60%"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "couponCodeMultiple",
+                    "fieldLabel": "Enable/Disable Multiple Coupon Code"
+                }
+
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Login Layover Links",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Login Layover Links",
+                    "xtype": "mz-input-textarea",
+                    "name": "layoverlinks",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "WishList Event Types",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Event Types",
+                    "xtype": "mz-input-textarea",
+                    "name": "wishlisteventtypes",
+                    "width":"100%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Custom Login Session Message",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Login Session Message",
+                    "xtype": "mz-input-textarea",
+                    "name": "loginSessionMessage",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Search Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for search heading",
+                    "xtype": "mz-input-textarea",
+                    "name": "searchPageHeading",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Related Products Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for related products heading",
+                    "xtype": "mz-input-text",
+                    "name": "relatedProductHeading",
+                    "width":"60%"
+                },
+                {
+                    "fieldLabel": "Enter text for similar products heading",
+                    "xtype": "mz-input-text",
+                    "name": "similarProductHeading",
+                    "width":"60%"
+                },
+                {
+                    "fieldLabel": "Enter text for recommended products heading",
+                    "xtype": "mz-input-text",
+                    "name": "recommendedProductHeading",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Mini Cart Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for mini cart heading",
+                    "xtype": "mz-input-text",
+                    "name": "miniCartHeading",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "No Search Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for no search heading",
+                    "xtype": "mz-input-textarea",
+                    "name": "noSearchPageHeading",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Our Other Sites Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for no search heading",
+                    "xtype": "mz-input-textarea",
+                    "name": "ourOtherSite",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Suggested Products Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for suggested Products Heading",
+                    "xtype": "mz-input-textarea",
+                    "name": "suggestedProductsHeading",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "No Search sub text",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for no search heading",
+                    "xtype": "mz-input-textarea",
+                    "name": "noSearchSubText",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "My Account Page Tabs",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "My Account Tabs",
+                    "xtype": "mz-input-textarea",
+                    "name": "myaccounttabs",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Customer Support on Order Status & History page",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Customer Support on Order Status & History page",
+                    "xtype": "mz-input-textarea",
+                    "name": "supportsection",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Superpage Items",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Super page Items per page",
+                    "xtype": "mz-input-number",
+                    "name": "superpageitems",
+                    "width":"60%",
+                    "allowBlank": false
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Bundle Product Type Id",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Bundle Product Type Id",
+                    "xtype": "mz-input-number",
+                    "name": "bundleBroductTypeId",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype" : "panel",
+            "title" : "Cart Page Content",
+            "collapsed" : false,
+            "items" : [
+                {
+                    "fieldLabel" : "Please Enter Text For Continue Shopping Link",
+                    "xtype" : "mz-input-text",
+                    "name" : "continueShoppingLink",
+                    "width" : "60%"
+                },
+                {
+                    "fieldLabel" : "Please Enter Text desired promo in Cart",
+                    "xtype" : "mz-input-textarea",
+                    "name" : "cartpagePromo",
+                    "width" : "60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Confirmation page Rewards text",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for Anonymous user",
+                    "xtype": "mz-input-textarea",
+                    "name": "rewardAnonymous",
+                    "width":"60%"
+                },
+                {
+                    "fieldLabel": "Enter text for Logged in user",
+                    "xtype": "mz-input-textarea",
+                    "name": "rewardLoggedin",
+                    "width":"60%"
+                },
+                {
+                    "fieldLabel": "Enter text for Logged in user Join button",
+                    "xtype": "mz-input-text",
+                    "name": "rewardLoggedinJoin",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Attributes Definition ID",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Email Subscription",
+                    "xtype": "mz-input-number",
+                    "name": "emailSubscription",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Email Preferences",
+                    "xtype": "mz-input-number",
+                    "name": "holidayPreferences",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Occassions",
+                    "xtype": "mz-input-number",
+                    "name": "ocassions",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Customer Type",
+                    "xtype": "mz-input-number",
+                    "name": "customerType",
+                    "width":"60%",
+                    "allowBlank": false
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Third Party Config",
+            "collapsed": false,
+            "items": [
+                {
+                  "xtype": "panel",
+                  "title": "Marketo Form Id's and Account Number",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                          "fieldLabel": "Holiday Email Preferences",
+                          "xtype": "mz-input-number",
+                          "name": "mktoHolidayEmailPreferences",
+                          "width":"20%",
+                          "allowBlank": false
+                      },
+                      {
+                          "fieldLabel": "Email Subscription",
+                          "xtype": "mz-input-number",
+                          "name": "mktoEmailSubscription",
+                          "width":"20%",
+                          "allowBlank": false
+                      },
+                      {
+                          "fieldLabel": "Party Planner",
+                          "xtype": "mz-input-number",
+                          "name": "mktoPartyPlanner",
+                          "width":"20%",
+                          "allowBlank": false
+                      },
+                      {
+                          "fieldLabel": "Party Directory",
+                          "xtype": "mz-input-number",
+                          "name": "mktoPartyDirectory",
+                          "width":"20%",
+                          "allowBlank": false
+                      },
+                      {
+                          "fieldLabel": "Wholesale Program",
+                          "xtype": "mz-input-text",
+                          "name": "mktoWholesaleProgram",
+                          "width":"20%",
+                          "allowBlank": false
+                      },
+                      {
+                          "fieldLabel": "Contact Us",
+                          "xtype": "mz-input-number",
+                          "name": "mktoContactUs",
+                          "width":"20%",
+                          "allowBlank": false
+                      },
+                      {
+                          "fieldLabel": "Account Number",
+                          "xtype": "mz-input-text",
+                          "name": "mktoAccNumber",
+                          "width":"20%",
+                          "allowBlank": false
+                      }
+                  ]
+                },
+                {
+                  "xtype": "panel",
+                  "title": "Certona",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                          "xtype": "mz-input-checkbox",
+                          "name": "certonaRecomm",
+                          "fieldLabel": "Enable/Disable Certona Recommendations"
+                      },
+                      {
+                          "xtype": "mz-input-checkbox",
+                          "name": "certonaRecommSimilarProducts",
+                          "fieldLabel": "Enable/Disable Similar Products"
+                      },
+                      {
+                          "xtype": "mz-input-checkbox",
+                          "name": "certonaRecommRelatedProducts",
+                          "fieldLabel": "Enable/Disable Related Recommendations"
+                      }
+                    ]
+                },
+                {
+                  "xtype": "panel",
+                  "title": "Bloomreach",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                        "fieldLabel" : "Account Number",
+                        "xtype" : "mz-input-text",
+                        "name" : "brtrkAccNum",
+                        "width" : "20%",
+                        "allowBlank": false
+                      }
+                  ]
+                },
+                {
+                  "xtype": "panel",
+                  "title": "Biz Rate Connexity",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                        "fieldLabel" : "Merchant ID",
+                        "xtype" : "mz-input-text",
+                        "name" : "bizAccNumber",
+                        "width" : "20%",
+                        "allowBlank": false
+                      }
+                  ]
+                },
+                {
+                  "xtype": "panel",
+                  "title": "NexTag ROI Optimizer",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                        "fieldLabel" : "ID",
+                        "xtype" : "mz-input-text",
+                        "name" : "nexttag",
+                        "width" : "20%",
+                        "allowBlank": false
+                      }
+                  ]
+                },
+                {
+                  "xtype": "panel",
+                  "title": "Criteo",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                        "fieldLabel" : "Account Number",
+                        "xtype" : "mz-input-text",
+                        "name" : "criteoAccNum",
+                        "width" : "20%",
+                        "allowBlank": false
+                      }
+                  ]
+                },
+                {
+                  "xtype": "panel",
+                  "title": "Sheer ID",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                          "xtype":"mz-input-text",
+                          "name":"sheerIDAuthUrl",
+                          "fieldLabel":"Sheer ID Authroization URL (AWS Server Machine 1)",
+                          "allowBlank": false
+                      }
+                  ]
+                },
+                {
+                    "xtype": "panel",
+                    "title": "Commisson Junction",
+                    "collapsed": false,
+                    "items": [
+                        {
+                            "fieldLabel": "Container Tag Id - Anonymous user",
+                            "xtype": "mz-input-text",
+                            "name": "containerTagIdAnonymous",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "Container Tag Id - Existing User",
+                            "xtype": "mz-input-text",
+                            "name": "containerTagIdLoggedIn",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "Action ID - Anonymous user",
+                            "xtype": "mz-input-text",
+                            "name": "aidAnonymous",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "Action ID - Existing User",
+                            "xtype": "mz-input-text",
+                            "name": "aidExist",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "Enterprise ID",
+                            "xtype": "mz-input-text",
+                            "name": "cid",
+                            "width":"20%",
+                            "allowBlank": false
+                        }
+                    ]
+                },
+                {
+                    "xtype": "panel",
+                    "title": "Google Double Click Floodlight and Conversion",
+                    "collapsed": false,
+                    "items": [
+                        {
+                          "fieldLabel": "Source",
+                          "xtype": "mz-input-number",
+                          "name": "dclk_src",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Type",
+                          "xtype": "mz-input-text",
+                          "name": "dclk_type",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Category",
+                          "xtype": "mz-input-text",
+                          "name": "dclk_cat",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion ID",
+                          "xtype": "mz-input-number",
+                          "name": "gConvId",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion Language",
+                          "xtype": "mz-input-text",
+                          "name": "gConvLang",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion Format",
+                          "xtype": "mz-input-text",
+                          "name": "gConvFormat",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion Color",
+                          "xtype": "mz-input-text",
+                          "name": "gConvColor",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion Label",
+                          "xtype": "mz-input-text",
+                          "name": "gConvLabel",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion Value",
+                          "xtype": "mz-input-number",
+                          "name": "gConvValue",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Conversion Currency",
+                          "xtype": "mz-input-text",
+                          "name": "gConvCur",
+                          "width":"20%",
+                          "allowBlank": false
+                        },
+                        {
+                          "fieldLabel": "Google Remarketing",
+                          "xtype": "mz-input-checkbox",
+                          "name": "gConvCur"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "xtype" : "panel",
+            "title" : "Custom Labels and Data",
+            "collapsed" : false,
+            "items" : [
+
+                 {
+                    "fieldLabel" : "Cart page Coupon Label",
+                    "xtype" : "mz-input-text",
+                    "name" : "cartCouponLabel",
+                    "width" : "50%"
+                },{
+                    "fieldLabel" : "Cart page Coupon Placeholder text",
+                    "xtype" : "mz-input-text",
+                    "name" : "cartCouponPlaceholder",
+                    "width" : "50%"
+                },{
+                    "fieldLabel" : "Single PromoCode Text",
+                    "xtype" : "mz-input-text",
+                    "name" : "singleCouponCodeLabel",
+                    "width" : "50%"
+                },
+                {
+                    "fieldLabel" : "Multiple PromoCode Text",
+                    "xtype" : "mz-input-text",
+                    "name" : "multipleCouponCodeLabel",
+                    "width" : "50%"
+                },{
+                    "fieldLabel" : "Cart Page Zip Code Label ",
+                    "xtype" : "mz-input-text",
+                    "name" : "cartZipLabel",
+                    "width" : "50%"
+                },{
+                    "fieldLabel" : "Cart Page Zip Code Placeholder text ",
+                    "xtype" : "mz-input-text",
+                    "name" : "cartZipPlaceholder",
+                    "width" : "50%"
+                },{
+                    "fieldLabel" : "Cart Page Zip code description Text",
+                    "xtype" : "mz-input-text",
+                    "name" : "cartZipDesc",
+                    "width" : "50%"
+                },
+                {
+                    "fieldLabel" : "Occasion Relationship List(Seperate each by semicolon';' Note: Sentence Case)",
+                    "xtype" : "mz-input-textarea",
+                    "name" : "occasionRel",
+                    "width" : "50%"
+                },
+                {
+                    "fieldLabel" : "Occasion Type List(Seperate each by semicolon';' Note: Sentence Case)",
+                    "xtype" : "mz-input-textarea",
+                    "name" : "occasionType",
+                    "width" : "50%"
+                },
+                {
+                    "fieldLabel" : "Store Credit Code Info",
+                    "xtype" : "mz-input-textarea",
+                    "name" : "storeCreditCodeInfoLabel",
+                    "width" : "50%"
+                },
+                {
+                    "fieldLabel" : "Store Credit FAQ Info",
+                    "xtype" : "mz-input-textarea",
+                    "name" : "storeCreditFAQinfo",
+                    "width" : "50%"
+                }
+            ]
+        },
+        {
+            "xtype" : "panel",
+            "title" : "Satety Flags",
+            "collapsed" : false,
+            "items" : [
+                {
+                    "fieldLabel" : "Safety-1",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-1"
+                },
+                {
+                    "fieldLabel" : "Safety-2",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-2"
+                },
+                {
+                    "fieldLabel" : "Safety-3",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-3"
+                },
+                {
+                    "fieldLabel" : "Safety-4",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-4"
+                },
+                {
+                    "fieldLabel" : "Safety-5",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-5"
+                },
+                {
+                    "fieldLabel" : "Safety-6",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-6"
+                },
+                {
+                    "fieldLabel" : "Safety-A",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-a"
+                },
+                {
+                    "fieldLabel" : "Safety-B",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-b"
+                },
+                {
+                    "fieldLabel" : "Safety-C",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-c"
+                },
+                {
+                    "fieldLabel" : "Safety-D",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-d"
+                },
+                {
+                    "fieldLabel" : "Safety-E",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-e"
+                },
+                {
+                    "fieldLabel" : "Safety-F",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-f"
+                },
+                {
+                    "fieldLabel" : "Safety-G",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-g"
+                },
+                {
+                    "fieldLabel" : "Safety-H",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-h"
+                },
+                {
+                    "fieldLabel" : "Safety-I",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-i"
+                },
+                {
+                    "fieldLabel" : "Safety-J",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-j"
+                },
+                {
+                    "fieldLabel" : "Safety-K",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-k"
+                },
+                {
+                    "fieldLabel" : "Safety-L",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-l"
+                },
+                {
+                    "fieldLabel" : "Safety-M",
+                    "height": 60,
+                    "width": "100%",
+                    "xtype": "mz-input-text",
+                    "name": "safety-m"
+                }
+            ]
+        }
+    ]
+}

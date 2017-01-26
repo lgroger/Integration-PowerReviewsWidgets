@@ -1,0 +1,36 @@
+{% require_script "modules/my-menu" %}       
+            {% for modelItem in model %}    
+                    <div class="item">
+                      <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+                        <div class="mz-productlist mz-productlist-tiled">
+                          <div class="mz-productlist-item" >
+                            <div class="mz-productlisting mz-productlist-tiled" data-mz-product="KSSTOC">
+                              <div class="super_theme_img">
+                                {% if modelItem.logo == '' %}
+                                 <img src="/resources/images/no-image.png" alt="No Image"/>                         
+                                {% else %}
+                                  <img src="{{modelItem.logo}}" alt="{{modelItem.name}}"/>
+                                {% endif %}
+                              </div>
+                              <h3>{{modelItem.name|safe}}</h3>
+                              <!--h3 class="super_themeslider_price"> <span>$84</span> </h3-->
+                              <div class="mz-productlisting-rating">
+                                 <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                              </div>
+                            </div>
+                          </div>
+                       </div>
+                      </div> 
+             </div> 
+            {% endfor %}  
+                
+
+
+
+
+
+
+
+
+
+

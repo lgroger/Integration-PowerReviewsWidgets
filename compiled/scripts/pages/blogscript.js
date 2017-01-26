@@ -1,0 +1,1 @@
+define(["modules/jquery-mozu"],function(t){function n(n){var i=0;n.each(function(){var n=t(this).height();n>i&&(i=n)}),i>0&&n.height(i)}n(t(".zone-recent-post .recent-post li a")),window.innerWidth<830&&t(".post-img-section").each(function(){t(this).find(".blog-post-summary").length>0&&t(this).insertAfter(t(this).parent().find(".blog-content-section-right"))})});

@@ -1,0 +1,19 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-category no-box-drop-shadow {% endblock body-tag-classes %}
+
+{% block body-content %}
+{% require_script "pages/category" %}
+{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
+    {% with isguidedsearch|length as isGuidedSearchURL %}
+		<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+		    {% include "pages/category-interior" with isGuidedSearchURL=isGuidedSearchURL %}
+		</div>
+	{% endwith %}
+{% endwith %}
+{% require_script "modules/filters" %}
+{% require_script "modules/quick-view" %}
+{% require_script "pages/compare-list" %}
+{% endblock body-content %} 

@@ -1,0 +1,19 @@
+﻿        <div class="mz-l-formfieldgroup-cell hide_cart">
+            <label for="coupon-code">{{ labels.couponCode }} </label>
+        </div>
+        <div class="mz-l-formfieldgroup-cell">
+            <input type="text" id="coupon-code" name="coupon-code" value="{{ model.couponCode }}" placeholder="{{themeSettings.cartCouponPlaceholder}}" data-mz-value="couponCode">
+            <button type="button" id="cart-coupon-code" class="mz-button" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+        </div>
+        {% if model.couponCodes.length > 0 %}
+        <div>
+
+            <span class="coupon-code-stripe">
+                Note: {% for code in model.couponCodes %}
+                "{{code}}"
+                {% if forloop.index < model.couponCodes.length %} ,{% endif %}
+                {% endfor %}may be  reflected in checkout.
+            </span>
+            
+        </div>
+        {% endif %}

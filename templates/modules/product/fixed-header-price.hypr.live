@@ -1,0 +1,17 @@
+<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+    {% if model.hasPriceRange %}
+    <span itemprop="minPrice" class="mz-pricestack-price-lower">
+        {% include "modules/common/price" with model=model.priceRange.lower %}
+    </span>
+    <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+        {% include "modules/common/price" with model=model.priceRange.upper %}
+    </span>
+    {% else %}
+    	Price: {% include "modules/common/price" with model=model.price %}
+    {% endif %}
+     {% with model|get_product_attribute("tenant~uom") as prdValue %}
+               {% for value in prdValue.values %}
+               {{ value.stringValue }}
+               {% endfor %}
+               {% endwith %}
+</div> 

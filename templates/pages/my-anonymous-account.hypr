@@ -1,0 +1,36 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle labels.orderStatus %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-anonymous-account {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+{% require_script "pages/order-status" %}
+
+{% comment %}{% require_script "pages/myaccount" %}{% endcomment %}
+
+{% preload_json model "customer" %}
+<div class="mz-l-container orderstatus_page">
+
+    {% dropzone "orderstatus-top" scope="template" %}
+    
+    <h1 class="mz-pagetitle">{{ labels.orderStatus }}</h1>
+
+    <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
+
+        <a id="orderhistory"></a>
+        <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
+            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory showPaging=false %}
+        </div>
+        
+        <a id="returnhistory"></a>
+        <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
+            {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
+        </div>
+    </div>
+
+    {% dropzone "orderstatus-bottom" scope="template" %}
+
+</div>
+{% endblock body-content %}

@@ -1,0 +1,29 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}{{ labels.noResultsTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-searchresults mz-noresults {% endblock body-tag-classes %}
+
+{% block body-content %}
+<div class="mz-l-container">
+    <div class="no-search">
+        <h1 class="mz-pagetitle">{{ themeSettings.noSearchPageHeading }} <span class="mz-searchresults-query">"{{ pageContext.search.query }}"</span></h1>
+        	{% include 'modules/search/search-bar' with view='_2'%}
+        <div class="mz-search-suggestion-container">
+	        {{ themeSettings.noSearchSubText | safe }} 
+    	</div>
+    </div>
+    {% dropzone "no-results" scope="template" %}
+    
+	<div class="mz-shi-heading-style ech-shi-popular-cat-widget">
+		<h1 class="popular-cat-heading">{{ themeSettings.suggestedProductsHeading }}</h1>
+	</div>
+	
+	<div data-mz-recommendedProducts id="recommended_products_slot">
+	</div>
+</div>
+{% require_script "modules/quick-view" %}
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

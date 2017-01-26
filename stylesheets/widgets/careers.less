@@ -1,0 +1,136 @@
+.careers-list-item{
+	h3{
+		position: relative;
+		margin: 0;
+		padding: 15px 40px;
+		cursor: pointer;
+		font: 20px/1.2 @fontMontserratRegular;
+		color: #333;
+		border-radius: 10px;
+		font-weight: 400;
+		border: 1px dashed #d7d7d7;
+		margin-top: 10px;
+		transition:background 0.4s ease-in-out;
+		&:after{
+			content: "";
+			position: absolute;
+			top: 26%;
+			width: 25px;
+			height: 25px;
+			background: url('../resources/images/icon-plus-sign.png');
+			right: 14px;
+			background-size: cover;
+		}
+		&+.job-content{
+			display: none;
+			padding: 20px 40px;
+			border: 1px solid #f9f9f9;
+			border-bottom-right-radius: 10px;
+			border-bottom-left-radius: 10px;
+			font: 18px/1.2 @fontMontserratRegular;
+			color: #333;
+			background: #f9f9f9;
+		}
+		&.show-careers{
+			border-bottom-right-radius: 0;
+			border-bottom-left-radius: 0;
+			color: #fff;
+			background: #848484;
+			&:after{
+				width: 25px;
+				height: 25px;
+				background: url('../resources/images/icon-minus-sign.png') no-repeat;
+				right: 20px;
+				top: 45%;
+			}
+			&+.job-content{
+				display: block;
+			}
+		}
+	}
+	.jobitem{
+		.clearfix();
+		.jobfield{
+			display: inline-block;
+			width: 30%;
+			padding: 10px;
+			color: #131314;
+			font: 20px @fontMontserratRegular;
+			color: #131314;
+		}
+		.jobfieldval{
+			display: inline-block;
+			width: 65%;
+			vertical-align: top;
+			font: 18px @RobotoRegular;  
+			padding: 10px;
+			color: #646464;
+		}
+	}
+	.job-apply-btn{
+		display: inline-block;
+		width: 150px;
+		padding: 10px 10px;
+		background: #00b09b;
+		font: 22px @fontMontserratRegular;
+		color: #fff;
+		margin: 40px 0 20px;
+		border-radius: 3px;
+		text-transform: uppercase;
+		text-align: center;
+		text-decoration: none;
+		transition:background 0.4s ease-in-out;
+		&:hover,&:focus{
+			 background: #0e3a60 6px;
+		}
+	}
+}
+@media only screen and (max-width: 995px) {
+	.careers-list-item{
+		.jobitem{
+			.jobfield{
+				font-size: 18px;
+			}
+			.jobfieldval{
+				width: 62%;
+				font-size: 16px;
+			}
+		}
+
+	}
+
+}
+@media only screen and (max-width: 700px) {
+	.careers-list-item{
+		h3{
+			padding: 15px 35px 15px 20px;
+			&:after{
+				top: 30%;
+				width: 20px;
+				height: 20px;
+				right: 10px;
+			}
+			&+.job-content{
+				padding: 10px;
+			}
+		}
+		.jobitem{
+			.jobfield{
+				width: 100%;
+				padding: 0 10px;
+			}
+			.jobfieldval{
+				width: 100%;
+			}
+		}
+		.job-apply-btn{
+			margin: 10px 10px 0;
+		}
+	}
+
+}
+	@media only screen and (min-width:1500px){
+		.careers-list-item .jobitem{
+			max-width: 1400px;
+		}
+	}
