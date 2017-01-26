@@ -198,10 +198,6 @@ if(pageContext.pageType==="confirmation"){
               if($('.mz-error-item').length>=1){
                 chg++;
                     if(chg%5 === 0){
-                        errCtr++;
-                        //console.log(errCtr);
-                        lpAddVars('page','Checkout',$('.mz-error-item').html());
-                        lpAddVars('page','ErrorCounter',errCtr);
                     }
                 }
                 e.preventDefault();

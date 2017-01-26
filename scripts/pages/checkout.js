@@ -87,23 +87,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             EditableView.prototype.render.apply(this, arguments);
             this.resize();
 
-            //Session Cam Checkout Step process Start
-
-            if(this.model.stepStatus() === "incomplete" || this.$el.hasClass('is-invalid')){
-
-                var name = this.$el.attr('id').replace(/[^\w\s]/gi, '');
-
-
-                if(window.sessionCamRecorder) {
-                    if(window.sessionCamRecorder.createVirtualPageLoad){
-                        window.sessionCamRecorder.createVirtualPageLoad('/checkout/'+name);
-                    }
-                }
-            }
             if(this.$el.attr('id') == 'step-payment-info' && this.$el.hasClass('is-complete')){
                 $('#step-review').addClass('is-incomplete');
             }
-            //Session Cam Checkout Step process End
             /* call for after-render */
             if($('#mz--contactselector-savedcontact option:selected').val() == 'Add new address'){
                 $('#shipping-addr-edit-link').hide();
@@ -2067,15 +2053,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
             _.defer(function () {
             self.model.submit();
-            //Session Cam Checkout Step process Start
-
-            if(window.sessionCamRecorder) {
-                if(window.sessionCamRecorder.createVirtualPageLoad){
-                    window.sessionCamRecorder.createVirtualPageLoad('/checkout/complete');
-                }
-            }
-
-            //Session Cam Checkout Step process End
 
             });
         },

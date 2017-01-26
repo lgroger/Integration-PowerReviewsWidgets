@@ -147,18 +147,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                     break;
                 case 'AddToWishlist':
                     window.productView.AddToWishlistAfterPersonalize(data);
-                    break;  
-                case 'LPerror':
-                    console.log(data);
-                     if(data.message===self.errorMsg){
-                        self.errorMsgCounter++;
-                     }else{
-                        self.errorMsgCounter=1;
-                     }
-                     self.errorMsg = data.message;
-                    lpAddVars('page','DND',data.message);
-                    lpAddVars('page','ErrorCounter',self.errorMsgCounter); 
-                    break;      
+                    break;     
             }
         };
         self.initialize=function(){

@@ -110,25 +110,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.displayMessage(xhr.message ||
                 (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
                 Hypr.getLabel('unexpectedError'));
-            var errCtr = 0;
-            if(xhr.message.indexOf("failed. Please try again")>=0){
-                errCtr++;
-                lpAddVars('page','Login Popup','Login - No Match Found');
-                lpAddVars('page','LoginErrorCounter',errCtr);
-            }
-            
         },
         displayMessage: function (msg) {
             this.setLoading(false);
             this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
             setTimeout(function(){$('.mz-validationmessage').fadeOut();},4000);
-            var errCtr = 0;
-            if(msg.indexOf("Please enter a valid email address")>=0){
-                errCtr++;
-                lpAddVars('page','Invalid Email or Password',msg);
-                lpAddVars('page','LoginErrorCounter',errCtr);
-            } 
-
         },
         init: function (el) {
             this.$el = $(el);
@@ -463,14 +449,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             setTimeout(function(){
             	$('#cboxOverlay').hide().removeClass('page-loading'); //hide page loader
             },100);
-	    
-	    var errCtr = 0;
-            if(msg.indexOf("Please enter a valid email address")>=0){
-                errCtr++;
-                lpAddVars('page','Invalid Email or password',msg);
-                lpAddVars('page','LoginErrorCounter',errCtr);
-            }
-
         }
     });
 

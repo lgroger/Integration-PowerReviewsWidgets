@@ -243,35 +243,6 @@
       <div id="cboxOverlay" style="display:none;"></div>
           <!-- <div id="login-signup-container" class='overlay' style="display:none;"></div> -->
 
-      <!-- SessionCam Client Integration v6.0 -->
-      <script type="text/javascript">
-      //<![CDATA[
-      var scRec=document.createElement('SCRIPT');
-      scRec.type='text/javascript';
-      scRec.src="//d2oh4tlt9mrke9.cloudfront.net/Record/js/sessioncam.recorder.js";
-      document.getElementsByTagName('head')[0].appendChild(scRec);
-      //]]>
-      </script>
-
-      <script type="text/javascript">
-
-           if(!window.sessioncamConfiguration)
-              window.sessioncamConfiguration = new Object();
-              sessioncamConfiguration.SessionCamPath = "{% if {{ pageContext.pageType }} == "web_page" %}{{ pageContext.metaTitle }}{% else %}{{ pageContext.pageType }}{% endif %}";
-              {% if {{ pageContext.pageType }} !=  'checkout' %}
-                  {% if {{ pageContext.pageType }} ==  "search" %}
-              sessioncamConfiguration.SessionCamPageName = "{{ pageContext.cmsContext.template.path }}";
-                  {% else %}
-                      {% if pageContext.pageType == "category" and pageContext.title != '' %}
-              sessioncamConfiguration.SessionCamPageName = "{{ pageContext.title }}";
-                      {% endif %}
-                  {% endif %}
-              {% endif %}
-
-      </script>
-      <!-- End SessionCam -->
-
-
       <!--Certona & Munchkin Code Integration Start -->
       <script type="text/javascript">
 
