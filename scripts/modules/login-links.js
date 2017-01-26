@@ -4,12 +4,13 @@
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
 
     var usePopovers = function() {
-        return !Modernizr.mq('(max-width: 480px)');
+        // return !Modernizr.mq('(max-width: 480px)');
+         return !Modernizr.mq('(max-width: 315px)');  
     },
     isTemplate = function(path) {
         return require.mozuData('pagecontext').cmsContext.template.path === path;
     },
-    returnFalse = function () {
+    returnFalse = function () {  
         return false;
     },
     $docBody,
@@ -33,6 +34,11 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 this.$el.off('click', returnFalse);
                 this.bindListeners(false);
                 $docBody.off('click', this.dismisser);
+                $('body').removeClass('lock-verflow');
+                $('#cboxOverlay').hide();
+                if(!$(e.target).hasClass('trigger-signup') && e.target.id != "login"){
+                    window.checkoutflag = 0;
+                }
             }
         },
         setLoading: function (yes) {
@@ -72,6 +78,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     container: 'body'
                 }).on('shown.bs.popover', this.onPopoverShow)
                 .popover('show');
+                $('#cboxOverlay').show().css('height',$(document).height());
+                $('body').addClass('lock-verflow');
+
+                if(this.$el.data("mz-action") == 'login') {
+                    $('.popover').addClass('popoverLoginForm');
+                } else {
+                    $('.popover').addClass('popoverSignupForm');
+                }
 
             }
         },
@@ -92,13 +106,29 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         },
         displayApiMessage: function (xhr) {
+            console.log(xhr);          
             this.displayMessage(xhr.message ||
                 (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
                 Hypr.getLabel('unexpectedError'));
+            var errCtr = 0;
+            if(xhr.message.indexOf("failed. Please try again")>=0){
+                errCtr++;
+                lpAddVars('page','Login Popup','Login - No Match Found');
+                lpAddVars('page','LoginErrorCounter',errCtr);
+            }
+            
         },
         displayMessage: function (msg) {
             this.setLoading(false);
             this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
+            setTimeout(function(){$('.mz-validationmessage').fadeOut();},4000);
+            var errCtr = 0;
+            if(msg.indexOf("Please enter a valid email address")>=0){
+                errCtr++;
+                lpAddVars('page','Invalid Email or Password',msg);
+                lpAddVars('page','LoginErrorCounter',errCtr);
+            } 
+
         },
         init: function (el) {
             this.$el = $(el);
@@ -149,7 +179,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 var $parentForm = $(e.currentTarget).parents('[data-mz-role]');
                 switch ($parentForm.data('mz-role')) {
                     case "login-form":
-                        this.login();
+                        this.login(e);
                         break;
                     case "forgotpassword-form":
                         this.retrievePassword();
@@ -160,18 +190,46 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         },
         slideRight: function (e) {
             if (e) e.preventDefault();
-            this.$slideboxOuter.css('left', -this.panelWidth);
+            $('.mz-login-form.mz-l-slidebox-panel').hide();  
+            $('.mz-forgot-password.mz-l-slidebox-panel').show();
+            // this.$slideboxOuter.css('left', -this.$parent.find('.mz-l-slidebox-outer>.mz-l-slidebox-inner>section.mz-l-slidebox-panel').first().outerWidth()); //this.panelWidth); //this.$parent.find('.mz-l-slidebox-outer>.mz-l-slidebox-inner>section.mz-l-slidebox-panel').first().outerWidth()); //this.panelWidth
         },
         slideLeft: function (e) {
             if (e) e.preventDefault();
-            this.$slideboxOuter.css('left', 0);
+            $('.mz-login-form.mz-l-slidebox-panel').show();
+            $('.mz-forgot-password.mz-l-slidebox-panel').hide();  
+            // this.$slideboxOuter.css('left', 0); 
+        },   
+        login: function (e) {
+            // this.setLoading(true);
+            $('#cboxOverlay').show().addClass('page-loading'); //show page loader
+            var me = this;
+            var email = this.$parent.find('[data-mz-login-email]').val().toLowerCase();
+            var password = this.$parent.find('[data-mz-login-password]').val();
+            var payload = {
+                email : email
+            };
+            if(password === '' && email === ''){
+            	this.displayMessage("Username and Password required.");
+            	return;
+            }else if(password === ''){
+            	this.displayMessage("Password required.");
+            	return;
+            }
+            if (me.validate(payload)) {
+                api.action('customer', 'loginStorefront', {
+                    email: this.$parent.find('[data-mz-login-email]').val(),
+                    password: this.$parent.find('[data-mz-login-password]').val()
+                }).then(function(res){
+                    me.handleLoginComplete(e);
+                }, this.displayApiMessage);
+                
+            }
         },
-        login: function () {
-            this.setLoading(true);
-            api.action('customer', 'loginStorefront', {
-                email: this.$parent.find('[data-mz-login-email]').val(),
-                password: this.$parent.find('[data-mz-login-password]').val()
-            }).then(this.handleLoginComplete.bind(this, this.$parent.find('input[name=returnUrl]').val()), this.displayApiMessage);
+        validate:function(payload){
+            var emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            if (!emailRegex.test(payload.email)) return this.displayMessage(Hypr.getLabel('emailMissing')), false; 
+            return true;
         },
         anonymousorder: function() {
             var email = "";
@@ -210,32 +268,82 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 
             }
 
-            this.setLoading(true);
+            // this.setLoading(true);
             // the new handle message needs to take the redirect.
-            api.action('customer', 'orderStatusLogin', {
+            api.action('customer', 'orderStatusLogin', {              
                 ordernumber: this.$parent.find('[data-mz-order-number]').val(),
                 email: email,
                 billingZipCode: billingZipCode,
                 billingPhoneNumber: billingPhoneNumber
             }).then(function () { window.location.href = "/my-anonymous-account"; }, _.bind(this.retrieveErrorLabel, this));
+            api.on('error', function(error){
+                $(".errormessage").css("display","block");
+                $(".errormessage").html(error.message);
+                console.log(error);  
+                return false;
+            });
         },
         retrievePassword: function () {
-            this.setLoading(true);
-            api.action('customer', 'resetPasswordStorefront', {
-                EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
-            }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
-        },
-        handleLoginComplete: function (returnUrl) {
-            if ( returnUrl ){
-                window.location.href= returnUrl;
-            }else{
-                window.location.reload();
+            // this.setLoading(true);
+            var payload = {
+                email : this.$parent.find('[data-mz-forgotpassword-email]').val()
+            };
+            if (this.validate(payload)) {
+                api.action('customer', 'resetPasswordStorefront', {  
+                    EmailAddress: this.$parent.find('[data-mz-forgotpassword-email]').val()
+                }).then(_.bind(this.displayResetPasswordMessage,this), this.displayApiMessage);
             }
+        },  
+        handleLoginComplete: function (e) {
+            var wishlistprouct = $.cookie('wishlistprouct');
+            if(wishlistprouct && wishlistprouct!==""){
+                $.cookie('wishlistprouct', "",{path:'/'});
+                var iframe = document.createElement('iframe');
+                    iframe.id="homepageapicontext";
+                    iframe.onload = function() {
+                        $('#login-popover-close').trigger('click');
+                        if(wishlistprouct==='direct'){
+                            window.productView.addToWishlistAfterLogin();
+                        }else{
+                            window.productView.addToWishlistAfterLoginPersonalize();
+                        }
+                        
+                     }; // before setting 'src'
+                    var iframeloadurlafterlogin = Hypr.getThemeSetting('iframeloadurlafterlogin');
+                    iframe.src = iframeloadurlafterlogin; //Simply loading Home page in iframe;
+                    document.body.appendChild(iframe); // add it to wherever you need it in the document
+
+                return;
+            }
+            if(e){
+                var checkoutFlag = $(e.currentTarget).parents('section').find('.checkoutflag').val();
+                if(checkoutFlag !== "0"){
+                    window.location='/cart/checkout';   
+                }
+                else{
+                   window.location.reload();     
+                }
+            }else{
+                if(this.pageType==='login'){
+                 if($(".mz-loginform-page input[name='returnUrl']").attr("value") !== ""){
+                        window.location.href=$(".mz-loginform-page input[name='returnUrl']").attr("value");
+                    }else{
+                      window.location.href='/myaccount';
+                 }
+                }else{
+                    window.location.reload();
+                }
+                
+            }
+            
+            setTimeout(function(){
+            	$('#cboxOverlay').hide().removeClass('page-loading'); //hide page loader
+            },4000);
         },
         displayResetPasswordMessage: function () {
-            this.displayMessage(Hypr.getLabel('resetEmailSent'));
+            this.displayMessage(Hypr.getLabel('resetEmailSent')); 
         }
-    });
+    });  
 
     var SignupPopover = function() {
         DismissablePopover.apply(this, arguments);
@@ -253,23 +361,36 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         handleEnterKey: function (e) {
             if (e.which === 13) { this.signup(); }
         },
-        validate: function (payload) {
+        validateSignUp: function (payload) {
+            var emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            if (!payload.account.firstName) return this.displayMessage(Hypr.getLabel('firstNameMissing')),false;
+            if (!payload.account.lastName) return this.displayMessage(Hypr.getLabel('lastNameMissing')), false;
             if (!payload.account.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
+            if (!emailRegex.test(payload.account.emailAddress)) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
             if (!payload.password) return this.displayMessage(Hypr.getLabel('passwordMissing')), false;
             if (payload.password !== this.$parent.find('[data-mz-signup-confirmpassword]').val()) return this.displayMessage(Hypr.getLabel('passwordsDoNotMatch')), false;
             return true;
         },
-        signup: function () {
+        signup: function (e) {
+
             var self = this,
                 email = this.$parent.find('[data-mz-signup-emailaddress]').val(),
                 firstName = this.$parent.find('[data-mz-signup-firstname]').val(),
                 lastName = this.$parent.find('[data-mz-signup-lastname]').val(),
+                optMarketing = this.$parent.find('[data-mz-value="acceptsMarketing"]').is(':checked'),
+                themeSettings = require('hyprlivecontext').locals.themeSettings,
                 payload = {
                     account: {
                         emailAddress: email,
                         userName: email,
                         firstName: firstName,
                         lastName: lastName,
+                        acceptsMarketing:optMarketing,
+                        attributes: [{
+                             attributeDefinitionId: Hypr.getThemeSetting('emailSubscription'),
+                             fullyQualifiedName: "tenant~email-subscription",
+                             values: [optMarketing]
+                        }],
                         contacts: [{
                             email: email,
                             firstName: firstName,
@@ -278,18 +399,78 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     },
                     password: this.$parent.find('[data-mz-signup-password]').val()
                 };
-            if (this.validate(payload)) {   
+            if (this.validateSignUp(payload)) {   
                 //var user = api.createSync('user', payload);
-                this.setLoading(true);
+                // this.setLoading(true);
                 return api.action('customer', 'createStorefront', payload).then(function () {
                     if (self.redirectTemplate) {
                         window.location.pathname = self.redirectTemplate;
                     }
                     else {
-                        window.location.reload();
+                        if(window.checkoutflag !== 0){
+                            window.location.href = "/cart/checkout";
+                        }
+                        else{
+                            window.location.reload();
+                        }
+                    }
+                    if(optMarketing){
+                        window.email_signup.vals({"Email":email,"subscribeShindigz":"yes","unsubscribeShindigz":"no"});
+                    
+                        if (window.email_signup.submittable()) {                       
+                           
+                            window.email_signup.submit();
+                            window.email_signup.onSuccess(function(values, followUpUrl) {                            
+                                //$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);'>OK</button></div></div>");                            
+                                return false;
+                            });
+                        }
                     }
                 }, self.displayApiMessage);
             }
+        },
+        displayApiMessage: function (xhr) {
+            var err='';
+            if(xhr.errorCode=="MISSING_OR_INVALID_PARAMETER"){
+                var errorMessage = xhr.message;
+                var msgArray = errorMessage.split("Missing or invalid parameter:");  // filter out only the message
+                var trimMsg = msgArray[1].trim();
+                var errArray =  trimMsg.replace(/^\S+/g, '');
+                // set the error message
+                err = errArray; 
+            }else if(xhr.errorCode =="VALIDATION_CONFLICT"){
+                    this.$el.find('[data-mz-signup-email]').val('');
+                    this.$el.find('[data-mz-signup-confirmemail]').val('');
+                    err = 'Username already registered';
+            }
+            if(err !== ''){
+            	this.displayMessage(err);
+            }else{
+            	if(xhr.message.indexOf('Login as') >= 0){
+            		this.displayMessage("Invalid Email Id or Password, Please try again!"); //display message for inavlid username or password
+            	}            	
+            }
+              
+        },
+        displayMessage: function (msg) {
+            this.setLoading(false);
+            this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
+            //setTimeout(function(){$('.mz-validationmessage').fadeOut();},4000);
+            $('[data-mz-role="popover-message"]').bind('click', function(){
+            	setTimeout(function(){$('.mz-validationmessage').fadeOut();},4000); //hide error message after click on error message
+            });
+            
+            setTimeout(function(){
+            	$('#cboxOverlay').hide().removeClass('page-loading'); //hide page loader
+            },100);
+	    
+	    var errCtr = 0;
+            if(msg.indexOf("Please enter a valid email address")>=0){
+                errCtr++;
+                lpAddVars('page','Invalid Email or password',msg);
+                lpAddVars('page','LoginErrorCounter',errCtr);
+            }
+
         }
     });
 
@@ -326,7 +507,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         $('[data-mz-action="anonymousorder-submit"]').each(function () {
             var loginPage = new SignupPopover();
             loginPage.formSelector = 'form[name="mz-anonymousorder"]';
-            loginPage.pageType = 'anonymousorder';
+            loginPage.pageType = 'anonymousorder';        
             loginPage.init(this);
         });
         $('[data-mz-action="forgotpasswordpage-submit"]').each(function(){
@@ -334,6 +515,17 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             loginPage.formSelector = 'form[name="mz-forgotpasswordform"]';
             loginPage.pageType = 'retrievePassword';
             loginPage.init(this);
+        });
+        /*To close popover on click of close*/
+        $(document).on('click', '#login-popover-close', function(){
+                $('.popover').popover('destroy');
+                $('#cboxOverlay').hide();
+                $('body').trigger('click');
+        });
+        $(document).on('click', '#signup-popover-close', function(){
+                $('.popover').popover('destroy');
+                $('#cboxOverlay').hide();
+                $('body').trigger('click'); 
         });
 
         $('[data-mz-action="logout"]').each(function(){
@@ -347,12 +539,33 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                     $.ajax({
                         method: 'GET',
                         url: '../../logout',
-                        complete: function() { location.reload();}
+                        complete: function() { location.reload();} 
                     });
                 });
             }
             
+        });    
+        $(document).on('click','.cont-to-signup',function(e){ 
+            $('.trigger-signup').trigger('click'); 
+            // $(document).scrollTop(0);
+            $('body').addClass('lock-verflow');
+            $('#cboxOverlay').show(); 
         });
-    });
-
+        $(document).on('click','.forgot-password-container a, .cancel-reset-container a',function(){
+            $('.mz-validationmessage').hide();
+        });
+        /*$(document).on('click','#back_to_login_link',function(){ 
+            $('.trigger-login').trigger('click');
+            $('#cboxOverlay').show();
+            $('body').addClass('lock-verflow');
+        });*/
+        $(document).on('click','.float-login',function(){
+            //$('.trigger-login').trigger('click');
+            //$('#cboxOverlay').show(); 
+        });
+        //mz-validationmessage  mz-popover-message
+        $(document).on('click','.login-back',function(){
+            $('.default-hide').hide();
+        });
+    });//document.ready
 });

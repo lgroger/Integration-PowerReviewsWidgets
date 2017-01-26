@@ -1,7 +1,200 @@
-﻿        <div class="mz-l-formfieldgroup-cell">
-            <label for="coupon-code">{{ labels.couponCode }}: </label>
-        </div>
-        <div class="mz-l-formfieldgroup-cell">
-            <input type="text" id="coupon-code" name="coupon-code" value="{{ model.couponCode }}" data-mz-value="couponCode">
-            <button class="mz-button" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
-        </div>
+﻿
+		<div class="mz-l-formfieldgroup-cell" id="ref_verify_div" style='display:none;'>
+
+			<div id="myModal" class="modal">
+
+			  <div class="modal-content" id="res_sheerid">
+			  		<span class="close">×</span>
+			  		<div id="model-sheerid">
+			  		<img src="../resources/images/military-discount_01.jpg" width="100%" alt="Military Discount">
+
+			  		<div class="form_field_row">
+				  		<label for="organizationId">Military:</label>
+			  			<div class="form_field_input">
+				  			<select name="organizationId" id="organizationId">
+								<option value="4073">Air Force</option>
+								<option value="4080">Air Force Reserve</option>
+								<option value="4079">Air National Guard</option>
+								<option value="4070">Army</option>
+								<option value="4075">Army National Guard</option>
+								<option value="4076">Army Reserve</option>
+								<option value="4074">Coast Guard</option>
+								<option value="4081">Coast Guard Reserve</option>
+								<option value="4071">Marine Corps</option>
+								<option value="4077">Marine Corps Forces Reserve</option>
+								<option value="8353">National Oceanic and Atmospheric Administration</option>
+								<option value="4072">Navy</option>
+								<option value="4078">Navy Reserve</option>
+								<option value="4082">Other DoD</option>
+								<option value="8352">Public Health Service Commissioned Corps</option>
+							</select>
+						</div>
+					</div>
+
+			  		<div class="form_field_row">
+						<label for='firstname'>First Name<span class="is-required">*</span>:</label>
+			  			<div class="form_field_input">
+							<input type='text' name='firstname' id='firstname' /><span class="field-error">Please Enter First Name</span>
+						</div>
+					</div>
+
+			  		<div class="form_field_row">
+						<label for='lastname'>Last Name<span class="is-required">*</span>:</label>
+			  			<div class="form_field_input">
+							<input type='text' name='lastname' id='lastname' /><span class="field-error">Please Enter Last Name</span>
+						</div>
+					</div>
+
+			  		<div class="form_field_row">
+						<label for='servicetype'>Service Type<span class="is-required">*</span>:</label>
+			  			<div class="form_field_input acc-pref-main-sec radio-acc">
+							<input type='radio' name='servicetype' value='ACTIVE_DUTY' id="active_duty" class="check-acc-box" checked ><label class="acc-pre-che" for="active_duty">Active Duty</label>
+							<input type='radio' name='servicetype' value='VETERAN' id="veteran" class="check-acc-box"><label class="acc-pre-che" for="veteran">Veteran</label>
+						</div>
+					</div>
+
+			  		<div class="form_field_row">
+						<label for='birthdate'>Date of Birth: <span class="is-required">*</span>:</label>
+			  			<div class="form_field_input">
+							<input type='text' name='birthdate' id='birthdate' placeholder="YYYY-MM-DD" /><span class="field-error">Please Enter Birth Date in (YYYY-MM-DD) format</span>
+						</div>
+					</div>
+
+					<div class="form_field_row" id="discharge_div" style="display:none;">
+						<label for='separationdate'>Date of Separation: <span class="is-required">*</span>:</label>
+			  			<div class="form_field_input">
+							<input type='text' name='separationdate' id='separationdate' placeholder="YYYY-MM-DD"/><span class="field-error">Please Enter Separation Date</span>
+						</div>
+					</div>
+
+
+			  		<div class="form_field_row">
+						<label for='email'>Email<span class="is-required">*</span>:</label>
+			  			<div class="form_field_input">
+							<input type='email' name='email' id='email' /><span class="field-error">Please Enter Email</span>
+						</div>
+					</div>
+
+
+
+			  		<div class="form_field_submit">
+						<input class='submit-button' type='submit' id="verify-military"/>
+					</div>
+			  </div>
+
+			  </div>
+
+			</div>
+
+
+		</div>
+<div class="checkout_ostable_total">
+    <table class="mz-ordersummary">
+        <tbody>
+		<tr>
+			<td colspan="2" class="mz-ordersummary-coupanfield">
+				<div class="mz-l-formfieldgroup-cell">
+		            <label for="coupon-code" class="summary_promo_label">{{ labels.couponCode }}</label>
+		            <p>{% if themeSettings.couponCodeMultiple %}{{ themeSettings.multipleCouponCodeLabel }}{% else %}{{ themeSettings.singleCouponCodeLabel }}{% endif %}</p>
+					{% comment %}
+					{% dump model.couponCodes %}
+		            {# Product Discounts #}
+		            {% for item in model.items %}
+		                {% if item.productDiscounts.length > 0 %}
+			                {% for disc in item.productDiscounts %}
+			                	{% if disc.couponCode %}
+			                    <ul>
+			                        <li>
+			                            <span>Coupon <strong>{{disc.couponCode|upper}}</strong> successfully applied</span>
+			                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc.couponCode}}" class="remove-coupon-link">&times;</a>
+			                        </li>
+			                    </ul>
+			                    {% endif %}
+			                {% endfor %}
+		                {% endif %}
+                	{% endfor %}
+
+                {# Order Discounts #}
+                {% for coupon in model.orderDiscounts %}
+                	{% if coupon.couponCode %}
+	                    <ul>
+	                        <li>
+	                            <span>Coupon <strong>{{coupon.couponCode|upper}}</strong> successfully applied</span>
+	                            <a href="javascript:void(0);" id="{{model.id}}" name="{{coupon.couponCode}}" class="remove-coupon-link">&times;</a>
+	                        </li>
+	                    </ul>
+                    {% endif %}
+                {% endfor %}
+
+
+                {# Shipping Discounts #}
+                {% for disc in model.shippingDiscounts %}
+	                    <ul>
+	                        <li>
+	                            <span>Coupon <strong>{{disc.discount.couponCode|upper}}</strong> successfully applied</span>
+	                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc.discount.couponCode}}" class="remove-coupon-link">&times;</a>
+	                        </li>
+	                    </ul>
+	                {% endfor %}
+	                {% endcomment %}
+					{% for disc in model.couponCodes %}
+	                <ul class="coupon-list-custom">
+	                        	{% for ship_disc in model.shippingDiscounts %}
+	                        		{% if ship_disc.discount.couponCode  %}
+		                        		{% if ship_disc.discount.couponCode == disc %}
+	                        			<li>
+				                            <span>Coupon <strong>{{disc|upper}}</strong> successfully applied</span>
+				                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc}}" class="remove-coupon-link">&times;</a>
+				                          </li>
+		                        		{% endif %}
+		                        	{% endif %}
+	                        	{% endfor %}
+	                        	{% for order_disc in model.orderDiscounts %}
+	                        		{% if order_disc.couponCode  %}
+		                        		{% if order_disc.couponCode == disc %}
+				                           <li>
+				                            <span>Coupon <strong>{{disc|upper}}</strong> successfully applied</span>
+				                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc}}" class="remove-coupon-link">&times;</a>
+				                          </li>
+		                        		{% endif %}
+		                        	{% endif %}
+	                        	{% endfor %}
+	                        	{% comment %}
+	                        		Product Line item level check
+	                        	 {% endcomment %}
+		                        	{% for each_item in model.items %}
+		                        		{% if each_item.productDiscount.couponCode  %}
+			                        		{% if each_item.productDiscount.couponCode == disc %}
+					                            <li>
+					                            <span>Coupon <strong>{{disc|upper}}</strong> successfully applied</span>
+					                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc}}" class="remove-coupon-link">&times;</a>
+					                          </li>
+			                        		{% endif %}
+			                        	{% endif %}
+		                        	{% endfor %}
+	                    </ul>
+					{% endfor %}
+		        </div>
+		        <div class="mz-l-formfieldgroup-cell code_input">
+		            <input type="text" id="coupon-code" class="code_input_box" name="coupon-code" placeholder="Enter Promo Code" value="{{ model.couponCode }}" data-mz-value="couponCode" autocomplete="false">
+		            <button class="mz-button code_input_btn" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+		        </div>
+			</td>
+		</tr>
+		<tr class="mz-ordersummary-grandtotal">
+                <td><span class="mz-ordersummary-totalname">{% if pageContext.pageType == 'checkout' %} {{ labels.total }} {% else %} {{ labels.total }} {% endif %}</span></td>
+                <td><span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span></td>
+            </tr>
+            {% if model.billingInfo and model.billingInfo.digitalCreditPaymentTotal %}
+              <tr class="mz-ordersummary-digitalcreditpayment">
+                <td><span class="mz-ordersummary-totalname">{{ labels.digitalCreditTotal }}</span></td>
+                <td><span class="mz-ordersummary-totalvalue">{{ labels.digitalCreditSubtractFromOrderPrefix }}{{ model.billingInfo.digitalCreditPaymentTotal|currency }}{{ labels.digitalCreditSubtractFromOrderSuffix }}</span></td>
+              </tr>
+              <tr class="mz-ordersummary-grandtotal">
+                  <td><span class="mz-ordersummary-totalname">{{ labels.remainingBalance }}:</span></td>
+                  <td><span class="mz-ordersummary-totalvalue">{{ model.billingInfo.nonStoreCreditTotal|currency }}</span></td>
+              </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>

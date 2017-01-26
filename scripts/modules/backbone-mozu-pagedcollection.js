@@ -5,11 +5,16 @@
     "modules/backbone-mozu-model"], function ($, _, Hypr, Backbone) {
 
         var defaultPageSize = Hypr.getThemeSetting('defaultPageSize'),
+            QuoteOrderAttributeId = Hypr.getThemeSetting('QuoteOrderAttributeId'),
             defaultSort = Hypr.getThemeSetting('defaultSort'),
             sorts = [
             {
                 "text": Hypr.getLabel('default'),
                 "value": defaultSort
+            },
+            {
+                "text": "RATINGS",
+                "value": "tenant~rating desc"
             },
             {
                 "text": Hypr.getLabel('sortByPriceAsc'),
@@ -115,10 +120,15 @@
             changePageSize: function() {
                 return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize') }));
             },
-
+            myAccountChangePageSize: function() {
+                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize'), sortBy:"createDate desc", filter: "attributes.id ne "+QuoteOrderAttributeId+" and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending" }));
+            },
+            myAccountQuoteChangePageSize: function() {
+                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize'), sortBy:"createDate desc", filter: "attributes.id eq "+QuoteOrderAttributeId+" and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending"}));
+            },
             firstIndex: function() {
                 return this.get("startIndex") + 1;
-            },
+            }, 
 
             lastIndex: function() {
                 return this.get("startIndex") + this.get("items").length;

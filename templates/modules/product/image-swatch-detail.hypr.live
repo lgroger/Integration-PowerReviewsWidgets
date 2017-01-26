@@ -1,0 +1,14 @@
+{% if model.items %}
+<span>Color: </span>
+	<ul class="">
+		{% for prod in model.items %}
+			{% if prod.mainImage.imageUrl %}
+            	<li  class="item">
+            		<a href="{% make_url "product" prod %}">
+                		<img src="{% make_url "image" prod.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if prod.mainImage.altText %}alt="{{ prod.mainImage.altText }}"{% else %}alt="{{ prod.content.productName }}"{% endif %} width="80px" />
+                	</a>
+                </li>
+            {% endif %}
+	    {% endfor %}
+	</ul>
+{% endif %}

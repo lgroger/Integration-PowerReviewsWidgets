@@ -1,0 +1,49 @@
+<div class="quantity-price-break-point">
+  {% if model.volumePriceBands.length > 0 %}
+      <p>Minimum Order Quantity:{{model.minQty}}</p>
+  {% endif %}
+
+  {% if model.productUsage == "Configurable" %}
+    {% if model.isConfigure %}
+      {% for priceBand in model.volumePriceBands %}
+        <p>Qty of 
+          {% if priceBand.maxQty %}
+            {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
+          {% else %}
+            {{ labels.volumePriceMinOnlyQty|string_format(priceBand.minQty) }}
+          {% endif %}
+          price {% include "modules/product/volume-price-stack" with model=priceBand %}
+          {% if model.uom %}
+            {{model.uom}}
+          {% else %}
+            {% if model|get_product_attribute_values(themeSettings.productAttributes.unitOfMeasure) %}
+                     {% with model|get_product_attribute_values(themeSettings.productAttributes.unitOfMeasure) as uom %}
+                          {{uom}}
+                     {% endwith %}
+            {% endif %}
+          {% endif %}        
+        </p>
+      {% endfor %}
+      {% endif %}
+  {% else %}
+  {% for priceBand in model.volumePriceBands %}
+    <p>Qty of 
+      {% if priceBand.maxQty %}
+        {{ labels.volumePriceMinMaxQty|string_format(priceBand.minQty,priceBand.maxQty) }}
+      {% else %}
+        {{ labels.volumePriceMinOnlyQty|string_format(priceBand.minQty) }}
+      {% endif %}
+      price {% include "modules/product/volume-price-stack" with model=priceBand %}
+      {% if model.uom %}
+        {{model.uom}}
+      {% else %}
+        {% if model|get_product_attribute_values(themeSettings.productAttributes.unitOfMeasure) %}
+                 {% with model|get_product_attribute_values(themeSettings.productAttributes.unitOfMeasure) as uom %}
+                      {{uom}}
+                 {% endwith %}
+        {% endif %}
+      {% endif %}        
+    </p>
+  {% endfor %}
+  {% endif %}
+</div>

@@ -1,0 +1,2 @@
+{% include_products "modules/product/super-page-facets" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+

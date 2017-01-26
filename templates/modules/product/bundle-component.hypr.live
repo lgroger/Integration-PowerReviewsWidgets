@@ -1,0 +1,3 @@
+{% with model.items|first as product %}
+{{product.mainImage.src}}
+{% endwith %}

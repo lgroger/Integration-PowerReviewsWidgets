@@ -1,0 +1,16 @@
+{% require_script "widgets/testimonials" %}
+<div class="echi-shi-testimonials"> 
+			<!--p class="testimonial-heading">What People Are Saying About Shindigz</p-->	
+			<div class="cd-testimonials-wrapper cd-container">
+				<ul class="cd-testimonials">
+				  {% for item in model.config.data%} 
+					<li>
+						<div class="echi-shi-corousal-content-width">
+							<p><img src="{{item.imageUrl}}" align="middle"> <span class="testimonial-table"><span class="testimonial-quotes"><br/> {{item.details.lineOne}}</span><br/><br/>
+							<span class="echi-shi-testimonial-name">{{item.details.lineTwo}}</span> <span class="echi-shi-testimonial-city">{{item.details.lineThree}}</span></span></p>
+						</div>
+					</li>
+					 {% endfor %} 
+				</ul> 
+			</div>
+		</div>

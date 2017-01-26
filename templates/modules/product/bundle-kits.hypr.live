@@ -1,0 +1,10 @@
+
+{% for bundle-products in model.items %}
+	{% include_products "modules/product/related-bundle-products" with productCodes=bundle-products.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+			
+				
+{% comment %}
+{{  bundle-products.productCode }}
+{{  bundle-products.productUsage }}
+{% endcomment %}
+{% endfor %}

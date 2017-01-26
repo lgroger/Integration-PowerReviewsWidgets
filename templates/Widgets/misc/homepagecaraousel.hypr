@@ -1,0 +1,47 @@
+<div class="imagevideocaraousel" homepagecaraousel>
+    {% for item in model.config.data%} 
+        <div slideitem="homepagecaraousel" class="{% if item.details.urlType%}videopop{%else%}vt-slider{%endif%}" {% if not forloop.first %}{% endif %}> 
+                <div class="slider-caption custom-slider">
+                    {% if item.details.lineOne %}
+                    <p class="first-line" style="color:{{item.details.color}}">{{item.details.lineOne}}</p>
+                    {% endif %}
+
+                    {% if item.details.lineTwo %}
+                    <p class="second-linedata" style="" >{{item.details.lineTwo}}</p>
+                    {% endif %}
+
+                    {% if item.details.lineThree %}
+                    <a href="{{item.details.url}}" class="third-line" style="" >{{item.details.lineThree}}</a>
+                    {% endif %}
+                </div>
+                
+                {% if item.details.urlType%}<span class="videoicon"></span>{%endif%} 
+                {% if item.details.urlType%}
+                    {% if pageContext.isMobile  %}
+                        <img src="{{item.imageUrl}}?max=800&quality={{themeSettings.homepageCdnQuality}}" {% if item.details.urlType%}data-video="{{item.details.url}}"{%endif%}> 
+                    {% else %}
+                        {% if pageContext.isTablet  %}
+                            <img src="{{item.imageUrl}}?max=1000&quality={{themeSettings.homepageCdnQuality}}" {% if item.details.urlType%}data-video="{{item.details.url}}"{%endif%}>
+                        {% else %}
+                            <img src="{{item.imageUrl}}?max=1900&quality={{themeSettings.homepageCdnQuality}}" {% if item.details.urlType%}data-video="{{item.details.url}}"{%endif%}>
+                        {% endif %}
+                    {% endif %}
+                {% else %}
+                    <a>
+                    
+                        {% if pageContext.isMobile  %}
+                        <img src="{{item.imageUrl}}?max=800&quality={{themeSettings.homepageCdnQuality}}" {% if item.details.urlType%}data-video="{{item.details.url}}"{%endif%}> 
+                        {% else %}
+                            {% if pageContext.isTablet  %}
+                                <img src="{{item.imageUrl}}?max=1000&quality={{themeSettings.homepageCdnQuality}}" {% if item.details.urlType%}data-video="{{item.details.url}}"{%endif%}>
+                            {% else %}
+                                <img src="{{item.imageUrl}}?max=1900&quality={{themeSettings.homepageCdnQuality}}" {% if item.details.urlType%}data-video="{{item.details.url}}"{%endif%}>
+                            {% endif %}
+                        {% endif %}
+                    </a>
+                {%endif%}
+        </div>
+    {% endfor %} 
+</div>
+
+{% require_script "widgets/owl-carousel"%}

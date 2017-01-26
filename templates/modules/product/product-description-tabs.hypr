@@ -1,0 +1,203 @@
+<!-- Tabs -->
+<div class="tabs" id="description">
+   <!-- Radio button and lable for #tab-content1 -->
+   <input type="radio" name="tabs" id="tab1" checked >
+   <label for="tab1">
+   <span>DETAILS</span>
+   </label>
+   <!-- Radio button and lable for #tab-content4 -->
+   <input type="radio" name="tabs" id="tab4">
+   <label for="tab4">
+   <span>SHIPPING</span>
+   </label>
+{% comment %}
+   <!-- Radio button and lable for #tab-content2 -->
+   <input type="radio" name="tabs" id="tab2">
+   <label for="tab2">
+   <span>REVIEW(S) </span>
+   </label>
+   <!-- Radio button and lable for #tab-content3 -->
+   <input type="radio" name="tabs" id="tab3">
+   <label for="tab3">
+   <span>Q&A </span>
+   </label>
+{% endcomment %}
+
+   <div id="tab-content1" class="tab-content">
+         <div class="tab-content-inner">
+            <h3>{{ model.content.productName }}</h3>
+            
+            <p> 
+               <span style="color:#0d3762;font-weight: 600;">
+               {{ labels.productCode }}</span> : {{ model.variationProductCode|default(model.productCode) }}
+               </span>
+               {% if model.productUsage == "Bundle"  %}
+                  <div class="bundle-comp-pdp-section">
+                     <a class="show-cmp-bundle"><span>Show Components </span><i class="fa-chevron-circle-right"></i></a>
+                     <div class="bundle-items-wrap-pdp">
+                        {% include "modules/product/pdp-bundle-products" %}                 
+                     </div>   
+                  </div>
+               {% endif %}
+               {% comment %}
+               <span style="color:#0d3762;font-weight: 600;">Availability</span> :
+               {% if model.inventoryInfo.manageStock == true %}
+               {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+               <span style="color:#00af9a;"> In Stock </span>
+               {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+               {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}                                    
+               - {{  prod_time.values|first|prop("value") }}  Business Days&nbsp;
+               {% endwith %}
+               {% endif %}
+               {% else %}
+               <span style="color:#d70056;">  Out of Stock </span>
+               {% endif%}
+               {% else %}
+               <span style="color:#00af9a;">   In Stock </span>
+               {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+               {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}                                    
+               - {{  prod_time.values|first|prop("value") }}  Business Days&nbsp;
+               {% endwith %}
+               {% endif %}
+               {% endif%}
+               {% endcomment %}
+            </p>
+            <p> 
+               {{ model.content.productFullDescription|safe }}
+            </p>
+            
+            
+            {% if themeSettings.safetyFlags %}
+               {% for safetyFlg in themeSettings.safetyFlags %}
+                  
+                  {% if model|get_product_attribute(safetyFlg.code) %}
+                     {% with model|get_product_attribute(safetyFlg.code) as safetyValues %}
+                     {% with safetyValues.values|first as val %}
+                        {% if val.value %}
+                           <span class="wrapper"><i class="fa fa-exclamation-triangle"></i>WARNING
+                                  <div class="tooltip warning">
+                                    {{themeSettings|prop(safetyFlg.field)|safe}}
+                                  </div> 
+                           </span>
+                        {% endif %}
+                     {% endwith %}   
+                     {% endwith %}
+                  {% endif %}
+               {% endfor %}
+            {% endif %}
+         </div>
+      </div>
+   <!-- #tab-content1 -->
+
+   <div id="tab-content4" class="tab-content">  
+      <div class="tab-content-inner">     
+         {% dropzone "shipping-tab" scope="template" %}
+      </div>
+   </div>
+   <!-- #tab-content4 -->
+
+   <div id="tab-content3" class="tab-content">
+      <div class="tab-content-inner">
+         <!-- <h3>Customer Questions & Answers</h3> -->
+         {% dropzone "qa-widget-heading" scope="template" %}
+         {% dropzone "qa-widget-slot" scope="template" %}
+      </div>
+   </div>
+   <!-- #tab-content3 -->
+
+   <div id="tab-content2" class="tab-content" >
+      <div class="tab-content-inner">
+         <!-- <h3>Customer Reviews</h3> -->
+         {% dropzone "review-zone-heading" scope="template" %}
+         {% dropzone "review-zone" scope="template" %}
+      </div>
+   </div>
+   <!-- #tab-content2 -->
+
+</div>
+
+{% comment %}
+ <div class="mob-tabs">
+   <div class="">
+      <div class="clear"></div>
+      <div class="container-des">
+         <div class="header mob-head-tab">
+            <span style="margin: 3%;">DETAILS</span>
+         </div>
+         <div class="content-des content-bg collapsed" style="padding: 0% 5%;">
+            <h3>{{ model.content.productName }}</h3>
+            <p> 
+               <span style="color:#0d3762;font-weight: 600;">
+               {{ labels.productCode }}</span> : {{ model.variationProductCode|default(model.productCode) }}<br>
+               <span style="color:#0d3762;font-weight: 600;">Availability</span> :
+               {% if model.inventoryInfo.manageStock == true %}
+               {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+               <span style="color:#00af9a;"> In Stock </span>
+               {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+               - {{  model.properties|first|prop("values")|first|prop("value") }}  Business Days
+               {% endif %}
+               {% else %}
+               <span style="color:#d70056;">  Out of Stock </span>
+               {% endif%}
+               {% else %}
+               <span style="color:#00af9a;">   In Stock </span>
+               {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+               - {{  model.properties|first|prop("values")|first|prop("value") }}  Business Days
+               {% endif %}
+               {% endif%}
+            </p>
+            {% if themeSettings.safetyFlags %}
+               {% for safetyFlg in themeSettings.safetyFlags %}
+                  
+                  {% if model|get_product_attribute(safetyFlg.code) %}
+                     {% with model|get_product_attribute(safetyFlg.code) as safetyValues %}
+                     {% with safetyValues.values|first as val %}
+                        {% if val.value %}
+                           <span class="wrapper"><i class="fa fa-exclamation-triangle"></i>WARNING
+                                  <div class="tooltip warning">
+                                    {{themeSettings|prop(safetyFlg.field)|safe}}
+                                  </div> 
+                           </span>
+                        {% endif %}
+                     {% endwith %}   
+                     {% endwith %}
+                  {% endif %}
+               {% endfor %}
+            {% endif %}
+            <p> {{ model.content.productFullDescription|safe }}</p>
+         </div>
+      </div>
+   </div>
+   <div class="">
+      <div class="clear"></div>
+      <div class="container-des collapsed">
+         <div class="header mob-head-tab power-review">
+            <span style="margin: 3%;">REVIEWS</span>
+         </div>
+         <div class="content-des content-bg power-review-content">
+         </div>
+      </div>
+      <div class="">
+         <div class="clear"></div>
+         <div class="container-des collapsed">
+            <div class="header mob-head-tab">
+               <span style="margin: 3%;">Q&A</span>                    
+            </div>
+            <div class="content-des content-bg qa-content-dropzone">
+            </div>
+         </div>
+      </div>
+      <div class="">
+         <div class="clear"></div>
+         <div class="container-des collapsed">
+            <div class="header mob-head-tab">
+               <span style="margin: 3%;">SHIPPING</span>
+            </div>
+            <div class="content-des content-bg shipping-content" style="padding: 0% 5%;">
+               <p>Please allow ample time for delivery. Our ship date for this product is noted in your shopping cart. Many items are shipped separately, so please allow extra time for these items to arrive. Shipping charges are based on the value of the merchandise and not the number of shipments. For additional shipping information, please contact our Customer Service Department at (<span style="color:#00af9a">csr@spiritline.com</span> or 1-800-314-8794).</p>
+            </div>
+         </div>
+      </div>
+   </div>
+</div> 
+{% endcomment %}

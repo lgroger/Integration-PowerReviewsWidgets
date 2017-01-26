@@ -1,0 +1,59 @@
+{% extends "page" %}
+
+{% block body-content %}
+
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+ <script type="text/javascript">
+    var pr_resize_url = "//"+document.location.host+"/resources/resize.html";
+  </script> 
+
+ <script type="text/javascript">
+     var pr_merchant_group_id="{{ pageContext.query.merchantGroupId }}";
+     var pr_merchant_id="{{ pageContext.query.merchantId }}";
+     var pr_locale="{{pageContext.query.locale }}";
+     var pr_page_id="{{pageContext.query.pageId}}";
+     var pr_source="web";
+     var pr_return_url="{{ pageContext.query.returlUrl }}";
+     var pr_style_sheet="//"+document.location.host+"/stylesheets/widgets/pr_write_a_review_override.css";
+ </script>
+
+
+<script type="text/javascript" src="{{siteContext.cdnPrefix}}/staticContent/pwr/{{ pageContext.query.merchantGroupId }}/pwr/engine/js/appLaunch.js"></script>
+
+
+{% endblock body-content %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

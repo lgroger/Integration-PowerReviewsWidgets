@@ -13,9 +13,10 @@
             render: function() {
                 Backbone.MozuView.prototype.render.apply(this, arguments);
                 if (this.model.length > 0) {
-                    this.$el.ScrollTo({
+                    // this.$el
+                    $(document.body).ScrollTo({
                         onlyIfOutside: true,
-                        offsetTop: offset,
+                        offsetTop: $(document.body).offset().top,
                         offsetLeft: offset * 1.5,
                         axis: 'y'
                     });

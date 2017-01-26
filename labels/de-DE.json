@@ -1,4 +1,4 @@
-﻿{
+{
 
     "dateFormat": "j.n.Y",
 
@@ -65,7 +65,6 @@
     "phone"   : "Telefon",
     "email"   : "E-Mail",
     "emailAddress"   : "E-Mail-Addresse",
-    "logInInput"     : "Benutzername oder E-mail Adresse",
     "creditCard"   : "Kreditkarte",
     "payPal"   : "Paypal Express",
     "password"   : "Passwort",
@@ -157,6 +156,7 @@
     "checkByMail"   : "Überprüfen Sie per Mail",
     "useShippingAddress"   : "Verwenden Sie meine Lieferadresse",
     "optIn"   : "Ja! Ich möchte Neuigkeiten und besondere Angebote von {0} erhalten!",
+    "emailCheckoutsub" : "Wir werden Ihre Bestellung und Versandbestätigung an diese Adresse senden",
     "promoCodeError"   : "Sorry, '{0}' nicht erscheint, um eine gültige Gutscheincode.",
     "reviewOrder"   : "Füllen Sie Ihre Bestellung",
     "reviewOrderText"   : "Bitte lesen Sie alle Informationen, die auf dieser Seite und, wenn nötig, Änderungen vornehmen, bevor Sie Ihre Bestellung.",
@@ -387,6 +387,5 @@
     "notifyWidgetError"   : "Es gab einen Fehler oder Forums. Bitte versuchen Sie es erneut.",
 
     "dealOfTheDay"     : "Angebot des Tages",
-    "exclusivePricelist": "Die folgenden Produkte sind nicht zum Kauf zur Verfügung und wurden entfernt.",
-    "newPriceList": "Sie sind nun berechtigt, für spezielle Preise."
+    "checkoutPlace" : "Bestellung aufgeben"
 }

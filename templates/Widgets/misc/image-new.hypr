@@ -1,0 +1,19 @@
+<div class="image-container-widget" style="{% if model.config.borderStyle != 'none'%}border:{{model.config.borderWidth}}px {{model.config.borderStyle}} {{model.config.borderColor}};{% endif %}">
+	{% if model.config.fillStyle == "Aspect Ratio" %}
+		{% if model.config.linkTo.length > 0  %}
+			<a href="{{model.config.linkTo}}" {% if model.config.newTab==true %} target="_blank"{% endif %}>
+				<img src='{% make_url "image"  model.config.imageEditor.imageUrl with max=model.config.imgMaxSize as_parameter %}' alt="{{model.config.imageEditor.altText}}" style="width:100%;">
+			</a>
+		{% else %}
+			<img src='{% make_url "image"  model.config.imageEditor.imageUrl with max=model.config.imgMaxSize as_parameter %}' alt="{{model.config.imageEditor.altText}}" style="width:100%;">
+		{% endif%}
+	{% else %}
+	{% if model.config.linkTo.length > 0  %}
+			<a href="{{model.config.linkTo}}" {% if model.config.newTab==true %} target="_blank" {% endif %}>
+			<div style='height:400px;background:url({% make_url "image" model.config.imageEditor.imageUrl with max=model.config.imgMaxSize as_parameter %});background-repeat:no-repeat;background-size:cover;background-position:{{model.config.BackgroundHPos}} {{model.config.BackgroundVPos}};'></div>
+			</a>
+		{% else %}
+			<div style='height:400px;background:url({% make_url "image" model.config.imageEditor.imageUrl with max=model.config.imgMaxSize as_parameter %});background-repeat:no-repeat;background-size:cover;background-position:{{model.config.BackgroundHPos}} {{model.config.BackgroundVPos}};'></div>
+		{% endif%}
+	{% endif %}
+</div>

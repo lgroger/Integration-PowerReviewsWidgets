@@ -10,13 +10,14 @@
     
     {% if Model.config.imageClickAction == 'url' %}
         <a 
-            target="_blank"
             title="{{Model.config.imageAltText}}"
             
             {% if Model.config.linkSource == 'externalUrl' %}
+                target="_blank"
                 href="{{Model.config.linkExternalUrl}}"
             {% endif %}
             {% if Model.config.linkSource == 'internalUrl' %}
+
                 href="{{Model.config.linkInternalUrl}}"
             {% endif %}
             {% if Model.config.linkSource == 'file' %}
@@ -61,11 +62,12 @@
         alt="{{Model.config.imageAltText}}"
         
         {% if Model.config.imageClickAction == 'url' %}
-            target="_blank"
             {% if Model.config.linkSource == 'externalUrl' %}
+                target="_blank"
                 href="{{Model.config.linkExternalUrl}}"
             {% endif %}
             {% if Model.config.linkSource == 'internalUrl' %}
+            target="_self"
                 href="{{Model.config.linkInternalUrl}}"
             {% endif %}
             {% if Model.config.linkSource == 'file' %}
@@ -95,4 +97,3 @@
 
 {% endif %}
 </div>
-{% require_script "widgets/image" %}

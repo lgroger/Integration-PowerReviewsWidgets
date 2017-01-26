@@ -5,84 +5,580 @@
 {% block body-tag-classes %} mz-confirmation {% endblock body-tag-classes %}
 
 {% block body-content %}
-
+{% require_script "pages/post_order_signup" %}
+{% require_script "modules/quick-view" %}
 {% preload_json model "order" %}
-
-<div class="mz-l-container">
-    <h1 class="mz-pagetitle">{{ labels.orderConfirmation }} </h1>
-
-	<p>{{ labels.confirmationText }}</p>
-
-    <p>{{ labels.yourOrderNumber|string_format(model.orderNumber)|safe }}</p>
-
-    <div class="mz-l-stack">
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.payments }}</h4>
-			{% if model.total == 0 %}
-				{% with model.total|currency as total %}
-					<h4 class="mz-confirmation-nopaymentrequired">{{ labels.noPaymentWasRequired|string_format(total) }}</h4>
-				{% endwith %}
-			{% else %}
-				{% for payment in model.payments %}
-				{% if payment.status != "Voided" and payment.status != "Declined" %}
-				{% include "modules/checkout/checkout-payment" with model=payment %}
-				{% endif %}
-				{% endfor %}
-			{% endif %}
-        </div>
-        {% if model.hasDirectShip %}
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.shippingInformation }}</h4>
-            <dl class="mz-propertylist">
-                <dt>{{ labels.shipTo }}</dt>
-                <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.fulfillmentInfo.fulfillmentContact %}</dd>
-                <dt>{{ labels.shippingMethod }}</dt>
-                <dd>{{ model.fulfillmentInfo.shippingMethodName }}</dd>
-            </dl>
-        </div>
+<style type="text/css">
+@media print
+{
+.header-float{display: none !important;}
+.ech-shi-top-header{display: none;}
+.header-block.floatheader{display: none !important;}
+.confirm_join_rewards{display: none;}
+.mega-menu-wrapper, #mz-drop-zone-promo-adds, .signup-block, .help-sec, .print-link, .confiramtion-slider, #mz-drop-zone-body-bottom, .ech-shi-footer, .ech-shi-ourother-sites, .mz-ordersummary-item-availability h3{display: none;}
+.clear{height: 1px;}
+.print_header{display: inline-block !important;width: 94%;margin:0 3%;padding-bottom:15px;border-bottom:1px solid #eee;}
+.logo_box{width:30%;float:left;}
+.text_box{width:45%;float:right;font-size: 13px;color:#666;}
+.order-confirmation .mz-pagetitle{font-size:18px;padding-left:10px;}
+.order-confirmation .confirm-block{height: 150px;background: #00af9a;}
+.order-confirmation .confrim-block .icon-block{width:55%;}
+.order-confirmation .confrim-block .total-sec{width:45%; background: #019a88;}
+.order-confirmation .confrim-block .confirm-text1{font-size:20px;}
+.order-confirmation .confirm-block .confirm-text2{font-size:13px;}
+.order-confirmation .confirm-block .payment-sec{width:90%;}
+.order-confirmation .confirm-block h4.order-det1{font-size: 11px;}
+.order-confirmation .confirm-block h4.order-det1 span{font-size: 13px;}
+.order-confirmation .confrim-block .order-det2{font-size: 16px;}
+.order-confirmation .confrim-block .order-det2 span{font-size: 20px;}
+.order-confirmation .shipping-info .shipping-head{font-size: 18px;}
+.order-confirmation .shipping-info hr{margin:12px -5px 15px;}
+.order-confirmation .shipping-info .block1{min-width: 90px;}
+.order-confirmation .shipping-info .block1 .ship-text1{font-size:15px;font-weight:500;}
+.order-confirmation .shipping-info .block2 .ship-text2{font-size:15px;font-weight:500;}
+.order-confirmation .shipping-info .block2 .confirmation_address{min-height: 90px;}
+.order-confirmation .shipping-info .block2 .confirmation_address span.address_name {font-size: 15px;font-weight:500;}
+.confirm_orders .orders-heading{font-size: 18px;text-transform: capitalize;}
+.confirm_orders hr{margin:12px -5px 15px;}
+.confirm_orders .mz-ordersummary th{padding: 15px 1.5%;font-size: 13px;box-sizing: border-box;}
+.confirm_orders .mz-ordersummary td{padding: 15px 1.5%;font-size: 14px;box-sizing: border-box;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-image {width: 60px;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-image .cp_image{min-height: 50px;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-image .cp_image img{max-width: 50px;max-height: 50px;margin:5px 0px 0px;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-product{font-size: 14px;font-weight:500;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-product .item_small_description .sd_text{font-size:14px;font-weight: 500;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-price{font-size: 14px;font-weight:500;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-qty{font-size: 14px;font-weight:500;}
+.confirm_orders .mz-ordersummary td.mz-ordersummary-item-total{font-size: 14px;font-weight:500;}
+.confirm_orders .orders{width:58%;float:left;display:inline-block;box-sizing: border-box;}
+.confirm_orders .cart-rec{width: 31%;float:left;display:inline-block;box-sizing: border-box;}
+.confirm_orders .cart_summary_title{font-size: 14px;}
+.confirm_orders .confirmation_ostable_total{padding:13px 0px 0px;}
+.confirm_orders .confirmation_ostable_total .mz-ordersummary tr td:first-child{font-size: 13px;font-weight: 400;}
+.confirm_orders .confirmation_ostable_total .mz-ordersummary tr td:last-child{font-size: 14px;}
+.confirm_orders .confirmation_ostable_total .mz-ordersummary tr.mz-ordersummary-grandtotal td:first-child{font-size: 15px;font-weight: 400;}
+.confirm_orders .confirmation_ostable_total .mz-ordersummary tr.mz-ordersummary-grandtotal td:last-child .mz-ordersummary-totalvalue{font-size: 16px;font-weight: 500;}
+.mob_show{display: none;}
+}
+</style>
+<div class="print_header" style="display:none;">
+  <div class="logo_box">
+    <img src="/resources/images/Logo_Shindigz.png" height="60px">
+  </div>
+  <div class="text_box">
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut imperdiet volutpat rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae
+  </div>
+</div>
+<div class="mz-l-container order-confirmation">
+    <h1 class="mz-pagetitle">
+        {% if model.billingInfo.paymentType == 'Check' %}
+        {% comment %}
+          <a href="/request-quote" class="request-link">{{ labels.reuestQuoteLnk }}</a>
+          {% endcomment %}
+          {{ labels.quoteConfirmation }}
+          <span class="print-link"><u>Print Receipt</u></span>
+        {% else %}
+          {{ labels.orderConfirmation }}
+          <span class="print-link"><u>Print Receipt</u></span></h1>
         {% endif %}
-        {% for item in model.items %}
-        {% if item.fulfillmentMethod == "Pickup" %}
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.storePickupFor|string_format(item.product.name)|safe }}</h4>
-            <dl class="mz-propertylist">
-                <dt>{{ labels.storeName }}</dt>
-                <dd>{{ item.fulfillmentLocationName }}</dd>
-            </dl>
+    </h1>
+    <div class="mz-cms-col-12-12 confrim-block">
+        <div class="icon-block mz-cms-col-8-12">
+            <div class="tick">
+                <i class="icon fa fa-check" aria-hidden="true"></i>
+            </div>
+            {% if model.billingInfo.paymentType == 'Check' %}
+                <h1 class="confirm-text1">{{ labels.quoteconfirmationText }}</h1>
+            {% else %}
+                <h1 class="confirm-text1">{{ labels.confirmationText }}</h1>
+            {% endif %}
+            <!-- <h1 class="confirm-text1">Thank you for your order {{ model.billingInfo.billingContact.firstName }}!</h1> -->
+            <h3 class="confirm-text2">You will receive an email confirmation</h3>
         </div>
-        {% endif %}
-        {% endfor %}
-
-
-        <div class="mz-l-stack-section">
-            <h4 class="mz-l-stack-sectiontitle">{{ labels.orderSummary }} </h4>
-            {% include "modules/common/order-summary" %}
-            {% if model.shopperNotes.comments %}
-            <div class="mz-ordercomments">
-                <h5 class="mz-ordercomments-header">{{ labels.comments }}</h5>
-                <p class="mz-ordercomments-body">{{ model.shopperNotes.comments }}</p>
-            </div>
+        <div class="mz-cms-col-4-12 total-sec">
+            <div class="payment-sec">
+            {% if model.billingInfo.paymentType == 'Check' %}
+                <h4 class="order-det1">Your quote number is <span>{{ model.orderNumber }}</span></h4>
+            {% else %}
+                <h4 class="order-det1">Your order number is <span>{{ model.orderNumber }}</span></h4>
             {% endif %}
-            {% if model.shopperNotes.giftMessage %}
-            <div class="mz-ordercomments">
-                <h5 class="mz-ordercomments-header">{{ labels.giftMessage }}</h5>
-                <p class="mz-ordercomments-body">{{ model.shopperNotes.giftMessage }}</p>
+            <h2 class="order-det2">TOTAL PAYMENT: <span>{{ model.total|currency }}</span></h2>
             </div>
-            {% endif %}
         </div>
     </div>
-</div><!-- #order-confirmation -->
+     <div class="clear"></div>
+     {% if user.isAnonymous %}
+     <div class="mz-cms-col-12-12 signup-block">
+        <div class="signup-inner">
+            {{ themeSettings.rewardAnonymous | safe }}
+
+            {% comment %}
+              <h1 class="sign-text1">Sign Up For an Account with Us Today</h1>
+              <h3 class="sign-text2">All you need to do is enter password below and we will remember who your are for next time</h3>
+              <h3 class="sign-text3">You've earned 10 points, sign up now to receive 10 points now</h3>
+            {% endcomment %}
+             <!-- adding hidden text fields for creating user with billing contact informations -->
+             <input type="hidden" value="{{model.id}}" name="data-mz-post-order-signup" data-mz-post-order-signup />
+             <input type="hidden" value="{{model.total}}" name="data-mz-post-order-total" data-mz-post-order-total />
+              <input name="emailAddress" data-mz-signup-emailaddress  type="hidden" value="{{model.billingInfo.billingContact.email}}">
+              <input name="firstName" data-mz-signup-firstname type="hidden" value="{{model.billingInfo.billingContact.firstName}}">
+              <input  name="lastName" data-mz-signup-lastname  type="hidden" value="{{model.billingInfo.billingContact.lastNameOrSurname}}">
+              <input name="password" data-mz-signup-password placeholder="Enter a Password" type="password">
+              <input name="confirmPassword" data-mz-signup-confirmpassword placeholder="Confirm Password" type="password">
+              <button class="signup-btn" data-mz-action="order-confirmation-signup-submit">Sign Up</button>
+              <p confirmation-signup-passwordmissmatch style="color: #d43b3b;text-align: left;letter-spacing: .5px;display:none;">
+
+              </p>
+        </div>
+     </div>
+     {% else %}
+        <!-- Show following div only if the user enable-shipping-reward-program custom attribute value is false  -->
+        <div class="mz-cms-col-12-12 confirm_join_rewards" customer-shipping-reward-join style="display:none;">
+            <div class="join_rewards_inner">
+              <div class="mz-cms-col-9-12 join_rewards_text">
+                {{ themeSettings.rewardLoggedin | safe }}
+                {% comment %}
+                  <h2>JOIN THE SHINDIGZ REWARDZ PROGRAM</h2>
+                  <p>Earn Rewardz Dollars on EVERY purchase Join the party and get in on great Rewardz when you shop Shindigz!
+                  Plus, get access to secret sales, bonus Rewardz, double Rewardz months, and special gifts.</p>
+                {% endcomment %}
+              </div>
+              <div class="mz-cms-col-3-12 join_rewards_btn">
+                <a href="#" class="join_btn">{{ themeSettings.rewardLoggedinJoin }}</a>
+              </div>
+              <div class="clear"></div>
+            </div>
+        </div>
+     {% endif %}
+
+     <div class="clear"></div>
+	<!--p>{{ labels.confirmationText }}</p>
+
+    <p>{{ labels.yourOrderNumber|string_format(model.orderNumber)|safe }}</p-->
+
+     {% if model.hasDirectShip %}
+    <div class="shipping-info">
+      <h3 class="shipping-head">Shipping Information</h3>
+      <hr>
+      <div class="div_33">
+        <div class="block1">
+           <span class="ship-text1" >{{ labels.shipTo }}:</span>
+        </div>
+        <div class="block2">
+          <div class="confirmation_address">
+            {% include "modules/common/confirmation-address" with model=model.fulfillmentInfo.fulfillmentContact %}
+          </div>
+
+            <!--span class="ship-text2" style="">Jhon Doe</span><br>
+            <span class="ship-address">12th Avenue<br>
+            Brooks Street,<br>
+            New York, NY 100007<br>
+            USA</span-->
+        </div>
+      </div>
+      <div class="div_66">
+        <div class="block1">
+            <span class="ship-text1" style=""> {{ labels.shippingMethod }}:</span>
+        </div>
+        <div class="block2">
+            <span class="ship-text2" style="">{{ model.fulfillmentInfo.shippingMethodName }}</span>
+        </div>
+      </div>
+      <div class="clear"></div>
+      <hr>
+    </div>
+    {% endif %}
+
+    <div class="shipping-info billing-info">
+      <h3 class="shipping-head">Billing Information</h3>
+      <hr>
+      <div class="div_33">
+        <div class="block1">
+           <span class="ship-text1" >{{ labels.billingEmail }}:</span>
+        </div>
+        <div class="block2">
+            <span class="ship-text2" style="">{{ model.billingInfo.billingContact.email }}</span>
+        </div>
+      </div>
+      <div class="div_33 billing-block">
+
+        <div class="block2">
+          {% for addresspayment in model.payments %}
+             {% if addresspayment.status != "Voided" and addresspayment.status != "Declined" %}
+              {% include "modules/checkout/billing-info" with model=addresspayment %}
+              {% endif %}
+          {% endfor %}
+
+        </div>
+      </div>
+      <div class="div_33">
+        <div class="block1">
+            <span class="ship-text1">Payment Method:</span>
+        </div>
+         <div class="block2">
+            <span class="ship-text2" style="">
+            <span>
+              {% for payment in model.payments %}
+              {% if payment.status != "Voided" and payment.status != "Declined" %}
+              {% include "modules/checkout/checkout-payment" with model=payment %}
+              {% endif %}
+              {% endfor %}
+              </span>
+              </span>
+        </div>
+
+
+      </div>
+      <div class="clear"></div>
+      <hr>
+    </div>
+
+    <div class="confirm_orders">
+      <div class="orders-sec">
+        <h3 class="orders-heading">Order Summary</h3>
+        <hr>
+          <div class="orders mz-cms-col-8-12">
+            <div class="confirmation_ostable">
+              <table class="mz-ordersummary">
+                <thead>
+                    <tr>
+                        <th class="mz-ordersummary-header-product">{{ labels.item }}</th>
+                        <th class="mz-ordersummary-header-description"><span class="mob_hide">{{ labels.fullDesc }}</span></th>
+                        <th class="mz-ordersummary-header-each">{{ labels.price }}</th>
+                        <th class="mz-ordersummary-header-qty"><span class="mob_hide">{{ labels.quantity }}</span><span class="mob_show">{{ labels.qty }}</span></th>
+                        <th class="mz-ordersummary-header-total">{{ labels.subtotal }}</th>
+                    </tr>
+                </thead>
+                {% for item in model.items %}
+                    {% with forloop.counter0 as idx %}
+                    <tbody class="mz-ordersummary-lineitems">
+                      <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
+                            <td class="mz-ordersummary-item-image">
+                              {% if item.product.imageUrl and themeSettings.showCartItemImage %}
+                                <div class="cp_image">
+                                  <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
+                                </div>
+                              {% endif %}
+                            </td>
+                            <td class="mz-ordersummary-item-product">
+                                {{ item.product.name }}
+                                <br>
+                                {% for attr in model.attributes %}
+                                  {% if attr.fullyQualifiedName == "tenant~est-delivery-date" %}
+                                    {%  with attr.values.0|split(":::") as estd %}
+                                      {% for est in estd %}
+                                        {% if forloop.counter0 == idx %}
+                                          <br> Est Delivery Date : {{est}}
+                                        {% endif %}
+                                      {% endfor %}
+                                    {% endwith %}
+                                  {% endif %}
+                                {% endfor %}
+                                <div class="item_small_description">
+                                {% if item.product.options.length > 0 %}
+                                  {% for opt in item.product.options %}
+                                    {% if opt.name=="dnd-token" %}
+                                    {% else %}
+                                        {% if opt.name == 'Color' %}
+                                          <p><span class="sd_label">Color:</span><span class="sd_color_box" style="background:{{ opt.value }};"></span></p>
+                                        {% else %}
+                                          <p><span class="sd_label">{{ opt.name }}:</span><span class="sd_text">{{ opt.value }}</span></p>
+                                        {% endif %}
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                                  <!-- <p><span class="sd_label">Color:</span><span class="sd_color_box" style="background:#594d42;"></span></p>
+                                  <p><span class="sd_label">Type:</span><span class="sd_text">Outdoor Banner with Slits</span></p>
+                                  <p><span class="sd_label">Size:</span><span class="sd_text">lorem ipsum</span></p> -->
+                                </div>
+
+                                <!-- {% if item.product.bundledProducts.length %}
+                                  <dl class="mz-propertylist">
+                                  {% for bundledProduct in item.product.bundledProducts %}
+                                    <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
+                                    <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
+                                  {% endfor %}
+                                  </dl>
+                                {% endif %} -->
+                            </td>
+                            <td class="mz-ordersummary-item-price">
+                                {% include "modules/common/item-price" %}
+                            </td>
+                            <td class="mz-ordersummary-item-qty">{{ item.quantity }}</td>
+                            <td class="mz-ordersummary-item-total">
+                              {% include "modules/common/item-total" %}
+                            </td>
+                        </tr>
+
+                        <tr class="mz-ordersummary-item-shipping-info">
+                          <td colspan="5" class="mz-ordersummary-item-availability">
+                          {% if item.product.productUsage == 'Bundle' %}
+                              <h3><span class="toggle_components" data-parent-id="{{ item.id }}">Show Components <i class="fa fa-caret-down"></i></span></h3>
+                              <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;">
+                                  <div class="bundle_lists">
+                                      {% for components in item.product.bundledProducts %}
+                                        <div class="mz-cms-col-4-12 bundle_box">
+                                            <div class="bb_labels">
+                                                <h3 class="bundle_heading">
+                                                  {{components.name}}
+                                                </h3>
+                                                <h3 class="bundle_quantity"><span>X</span>{{components.quantity}}</h3>
+                                            </div>
+                                            <img src="{% include_products "modules/product/bundle-component" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}" alt="{{components.name}}"/>
+                                        </div>
+                                      {% endfor %}
+                                  </div>
+                              </div>
+                          {% endif %}
+                          </td>
+                        </tr>
+                    </tbody>
+                    {% endwith %}
+                {% endfor %}
+              </table>
+            </div>
+              <!-- <div class="orders-header mz-cms-col-12-12">
+                  <div class="order-blocks1">
+                      ITEMS
+                  </div>
+                  <div class="order-blocks2">
+                      DESCRIPTION
+                  </div>
+                  <div class="order-blocks3">
+                      PRICE
+                  </div>
+                  <div class="order-blocks4">
+                      QTY
+                  </div>
+                  <div class="order-blocks5">
+                      TOTAL
+                  </div>
+              </div>
+               {% for item in model.items %}
+               <div class="orders-body mz-cms-col-12-12">
+                  <div class="order-blocks1">
+                      <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}">
+                  </div>
+                  <div class="order-blocks2">
+                      <p class="product-name">{{ item.product.name }} </p>
+                     <span style="color:#777;"> Color:</span><span class="rounded-cart-color">
+                      <span style="background-color:Blue;"></span>
+                      </span>
+                  </div>
+                  <div class="order-blocks3">
+                     {% include "modules/common/item-total" %}
+                  </div>
+                  <div class="order-blocks4">
+                     {{ item.quantity }}
+                  </div>
+                  <div class="order-blocks5">
+                       {% include "modules/common/item-total" %}
+                  </div>
+                   <hr>
+              </div>
+              {% endfor %} -->
+          </div>
+          <div class="cart-rec mz-cms-col-4-12">
+            <h2 class="cart_summary_title">Cart Summary</h2>
+            <div class="confirmation_ostable_total">
+                <table class="mz-ordersummary">
+                    <tbody>
+                        <tr class="mz-ordersummary-subtotal">
+                          <td><span class="mz-ordersummary-totalname">{{ labels.subtotal }}</span></td>
+                          <td><span class="mz-ordersummary-totalvalue">{{ model.discountedSubtotal|currency }}</span></td>
+                        </tr>
+
+                        <tr class="mz-ordersummary-shippingtotal">
+                          <td><span class="mz-ordersummary-totalname">Shipping</span></td>
+                          <td><span class="mz-ordersummary-totalvalue">{{ model.shippingSubTotal|currency }}</span></td>
+                        </tr>
+
+                        {% for shippingDiscount in model.shippingDiscounts %}
+                        <tr class="mz-ordersummary-shippingdiscount">
+                          <td><span class="mz-ordersummary-totalname">Shipping Discount</span></td>
+                          <td><span class="mz-ordersummary-totalvalue">-{{ shippingDiscount.discount.impact|currency }}</span></td>
+                        </tr>
+                        {% endfor %}
+                        {% if model.handlingTotal %}
+                        <tr class="mz-ordersummary-additionalhandling">
+                            <td><span class="mz-ordersummary-totalname">{{ labels.shippingSurcharge }}{% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ( {{ model.handlingAmount|currency }} )</span>{% endif %}</span></td>
+                            <td><span class="mz-ordersummary-totalvalue">{{ model.handlingTotal|currency }}</span></td>
+                        </tr>
+                        {% endif %}
+                        {% for discount in model.orderDiscounts %}
+                        {% if not discount.excluded %}
+                          <tr class="mz-ordersummary-discount">
+                            <td><span class="mz-ordersummary-discountname">Discount </span></td>
+                            <td><span class="mz-ordersummary-discountamt">-{{ discount.impact|currency }}</span></td>
+                          </tr>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if model.dutyTotal > 0 %}
+                          <tr class="mz-ordersummary-tax">
+                            <td><span class="mz-ordersummary-totalname">{{ labels.taxDuty }}</span></td>
+                            <td><span class="mz-ordersummary-totalvalue">{% filter currency %} {{ model.dutyTotal|add(model.taxTotal)}} {% endfilter %}</span></td>
+                          </tr>
+                        {% else %}
+                        {% if model.taxTotal %}
+                          <tr class="mz-ordersummary-tax">
+                            <td><span class="mz-ordersummary-totalname">{{ labels.tax }}</span></td>
+                            <td><span class="mz-ordersummary-totalvalue">{{ model.taxTotal|currency }}</span></td>
+                          </tr>
+                        {% endif %}
+                        {% endif %}
+
+                        <tr class="mz-ordersummary-grandtotal">
+                            <td><span class="mz-ordersummary-totalname">{{ labels.total }}</span></td>
+                            <td><span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span></td>
+                        </tr>
+                        {% if model.billingInfo and model.billingInfo.digitalCreditPaymentTotal %}
+                          <tr class="mz-ordersummary-digitalcreditpayment">
+                            <td><span class="mz-ordersummary-totalname">{{ labels.digitalCreditTotal }}</span></td>
+                            <td><span class="mz-ordersummary-totalvalue">{{ labels.digitalCreditSubtractFromOrderPrefix }}{{ model.billingInfo.digitalCreditPaymentTotal|currency }}{{ labels.digitalCreditSubtractFromOrderSuffix }}</span></td>
+                          </tr>
+                          <tr class="mz-ordersummary-grandtotal">
+                              <td><span class="mz-ordersummary-totalname">{{ labels.remainingBalance }}:</span></td>
+                              <td><span class="mz-ordersummary-totalvalue">{{ model.billingInfo.nonStoreCreditTotal|currency }}</span></td>
+                          </tr>
+                        {% endif %}
+
+                    </tbody>
+                </table>
+            </div>
+
+              <!-- <div class="cart-summary cart-head mz-cms-col-12-12">
+                  <h3 class="cart-head" style="margin: 0;margin-left:5%;">CART SUMMARY</h3>
+              </div>
+              <div style="background:#f0faf9;border: 1px solid rgba(128, 128, 128, 0.25">
+              <div class="cart-summary ">
+                  <h3 class="cart-label" style="margin:0;margin-left:5%;">SUB TOTAL <span class="cart-num">{{ model.discountedSubtotal|currency }}</span></h3>
+              </div>
+              <div class="cart-summary ">
+                  <h3 class="cart-label" style="margin:0;margin-left:5%;">SHIPPING <span class="cart-num">{{ model.shippingSubTotal|currency }}</span></h3>
+              </div>
+              <div class="cart-summary ">
+                  <h3 class="cart-label" style="margin:0;margin-left:5%;">SHIPPING SURCHARGE <span class="cart-num">{{ model.handlingTotal|currency }}</span></h3>
+              </div>
+              <div class="cart-summary">
+                  <h3 class="cart-label" style="margin:0;margin-left:5%;">TAX <span class="cart-num">$0</span></h3>
+              </div>
+              <hr>
+               <div class="cart-summary">
+                  <h3 style="margin-left:5%;">TOTAL <span class="cart-num">{{ model.total|currency }}</span></h3>
+              </div> -->
+              <div class="help-sec">
+               {% dropzone "confirmation-help-text" scope="template"%}
+               <!-- <h4>Questions about this order?</h4>
+                <hr>
+                <div class="support-text">Please call <br> Customer Support at</div>
+                <div class="support-num">1-800-314-8736</div> -->
+              </div>
+            </div>
+          </div>
+       </div>
+    </div>
+    <div class="confiramtion-slider">
+      {% dropzone "confriramtion-theme-slider" scope="template" %}
+      <div data-mz-recommendedProducts id="recommended_products_slot">
+
+      </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var qty=0,url="";
+{% for i in model.items %}
+qty += {{i.quantity}};
+{% endfor %}
+  / Performance Tracking Data / 
+  var mid            = '{{ themeSettings.bizAccNumber }}';
+  var cust_type      = '{% if pageContext.user.isAnonymous %}1{% else %}0{% endif %}';
+  var order_value    = '{{ model.total }}';
+  var order_id       = '{{ model.orderNumber }}';
+  var units_ordered  = ''+qty;
+</script> 
+<script language="javascript" src="https://s1.cnnx.io/api/roi_tracker.min.js?v=1"></script>
 
 {% endblock body-content %}
 
 {% block trailing-scripts %}
 	{% parent %}
-	{% if siteContext.generalSettings.isGoogleAnalyticsEnabled and siteContext.generalSettings.isGoogleAnalyticsEcommerceEnabled %}
-	{% include "modules/analytics/google-analytics-ecommerce-tracking-code" %}
-	{% endif %}
+  {% block DoubleClick-FloodLight %}
+    <script type="text/javascript">
+      var ordNumber = {{ model.orderNumber }};
+      var ordVal = "000000000" + ordNumber;
+      var valu1 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.product.productCode }}{% endfor %}";
+      var valu2 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.product.name }}{% endfor %}";
+      var valu3 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.subtotal }}{% endfor %}";
+      var valu4 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.quantity }}{% endfor %}";
+      var tag_url = 'https://fls.doubleclick.net/activityi;src={{ themeSettings.dclk_src }};type={{ themeSettings.dclk_type }};cat={{ themeSettings.dclk_cat }};u1='+valu1+';u2='+valu2+';u3='+valu3+';u4='+valu4+';x='+valu1+';y='+valu2+';z='+valu3+';da1='+valu4+';qty=1;cost={{ model.subtotal }};ord='+ordVal.substr(ordVal.length - ordNumber.length)+'?';
+      if(document.getElementById("DCLK_FLDiv")){
+        var flDiv=document.getElementById("DCLK_FLDiv");
+      }else{
+        var flDiv=document.body.appendChild(document.createElement("div"));flDiv.id="DCLK_FLDiv";flDiv.style.display="none";
+      }
 
+      var DCLK_FLIframe=document.createElement("iframe");
+      DCLK_FLIframe.id="DCLK_FLIframe_"+Math.floor(Math.random()*999999);
+      DCLK_FLIframe.src=tag_url;
+      $(DCLK_FLIframe).attr('width','1');
+      $(DCLK_FLIframe).attr('height','1');
+      $(DCLK_FLIframe).attr('frameborder','0');
+      flDiv.appendChild(DCLK_FLIframe);
+    </script>
+  {% endblock DoubleClick-FloodLight %}
+
+  {% block Nextag %}
+   
+   <script type="text/javascript">
+
+    function getCookie(name)
+  {
+    var re = new RegExp(name + "=([^;]+)");
+    var value = re.exec(document.cookie);
+    return (value != null) ? unescape(value[1]) : null;
+  }
+    var cookval =   getCookie("pageurlclick");
+    var finalcook = cookval.replace(/,/g , '|');
+    
+    /* NexTag ROI Optimizer Data */
+    var id = '{{ themeSettings.nexttag }}'; 
+    var rev = '{{ model.total }}';
+    var order = '{{ model.orderNumber}}';
+    var cats = '{% for item in model.items %}{% for cat in item.product.categories %}{{ cat.id }}{% if not forloop.last %}|{% endif %}{% endfor %}{% endfor %}';
+    var prods = '{% for item in model.items %}{{ item.product.productCode }}{% if not forloop.last %}|{% endif %}{% endfor %}';
+    var units = '{% for item in model.items %}{{ item.quantity }}{% if not forloop.last %}|{% endif %}{% endfor %}';
+    var itemrevs = '{% for item in model.items %}{{ item.unitPrice.extendedAmount }}{% if not forloop.last %}|{% endif %}{% endfor %}';
+     var click = ''+finalcook;
+    var type = 'product';  
+
+</script>
+
+<script type="text/javascript" src="https://imgsrv.nextag.com/imagefiles/includes/roitrack.js"></script> 
+
+  {% endblock Nextag %}
+
+  {% block Google-Conversion-Tag %}
+  <!-- Google Code for Conversion Conversion Page -->
+  <script type="text/javascript">
+  /* <![CDATA[ */
+  var google_conversion_id = {{ themeSettings.gConvId }};
+  var google_conversion_language = "{{ themeSettings.gConvLang }}";
+  var google_conversion_format = "{{ themeSettings.gConvFormat }}";
+  var google_conversion_color = "{{ themeSettings.gConvColor }}";
+  var google_conversion_label = "{{ themeSettings.gConvLabel }}";
+  var google_conversion_currency = "{{ themeSettings.gConvCur }}";
+  var google_conversion_value = {{ themeSettings.gConvValue|floatformat(2) }};
+  var google_remarketing_only = {{ themeSettings.gRemarketing|lower }};
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+  <noscript>
+  <div style="display:inline;">
+  <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/{{ themeSettings.gConvId }}/?value={{ themeSettings.gConvValue|floatformat(2) }}&amp;currency_code={{ themeSettings.gConvCur }}&amp;label={{ themeSettings.gConvLabel }}&amp;guid=ON&amp;script=0"/>
+  </div>
+  </noscript>
+  {% endblock Google-Conversion-Tag %}
 {% endblock trailing-scripts %}
-
-		
-		
-		

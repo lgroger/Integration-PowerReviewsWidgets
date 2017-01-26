@@ -1,33 +1,244 @@
 {% extends "page" %}
-
 {% block title-tag-content %}{% firstof pageContext.metaTitle model.content.productName %}  - {% parent %}{% endblock title-tag-content %}
-
 {% block body-tag-classes %} mz-product {% endblock body-tag-classes %}
-
 {% block body-content %}
-
 {% require_script "pages/product" %}
-
+{% require_script "modules/quick-view" %}
 {% preload_json model "product" %}
-
-<div itemscope itemtype="http://schema.org/Product" class="mz-l-container">
-
-	<h1 class="mz-pagetitle" itemprop="name">{{ model.content.productName }}</h1>
-	
-    <div data-mz-productimages class="mz-productimages mz-l-sidebar">
-        {% include "modules/product/product-images" %}
-    </div>
-
-    <div class="mz-productdetail-wrap">
-        {% include "modules/common/message-bar" %}
-        <div id="product-detail" class="mz-productdetail mz-l-stack">
-            {% include "modules/product/product-detail" %}
-        </div>
-    </div>
-
+<style type="text/css">
+   .sticky{
+   display: none !important; 
+   }
+   .header-float{
+   display: none !important; 
+   }
+   .mz-breadcrumbs:first-child {
+   display: none;
+   }
+</style>
+<!--[if IE]>
+<style>
+   .display-fixed-mob #add-to-wishlist{
+   max-height: none; 
+   }
+</style>
+<[endif]-->
+<div class="mz-breadcrumbs">   
+   <a href="../../" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+   <span class="mz-breadcrumb-separator"> / </span> 
+   <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+   <span>{{navigation.currentNode.name}}</span>
 </div>
+{% if pageContext.isMobile %}
+<h1 class="mz-pagetitle mob-tag" itemprop="name">{{ model.content.productName }}</h1>
+{% endif %}
+<div itemscope itemtype="http://schema.org/Product" class="mz-l-container pdp-detail">
+   <div class="mz-productdetail-wrap1">
+      <div class="mz-quick-view-wrapper">
+         <div class="container-left">
+            <div class="product-image">
+               {% if model.mainImage.imageUrl %}
+               <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=600 quality=75 as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} />
+               {% else %}
+               <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+               {% endif %}
+               <iframe width="100%" height="100%" id="video-frame" style="display:none;"></iframe>
+            </div>
+            <div class="product-image-slider echi-shi-product_pdp_slider">
+               {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %}
+                     <div class="owl-carousel">
+                        {% for image in model.content.productImages %}
+                           <div class="item">
+                              <img class="mz-productimages-thumbimage"  src="{% make_url "image" image with max=80 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
+                           </div>
+                        {% endfor %}
+                     </div>
+               {% else %}
+                  {% if model.content.productImages|length >1 %}
+                     <div class="owl-carousel">
+                        {% for image in model.content.productImages %}
+                           <div class="item">
+                              <img class="mz-productimages-thumbimage"  src="{% make_url "image" image with max=80 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
+                           </div>
+                        {% endfor %}
+                     </div>
+                  {% endif %}
+               {% endif %}    
+            </div>
+            {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %}
+            {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
+            {% with videoURLs|first|split(",") as videos %}
+            <div class="product-video">
+               <div class="owl-carousel">
+                  {% for video in videos %}
+                  {% with video|split("=") as vCode %}
+                  <div class="item" video-data="{{ vCode|last }}">
+                     <img src="http://img.youtube.com/vi/{{ vCode|last }}/default.jpg" width="100%" style="height:90px;">
+                     <span class="video-icon"></span>
+                  </div>
+                  {% endwith %}
+                  {% endfor %}
+               </div>
+            </div>
+            {% endwith %}
+            {% endwith %}
+            {% endif %}
+         </div>
+         <div class="container-right">
+            <div class="product-info">
+               <div class="product-title">
+                  {% if pageContext.isDesktop or pageContext.isTablet %}
+                  <h1 class="mz-pagetitle desktop-name" itemprop="name">{{ model.content.productName }}</h1>
+                  {% endif %}
+               </div>
+               {% include "modules/common/message-bar" %}
+               <div class="product-description">
+                  {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
+                  {{ model.content.productShortDescription|safe }}
+                  <br/><a style="cursor: pointer;" id="morelink" class="morelink-pdp">More Details</a>
+                  {% endif %}
+               </div>
+               {% with model|get_product_attribute("tenant~hasconfigurablechild") as obj %}
+               {% for value in obj.values %}
+               {% if value.value %}
+               {% if model|get_product_attribute_values("tenant~productcodes") %}
+               {% with model|get_product_attribute("tenant~productcodes") as prdValue %}
+               {% for value in prdValue.values %}
+               {% if value.stringValue %}
+               {{value.stringValue}}
+               {% include_products "modules/product/product-configurable" with productCodes=value.stringValue and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+               {% endif %}
+               {% endfor %}
+               {% endwith %}
+               {% endif %}
+               {% endif %}
+               {% endfor %}
+               {% endwith %}
+               <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating product-rating-review" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}" >
+                  {% if model|get_product_attribute('tenant~rating') %}
+                  {% with model|get_product_attribute('tenant~rating') as rating %}
+                  {% if rating.values|first|prop("value") != "" %}
+                     {% with rating.values|first|prop("value")|floatformat as totalRating %}
+                        <div class="product-rating">
+                           <div class="pr-snippet-stars">
+                              {% if totalRating > 4.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating == 4.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
+                              {% endif %}                              
+                              {% if totalRating > 3.5 and totalRating < 4.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating == 3.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating > 2.5 and totalRating < 3.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating == 2.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating > 1.5 and totalRating < 2.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
+                              {% endif %}
+                               {% if totalRating == 1.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating > 0.5 and totalRating < 1.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating > 0 and totalRating <= 0.5 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
+                              {% endif %}
+                           </div>
+                  <div class="product-review">
+                     <a href="{{ model.url }}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-{{ model.productCode }}"><span id="pr-snippet-read-review-count"></span> Review(s)</a> | <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
+                  </div>
+               </div>
+               {% endwith %}
+               {% endif %}
+               {% endwith %}
+               {% else %}
+               <div class="product-rating">
+                  {% comment %}
+                  <div class="pr-snippet-stars">
+                     <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
+                  </div>
+                  {% endcomment %}
+                  <div class="product-review">
+                     <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Be the first to Review</a>
+                  </div>
+               </div>
+               {% endif %}
+            </div>
+            {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
+               {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %}
+               <div class="product-color-swatch">
+                  {% if pdcs|first == "asColors" %}
+                  {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
+                     {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
+                        {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
+                           {% include_products "modules/product/color-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+                        {% endwith %}
+                     {% endwith %}
+                     {% endif %}
+                  {% else %}
+                     {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
+                        {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
+                           {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
+                              {% include_products "modules/product/image-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+                           {% endwith %}
+                        {% endwith %}
+                     {% endif %}
+                  {% endif %}
+               </div>
+               {% endwith %}
+            {% endif %}
+            <div id="product-detail" class="mz-productdetail mz-l-stack">
+               {% include "modules/product/product-detail-custom" %}
+            </div>
+            <div class="product-share">
+                 <span>Share: </span>        
+                 <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                 <div id="addThis-conainer" style="display: inline-block;vertical-align: middle;" class="addthis_sharing_toolbox addthis_32x32_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
+                 </div>
+            </div>
+            {% dropzone "instock-notice" scope="template" %}
+         </div>
+      </div>
+      <div class="clear"></div>
+   </div>
+</div>
+</div>
+<!-- Description Tabs-->
+<div class="mz-shi-heading-style">
+   {% dropzone "recommended-products" scope="template" %}
+</div>
+{% include "modules/product/fixed_product_desc_header" %}
 
+{% if themeSettings.certonaRecomm %}
+   {% if themeSettings.certonaRecommSimilarProducts %}   
+      {% if themeSettings.similarProductHeading %}
+      <div class="related-products-heading recom_slot-heading_1" style="display:none">
+              <h2>{{ themeSettings.similarProductHeading }}</h2>
+      </div>
+      {% endif %}
+      <div data-mz-recommendedProducts id="recommended_products_slot_1">
+      </div>
+   {% endif %}   
+   {% if themeSettings.certonaRecommRelatedProducts %}
+      {% if themeSettings.recommendedProductHeading %}
+      <div class="related-products-heading recom_slot-heading_2" style="display:none">
+            <h2>{{ themeSettings.recommendedProductHeading }}</h2>
+      </div>
+      {% endif %}
+      <div data-mz-recommendedProducts id="recommended_products_slot_2">
+      </div>
+   {% endif %}
+{% endif %}
+{% include "modules/product/pdp-shop-widget" %}
+{% include "modules/product/product-description-tabs" %}
+{% include "modules/product/product-description-inspiration" %}   
+{% include "modules/product/pdp-related-products" %}
 {% endblock body-content %}
-
-
- 

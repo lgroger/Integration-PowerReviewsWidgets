@@ -1,4 +1,4 @@
-﻿{% extends "page" %}
+﻿{% extends "page" %} 
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.checkout %} - {% parent %}{% endblock title-tag-content %}
 
@@ -7,6 +7,7 @@
 {% if siteContext.checkoutSettings.visaCheckout.isEnabled and not pageContext.isEditMode %}
 {% include "modules/common/anti-clickjacking-script" %}
 {% endif %}
+{% require_script "pages/checkout" %}
 {% endblock head-tag-scripts %}
 
 {% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %}
@@ -15,65 +16,110 @@
 
 {% block body-content %}
 
-{% require_script "pages/checkout" %}
 
 {% preload_json model "checkout" %}
 
-<div class="mz-l-container">
+{% preload_json model "customer" %}
+
+{% include_documents "widgets/cms/holiday_preload" with view="holidayView" and listFQN="ShippingholidayList@shindigz" and pageSize=100 as_parameter %}
+
+{% include_documents "widgets/cms/shipDate" with view="shipDateView" and listFQN="shippingDateList@shindigz" and pageSize=40 as_parameter %}
+
+{% include_documents "widgets/cms/ups_ship" with view="holidayView" and listFQN="UPSholidayList@shindigz" and pageSize=40 as_parameter %}
+
+<div class="mz-l-container checkout_main_container">
+    <span style="display:none;" id="time-custom-now" date-attr={% now "F, j, Y h:i:s A" %}>{% now "F, j, Y h:i:s A" %}</span>
     <h1 class="mz-pagetitle">
         {{ labels.checkout }}
-        {% if not user.isAuthenticated %}
+    <!--    {% if not user.isAuthenticated %}
         <span class="mz-pagetitle-note">
             {{ labels.registeredCustomer }} <a data-mz-action="login" data-placement="left" href="javascript;">{{ labels.logIn }}</a>
         </span>
-        {% endif %}
+        {% endif %} -->
+
+        <span class="total_pay"><label>{{ labels.total }}</label><strong>{{ model.total|currency }}</strong></span>
+
     </h1>
 
-    <form id="checkout-form" class="mz-checkoutform mz-l-2column mz-l-2column-right fades-in" method="post" onsubmit="return false;">
+<div class="cart_bundle_box" style="display:none;">
+    {% for item in model.items %}
+        {% if item.product.productUsage == 'Bundle' %}
+            {% for components in item.product.bundledProducts %}
+                <img class="cart_bundle_img" style="" value="{{ item.id }}-{{ components.productCode }}" src="{% include_products "modules/product/bundle-component" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}" alt="Bundle Item"/>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
+</div>
+    <form id="checkout-form" class="checkout_cols mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;">
 
     {% include "modules/common/message-bar" with model=model.messages %}
 
-    <div class="mz-l-column" id="checkout-rightcol">
-        
-        <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
-            {% include "modules/checkout/checkout-order-summary" %}
-        </div>
+    <div class="mz-cms-row">
+        <div class="checkout_col_left mz-cms-col-8-12">
 
-        <div class="mz-l-formfieldgroup">
-            <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
-                {% include "modules/checkout/coupon-code-field" %}
+            <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
+                {% include "modules/checkout/step-shipping-address"  with model=model.fulfillmentInfo.fulfillmentContact %}
             </div>
-            {% if themeSettings.showCheckoutCommentsField %}
-            <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
-                {% include "modules/checkout/comments-field" %}
+
+            <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
+                {% include "modules/checkout/step-shipping-method" %}
             </div>
-            {% endif %}
-        </div>
 
-    </div>
+            <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
+                {% include "modules/checkout/step-payment-info" %}
+            </div>
 
-    <div class="mz-l-column">
+            <div class="mz-formstep mz-checkoutform-review" id="step-review">
+                {% include "modules/checkout/step-review" %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-shippingaddress" id="step-shipping-address">
-            {% include "modules/checkout/step-shipping-address" %}
-        </div>
+        </div><!-- left .column -->
 
-        <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
-            {% include "modules/checkout/step-shipping-method" %}
-        </div>
+        <div class="checkout_col_right mz-cms-col-4-12" id="checkout-rightcol">
+            
+            <div class="mz-formstep mz-checkoutform-ordersummary" id="order-summary">
+                {% include "modules/checkout/checkout-order-summary" %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
-            {% include "modules/checkout/step-payment-info" %}
-        </div>
+            <div class="checkout_coupan">
+                <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
+                    {% include "modules/checkout/coupon-code-field" %}
+                </div>
+                <!--{% if themeSettings.showCheckoutCommentsField %}
+                <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
+                    {% include "modules/checkout/comments-field" %}
+                </div>-->
+                {% endif %}
+            </div>
 
-        <div class="mz-formstep mz-checkoutform-review" id="step-review">
-            {% include "modules/checkout/step-review" %}
-        </div>
 
-    </div><!-- left .column -->
-
+        </div>        
+    </div>    
+<div id="AmazonPayButton" style="display:none;"/>
 </form>
 
 </div>
+{% require_script "vendor/bootstrap-datetimepicker" %}
+<script>
+    WebFontConfig = {
+        google: {
+            families: [
+                {% for font in themeSettings.loadGoogleFonts %}
+                {% if not forloop.first %},{% endif %}'{{ font }}:regular,italic,bold,bolditalic'
+                {% endfor %}
+            ]
+        }
+    };
+    (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://ajax.googleapis.com/ajax/libs/webfont/1.4.7/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+    })();
+
+</script>
 
 {% endblock body-content %}
+{% block page-footer %}{% endblock page-footer %}

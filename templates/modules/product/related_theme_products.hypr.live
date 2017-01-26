@@ -1,0 +1,72 @@
+
+{% with model.items|first as product %}
+<div class="item">
+                  <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+                        <div class="mz-productlist mz-productlist-tiled">
+                         <div class="mz-productlist-item" ><div class="mz-productlisting mz-productlist-tiled" data-mz-product="KSSTOC">
+                         <a href="/p/{{ product.productCode }}">
+                         <img class="theme-img" src="{{product.mainImage.imageUrl}}" alt="{{ product.content.productName }}"/>
+                         <h3>{{ product.content.productName }}</h3>
+
+                         <h3>Price <span style="color:#0d3762"><span style="font-size:1.5em;">${{product.price.price|floatformat}}</span> each</span></h3>
+                         </a> 
+                         <div class="fixed-right-first mz-productdetail-conversion-controls">
+                         <p>
+                          Qty : 
+                           <span class="bundle-page-qty">
+                              <input type="button" value="-" class="qtyminus" field="quantity">
+                              <input id="{{ product.productCode }}" class="mz-productdetail-qty qty" type="number" value="1" min="1" max="999" maxlength = "3"  data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                              <input type="button" value="+" class="qtyplus" field="quantity">
+                          </span>
+                        </p>
+                        </div>
+                        <div>
+                        
+                           <button id="add-to-cart" data-productid="{{ product.productCode }}" class="btn-themes btn-cart " onClick="BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': '{{model.productCode}}' });">Add to Cart</button>
+                           
+                           <button id="add-to-wishlist" data-productid="{{ product.productCode }}" class="addToWishlist mz-productdetail-addtowishlist mz-button " data-mz-action="addToWishlist"></button> 
+                           
+                           </div>
+                           
+                        </div>
+                     </div>
+                      </div>
+                  </div> 
+                 </div>
+ <!--div class="item">         
+            <div class="mz-productlist-item" data-mz-product="{{ product.productCode }}">
+               <div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{ product.productCode }}">
+                  <div class="mz-productlisting-image">
+                     <a href="/p/{{ product.productCode }}">
+                     <img src="{{product.mainImage.imageUrl}}">
+                     </a>
+                     <div class="quick-view">
+                        <a href="#" data-pro-id="{{ product.productCode }}">QUICK VIEW</a>
+                     </div>
+                     <div class="wishlist-icon" id="{{ product.productCode }}">
+                        <a href="#"></a>
+                     </div> 
+                  </div>
+                  <div class="mz-productlisting-info">
+                     <div class="color-swatch">
+                     </div>
+                     <a class="mz-productlisting-title" href="{{ product.url }}">{{ product.content.productName }}</a>
+                     
+                     <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+                        <span itemprop="price" class="mz-price">
+                       ${{product.price.price}}
+                        </span>
+                     </div>
+                  </div>
+                  <div class="mz-productlisting-rating">
+                     <div class="mz-product-rating">
+                        <div class="pr-snippet-stars">
+                           <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div-->
+
+{% endwith %}

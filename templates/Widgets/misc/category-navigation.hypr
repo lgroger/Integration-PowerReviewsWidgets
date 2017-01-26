@@ -1,19 +1,223 @@
-{% with navigation|find(model.config.mainCategory) as navNode %}
-<div class="mz-categorylist" >
-  <div class="mz-categorylist-title-{{Model.config.template}}"><a href="{{navNode.url}}">{{navNode.name}}</a></div>
+ {% require_script "widgets/category-nav"%} 
+ <div class="menu-container hide-float" >
+  <div class="menu">  
+    <ul class="star-header" data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
+      data-mz-contextify-attr='class'
+      data-mz-contextify-val='is-current'  style="padding-left:0px !important;">
+          {% for category in model.config.mainCategory %} 
+            {% with navigation|find(category) as navNode %}
+                <li class="nav-{{navNode.originalId}} ">
+                    <a href="{{navNode.url}}" id="nav-{{navNode.originalId}}" class="menu-first">{{navNode.name|safe}}</a>
+                    <!-- |truncatechars(themeSettings.maxTopLevelNavLabelLength) -->
+                    {% if navNode.items %}
+                        <ul class="nav-{{navNode.originalId}} nopad menu-style">
+                            <div class="menu-sec-1 scrollbar ex3"  style="">
+                                <li>
+                                    <ul class=""><!--  menu-top -->
+                                        {% for item in navNode.items %}
+                                            {% if forloop.counter0 < Model.config.numberToDisplay %}
+                                            {% if not item.isEmpty or not model.config.hideEmptyChildNodes %}
+                                                <li class="link-active">
+                                                    <a  class="{{item.originalId}}" href="{{item.url}}" id="">{{item.name}}</a>             
+                                                </li>  
+                                            {% endif %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                            </div>
+
+                            <div class="menu-sec-2 scrollbar ex3 nav-{{navNode.originalId}}"  style="">
+                                {% for subitem in navNode.items %}
+                                    {% if not subitem.isEmpty or not model.config.hideEmptyChildNodes %}
+                                        <div class="adSlideBox loop-{{subitem.originalId|safe}} " id="{{subitem.originalId}}">
+                                            <div class="ech-shi-sub-links">
+                                                <ul>
+                                                    <li>
+                                                        {% if subitem.items %}
+                                                            <ul class="mz-sitenav-sub-sub">
+                                                                {% for level-3-item in subitem.items %}
+                                                                {% if level-3-item.items.length > 0 %}
+                                                                    {% if forloop.counter0 < 15 %}
+                                                                        <li class="mz-sitenav-item third-level-cat-up">
+                                                                            <a class="mz-sitenav-link" href="{{level-3-item.url}}" style="font-size: 17px !important;">{{ level-3-item.name|safe }}</a>
+                                                                            <ul>                      {% for lvl-4 in level-3-item.items %}
+                                                                            <li class="fourth-level"><a href="{{lvl-4.url}}" style="padding-bottom:0em !important;">{{ lvl-4.name }}</a></li>
+                                
+                                                                            {% endfor %}
+                                                                            </ul>
+
+                                                                        </li>                               {% endif %}
+                                                                        {% endif %}
+                                                                {% endfor %}
+                                                                {% if subitem.items.length>15 %} 
+                                                                    <li class="mz-sitenav-item">
+                                                                        <a class="mz-sitenav-link" href="{{subitem.url}}">View ghAll</a>
+                                                                    </li>
+                                                                {% endif %}  
+                                                            </ul>
+                                                        {% endif %}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <div class="menu-category-promo-image" style="text-align: right;">
+                                                <!-- <img src="" style="width:100%;"/> -->
+                                                <!-- <span>Image wil come here.</span> -->
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor%}
+                            </div>
+                        </ul>
+                    {% endif %}
+                </li>
+            {% endwith %}
+            <li><span class="star-icon"></span></li>
+          {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<!-- Mobile Menu -->
+
+<div id="mobile-nav">
+    <div id="wrapper">
+        <input type="checkbox" id="menu-custom" name="menu" class="menu-checkbox">
+        <div class="menu-custom">
+            <label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
+            <ul class="mob-menu-l1" style="" data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
+            data-mz-contextify-attr='class'
+            data-mz-contextify-val='is-current'>
+                {% for category in model.config.mainCategory %}
+                    {% with navigation|find(category) as navNode %}
+                        {% if not navNode.isEmpty and forloop.counter0 < themeSettings.maxTopLevelNavItems %}
+                        <!-- not navNode.isHidden and -->
+                            <li class="toggleul">
+                                {% if navNode.items %}
+                                   <!-- <a href="{{navNode.url}}" class="level-1-category-link"></a> level-1-category-expand -->
+                                    <label for="{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}" class="">{{navNode.name|safe}}</label>   
+                                    <input type="checkbox" id="{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}" name="{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}" class="menu-checkbox">
+                                    <div class="menu-custom">
+                                        <label class="menu-toggle" for="{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}"><span>Toggle</span></label>
+                                        {% if navNode.items %}
+                                            <ul class=""><!-- mob-menu-l2  -->
+                                                <div class="secondlevel" style="margin-top: -10%;padding: 2% 5%;"> 
+                                                    <span class="first-level-back">
+                                                        <i for="{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}}" class="fa fa-angle-left" style="font-size: 30px;  vertical-align: middle;" aria-hidden="true"></i> 
+                                                        BACK  
+                                                    </span>
+                                                    &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; 
+                                                    <span style="color:#fff;">{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}} </span>  
+                                                </div>
+                                                {% for sublink in navNode.items %}
+                                                    {% if not sublink.isHidden and not sublink.isEmpty %}
+                                                        <li>
+                                                            <div>
+                                                                <a href="{{ sublink.url}}" class="level-2-link">{{ sublink.name|safe}}</a>
+                                                                <label class="toggle-plus-icon levle-2-expand" style=""><i class="fa fa-plus" aria-hidden="true"></i></label>
+
+                                                                <ul class="my-mob-menu-third">
+                                                                    {% for sublink-1 in sublink.items %}
+                                                                        <li style="list-style-type:none;">
+                                                                            <span style="color:aqua;">
+                                                                                {{ sublink-1.name | safe }}
+                                                                            </span>
+                                                                        </li>
+                                                                    {% endfor %}
+                                                                </ul>
+                                                            </div>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </div>
+                                {% else %}
+                                    <a href="{{navNode.url}}">
+                                        {{navNode.name|safe}}
+                                    </a>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+                <div class="mob-promo">
+                    <hr/>
+                    <li class="mob-head-promo">
+                        Save $10 -- Signup now
+                    </li>
+                    <li class="mob-head-promo mob-promo-phone" style="color:#00af9a;">
+                        1-800-314-8736
+                    </li>
+                    <li class="mob-head-promo mob-cust-sup">
+                        <a href=""></a>
+                    </li>
+                    <li class="mob-head-promo mob-faq-app">
+                        <a href=""></a>
+                    </li>
+                    <li class="mob-head-promo mob-about-app">
+                        <a href=""></a>
+                    </li>
+                    <li class="mob-head-promo mob-our-app">
+                        <a href=""></a>
+                    </li> 
+                </div>
+            </ul>
+        </div>    
+    </div>
+</div>
+
+
+
+{% comment %}
+<ul class="mz-categorylist" >
+{% for category in model.config.mainCategory %}
+{% with navigation|find(category) as navNode %}
+  <li class="mz-categorylist-title-{{Model.config.template}}"><a href="{{navNode.url}}">{{navNode.name}}</a></li>
   {% for item in navNode.items %}
   {% if forloop.counter0 < Model.config.numberToDisplay %}
   {% if not item.isEmpty or not model.config.hideEmptyChildNodes %}
-  <div class="mz-categorylist-list-label{{Model.config.template}}"><a href="{{item.url}}">{{ item.name }}</a></div>
+  <li class="mz-categorylist-list-label{{Model.config.template}}"><a href="{{item.url}}">{{ item.name }}</a>
     <ul class="mz-categorylist-list-{{Model.config.template}} {% block list-classes %}{% endblock list-classes %}">
     {% for subitem in item.items %}
     {% if not subitem.isEmpty or not model.config.hideEmptyChildNodes %}
       <li class="mz-categorylist-item-{{Model.config.template}}"><a href="{{subitem.url}}">{{ subitem.name }}</a></li>
     {% endif %}
-	{% endfor %}
-	</ul>
+    {% endfor %}
+    </ul></li>
   {% endif %}
   {% endif %}
   {% endfor %}
-</div>
 {% endwith %}
+{% endfor %}
+</ul>
+{% endcomment %}
+
+<script>
+jQuery(document).ready(function(){
+    $('.qtyplus').click(function(e){
+        e.preventDefault();
+        fieldName = $(this).attr('field');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+        if (!isNaN(currentVal)) {
+            $('input[name='+fieldName+']').val(currentVal + 1);
+        } else {
+            $('input[name='+fieldName+']').val(1);
+        }
+    });
+    $(".qtyminus").click(function(e) {
+        e.preventDefault();
+        fieldName = $(this).attr('field');
+        var currentVal = parseInt($('input[name='+fieldName+']').val());
+        if (!isNaN(currentVal) && currentVal > 1) {
+            $('input[name='+fieldName+']').val(currentVal - 1);
+        } else {
+            $('input[name='+fieldName+']').val(1);
+        }
+    });
+                
+});
+
+
+
+</script>

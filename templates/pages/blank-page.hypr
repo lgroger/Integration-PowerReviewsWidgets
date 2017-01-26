@@ -2,4 +2,14 @@
 
 {% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
 
-{% block body-tag-classes %} mz-blankpage {% endblock body-tag-classes %}
+{% block body-tag-classes %} mz-blankpage  {{navigation.currentNode.name}} {% endblock body-tag-classes %}
+  {% block breadcrumbs %}
+     {% if themeSettings.showBreadcrumbs %}
+		<div class="mz-breadcrumbs">   
+			<a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+			<a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+			<span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+		</div> 
+    {% endif %}
+{% endblock breadcrumbs %}
+

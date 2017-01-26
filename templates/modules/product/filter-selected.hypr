@@ -1,0 +1,26 @@
+{% for facet in model.facets %}
+{% if facet.values and facet.facetType != "Hierarchy" %}
+    {% for fval in facet.values %}
+        {% if fval.isApplied %}
+        {% set_var filterSelected=true %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endfor %}
+<span class="filter-strip-appyling">
+{% if filterSelected %}
+<button class="mz-button mz-facetingform-clearall selected-filter" style="width:auto !important" data-mz-action="clearFacets" data-mz-url="{% make_url "facet" "clear"  %}">{{ labels.clearAllFiltersSelected }}</button>
+{% endif %}
+
+{% for facet in model.facets %}
+{% if facet.values and facet.facetType != "Hierarchy" %}
+    {% for fval in facet.values %}
+        {% if fval.isApplied %}
+        <div class="selected-filter">
+        {{ fval.label }} <a click-data="{{facet.field|slugify }}_{{ fval.value|slugify }}" data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">x</a>
+        </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+</span>
+{% endfor %}

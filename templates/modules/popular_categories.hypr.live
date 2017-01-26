@@ -1,0 +1,28 @@
+{% require_script "modules/my-menu" %}       
+            {% for modelItem in model %} 
+                    <div class="item">
+                        <a href="/{{modelItem.slug|lower}}/c/{{ modelItem.categoryId }}">
+                      {% if modelItem.logo == '' %}
+                      <center>
+                        <img src="/resources/images/no-image.png" alt="No Image"><br/>
+                        </center>
+                         {% else %}
+                         <center>
+                          <img src="{{modelItem.logo}}?max=330" alt="{{modelItem.name}}"><br/>
+                          </center>
+                              {% endif %}
+                        <p>{{modelItem.name|safe}}</p>
+                        </a>
+                    </div>
+            {% endfor %}  
+                
+
+
+
+
+
+
+
+
+
+

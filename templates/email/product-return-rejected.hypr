@@ -1,55 +1,82 @@
 ﻿  {% extends "email/email" %}
 
   {% block body-content %}
+<table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" style="margin: 0px auto; background-color: rgb(255, 255, 255);" data-module="Mdl28" data-thumb="http://emailtemplatebuilders.com/Metrospective/03_TBThumbnails/module-27.jpg">
+   <tr>
+      <td align="center">
+         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" class="table600Min" style="margin: 0px auto; min-width: 668px; background-color: rgb(255, 255, 255);">
+            <tr>
+               <td align="center" class="table600st" style="min-width:668px;">
+                  <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" class="table600Min" style="min-width:629px;">
+                     <tr>
+                        <td class="table600st" style="min-width:629px;">
+                           <table width="100%" bgcolor="#fefefe" data-bgcolor="ModuleBGColor" align="left" cellpadding="0" cellspacing="0" border="0" class="table600" data-border-bottom-color="ModuleBorderColor" style="border-bottom:1px solid #dde5f1;">
+                              <tr>
+                                 <td align="center">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table600">
+                                       <tr>
+                                          <td colspan="3" height="25" style="font-size:0;line-height:0;" class="vrtclAlgn2">&nbsp;</td>
+                                       </tr>
+                                       <tr>
+                                          <td width="30" class="wz"></td>
+                                          <td width="30" class="wz"></td>
+                                       </tr>
+                                       <tr>
+                                          <td colspan="3" height="10" style="font-size:0;line-height:0;">&nbsp;</td>
+                                       </tr>
+                                       <tr>
+                                          <td width="30" class="wz"></td>
+                                          <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+                                          {% with pageContext.cmsContext.page.document.properties.html_3 as  message%}
+                                          {% with message|replace('{{firstname}}', model.firstName) as message1 %}
+                                              {% with message1|replace('{{returnNumber}}', model.returnNumber) as message2 %}
+                                              {% with message2|replace('{{sitename}}', siteContext.generalSettings.websiteName) as message3 %}
+                                                    {% with message3|replace('{{returnRequestDate}}', model.rmaDeadline) as message4 %}
+                                                      {{message4|safe}}
+                                                    {% endwith %}  
+                                              {% endwith %}
+                                              {% endwith %}
+                                          {% endwith %}
+                                          {% endwith %}
 
-	<dl class="mz-orderheader">
-	<!--
-		<dt>{{ labels.orderNo }}</dt>
-		<dd><a href="https://{{domainName}}/checkout/{{model.id}}/confirmation">{{ model.orderNumber }}</a></dd>
-		-->
-
-		<dt>{{ labels.return }}</dt>
-		<dd>{{ model.returnNumber }}</dd>
-
-		<dt>{{ labels.orderDate }}:</dt>
-		<dd>{{ model.order.submittedDate }}</dd>
-
-		<dt>{{ labels.returnRequestDate }}</dt>
-		<dd>{{ model.rmaDeadline }}</dd>
-	</dl>
-	<br />
-
-	<p>
-	{% if user and user.firstName %}
-		{{ labels.emailOpening|string_format(user.firstName)|safe }}
-	{% else %}
-		{{ labels.emailOpeningAlternative|safe }}
-	{% endif %}
-	</p>
-
-	{{ labels.returnRejectedBlob1|string_format(siteContext.generalSettings.websiteName, domainName)|safe }}
-
-	<table class="mz-ordersummary">
+	<table style="border-collapse:collapse;"  class="mz-ordersummary">
         <thead>
             <tr>
-                <th class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
-                <th class="mz-ordersummary-header-product">{{ labels.product }}</th>
+                <th style="padding: 12.5px 25px;background-color:#d91a60;color:#fff;" class="mz-ordersummary-header-qty">{{ labels.qty }}</th>
+                <th style="padding: 12.5px 25px;background-color:#d91a60;color:#fff;" class="mz-ordersummary-header-product">{{ labels.product }}</th>
             </tr>
 		</thead>
 		<tbody class="mz-ordersummary-lineitems">
 		{% for item in model.items %}
 			{% for reason in item.reasons %}
 			<tr class="mz-ordersummary-line mz-ordersummary-line-item">
-				<td>{{ reason.quantity }}</td>
-				<td class="mz-ordersummary-item-product">{{ item.product.name }}</td>
+				<td style="padding: 12.5px 25px;">{{ reason.quantity }}</td>
+				<td style="padding: 12.5px 25px;" class="mz-ordersummary-item-product">{{ item.product.name }}</td>
 			</tr>
 			{% endfor %}
 		{% endfor %}
 		</tbody>
     </table>
-
-	{{ labels.returnRejectedBlob2|safe }}
-
-	{{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
-
+{{pageContext.cmsContext.page.document.properties.html_4|safe}}
+                                          </td>
+                                          <td width="30" class="wz"></td>
+                                       </tr>
+                                       <tr>
+                                          <td colspan="3" height="30" class="vrtclAlgn" style="font-size:0;line-height:0;">&nbsp;</td>
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+         </table>
+      </td>
+   </tr>
+   
+</table>
+	
 {% endblock body-content %}

@@ -1,16 +1,44 @@
 ﻿<div class="mz-productoptions">
-    {% for option in model.options %}
-    <div class="mz-productoptions-optioncontainer">
-        {% if option.isRequired %}
-            <strong class="is-required">*</strong>
+{% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
+{% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}
+{% if isProductTypeFlag %}
+            
+     <div class="mz-productoptions-valuecontainer">
+        <select class="mz-productlable-options" mz-banner-type>
+            <option value="">Select Type*</option>
+            {% for option in model.options %}
+                {% if option.attributeFQN|lower != "tenant~outdoor-banner-with-slits"  and option.attributeFQN|lower != "tenant~dnd-token" %}
+                    <option value="{{ option.attributeFQN }}" {% if option.value %}selected="true"{% endif %}>{{ option.attributeDetail.name }}</option>
+                {% endif %} 
+            {% endfor %}
+        </select><br/>
+        {% for option in model.options %}
+            {% if option.attributeFQN|lower != "tenant~outdoor-banner-with-slits" and option.attributeFQN|lower != "tenant~dnd-token" %}
+                <select class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" {% if option.value %}style="display:block"{% else %} style="display:none"{% endif %}>
+                    <option value="">Size*</option>
+                {% for value in option.values %}
+                    <option value="{{value.value}}" {% if value.isSelected %}selected="true"{% endif %}>{{ value.stringValue }}</option>
+                {% endfor %}
+                </select>
+            {% endif %}
+        {% endfor %}
+        {% if model.enableSlitoption %}
+            <div><input type="checkbox" class="needslits" name="slitscheckbox"/> With Wind Slits</div>
         {% endif %}
-        <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}</label>
+    </div>
+{% else %}
+    {% for option in model.options %}
+    
+    {% if option.isHideExtra == "show" %}
+    <div class="mz-productoptions-optioncontainer">
+        {% if option.attributeDetail.name != "dnd-token" %}
+        <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}{% if option.isRequired %}<strong class="is-required">*</strong>{% endif %}</label>
         <div class="mz-productoptions-valuecontainer">
             {% if option.attributeDetail.inputType == "List" %}
-                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}">
-                    {% if not option.isMultiValue %}<option></option>{% endif %}
+                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" usageType={{option.attributeDetail.usageType}}>
+                    {% if not option.isMultiValue %}<option value="">Select {{ option.attributeDetail.name }}</option>{% endif %}
                     {% for value in option.values %}
-                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}{% if value.deltaPrice and value.deltaPrice > 0 %} ( {{ value.deltaPrice|currency }} {{ labels.more }} ){% endif %}</option>
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
                     {% endfor %}
                 </select>
             {% else %}
@@ -38,7 +66,12 @@
                   {% endfor %}
                 {% endif %}
             {% endif %}
-        </div>
+            </div>
+        {% endif %}    
     </div>
+    {% endif %}
     {% endfor %}
+{% endif %}
+{% endwith %}
+{% endwith %}
 </div>

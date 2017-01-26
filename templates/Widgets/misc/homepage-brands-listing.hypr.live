@@ -1,0 +1,85 @@
+{% for modelItem in model %} 
+                <li class="brand-item category_li">
+                <a href="/c/{{ modelItem.categoryId }}"> 
+                	<!-- onclick="getSubCatg()" -->
+                    <!-- mz-productlist-item  -->
+                    <div class="catg_list_img">
+                        {% if modelItem.logo == '' %}
+                                <!-- <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span> -->
+                                <img class="brand_logo" src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4?max=330" alt=""> </img> 
+
+                        {% else %}
+                        <!-- brand_logo -->
+                                <img class="brand_logo" src="{{modelItem.logo}}?max=330" alt="{{modelItem.name}}"> </img> 
+                            <!-- {{modelItem.logo}} -->
+                        {% endif %}
+                    </div>
+                    <div align="center" class="catg_list_name">
+                        <p class="catg_list_name">{{modelItem.name|safe}}</p>
+                    </div>
+                </a>
+                </li>
+{% endfor %}
+<style type="text/css">
+    img.brand_logo {
+        width:100%;
+    }
+    .mz-productlisting-image span.mz-productlisting-imageplaceholder{
+        height: 248px;
+        width: auto;
+    }
+    .mz-no-imagecontainer{
+        /*overflow:hidden;*/
+    }
+    a .mz-productlist-item{
+            background-color: lightgrey;
+            color: grey;
+            width: 100% !important;
+    }
+    .catg_list_img>span{
+            width: 100%;
+            height: auto;
+    }
+    @media only screen and (min-device-width : 320px) and (max-device-width : 568px){
+        .category_li {
+            width: 47%;
+            margin: 3% 1%;
+        }
+        .brand-lister{
+            padding: 0;
+        }
+        .mz-productlisting-image span.mz-productlisting-imageplaceholder{
+            width:100%;
+        }
+        .category_li{
+            /*margin:auto;*/
+        }
+        figure.cat-fig {
+            height: 175px;
+        }
+        .mz-productlist-item {
+            height: 150px;
+        }
+        .mz-productlisting .mz-productlist-tiled{
+            height: auto;
+        }
+        .brand-item h3{
+            padding: 13px 5px;
+            font-size: inherit;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+        .mz-productlist-item{
+            background-color: lightgrey;
+            color: grey;
+            padding-top: 50%;
+            padding-left: 21%;
+            width: 100%;
+    }
+    }
+</style>
+
+
+
+
+

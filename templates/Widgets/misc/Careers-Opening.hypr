@@ -1,0 +1,49 @@
+<div class="careers-list-item" {% data_attributes Model %}>
+	{% for job in {{Model.config.jobData}} %}
+		<h3 {% if {{forloop.first}} %} class="show-careers" {% endif %}>{{job.title|upper}}</h3>
+		<div class="job-content">
+			<div class="jobitem">
+				<div class="jobfield">
+					Department
+				</div>
+				<div class="jobfieldval">
+					{{job.dept}}
+				</div>
+			</div>	
+			<div class="jobitem">
+				<div class="jobfield">
+					Primary Function
+				</div>
+				<div class="jobfieldval">
+					{{job.func|safe}}
+				</div>
+			</div>
+			<div class="jobitem">
+				<div class="jobfield">
+					Education
+				</div>
+				<div class="jobfieldval">
+					{{job.edu}}
+				</div>
+			</div>
+			<div class="jobitem">
+				<div class="jobfield">
+					Experience	
+				</div>
+				<div class="jobfieldval">
+					{{job.exp|safe}}
+				</div>
+			</div>
+			<div class="jobitem">
+				<div class="jobfield">
+					Skills
+				</div>
+				<div class="jobfieldval">
+					{{job.skill|safe}}
+				</div>
+			</div>
+			<a href="{{job.link}}" target="_blank" class="job-apply-btn">Apply</a>
+		</div>
+		{% endfor %}
+</div>
+ {% require_script "widgets/careers" %}

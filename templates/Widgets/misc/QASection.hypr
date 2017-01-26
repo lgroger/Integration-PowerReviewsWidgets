@@ -1,0 +1,19 @@
+<div class="main-qa-wrap">
+	<div class="faq-column-main">
+		<div class="faq-category-section">
+			<ul>
+				<li>
+					{% for questionsObj in model.config.data %}
+						<div class="faq-list-item">
+							<h3>{{ questionsObj.ques}}</h3>
+							<div>
+								{{ questionsObj.ans|safe}}
+							</div>
+						</div>
+					{% endfor %}
+				</li>
+			</ul>
+		</div>
+	</div>	
+</div>
+{% require_script "widgets/faq" %}

@@ -1,0 +1,76 @@
+<div class="popup" data-popup="popup-{{model.productCode}}">
+   <div class="mz-quick-view-wrapper add-cart">
+      <header>
+         <div class="btn-slot">
+            <div class="item-text"><i class="fa fa-check" aria-hidden="true"></i> ITEM ADDED TO CART </div>
+            <a onclick="window.location='{{ pageContext.secureHost}}/cart'" id="mz-go-to-cart" class="addToCart">EDIT CART</a> 
+            {% comment %}
+               <a href="#" id="mz-go-to-checkout" class="addToCart">PROCEED TO CHECKOUT</a>
+            {% endcomment %}
+            <form method="post" action="/cart/checkout" id="cartform" style="display:inline">
+               <input type="submit" id="mz-go-to-checkout" class="soft-cart-btn chkout-minicart-btn addToCart" value="CHECKOUT">
+            </form>
+         </div>
+      </header>
+      <div class="container-left">
+         <div class="product-image"> 
+            {% if model.product.imageUrl %}
+            <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.product with max=themeSettings.productImagesContainerWidth as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% else %}alt="{{model.product.name}}"{% endif %} />
+            {% else %}
+            <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+            {% endif %}
+         </div>
+         <div class="product-info">
+            <div class="product-title">
+               <h2>{{ model.product.name }}</h2>
+            </div>
+            <div class="product-options product_optionbox">
+               <ul>
+                  {% if model.product.options and model.product.options.length > 0 %}
+                  {% for option in model.product.options %}
+                  {% if option.name != "dnd-token" and option.name != "Misc. Favor with Design" %}
+                       {% if option.stringValue %} 
+                        <li><span class="p_label">{{ option.name }}: </span> <span>{{ option.stringValue }}</span></li>
+                       {% else %}
+                        <li><span class="p_label">{{ option.name }}: </span> <span>{{ option.shopperEnteredValue }}</span></li>
+                       {% endif %}
+                  {% endif %}
+                  {% endfor %}
+                  {% endif %}
+               </ul>
+            </div>
+            <div class="quantity product_optionbox">
+               <span class="p_label">Qty:</span> <span>{% if model.newQuantity %}{{ model.newQuantity }}{% else %}{{ model.quantity }}{% endif %} </span>
+            </div>
+         </div>   
+         <div class="product_bottom_box"> 
+            <div class="price product_optionbox">
+                  <span class="p_label">Price:</span>{% if model.product.price.salePrice %}{{model.product.price.salePrice|currency}} {% else %} {{model.product.price.price|currency}} {% endif%}
+            </div>     
+            <div class="product-share">
+               <span>Share: </span>
+               <!-- Go to www.addthis.com/dashboard to customize your tools -->
+               <div id="addThis-conainer" style="display: inline-block;vertical-align: middle;" class="addthis_sharing_toolbox addthis_32x32_style" data-url="{% make_url "product" model.product %}" data-title="{{ model.product.name }}">
+               </div>
+               <!-- Go to www.addthis.com/dashboard to customize your tools -->
+               <script type="text/javascript" src="//s7.addthis.com/js/250/addthis_widget.js#pubid={{ themeSettings.socialShareAddThis }}"></script>
+            </div>
+         </div>
+      </div>
+   <div class="clear"></div>
+   <div class="product-slider">
+      <!-- Make Product Slider Here Recommended Products go here-->
+      <div id="static">
+         <h2>
+            You Might Be Interested In
+         </h2> 
+      </div>
+   <div id="recommended_products_slot_cart">
+      
+   </div>
+   </div>
+   <div class="mz-quick-veiw-close-btn">
+      <a id="mz-added-to-cart-close" class="popup-close fa fa-remove cursor-pointer">&times;</a>
+   </div>
+</div>
+</div>

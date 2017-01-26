@@ -1,0 +1,24 @@
+
+{% for item in model.items %}
+    {% if forloop.first %}
+        <div class="shopable_image_hotspot_popup" hotspot-data-id="{{model_id}}"
+            pcode="{{item.productCode}}" id="{{hotspot_id}}">
+            <span class="close" data-action="close_hotspot_popup" data-id="{{model_id}}"
+                pcode="{{hotspot.pcode}}"><p>-</p>
+            </span>
+            <div class="product-details">
+                <div class="img-container">
+                    <a href="/p/{{item.productCode}}">
+                        <img dsrc="/resources/images/product_place_holder.jpg"
+                            src="{{item.mainImage.imageUrl}}?max=120"
+                            alt="{{item.content.productName|safe}}" />
+                    </a>
+                </div>
+                <div class="details">
+                    <p class="shop_product_title"><a href="/p/{{item.productCode}}">{{item.content.productName|safe}} {{item.productCode}}</a></p>
+                    <a action="add-to-cart" href="/p/{{item.productCode}}" pcode="{{item.productCode}}">View Details</a>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endfor %}

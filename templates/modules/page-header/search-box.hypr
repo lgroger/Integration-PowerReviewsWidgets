@@ -1,21 +1,21 @@
 ﻿<form id="searchbox" class="mz-searchbox{% if themeSettings.useSearchAutocomplete %} mz-searchbox-expands{% endif %}" action="/search">
-    <span class="mz-searchbox-field">
-        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
-        <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
-    </span>
-	<select class="mz-searchbox-categories" name="categoryId" 
+	<select class="mz-searchbox-categories"  style="width: 60px;    border: 1px solid rgba(167, 167, 167, 0.44);" name="categoryId" 
             data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
             data-mz-contextify-attr='selected'
             data-mz-contextify-val='selected'>
-        <option value="">{{ labels.all }}</option>
+        <option value="" selected>{{ labels.all }}</option>
         {% partial_cache %}
         {% for node in navigation.tree %}
         {% if node.nodeType == "category" and not node.isEmpty %}
         <option value="{{node.originalId}}">{{node.name}}</option>
         {% endif %}
 		{% endfor %}
-        {% endpartial_cache %}
+        {% endpartial_cache %}  
 	</select>
+	 <span class="mz-searchbox-field" style="left: -2%;   border: 1px solid rgba(167, 167, 167, 0.44);border-left: 0; ">
+        <input placeholder="{{ labels.search }}" type="search" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" />
+        <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
+    </span>
     {% require_script "modules/contextify" %}
     {% if themeSettings.useSearchAutocomplete %}
         {% require_script "modules/search-autocomplete" %}

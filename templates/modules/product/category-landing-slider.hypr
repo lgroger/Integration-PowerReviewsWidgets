@@ -1,0 +1,36 @@
+
+	<div class="clear"></div>
+	<!--
+	<div class="mz-shi-heading-style">
+		  <h1>RELATED PRODUCTS</h1>
+		 </div>
+		-->
+	
+	<div class="echi-shi-superpage-slider">		
+		<div class="owl-carousel">
+		{% for subcategories in model.childrenCategories %}		
+
+			<a href="{{subcategories.url}}">
+				<div class="item">
+					<div data-mz-productlist="" class="mz-l-paginatedlist-list">
+						<div class="mz-productlist mz-productlist-tiled">
+						    <div class="mz-productlist-item" data-mz-product="KSSTOC">
+							    <div class="mz-productlisting mz-productlist-tiled" data-mz-product="KSSTOC">
+							    {% with subcategories.content.categoryImages|first as category-img %}
+							    {% if category-img.imageUrl %}
+								    <img src="{{category-img.imageUrl}}?max=250" alt="{{ subcategories.content.name }}"/>	    
+								    {% else %}
+								    <img src="../../resources/images/no-image.png" alt="No Image"/>
+								    {% endif %}
+								    {% endwith %}
+								    <h3>{{ subcategories.content.name }}</h3>
+								</div>
+						    </div>
+						</div>
+					</div>
+				</div>
+			</a>
+			{% endfor %}
+
+		</div>
+	</div>

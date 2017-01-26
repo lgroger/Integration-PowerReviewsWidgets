@@ -5,75 +5,186 @@
 {% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
 
 {% block body-content %}
+ <style type="text/css"> 
+[role="main"] > .mz-breadcrumbs:first-child {
+    display: none;
+}  
+</style>  
 
+{% require_script "modules/jquery-simple-datetimepicker" %}
 {% require_script "pages/myaccount" %}
+{% require_script "modules/defaultScript" %}
 
 {% preload_json model "customer" %}
 
-<div class="mz-l-container">
-    <h1 class="mz-pagetitle">
-        {{ labels.yourAccount }}
-    </h1>
-
-    <div class="mz-l-sidebar mz-myaccount-nav">
-        {% include "modules/my-account/my-account-nav" with navtarget="body" %}
-    </div>
-
-    <div id="account-panels" class="mz-myaccount-panels mz-l-stack mz-l-stack-large">
-
-		{% dropzone "my-account-top" scope="template" %}
-
-        <div id="account-messages">
-            {% include "modules/common/message-bar" with model=model.messages %}
+<div class="mz-l-container echi-shi-my-acc">
+    <div class="my_account_page_breadcrumbs mz-cms-col-12-12">
+        <div class="mz-breadcrumbs">
+            <a href="/" class="mz-breadcrumb-link">Home</a>
+            <span class="mz-breadcrumb-separator"> / </span>
+            <span class="mz-breadcrumb-current">{{pageContext.cmsContext.template.path|safe}}</span>
         </div>
+    </div>    
+    
+    <div class="my-account-body-content">        
 
-        <a id="settings"></a>
-        <div class="mz-l-stack-section mz-accountsettings" id="account-settings">
-            {% include "modules/my-account/my-account-settings" %}
+        <h1 class="mz-pagetitle my_account_heading">
+            {{ labels.myAccountCustom }}
+        </h1> 
+        <div class="my_account_left">
+        {{ themeSettings.myaccounttabs|safe  }}
+           
+ 
         </div>
+        <div class="my_account_right">
+        <div class="my_acc_ri">
 
-        <a id="password"></a>
-        <div class="mz-l-stack-section mz-passwordsection" id="password-section">
-            {% include "modules/my-account/my-account-password" %}
+            <div id="account-messages">
+                {% include "modules/common/message-bar" with model=model.messages %}
+            </div>
+            <!-- #my profile div starts here-->     
+            
+            <div id="tab_1" class="account_tab-content acc-pref-main-sec">
+                <button class="accordion1">My Profile <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                <span><i class="fa fa-caret-up" aria-hidden="true"></i></span>
+                </button>
+                <div  class="panel1">
+                    {% dropzone "myaccount-tab1" scope="template" %}
+                    <div class="account_heading">
+                        <span>Personal Information</span>     
+                    </div> 
+                    <div class="personal-info-section">
+                        <div class="mz-l-stack-section mz-accountsettings account-edits" id="account-settings" >
+                            {% include "modules/my-account/my-account-settings" %}
+                        </div>  
+                        <div class="personal_others">
+                            
+ 
+                               <div class="mz-l-stack-section mz-accountsettings account-edits" id="account-settings-ocassion">              
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="account-password-sec">
+                        <div class="account_heading">
+                            <span>Password</span>
+                        </div> 
+                        <div class="password-main-sec">
+                            <div class="mz-l-stack-section mz-passwordsection" id="password-section">
+                                {% include "modules/my-account/my-account-password" %}
+                            </div>
+                        </div>  
+                    </div>
+                    <div class="account-preference-sec">
+                        <div class="account_heading">
+                            <span>Preferences</span>
+                        </div>  
+                       <div class="acc-pref-main-sec">
+                            {% dropzone "holiday-preferences" scope="template" %}
+                       </div>
+                    </div>  
+                
+                </div>
+            </div> 
+            <script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
+            <form id="mktoForm_{{ themeSettings.mktoHolidayEmailPreferences }}" style="display:none;"></form>
+            <script>
+
+            MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoHolidayEmailPreferences }},function(form){
+                window.email_pre = form;
+            });
+            
+            </script>
+
+            <!-- #my profile div ends here -->
+            <!-- #saved cards div starts here-->
+            <div id="tab_2" class="account_tab-content">
+                <button class="accordion1">Saved Cards <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
+                <div class="panel1">
+                    {% dropzone "myaccount-tab2" scope="template" %}                   
+                    <a id="paymentmethods"></a>
+                    <div class="mz-l-stack-section mz-accountpaymentmethods" id="account-paymentmethods">                        
+                        {% include "modules/my-account/my-account-paymentmethods" %}
+                    </div>
+                </div> 
+            </div>
+            <!-- #saved cards div ends here -->
+            <!-- #address book div starts here-->
+            <div id="tab_3" class="account_tab-content">
+                <button class="accordion1">Address Book <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
+                <div class="panel1">
+                 {% dropzone "myaccount-tab3" scope="template" %}                   
+                    <a id="addressbook"></a>
+                    <div class="mz-l-stack-section mz-accountaddressbook" id="account-addressbook">
+                        {% include "modules/my-account/my-account-addressbook" %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- #address book div ends here -->
+            <!-- #my orders div starts here-->
+            <div id="tab_4" class="account_tab-content">
+                 <button class="accordion1">My Orders <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                 <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
+                <div class="mz-l-stack-section mz-accountorderhistory panel1" id="account-orderhistory">                   
+                 {% dropzone "myaccount-tab4" scope="template" %}                   
+                    {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory showPaging=true %}
+                </div>
+            </div>
+            <!-- #my orders div ends here -->  
+            <!-- #my wishlist div starts here-->
+            <div id="tab_5" class="account_tab-content">
+                <button class="accordion1">My Wishlist <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                 <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
+                <div class="panel1">
+                 {% dropzone "myaccount-tab5" scope="template" %}
+                   
+                    {% if siteContext.generalSettings.isWishlistCreationEnabled %}
+                        <a id="wishlist"></a>
+                        <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
+                            Please wait loading... 
+                        </div> 
+                    {% endif %}
+                </div> 
+            </div>
+            <!-- #my wishlist div ends here -->
+            <!-- #shindigz rewards div starts here-->
+            <div id="tab_6" class="account_tab-content">
+                <button class="accordion1">Shindigz Rewards <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
+                <div class="panel1">
+                 {% dropzone "myaccount-tab6" scope="template" %}
+                  
+                             <a id="{{ labels.digitalCreditsAnchor }}"></a>
+                    <div class="mz-l-stack-section mz-accountstorecredit rewards-sec" id="account-storecredit">
+                        {% include "modules/my-account/my-account-storecredit" %}
+                    </div>
+                </div>  
+            </div>
+             <!-- #my orders div starts here-->
+            <div id="tab_7" class="account_tab-content">
+                 <button class="accordion1">My Quotes <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
+                 <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
+                <div class="mz-l-stack-section mz-accountorderhistory panel1" id="account-quoteorderhistory">                   
+                    {% dropzone "myaccount-tab7" scope="template" %}                   
+                {% include "modules/my-account/my-account-quoteorderhistory" showPaging=true %}
+                </div>
+            </div>
+
+            <!-- #shindigz rewards div ends here -->
         </div>
-
-        {% if siteContext.generalSettings.isWishlistCreationEnabled %}
-        <a id="wishlist"></a>
-        <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
-            {% include "modules/my-account/my-account-wishlist" with model=model.wishlist %}
         </div>
-        {% endif %}
+        <div class="clear"></div>       
 
-        <a id="orderhistory"></a>
-        <div class="mz-l-stack-section mz-accountorderhistory" id="account-orderhistory">
-            {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory showPaging=true %}
+    		{% dropzone "my-account-bottom" scope="template" %}
+
         </div>
-        
-        <a id="returnhistory"></a>
-        <div class="mz-l-stack-section mz-accountreturnhistory" id="account-returnhistory">
-            {% include "modules/my-account/my-account-returnhistory" with model=model.returnHistory %}
-        </div>
-
-        <a id="paymentmethods"></a>
-        <div class="mz-l-stack-section mz-accountpaymentmethods" id="account-paymentmethods">
-            {% include "modules/my-account/my-account-paymentmethods" %}
-        </div>
-
-        <a id="addressbook"></a>
-        <div class="mz-l-stack-section mz-accountaddressbook" id="account-addressbook">
-            {% include "modules/my-account/my-account-addressbook" %}
-        </div>
-
-        <a id="{{ labels.digitalCreditsAnchor }}"></a>
-        <div class="mz-l-stack-section mz-accountstorecredit" id="account-storecredit">
-            {% include "modules/my-account/my-account-storecredit" %}
-        </div>
-
-		{% dropzone "my-account-bottom" scope="template" %}
-
     </div>
 </div>
-{% endblock body-content %}
+{% require_script "vendor/bootstrap-datetimepicker" %}
 
+{% endblock body-content %}
 {% block body-below-content %}
-{% endblock body-below-content %}
+{% endblock body-below-content %} 

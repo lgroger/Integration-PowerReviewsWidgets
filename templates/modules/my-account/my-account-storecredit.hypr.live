@@ -1,42 +1,106 @@
-﻿<h3 class="mz-l-stack-sectiontitle">{{ labels.digitalCredit }}</h3>
-<div class="mz-accountstorecredit-form">
-  <input type="text" placeholder="{{ labels.enterDigitalCredit }}" class="mz-accountstorecredit-input" data-mz-entering-credit />
-  <button class="mz-button mz-button-small mz-accountstorecredit-add" data-mz-action="addStoreCredit">{{ labels.add }}</button>
+﻿<h3 class="mz-l-stack-sectiontitle reward-head">My Rewards</h3>
+
+    {% if model.isEnabledShippingReward == "no" %}
+        <!-- NOT participated -->
+        {% dropzone "shindigz-rewards" scope="template" %}
+        <div class="reward_signup_div">
+            <button class="reward_signup" data-mz-action="enableRewardPointSystem">
+                SIGNUP FOR REWARDS
+            </button>
+        </div>
+
+    {% else %}
+        <!-- Participated in reward prgram -->
+        <div class="rewards-top-block">
+            <h3>NO REWARDS TILL DATE</h3>
+            <div>
+                <label>Enrolled On:</label>&nbsp;{{model.enrolledOn}}<br/>
+                <label>Balance:</label>&nbsp;{{model.rewardpoint}}&nbsp;&nbsp; Points
+            </div>
+            <!-- <p>Refer friends and like us on Facebook for even more Rewardz!</p>
+            <button class="refer-btn">REFER FRIENDS NOW</button>
+            <button class="like-btn">LIKE US ON FACEBOOK</button> -->
+        </div>
+    {% endif %}
+    <h3 class="mz-l-stack-sectiontitle reward-head">STORE CREDITS</h3>
+    <div class="store-credit">
+        <h3>STORE CREDIT BALANCE</h3>
+        <h3 class="account_storebalance">You Currently have balance of <span>{{ model.totalCreditAmount|currency }}</span></h3>
+    </div>
+    <div class="mz-accountstorecredit-form credit-form">
+        <h4 class="mz-accountstorecredit-title">{{ themeSettings.storeCreditCodeInfoLabel }}</h4>
+        <div class="mz-accountstorecredit-box">
+            <input type="text" class="mz-accountstorecredit-input" data-mz-entering-credit />
+            <button class="mz-button mz-button-small mz-accountstorecredit-add" data-mz-action="addStoreCredit">Apply</button>
+        </div>
+    </div>
+    <div class="mz-accountstorecredit-table">
+        {% if model.credits %}
+            <table class="mz-table">
+                <thead>
+                    <tr>
+                        <th class="mz-accountstorecredit-header-creditnumber">{{ labels.digitalCreditCode }}</th>
+                        <th class="mz-accountstorecredit-header-creditdate">{{ labels.creditDate }}</th>
+                        <th class="mz-accountstorecredit-header-creditamount">{{ labels.creditAmount }}</th>
+                        <th class="mz-accountstorecredit-header-remaining">{{ labels.remaining }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for credit in model.credits %}
+                    <tr class="mz-accountstorecredit-row">
+                        <td class="mz-accountstorecredit-cell-storecreditnumber">{{ credit.code }}</td>
+                        <td class="mz-accountstorecredit-cell-creditdate">{{ credit.activationDate|date("F j, Y") }}</td>
+                        <td class="mz-accountstorecredit-cell-creditamount">{{ credit.initialBalance|currency }}</td>
+                        <td class="mz-accountstorecredit-cell-remaining">{{ credit.currentBalance|currency }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr class="mz-accountstorecredit-totalrow">
+                    <td class="mz-accountstorecredit-totallabelcell" colspan="3" align="right">
+                        <span class="mz-accountstorecredit-totallabel">{{ labels.totalCreditBalance }}</span>
+                    </td>
+                    <td class="mz-accountstorecredit-total" align="left">
+                        <span class="mz-accountstorecredit-totalamount">{{ model.totalCreditAmount|currency }}</span>
+                    </td>
+                    </tr>
+                </tfoot>
+            </table>
+        {% else %}
+            {{ labels.accountNoCredits }}
+        {% endif %}
+        <hr>
+    </div>
+
+
+<h3 class="mz-l-stack-sectiontitle faq-head">
+    <p>
+        <span>FAQ</span>{{ themeSettings.storeCreditFAQinfo }}
+    </p>
+</h3>
+{% dropzone "faq-store-front" scope="template" %}
+<!--button class="accordion"><span style="color:#00b09b;    font-size: 22px;
+    margin-right: 2%;">Q:</span>When will I receive my Rewardz?</button>
+<div class="panel">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 </div>
-<div class="mz-accountstorecredit-table">
-  {% if model.credits %}
-  <table class="mz-table">
-    <thead>
-      <tr>
-        <th class="mz-accountstorecredit-header-creditnumber">{{ labels.digitalCreditCode }}</th>
-        <th class="mz-accountstorecredit-header-creditdate">{{ labels.creditDate }}</th>
-        <th class="mz-accountstorecredit-header-creditamount">{{ labels.creditAmount }}</th>
-        <th class="mz-accountstorecredit-header-remaining">{{ labels.remaining }}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for credit in model.credits %}
-      <tr class="mz-accountstorecredit-row">
-        <td class="mz-accountstorecredit-cell-storecreditnumber">{{ credit.code }}</td>
-        <td class="mz-accountstorecredit-cell-creditdate">{{ credit.activationDate|date("F j, Y") }}</td>
-        <td class="mz-accountstorecredit-cell-creditamount">{{ credit.initialBalance|currency }}</td>
-        <td class="mz-accountstorecredit-cell-remaining">{{ credit.currentBalance|currency }}</td>
-      </tr>
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr class="mz-accountstorecredit-totalrow">
-        <td class="mz-accountstorecredit-totallabelcell" colspan="3" align="right">
-          <span class="mz-accountstorecredit-totallabel">{{ labels.totalCreditBalance }}</span>
-        </td>
-        <td class="mz-accountstorecredit-total" align="left">
-          <span class="mz-accountstorecredit-totalamount">{{ model.totalCreditAmount|currency }}</span>
-        </td>
-      </tr>
-    </tfoot>
-    </tbody>
-  </table>
-  {% else %}
-  {{ labels.accountNoCredits }}
-  {% endif %}
+<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
+    margin-right: 2%;">Q:</span>How much do I need to spend to receive Shindigz Rewardz ?</button>
+<div class="panel">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
 </div>
+<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
+    margin-right: 2%;">Q:</span>How long do I have to redeem my Shindigz Rewardz; do they expire?</button>
+<div class="panel">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+</div>
+<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
+    margin-right: 2%;">Q:</span>How can I make sure I earn Rewardz?</button>
+<div class="panel">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+</div>
+<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
+    margin-right: 2%;">Q:</span>Can I check my Rewardz balance?</button>
+<div class="panel">
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+</div-->

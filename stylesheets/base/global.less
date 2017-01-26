@@ -6,9 +6,9 @@ body {
     margin: 0 auto;
     height: 100%;
     background-color: @bodyBackgroundColor;
-	font-family: @fontFamily;
+	  font-family: @RobotoRegular;
     font-size: @fontSize;
-	color: @textColor;
+	  color: @textColor; 
 }
 h1, h2, h3, h4, h5, h6 {
     color: @textColor;
@@ -155,4 +155,53 @@ button {
 
 .mz-strikethrough {
 	text-decoration: line-through;
+}
+ .dnd-popup{
+      position: fixed;
+      width: 70%;
+      height: auto;
+      left: 15%;
+      display: none;
+      background: white;
+      z-index: 1002;
+      top: 0;
+      position: absolute;
+      margin:0 auto;
+      .personalize-close{
+        position: absolute;
+        right: -22px;
+        color: white;
+        background-color: #0b3862;
+        font-size: 30px;
+        border-radius: 5px;
+        padding: 5px 13px;
+        line-height: 1;
+        top: -22px;
+        margin: 0;
+        &:hover{
+          background-color: #00af9a;
+        }
+      }
+
+}
+.dnd-active-noscroll{
+    position: fixed;
+    width: 100%;
+    top:0;
+    left: 0;
+    height: 100%;
+    overflow:hidden;
+ }
+.mz-messagebar{
+  color:red;
+}
+@media only screen and (max-width:676px){
+  .dnd-popup{
+    .personalize-close{
+      right: -7px;
+      font-size: 23px;
+      padding: 4px 12px; 
+      top: -7px;
+    }
+  }
 }

@@ -1,0 +1,29 @@
+{% for product in model.items %}
+<div class="item">
+   <div class="mz-productlist-item" data-mz-product="{{ product.productCode }}">
+      <div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{ product.productCode }}">
+         <div class="mz-productlisting-image">
+            <a href="{{ product.url }}">
+            <img src="{{product.mainImage.imageUrl}}" alt="{{ product.content.productName }}">
+            </a>           
+         </div>
+         <div class="mz-productlisting-info">
+           
+            <a class="mz-productlisting-title" href="{{ product.url }}">{{ product.content.productName }}</a>            
+            <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+               <span itemprop="price" class="mz-price">
+               {{product.price.price | currency}}
+               </span>
+            </div>
+         </div>
+         <div class="mz-productlisting-rating">
+            <div class="mz-product-rating">
+               <div class="pr-snippet-stars">
+                  <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+{% endfor %}

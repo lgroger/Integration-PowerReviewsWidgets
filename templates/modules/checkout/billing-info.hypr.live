@@ -1,0 +1,21 @@
+
+                <dl class="mz-propertylist">                  
+                 
+                     {%if model.billingInfo.billingContact.address.address1 !=='' && model.billingInfo.paymentType !== "Check" %}
+                    <dt>{{ labels.billingAddress }}</dt>
+                    <dd class="mz-addresssummary">{% include "modules/common/address-summary" with model=model.billingInfo.billingContact %}</dd>
+                    {% endif %}
+                    {% if model.billingInfo.paymentType == "CreditCard" %}
+                   
+                    {% endif %}
+                    {% if model.billingInfo.paymentType == "Check" %} 
+                  
+                    <!--dt><strong>{{ labels.mailCheckTo }}</strong></dt>
+                    <dd class="mz-addresssummary">
+                        <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
+                        <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
+                        {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}
+                    </dd-->
+                    {% endif %}
+                </dl>
+            

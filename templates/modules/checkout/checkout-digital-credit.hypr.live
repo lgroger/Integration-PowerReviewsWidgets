@@ -1,12 +1,22 @@
 ﻿<div class="mz-checkout-digitalcredit mz-l-stack-section">
-  <h4 class="mz-checkoutform-title">{{ labels.digitalCredits }}</h4>
-  <div class="mz-l-formfieldgroup-cell">
-    <input type="text" id="digital-credit-code" name="digital-credit-code" class="mz-checkout-digitalcredit-enter-code" value="{{ model.digitalCreditCode }}" data-mz-value="digitalCreditCode" />
-    <button class="mz-button" data-mz-action="getDigitalCredit" {% if not model.digitalCreditCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+
+    <div class="gift_input_title">
+      <h4 class="mz-checkoutform-title gift_input_toggle"><i class="fa fa-plus"></i> Enter your gift certificate or store credit code</h4>
+      <span class="gift_card_balance" style="display:none;">Store Credit Balance: <span class="store-credit-balance">$0.00</span> </span>
+    </div>
+
+  <div class="grey_bg  giftcode_box">
+    <h4 class="mz-checkoutform-title">Enter your gift certificate or store credit code, then click "Apply"</h4>
+    <div class="mz-l-formfieldgroup-cell">
+      <input type="text" id="digital-credit-code" name="digital-credit-code" class="mz-checkout-digitalcredit-enter-code" value="{{ model.digitalCreditCode }}" data-mz-value="digitalCreditCode" />
+      <button class="mz-button" data-mz-action="getDigitalCredit" {% if not model.digitalCreditCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
+    </div>
   </div>
 
+<div class="digital_credit_box {% if model.availableDigitalCredits %}white_border{% endif %}">
   {% if model.availableDigitalCredits %}
   <div class="mz-checkout-digitalcredit-table">
+    <h4 class="mz-checkoutform-title">Redeem your gift certificate or store credit</h4>
     <table class="mz-table">
       <thead>
         <tr>
@@ -23,11 +33,13 @@
         {% for credit in model.availableDigitalCredits.models %}
         <tr class="mz-checkout-digitalcredit-row">
           <td class="mz-checkout-digitalcredit-cell-enable">
-              <input type="checkbox" data-mz-digital-credit-enable {% if credit.attributes.isEnabled %}checked="checked"{% endif %} 
-                     class="data-mz-credit-enabled"
-                     data-mz-credit-code-source="{{ credit.attributes.code }}" 
+            <div class="label-push-down acc-pref-main-sec">
+                <input type="checkbox" data-mz-digital-credit-enable {% if credit.attributes.isEnabled %}checked="checked"{% endif %} 
+                     class="check-acc-box data-mz-credit-enabled" data-mz-credit-code-source="{{ credit.attributes.code }}" 
                      data-mz-credit-balance="{{ credit.attributes.currentBalance }}" 
                      id="enable{{ credit.attributes.code }}"/>
+                <label class="acc-pre-che" for="enable{{ credit.attributes.code }}" title="Redeem Balance"></label>
+            </div>
           </td>
           <td class="mz-checkout-digitalcredit-cell-code">
             <label class="mz-checkout-digitalcredit-code" for="enable{{ credit.attributes.code }}">
@@ -70,4 +82,5 @@
     </table>
   </div>
   {% endif %}
+</div>
 </div>

@@ -1,9 +1,63 @@
-﻿@fontFamily:            {{ themeSettings.primaryFont }}, sans-serif;
+﻿/*
+Fonts Import
+*/
+@import url('https://fonts.googleapis.com/css?family=Montserrat');
+@font-face{
+	font-family : 'ArvoRegular';
+	src: url(../resources/fonts/Arvo-Regular.ttf);
+}
+@font-face{
+	font-family : 'MonstserratLight';
+	src: url(../resources/fonts/Montserrat-light.ttf);
+}
+@font-face {
+    font-family: 'MontserratRegular';
+    src: url(../resources/fonts/Montserrat-Regular.ttf);
+}
+@font-face {
+    font-family: 'MontserratSemiBold';
+    src: url(../resources/fonts/Montserrat-SemiBold.ttf);
+}
+@font-face {
+    font-family: 'RobotoLight';
+    src: url(../resources/fonts/Roboto-Light.ttf);
+}
+@font-face {
+    font-family: 'RobotoRegular';
+    src: url(../resources/fonts/Roboto-Regular.ttf);
+}
+@font-face{
+    font-family : 'MontserratHairline';
+    src: url(../resources/fonts/Montserrat-Hairline.ttf);
+}
+
+ 
+
+@fontArvo: ArvoRegular;
+@fontRoboto: RobotoLight;
+@RobotoRegular: RobotoRegular;
+@fontMontserratLight: 'Montserrat-Regular', sans-serif;
+@fontMontserratRegular: 'MontserratRegular', sans-serif;
+@fontMontserratBold: MontserratSemiBold;
+@fontMontserratHairline: MontserratHairline;
+
+
+
+
+
+@fontFamily:            @fontMontserratLight;
 @fontSize:              {{ themeSettings.fontSize }};
 @fontSizeSmall:         @fontSize - 2px;
 @fontSizeLarger:        @fontSize + 2px;
 @fontSizeLarge:         @fontSize + 6px;
 @storeBrandingFontSize: 36px;
+
+@dark-blue:#0d3762;
+@latel-green:#00af9a;
+@latel-grey:#dceaf6;
+@dark-grey:#303030;
+@disabled-grey:#707070;
+@active-grey:#000;
 
 @textColor:             {{ themeSettings.textColor }};
 @linkColor:             #4F4F4F;
@@ -40,3 +94,10 @@
 @orderDetailWidth:      200px;
 @itemListingThumbSize:  {{ themeSettings.itemListingThumbSize }};
 @productListingThumbSize: {{ themeSettings.listProductThumbSize }}px;
+
+
+@background: #dceaf6;
+@backgroundSeconderyCTA: #00af9a;
+@disabledBTN: #d1d2d4;
+
+

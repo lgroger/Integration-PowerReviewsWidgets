@@ -1,6 +1,47 @@
-<h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
-{% dropzone "category-page-top" scope="page" %}
-{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
-{% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-{% endpartial_cache %}
-{% dropzone "category-page-bottom" scope="page" %}
+{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
+{% with isguidedsearch|length as isGuidedSearchURL %}
+	 <div class="guided-search-search-result-page" data-container="guided-search-search-result-page" {% if isGuidedSearchURL == 1 %}style="display:none;"{% endif %}>
+	        {% include "modules/search/guided-search"  with isGuidedSearchURL=isGuidedSearchURL %}
+	 </div>
+	 
+ 	{% if isGuidedSearchURL == 1 %}
+		<div class="mz-category-title">
+		    {% dropzone "category-page-top" scope="page" %}
+		    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
+		</div> 
+		{% dropzone "category-page-top-2" scope="page" %}
+		<style>.mz-breadcrumbs:first-child{display:none;}</style>
+		{% block breadcrumbs %}
+		{% if themeSettings.showBreadcrumbs %}
+		{% include "modules/breadcrumbs" %}
+		{% endif %} 
+		{% endblock breadcrumbs %}
+	{% endif %}
+	{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
+
+	{% include_products "modules/product/faceted-products" with responseFields="facets,items(productCode,productSequence,productUsage,fulfillmentTypesSupported,goodsType,content, purchasableState,isActive, price,priceRange, pricingBehavior,productType,productTypeId,isTaxable,inventoryInfo ,upc,upcs,measurements,mfgPartNumber,isPackagedStandAlone,properties,createDate,options,categories(categoryId))" and responseGroups="FirstCategoryOnly" and isGuidedSearchURL=isGuidedSearchURL and includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+
+	{% endpartial_cache %}
+	{% dropzone "category-seo-zone" scope="page" %}
+	<!-- Make Product Slider Here -->
+	<div id="static" class="recommended_products">
+		{% dropzone "recommended_slot_heading" scope="template" %}
+		<!-- <h2>You Might Be Interested In</h2>  -->
+	</div>
+	<div data-mz-recommendedProducts id="recommended_products_slot">
+
+	</div>
+
+	{% dropzone "category-page-bottom" scope="page" %}
+	<div class="mz-category-description">
+		<h2>{{ model.name|safe }}</h2>
+		<p id="mz-cat-description-hide-more" >
+			{% if model.content.description %}
+				{{ model.content.description }}
+			{% else %}
+				{{ model.content.metaTagDescription }}
+			{% endif %}
+		</p>
+	</div>
+{% endwith %}
+{% endwith %}

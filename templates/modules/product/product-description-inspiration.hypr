@@ -1,0 +1,18 @@
+
+<div class="mz-cms-col-12-12">
+{% dropzone "inspiration-heading"  scope="template" %}
+</div>
+
+<div class="clear"></div>
+<div class="mz-cms-col-7-12">
+	{% dropzone "inspiratio-1"  scope="template" %}
+</div>
+<div class="mz-cms-col-5-12">
+	<div>
+		{% dropzone "inspiratio-2"  scope="template" %}
+	</div>
+	<div>
+		{% dropzone "inspiratio-3"  scope="template" %}
+		</div>
+</div>
+

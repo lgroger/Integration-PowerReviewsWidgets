@@ -1,0 +1,16 @@
+{% require_script "widgets/popular_categories" %}
+{% with "popular_categories_{0}"|string_format(model.config.noWid-inputEl) as preloadID %}
+	{% preload_json Model.config.popular-categories preloadID %}
+{% endwith %}
+
+<div class="ech-shi-popular-cat-widget" cus-id={{model.config.noWid-inputEl}}>
+       
+         <div class="owl-carousel">
+<div class="brand-lister-product-cat" id="popular_categories-{{model.config.noWid-inputEl}}"> 
+
+</div>
+</div>
+</div>
+<!--ul class="brand-lister" id="home_featured_categories" style="list-style-type:none;">
+
+</ul-->

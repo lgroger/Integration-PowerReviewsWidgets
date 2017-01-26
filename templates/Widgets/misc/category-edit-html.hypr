@@ -1,0 +1,23 @@
+<div class="category-editor-container">
+	<div class="title-content-category">
+		{{model.config.titleHtml|safe}}
+	</div>
+	<div class="read-more-container">
+		{% with model.config.moreContent|split(".") as contentSection %}
+			{% for val in contentSection %}
+				{{val|safe}}{% if not forloop.last %}.{% endif %}{% if forloop.counter == 2 %}<span class="read-more-content">{% endif %}
+			{% endfor %}
+		{% endwith %}
+		</span>
+	</div>
+	{% if model.config.data.length >0 %}
+		<ul class="category-editor-list">
+			{% for liItem in model.config.data %}
+				<li>{{liItem.bcap|safe}}</li>
+			{% endfor %}
+		</ul>
+	{% endif %}
+	{% if model.config.moreContent.length > 0 or model.config.data.length > 0 %}
+		<p class="readmore-btn" data-more="{{model.config.readmore}}" data-less="{{ model.config.readless }}"><em>{{model.config.readmore}}</em></p>
+	{% endif %}
+</div>

@@ -1,0 +1,84 @@
+<div class="megamu-wrapper megamenu-wrapper-new" {% data_attributes Model %}>
+	<p class="back-direction-icon"><span class="megamenu_cat"><span class="back-to-main-cat">&#10094; Back</span> | <span class="menu_category_heading"></span></span><span class="megamenu-close-btn">&times;</span></p>
+
+	<ul>
+		{% for mainnav in Model.config.data %} 
+			<li>
+				{% if pageContext.cmsContext.template.path == "main-page" %}
+					<h2>
+						<a {% if mainnav.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ mainnav.mlink }}" {%endif%} {% if {{mainnav.ntab}} %} target="_blank" {% endif %}>{{mainnav.mcap }}</a>
+					</h2>
+				{% else %}
+				<a {% if mainnav.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ mainnav.mlink }}" {%endif%} {% if {{mainnav.ntab}} %} target="_blank" {% endif %}>{{mainnav.mcap }}</a>
+				{% endif %}
+				<span></span>
+				{% if mainnav.col_count %}
+					{% set_var no_cols=mainnav.col_count %}
+				{% else %}
+					{% set_var no_cols=15 %}
+				{% endif %}
+			{% if {{mainnav.items.length}} > 0 %}
+				{% set_var counter=1 %}
+				<div class="main-drop-down">
+					<div class="mega-menu-container clearfix">
+						<div class="menu-column-block">
+							{% for menuLV2 in mainnav.items %}	
+							{% if menuLV2.mcol %}
+								{% if menuLV2.mcol== true %}
+									{% with counter|add(1) as tmp %}
+										{% set_var counter=tmp %}
+									{% endwith %}
+									</div>
+									<div class="menu-column-block">
+									<h3><a {% if menuLV2.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV2.mlink }}" {%endif%} {% if {{menuLV2.ntab}} %} target="_blank" {% endif %}>{{menuLV2.mcap }}</a><span></span></h3>
+								{% else %}
+									<h3><a {% if menuLV2.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV2.mlink }}" {%endif%} {% if {{menuLV2.ntab}} %} target="_blank" {% endif %}>{{menuLV2.mcap }}</a><span></span></h3>
+								{% endif %}
+							{% else %}
+							<h3><a {% if menuLV2.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV2.mlink }}" {%endif%} {% if {{menuLV2.ntab}} %} target="_blank" {% endif %}>{{menuLV2.mcap }}</a><span></span></h3>
+							{% endif %}							
+								{% if {{menuLV2.items.length}} > 0 %}
+									<ul>
+										{% for menuLV3 in menuLV2.items %}
+										{% if menuLV3.mcol %}
+											{% if menuLV3.mcol== true %}
+											
+											{% with counter|add(1) as tmp %}
+												{% set_var counter=tmp %}
+											{% endwith %}
+													</ul>
+												</div>
+												<div class="menu-column-block">
+													<ul>
+												<li><a {% if menuLV3.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV3.mlink }}" {%endif%} {% if {{menuLV3.ntab}} %} target="_blank" {% endif %}>{{menuLV3.mcap}}</a></li>
+											{% else %}
+												<li><a {% if menuLV3.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV3.mlink }}" {%endif%} {% if {{menuLV3.ntab}} %} target="_blank" {% endif %}>{{menuLV3.mcap}}</a></li>
+											{% endif %}
+										{% else %}
+											<li><a {% if menuLV3.mlink =="" %} href="javascript:void(0)" {% else %} href="{{ menuLV3.mlink }}" {%endif%} {% if {{menuLV3.ntab}} %} target="_blank" {% endif %}>{{menuLV3.mcap}}</a></li>
+										{% endif %}
+										{% endfor %}
+									</ul>
+								{% endif %}
+							{% endfor %}
+						</div>
+						<div data-len="menu-col-{{counter}}" style="display:none;" class="menu-cols-count"></div>
+					</div>
+					{% if mainnav.banner %}
+					<a {% if mainnav.banner.url =="" %} href="javascript:void(0)" {% else %} href="{{ mainnav.banner.url }}" {%endif%} class="menu-promo-panel">
+						<div class="img-area menu-promo-slot" style="background-image:url('{% make_url "image" mainnav.banner.imgUrl with max=mainnav.banner.imgwid as_parameter %}');max-width:{{mainnav.banner.imgwid}}px;height:{{mainnav.banner.imghei}}px;">
+						</div>
+					</a>
+					{% endif %}
+				</div>	
+			{% endif %}
+			</li>
+		{% endfor %}
+	</ul>
+	<div class="cta-mobile-menu-section">
+		{% if Model.config.data.length > 0 %}
+			{{Model.config.data.0.cta | safe }}
+		{% endif %}
+	</div>
+</div>
+{% require_script "modules/megamenuNew" %}

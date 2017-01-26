@@ -11,6 +11,7 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
         CartMonitor = {
             setCount: function(count) {
                 this.$el.text(count);
+                $('.floating-cart-badge').text(count);
                 savedCounts[userId] = count;
                 $.cookie('mozucartcount', JSON.stringify(savedCounts), { path: '/' });
             },
@@ -44,6 +45,7 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
 
     $document.ready(function () {
         CartMonitor.$el = $('[data-mz-role="cartmonitor"]').text(savedCount || 0);
+        $('.floating-cart-badge').text(savedCount || 0);
     });
 
     return CartMonitor;

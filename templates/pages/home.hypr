@@ -6,7 +6,6 @@
 
 {% block body-content %}
     {% dropzone "home" scope="template" %}
-    {% dropzone "home2" scope="page" %}
 {% endblock body-content %}
 
 {% block body-below-content %}

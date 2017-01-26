@@ -37,7 +37,7 @@
   <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
 </div>
   <div class="mz-productdetail-conversion-buttons">
-  <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-action="addToCart" >
+  <button id="add-to-cart" class="mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onClick="BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': '{{model.productCode}}' });" data-mz-action="addToCart" >
       {{ labels.addToCart }}
   </button>
 
@@ -87,6 +87,7 @@
 </div>
 {% endif %}
 
+{% comment %}
 {% if model.properties and themeSettings.showProductDetailProperties %}
 <div class="mz-productdetail-properties mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.properties }}</h4>
@@ -102,6 +103,7 @@
   </dl>
 </div>
 {% endif %}
+{% endcomment %}
 
 {% if model.measurements and themeSettings.showProductDetailMeasurements and not model.bundledProducts %}
 <div class="mz-productdetail-measurements mz-l-stack-section">

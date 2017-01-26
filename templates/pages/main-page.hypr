@@ -1,0 +1,130 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-homepage {% endblock body-tag-classes %}
+  {% block breadcrumbs %}
+        <div class="mob-hr"><hr/></div>    
+	{% endblock breadcrumbs %}
+{% block body-content %}
+	<div class="ech-shi-homeSlider">
+		{% dropzone "slider" scope="template" %}
+	</div> 
+	<div class="">
+		{% dropzone "mobslider" scope="template" %} 
+	</div>  
+	<div>
+		
+		{% dropzone "party-heading" scope="template" %} 
+		<div class="home_cat_option">
+			<div class="home-category">
+				{% dropzone "home-category" scope="page" %}
+			</div>
+			<div class="all-promo-custom-sty1">
+				<div  class="cat-promo-1" style="">
+				{% dropzone "cat-promos-1" scope="template" %}
+				</div>
+				<div class="cat-promo-2" style="">
+					<div class="cat-promos-2-1">
+						{% dropzone "cat-promos-2.1" scope="template" %}
+					</div>
+					<div class="cat-promos-2-2">
+					{% dropzone "cat-promos-2.2" scope="template" %}
+					</div>
+				</div>
+				<div  class="cat-promo-3" style="">
+				{% dropzone "cat-promos-3" scope="template" %}
+				</div>
+
+					{% dropzone "cat-promos" scope="template" %}
+			</div>
+		</div>
+	<div class="mz-prom-banner">
+		<header class="party-section">
+			{% dropzone "ourservices-heading" scope="template" %}
+			<!--p class="service-title">Our Services</p>
+			<p class="party-desc">Let us help you plan your next party.</p-->
+		</header>
+			
+			<footer>
+				<ul>
+					<li>
+					{% dropzone "ourservices" scope="template" %}
+						<!--div class="my-promo-bg-sty">
+							<img src="../resources/images/Wholesale.svg" class="img-circle" width="50px">
+						</div>
+						<p class="my-promo-bg-sty1">Are you an event planner, decorator or have a photography studio? Check out our</p>
+						<p class="my-promo-bg-sty2">Wholesale program</p-->
+					</li>
+					<li>
+					{% dropzone "ourservices2" scope="template" %}
+						<!--div class="my-promo-bg-sty">
+							<img src="../resources/images/Free_PartY_Planning.svg"  class="img-circle" width="50px">
+						</div><br/>
+						<p class="my-promo-bg-sty1">Need help expert party advice?</p>
+						<p class="my-promo-bg-sty2"> Free Party Planning! </p-->						
+					</li>
+					<li>
+					{% dropzone "ourservices3" scope="template" %}
+						<!--div class="my-promo-bg-sty">
+							<img src="../resources/images/Prty_Direction.svg" class="img-circle" width="50px">
+						</div>
+						<p class="my-promo-bg-sty1">Always want the best services? <br/> Pick your choice from our</p>
+						<p class="my-promo-bg-sty2"> Party Directory </p-->	
+					</li>
+				</ul>
+			</footer>
+		</div>
+		
+    <div class="mz-cms-col-12-12">
+			{% dropzone "partycentral-2" scope="template" %}
+     <div class="mz-cms-col-8-12 my-mob-custom-class">
+      {% dropzone "home-promo-1" scope="template" %}
+     </div>
+     <div class="mz-cms-col-4-12 my-mob-custom-class1">
+      {% dropzone "home-promo-2" scope="template" %}
+     </div>
+    </div>
+    <div class="mz-cms-col-12-12 promo-block">
+		 <div class="mz-cms-col-4-12">
+		  {% dropzone "home-promo-3" scope="template" %}
+		 </div>
+		 <div class="mz-cms-col-4-12">
+		  {% dropzone "home-promo-4" scope="template" %}
+		 </div>
+		 <div class="mz-cms-col-4-12">
+		  {% dropzone "home-promo-5" scope="template" %}
+		 </div>
+    </div>
+	
+	<!--div>
+	{% dropzone "popular-categories" scope="template" %}
+	</div-->
+	<div class="echi-shi-testimonials">
+	{% dropzone "testimonial_widget_heading" scope="template" %}
+	</div>
+	<!--p class="testimonial-heading">What People Are Saying About Shindigz</p-->	
+		{% dropzone "testimonial_widget" scope="template" %}
+		
+		</div> <!-- cd-testimonials-wrapper -->
+		<div class="ech-shi-popular-cat-widget">
+		{% dropzone "popular-cat-widgets-heading" scope="template" %}
+		</div>
+		
+{% dropzone "popular-cat-widgets" scope="template" %}	
+
+	
+		
+<div class="echi-shi-bottom-promo">
+	{% dropzone "bottom-promo" scope="template" %}
+</div>
+	
+	
+	{% include "modules/instagram" %}
+	
+
+{% endblock body-content %}
+
+	
+{% block body-below-content %}
+{% endblock body-below-content %}

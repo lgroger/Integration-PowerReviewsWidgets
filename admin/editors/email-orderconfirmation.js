@@ -5,7 +5,8 @@
         {
             fieldLabel: 'Email Subject',
             xtype: 'textfield',
-            name: 'subject'
+            name: 'subject',
+            enableFont: false
         },
         {
             fieldLabel: 'Header html 1',
@@ -20,9 +21,30 @@
             enableFont: false
         },
         {
-            fieldLabel: 'Custom Field 1',
-            xtype: 'textfield',
-            name: 'custom1'
+            fieldLabel: 'Message',
+            xtype: 'taco-htmleditor',
+            name: 'html_3',
+            enableFont: false
+
+        },
+        {
+            fieldLabel: 'Additional Message',
+            name: 'html_4',
+            xtype: 'taco-htmleditor',
+            enableFont: false
+        },
+        {
+            fieldLabel: 'Quote Order Message',
+            xtype: 'taco-htmleditor',
+            name: 'html_5',
+            enableFont: false
+
+        },
+        {
+            fieldLabel: 'Quote Order Additional Message',
+            name: 'html_6',
+            xtype: 'taco-htmleditor',
+            enableFont: false
         }
     ]
 });

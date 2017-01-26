@@ -1,21 +1,87 @@
-<div class="mz-popover mz-popover-login mz-l-slidebox">
-  <div class="mz-l-slidebox-outer">
-    <div class="mz-l-slidebox-inner">
-      <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
-        <input name="email" data-mz-login-email placeholder="{{ labels.logInInput }}" type="text" />
-        <input name="password" data-mz-login-password placeholder="{{ labels.password }}" type="password" />
-        <div class="mz-popover-action">
-          (<a data-mz-action="forgotpasswordform" href="javascript:;">{{ labels.forgotPasswordLink }}</a>) <button class="mz-button" data-mz-action="submitlogin">{{ labels.logIn }}</button>
+<!-- <div class="login-popup-wrapper"> -->
+    
+    <a id="login-popover-close" class="close" href="javascript:void(0);">&times;</a>
+    <div class="mz-popover mz-popover-login mz-l-slidebox checkout-login-wrap">
+        <!-- For checkout login -->
+        <section data-mz-role="login-form" class="mz-login-form mz-cms-col-6-12 default-hide"><!-- mz-login-form mz-l-slidebox-panel  -->
+            <div class="mz-cms-col-12-12 login-popover-title-chkout">
+                <h2>CONTINUE AS GUEST</h2>
+                <small>Don't have an account, you can easily create one using the information used during the checkout process.</small>
+            </div> 
+            <div class="mz-cms-col-12-12">
+                <button id="continue-as-guest-btn">Continue As Guest User</button>
+            </div>
+        </section>
+        <!-- For checkout login -->
+
+      <div class="mz-l-slidebox-outer">
+        <div class="mz-l-slidebox-inner">
+            <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
+                <div class="mz-cms-col-12-12 login-popover-title">
+                {% if pageContext.title == "Wholesale Program" %}
+                    <h2>Returning Customer?</h2>
+                {% else %}
+                    <h2>PLEASE LOGIN TO YOUR <br/> SHINDIGZ ACCOUNT</h2>
+                {% endif %}
+                </div>  
+
+        <!-- For checkout login -->
+                <div class="mz-cms-col-12-12 login-popover-title-chkout default-hide">
+                    <h2>Returning Customer?</h2>
+                </div>  
+        <!-- For checkout login -->
+
+                <section data-mz-role="popover-message" class="mz-popover-message"></section>
+                <input type="hidden" class="checkoutflag" name="checkoutflag" value="0"/> 
+                <input name="email" data-mz-login-email placeholder="{{ labels.emailAddress }}" type="text" />
+                <input name="password" autocomplete="off" data-mz-login-password placeholder="{{ labels.password }}" type="password" />
+                <div class="mz-popover-action mz-cms-col-12-12 checkout-hide"> 
+                    <button class="mz-button" data-mz-action="submitlogin">{{ labels.logIn | upper }}</button>
+                    <div class="forgot-password-container mz-cms-col-11-12">
+                        <a data-mz-action="forgotpasswordform" href="">Forgot your password?</a> <!-- {{ labels.forgotPasswordLink }} --> 
+                    </div>
+                </div>
+                <!-- Login action for checkout -->
+                <div class="mz-popover-action mz-cms-col-12-12 chkout-login-action">
+                    <div class="checkout_forgotpwd mz-cms-col-12-12">
+                        <a data-mz-action="forgotpasswordform" href="">Forgot your password?</a>
+                    </div> 
+                    <div class="mz-cms-col-6-12">
+                        <button id="chkout-Login-btn" class="mz-button" data-mz-action="submitlogin" value="action-checkout">{{ labels.logIn | upper }}</button>
+                    </div>
+                    <div class="mz-cms-col-6-12">
+                        <a class="mz-cms-col-12-12 cont-to-signup-chkout">create account</a> 
+                    </div>
+                </div>   
+            </section>
+            <section data-mz-role="forgotpassword-form" class="mz-forgot-password mz-l-slidebox-panel">
+                <div class="mz-cms-col-12-12 login-popover-title">
+                    <h2>FORGOT PASSWORD</h2>
+                </div>
+                <section data-mz-role="popover-message" class="mz-popover-message"></section>   
+                {% comment %}<label>{{ labels.resetPassword }}</label>{% endcomment %}
+                <input type="email" data-mz-forgotpassword-email name="reset-password" placeholder="{{ labels.emailAddress }}" />
+                <div class="mz-popover-action">
+                    <button class="mz-button submit-btn" data-mz-action="submitforgotpassword">{{ labels.sendEmail }}</button>
+                    <div class="cancel-reset-container">
+                            <a class="login-back" href="javascript:;" data-mz-action="loginform">BACK TO LOGIN</a>
+                    </div>
+                </div>
+            </section> 
         </div>
-      </section>
-      <section data-mz-role="forgotpassword-form" class="mz-forgot-password mz-l-slidebox-panel">
-        <label>{{ labels.resetPassword }}</label>
-        <input type="email" data-mz-forgotpassword-email name="reset-password" placeholder="{{ labels.emailAddress }}" />
-        <div class="mz-popover-action">
-          (<a href="javascript:;" data-mz-action="loginform">{{ labels.cancel }}</a>) <button class="mz-button" data-mz-action="submitforgotpassword">{{ labels.sendEmail }}</button>
-        </div>
-      </section>
-    </div>
-  </div>
-  <section data-mz-role="popover-message" class="mz-popover-message"></section>
-</div>
+      </div>
+        <section class="mz-cms-col-12-12 sign_up_link_container ">
+            <small>If this is your first purchase with us, please proceed by clicking the following button to continue first-time registration</small>
+            <button class="mz-cms-col-7-12 cont-to-signup">CONTINUE TO SIGN-UP</button>
+        </section>
+    </div> 
+    <!-- <div class="mz-popover mz-popover-login mz-l-slidebox checkout-login-wrap">
+        <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
+            <div class="mz-cms-col-12-12 login-popover-title">
+                    <h2>CONTINUE ASS GUEST</h2>
+                    <small>You can easily create one using information used during the checkout process.</small>
+                </div> 
+        </section>
+    </div> -->
+    
+<!-- </div> -->

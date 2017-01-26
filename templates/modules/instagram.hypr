@@ -1,0 +1,7 @@
+<div class="mz-instagram-slot party-section">
+	<div class="mz-instagram-header ech-shi-newletter">
+		{% dropzone "instagram-sub-heading" scope="template" %}
+	</div>
+	{% dropzone "instagramme-widget" scope="template" %}
+</div>
+{% require_script "modules/instagram" %}

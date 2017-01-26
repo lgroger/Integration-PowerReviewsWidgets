@@ -1,0 +1,41 @@
+<div class="mz-contactselector">
+    
+    {% block contact-selector %}
+    <div class="mz-l-formfieldgroup-row">
+	    <div class="mz-l-formfieldgroup-cell">
+	    	<select data-mz-value="{{ contactcontext }}contactId" name="contactId" class="select_addresslist">
+	            <option data-mz-enternewcontact value="new">{{labels.addAddress}}</option>
+	            {% for contact in model.contacts %}
+	          
+	                <option data-mz-value="{{ contactcontext }}contactId" name="contactId" value="{{ contact.id }}" {% if model.contactId == contact.id %}selected="selected"{% endif %}> {% include "modules/common/address-summary" with model=contact %}</option>
+	         
+	            {% endfor %}
+	    	</select>
+	    </div>
+	</div>
+    
+	    {% if model.contactId == "new" %}
+	    <div class="mz-contactselector-contact mz-contactselector-new">        
+	        <div class="mz-contactselector-summarywrapper">
+	            {% block enter-new-form %}
+	            {% include "modules/common/address-form" with model=editingContact %}
+	            {% endblock enter-new-form %}
+	        </div>
+	    </div>	    
+	   	{% else %}
+
+	{% for contact in model.contacts %}
+	    {% if model.contactId == contact.id %}
+	   	<div class="mz-contactselector-summarywrapper">
+            <div class="mz-addresssummary">
+                {% include "modules/common/address-summary" with model=contact %}
+            </div>
+        </div>
+	   	
+	    {% endif %}
+	 {% endfor %}
+	 {% endif %}
+    {% endblock contact-selector %}
+</div>
+<div class="clear"></div>
+

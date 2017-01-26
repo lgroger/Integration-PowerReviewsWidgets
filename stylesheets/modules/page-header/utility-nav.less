@@ -7,10 +7,15 @@
         margin: 0;
         padding: 0 10px;
         text-align: right;
-
+		    color: #000;
+		    font-size: 13px;
+        border-right: 1px solid #f5f5f5;
+        padding-top:4px;
+        padding-bottom:4px;
         &:last-child {
             padding-right: 0;
             text-align: right;
+            border-right:0px; 
         }
     }
 
@@ -19,3 +24,56 @@
     }
 
 }
+
+/*css for responsive search bar */
+        .overlay {
+          position: fixed;
+          top: 0;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          background: rgba(0, 0, 0, 0.7);
+          transition: opacity 500ms;
+          visibility: hidden;
+          opacity: 0;
+          z-index:9999999;
+        }
+        .overlay:target {
+          visibility: visible;
+          opacity: 1;
+        }
+        .popups {
+          margin:0px;
+          padding: 20px;
+          background: #fff;
+          width: 100%;
+          position: relative;
+          transition: all 5s ease-in-out;
+          text-align: center;
+        }
+        .popups h2 {
+          margin-top: 0;
+          color: #333;
+          font-family: Tahoma, Arial, sans-serif;
+        }
+        .popups .close {
+          position: absolute;
+          top: 0px;
+          right: 2.8%;
+          transition: all 200ms;
+          font-size: 30px;
+          font-weight: bold;
+          text-decoration: none;
+          /*color: #333;*/
+        }
+        .popups .content {
+          /*max-height: 30%;*/
+        }
+        a.close {
+            color: white;
+            width: 46px;
+            text-align: center;
+            height: 45px;
+            background-color:#6B88A1;
+            border-top-right-radius: 3px;
+        }

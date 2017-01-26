@@ -1,0 +1,19 @@
+<div class="first-promo-banner-align promo-banner" style="background-image:url('{{model.config.background_image_1.imageUrl}}?max={{model.config.image_size}}');position:relative;"> 
+	<div class="wdg-container-lg">
+		<div class="text-stripe" align="center">
+			<span style="display:inline-block;">{{ model.config.offer_desc_1|safe}}</span>
+		</div>
+		<div class="btn-stripe">
+			{% if model.config.btn_css == '' %}
+				<button class="default_offer_btn_lg" style="{{model.config.btn_css_1}}" onclick="location.href='{{model.config.offer_url_1}}'">{{ model.config.offer_btn_title_1}}</button>
+			{% else %}
+				<button style="{{model.config.btn_css_1}}" onclick="location.href='{{model.config.offer_url_1}}'">{{ model.config.offer_btn_title_1}}</button>
+			{% endif %}
+		</div>
+		<div class="clear"></div>
+		<input type="hidden" value="{{ model.config.btn_css_1}}"/>
+	</div>
+</div>
+<style>
+	
+</style>

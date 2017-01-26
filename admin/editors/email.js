@@ -18,6 +18,18 @@
             xtype: 'taco-htmleditor',
             name: 'html_2',
             enableFont: false
+        },
+        {
+            fieldLabel: 'Message',
+            name: 'html_3',
+            xtype: 'taco-htmleditor',
+            enableFont: false
+        },
+        {
+            fieldLabel: 'Additional Message',
+            name: 'html_4',
+            xtype: 'taco-htmleditor',
+            enableFont: false
         }
     ]
 });

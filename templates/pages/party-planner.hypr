@@ -1,0 +1,134 @@
+{% extends "page" %}
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-aboutus party-planner-wrap {% endblock body-tag-classes %}
+
+{% block breadcrumbs %}
+  {% if themeSettings.showBreadcrumbs %}
+    <div class="mz-breadcrumbs">   
+       <a href="/" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
+       <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
+      <span>{{pageModel.PROPERTIES.LINK_TITLE}}</span>
+    </div> 
+  {% endif %}
+{% endblock breadcrumbs %}
+
+{% block body-content %}
+{% dropzone "party-planner-heading" scope="page" %} 
+{% dropzone "party-planner-banner" scope="page" %}<br/><br/>
+  <div class="party-planner">
+	  <script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>    
+	  <form id="mktoForm_{{ themeSettings.mktoPartyPlanner }}"></form>
+    <div class="partyPlanner-captcha">
+      <small>Are you a robot?</small><div id="captcha_container"></div>
+      <div class="recaptcha-err-msg" style="display:none;color:red;">Please verify that you are not a robot.</div>       
+    </div>
+  
+	 <script>    
+
+  	MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoPartyPlanner }}, function(form){
+  		$(".partyPlanner-captcha").insertBefore(".mktoFormRow:last");
+  		//form.getFormElem().find(".mktoButton").hide();
+  		var btn = document.getElementById("partyPlanner");
+  		$('#mktoForm_1200 > div:nth-child(5) input').click(function(){$(this).parent().parent().find(".mktoLabel ").toggleClass("check-highlight")});
+  		 if($(window).width()<=700){
+        if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
+            $("#dateofEvent").addClass('placeholderclass');
+            $("#dateofEvent").click(function(){
+               // $(this).attr('type','date');
+                $(this).removeClass('placeholderclass');
+            });
+            $("#dateofEvent").blur(function(event){
+              if($(this).val().length==0){
+                 $(this).addClass('placeholderclass');
+                //$(this).attr('type','text');
+              }
+            });
+          }
+          $(".mktoFieldWrap").each(function(){
+            	if($(this).find("input,textarea").parent().hasClass("mktoRequiredField")){
+            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
+            	}else{
+            		$(this).find(".mktoAsterix").remove();
+            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text())
+            	}
+            });
+        }
+  		form.onValidate(function() {		        
+  	   res?form.submittable(!0):form.submittable(!1);		        
+  	  });
+
+
+      $("input[type='text'],input[type='tel'],input[type='number']").not('#dateofEvent,#colors,#theme,#City,#Phone').bind('change keyup keypress', function() {
+            $(this).val($(this).val().replace(/[!"#$%&'()*+,-./`¨.<>\{\}\[\]\\\Ç¬÷“=?¿;:´'",”?ºª€£¥€••¥£€®©~!¡@#$%^&*()_|+-]/gi, ''));
+      });
+
+      /*$("#number,#businessAmount,#Phone").bind('change keyup keypress', function() {
+          $(this).val($(this).val().replace(/[eE]/g, ''));
+      });*/
+
+      $('#colors,#theme,#City').bind('change keyup keypress', function() {
+          $(this).val($(this).val().replace(/[!"#$%&'()*+./`¨.<>\{\}\[\]\\\Ç¬÷“=?¿;:´'"”?ºª€£¥€••¥£€®©~!¡@#$%^&*()_|+0-9]/gi, ''));
+      });
+
+      $("#FirstName").bind('change keyup keypress', function() {
+          $(this).val($(this).val().replace(/[0-9]/g, ''));
+      });
+
+      $("input[type='tel']").bind('change keyup keypress', function(e) {
+
+          $(this).val($(this).val().replace(/[A-Za-z\s]/gi,''));
+      });
+    
+      $("#mktoForm_1200 #dateofEvent").attr("data-date-format","mm/dd/yyyy");
+      
+      /*var date = new Date();
+      date.setDate(date.getDate()-1);
+
+      $("#mktoForm_1200 #dateofEvent").datetimepicker({
+          //language:  'en',
+          weekStart: 1,
+          todayBtn:  1,
+          autoclose: 1,
+          todayHighlight: 1,
+          startView: 2,
+          minView: 2,
+          forceParse: 0,
+          startDate: date
+      }); */   
+ 
+  	});
+ 
+    var captchaContainer = null;
+    var res = "";
+    var loadCaptcha = function() {
+      captchaContainer = grecaptcha.render('captcha_container', {
+        'sitekey' : '6Lf5vCcTAAAAAKXDMxGQcebgm6QBQr9krzLOzJJR',
+        'callback' : function(response) {
+           console.log(response);
+           res = response;
+        }
+      });
+    };
+    
+
+	  $(document).ready(function(){
+
+  		if(window.location.search.indexOf('aliId=') >= 1){
+  			$('.party-planner').prepend('<pre class="thank-you" onclick="$(this).fadeOut(1000);">Thank You for submitting form</pre>');
+  		}
+
+  		$("#mktoForm_1200").on("submit",function(){res?$(".recaptcha-err-msg").hide():$(".recaptcha-err-msg").show()});      
+    
+		
+	  });
+	</script> 
+
+  <script src="https://www.google.com/recaptcha/api.js?onload=loadCaptcha&render=explicit" async defer></script>
+  <script src="{% make_url "cdn" "/scripts/vendor/bootstrap-datetimepicker.js" %}"></script>
+</div> 
+
+{% dropzone "checkout-party-planner" scope="page" %} <br/>
+
+{% dropzone "body" scope="page" %}
+{% endblock body-content %} 

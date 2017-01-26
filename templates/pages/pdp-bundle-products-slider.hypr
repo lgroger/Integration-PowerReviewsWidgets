@@ -1,0 +1,495 @@
+<div class="pdp-related-products">
+   <div class="clear"></div>
+   <!--
+      <div class="mz-shi-heading-style">
+      	  <h1>RELATED PRODUCTS</h1>
+      	 </div>
+      	-->
+   <div class="echi-shi-related-products-slider">
+      <div class="owl-carousel">
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="KSSTOC">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="KSSTOC">
+                        <div class="mz-productlisting-image">
+                           <a href="/TOUCH-OF-CLASS-BUILDING-STANDEES/p/KSSTOC">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="KSSTOC">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="KSSTOC">
+                              <a href="#"></a>
+                           </div>
+                           <div class="mz-sales-ribbon">
+                              <span itemprop="price" class="mz-price is-saleprice">
+                              <span class="mz-price-discountname">Get 40% OFF –</span>
+                              </span>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">
+                           </div>
+                           <a class="mz-productlisting-title" href="/TOUCH-OF-CLASS-BUILDING-STANDEES/p/KSSTOC">TOUCH OF CLASS BUILDING STANDEES</a>
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+                              <span class="mz-price is-crossedout">
+                              $266.19
+                              </span>
+                              <span itemprop="price" class="mz-price is-saleprice">
+                              $159.71
+                              </span>
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="bln-wht">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="bln-wht">
+                        <div class="mz-productlisting-image">
+                           <a href="/balloon-white/p/bln-wht">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="bln-wht">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="bln-wht">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">
+                              <ul>
+                                 <li>
+                                    <a href="/balloon-red/p/bln-red" alt="Balloon - Red" class="swatch-color" title="Balloon - Red" style="background-color: Red"></a>
+                                 </li>
+                                 <li>
+                                    <a href="/balloon-yellow/p/bln-ylw" alt="Balloon - Yellow" class="swatch-color" title="Balloon - Yellow" style="background-color: Yellow"></a>
+                                 </li>
+                              </ul>
+                           </div>
+                           <a class="mz-productlisting-title" href="/balloon-white/p/bln-wht">Balloon-White</a>
+                           <!--
+                              <div class="mz-productlisting-productcode">bln-wht</div>
+                              
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+                              <span itemprop="price" class="mz-price">
+                              $50.00
+                              </span>
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="item">
+            <div data-mz-productlist="" class="mz-l-paginatedlist-list">
+               <div class="mz-productlist mz-productlist-tiled">
+                  <div class="mz-productlist-item" data-mz-product="HATCCD">
+                     <div class="mz-productlisting mz-productlist-tiled" data-mz-product="HATCCD">
+                        <div class="mz-productlisting-image">
+                           <a href="/COLORED-COWBOY-HATS/p/HATCCD">
+                           <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">[no image]</span></span>
+                           </a>
+                           <div class="quick-view">
+                              <a href="#" data-pro-id="HATCCD">QUICK VIEW</a>
+                           </div>
+                           <div class="wishlist-icon" id="HATCCD">
+                              <a href="#"></a>
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-info">
+                           <div class="color-swatch">            
+                           </div>
+                           <a class="mz-productlisting-title" href="/COLORED-COWBOY-HATS/p/HATCCD">COLORED COWBOY HATS</a><!--
+                              <div class="mz-productlisting-productcode">HATCCD</div>    
+                              
+                              -->
+                           <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">  
+                              <span itemprop="price" class="mz-price">
+                              $21.99	 
+                              </span>   
+                           </div>
+                           <div class="mz-product-rating">
+                           </div>
+                        </div>
+                        <div class="mz-productlisting-rating">
+                           <span class="fa fa-star"></span><span class="fa fa-star"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span><span class="fa fa-star rated"></span>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

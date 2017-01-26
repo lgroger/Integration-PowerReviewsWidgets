@@ -1,21 +1,37 @@
 ﻿.mz-myaccount {
     .mz-myaccount-panels {
         margin-left: 200px;
-    }
-
+    } 
+ 
     .mz-myaccount-nav {
         width: 200px;
         box-sizing: border-box;
     }
 
     .mz-contacttype-isprimary {
-        font-size: @fontSizeSmall;
-        font-style: italic;
+        font-size: @fontSizeSmall !important;
+        font-style: italic !important;
         display: block;
         margin-top: 3px;
         text-indent: @gutter;
     }
+    @media screen and (max-width: 480px) {
+        .mz-quick-view-wrapper{
+            width: 90%;
+            .container-left{
+                display: none;
+            }
+            .container-right{
+                .product-share{
+                    display: none;
+                }
+                #add-to-wishlist{
+                    display: none;
+                }
+            }
+        }
 
+    }
     @media (max-width: 600px) {
         .mz-myaccount-panels {
             margin-left: 0;
@@ -40,16 +56,343 @@
 
     #account-settings {
         clear: none;
-
         .mz-link-edit-accountsettings {
             float: none;
             line-height: inherit;
         }
-
+        .attribute-blocks .mz-accountsettings-attribute{
+            padding: 0px;
+            margin: 12.5px 0px;
+        }
+        .mz-accountsettings-attribute{
+            .my-account-allign{
+                label{
+                    text-transform: capitalize;
+                }
+            }            
+        }
         .mz-accountsettings-label {
             display: block;
-            color: #999;
-            font-size: 80%;
+            color: #666;
+            font-size: 16px !important;
+            text-transform: capitalize;
+            padding-right: 5px;
         }
+        span.mz-accountsettings-attribute--value, span.mz-accountsettings-attribute-value {
+            font-size: 16px !important;
+            font-family: @fontMontserratRegular !important;
+            color: #333;
+        }
+        input[data-mz-attribute="tenant~customertype"],textarea[data-mz-attribute="tenant~sp-preferences"],div[data-mz-attribute="tenant~sp-preferences"],textarea[data-mz-attribute="tenant~sl-preferences"],div[data-mz-attribute="tenant~sl-preferences"],textarea[data-mz-attribute="tenant~preferences"],div[data-mz-attribute="tenant~preferences"],div[data-mz-attribute="tenant~customertype"]{
+            display: none;
+        }
+        div[data-mz-attribute="tenant~shipping-reward-point-1"],div[data-mz-attribute="tenant~rp-enrolled-on"],label[for="account-attribute-tenant~enable-shipping-reward-program"]{
+            display: none;
+        }
+    }
+}
+div.order-status-wrap{
+    padding: 0 2%;
+
+    div.orders-body.remove-extra-margin{
+        margin: 0;
+        padding: 0;
+    }
+}
+.error-message{
+    display: block;
+    color: red;
+}
+.echi-shi-my-acc .mz-breadcrumbs{
+    padding:10px 15px;
+}
+.my-account-body-content{
+    padding:0px 30px 40px;
+    font-family: @fontMontserratRegular;
+    border-bottom: 1px solid #ccc;
+    .my_account_heading{
+        font-family:@fontArvo;
+        font-weight: normal;
+        color: #0d3762;
+        font-size: 1.8rem;
+        border-bottom: 1px solid #d4d4d4;
+        vertical-align: top;
+        margin-bottom: 0px;
+        padding:5px 0px;
+    }
+    .my_account_left{
+        float: left;
+        width: 24.1%;
+        vertical-align: top;
+        padding-top: 34px;
+        ul {
+            margin: 0px;
+            padding: 0px;
+            margin-right: 30px;
+        } 
+            ul li{ 
+            text-transform: uppercase;
+            list-style-type: none;
+            border-radius: 14px;
+            padding: 12px 5px 12px 33px;
+            font-size: 16px;
+            a{   
+                cursor: pointer;
+                color: #0d3762;
+            }
+        }
+        .active_my_account_menu{
+            background-color: #F5F5F5;
+            font-weight: 600;
+        }
+    }
+    .my_account_right{    
+        float: left;
+        width: 75%;
+        border-left: 1px solid #d4d4d4;
+        padding-top: 34px;
+        min-height: 300px;
+        background: -webkit-linear-gradient(left, #f5f5f5, transparent 2%, transparent);
+        background: -o-linear-gradient(left, #f5f5f5, transparent 2%, transparent);
+        background: -moz-linear-gradient(left, #f5f5f5, transparent 2%, transparent);
+        p{
+            font-size: 14px;
+            color: #080808; 
+            font-family: @fontMontserratLight;
+        }
+        .panel1>p{
+            font-size: 15px;
+        }
+        .account_heading{
+            background-color: #EFF5FB;
+            width: 100%;
+            text-transform: uppercase;
+            padding: 10px 15px;
+            box-sizing: border-box;
+        }
+    }
+    .my_acc_ri{
+        padding-left: 50px; 
+    } 
+}
+.account_tab-content{
+    display: none; 
+}
+#tab_1{
+    display: block;
+}
+.account_heading span{
+    font-family:@fontArvo; 
+    font-size: 18px;
+    color: #000; 
+}
+.mz-l-pagecontent{
+    min-height:inherit;
+}
+.personal-info-section{  
+    margin-top:15px;
+    padding:0px 15px 35px;
+    p{
+        font-size:16px !important;
+        font-family:@fontMontserratRegular !important;
+        color: #666 !important;
+    }
+    .acc-sub-heading span{
+        color:#333;
+    }
+    .acc-sub-main-heading{
+        font-family: ArvoRegular !important;
+        font-size: 18px !important;
+        color: #666 !important;
+        text-transform:uppercase;
+        margin-top:25px;
+    }
+    .personal_others{
+        .acc-pref-main-sec .check-acc-box:checked+.acc-pre-che{
+            color:#666;
+        }
+        label{
+            font-size: 15px;
+        }
+        .my-account-allign1{
+            label{
+                font-size: 14px;
+            }
+            select{
+                font-size: 14px;
+                height: 35px;
+            }
+            input,select{
+                font-size: 14px;
+                padding: 13px 10px !important;
+                box-sizing: border-box;
+                min-height: 45px !important;
+                width: 94% !important;
+                padding-right: 20px !important;
+            }
+            select.month.bd, select.day.bd,select.year.bd{
+                width:28% !important;
+            }
+            &.dateDropdown label{
+                display: block;
+            }
+        }
+    }
+}
+.personal-left{
+    float:left;
+    width:80%;
+}
+.personal-right{
+    float:right;
+    width:20%;
+    text-align: right;
+}
+.personal-right .acc-edit-delete{
+     li{
+        list-style-type: none;
+        display: inline;
+        padding: 0px 10px 0px 5px;
+        border-right: 1px solid #ccc;
+        font-size: 14px;
+         &:last-child{
+            border-right:0px;
+        }
+    }
+} 
+        .acc-edit{
+            text-decoration:underline;
+            color:#00af9a;
+            cursor:pointer;
+        }
+        .acc-delete{
+            text-decoration:underline;
+            color:#333;
+            cursor:pointer;
+        }
+.password-main-sec{
+    padding:0px 0px;
+    .mz-accountsettings-passwordedit{
+        text-decoration: underline;
+        color: #00af9a;
+        cursor: pointer;
+        background-color: inherit;
+        border: 0px;
+        font-size: 15px;
+        font-family: @fontMontserratRegular;
+    } 
+}
+.mz-accountsettings-password label{
+    font-size: 16px;
+    font-family: @fontMontserratLight;
+    color: #909090;
+    padding-left: 0px;
+} 
+.account-preference-sec{
+    .acc-pref-main-sec{
+        padding: 0px 15px;
+        label{
+            color:#666;
+            font-size: 15px;
+            font-family: @fontMontserratRegular;
+        }
+        .check-acc-box:checked+.acc-pre-che{
+            color:#666;
+        }
+        .label-push-down{
+            .check-acc-box:checked+.acc-pre-che{
+                font-weight: 600;
+            }
+        }
+    }
+}
+.push-label-down{
+    margin-top:25px;
+}
+.mz-accountsettings-passworddone{
+    transition:0.3s ease-in-out;
+}
+.mz-accountsettings-passworddone:hover{
+    background-color:#0D3762;
+}
+.mz-accountsettings-password input[type="password"]{
+    border-radius: 7px;
+    height: 42px;
+    font-size: 56px;
+    max-width: 300px;
+    margin-top: 7px;
+    padding: 0px 10px 11px;
+    background-color: #F7F7F7;
+    color: #ACACAC;
+    border: 1px solid #e8e8e8;
+    &:focus{
+        background-color: #fffdea;
+    }
+}
+.change-password-head{
+    font-size: 20px;
+    font-family: @fontMontserratLight;
+    color: #909090; 
+    font-weight:normal;
+    margin-top: 5px;
+}
+.mz-password-actions > [data-mz-action="finishEditPassword"], .mz-password-actions > [data-mz-action="cancelEditPassword"]{
+    background-color: #0971ce;
+    color: #fff;
+    border: 0px;
+    font-size: 17px;
+    text-transform: uppercase;
+    padding: 14px 55px;
+    width: 174px;
+    box-sizing: border-box;
+    margin-right: 10px;
+    margin-top: 15px; 
+}
+.mz-password-actions > [data-mz-action="cancelEditPassword"]{
+    background-color:#B7B7B7;
+}
+/*.acc-pref-main-sec{
+    padding:0px 15px;
+}*/ 
+.acc-sub-main-heading{
+    font-family: ArvoRegular !important;
+    font-size: 18px !important;
+    color: #666 !important;
+    text-transform:uppercase;
+    margin-top:20px;
+}
+.acc-pref-main-sec{
+    label{
+        color:#888;
+        &:hover{
+            color:#000; 
+        }
+    }
+    .label-push-down{
+        margin-bottom:15px;
+    }
+    input[type="checkbox"]{
+        vertical-align:top;
+        display:none;
+    }
+    .acc-pre-che:before{
+        content: '';
+        width: 17px;
+        height: 17px;
+        border: 1px solid #093863;
+        display: inline-block;
+        border-radius: 2px;
+        vertical-align: text-bottom;
+        margin-right: 15px;
+        text-align:center; 
+    }
+    .check-acc-box:checked + .acc-pre-che:before{
+        font-family:FontAwesome;
+        content:'\f00c';
+        color:#093863;
+        font-size: 14px;
+    }
+    .check-acc-box:checked + .acc-pre-che{
+        color:#000;
     }
 }

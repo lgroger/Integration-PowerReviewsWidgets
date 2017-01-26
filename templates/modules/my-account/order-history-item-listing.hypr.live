@@ -5,6 +5,7 @@
 {% endblock item-name %}
 {% block item-listing-actions %}
     {% for item in order.packages %}
+    
     <span class="mz-itemlisting-action" data-mz-tracking-number="{{ item.trackingNumber }}" data-mx-shipping-code="{{ item.shippingMethodCode }}" data-mx-shipping-name="{{ item.shippingMethodName }}">{{ labels.trackingNumber }}: {{ item.trackingNumber }}</span>
     {% endfor %}
     {% if returning == model.id %}

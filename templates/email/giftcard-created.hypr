@@ -1,29 +1,79 @@
 ﻿  {% extends "email/email" %}
 
-  {% block body-content %}
-    <br>
+  {% block body-content %} 
+  
+  <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" style="margin: 0px auto; background-color: rgb(255, 255, 255);" data-module="Mdl28" data-thumb="http://emailtemplatebuilders.com/Metrospective/03_TBThumbnails/module-27.jpg">
+   <tr>
+      <td align="center">
+         <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" class="table600Min" style="margin: 0px auto; min-width: 668px; background-color: rgb(255, 255, 255);">
+            <tr>
+               <td align="center" class="table600st" style="min-width:668px;">
+                  <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" class="table600Min" style="min-width:629px;">
+                     <tr>
+                        <td class="table600st" style="min-width:629px;">
+                           <table width="100%" bgcolor="#fefefe" data-bgcolor="ModuleBGColor" align="left" cellpadding="0" cellspacing="0" border="0" class="table600" data-border-bottom-color="ModuleBorderColor" style="border-bottom:1px solid #dde5f1;">
+                              <tr>
+                                 <td align="center">
+                                    <table width="100%" cellpadding="0" cellspacing="0" border="0" class="table600">
+                                       <tr>
+                                          <td colspan="3" height="25" style="font-size:0;line-height:0;" class="vrtclAlgn2">&nbsp;</td>
+                                       </tr>
+                                       <tr>
+                                          <td width="30" class="wz"></td>
+                                          <td width="30" class="wz"></td>
+                                       </tr>
+                                       <tr>
+                                          <td colspan="3" height="10" style="font-size:0;line-height:0;">&nbsp;</td>
+                                       </tr>
+                                       <tr>
+                                          <td width="30" class="wz"></td>
+                                          <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+                                               {% with pageContext.cmsContext.page.document.properties.html_3 as  message%}
+                                                {% with message|replace('{{bill_firstname}}', model.Order.billingInfo.billingContact.firstName) as message1 %}
+                                                    {% with message1|replace('{{bill_lastname}}', model.Order.billingInfo.billingContact.lastNameOrSurname) as message2 %}
+                                                    {% with message2|replace('{{sitename}}', siteContext.generalSettings.websiteName) as message3 %}
+                                                        {% with "http://{0}"|string_format(domainName) as sitelink %}
 
-	{{ labels.giftCardEmailBanner|string_format(domainName)|safe}}
+                                                          {% with message3|replace('{{sitelink}}', sitelink) as message4 %}
+                                                            {% with message4|replace('{{domainName}}', domainName) as message5 %}
+                                                              {% with model.Credit.CurrentBalance|currency as  giftamount%}
+                                                               {% with message5|replace('{{giftamount}}', giftamount) as message6 %}
+                                                                {% with message6|replace('{{giftcode}}', model.Credit.Code) as message6 %}
+                                                               {{message6|safe}}
+                                                                {% endwith %}
+                                                              {% endwith %}     
+                                                              {% endwith %}
+                                                            {% endwith %}   
+                                                          {% endwith %}
+                                                      {% endwith %}  
+                                                    {% endwith %}
+                                                    {% endwith %}
+                                                {% endwith %}
+                                                {% endwith %}
 
-	<p>
-	{% if model.Order.billingInfo.billingContact.firstName %}
-		{{ labels.giftCardEmailGreeting|string_format(model.Order.billingInfo.billingContact.firstName, model.Order.billingInfo.billingContact.lastNameOrSurname)|safe }}
-	{% else %}
-		{{ labels.emailOpeningAlternative|safe }}
-	{% endif %}
-	</p>
-
-	{{ labels.giftCardEmailIntro|string_format(siteContext.generalSettings.websiteName)|safe }}
-	
-	{{ labels.giftCardEmailImage|string_format(domainName)|safe}}
-
-	<p><b>{{ labels.giftCardEmailAmount }}</b> <span class="mz-price">{{model.Credit.CurrentBalance|currency}}</span></p>
-    <p><b>{{ labels.giftCardEmailClaimCode }}</b> {{model.Credit.Code}}</p>
-
-	{{ labels.giftCardEmailInstructions|string_format(domainName)|safe }}
-
-	{{ labels.giftCardEmailClosing|string_format(domainName)|safe }}
-
-    {{ labels.emailClosing|string_format(siteContext.generalSettings.websiteName)|safe }}
+													
+                                          </td>  
+                                          <td width="30" class="wz"></td>
+                                       </tr>
+                                      <tr>
+                                           <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+                                             {{pageContext.cmsContext.page.document.properties.html_4|safe}}
+                                           </td>
+                                           <td width="30" class="wz"></td>   
+                                       </tr>
+                                    </table>
+                                 </td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                  </table>
+               </td>
+            </tr>
+         </table>
+      </td>
+   </tr>
+</table>
+   
 
 {% endblock body-content %}

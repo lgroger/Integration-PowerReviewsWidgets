@@ -1,0 +1,23 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %} - {% parent %}{% endblock title-tag-content %}
+
+
+
+{% block body-tag-classes %} mz-homepage {% endblock body-tag-classes %}
+
+{% block body-content %}
+    {% dropzone "home" scope="template" %}
+    <div id="faq">
+        <div id="categories">
+            
+        </div>
+    </div>
+    {% require_script "pages/faq" %}
+    {% block trailing-scripts %}
+    {% include "modules/trailing-scripts" %}
+    {% endblock trailing-scripts %}
+{% endblock body-content %}
+
+{% block body-below-content %}
+{% endblock body-below-content %}

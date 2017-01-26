@@ -1,0 +1,37 @@
+.mz-product-rating .pr-snippet-stars .pr-stars-small, .pr-modal-container .pr-stars {
+	float: none;
+}
+
+.mz-product-rating .pr-snippet-social-bar,
+.mz-product-rating .pr-snippet-read-write,
+.mz-product-rating .pr-snippet-review-count,
+.mz-product-rating .pr-snippet-stars .pr-snippet-rating-decimal {
+    display: none;
+}
+
+.mz-product-rating .pr-snippet-wrapper {
+    border: none;
+    background: transparent;
+}
+.mz-product-rating .pr-snippet-stars {
+    border: none;
+    background: transparent;
+    padding: .3em;
+    float: none;
+    margin-right: .3em;
+    width: 100%;
+}
+.mz-product-rating .reviewSnippetProduct {
+	width: 100%;
+	float: none;
+}
+
+.mz-product-rating .pr-snippet-stars .pr-stars-small, .pr-modal-container .pr-stars {
+    float: none; 
+    height: 22px;
+    line-height: 15px;
+    width: 100px;
+    margin: 0 auto;
+    background-image: url(http://cdn-tp2.mozu.com/11870-16262/resources/images/icons/star-rating-icon.png);
+    background-size: 100px;
+}

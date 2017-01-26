@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/contact-selector-radio" %}
+﻿{% extends "modules/common/contact-select-list" %}
 {% block module-classes %} mz-l-tiles {% endblock module-classes %}
 {% block contact-selector %}
 {% set contactcontext="editingCard." %}

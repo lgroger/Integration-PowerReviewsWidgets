@@ -1,5 +1,26 @@
-﻿<h1 class="mz-pagetitle">{{ labels.searchResults }}: <span class="mz-searchresults-query">{{ pageContext.search.query }}</span></h1>
-{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
-{% include "modules/product/faceted-products" %}
-{% endpartial_cache %}
-{% dropzone "search-results" scope="template" %}
+{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
+{% with isguidedsearch|length as isGuidedSearchURL %}
+
+    <div class="guided-search-search-result-page" data-container="guided-search-search-result-page" {% if isGuidedSearchURL == 1 %}style="display:none;"{% endif %}>
+        {% include "modules/search/guided-search"  with isGuidedSearchURL=isGuidedSearchURL %}
+    </div>
+    ﻿{% if not pageContext.search.query and model.facets %}
+    	{% with model.facets|first as cat %}
+    		{% with cat.values|first as category %}
+    			<h1 class="mz-pagetitle" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>{{ category.label }}</h1>
+    		{% endwith %}
+    	{% endwith %}
+        {% endif %}
+     {% comment %}
+    {% else %} 
+    	<h1 class="mz-pagetitle" {% if isGuidedSearchURL == 1 %}style="display:none;"{% endif %}>{{ themeSettings.searchPageHeading }} <span class="mz-searchresults-query">&ldquo;{{ pageContext.search.query }}&ldquo;</span></h1>
+    {% endcomment %}
+
+      <h1 class="mz-pagetitle">{{ themeSettings.searchPageHeading }} <span class="mz-searchresults-query">&ldquo;{{ pageContext.search.query }}&ldquo;</span></h1> 
+        {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
+    {% include "modules/product/faceted-products" with isGuidedSearchURL=isGuidedSearchURL %}
+    {% endpartial_cache %}
+    {% dropzone "search-results" scope="template" %}
+
+{% endwith %}
+{% endwith %}

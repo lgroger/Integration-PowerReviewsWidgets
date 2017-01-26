@@ -1,0 +1,60 @@
+
+<div class="faq-main-wrap" {% data_attributes Model %}>
+
+	 <div class="faq-side-column">
+	 	<ul>
+			{% for categoryObj in {{Model.config.data}} %}
+				<li><span {% if {{forloop.first}} %} class="current" {% endif%}>{{ categoryObj.Category |upper }}</span>
+					{% if {{pageContext.isMobile}} %}
+					 	<div class="faq-category-section {% if {{ forloop.first }} %} show-section{% endif %}">
+						 	<ul>
+								<li>
+									{% for questionsObj in categoryObj.Questions %}
+										<div class="faq-list-item">
+											<h3>{{ questionsObj.qus}}</h3>
+											<div>
+												{{ questionsObj.ans|safe}}
+											</div>
+										</div>
+									{% endfor %}
+								</li>
+							</ul>
+							<div class="default-faq-contact">
+								{% for contactText in Model.config.dataConfig %}
+									{{ contactText.dconfig |safe }}
+								{% endfor %}
+							</div>
+					 	</div>
+				</li>
+				{% endif %}
+			{% endfor %}
+	 	</ul>
+	 </div>
+	 <div class="faq-desktop-layout">	 	
+		 <div class="faq-column-main">
+			{% for categoryObj in {{Model.config.data}} %}
+			 	<div class="faq-category-section {% if {{ forloop.first }} %} show-section{% endif %}">
+				 	<ul>
+						<li>
+							<h2>{{categoryObj.head}}</h2>
+							{% for questionsObj in categoryObj.Questions %}
+								<div class="faq-list-item">
+									<h3>{{ questionsObj.qus}}</h3>
+									<div>
+										{{ questionsObj.ans|safe}}
+									</div>
+								</div>
+							{% endfor %}
+						</li>
+					</ul>
+			 	</div>
+			{% endfor %}
+			<div class="default-faq-contact">
+				{% for contactText in Model.config.dataConfig %}
+					{{ contactText.dconfig |safe }}
+				{% endfor %}
+			</div>
+		</div>
+	 </div>
+ </div>
+ {% require_script "widgets/faq" %}

@@ -1,4 +1,4 @@
-﻿    <table class="mz-ordersummary" cellpadding="1" width="100%">
+﻿    <table class="mz-ordersummary" style="border-collapse:collapse;" cellpadding="1" width="100%">
         <thead>
             <tr>
                 <td bgcolor="#666666" class="mz-ordersummary-header-product"><font color="#ffffff">{{ labels.product }}</font></td>
@@ -8,10 +8,22 @@
             </tr>
         </thead>
         {% for item in model.items %}
+          {% with forloop.counter0 as idx %}
             <tbody class="mz-ordersummary-lineitems">
               <tr class="mz-ordersummary-line mz-ordersummary-line-item {% if item.discountTotal > 0 %}is-discounted{% endif %}">
                     <td class="mz-ordersummary-item-product">
                       {{ item.product.name }}
+                       {% for attr in model.attributes %}
+                          {% if attr.fullyQualifiedName == "tenant~est-delivery-date" %}
+                            {%  with attr.values.0|split(":::") as estd %}
+                              {% for est in estd %}
+                                {% if forloop.counter0 == idx %}
+                                  <br> Est Delivery Date : {{est}}
+                                {% endif %}
+                              {% endfor %}
+                            {% endwith %}
+                          {% endif %}
+                        {% endfor %}
                       {% if item.product.productUsage == 'Bundle' %}
                       <dl class="mz-propertylist">
                         {% for bundledProduct in item.product.bundledProducts %}
@@ -20,20 +32,36 @@
                         {% endfor %}
                       </dl>
                       {% endif %}
+                      {% if model.packages.length > 1 %}
+                       {% for track in model.packages %}
+                         {% for items in track.items %}
+                           {% if items.productCode == item.product.productCode %}
+                             <br> <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                           {% endif %}
+                         {% endfor %}
+                       {% endfor %}
+                     {% else %}
+                         {% if model.packages.length == 1 %}
+                             {% for track in model.packages %}
+                             <br> <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                             {% endfor %}
+                         {% endif %}
+                     {% endif %}
                     </td>
                     <td>{{ item.quantity }}</td>
                     <td align="right"> {% include "modules/common/email-item-price" %}</td>
                     <td align="right"> {% include "modules/common/email-item-total" %}</td>
                 </tr>
             </tbody>
+           {% endwith %}
         {% endfor %}
-      
+
         <tbody>
             {% for discount in model.orderDiscounts %}
             {% if not discount.excluded %}
             <tr class="mz-ordersummary-discount">
               <td align="right" colspan="4">
-                <span class="mz-ordersummary-discountname">{{ discount.discount.name }}:</span>
+                <span class="mz-ordersummary-discountname">Discount:</span>
                 <span class="mz-ordersummary-discountamt">-{{ discount.impact|currency }}</span>
               </td>
             </tr>
@@ -73,15 +101,15 @@
             {% for shippingDiscount in model.shippingDiscounts %}
             <tr class="mz-ordersummary-shippingdiscount">
               <td align="right" colspan="4">
-                <span class="mz-ordersummary-totalname">{{ shippingDiscount.discount.discount.name }}:</span>
+                <span class="mz-ordersummary-totalname">Shipping Discount :</span>
                 <span class="mz-ordersummary-totalvalue">-{{ shippingDiscount.discount.impact|currency }}</span>
               </td>
             </tr>
             {% endfor %}
-            {% if model.handlingAmount %}
+            {% if model.handlingTotal %}
             <tr class="mz-ordersummary-additionalhandling">
                 <td align="right" colspan="4">
-                  <span class="mz-ordersummary-totalname">{{ labels.additionalHandling }}{% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ({{ model.handlingAmount|currency }})</span>{% endif %}</span>
+                  <span class="mz-ordersummary-totalname">{{ labels.shippingSurcharge }}{% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ({{ model.handlingAmount|currency }})</span>{% endif %}</span>
                   <span class="mz-ordersummary-totalvalue">{{ model.handlingTotal|currency }}</span>
                 </td>
             </tr>

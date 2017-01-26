@@ -1,0 +1,5 @@
+<p class="ech-shi-news-header" style="text-align:center;margin-bottom:0">{{ Model.config.instagrammemainheading }}</p>
+<p style="font-size: 16px;text-align:center;font-family: MonstserratLight;margin-top:0">{{ Model.config.instagrammeSubHeading }}</p>
+<div class="mz-instagram-slider" instagram-data="{{ Model.config.instagrammeAccountId }}" insta-count="{{ Model.config.instagrammeImageCount }}">
+		<div class="owl-carousel"></div>
+	</div>

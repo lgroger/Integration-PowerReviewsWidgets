@@ -1,0 +1,132 @@
+<div class="pdp-related-products">
+   <div class="clear"></div>
+   <div class="echi-shi-related-products-slider">
+      <div class="owl-carousel">
+      {% for item in model.items %}
+
+         <div class="item">
+            <div class="mz-productlist-item" data-mz-product="{{item.productCode}}">
+              {% if pageContext.isTablet == true %}
+                  <!--<div class="wishlist-icon-tablet" id="{{ item.productCode }}" >
+                      <a href="#" id="{{ item.productCode }}"></a>
+                  </div>-->
+              {% else%}
+                  <!--<div class="wishlist-icon" id="{{ item.productCode }}" >
+                      <a href="#" id="{{ item.productCode }}"></a>
+                  </div>-->
+              {% endif%}
+               <div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{item.productCode}}">
+                  <div class="mz-productlisting-image">
+                    <a href="{{ item.url }}{% if pageContext.pageType == "search" or pageContext.pageType == "category" %}?rrec=true{% endif %}">
+                        {% if item.mainImage.imageUrl %}
+                            {% comment %}
+                             <a href="{% make_url "product" item %}"
+                    ><img src="{% make_url "image" item.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if item.mainImage.altText %}alt="{{ item.mainImage.altText }}"{% endif %} /></a>
+                            {% endcomment %}
+                            <img src="{% make_url "image" item.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if item.mainImage.altText %}alt="{{ item.mainImage.altText }}"{% else %}alt="{{item.content.productName}}"{% endif %} />
+                        {% else %}
+                            <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+                        {% endif %}
+                    </a>                 
+                    {% for type in item.purchasableState.messages %}
+                      {% if type.validationType === "OutOfStock" %}
+                        <div class="out-of-stock">
+                          <a>Out Of Stock</a>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                    <div class="quick-view">  
+                        <a href="javascript:void(0)" data-pro-id="{{item.productCode}}">QUICK VIEW</a>
+                    </div>
+                    <!--<div class="compare-btn">  
+                        <a href="javascript:void(0)" data-pro-id="{{item.productCode}}">ADD TO COMPARE</a>
+                    </div>-->
+                    <div class="wishlist-icon" id="{{item.productCode}}">
+                      <a href="#" id="{{item.productCode}}"></a>
+                    </div>
+                    {% if item.price.onSale %}
+                      <div class="mz-sales-ribbon">
+                        <span itemprop="price" class="mz-price is-saleprice">
+                        {% with item.price.price|subtract(item.price.salePrice) as subAmt %}      
+					      	{% with subAmt|divide(item.price.price) as divAmt %}
+					      		{% with divAmt|multiply(100) as perAmt %}					      			
+					      			<span class="mz-price-discountname">{{ perAmt|floatformat(2) }}%</span>
+					      		{% endwith %}      		
+					      	{% endwith %}
+      					{% endwith %}
+                          
+                        </span>
+                      </div>
+                    {% endif %}
+                    {% if item|get_product_attribute(themeSettings.productAttributes.newFlag) %} 
+                        {% with item|get_product_attribute(themeSettings.productAttributes.newFlag) as isNew %}                        
+                            {% if isNew.values|first|prop("value") == true %}
+                                <div class="mz-new-ribbon" style="display: block;" mz-new-flag-date="{{ item.createDate }}">
+                                    <span class="new-ribbon">{{ isNew }}</span>
+                                </div> 
+                            {% else %}
+                                <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ item.createDate }}">
+                                    <span class="new-ribbon">{{ isNew }}</span>
+                                </div>   
+                            {% endif %}
+                        {% endwith %}
+                    {% else %}
+                        <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ item.createDate }}">
+                            <span class="new-ribbon">{{ isNew }}</span>
+                        </div> 
+                    {% endif %}
+
+                  </div> 
+                  <div class="mz-productlisting-info">
+                       <a class="mz-productlisting-title" href="{{item.url}}{% if pageContext.pageType == "search" or pageContext.pageType == "category" %}?rrec=true{% endif %}">{{item.content.productName}}</a> 
+                       <!--<div class="mz-productlisting-productcode">{{product.productCode}}</div>-->
+                       <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+                          <span>
+                          {% if item.hasPriceRange %}
+                            <span itemprop="minPrice" class="mz-pricestack-price-lower">
+                                {% include "modules/common/price" with model=item.priceRange.lower %}
+                            </span>
+                            <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+                                {% include "modules/common/price" with model=item.priceRange.upper %}
+                            </span>
+                          {% else %}
+                            {% include "modules/common/price" with model=item.price %}
+                          {% endif %}
+                        </span>
+                       </div>
+                  </div>
+                  <!--<div class="mz-productlisting-rating">
+                       <div class="mz-product-rating">
+                           <div class="pr-snippet-stars">
+                               <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
+                           </div>
+                       </div>
+                  </div>-->
+                  {% if item|get_product_attribute(themeSettings.productAttributes.dndCode) %}
+			        {% with item|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
+				            {% if isPersonalize.values|first|prop("value") != "" %}
+				                <div class="mz-productlisting-is-personalize">
+				                    <a href="{{ item.url }}{% if pageContext.pageType == "search" or pageContext.pageType == "category" %}?rrec=true{% endif %}">PERSONALIZE</a>
+				                </div>
+				            {% endif %}
+				        {% endwith %}
+				    {% comment %}
+				    {% else %}
+			        {% if item.options %}
+			            {% for option in item.options %}
+			                   {% if option.attributeFQN===themeSettings.productAttributes.dndToken %}
+			                    <div class="mz-productlisting-is-personalize">
+			                        <a href="{% make_url "product" item %}">PERSONALIZE</a>
+			                    </div> 
+			                   {% endif %}
+			            {% endfor %} 
+			        {% endif %}
+			    {% endcomment %}        
+			    {% endif %}
+               </div>
+            </div>                    
+         </div>
+      {% endfor %}
+      </div>
+   </div>
+</div>

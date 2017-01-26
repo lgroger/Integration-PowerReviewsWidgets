@@ -1,0 +1,19 @@
+{% require_script "widgets/video" %}
+{% if not Model.config %} 
+    <div class="mz-cms-image-cover" style="background-image: url('/admin/scripts/resources/images/legacy/AddPhotos.png');"></div>
+{% else %}
+    <div class="video-promo-bac">
+        <div class="mz-cms-video-placeholder"
+             data-url="{{Model.config.vid_promo_url}}"
+             {% if PageContext.IsEditMode %}data-edit="true"{% endif %}>
+            <div class="mz-cms-video-player"></div>
+            <div class="mz-cms-video-cover"></div>
+            <div class="mz-cms-video-play"><span></span></div>
+        </div>
+        <div class="video-promo-pad">
+            <span>
+                {{ model.config.vid_desc|safe }}
+            </span>
+        </div>
+    </div>
+{% endif %}

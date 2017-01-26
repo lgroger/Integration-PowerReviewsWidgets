@@ -1,4 +1,5 @@
 ﻿<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+
     {% if model.hasPriceRange %}
     <span itemprop="minPrice" class="mz-pricestack-price-lower">
         {% include "modules/common/price" with model=model.priceRange.lower %}
@@ -7,6 +8,27 @@
         {% include "modules/common/price" with model=model.priceRange.upper %}
     </span>
     {% else %}
-    {% include "modules/common/price" with model=model.price %}
-    {% endif %}
+        {% include "modules/common/price" with model=model.price %}
+    {% endif %} 
+    {% if model.uom %}
+        {{model.uom}}
+    {% else %}
+      {% with model|get_product_attribute("tenant~uom") as prdValue %}
+        {% for value in prdValue.values %}
+          {{ value.stringValue }}
+        {% endfor %}
+      {% endwith %}
+    {% endif %} 
+     {% if model.hasPriceRange %}
+         {% if model.priceRange.lower.discount.discount %}
+            <span class="discount-block">
+              <span class="mz-price-discountname">You Save &nbsp;{{model.priceRange.lower.discount.discount.name}}</span>
+            </span>
+        {% endif %}
+     {% else %}
+        {% if model.price.discount.discount.name %}      
+                      <span class="discount-block">
+            <span class="mz-price-discountname">  You Save &nbsp; {{model.price.discount.discount.name}}</span></span>
+        {% endif %}
+     {% endif %}           
 </div>
