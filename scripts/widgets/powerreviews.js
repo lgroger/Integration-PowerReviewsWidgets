@@ -109,7 +109,7 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
                 zip_location = "/staticContent/pwr/" + merchantGroupId + "/";
 
                 var host = HyprLiveContext.locals.siteContext.cdnPrefix,
-                prScript = host + zip_location + "pwr/engine/js/full.js";
+                prScript = host + zip_location + "pwr/engine/js/full.js?t="+Date.now();
                 prStylesReview = host + zip_location + "pwr/engine/pr_styles_review.css";
                 prMerchantStyles2 = host + zip_location + "pwr/engine/merchant_styles2.css";
 
@@ -262,8 +262,8 @@ define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/mod
                         console.log(jqxhr);
                     });
             });
-            
-     
+
+
         });
 
         return {
