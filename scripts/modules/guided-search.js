@@ -188,7 +188,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/api','modules/m
 		if(startid==1){
 			startindex=1;
 		}	*/
-		console.log(pages);   
+	//	console.log(pages);   
 		loadfunc(categoryid,1,1,pages,1);
 	});
  		$(document).on('click','.pagination',function(){				
@@ -214,7 +214,7 @@ define(['modules/jquery-mozu', 'modules/backbone-mozu', 'modules/api','modules/m
 	 $( document ).ready(function() {
 	 	var page=$('.pagesizes').val();
 	 	var cookiecat_id=getCookie("guidedcategory");
-	 	console.log(cookiecat_id);
+	 //	console.log(cookiecat_id);
 	 	$('.loader').show();
 	 	loadfunc(cookiecat_id,0,1,page,1); 
 	 		$(document).on('click','.guided-save',function(){ 		

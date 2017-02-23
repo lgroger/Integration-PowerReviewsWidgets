@@ -1,3 +1,8 @@
+{% if themeSettings.searchVersion == "AllBloomReach" or (themeSettings.searchVersion == "BloomReachCatOnly" and pageContext.pageType == "category") or (pageContext.pageType == "search" and themeSettings.searchVersion == "BloomReachSearchOnly") %}
+     {% set_var useBR=1 %}
+{% else %}
+     {% set_var useBR=0 %}
+{% endif %}
 <!-- Mobile filters -->
     <div class="mobile mz-mobile-filter" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
         <div class="mz-l-paginatedlist-header">
@@ -34,7 +39,13 @@
                 </header>
                 {% if model.facets %}
                 <div data-mz-facets class="mz-l-sidebar">
-                    {% include "modules/product/faceting-form-mobile" %}
+                {% if model.facets %}
+                    {% if useBR==1 %}
+                        {% include "modules/product/br-faceting-form-mobile" %}
+                    {% else %}
+                        {% include "modules/product/faceting-form-mobile" %}
+                    {% endif %}
+                {% endif %}
                 </div>
                 {% endif %}
             </div>

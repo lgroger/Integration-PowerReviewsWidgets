@@ -1,35 +1,17 @@
     <input id="category_ids" type="hidden" value="{{ themeSettings.categoryForSearchDropdown }}"/>
-    {% require_script "modules/search-category-dropdown" %}
+    {% require_script "modules/bloomreach.suggest" %}
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
     <ul class="searchNav">
-        <li id="options" class="options">
-           <a id="s_cat{{view}}" class="sel_category" data-mz-contextify='[value="{{themeSettings.allProductsCategoryCode}}"]' search-data="{{ themeSettings.allProductsCategoryCode }}">
-                {{ labels.all | upper }} 
-                <span class="caret-all"><i class="fa fa-caret-down"></i></span>
-            </a>
-            <ul class="subnav" id="search-categories{{view}}"></ul>
-        </li>
         <li id="search">
             <form name="search_form" action="/search" method="get">
-                {% if pageContext.search.query  %}
-                <input type="hidden" name="categoryId" value="{{ pageContext.search.query }}" data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
-            data-mz-contextify-attr='selected'
-            data-mz-contextify-val='selected'>
-                 {% else %}
                  <input type="hidden" name="categoryId" value="{{ themeSettings.allProductsCategoryCode }}" data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
             data-mz-contextify-attr='selected'
             data-mz-contextify-val='selected'>
-                 {% endif %}
                 <input placeholder="{{ labels.search }}" required type="text" value="{{ pageContext.search.query }}" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" id="search_text" />
                 <input type="submit" value="" id="search_button">
             </form>
         </li>
     </ul>
-    <div class="mz-search-autocomplete">        
-        {% require_script "modules/contextify" %}  
-        {% if themeSettings.useSearchAutocomplete %}
-            {% require_script "modules/search-autocomplete" %}
-        {% endif %}
-    </div> 
 
 {% comment %} 
 {% if pageContext.categoryId %}

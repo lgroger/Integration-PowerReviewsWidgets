@@ -152,11 +152,11 @@
                                     {% if model.inventoryInfo.onlineStockAvailable > 0 %}
                                       <span>Please select an option</span>
                                     {% else %}
-                                      <span>Product is in out of stock</span>
+                                      <span>Product is out of stock</span>
                                     {% endif %}
                                   {% else %}
                                     {% if model.isConfigure %}
-                                        <span> Product is in out of stock</span>
+                                        <span> Product is out of stock</span>
                                     {% else %}
                                         <span> Please select an option</span>
                                     {% endif %}

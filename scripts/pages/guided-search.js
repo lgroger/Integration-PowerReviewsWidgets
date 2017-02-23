@@ -1,6 +1,6 @@
 define(['modules/jquery-mozu',"modules/api",'modules/backbone-mozu', 'underscore', 'hyprlivecontext', 'hyprlive'],
 function($, Api, Backbone, _, HyprLiveContext, Hypr) {
-    window.console.log("Guidede search");
+   // window.console.log("Guidede search");
     // Guided Search model 
     var GuidedSearchModel = Backbone.MozuModel.extend({
 
@@ -20,7 +20,7 @@ function($, Api, Backbone, _, HyprLiveContext, Hypr) {
         },
         render: function(){
             Backbone.MozuView.prototype.render.apply(this);
-            window.console.log("rendered");
+          //  window.console.log("rendered");
             // check if there is facets is available
             if(this.model.get('facets') && this.model.get('facets').length > 0 && this.model.get('facets')[0].values && this.model.get('facets')[0].values.length>0){
                 // activate owl carausal for category listing in search resutl page
@@ -39,7 +39,7 @@ function($, Api, Backbone, _, HyprLiveContext, Hypr) {
 
         },
         initialize: function(){
-            window.console.log("initializing view.");
+           // window.console.log("initializing view.");
             // initializing the preselection to empty
             for (var j1 = 0; j1 < this.model.get('filters').length; j1++) {
                 for (var k1 = 0; k1 < this.model.get('filters')[j1].vocabularyValues.length; k1++) {
@@ -90,7 +90,7 @@ function($, Api, Backbone, _, HyprLiveContext, Hypr) {
                         }
                     }
                 }
-                window.console.log(this.currentSelection);
+               // window.console.log(this.currentSelection);
                 // set selected value on the filters Object based on current url informations
                 for (var j = 0; j < this.model.get('filters').length; j++) {
                     // Getting each value for each filters
@@ -116,7 +116,7 @@ function($, Api, Backbone, _, HyprLiveContext, Hypr) {
             }
 
 
-            window.console.log(this.model);
+         //   window.console.log(this.model);
         },
         showHideGSContainer: function(){
             $('.guided_positioned_box').slideDown();
@@ -206,9 +206,9 @@ function($, Api, Backbone, _, HyprLiveContext, Hypr) {
     });
 
     $(document).ready(function() {
-        console.log("guided search gettign themeSettings.");
+       // console.log("guided search gettign themeSettings.");
         window.themeSettings = require('hyprlivecontext').locals.themeSettings;
-        console.log(window.themeSettings);
+      //  console.log(window.themeSettings);
         if (window.themeSettings.isEnableGuidedSearch && window.location.search.indexOf('isguidedsearch=1') == -1) {
             $('.guided-search-button').on('mouseover mouseenter',function(){
                 $(this).addClass('popup-right-zero');

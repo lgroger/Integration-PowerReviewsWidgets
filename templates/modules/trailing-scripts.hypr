@@ -9,6 +9,7 @@
       baseUrl: "{{ siteContext.cdnPrefix }}{% if not debugMode %}/compiled{% endif %}/scripts",
       paths: {
         jquery: "//ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery{% if not debugMode %}.min{% endif %}",
+        jqueryui: "//ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui{% if not debugMode %}.min{% endif %}",
 		underscore: "vendor/underscore/underscore",
 		backbone: "vendor/backbone/backbone"
       },waitSeconds: 30 

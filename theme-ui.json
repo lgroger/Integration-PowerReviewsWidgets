@@ -363,6 +363,19 @@
                     "name": "suggestPriorSearchTerms",
                     "fieldLabel": "Show search terms others used on this site in search suggestions",
                     "enableIf": "useSearchAutocomplete"
+                },
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "searchVersion",
+                    "fieldLabel": "Bloom Reach",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "AllKiboOOTB",
+                        "BloomReachSearchOnly",
+                        "AllBloomReach",
+                        "BloomReachCatOnly"
+                    ]
                 }
             ]
         },

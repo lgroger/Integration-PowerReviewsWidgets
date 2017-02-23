@@ -114,7 +114,7 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 	            }
 	        //}*/
 	        var productCodes = _.uniq(productCodesArr);
-	        console.log(productCodes);
+	        //console.log(productCodes);
 	        if(productCodes.length>0){
 	            var filter = '';
 	            for(var p=0;p<productCodes.length;p++){

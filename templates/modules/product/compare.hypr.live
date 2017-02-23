@@ -185,7 +185,7 @@
                     {% if model.inventoryInfo.onlineStockAvailable > 0 %}
                       <span style="color:#00af9a;">   In Stock </span>
                     {% else %}
-                      <span>Product is in out of stock</span>  
+                      <span>Product is out of stock</span>  
                     {% endif %}
                   {% else %}
                     <span style="color:#00af9a;">   In Stock </span>

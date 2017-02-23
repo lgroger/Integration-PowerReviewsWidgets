@@ -1,0 +1,223 @@
+{% if model.productType == "THEMEPAGE" %}
+<div class="mz-productlisting br-theme-tile {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
+  <a href="{{model.content.seoFriendlyUrl}}" class="container-link"></a>
+  <div class="mz-productlisting-image">
+        {% block product-image %}
+        <a href="{{model.content.seoFriendlyUrl}}">
+            {% if model.mainImage.imageUrl %}
+                <img src="{{model.mainImage.imageUrl}}?max={{themeSettings.listProductThumbSize}}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} />
+            {% else %}
+                <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+            {% endif %}
+        </a>
+        {% endblock product-image %}
+        <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ model.createDate }}">
+          <span class="new-ribbon">New</span>
+        </div>
+  </div>
+  <p class="product-mainname"><a href="{{model.content.seoFriendlyUrl}}">{{model.content.productName}}</a></p>
+  <a href="{{model.content.seoFriendlyUrl}}" class="br-theme-page">Shop by theme</a>
+</div>
+{% else %}
+<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
+    {% if pageContext.isTablet == true %}
+            <div class="wishlist-icon-tablet" id="{{ model.productCode }}" >
+                <a href="#" id="{{ model.productCode }}"></a>
+            </div>
+    {% else%}
+            <div class="wishlist-icon" id="{{ model.productCode }}" >
+                <a href="#" id="{{ model.productCode }}"></a>
+            </div>
+    {% endif%}
+    <a href="{{model.content.seoFriendlyUrl}}" class="container-link"></a>
+    <div class="mz-productlisting-image">
+        {% block product-image %}
+        <a href="{{model.content.seoFriendlyUrl}}">
+            {% if model.mainImage.imageUrl %}
+                <img src="{{model.mainImage.imageUrl}}?max={{themeSettings.listProductThumbSize}}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} />
+            {% else %}
+                <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+            {% endif %}
+        </a> 
+        {% endblock product-image %}
+        {% if model.inventoryinfo.onlineStockAvailable < 1  %}
+                <div class="out-of-stock">
+                    <a>Out Of Stock</a>
+                </div>
+        {% else %}
+            <div class="quick-view">  
+                <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">QUICK VIEW</a>
+            </div>
+            {% if themeSettings.compareProductFlag and themeSettings.compareCategoriesList|length > 0 %}
+              {% if pageContext.pageType == "search" %}
+                  <div class="compare-btn">  
+                        <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">ADD TO COMPARE</a>
+                  </div>
+              {% else %}
+                  {% for categoryId in themeSettings.compareCategoriesList %}
+                    {% if pageContext.categoryId == categoryId %}
+                    <div class="compare-btn">  
+                        <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">ADD TO COMPARE</a>
+                    </div>
+                    {% endif %}
+                  {% endfor %}
+              {% endif %}
+            {% endif %}
+        {% endif %}
+        {% if model|get_product_attribute(themeSettings.productAttributes.dndColor) %} 
+            {% with model|get_product_attribute(themeSettings.productAttributes.dndColor) as dndColor %}
+                {% if dndColor.values|first|prop("value") == true %}
+                    <div class="mz-dnd-color-flag">
+                        <a href="{{model.content.seoFriendlyUrl}}">COLORS</a>
+                    </div>
+                {% endif %}
+            {% endwith %}
+        {% endif %}
+        {% if model.price.onSale %}
+            <div class="mz-sales-ribbon">
+                <span itemprop="price" class="mz-price is-saleprice">
+                    {% with model.price.price|subtract(model.price.saleprice)) as disAmt %}
+                        {% with disAmt|divide(model.price.price) as discountRatio %}
+                                {% with discountRatio|multiply(100) as discountPer %}
+                                    <span class="mz-price-discountname">{{discountPer|floatformat(0)}}% off</span>
+                                {% endwith %} 
+                        {% endwith %}    
+                    {% endwith %}
+                </span>
+            </div>
+        {% endif %}
+            {% if model|get_product_attribute(themeSettings.productAttributes.newFlag) %} 
+                {% with model|get_product_attribute(themeSettings.productAttributes.newFlag) as isNew %}
+                    {% if isNew.values|first|prop("value") == true %}
+                        <div class="mz-new-ribbon" style="display: block;" mz-new-flag-date="{{ model.createDate }}">
+                            <span class="new-ribbon">New</span>
+                        </div> 
+                    {% else %}
+                        <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ model.createDate }}">
+                            <span class="new-ribbon">New</span>
+                        </div>   
+                    {% endif %}
+                {% endwith %}
+            {% else %}
+                <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ model.createDate }}">
+                        <span class="new-ribbon">New</span>
+                </div> 
+        {% endif %}
+
+        {% if model|get_product_attribute(themeSettings.productAttributes.clearanceFlag) %} 
+                {% with model|get_product_attribute(themeSettings.productAttributes.clearanceFlag) as clearanceFlag %}
+                    {% if clearanceFlag.values|first|prop("value") == true %}
+                        <div class="mz-clearance-ribbon" style="display: block;">
+                            <span class="new-ribbon">Clearance</span>
+                        </div> 
+                        {% endif %}
+                {% endwith %}
+        {% endif %}
+    </div>
+    <div class="mz-productlisting-info">
+    <a href="{{model.content.seoFriendlyUrl}}">
+            <div class="color-swatch">    
+                {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
+                    {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %}
+                        {% if pdcs|first == "asColors" %}
+                        
+                        {% else %}
+                            {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}  
+                              {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValueStr %}
+                                  {% with "{0},{1}"|string_format(model.productCode, prdValueStr) as prdValue %}
+                                    <div class="colorswacthproductcodelist" style="display:none" displaytype="image">{{prdValue}}</div>
+                                    <div class="colorbox">
+                                        <ul>
+                                            <li><img src="{{model.mainImage.imageUrl}}?max=12" /></li>
+                                         {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as productCodes %}
+                                            {% for imgid in productCodes %}
+                                            {% if forloop.counter0 < 5 %}
+                                            <li><img alt="PL7PER-PT002-HDR" src="//cdn-tp2.mozu.com/16647-25302/cms/25302/files/{{imgid}}?max=12" /></li>
+                                            {% endif %}
+                                            {% endfor%}
+                                        {% endwith %}
+                                       </ul>
+                                       {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as colorlength %}
+                                           {% if colorlength|length > 5 %}
+                                           <span class="total-color">{{colorlength|length}} Styles</span> 
+                                           {% endif%}
+                                       {% endwith %}
+                                    </div>   
+                                  {% endwith %}    
+                                {% endwith %}
+                            {% endif %}  
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+            </div></a>
+        <p class="product-mainname"><a href="{{model.content.seoFriendlyUrl}}">{{model.content.productName}}</a></p>
+        <a href="{{model.content.seoFriendlyUrl}}">{% include "modules/product/price-stack" %}</a>
+        {% block product-extrainfo %}
+        {% if dealOfTheDay %}
+          {% if dealOfTheDay.savings %}
+            {% if model.price.discount.impact %}
+              <p class="mz-productlisting-savings">You save: {{ model.price.discount.impact|currency }}</p>
+            {% endif %}
+          {% endif %}
+          {% if dealOfTheDay.expirationDate %}
+            {% if model.price.discount.discount.expirationDate %}
+              <p class="mz-productlisting-expirationdate">Expires: {{ model.price.discount.discount.expirationDate|date("F j, Y") }}</p>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+        {% endblock product-extrainfo %}
+    </div>
+    <div class="mz-productlisting-rating">
+        {% block product-rating %}
+        <div class="mz-product-rating">
+            <div id="PRInlineRating-{{model.productCode}}" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}" style="display:none;"></div>
+            {% if model|get_product_attribute('tenant~rating') %}
+                {% with model|get_product_attribute('tenant~rating') as rating %}
+                    {% if rating.values|first|prop("value") != "" %}
+                        {% with rating.values|first|prop("value")|floatformat as totalRating %}
+                            <div class="pr-snippet-stars">
+                                  {% if totalRating > 4.5 %}
+                                   <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating == 4.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
+                                   {% endif %}                              
+                                   {% if totalRating > 3.5 and totalRating < 4.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating == 3.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 2.5 and totalRating < 3.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating == 2.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 1.5 and totalRating < 2.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
+                                   {% endif %}
+                                    {% if totalRating == 1.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 0.5 and totalRating < 1.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
+                                   {% endif %}
+                                   {% if totalRating > 0 and totalRating <= 0.5 %}
+                                      <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
+                                   {% endif %}
+                            </div>
+                        {% endwith %}
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
+        </div>
+        {% endblock %}
+    </div>
+    {% if model|get_product_attribute(themeSettings.productAttributes.dndToken) %}
+        <div class="mz-productlisting-is-personalize">
+            <a href="{{model.content.seoFriendlyUrl}}">PERSONALIZE</a>
+        </div>     
+    {% endif %}
+</div>
+{% endif %}
