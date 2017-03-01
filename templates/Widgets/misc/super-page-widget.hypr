@@ -1,11 +1,29 @@
-<div class="super-page-filter-wrap">
-	<ul {% if model.config.enableSlider %} class="owl-carousel" {% endif %}>
-		<li><a data-prop="*"><span>All Products</span></a></li>
-		{% for val in model.config.productTypedata %}
-		<li><a class="" data-prop="tenantproduct-type_{{val|slugify}}"><span>{{val}}</span></a></li>
-		{% endfor %}
+<div class="super-page-filter-wrap {% if model.config.enableSlider %}enable-slider{% else %}{% if pageContext.isMobile or pageContext.isTablet and model.config.data|length >3 %}enable-slider{% endif %}{% endif %}">
+	<span class="btn-prev-opt"><i></i></span>
+		<span class="btn-next-opt"><i></i></span>
+	<ul class="super-page-btn {% if model.config.enableSlider %}enable-slider{% else %}{% if pageContext.isMobile or pageContext.isTablet and model.config.data|length >3 %}enable-slider{% endif %}{% endif %}">
 		{% for sval in model.config.data %}
-		<li><a class="" data-prop="tenantsuper-page-product-type_{{sval|slugify}}"><span>{{sval}}</span></a></li>
+		<li>
+			<a class="" data-prop="{{sval.attrValue|slugify}}" href="#{{sval.attrValue|slugify}}">
+				<span class="btn-index">{{forloop.index}}</span>
+				<span class="btn-caption">{{sval.textcaption}}</span>
+			</a>
+		</li>
 		{% endfor %}
 	</ul>
+
+	<div class="super-btn-fixed-wrap visHidden {% if model.config.enableSlider %}slider-parent{% else %}hide {% if pageContext.isMobile or pageContext.isTablet and model.config.data|length >3 %}slider-parent{% endif %}{% endif %}">
+
+		<span class="btn-prev-fixed"><i></i></span>
+		<span class="btn-next-fixed"><i></i></span>
+		<ul class="super-page-btn-fixed  clearfix {% if model.config.enableSlider %}enable-slider{% else %}  {% if pageContext.isMobile or pageContext.isTablet and model.config.data|length >3 %}enable-slider{% endif %}{% endif %}">
+			{% for sval in model.config.data %}
+			<li>
+				<a class="" data-prop="{{sval.attrValue|slugify}}" href="#{{sval.attrValue|slugify}}">
+					<span class="btn-index">{{forloop.index}}</span>
+					<span class="btn-caption">{{sval.textcaption}}</span>
+				</a>
+			</li>
+			{% endfor %}
+	</div>
 </div>

@@ -169,6 +169,15 @@ require(
                 "click .qtyplus":"increaseQty",
                 "click .qtyminus":"decreaseQty"
             },
+            setQtyModel:function (qty) {
+                 var newQuantity = parseInt(qty, 10);
+                  if(newQuantity < this.model._minQty){
+                    $('[data-mz-validationmessage-for="quantity"]').html("Quantity should be more than minimum quantity");
+                    return false;
+                }else{
+                     this.model.set('quantity',newQuantity);
+                }
+            },
             addToCart: function () {
               if(this.model.get('productUsage')=='Bundle'){
                   return true;
@@ -886,6 +895,7 @@ require(
             /* OPEN */
             $(document).on('click', '.quick-view > a[data-pro-id]', function(e){
                 window.showPageLoader();
+                var btn=$(this);
                 var productCode = $(this).attr('data-pro-id'),
                     sku = "";
                 getExtrasProductDetails(productCode,function(product){
@@ -930,6 +940,9 @@ require(
                         model:product,
                         productCode: productCode
                     });
+                    if(require.mozuData("pagecontext").cmsContext.template.path==="super-page"&& $("#qty-" + productCode).length>0){
+                        window.productView.setQtyModel($("#qty-" + productCode).val());
+                    }
                     window.productView.render();
                     window.removePageLoader();
                     $('#mz-quick-view-container').fadeIn(350);

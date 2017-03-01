@@ -88,7 +88,7 @@
     color: #ababab !important;
  }
  .echi-shi-party-packs{
- 	padding: 20px 2.5% 40px !important;
+ 	padding: 10px 2.5% 40px;
  	button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
  		background-color: #0971ce;
  		&:hover{
@@ -102,7 +102,7 @@
  		}
  	}
  	.mz-productlisting.mz-productlist-tiled{
- 		padding: 7px 7px 10px;
+ 		padding: 10px 7px 70px;
  	}
  	.mz-l-paginatedlist-list{
  		margin-bottom:5px;
@@ -114,18 +114,26 @@
  		margin:10px 0px;
  	}
  	.products-title{
-	 	height:45px;
+	 	height:auto;
 	 	overflow: hidden;   
  	} 
  	.party_packs_btns{
  		margin-top:5px;
  		text-align: center;
- 		display: inline-block;
-    	width: 98%;
+    	margin: 0 auto;
+    	width: auto;
+    	display: inline;
+		position: absolute;
+		width: 100%;
+		bottom: 0;
+		left: 0;
 	 	.btn-cart{
-	 		padding: 13px 13%;
+			padding: 13px 6%;
 		    text-transform: uppercase;
-		    font-size: 16px;
+		    font-size: 15px;
+		    &.is-disabled{
+		    	font-size: 14px;
+		    }
 	 	}
 	 	.fixed-wishlist{
 	 		padding: 6px 2%;
@@ -169,6 +177,10 @@
 	.party_packs_qty{
 		color:#666;
 		font-size: 15px;
+		display: inline-block;
+		float: left;
+		width: 43%;
+		text-align: right;
 		span{			
 			margin-left: 5px;
 		}
@@ -532,7 +544,6 @@
 		 	color: #ffffff;
 		 }
 		.addToCart, .personalize{
-			line-height: 60px;
 			border-radius: 5px !important;
 	    	border: 0px !important;
 	    	margin-right:2%;

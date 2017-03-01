@@ -7,10 +7,10 @@
 {% require_script "modules/my-menu" %}
 {% require_script "modules/filters" %}
 {% require_script "modules/quick-view" %}
-{% require_script "modules/superpage" %}
+{% require_script "pages/super-page" %}
 {% preload_json model "category" %}
 {% comment %}
-{% require_script "pages/super-page" %}
+{% require_script "modules/superpage" %}
 
 {% endcomment %}
 
@@ -29,10 +29,12 @@
    <div class="pdp-banner">  
          {% for bannerimage in model.content.categoryImages %}
             {% if forloop.counter0==1 %}
-               <img src= '{{bannerimage.imageUrl}}' alt="{{bannerimage.altText}}">
+              <!--  <img src= '{{bannerimage.imageUrl}}' alt="{{bannerimage.altText}}" class="super-banner-img"> -->
+               <div style="background:url('{{bannerimage.imageUrl}}?max=1800');height:300px;" class="banner-area">
                   <div class="super-page-title clearfix">
                     <h1 class="mz-pagetitle">{{ model.name|safe|upper }}</h1>  
                   </div>
+               </div>
                </div>
             {% endif %}
          {% endfor %}
@@ -48,8 +50,11 @@
 </div>
 {% endif %}
 {% dropzone "super-page-top-seo" scope="page" %}
- <div  class="super-page-product-wrap" data-mz-category="{{model.categoryCode}}">
-{% include "pages/super-page-view" %}
+ <div  class="super-page-product-wrap clearfix" data-mz-category="{{model.categoryCode}}">
+   <div data-mz-superpagelisting class="echi-shi-party-packs" style="width:100%;">
+    {% include "templates/pages/super-page-interior" with pmodel=model and chil=model.childrenCategories %}
+   </div>   
+
  </div> 
 
 <!-- Make Product Slider Here -->

@@ -23,7 +23,7 @@
             <label for="company">{{ labels.company }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="company" placeholder="{{ labels.company }}" data-mz-value="{{ addresscontext }}company" value="" maxlength="200">
+            <input type="text" name="company" placeholder="{{ labels.company }}" data-mz-value="{{ addresscontext }}companyOrOrganization" value="{{ model.companyOrOrganization }}" maxlength="200">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}company"></span>
         </div>
     </div>
