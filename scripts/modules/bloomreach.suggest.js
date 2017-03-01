@@ -40,6 +40,10 @@ $(function(){
 				var pricediv='<div class="autocomplete-price">$' + item.price + uomdiv + '</div>';
 				if(item.pricerange[0] != item.pricerange[1])
 					pricediv='<div class="autocomplete-price-range">$' + item.pricerange[0] + ' to $' + item.pricerange[1] + uomdiv + '</div>';
+				if(item.ptype =='THEMEPAGE'){
+					item.classname+=' br-suggest-theme';
+					pricediv='<button>Shop by theme</button>';
+				}
 				var ratingdiv = "";
 				if(item.rating){
 					var ratenum = Math.round(parseFloat(item.rating)*2)/2;
@@ -48,6 +52,7 @@ $(function(){
 					else
 						ratingdiv = '<div class="mz-product-rating"><div class="pr-snippet-stars"><div class="pr-stars pr-stars-small pr-stars-'+ratenum+'-sm">&nbsp;</div></div></div>';
 				}
+				
 				return $( "<li>" ).addClass("br-suggest-right").addClass(item.classname)
 					.append('<div class="ui-menu-item-wrapper br-suggest-product"><div class="br-suggest-product-image"><img src="' + item.img + '" class="autocomplete-thumb" /></div><div class="autocomplete-title">' + item.label + '</div><div class="autocomplete-priceline">'+pricediv+'<div class="autocomplete-clear"></div>'+ratingdiv+'</div><div class="autocomplete-clear"></div></div>' )
 					.appendTo( ul );
@@ -107,7 +112,7 @@ $(function(){
 								if(item.max_price){
 									item.sale_price_range[1] = parseFloat(item.max_price);
 								}
-								if(pcnt <=6)
+								if(pcnt == 1){ //for development
 									return {
 										type:'product',
 										label: item.title,
@@ -119,7 +124,24 @@ $(function(){
 										rating: item.rating,
 										pricerange: item.sale_price_range,
 										uom:(typeof item.unitofmeasure_attr == 'undefined'?'':item.unitofmeasure_attr),
-										classname:"br-suggest-product-"+pcnt
+										classname:"br-suggest-product-"+pcnt,
+										ptype: "THEMEPAGE"
+									};
+								}
+								else if(pcnt <=6)
+									return {
+										type:'product',
+										label: item.title,
+										img: item.thumb_image+"?max=100",
+										price: item.sale_price.toFixed(2).toString(),
+										url: item.url,
+										value: item.pid,
+										category:catname,
+										rating: item.rating,
+										pricerange: item.sale_price_range,
+										uom:(typeof item.unitofmeasure_attr == 'undefined'?'':item.unitofmeasure_attr),
+										classname:"br-suggest-product-"+pcnt,
+										ptype: item.mozuproducttype
 									};
 							});
 						}
