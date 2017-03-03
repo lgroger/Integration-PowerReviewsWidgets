@@ -347,7 +347,7 @@
             "xtype": "panel",
             "title": "Search",
             "collapsed": false,
-            "items": [
+            "items": [/* these don't do anything b/c this theme using bloomreach search suggest only
                 {
                     "xtype": "mz-input-checkbox",
                     "name": "showChildCategoriesInFaceting",
@@ -363,18 +363,17 @@
                     "name": "suggestPriorSearchTerms",
                     "fieldLabel": "Show search terms others used on this site in search suggestions",
                     "enableIf": "useSearchAutocomplete"
-                },
+                }, */
                 {
                     "xtype": "mz-input-dropdown",
                     "name": "searchVersion",
-                    "fieldLabel": "Bloom Reach",
+                    "fieldLabel": "<strong>Bloom Reach</strong><br>To enable BloomReach, you have to enable arcjs shindigz.BloomReachArcJS app & specify the correct configuration values.  Once you add these values, it will always use bloomreach for search so you need to select BloomReachSearchOnly or AllBloomReach so results render correctly. \"configuration\": {\"s26978\": {\"domainKey\":\"Shindigz\"}}",
                     "allowBlank": false,
                     "forceSelection": true,
                     "store": [
                         "AllKiboOOTB",
                         "BloomReachSearchOnly",
-                        "AllBloomReach",
-                        "BloomReachCatOnly"
+                        "AllBloomReach"
                     ]
                 }
             ]

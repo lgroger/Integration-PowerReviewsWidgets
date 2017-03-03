@@ -130,7 +130,7 @@
   "resultsPerPage"       : "results per page",
   "sortBy"               : "Sort by ",
   "gobacklogin"          : "Login",
-  "default"        : "Default",
+  "default"        : "Relevance",
   "sortByPriceAsc"     : "Price: Low to High",
   "sortByPriceDesc"    : "Price: High to Low",
   "sortByNameAsc"    : "Alphabetical: A-Z",

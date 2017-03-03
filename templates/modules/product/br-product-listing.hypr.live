@@ -16,7 +16,7 @@
         </div>
   </div>
   <p class="product-mainname"><a href="{{model.content.seoFriendlyUrl}}">{{model.content.productName}}</a></p>
-  <a href="{{model.content.seoFriendlyUrl}}" class="br-theme-page">Shop by theme</a>
+  <a href="{{model.content.seoFriendlyUrl}}" class="br-theme-page">Shop theme</a>
 </div>
 {% else %}
 <div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">

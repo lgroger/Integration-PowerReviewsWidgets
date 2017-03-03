@@ -1,5 +1,8 @@
  <section class="mz-facetingform">
-    {% if model.hasValueFacets %}
+    {% if model.facets.length > 0 %}
+    <div class="br-facet-form-header">
+        Narrow by
+    </div>
     {% endif %}
     <ul class="mz-l-sidebaritem-mobile">
     {% for facet in model.facets %}

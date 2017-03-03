@@ -42,7 +42,7 @@ $(function(){
 					pricediv='<div class="autocomplete-price-range">$' + item.pricerange[0] + ' to $' + item.pricerange[1] + uomdiv + '</div>';
 				if(item.ptype =='THEMEPAGE'){
 					item.classname+=' br-suggest-theme';
-					pricediv='<button>Shop by theme</button>';
+					pricediv='<a class="br-theme-page">Shop theme</a>';
 				}
 				var ratingdiv = "";
 				if(item.rating){
@@ -74,7 +74,7 @@ $(function(){
 	$("[id='search_text']").autoCompleteSearch({ // #search_text is on page twice, once for desktop, once for mobile
 		delay: 0,
 		source: function( req, add ) {
-			var searchsuggestURL = "http://brm-staging-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
+			var searchsuggestURL = "http://brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
 			var randomID = function() {
 				var chars = '0123456789'.split('');
 				var str = '';
@@ -112,23 +112,7 @@ $(function(){
 								if(item.max_price){
 									item.sale_price_range[1] = parseFloat(item.max_price);
 								}
-								if(pcnt == 1){ //for development
-									return {
-										type:'product',
-										label: item.title,
-										img: item.thumb_image+"?max=100",
-										price: item.sale_price.toFixed(2).toString(),
-										url: item.url,
-										value: item.pid,
-										category:catname,
-										rating: item.rating,
-										pricerange: item.sale_price_range,
-										uom:(typeof item.unitofmeasure_attr == 'undefined'?'':item.unitofmeasure_attr),
-										classname:"br-suggest-product-"+pcnt,
-										ptype: "THEMEPAGE"
-									};
-								}
-								else if(pcnt <=6)
+								if(pcnt <=6)
 									return {
 										type:'product',
 										label: item.title,

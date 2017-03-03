@@ -1,6 +1,18 @@
+{% if themeSettings.searchVersion == "AllBloomReach" or (themeSettings.searchVersion == "BloomReachCatOnly" and pageContext.pageType == "category") or (pageContext.pageType == "search" and themeSettings.searchVersion == "BloomReachSearchOnly") %}
+     {% set_var useBR=1 %}
+{% else %}
+     {% set_var useBR=0 %}
+{% endif %}
+
 <div class="categorylanding-breadcum">
 {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
-{% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+{% if useBR == 1 %}
+{# don't specify any reponseFields, send in searchTuningRuleCode so arcJS knows to use bloomreach #}
+	{% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize and searchTuningRuleCode="BloomReachCat" as_parameter %}
+{% else %}
+	{% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+{% endif %}
+
 {% endpartial_cache %}
 </div>  
 <!-- Make Product Slider Here --> 

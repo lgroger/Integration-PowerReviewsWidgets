@@ -72,11 +72,11 @@
     }
 }
 /* Bloomreach Guided Search */
-.mz-productlisting.mz-productlist-tiled.br-theme-tile {
+.mz-productlisting.mz-productlist-tiled.br-theme-tile, .br-suggest-right.br-suggest-theme {
 	border: 1px solid #00b09b;
 	text-align: center;
 }
-.mz-productlisting.mz-productlist-tiled.br-theme-tile a.br-theme-page {
+a.br-theme-page {
 	-webkit-appearance: none;
 	background-color: #00b09b;
 	border-radius: 5px;
@@ -85,13 +85,17 @@
 	border: 1px solid #00b09b;
 	margin: 5px auto 0 auto;
 	text-transform: uppercase;
-	color: #FFF;
+	color: #FFF !important;
 	padding: 5px 3px 5px 3px;	
 	display: block;
-	max-width: 150px;
+	max-width: 90%;
 	font-family: MontserratRegular, Montserrat, sans-serif;	
+	font-size: 92%;
 }
-.mz-productlisting.mz-productlist-tiled.br-theme-tile a.br-theme-page:hover {
+.ui-menu .br-suggest-left.ui-menu-item {
+	list-style-image: none !important;	
+}
+a.br-theme-page:hover {
 	background-color: #00ceb3;
 	border: 1px solid #00ceb3;
 }
@@ -120,6 +124,8 @@
 	padding: 10px;	
 	font-family: MontserratRegular, Montserrat, RobotoRegular, sans-serif;
 	position: fixed;
+	box-shadow: rgba(136,136,136,0.34902) 0px 10px 15px;
+	line-height: normal;
 }
 .facet-heading:first-child {
 	border-top: none;
@@ -136,10 +142,7 @@
 	bottom: 10px;	
 	width: 1px;
 }
-#ui-id-1 .ui-autocomplete-category.br-suggest-divider {
-	display: block;
-}
-#ui-id-2 .ui-autocomplete-category.br-suggest-divider {
+.ui-autocomplete-category.br-suggest-divider {
 	display: none;
 }
 #ui-id-1 {
@@ -152,11 +155,16 @@
 	overflow: hidden;
 	padding: 5px 5px 5px 10px;
 	font-size: 12px;	
+	box-shadow: rgba(136,136,136,0.34902) 0px 10px 15px;
+	line-height: normal;
 }
 .br-suggest-left {
 	clear: left !important;	
 	overflow: hidden;
 	box-sizing: border-box;	
+	line-height: normal;
+	margin: 0;
+	padding: 0;
 }
 #ui-id-1 .br-suggest-left  {
 	width: 26%;
@@ -317,18 +325,13 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	width: 30%;
 	position: absolute;
 	bottom: 10px;
-	left: 50%;
+	left: 47.2%;
 	padding: 10px 20px 10px 20px !important;
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	text-align: center;
-}
-#ui-id-1 .br-suggest-cta.ui-menu-item {
-	display: block;
-}
-#ui-id-2 .br-suggest-cta.ui-menu-item {
-	display: none;
+	text-transform: uppercase;	
 }
 .br-suggest-cta.ui-menu-item:hover {
 	background-color: #00ceb3 !important;		
@@ -338,6 +341,9 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 }
 .mz-facetingform .mz-facetingform-facet li.br-facet-color {
 	margin: 0;	
+}
+.mz-mobile-filter ul.mz-l-sidebaritem-mobile {
+	margin-bottom: 25px;	
 }
 /* FIXED SEARCH BAR - SAME ON MOBILE AS ON FIXED DESKTOP SEARCH AFTER SCROLLING DOWN */
 #popup1.overlay .popups {
@@ -355,22 +361,72 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 #popup1.overlay .popups div .close {
 	top: 14px;
 }	
+#ui-id-2 .br-suggest-cta.ui-menu-item {
+	display: none;	
+}
+.mz-productlisting-image {
+	margin-bottom: 0 !important;	
+}
 @media screen and (min-width:375px) {
-#popup1.overlay .popups div .close {
-	right: 2%;
-}	
+	#popup1.overlay .popups div .close {
+		right: 2%;
+	}	
 }
 @media screen and (min-width:768px) {
-#popup1.overlay .popups {
-	text-align: center;
+.mz-productlisting-image {
+	margin-bottom: 50px !important;	
 }
+}
+@media screen and (min-width:781px) {
+	#popup1.overlay .popups {
+		text-align: center;
+	}
+	#ui-id-1 .br-suggest-cta.ui-menu-item, #ui-id-2 .br-suggest-cta.ui-menu-item, #ui-id-2 .br-suggest-right {
+		display: block;
+	}	
+	#ui-id-2 .br-suggest-left {
+		width: 26%;
+	}
+	#ui-id-2 {
+		min-width: 650px;
+		max-width: 850px;	
+		min-height: 600px;
+	}
+	.ui-autocomplete-category.br-suggest-divider {
+		display: block;
+	}
+}
+@media screen and (min-width:900px) {
+	#ui-id-2 {
+		min-height: 675px;	
+	}
+}
+@media screen and (min-width:1200px) {
+	#ui-id-1 {
+		max-width: 60%;	
+	}	
+}
+@media screen and (min-width:1300px) {
+	#ui-id-1 {
+		max-width: 55%;	
+	}	
+}
+@media screen and (min-width:1450px) {
+	#ui-id-1 {
+		max-width: 768px !important;
+		width: 768px !important;
+		min-width: 768px;			
+	}	
 }
 /* FACET COLOR SWATCHES */
 .br-facet-color .mz-facetingform-value {
 	display: none;	
 }
-.mz-mobile-filter .mz-filter-mobile-options ul {
+.mz-mobile-filter ul.mz-facetingform-facet.mz-facetingform-facet-hierarchy  {
 	overflow: hidden;	
+}
+.filter-level-1 {
+	clear: both;	
 }
 .mz-facetingform .mz-facetingform-valuelabel {
 	margin-top: 5px;
@@ -412,14 +468,17 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 .br-facet-color.br-color-assorted .mz-facetingform-valuelabel {
 	background: red; /* For browsers that do not support gradients */
   /* Safari 5.1 to 6.0 */
-  background: -webkit-repeating-linear-gradient(red, yellow 10%, blue 20%);
+  /*background: -webkit-repeating-linear-gradient(red, yellow 10%, blue 20%);*/
   /* Opera 11.1 to 12.0 */
-  background: -o-repeating-linear-gradient(red, yellow 10%, blue 20%);
+  /*background: -o-repeating-linear-gradient(red, yellow 10%, blue 20%);*/
   /* Firefox 3.6 to 15 */
-  background: -moz-repeating-linear-gradient(red, yellow 10%, blue 20%);
+  /*background: -moz-repeating-linear-gradient(red, yellow 10%, blue 20%);*/
   /* Standard syntax */
-  background: repeating-linear-gradient(red, yellow 10%, blue 20%);
-	color: rgba(255, 255, 255, 0);		
+  /*background: repeating-linear-gradient(red, yellow 10%, blue 20%);*/
+	color: rgba(255, 255, 255, 0);	
+	background-image: url("http://cdn-tp2.mozu.com/16647-m1/cms/files/290414f9-f312-49ce-ba8b-5c7193e5294c");
+	background-size: contain;
+	background-repeat: none;
 }
 .br-facet-color.br-color-beige .mz-facetingform-valuelabel {
 	background-color: #A49480;
