@@ -300,8 +300,8 @@
       </script>
       {% if pagecontext.pageType != "checkout" %}
           {% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
-              <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/certonanewresoancesvone.js"></script>            
-          {% endwith %} 
+              <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/certonanewresoancesvtwo.js"></script>            
+          {% endwith %}  
       {% endif %}
       <script type="text/javascript" src="//edge1.certona.net/cd/67195178/shindigz.com/scripts/resonance.js"></script>
       {% endif %}

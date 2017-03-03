@@ -2229,6 +2229,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             'editingCard.contactId',
             'editingContact.firstName',
             'editingContact.lastNameOrSurname',
+            'editingContact.companyOrOrganization',
             'editingContact.address.address1',
             'editingContact.address.address2',
             'editingContact.address.address3',
@@ -2465,6 +2466,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         autoUpdate: [
             'editingContact.firstName',
             'editingContact.lastNameOrSurname',
+            'editingContact.companyOrOrganization', 
             'editingContact.address.address1',
             'editingContact.address.address2',
             'editingContact.address.address3',

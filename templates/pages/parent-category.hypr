@@ -38,7 +38,7 @@
 					{% for childcategory in model.childrenCategories %}
 						{% if forloop.counter < 10 %}
 							<li class="category_li">
-								<a href="/{{childcategory.content.slug|lower}}/c/{{ childcategory.categoryId }}">
+								<a href="/{{childcategory.content.slug|lower}}/c/{{ childcategory.categoryId }}"> 
 									<div class="catg_list_img">
 										{% if childcategory.content.categoryImages.length > 0 %}					
 											{% for img in childcategory.content.categoryImages %}
@@ -68,7 +68,7 @@
 							</li>
 						{% else %}
 							<li class="category_li more_catgories" style="display:none;">
-								<a href="/c/{{ childcategory.categoryId }}">
+								<a href="/{{childcategory.content.slug|lower}}/c/{{ childcategory.categoryId }}"> 
 
 									<div class="catg_list_img">
 										{% if childcategory.content.categoryImages.length > 0 %}					

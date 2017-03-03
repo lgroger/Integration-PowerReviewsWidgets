@@ -1118,22 +1118,20 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },next:function(){
             this.validateShipItem(this);
         },validateShipItem:function(scope_obj){
+            //Validate shipping address before moving to next step. Check for tenant~safety-j(USA only) and tenant~safety-k(USA 48 states) only.
             var me = scope_obj;
             try{
                 var err_msg="<ul class='is-showing mz-errors'>";
-                //console.log("next val "+this.model.toJSON().address.countryCode);
+                //Checking condition for non USA shipping address have any USA or USA48 products.
                 if((this.model.toJSON().address.countryCode!=="US" && window.usa_only.length>0) || (this.model.toJSON().address.countryCode!=="US" && window.usa_48.length>0)){
                     err_msg+="<li class='mz-error-item'>You have items that can only ship to an address in the USA</li>";
-                    window.usa_only.forEach(function(el){
-                        err_msg+="<li class='mz-error-item'><strong>"+el.name+"</strong></li>";
-                    });
-                    window.usa_48.forEach(function(el){
+                    var restricted_items=_.union(window.usa_only, window.usa_48);
+                    restricted_items.forEach(function(el){
                         err_msg+="<li class='mz-error-item'><strong>"+el.name+"</strong></li>";
                     });
                     err_msg+="<li>Please remove these items from your cart or change your ship to address</li></ul>";
                     $(".mz-messagebar").html(err_msg);
                      $("html, body").animate({ scrollTop: 0}, "slow");
-
                 }else if(this.model.toJSON().address.countryCode=="US" && window.usa_48.length>0 && window.nonlow48.indexOf(this.model.toJSON().address.stateOrProvince)>-1){
                      err_msg+="<li class='mz-error-item'>You have items that can only ship to an address in the Contiguous U.S.</li>";
                      window.usa_48.forEach(function(el){
@@ -1164,8 +1162,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         renderOnChange: [
             'availableShippingMethods'
         ],render:function(){
-            //console.log("render custom..");
-            //restrict some products in grond level only
+            //restrict tenant~safety-d and tenant~safety-k products in grond level only 
             try{
                 var order_item_list=require.mozuData("checkout").items;
                 window.ground_only="";
@@ -1178,7 +1175,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         }
                     }
                 });
-                 if(window.ground_only.length>0 && this.model.toJSON().fulfillmentContact.address.countryCode==="US"){
+                 if((window.ground_only.length>0||window.usa_48.length>0) && this.model.toJSON().fulfillmentContact.address.countryCode==="US"){
                     var ship_ground=_.where(this.model.get("availableShippingMethods"),{'shippingMethodCode':'24'});
                     if(ship_ground.length>0){
                         this.model.set("availableShippingMethods",ship_ground);
@@ -1373,7 +1370,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
-            console.log("render");
+            //console.log("render");
  
             this.model.set("card.CCSaveFlag",$("select.mz-payment-select-saved-payments").val());
             preserveElements(this, ['.v-button','.p-button', '#amazonButonPaymentSection'], function() {
