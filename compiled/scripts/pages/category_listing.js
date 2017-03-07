@@ -1,1 +1,0 @@
-define(["modules/jquery-mozu"],function(i){i(function(){i("#btn_show_all").click(function(){i(".more_catgories").css("display","inline-block"),i(this).hide()})})});

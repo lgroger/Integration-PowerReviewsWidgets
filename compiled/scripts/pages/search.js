@@ -1,1 +1,0 @@
-define("pages/search",["modules/jquery-mozu","modules/views-collections"],function(e,o){e(document).ready(function(){window.facetingViews=o.createFacetedCollectionViews({$body:e("[data-mz-search]"),template:"search-interior"})})});

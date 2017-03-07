@@ -25,7 +25,7 @@ $(function(){
 				li.attr( "aria-label", item.category + " : " + item.label );
 			  }
 			});
-			
+			$(ul).unbind("mouseenter mouseleave");// remove need for two taps per li on mobile
 		}, /* _renderItemData calls _renderItem */
 		_renderItem: function(ul, item){
 			if(item.type == "keyword"){
@@ -74,7 +74,7 @@ $(function(){
 	$("[id='search_text']").autoCompleteSearch({ // #search_text is on page twice, once for desktop, once for mobile
 		delay: 0,
 		source: function( req, add ) {
-			var searchsuggestURL = "http://brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
+			var searchsuggestURL = "//brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
 			var randomID = function() {
 				var chars = '0123456789'.split('');
 				var str = '';

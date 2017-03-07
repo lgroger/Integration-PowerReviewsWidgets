@@ -1,3 +1,11 @@
+{# test the value of seoFriendlyUrl to verify that the result was created by bloomreach api #}
+{% if model.content.seoFriendlyUrl == model.content.seoFriendlyUrl|replace("http://", "") %}
+  {# fall back to default product-listing #}
+  {% include "modules/product/product-listing" %}
+{% else %}
+  {# use this bloomreach-specific product-listing #}
+
+{# this is a theme-page category that we send to bloomreach as if it's pdp, style it accordingly #}
 {% if model.productType == "THEMEPAGE" %}
 <div class="mz-productlisting br-theme-tile {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
   <a href="{{model.content.seoFriendlyUrl}}" class="container-link"></a>
@@ -220,4 +228,5 @@
         </div>     
     {% endif %}
 </div>
+{% endif %}
 {% endif %}

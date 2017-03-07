@@ -1,1 +1,0 @@
-define(["modules/jquery-mozu","modules/api","vendor/jQuery.selectric"],function(e){e(function(){e(".careers-list-item h3").click(function(){e(this).hasClass("show-careers")?e(this).removeClass("show-careers"):(e(".careers-list-item h3").removeClass("show-careers"),e(this).addClass("show-careers"))})})});
