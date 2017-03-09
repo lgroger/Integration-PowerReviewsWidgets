@@ -1,5 +1,19 @@
 ﻿{% extends "page" %}
-
+  {% block trackingscript %}
+    <script>
+     //Facebook pixel search event tracking
+      if(fbq!==undefined){
+        fbq('track', 'Search', {
+          search_string: '{{ pageContext.search.query }}',
+          content_category: 'Product Search'
+        });
+      }
+      //Pinterest search tracking
+      if(pintrk!==undefined){
+        pintrk('track', 'search');
+      }      
+    </script>
+  {% endblock trackingscript %}
 {% block title-tag-content %}{{ labels.noResultsTitle|string_format(pageContext.search.query) }}  - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-searchresults mz-noresults {% endblock body-tag-classes %}

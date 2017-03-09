@@ -11,10 +11,10 @@
           {% include "modules/product/hierarchy-facets-mobile" with facet=facet facetValues=facet.values %}
         {% endif %}
         {% endif %}  
-    {% endfor %} 
+    {% endfor %}   
     {% for facet in model.facets %}
     {% if facet.values and facet.facetType != "Hierarchy" %}
-        <li class="filter-level-1"><a>{{ facet.label }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
+        <li class="filter-level-1"><a class="facetheadmob">{{ facet.label }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
          {% if facet.label == "Rating" %}
          <ul class="filter-level-2 mzsz-rating">
                 {% for fval in facet.values %}

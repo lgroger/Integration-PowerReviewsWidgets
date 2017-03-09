@@ -1,4 +1,3 @@
-{% require_script "modules/cycle2" %}
   {% autoescape on %}
   {% block doctype %}
   <!doctype html>
@@ -64,8 +63,31 @@
           <link rel="shortcut icon" type="image/ico" href="{{themeSettings.favicon}}"/>
           <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>
 
-          <script src="//ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
          {{themeSettings.ThirdPartyHeadTag|safe}}
+         <!-- Facebook Pixel Code-->
+         <script>
+          !function(f,b,e,v,n,t,s){if(f.fbq){return;}n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments);};if(!f._fbq){f._fbq=n;}n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","{{themeSettings.facebookPixel}}");fbq("track","PageView");
+          </script>
+            <noscript><img height="1" width="1" style="display:none" src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAQAICRAEAOw==" data-blzsrc="https://www.facebook.com/tr?id={{themeSettings.facebookPixel}}&ev=PageView&noscript=1"/></noscript>
+          <!-- End Facebook Pixel Code -->
+          <!-- Pinterest Tracking Code -->
+          <script type="text/javascript">
+          !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var n=window.pintrk;n.queue=[],n.version="3.0";var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+          pintrk('load','{{themeSettings.pinterestTagID}}');
+          pintrk('page', {
+            page_name: 'My Page',
+            page_category: 'My Page Category'
+          });
+          pintrk('track', 'pagevisit');
+          </script>
+          <noscript>
+          <img height="1" width="1" style="display:none;" alt=""
+          src="https://ct.pinterest.com/v3/?tid={{themeSettings.pinterestTagID}}&noscript=1" />
+          </noscript>
+          <!-- End Pinterest Tracking Code -->
+         {% block trackingscript %}
+         {% endblock trackingscript %}
           
           {% if PageContext.FeedUrl  %}
           <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />

@@ -79,6 +79,35 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                                         SoftCart.update();
                                        window.removePageLoader();
                                         addedToCart.proFunction(cartitemModel);
+                                        //Facebook pixel add to cart event
+                                       var track_price=ProductMod.get("price").toJSON().price;
+                                       if(ProductMod.get("price").toJSON().salePrice){
+                                          track_price=ProductMod.get("price").toJSON().salePrice;
+                                       }
+                                        var track_product_code=[];
+                                        track_product_code.push(ProductMod.toJSON().productCode); 
+                                        if(fbq!==undefined){
+                                           fbq('track', 'AddToCart', {
+                                              content_ids:track_product_code,
+                                              content_type:'product',
+                                              value: parseFloat(track_price*ProductMod.get('quantity')).toFixed(2),
+                                              currency: 'USD'
+                                          });
+                                       }
+                                       //Pinterest tracking
+                                       if(pintrk!==undefined){
+                                           pintrk('track','addtocart',{
+                                              value:parseFloat(track_price*ProductMod.get('quantity')).toFixed(2),
+                                              order_quantity:ProductMod.get('quantity'),
+                                              currency:"USD",
+                                              line_items:[{
+                                                  product_name:ProductMod.toJSON().content.productName,
+                                                  product_id:track_product_code[0],
+                                                  product_price:track_price,
+                                                  product_quantity:ProductMod.get('quantity')
+                                              }]
+                                          });
+                                       }
                                     }
                                 });
                                 ProductMod.set({
@@ -100,6 +129,34 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                         SoftCart.update();
                         window.removePageLoader();
                         addedToCart.proFunction(cartitemModel);
+                         //Facebook pixel add to cart event
+                         var track_price=ProductMod1.get("price").toJSON().price;
+                         if(ProductMod1.get("price").toJSON().salePrice){
+                            track_price=ProductMod1.get("price").toJSON().salePrice;
+                         } 
+                          var track_product_code=[];
+                           track_product_code.push(ProductMod1.toJSON().productCode);
+                           if(fbq!==undefined){
+                               fbq('track', 'AddToCart', {
+                                  content_ids:track_product_code,
+                                  content_type:'product',
+                                  value: parseFloat(track_price*ProductMod1.get('quantity')).toFixed(2),
+                                  currency: 'USD'
+                              });
+                          }
+                          if(pintrk!==undefined){
+                             pintrk('track','addtocart',{
+                                value:parseFloat(track_price*ProductMod1.get('quantity')).toFixed(2),
+                                order_quantity:ProductMod1.get('quantity'),
+                                currency:"USD",
+                                line_items:[{
+                                    product_name:ProductMod1.toJSON().content.productName,
+                                    product_id:track_product_code[0],
+                                    product_price:track_price,
+                                    product_quantity:ProductMod1.get('quantity')
+                                }]
+                            });
+                         }
                         }
 
                         });
@@ -122,13 +179,42 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                     var cartitemModel = new ProductModels.Product(cartitem.data);
                   
                     $('.dnd-popup').hide();
-                     $('body').css({overflow: 'auto'});
+                     $('body').css({overflow: 'scroll'});
                 $('html').removeClass('dnd-active-noscroll');
                 $('#cboxOverlay').hide();
                     CartMonitor.addToCount(window.productView.DNDProductModel.get('quantity'));
                     SoftCart.update();
                    window.removePageLoader();
                     addedToCart.proFunction(cartitemModel);
+                    //Facebook pixcel tracking
+                    var track_price= window.productView.DNDProductModel.get("price").toJSON().price;
+                         if( window.productView.DNDProductModel.get("price").toJSON().salePrice){
+                            track_price= window.productView.DNDProductModel.get("price").toJSON().salePrice;
+                         }
+                        var track_product_code=[];
+                         track_product_code.push(window.productView.DNDProductModel.toJSON().productCode);
+                         if(fbq!==undefined){
+                             fbq('track', 'AddToCart', {
+                                content_ids:track_product_code,
+                                content_type:'product',
+                                value: parseFloat(track_price*window.productView.DNDProductModel.get('quantity')).toFixed(2),
+                                currency: 'USD'
+                            });
+                         }
+                         if(pintrk!==undefined){
+                             pintrk('track','addtocart',{
+                                value:parseFloat(track_price*window.productView.DNDProductModel.get('quantity')).toFixed(2),
+                                order_quantity:window.productView.DNDProductModel.get('quantity'),
+                                currency:"USD",
+                                line_items:[{
+                                    product_name:window.productView.DNDProductModel.toJSON().content.productName,
+                                    product_id:track_product_code[0],
+                                    product_price:track_price,
+                                    product_quantity:window.productView.DNDProductModel.get('quantity')
+                                }]
+                            });
+                         }
+
                 }
 
             });

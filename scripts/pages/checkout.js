@@ -1717,7 +1717,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var lowerCode = this.$el.find('#coupon-code').val().toLowerCase().trim();
 
             this.$el.addClass('is-loading');
-
+            $('#coupon-code').prop('disabled',true);
             //check for single or multiple coupon code environment
             if(!Hypr.getThemeSetting('couponCodeMultiple')){
             	//check for product discounts

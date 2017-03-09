@@ -1083,6 +1083,8 @@
     "ThirdPartyHeadTag":"",
     "bizAccNumber":71746,
     "nexttag":4889912,
+    "facebookPixel":1000000,
+    "pinterestTagID":100000,
     "favicon":"//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico"
   },
   "layoutWidgets": [
@@ -1300,7 +1302,7 @@
         "*"
       ]
     },{
-         "displayName": "Super page",
+         "displayName": "Theme Page Buttons",
         "displayTemplate": "misc/super-page-widget",
         "customEditor":"super-page-filter",
         "id":"super-page-filter",

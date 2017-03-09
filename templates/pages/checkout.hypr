@@ -1,5 +1,12 @@
 ﻿{% extends "page" %} 
-
+  {% block trackingscript %}
+    <script>
+        //Facebook Pixel Tracking
+        if(fbq!==undefined){
+            fbq('track', 'InitiateCheckout');
+        }
+    </script>
+   {% endblock trackingscript %}
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.checkout %} - {% parent %}{% endblock title-tag-content %}
 
 {% block head-tag-scripts %}

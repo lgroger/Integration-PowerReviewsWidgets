@@ -174,7 +174,7 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 
 	};
 	$(document).ready(function() {
-		ColorSwatch.init();
+		//ColorSwatch.init();
 	});
 	return {ColorSwatch:ColorSwatch};
 });

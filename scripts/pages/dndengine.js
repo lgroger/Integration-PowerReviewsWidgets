@@ -104,7 +104,17 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                     var volobj ={};
                     volobj.minQty = volumePriceBands[i].minQty;
                     volobj.maxQty = volumePriceBands[i].maxQty;
-                    volobj.price = volumePriceBands[i].price.price;
+                    if(volumePriceBands[i].price){
+                        volobj.price = volumePriceBands[i].price.price;
+                    }else{
+                       if(volumePriceBands[i].priceRange){
+                            if(volumePriceBands[i].priceRange.upper.salePrice){
+                                volobj.price = volumePriceBands[i].priceRange.upper.salePrice;
+                            }else{
+                                volobj.price = volumePriceBands[i].priceRange.upper.price;
+                            }
+                       }
+                    }
                     volPrice.push(volobj);
                 }
                 self.addParameter('volumePricing', JSON.stringify(volPrice));
@@ -147,7 +157,18 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                     break;
                 case 'AddToWishlist':
                     window.productView.AddToWishlistAfterPersonalize(data);
-                    break;     
+                    break;  
+                case 'LPerror':
+                    console.log(data);
+                     if(data.message===self.errorMsg){
+                        self.errorMsgCounter++;
+                     }else{
+                        self.errorMsgCounter=1;
+                     }
+                     self.errorMsg = data.message;
+                    lpAddVars('page','DND',data.message);
+                    lpAddVars('page','ErrorCounter',self.errorMsgCounter); 
+                    break;      
             }
         };
         self.initialize=function(){

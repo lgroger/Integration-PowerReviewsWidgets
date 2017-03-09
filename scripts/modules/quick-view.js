@@ -924,6 +924,35 @@ require(
                                 }
                                 if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': cartitemModel.attributes.product.productCode , 'sku' : sku });}
                                 //end
+                                //Facebook pixel add to cart event
+                                 var track_price=product.get("price").toJSON().price;
+                                 if(product.get("price").toJSON().salePrice){
+                                    track_price=product.get("price").toJSON().salePrice;
+                                 } 
+                                  var track_product_code=[];
+                                 track_product_code.push(product.toJSON().productCode);
+                                 if(fbq!==undefined){
+                                     fbq('track', 'AddToCart', {
+                                        content_ids:track_product_code,
+                                        content_type:'product',
+                                        value: parseFloat(track_price*product.get('quantity')).toFixed(2),
+                                        currency: 'USD'
+                                    });
+                                 }
+                                 //Pinterest tracking
+                                 if(pintrk!==undefined){
+                                     pintrk('track','addtocart',{
+                                        value:parseFloat(track_price*product.get('quantity')).toFixed(2),
+                                        order_quantity:product.get('quantity'),
+                                        currency:"USD",
+                                        line_items:[{
+                                            product_name:product.toJSON().content.productName,
+                                            product_id:track_product_code[0],
+                                            product_price:track_price,
+                                            product_quantity:product.get('quantity')
+                                        }]
+                                    });
+                                 }
                             });
                         } else {
                             product.trigger("error", { message: Hypr.getLabel('unexpectedError') });

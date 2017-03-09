@@ -70,9 +70,38 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 cartitemModel.set('quantity',prod.get('quantity'));
                 addedToCart.proFunction(cartitemModel);
                 //window.location.href = "/cart";
-
-        /* added from thirdparty JS*/
-        //window.location.href = HyprLiveContext.locals.pageContext.secureHost+"/cart";
+                 //Facebook pixel add to cart event
+                 var track_price=product.get("price").toJSON().price;
+                 if(product.get("price").toJSON().salePrice){
+                    track_price=product.get("price").toJSON().salePrice;
+                 } 
+                 var track_product_code=[];
+                 track_product_code.push(product.toJSON().productCode);
+                /* if(product.toJSON().variationProductCode){
+                    fb_product_code[0]=product.toJSON().variationProductCode;
+                 }*/
+                 if(fbq!==undefined){
+                     fbq('track', 'AddToCart', {
+                        content_ids:track_product_code,
+                        content_type:'product',
+                        value: parseFloat(track_price*prod.get('quantity')).toFixed(2),
+                        currency: 'USD'
+                    });
+                 }
+                 //Pinterest tracking
+                 if(pintrk!==undefined){
+                     pintrk('track','addtocart',{
+                        value:parseFloat(track_price*prod.get('quantity')).toFixed(2),
+                        order_quantity:prod.get('quantity'),
+                        currency:"USD",
+                        line_items:[{
+                            product_name:product.toJSON().content.productName,
+                            product_id:track_product_code[0],
+                            product_price:track_price,
+                            product_quantity:prod.get('quantity')
+                        }]
+                    });
+                 }
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }

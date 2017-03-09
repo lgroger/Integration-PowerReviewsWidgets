@@ -8,10 +8,10 @@
                 <a href="#" id="{{ model.productCode }}"></a>
             </div>
         {% endif%}
-    <a href="{% make_url "product" model %}" class="container-link"></a>
+    <a href="{% make_url "product" model %}" class="container-link" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});"></a>
     <div class="mz-productlisting-image">
         {% block product-image %}
-        <a href="{% make_url "product" model %}">
+        <a href="{% make_url "product" model %}" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});"> 
             {% if model.mainImage.imageUrl %}
                 {% comment %}
                  <a href="{% make_url "product" model %}"

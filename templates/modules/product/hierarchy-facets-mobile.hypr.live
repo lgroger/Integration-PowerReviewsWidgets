@@ -1,10 +1,10 @@
 {% if facetValues and facetValues.length > 0 %}
     {% for fval in facetValues %}
     {% if fval.childrenFacetValues.length > 0 %}
-    <li class="filter-level-1"><a>{{ facet.label|safe }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
+    <li class="filter-level-1"><a class="facetheadmob">{{ facet.label|safe }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
     {% endif %}
     {% endfor %}   
-        <ul  class="filter-level-2">
+        <ul  class="filter-level-2 catmob">
             {% for fval in facetValues %}
             {% if fval.isDisplayed %}
             {% if themeSettings.showChildCategoriesInFaceting and fval.childrenFacetValues.length > 0 %}

@@ -66,9 +66,9 @@
 <div data-mz-recommendedProducts id="recommended_products_slot">
 
 </div>
-
+{% if model.content.description or  model.content.metaTagDescription %}
 <div class="mz-category-description">
-    <h2>{{ model.name|safe }}</h2>
+    <!-- <h2>{{ model.name|safe }}</h2> -->
     <p id="mz-cat-description-hide-more" >
       {% if model.content.description %}
         {{ model.content.description }}
@@ -77,6 +77,7 @@
       {% endif %}
     </p>
   </div>
+  {% endif %} 
 
 <div class="mz-shi-heading-style clear">
          {% dropzone "supertheme-theme-slider" scope="page" %}

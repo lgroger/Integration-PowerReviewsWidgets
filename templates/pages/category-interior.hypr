@@ -39,15 +39,16 @@
 	<!-- Make Product Slider Here -->
 	<div id="static" class="recommended_products">
 		{% dropzone "recommended_slot_heading" scope="template" %}
-		<!-- <h2>You Might Be Interested In</h2>  -->
+		<!-- <h2>You Might Be Interested In</h2>  --> 
 	</div>
 	<div data-mz-recommendedProducts id="recommended_products_slot">
 
 	</div>
 
 	{% dropzone "category-page-bottom" scope="page" %}
+	{% if model.content.description or  model.content.metaTagDescription %}
 	<div class="mz-category-description">
-		<h2>{{ model.name|safe }}</h2>
+		<!-- <h2>{{ model.name|safe }}</h2> -->
 		<p id="mz-cat-description-hide-more" >
 			{% if model.content.description %}
 				{{ model.content.description }}
@@ -56,5 +57,6 @@
 			{% endif %}
 		</p>
 	</div>
+	{% endif %} 
 {% endwith %}
 {% endwith %}

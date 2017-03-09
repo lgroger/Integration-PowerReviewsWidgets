@@ -630,7 +630,7 @@ if(pageContext.pageType==="confirmation"){
         console.log("global");
         if(require.mozuData("pagecontext").cmsContext.template.path!=="checkout"){
             setInterval(function(){
-                if(require.mozuData("pagecontext").url.toLowerCase()!==window.location.href.toLowerCase() && (!window.isBreadcrumbLoaded)){
+                if(require.mozuData("pagecontext").url.toLowerCase()!==(window.location.origin+window.location.pathname+window.location.search).toLowerCase() && (!window.isBreadcrumbLoaded)){
                     createBreadcrumb();
                 }else if(window.sessionStorage.getItem('lastItem')!==null){
                     if(require.mozuData("pagecontext").cmsContext.template.path==="product" && (document.referrer.toLowerCase().indexOf(window.sessionStorage.getItem('lastItem').toLowerCase())>-1||document.referrer==="")){

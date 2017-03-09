@@ -1162,6 +1162,32 @@
                           "name": "gConvCur"
                         }
                     ]
+                },{
+                    "xtype":"panel",
+                    "title":"Facebook Pixel Account ID",
+                    "collapsed":false,
+                    "flex":"1",
+                    "items":[{
+                        "fieldLabel":"Facebook Pixel ID",
+                        "xtype":"mz-input-text",
+                        "name":"facebookPixel",
+                        "width":"30%",
+                        "allowBlank":false
+                    }
+                    ]
+                },{
+                    "xtype":"panel",
+                    "title":"Pinterest tag",
+                    "collapsed":false,
+                    "flex":"1",
+                    "items":[{
+                        "fieldLabel":"Pinterest tag ID",
+                        "xtype":"mz-input-text",
+                        "name":"pinterestTagID",
+                        "width":"30%",
+                        "allowBlank":false
+                    }
+                    ]
                 }
             ]
         },

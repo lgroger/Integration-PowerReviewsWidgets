@@ -1,5 +1,42 @@
 ﻿{% extends "page" %}
-
+  {% block trackingscript %}
+    {% if model.billingInfo.paymentType != "check"%}
+    <script>
+      //Facebook pixcel purchase event
+      if(fbq!==undefined){
+        fbq('track', 'Purchase', {
+          content_ids: [{% for item in model.items %}'{{ item.product.productCode }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+          content_type: 'product',
+          value: {{model.total}},
+          currency: 'USD'
+        });
+      }
+      //Pinterest event tracking
+      {% set_var order_total_quantity=0 %}
+       {% for item in model.items %}
+        {% with order_total_quantity|add(item.quantity) as tmp %}
+            {% set_var order_total_quantity=tmp %}
+          {% endwith %}
+       {% endfor %}
+      if(pintrk!==undefined){
+         pintrk('track', 'checkout', {
+          value:{{model.total}},
+          order_quantity:{{order_total_quantity}},
+          currency:"USD",
+          line_items:[
+            {% for item in model.items %}{
+                 product_name:"{{item.product.name}}",
+                 product_id:"{{item.product.productCode}}",
+                 product_price:{{item.discountedTotal}},
+                 product_quantity: {{item.quantity}}
+              }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+          ]
+        })
+      }
+    </script>
+    {% endif %}
+  {% endblock trackingscript %}
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.orderConfirmation %} - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-confirmation {% endblock body-tag-classes %}
