@@ -1,5 +1,9 @@
 ﻿    <h3 class="mz-formstep-header mz-checkoutform-header">
+      {% if model.isQuotePayment and model.isQuotePayment== true %}
+        4. {{ labels.reviewQuote }}
+      {% else %}
         4. {{ labels.reviewOrder }}
+      {% endif %}
     </h3>
     <div class="mz-formstep-body mz-checkoutform">
         {% if model.isReady %}
@@ -57,9 +61,15 @@
             {% endif %}
 
             <div class="mz-formstep-next">
-                <button type="button" class="mz-button mz-button-large" data-mz-action="submit">
-                  {{labels.checkoutPlace}}
-                </button>
+                 {% if model.isQuotePayment and model.isQuotePayment== true %}
+                    <button type="button" class="mz-button mz-button-large" data-mz-action="submit">
+                    {{ labels.quotePlace }}
+                  </button>
+                {% else %}
+                  <button type="button" class="mz-button mz-button-large" data-mz-action="submit">
+                    {{ labels.checkoutPlace }}
+                  </button>
+                {% endif %}
             </div>
         {% endif %}
     </div>

@@ -193,6 +193,14 @@ $(function(){
 			return false;
 		}
 	});
+		//Hide search result dropdown when user rotate the iPad
+		window.addEventListener("orientationchange", function() {
+		    if($(window).width()<769){
+		    	$(".br-search-suggest").css("display","none");
+		    	document.activeElement.blur();
+		    }
+		    console.log($(window).width());
+		}, false);
 });
 
 });

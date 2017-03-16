@@ -8,10 +8,10 @@
 {# this is a theme-page category that we send to bloomreach as if it's pdp, style it accordingly #}
 {% if model.productType == "THEMEPAGE" %}
 <div class="mz-productlisting br-theme-tile {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
-  <a href="{{model.content.seoFriendlyUrl}}" class="container-link"></a>
+  <a href="{{model.content.seoFriendlyUrl}}" class="container-link" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});"></a>
   <div class="mz-productlisting-image">
         {% block product-image %}
-        <a href="{{model.content.seoFriendlyUrl}}">
+        <a href="{{model.content.seoFriendlyUrl}}" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});">
             {% if model.mainImage.imageUrl %}
                 <img src="{{model.mainImage.imageUrl}}?max={{themeSettings.listProductThumbSize}}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} />
             {% else %}
@@ -37,10 +37,10 @@
                 <a href="#" id="{{ model.productCode }}"></a>
             </div>
     {% endif%}
-    <a href="{{model.content.seoFriendlyUrl}}" class="container-link"></a>
+    <a href="{{model.content.seoFriendlyUrl}}" class="container-link" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});"></a>
     <div class="mz-productlisting-image">
         {% block product-image %}
-        <a href="{{model.content.seoFriendlyUrl}}">
+        <a href="{{model.content.seoFriendlyUrl}}" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});">
             {% if model.mainImage.imageUrl %}
                 <img src="{{model.mainImage.imageUrl}}?max={{themeSettings.listProductThumbSize}}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} />
             {% else %}

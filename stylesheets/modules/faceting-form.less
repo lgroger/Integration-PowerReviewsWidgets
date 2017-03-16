@@ -6,7 +6,7 @@
     /*
     padding-right: @gutter/2;
     border-right: 1px solid #eee;
-    */
+    */ 
     h4 {
         border-bottom: 1px solid #eee;
         margin: 0 0 5px;
@@ -18,17 +18,20 @@
         margin: 0;
         li {
             margin: 8px 0;
+            position: relative;
         }
         a {
             text-decoration: none;
         }
     }
     .mz-facetingform-valuelabel {
-        display: inline;
+        /*display: inline;
         margin-left: 8px;
-        /*cursor: none;  */
-        pointer-events: none;
-    }  
+        pointer-events: none;*/
+       display: inline-block;
+  pointer-events: none;
+  vertical-align: super;    
+}  
 
     .mz-facetingform-facet-hierarchy {
         .mz-facetingform-facet-hierarchy {
@@ -46,3 +49,32 @@
         }
     }
 }
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .mz-facetingform-valuelabel {
+        display: inline;
+        margin-left: 8px;
+        /*cursor: none;  */
+        pointer-events: none;
+    }  
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .mz-facetingform-valuelabel {
+        display: inline;
+        margin-left: 8px;
+        /*cursor: none;  */
+        pointer-events: none;
+    }  
+}
+
+@media only screen 
+  and (min-width: 320px) 
+  and (max-width: 736px){
+    .mz-facetingform-valuelabel {
+        display: inline;
+        margin-left: 8px;
+        /*cursor: none;  */
+        pointer-events: none;
+    }  
+  }

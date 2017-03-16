@@ -40,7 +40,7 @@
         {% if facet.values and facet.facetType != "Hierarchy" %} 
         {% if facet.values.length == 1 and facet.values.0.label == facet.label %}
             {% for fval in facet.values %}
-            <div class="facet-heading"> 
+            <div class="facet-heading-single"> 
                 <ul class="mz-facetingform-facet sz-singlefacet {% if facet.label== 'personalized' %}br-facet-personalized{% endif %}">
                     <li>
                         <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value desk-facet" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-desk-facet="desk-facet" data-mz-url="{% make_url "facet" fval %}">
@@ -90,7 +90,7 @@
                                    </ul>
                         {% else %} 
                             {% if facet.label == "Color" %}
-                                <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy {% if facet.isFaceted %} facetli {% endif %}">
+                                <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy {% if facet.isFaceted %} facetli {% endif %} filter-color-list">
                                 {% for fval in facet.values %}
                                     <li class="br-facet-color br-color-{{ fval.value|slugify|lower }} {% if fval.isApplied %}br-color-selected{% endif %}" title="{{fval.value|title}} ({{fval.count}})">
                                         <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value desk-facet" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-desk-facet="desk-facet" data-mz-url="{% make_url "facet" fval %}">

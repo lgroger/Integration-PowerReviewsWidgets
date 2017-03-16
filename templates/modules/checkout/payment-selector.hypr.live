@@ -6,7 +6,7 @@
         </div>
     {% endif %}
 
-    {% if siteContext.checkoutSettings.payByMail and user.isAuthenticated %}
+    {% if siteContext.checkoutSettings.payByMail %}
     <div class="mz-paymentselector-option mz-paymentselector-check mz-checkoutform {% if model.paymentType == "Check" %}mz-checkoutform-active{% endif %}">
         <div class="mz-l-formfieldgroup-row paymenttype_name">
             <div class="mz-l-formfieldgroup-cell">

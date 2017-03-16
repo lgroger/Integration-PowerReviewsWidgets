@@ -1162,7 +1162,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         renderOnChange: [
             'availableShippingMethods'
         ],render:function(){
-            //restrict tenant~safety-d and tenant~safety-k products in grond level only 
+             //restrict tenant~safety-d and tenant~safety-k products in grond level only 
             try{
                 var order_item_list=require.mozuData("checkout").items;
                 window.ground_only="";
@@ -2038,6 +2038,15 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.model.on('userexists', function (user) {
                 me.$('[data-mz-validationmessage-for="emailAddress"]').html(Hypr.getLabel("customerAlreadyExists", user, encodeURIComponent(window.location.pathname)));
             });
+        },render:function () {
+            //Check if it's Quote payment and update the submit button text in step-review section.
+            var isQuotePayment=_.findWhere(this.model.toJSON().payments,{"paymentType":"Check","status":"New"});
+            if(isQuotePayment!==undefined){
+                this.model.set("isQuotePayment",true);
+            }else{
+                 this.model.set("isQuotePayment",false);
+            }
+            Backbone.MozuView.prototype.render.call(this);
         },
         submit: function () {
             var self = this;

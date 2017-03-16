@@ -320,10 +320,10 @@ require(
 
                     if($('.mz-productoptions-option:visible').val()!==undefined &&
                         $('.mz-productoptions-option:visible').val()!==""){
-                        $('.personalize').prop('disabled', false);
+                        $('.mz-quick-view-wrapper .personalize').prop('disabled', false);
                         $('.custom-qty input').prop('disabled', false);
                     }else{
-                        $('.personalize').prop('disabled', true);
+                        $('.mz-quick-view-wrapper .personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
                     }
                 }
@@ -350,10 +350,10 @@ require(
                     if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){ 
                         if(me.model.get('purchasableState').isPurchasable && $('.mz-productoptions-option:visible:eq(1)').val()!==undefined &&
                                     $('.mz-productoptions-option:visible:eq(1)').val()!==""){
-                                    $('.personalize').prop('disabled', false);
+                                    $('.mz-quick-view-wrapper .personalize').prop('disabled', false);
                                     $('.custom-qty input').prop('disabled', false);
                         }else{ 
-                            $('.personalize').prop('disabled', true);
+                            $('.mz-quick-view-wrapper .personalize').prop('disabled', true);
                             $('.custom-qty input').prop('disabled', true);
                         }
                     }

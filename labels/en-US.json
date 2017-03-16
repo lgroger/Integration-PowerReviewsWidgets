@@ -489,5 +489,7 @@
   "purchaseOrderCustomFieldMissing"       : "Purchase order field required, see below",
   "creditLimit" :"Credit Limit",
   "availableBalance":"Available Balance",
-  "searchAll":"All Categories"
+  "searchAll":"All Categories",
+   "reviewQuote":"Review &  Request Price Quote",
+  "quotePlace": "Request Price Quote"
 }

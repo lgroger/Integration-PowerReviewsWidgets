@@ -90,19 +90,7 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 	            }
 	            Api.get('products',{filter:filter, pageSize:200, responseFields:"items(productCode,content,properties)"}).then(function(res){
 	                 var items = res.data.items;
-	                 console.log("api cl doneee");
 	                self.rendercolorswatchImage(items);
-	                /*if(self.colorswacthproductcodelist.length>0){
-	                    for(var inc = 0; inc < self.colorswacthproductcodelist.length; inc++){
-	                        productCodesStr=$(self.colorswacthproductcodelist[inc]).html().trim();
-	                        if(productCodesStr){
-	                        	$(self.colorswacthproductcodelist[inc]).attr('colorshow',1);
-	                            var productArr = _.without(productCodesStr.split(','),"");
-	                            self.displayColorSwatch($(self.colorswacthproductcodelist[inc]), self.getMatchProduct(productArr.slice(0,5),items),productArr.length);
-	                        }
-	                    }
-	                }*/ 
-
 	            });
 	        }
 	    },
@@ -120,18 +108,14 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 	        return productArr;
 	    },
 	    rendercolorswatchImage : function(items){
-	    	console.log("render done");
 	    	var el = null,swatchobj,colorhidecount;
 	    	for(var i = 0; i < items.length; i++){
 	    		if(items[i].content.productImages.length>0){
-	    			console.log("Item ");
-	    			console.log(items[i]);
 	    			el = $('[data-color-prdcode="'+items[i].productCode+'"]');
 	    			$(el).closest('a').attr('href', "/p/"+items[i].productCode); 
 	    			$(el).closest('a').attr('data-pro-id', items[i].productCode); 
 	    			$(el).attr('src',items[i].content.productImages[0].imageUrl+'?max=12');
 	    			$(el).closest('li').show();
-	    			console.log("Loadded ");
 	    			swatchobj = $(el).closest('ul+span.total-color');
 	    			if(swatchobj && swatchobj.length>0){
 	    				colorhidecount = parseInt(swatchobj.text(),10)-($(el).closest('ul').find('li:not(:visible)').length);
@@ -142,7 +126,6 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 	    },
 	    displayColorSwatch:function(obj, products, total){
 	        var displaytype = obj.attr('displaytype');
-	        console.log("render done diksda");
 	        var htmlcontent = '';
 	        if(displaytype=='image' || displaytype=='color'){ 
 	            htmlcontent='<ul>';
