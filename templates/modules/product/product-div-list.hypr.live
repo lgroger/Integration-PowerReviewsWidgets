@@ -3,7 +3,6 @@
 {% else %}
      {% set_var useBR=0 %}
 {% endif %}
-
 <div class="mz-productlist {% block module-classes %}{% endblock module-classes %}">
     {% if model.items %}
     <div class="mz-productlist-list {% block list-classes %}{% endblock list-classes %}">

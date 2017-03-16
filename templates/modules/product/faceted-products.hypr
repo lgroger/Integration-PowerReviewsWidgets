@@ -30,8 +30,8 @@
 {% else %}
      {% set_var useBR=0 %}
 {% endif %}
-
 {% preload_json model.facets "facets" %}
+
 <!-- element structure for search result category navigation -->
 <div class="bottom-category-list-container"
     {% if isGuidedSearchURL %}

@@ -12,7 +12,6 @@
 {% else %}
 	{% include_products "modules/product/faceted-products" with includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 {% endif %}
-
 {% endpartial_cache %}
 </div>  
 <!-- Make Product Slider Here --> 
