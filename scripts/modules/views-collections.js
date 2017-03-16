@@ -25,7 +25,7 @@ define([
         function clearFilterReseter() {
             if(require.mozuData('pagecontext').pageType === "search"){
                 $('[data-mz-action=clearFacets]').each(function(){
-                    $(this).attr('data-mz-url', $(this).attr('data-mz-url') + removeGetParam("facetValueFilter"));
+                    $(this).attr('data-mz-url', removeGetParam("facetValueFilter"));
                 });
             }
         }  
@@ -151,13 +151,13 @@ define([
             var flag=false;
             var filter_value = [];
             var url_data = "";
-            $(".mz-facetingform input:checkbox:checked").each(function(){
+             $(e.target).parents(".mz-facetingform").find("input:checkbox:checked").each(function(){
                 if ($.inArray(this.getAttribute('data-mz-facet-value'), filter_value) < 0) {
                     filter_value.push(this.getAttribute('data-mz-facet-value'));
                     if(this.getAttribute('data-mz-facet-value').indexOf(":") > 0) {
-                        url_data = this.getAttribute('data-mz-facet-value');
+                        url_data = encodeURIComponent(this.getAttribute('data-mz-facet-value'));
                     }else {
-                        url_data = this.getAttribute('data-mz-facet') + ':' + this.getAttribute('data-mz-facet-value');
+                        url_data = encodeURIComponent(this.getAttribute('data-mz-facet') + ':' + this.getAttribute('data-mz-facet-value'));
                     }
                     if(!flag)
                     {
