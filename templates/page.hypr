@@ -218,7 +218,8 @@
           {% visitor_tracking_pixel %}
 
 
-          <script>
+        <script type="text/javascript">
+        requirejs(['jquery'], function( $ ) {
            window.showPageLoader=function(){
               $('<div/>').addClass('se-pre-con').appendTo(document.body);
               $('<div/>').addClass('loader').appendTo(".se-pre-con");
@@ -249,7 +250,8 @@
                       });
                    });
               });
-           </script>
+        });
+        </script>
       <!--script>
       $('#menu').slicknav();
       </script-->
@@ -276,17 +278,18 @@
 
 
           if(page_context.pageType !== undefined){
+            requirejs(['jquery'], function( $ ) {
               page_type="/"===window.location.pathname||"main-page"===page_context.cmsContext.template.path?"HOME":$("#recommended_products_slot").length>=1&&"category"===page_context.pageType?"CATEGORY":$("#recommended_products_slot").length<=0&&"category"===page_context.pageType?"CATEGORYLANDING":"no-search-results"===page_context.cmsContext.template.path?"NOSEARCH":"search-results"===page_context.cmsContext.template.path?"SEARCH":"confirmation"===page_context.pageType?"PURCHASE":"my_account"===page_context.pageType?"ACCOUNT":"/compare"===window.location.pathname||"compare"===page_context.cmsContext.template.path?"COMPARE":page_context.pageType.toUpperCase();
                
                if(page_context.pageType === "confirmation"){
                  page_type = "{% if model.billingInfo.paymentType == 'Check' %}QUOTE{% else %}PURCHASE{% endif %}"  
                } 
-              
-
+            });
           }
       </script> 
       {% if themeSettings.certonaRecomm %}
           <script type="text/javascript">
+          requirejs(['jquery'], function( $ ) {
           var certona = {
               "pagetype" : page_type, //type of page
               "devicetype" : "{% if not pageContext.isDesktop %}Mobile{% else %}Desktop{% endif %}", //type of device isMobile or isDesktop
@@ -319,7 +322,7 @@
           if($("#recommended_products_slot").length>=1 && page_context.pageType === "category"){
              certona.recommendations = true;
           }
-
+        });
       </script> 
       {% if pagecontext.pageType != "checkout" %}
           {% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}

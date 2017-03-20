@@ -7,6 +7,7 @@
         <div class="mob-hr"><hr/></div>    
 	{% endblock breadcrumbs %}
 {% block body-content %}
+	{% require_script "modules/cycle2" %}
 	<div class="ech-shi-homeSlider">
 		{% dropzone "slider" scope="template" %}
 	</div> 

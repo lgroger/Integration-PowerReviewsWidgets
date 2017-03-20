@@ -15,6 +15,7 @@
 {% block body-tag-classes %} blog-main-page {% endblock body-tag-classes %}
 
 {% block body-content %}
+    {% require_script "modules/cycle2" %}
 	<div class="blog-home-content">
         {% dropzone "blog-top-header" scope="template" %}
 		<div class="top-blog-post">
