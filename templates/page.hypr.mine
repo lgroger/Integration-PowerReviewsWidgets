@@ -1,0 +1,592 @@
+  {% autoescape on %}
+  {% block doctype %}
+  <!doctype html>
+  {% endblock doctype %}
+  {% comment %}
+      The comment tag lets you write comments that will be visible when editing the template file, but don't appear in the rendered HTML. It's essentially just an "ignore this" tag.
+  {% endcomment %}
+
+  {% comment %}
+      The conditional statements below detect if visitor is on a particular
+      version of IE and adds the appropriate classes to the HTML element. You can then target
+      these browsers in your CSS without hacks, like:
+
+          .thing {
+          padding: 10px;
+          }
+          .ie6 .thing {
+          padding: 12px;
+          }
+
+      no-js:
+      The Modernizr library we're using will replace the class "no-js" with "js" if javascript
+      available. Again you can use this as a way to make sensible fallbacks if javascript
+      is not available.
+  {% endcomment %}
+
+  {% block open-html-tag %}
+  <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en"> <![endif]-->
+  <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en"> <![endif]-->
+  <!--[if IE 8]>    <html class="no-js ie8 oldie" lang="en"> <![endif]-->
+  <!--[if IE 9]>    <html class="no-js ie9" lang="en"> <![endif]-->
+  <!--[if (gt IE 9)|(!IE) ]><!-->
+  <html class="no-js" lang="en">
+  <!--<![endif]-->
+  {%endblock open-html-tag %}
+
+      {% block head-tag %}
+      <head>
+          {% block meta-tags %} 
+          <meta charset="utf-8"/>
+          <meta name="viewport" content="width=device-width,initial-scale=1"/>
+          <meta name="description" content="{{ PageContext.MetaDescription }}"/>
+          <meta name="keywords" content="{{ PageContext.MetaKeywords }}"/>
+          <meta name="correlationId" content="{{ pageContext.correlationId }}"/>
+          {% if pageContext.pageType == "product" %}
+              <meta property="og:title" content="{{ PageContext.metaTitle }}" />
+              <meta property="og:type" content="site" />
+              <meta property="og:image" content="{% if model.mainImage.imageUrl %}{% make_url "image" model.mainImage with max=600 quality=75 as_parameter %}{% endif %}" />
+              <meta property="og:url" content="{{ pageContext.url }}" />
+              <meta property="og:site_name" content="{{ siteContext.generalSettings.websiteName }}" />
+              <meta property="og:description" content="{{ PageContext.MetaDescription }}"/>
+          {% endif %}
+          {% if PageContext.pageType == 'product' %}
+          <meta name="twitter:card" content="summary_large_image"/>
+          <meta name="twitter:site" content="@shindigz"/>
+          <meta name="twitter:creator" content="@echidnainc"/>
+          <meta name="twitter:title" content="{{ model.content.productName }}"/>
+          <meta name="twitter:description" content="{{ PageContext.MetaDescription }}"/>
+          <meta name="twitter:image" content="{{ model.mainImage.src }}"/>
+          {% endif %}
+          {% endblock meta-tags %}
+          {% include "modules/json-required-for-hyprlive" %} 
+          <link rel="shortcut icon" type="image/ico" href="{{themeSettings.favicon}}"/>
+          <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>
+
+          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+         {{themeSettings.ThirdPartyHeadTag|safe}}
+         <!-- Facebook Pixel Code-->
+         <script>
+          !function(f,b,e,v,n,t,s){if(f.fbq){return;}n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments);};if(!f._fbq){f._fbq=n;}n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s);}(window,document,"script","https://connect.facebook.net/en_US/fbevents.js");fbq("init","{{themeSettings.facebookPixel}}");fbq("track","PageView");
+          </script>
+            <noscript><img height="1" width="1" style="display:none" src="data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAQAICRAEAOw==" data-blzsrc="https://www.facebook.com/tr?id={{themeSettings.facebookPixel}}&ev=PageView&noscript=1"/></noscript>
+          <!-- End Facebook Pixel Code -->
+          <!-- Pinterest Tracking Code -->
+          <script type="text/javascript">
+          !function(e){if(!window.pintrk){window.pintrk=function(){window.pintrk.queue.push(Array.prototype.slice.call(arguments))};var n=window.pintrk;n.queue=[],n.version="3.0";var t=document.createElement("script");t.async=!0,t.src=e;var r=document.getElementsByTagName("script")[0];r.parentNode.insertBefore(t,r)}}("https://s.pinimg.com/ct/core.js");
+          pintrk('load','{{themeSettings.pinterestTagID}}');
+          pintrk('page', {
+            page_name: 'My Page',
+            page_category: 'My Page Category'
+          });
+          pintrk('track', 'pagevisit');
+          </script>
+          <noscript>
+          <img height="1" width="1" style="display:none;" alt=""
+          src="https://ct.pinterest.com/v3/?tid={{themeSettings.pinterestTagID}}&noscript=1" />
+          </noscript>
+          <!-- End Pinterest Tracking Code -->
+         {% block trackingscript %}
+         {% endblock trackingscript %}
+          
+          {% if PageContext.FeedUrl  %}
+          <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />
+          {% endif %}
+
+          {% with pageContext.cmsContext.template.path as templateType %}
+              {% with siteContext.domains.primary.domainName as domainName %}
+
+                  {% if PageContext.url  %}
+                      {% if pageContext.cmsContext.template.path =="main-page" %}
+                          <link rel="canonical" href="http://{{ siteContext.domains.current.domainName }}">
+                      {% else %}
+                          {% if model.name and templateType != "categorylanding" and templateType!="category" and templateType != "product" and templateType!="super-page" and templateType !="parent-category" %}
+                              {{ '<link  rel="canonical" href="http://{0}/{1}">'|string_format(domainName, model.name) }}
+                          {% else %}
+                          {% if model.url %}
+                              {{ '<link rel="canonical" href="http://{0}{1}">'|string_format(domainName, model.url) }}
+                          {% else %}
+
+                          {% if templateType == "search-results" or templateType == "404" or templateType == "cart" or templateType == "checkout" or templateType == "my-account" %}
+                          {% endif %}
+                          {% endif %}
+                          {% endif %}
+                      {% endif %}
+                  {% endif %}
+              {% endwith %}
+          {% endwith %}
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
+          {% if PageContext.CrawlerInfo.PreviousUrl  %}
+          <link rel="prev" href="{{PageContext.CrawlerInfo.PreviousUrl}}">
+          {% endif %}
+
+          {% if PageContext.CrawlerInfo.NextUrl  %}
+          <link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
+          {% endif %}
+            <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>
+          {% block stylesheets %}
+          <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
+          {% endblock stylesheets %}
+
+          {% block head-tag-scripts %}
+
+          {% if siteContext.generalSettings.isGoogleAnalyticsEnabled %}
+            {% include "modules/analytics/google-analytics-tracking-code" %}
+          {% endif %}
+
+          {% if PageContext.pageType == 'confirmation' %} 
+          
+          {% if siteContext.generalSettings.isGoogleAnalyticsEnabled and siteContext.generalSettings.isGoogleAnalyticsEcommerceEnabled %}
+              {% include "modules/analytics/google-analytics-ecommerce-tracking-code" %}
+          {% endif %} 
+
+          {% endif %}  
+
+          {% include "modules/web-fonts-loader" %}
+          {% endblock head-tag-scripts %}
+          {% cms_resources %}
+
+
+          {%header_content%}
+
+
+
+      </head>
+      {% endblock head-tag %}
+
+      {% block body-tag %}
+
+      {% block open-body-tag %}
+      <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
+      {% endblock open-body-tag %}
+
+          <div id="page-wrapper" class="mz-l-pagewrapper">
+
+              {% block utility-bar %}
+                  {% include "modules/utility-bar/header" %}
+              {% endblock utility-bar %}
+
+              {% block page-header %}
+              {% include "modules/page-header" %}
+              {% endblock page-header %}
+
+              {% block site-nav %}
+              <div class="mega-menu-wrapper">
+                  {% dropzone "megamenu" scope="site" %}
+              </div>
+              {% dropzone "promo-adds" scope="site" %}
+              {% endblock site-nav %}
+
+
+              <div role="main" id="page-content" class="mz-l-pagecontent page-padding">
+
+                  {% block breadcrumbs %}
+                  {% if themeSettings.showBreadcrumbs %}
+                  {% include "modules/breadcrumbs" %}
+                  {% endif %}
+                  {% endblock breadcrumbs %}
+
+                  {% block body-content %}
+
+                  {% dropzone "body" scope="page" %}
+                  {% endblock body-content %}
+
+                  {% block body-below-content %}
+                  {% dropzone "body-bottom" scope="template" %}
+                  {% endblock body-below-content %}
+
+              </div>
+
+              {% block page-footer %}
+              {% include "modules/page-footer" %}
+              {% endblock page-footer %}
+
+          </div>
+          {% block trailing-scripts %}
+              {% if pageContext.pageType != 'checkout' %}
+                  {% require_script "modules/my-menu" %}
+                  {% require_script "modules/floating-header" %}
+                  {% require_script "modules/footer-collapse" %}
+                 <!-- requiring script file for guided search -->
+                  {% require_script "pages/guided-search" %}
+                  <!-- included script file for guided search -->
+              {% endif %}
+              {% require_script "pages/global" %}
+              {% require_script "modules/login-links" %}
+
+
+              {% include "modules/trailing-scripts" %}
+          {% endblock trailing-scripts %}
+          {% visitor_tracking_pixel %}
+
+
+          <script>
+           window.showPageLoader=function(){
+              $('<div/>').addClass('se-pre-con').appendTo(document.body);
+              $('<div/>').addClass('loader').appendTo(".se-pre-con");
+          }
+
+          window.removePageLoader = function(){
+              $('.se-pre-con').remove();
+              // $("html, body").animate({ scrollTop: 0 });
+          }
+           {% if pageContext.pageType == 'checkout' %}
+              window.showPageLoader();
+           {% endif %}
+           $(document).ready(function(){
+                   $('.ech-shi-footer-links ul li ul li:first-child').click(function(){
+                    if($(this).hasClass('footer_open_color') === false){
+                        $(this).addClass('footer_open_color');
+                        $(this).parent().children().not(':first').toggle();
+                        $(this).find('i').toggleClass('fa-caret-down fa-caret-up');
+                    }else{
+                         $(this).removeClass('footer_open_color');
+                         $(this).parent().children().not(':first').hide();
+                         $(this).find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
+                     }
+                      $(this).parent().parent().siblings().find('ul li:first-child').each(function(){
+                      $(this).removeClass('footer_open_color');
+                      $(this).parent().children().not(':first').hide();
+                      $(this).find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
+                      });
+                   });
+              });
+           </script>
+      <!--script>
+      $('#menu').slicknav();
+      </script-->
+      <div id="popup1" class="overlay">
+          <div class="popups">
+              <div>
+                  <a class="close" href="#">&times;</a>
+              </div>
+              <div class="content">
+                  {% include 'modules/search/search-bar' with view='_1' %}
+              </div>
+          </div>
+      </div>
+      <div id="cboxOverlay" style="display:none;"></div>
+          <!-- <div id="login-signup-container" class='overlay' style="display:none;"></div> -->
+
+      <!-- SessionCam Client Integration v6.0 -->
+      <script type="text/javascript">
+      //<![CDATA[
+      var scRec=document.createElement('SCRIPT');
+      scRec.type='text/javascript';
+      scRec.src="//d2oh4tlt9mrke9.cloudfront.net/Record/js/sessioncam.recorder.js";
+      document.getElementsByTagName('head')[0].appendChild(scRec);
+      //]]>
+      </script>
+
+      <script type="text/javascript">
+
+           if(!window.sessioncamConfiguration)
+              window.sessioncamConfiguration = new Object();
+              sessioncamConfiguration.SessionCamPath = "{% if {{ pageContext.pageType }} == "web_page" %}{{ pageContext.metaTitle }}{% else %}{{ pageContext.pageType }}{% endif %}";
+              {% if {{ pageContext.pageType }} !=  'checkout' %}
+                  {% if {{ pageContext.pageType }} ==  "search" %}
+              sessioncamConfiguration.SessionCamPageName = "{{ pageContext.cmsContext.template.path }}";
+                  {% else %}
+                      {% if pageContext.pageType == "category" and pageContext.title != '' %}
+              sessioncamConfiguration.SessionCamPageName = "{{ pageContext.title }}";
+                      {% endif %}
+                  {% endif %}
+              {% endif %}
+
+      </script>
+      <!-- End SessionCam -->
+
+
+      <!--Certona & Munchkin Code Integration Start -->
+      <script type="text/javascript">
+
+        !function(){function e(){t===!1&&(t=!0,Munchkin.init("{{ themeSettings.mktoAccNumber }}"))}var t=!1,n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src="//munchkin.marketo.net/munchkin.js",n.onreadystatechange=function(){("complete"==this.readyState||"loaded"==this.readyState)&&e()},n.onload=e,document.getElementsByTagName("head")[0].appendChild(n)}();
+
+          var globalNameSpace={},page_context=require.mozuData("pagecontext"),page_type="",catFlag;
+
+
+          if(page_context.pageType !== undefined){
+              page_type="/"===window.location.pathname||"main-page"===page_context.cmsContext.template.path?"HOME":$("#recommended_products_slot").length>=1&&"category"===page_context.pageType?"CATEGORY":$("#recommended_products_slot").length<=0&&"category"===page_context.pageType?"CATEGORYLANDING":"no-search-results"===page_context.cmsContext.template.path?"NOSEARCH":"search-results"===page_context.cmsContext.template.path?"SEARCH":"confirmation"===page_context.pageType?"PURCHASE":"my_account"===page_context.pageType?"ACCOUNT":"/compare"===window.location.pathname||"compare"===page_context.cmsContext.template.path?"COMPARE":page_context.pageType.toUpperCase();
+               
+               if(page_context.pageType === "confirmation"){
+                 page_type = "{% if model.billingInfo.paymentType == 'Check' %}QUOTE{% else %}PURCHASE{% endif %}"  
+               } 
+              
+
+          }
+      </script> 
+      {% if themeSettings.certonaRecomm %}
+          <script type="text/javascript">
+          var certona = {
+              "pagetype" : page_type, //type of page
+              "devicetype" : "{% if not pageContext.isDesktop %}Mobile{% else %}Desktop{% endif %}", //type of device isMobile or isDesktop
+              {% if pageContext.pageType ==  'category' %}
+              "categoryid" : "{{ pageContext.CategoryId }}",
+              {% endif %}
+              {% if pageContext.pageType ==  'product' %}
+              "itemid":   "{{ model.productCode }}",
+              {% endif %}
+              {% if pageContext.pageType ==  'confirmation' %}
+              "total" : "{{ model.subtotal|currency }}",
+              "price" : "{% for item in model.items %}{% if forloop.index!=1 %};{% endif %}{{ item.subtotal }}{% endfor %}",
+              "qty" : "{% for item in model.items %}{% if forloop.index!=1 %};{% endif %}{{ item.quantity }}{% endfor %}",
+              "transactionid" : "{{ model.orderNumber }}",
+              {% endif %}
+              {% if pageContext.pageType ==  'my_account' }} %}
+              "itemid" : "{% for ite in model.orderHistory.items %}{% if forloop.index!=1 %};{% endif %}{% for item in ite.items %}{{ item.product.productCode }}{% endfor %}{% endfor %}", //orderHistory items
+              {% endif %}
+              {% if pageContext.pageType ==  'cart' or pageContext.pageType ==  'confirmation' or pageContext.cmsContext.template.path == "compare" %}
+              "itemid" : "{% for item in model.items %}{% if forloop.index!=1 %};{% endif %}{{ item.product.productCode }}{% endfor %}",
+              {% endif %}
+              "customerid" : "{{ user.accountId }}", //(If user not logged in, value will be empty )
+              {% if pageContext.pageType ==  'cart' or pageContext.pageType ==  'product' or pageContext.pageType ==  'confirmation' or pageContext.cmsContext.template.path == "no-search-results" %}
+              "recommendations" : true
+              {% else %}
+              "recommendations" : false
+              {% endif %}  //(Boolean value)
+          };
+
+          if($("#recommended_products_slot").length>=1 && page_context.pageType === "category"){
+             certona.recommendations = true;
+          }
+
+      </script>
+      {% if pagecontext.pageType != "checkout" %}
+          {% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
+              <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/c6.js"></script>            
+          {% endwith %}   
+      {% endif %}
+      <script type="text/javascript" src="//edge1.certona.net/cd/67195178/shindigz.com/scripts/resonance.js"></script>
+      {% endif %}  
+
+      <!-- Certona Integration End -->
+
+  	{% if pageContext.crawlerInfo.canonicalUrl == "/homepage" or pageContext.cmsContext.template.path == "main-page" or pageContext.pageType == "product" or pageContext.pageType == "cart" or pageContext.pageType == "confirmation" %}
+      <!-- Criteo Integration Start-->
+          <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js"></script> <script type="text/javascript"> window.criteo_q = window.criteo_q || []; var deviceType = /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(navigator.userAgent) ? "m" : "d";
+      {% endif %}
+      {% if pageContext.crawlerInfo.canonicalUrl == "/homepage" or pageContext.cmsContext.template.path == "main-page" %}
+          window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "viewHome"}); </script>
+           <!-- Criteo Integration End -->
+       {% endif %}
+       {% if pageContext.pageType == "product" %}
+           window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "viewItem", item: "{{ model.productCode }}"}); </script>
+           <!-- Criteo Integration End -->
+       {% endif %}
+       {% if pageContext.pageType == "cart" %}
+           window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "viewBasket", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
+           <!-- Criteo Integration End -->
+       {% endif %}
+       {% if pageContext.pageType == "confirmation" %}
+          window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "trackTransaction", id: "{{ model.orderNumber }}", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
+          <!-- Criteo Integration End -->
+       {% endif %}
+
+
+       {% if pageContext.pageType == "confirmation" %}
+        <!-- BEGIN COMMISSION JUNCTION TRACKING CODE  - DO NOT MODIFY -->
+        <script>
+
+        var prd ="",uniquePrdDis="",url="https://www.emjcd.com/tags/c?";
+        
+        url += "containerTagId={% if pageContext.user.isAnonymous %}{{themeSettings.containerTagIdAnonymous}}{% else %}{{themeSettings.containerTagIdLoggedIn}}{% endif %}";
+        url += "&CID={{themeSettings.cid}}&OID={{ model.orderNumber }}";
+        url += "&TYPE={% if pageContext.user.isAnonymous %}{{themeSettings.aidAnonymous}}{% else %}{{themeSettings.aidExist}}{% endif %}";
+        url += "{% for item in model.items %}&ITEM{{ forloop.index }}={{ item.product.productCode }}&AMT{{ forloop.index }}={{ item.unitPrice.extendedAmount }}&QTY{{ forloop.index }}={{ item.quantity }}{% endfor %}";
+        url += "&CURRENCY=USD&DISCOUNT={{ model.discountTotal }}";
+
+        document.write('<iframe height="1" width="1" frameborder="0" scrolling="no" name="Conversion tag" src="' + url + '"></iframe>');
+
+        </script>
+       {% endif %}
+
+      <!-- Bloom reach integration start -->
+
+      {% if pageContext.pageType != 'login' and pageContext.pageType != 'undefined' %}
+      <script type="text/javascript">
+          var page_type_br="",bc,k="";
+          "CART"===page_type||"CHECKOUT"===page_type?page_type_br="other":"CATEGORYLANDING"===page_type||"CATEGORY"===page_type?page_type_br="category":"NOSEARCH"===page_type||"SEARCH"===page_type?page_type_br="search":"PURCHASE"===page_type?page_type_br="other":"HOME"===page_type?page_type_br="homepage":"PRODUCT"===page_type?page_type_br="product":page_type_br='other';
+
+          var br_data = {};
+
+          /* --- Begin parameters section: fill in below --- */
+          br_data.acct_id = "{{ themeSettings.brtrkAccNum }}";
+          br_data.user_id = "{{ user.accountId }}";
+          br_data.ptype = page_type_br;
+          {% if pageContext.pageType == 'category' %}
+          br_data.cat = "HOME|{% for crumb in navigation.breadcrumbs %}{% if not crumb.isHidden %}{% if forloop.index!=1 %}|{% endif %}{{crumb.name|safe}}{% endif %}{% endfor %}";
+          br_data.cat_id = "cat0|{% for cat in navigation.breadcrumbs %}{% if forloop.index!=1 %}|{% endif %}cat{{cat.originalId|safe}}{% endfor %}";
+          {% endif %}
+          {% if pageContext.pageType ==  'product' %}
+          br_data.prod_id = "{{ model.productCode }}";
+          br_data.prod_name = "{{ model.content.productName }}";
+          br_data.sku = "{% if model.productUsage == 'Bundle' or model.productUsage == 'Configurable' %}{% if model.variations.length %}{{ model.productCode }}{% endif %}{% endif %}";
+          {% endif %}
+          {% if pageContext.pageType ==  'search' %}
+          br_data.search_term = "{{ pageContext.search.query }}";
+          {% endif %}
+          {% if pageContext.pageType ==  'confirmation' %}
+          br_data.is_conversion = 1;
+          br_data.order_id = "{{ model.orderNumber }}";
+          br_data.basket_value = "{{ model.total }}";
+          br_data.basket = {
+          "items": [{% for item in model.items %}{% if forloop.index!=1 %},{% endif %}
+              {
+                "prod_id" : "{{ item.product.productCode }}",
+                "name": "{{ item.product.name }}",
+                "sku": "{{ item.product.variationProductCode }}",
+                "quantity": "{{ item.quantity }}",
+                "price": "{{ item.unitPrice.extendedAmount }}"
+              }{% endfor %}
+            ]
+          };
+          {% else %}
+          br_data.is_conversion = 0;
+          br_data.order_id = "";
+          {% endif %}
+
+          (function() {
+          var brtrk = document.createElement('script');
+          brtrk.type = 'text/javascript';
+          brtrk.async = true;
+          brtrk.src = 'https:' == document.location.protocol ? "https://cdns.brsrvr.com/v1/br-trk-{{ themeSettings.brtrkAccNum }}.js" : "http://cdn.brcdn.com/v1/br-trk-{{ themeSettings.brtrkAccNum }}.js";
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(brtrk, s);
+          })();
+      </script>
+
+      {% endif %}
+
+      <!-- Bloom reach integration end -->
+
+      <!-- Start Email Subscription Integration Marekto Form Please Do Not Change -->
+      <script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
+      <form id="mktoForm_{{ themeSettings.mktoEmailSubscription }}" style="display:none"></form>
+      <script>MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoEmailSubscription }},function(form){
+          window.email_signup = form;
+      });</script>
+      <!-- End Email Subscription Integration Marekto Form Please Do Not Change -->
+
+      <script>
+  	//maxlength validator
+  		function maxLengthCheck(object) {
+  		    if (object.value.length > object.max.length);
+  		      object.value = object.value.slice(0, object.max.length);
+  		}
+  	</script>
+      <script src="{% make_url "cdn" "/scripts/vendor/modernizr.min.js" %}"></script>
+      {% if pageContext.pageType != "checkout" %}
+          <script type="text/javascript">
+          if (typeof(window.lpUnit)=='undefined') { window.lpUnit='shindigz-sales-product'; }
+          </script>
+      {% endif %}
+      
+      <!-- guided search popup view container -->
+
+      {% if pageContext.pageType == "product" or  pageContext.pageType == "category" %}
+          <script type="text/javascript">
+              (function() {
+                  var s = document.createElement('script');
+                  s.type = 'text/javascript';
+                  s.async = true;
+                  s.src = '//s7.addthis.com/js/250/addthis_widget.js#pubid={{ themeSettings.socialShareAddThis }}';
+                  var x = document.getElementsByTagName('script')[0];
+                  x.parentNode.insertBefore(s, x);
+              })();
+
+         </script>
+     {% endif %}
+
+  {% if pageContext.pageType == "confirmation" %}
+     <script>
+    $(document).on('click','.toggle_components',function(e){
+        var toggleLinkId = $(this).data('parent-id');
+        var targetId = $(e.target).parent().parent().find('.hide_bundle_products').data('parent-id');
+        if(toggleLinkId == targetId){
+            $('.hide_bundle_products[data-parent-id="'+targetId+'"]').slideToggle();
+            $('.toggle_components').toggleClass('show_box');
+        }
+        if($(this).hasClass('show_box')){
+            $(this).html('Hide Components <i class="fa fa-caret-up"></i>');
+        } else {
+            $(this).html('Show Components <i class="fa fa-caret-down"></i>');
+        }
+     });
+  </script>
+
+  <script type="text/javascript">
+     $('.print-link').click(function(){
+      $(".order-confirmation").show();
+      window.print();
+
+     });
+  </script>
+  {% endif %}
+  {{themeSettings.allThirdPartyScriptTags|safe}}
+
+      <!-- guided search popup view container -->
+  {% if pagecontext.pageType != "cart" and pagecontext.pageType != "checkout" %}
+      {% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
+          {% with isguidedsearch|length as isGuidedSearchURL %}
+                  
+                    
+
+                  <div class="guided-search-div">
+                  <a style="display:none;" href="javascript:void(0)" class="guided-close fa fa-times-circle"></a>
+                   
+                   <div class="guided-circ">
+                  <a href="javascript:void(0)" class="guided-search-button-extra"
+                      {% if isGuidedSearchURL == 2 %}
+                          style="display:none;"
+                      {% else %}
+                          {% if themeSettings.isEnableGuidedSearch %}style="display:block;"{% else %}style="display:none;"{% endif %}
+                      {% endif %}>
+
+                      <div class="guided_icon_inner">
+                          
+                          <span>{{themeSettings.guidedSearchFloatingButtonText}}</span>
+                          <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
+                      </div>
+                  </a>
+    </div>
+
+                <div class="guided-tri">
+                  <a href="javascript:void(0)" class="guided-search-button" data-mz-action="open-guided-search-popover"
+                      {% if isGuidedSearchURL == 2 %}
+                          style="display:none;" 
+                      {% else %}
+                          {% if themeSettings.isEnableGuidedSearch %}style="display:block;"{% else %}style="display:none;"{% endif %}
+                      {% endif %}>
+
+                      <div class="guided_icon_inner">
+                          <!-- <i class="fa fa-2x fa-plus" aria-hidden="true"></i> -->
+                          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Isolation_Mode" x="0px" y="0px" viewBox="-481.9 485.9 27.3 31.9" style="enable-background:new -481.9 485.9 27.3 31.9;" xml:space="preserve">
+                          <g>
+                              <g>
+                                  <path d="M-471.3,516.5C-471.4,516.5-471.4,516.5-471.3,516.5c-0.6,0-1.3-0.4-1.7-0.9c-0.3-0.3-0.5-0.7-0.6-1.1    c-0.1-0.5,0-1,0.3-1.4c0.3-0.3,0.6-0.4,0.9-0.4c-0.4-0.9-1.4-1.9-2.6-3.1c-2.6-2.6-6.2-6.1-5.7-11.4c0.6-6.5,6.6-11.4,13.5-10.9    l0,0c7.2,0.6,12,6.2,11.5,13.5c-0.5,6-7.9,11.1-14.4,13.8c0.2,0.6,0.1,1.2-0.3,1.5C-470.7,516.3-471,516.5-471.3,516.5z     M-468.3,488.9c-5.6,0-10.3,4-10.7,9.4c-0.4,4.5,2.7,7.6,5.2,10.1c1.6,1.6,3,3,3.2,4.5c6.4-2.7,12.7-7.5,13.2-12.3    c0.5-6.3-3.7-11.2-9.9-11.7l0,0C-467.7,489-468,488.9-468.3,488.9z" style="fill:#fff;"/>
+                              </g>
+                              <g>
+                                  <path d="M-460.1,494.9l-1.5,1.4l0.4,2.1c0.1,0.4-0.2,0.6-0.5,0.4l-1.8-1l-1.8,1c-0.4,0.3-0.6,0-0.5-0.4l0.4-2.1l-1.5-1.4    c-0.3-0.3-0.3-0.6,0.2-0.7l2.1-0.3l0.9-1.9c0.2-0.4,0.5-0.4,0.7,0l0.9,1.9l2.1,0.3C-459.9,494.3-459.7,494.6-460.1,494.9z"  style="fill:#fff;"/>
+                              </g>
+                          </g>
+                          </svg>
+                          <br/>
+                          <span>{{themeSettings.guidedSearchFloatingButtonText}}</span>
+                      </div>
+                  </a>
+   </div>
+
+              </div>
+
+                  <div class="guided-search-container" data-container="guided-search" style="display:none;"></div>
+
+          {% endwith %}
+      {% endwith %}
+
+  {% endif %}
+      </body>
+
+  {% endblock body-tag %}
+
+  </html>
+  {% endautoescape %}

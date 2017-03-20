@@ -46,7 +46,7 @@ define(
                 me.closeview(e);
             });*/
             $("#mz-added-to-cart:empty").remove();
-            $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
+            //$('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
         },
         showPersonalizeImage: function(){
             var self = this, imgsrc,dndToken,personslizeIds = null, personslizeJson=null;

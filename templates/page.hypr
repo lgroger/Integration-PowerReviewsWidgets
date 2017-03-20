@@ -266,6 +266,7 @@
       <div id="cboxOverlay" style="display:none;"></div>
           <!-- <div id="login-signup-container" class='overlay' style="display:none;"></div> -->
 
+
       <!--Certona & Munchkin Code Integration Start -->
       <script type="text/javascript">
 
@@ -319,7 +320,7 @@
              certona.recommendations = true;
           }
 
-      </script>
+      </script> 
       {% if pagecontext.pageType != "checkout" %}
           {% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
               <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/certonanewresoancesvtwo.js"></script>            
@@ -449,10 +450,8 @@
           if (typeof(window.lpUnit)=='undefined') { window.lpUnit='shindigz-sales-product'; }
           </script>
       {% endif %}
-      
       <!-- guided search popup view container -->
-
-      {% if pageContext.pageType == "product" %}
+      {% if pageContext.pageType == "product" or  pageContext.pageType == "category" or pageContext.pageType == "search" or pageContext.pageType =="my_account" %}
           <script type="text/javascript">
               (function() {
                   var s = document.createElement('script');

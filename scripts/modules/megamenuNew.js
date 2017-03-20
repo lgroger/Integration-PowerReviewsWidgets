@@ -318,7 +318,7 @@ $(document).ready(function () {
         $('.search-overlay').hide();
     });
     // My account accordion opens in mobile  
-     var x = window.location.hash;
+    /* var x = window.location.hash;
         if(x == '#wishlist'){
             if($('div#tab_5').siblings().find('.panel1').hasClass('show')){
                 
@@ -333,7 +333,7 @@ $(document).ready(function () {
         $('#tab_5').on('click', function(){
             $('.my_account_right #tab_5').css('display','block');
         });
-/*
+
          */
 
             $('.megamu-wrapper > ul > li > ul > li').click(function(){

@@ -449,6 +449,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             setTimeout(function(){
             	$('#cboxOverlay').hide().removeClass('page-loading'); //hide page loader
             },100);
+
         }
     });
 

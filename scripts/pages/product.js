@@ -70,6 +70,48 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 cartitemModel.set('quantity',prod.get('quantity'));
                 addedToCart.proFunction(cartitemModel);
                 //window.location.href = "/cart";
+                 
+                 //google analytics code for add to cart event
+                  var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    }
+
+                    if(ga!==undefined){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'BuyPdp');
+                        ga('send', 'event', 'buy', 'buypdp', gaitem.product.name);  
+ 
+                    } 
+                    
+
+
+
                  //Facebook pixel add to cart event
                  var track_price=product.get("price").toJSON().price;
                  if(product.get("price").toJSON().salePrice){
@@ -88,6 +130,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         currency: 'USD'
                     });
                  }
+
+
+
                  //Pinterest tracking
                  if(pintrk!==undefined){
                      pintrk('track','addtocart',{
@@ -102,6 +147,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         }]
                     });
                  }
+                   if(addthis!==undefined){
+                    //Rerender addthis buttons
+                    addthis.toolbox('.cart-over-addthis');
+                }
             } else {
                 product.trigger("error", { message: Hypr.getLabel('unexpectedError') });
             }
@@ -558,8 +607,16 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             me.model.set('isConfigure', false);
             if(me.model.get('productUsage')==="Configurable"){
                 if(objj.length > 0){
+
+                    //Check all required options value are filled(model value prop shoud not be empty and it should be required).
+                    var filled_required_fileds=0;
+                    me.model.get('options').toJSON().forEach(function(ele,i){
+                        if(ele.hasOwnProperty('value') && ele.isRequired){
+                            filled_required_fileds+=1;
+                        }
+                    });
                     requiredOptions = _.where(me.model.get('options').toJSON(),{"isRequired":true});
-                    if(objj.length===requiredOptions.length){
+                    if(filled_required_fileds===requiredOptions.length){
                         me.model.set('isConfigure', true);
                     }
                 }
@@ -947,9 +1004,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             self.model.addToCart();
 
             //google analytics event tracking for personalised products
-            if(typeof _gaq !== "undefined"){
-              _gaq.push(['_trackEvent', 'shindigz', 'buy', 'addtocart']);
-            }
+            // if(typeof _gaq !== "undefined"){
+            //   _gaq.push(['_trackEvent', 'shindigz', 'buy', 'addtocart']);
+            // }
             //Bloomreach add to cart event
             var productUsage = this.model.attributes.productUsage,
                 variationProductCode = this.model.attributes.variationProductCode,
@@ -1160,6 +1217,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
 
     $(document).ready(function () {
+      
+
+
+
         var warnmessage = $('.mz-productdetail-notpurchasable').text().trim();
         $('.mz-productdetail-addtocart').attr('data-tooltip',warnmessage);
         var product = ProductModels.Product.fromCurrent();
@@ -1204,12 +1265,34 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             return false;
         });
         $(document).on("click",'[data-pr-event="snippet-read-reviews"]',function(e){
+             if(ga!==undefined){
+                ga('send', {
+            hitType: 'event',
+            eventCategory: 'PdpreadwriteReview',
+            eventAction: 'Pdp-Read-Review',
+            eventLabel: 'Read Review'
+            });
+            }
+
             $('#tab2').prop('checked', true);
             $('html, body').animate({
                     scrollTop: $("#mz-drop-zone-why-shop-wdgt").offset().top
                 }, 1000);
             return false;
         });
+        
+        $(document).on("click",'[data-pr-event="snippet-write-review"]',function(e){
+             if(ga!==undefined){
+                ga('send', {
+            hitType: 'event',
+            eventCategory: 'PdpreadwriteReview',
+            eventAction: 'Pdp-Write-Review',
+            eventLabel: 'Write Review'
+            });
+            }
+
+        });
+
     });
 
 });

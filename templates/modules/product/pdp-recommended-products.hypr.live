@@ -57,7 +57,7 @@
                           
                         </span>
                       </div>
-                    {% endif %}
+                    {% endif %} 
                     {% if item|get_product_attribute(themeSettings.productAttributes.newFlag) %} 
                         {% with item|get_product_attribute(themeSettings.productAttributes.newFlag) as isNew %}                        
                             {% if isNew.values|first|prop("value") == true %}

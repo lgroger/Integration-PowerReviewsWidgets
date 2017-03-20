@@ -144,7 +144,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 
             },
             render: function () {
-                var me = this;
+                var me = this,requiredOptions;
+                var objj=me.model.getConfiguredOptions();
                 var optionlist = $('[option-alternate-name]');
                 $.each(optionlist, function(ind, ele){
                     var id = $(ele).attr('option-alternate-name');
@@ -168,12 +169,27 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }
                      /** Enable Price Range Flag if Price Range Is Not Null **/
                     var jsonModel = me.model.toJSON();
-                    var objj=me.model.getConfiguredOptions();
                     if(objj.length===0 && !!jsonModel.priceRange){
                           me.model.apiModel.data = jsonModel;
                           me.model.apiModel.data.hasPriceRange=true;
                           me.model.set('hasPriceRange', true);
                           me.model._hasPriceRange=true;
+                    }
+                }
+                me.model.set('isConfigure', false);
+                if(me.model.get('productUsage')==="Configurable"){
+                    if(objj.length > 0){
+                            //Check all required options value are filled(model value prop shoud not be empty and it should be required).
+                            var filled_required_fileds=0;
+                            me.model.get('options').toJSON().forEach(function(ele,i){
+                                if(ele.hasOwnProperty('value') && ele.isRequired){
+                                    filled_required_fileds+=1;
+                                }
+                            });
+                        requiredOptions = _.where(me.model.get('options').toJSON(),{"isRequired":true});
+                        if(filled_required_fileds===requiredOptions.length){
+                            me.model.set('isConfigure', true);
+                        }
                     }
                 }
                 this.hideExtras();
@@ -297,13 +313,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     $(".product-image > iframe").attr('src', 'http://www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
                 });
                 $("#video-frame").hide();
-                $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
-                var interTimeObj = setInterval(function(){
-                    if($(".at4-share-outer.addthis-smartlayers.addthis-smartlayers-desktop").length > 0) {
-                        $(".at4-share-outer.addthis-smartlayers.addthis-smartlayers-desktop").remove();
-                        clearInterval(interTimeObj);
-                    }
-                }, 200);
+                
 
                 $("#mz-quick-view-container").children(".qtyminus,.qtyplus").css({"background-color":"transparent","fonts-size":"1rem"});
                 $(".addToWishlist-btn-extra").click(function(){
@@ -1800,6 +1810,16 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     cartitemModel.set('quantity', prod.get('quantity'));
                     addedToCart.proFunction(cartitemModel);
                     window.removePageLoader();
+                    if(window.addthis!==undefined){
+                       //Update addthis to currect product model and rerender.
+                        try{
+                            addthis.update('share', 'url',window.location.origin+prod.toJSON().url );
+                            addthis.update('share', 'title',prod.toJSON().name); 
+                           addthis.toolbox(".addthis_toolbox");
+                        }catch(err){
+                            console.log("Error on addthis "+err);
+                        }
+                    }
                 });
                 productModel.set('quantity', $(e.target).parents(".wishlist-item").find('[data-mz-value=quantity]').val());
                 productModel.addToCart();
@@ -2844,6 +2864,32 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     $("a#tab_5 .mz-cms-content").trigger('click');
                 }
             }
+        });
+
+        //Event lister to navigate sections. if user clicked in login dropdown check the window.location.hash and get the section to viewport
+        var tab_config={
+            "#wishlist":5,
+            "#myorders":4,
+            "#myquotes":7
+        };
+        if(window.location.hash.length>1){
+            checkNavigation(window.location.hash);
+        }
+        function checkNavigation(navItem) {
+            if(tab_config[navItem]!==undefined){
+                if($(window).width<660){
+                     $('div#tab_'+tab_config[navItem]+' button').addClass('active');
+                     $('div#tab_'+tab_config[navItem]+' button+div').addClass('show');
+                }else{
+                    $('div#tab_'+tab_config[navItem]).css('display','block');
+                    $('div#tab_'+tab_config[navItem]).siblings('.account_tab-content').css("display","none");
+                    $('.my_account_left a[href="#tab_'+tab_config[navItem]+'"]').parent().addClass('active_my_account_menu');
+                   $('.my_account_left a[href="#tab_'+tab_config[navItem]+'"]').parent().siblings().removeClass('active_my_account_menu');
+                }
+            }
+        }
+        $(window).on('hashchange', function() {
+            checkNavigation(window.location.hash);
         });
 
         // TODO: upgrade server-side models enough that there's no delta between server output and this render,

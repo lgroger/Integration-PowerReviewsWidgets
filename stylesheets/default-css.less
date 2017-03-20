@@ -1465,8 +1465,10 @@ a.br-theme-page:hover {
             >ul{
                 display: none;
                 &.show-menu-sub{
-                    display: block;
-                    margin: 5px 0 0;
+                	.clearfix;
+						display: block;
+						margin: 12px 0 0;
+						padding-left: 10px;
                 }
             }
         }
@@ -1550,7 +1552,12 @@ a.br-theme-page:hover {
             font-size: 17px;
         }
         .megamu-wrapper.megamenu-wrapper-new ul li ul li{
-            padding: 0;
+			padding: 0;
+			float: left;
+			clear: both;
+			display: inline;
+			margin: 2px 0;
+			font-size: 15px !important;
         }
         .megamu-wrapper ul li ul li{
             border-left: 0px !important;
@@ -6228,4 +6235,46 @@ h2.promo-slide-title{
 }
 #mz-drop-zone-category-seo-zone,#mz-drop-zone-category-seo-zone{
     clear: both;
+}
+
+.product-share{
+    .fa{
+        font-size: 26px;
+        margin: 0 5px;
+    }
+    .fa-facebook-square:hover{
+        color: #3b5998;
+        -webkit-transition: all 200ms ease;
+        -moz-transition: all 200ms ease;
+        -o-transition: all 200ms ease;
+        transition: all 200ms ease-in-out;
+    }
+    .fa-twitter-square:hover{
+        color: #1da1f2;
+        -webkit-transition: all 200ms ease;
+        -moz-transition: all 200ms ease;
+        -o-transition: all 200ms ease;
+        transition: all 200ms ease-in-out;
+    }
+    .fa-pinterest-square:hover{
+        color: #bd081b;
+        -webkit-transition: all 200ms ease;
+        -moz-transition: all 200ms ease;
+        -o-transition: all 200ms ease;
+        transition: all 200ms ease-in-out;
+    }
+    .fa-envelope:hover{
+        color: #bd081b;
+        -webkit-transition: all 200ms ease;
+        -moz-transition: all 200ms ease;
+        -o-transition: all 200ms ease;
+        transition: all 200ms ease-in-out;
+    }
+    .fa-google-plus-square:hover{
+        color: #dc4a38;
+        -webkit-transition: all 200ms ease;
+        -moz-transition: all 200ms ease;
+        -o-transition: all 200ms ease;
+        transition: all 200ms ease-in-out;
+    }
 }

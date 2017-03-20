@@ -26,6 +26,12 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
     		        'fast',function () {
                         $(".super-page-btn-fixed").removeClass("scrolling");
                     });
+               if($(window).width()<1025){
+                 var left_pos=$(this).offset().left;
+                 var curr_left=$(".super-page-btn-fixed").scrollLeft();
+                 var fixed_mid=Math.round($(".super-page-btn-fixed").width()/2);
+                 $(".super-page-btn-fixed").scrollLeft(left_pos+curr_left-fixed_mid);
+               }
             }
     	});
         $(document).on("click",".swatch-color",function(){
@@ -79,6 +85,48 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                                         SoftCart.update();
                                        window.removePageLoader();
                                         addedToCart.proFunction(cartitemModel);
+                                        
+                                        
+                  //google analytics code for add to cart event
+                  var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    }
+
+                    if(ga!==undefined){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'Buysuperpage');
+                        ga('send', 'event', 'buy', 'buysuperpagednd', gaitem.product.name);  
+ 
+                    } 
+
+                                          
+
                                         //Facebook pixel add to cart event
                                        var track_price=ProductMod.get("price").toJSON().price;
                                        if(ProductMod.get("price").toJSON().salePrice){
@@ -108,6 +156,16 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                                               }]
                                           });
                                        }
+                                       if(window.addthis!==undefined){
+                                    ///Update addthis to currect product model and rerender.
+                                    try{
+                                        addthis.update('share', 'url',window.location.origin+ProductMod.toJSON().url );
+                                        addthis.update('share', 'title',ProductMod.toJSON().content.productName); 
+                                       addthis.toolbox(".addthis_toolbox");
+                                    }catch(err){
+                                        console.log("Error on addthis "+err);
+                                    }
+                                }
                                     }
                                 });
                                 ProductMod.set({
@@ -129,6 +187,46 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                         SoftCart.update();
                         window.removePageLoader();
                         addedToCart.proFunction(cartitemModel);
+
+                        //google analytics code for add to cart event
+                          var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    }
+
+                    if(ga!==undefined){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'Buysuperpages');
+                        ga('send', 'event', 'buy', 'buysuperpage', gaitem.product.name);  
+ 
+                    } 
+                                        
+
                          //Facebook pixel add to cart event
                          var track_price=ProductMod1.get("price").toJSON().price;
                          if(ProductMod1.get("price").toJSON().salePrice){
@@ -186,6 +284,46 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                     SoftCart.update();
                    window.removePageLoader();
                     addedToCart.proFunction(cartitemModel);
+                    
+                    //google analytics code for add to cart event
+            var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    } 
+
+                    if(ga!==undefined){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'Buysuperpagepersonal');
+                        ga('send', 'event', 'buy', 'buysuperpagepersonalize', gaitem.product.name);  
+ 
+                    } 
+                                        
+
                     //Facebook pixcel tracking
                     var track_price= window.productView.DNDProductModel.get("price").toJSON().price;
                          if( window.productView.DNDProductModel.get("price").toJSON().salePrice){

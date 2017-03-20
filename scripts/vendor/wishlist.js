@@ -226,13 +226,13 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 		moveToWishlist: function(exWishlistId, newWishlistId, productId, callBackFunction, originalProductId) {
 			var me = this;
 	        if(originalProductId !== false && newWishlistId !== "") {
-	        	me.createNewWishlist(newWishlistId,$("#new-wishlist-name").val(), $("#new-event-date").val()).then(function(res) {
+	        	me.createNewWishlist(newWishlistId,$('#new-events-name option:selected').val(), $("#new-event-date").val()).then(function(res) {
 	        		var tempResponse = res;
 	        		me.getWishlistItemById(exWishlistId, productId).then(function(productModel) {
 	        			me.addItem(tempResponse.id, productModel).then(function(res) {
 	        				me.removeWishlistItem(exWishlistId, productId).then(function(res1) {
 	        					$("#wishlist-close").trigger('click');
-	        					callBackFunction();
+	        					callBackFunction(); 
 	        					me.showAddedPopup('Item Successfully Moved To Wishlist.');
 	        				});
 	                    });
@@ -310,6 +310,16 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	                //model.trigger('addedtowishlist');
 	            });
 	        }
+	    var gawishlist = model.toJSON().content.productName;
+			if(ga!==undefined){
+				ga('send', {
+				hitType: 'event',
+				eventCategory: 'wishlistitem',
+				eventAction: 'Item added to wishlist',
+				eventLabel: gawishlist
+				}); 
+			}
+
 	    },
 	    initoWishlist: function(model, callBackFunction){
 	    	var ifrm = $("#homepageapicontext");

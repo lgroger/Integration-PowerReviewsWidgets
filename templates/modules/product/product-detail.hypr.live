@@ -1,3 +1,4 @@
+
 {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
 <div class="mz-productdetail-shortdesc mz-l-stack-section">
   <h4 class="mz-l-stack-sectiontitle">{{ labels.shortDesc }}</h4>

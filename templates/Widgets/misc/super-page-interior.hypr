@@ -1,0 +1,5 @@
+<div class="prod-list clearfix" id="cat-{{ child.content.slug }}">
+  {% with chil as newVa %}
+  {% include_products "templates/pages/super-page-view" with pageSize=200 and responseFields="facets,items(productCode,productSequence,productUsage,fulfillmentTypesSupported,goodsType,content, purchasableState,isActive, price,priceRange, pricingBehavior,productType,productTypeId,isTaxable,inventoryInfo ,upc,upcs,measurements,mfgPartNumber,volumePriceBands,isPackagedStandAlone,properties,createDate,options,categories(categoryId))" and includeFacets=themeSettings.showCategoryFacets as_parameter %}
+  {% endwith %}
+</div>

@@ -222,7 +222,7 @@ require(
                 }
                 $('select.mz-productoptions-option').hide();
                 $('[data-mz-product-option="'+id+'"]').show();
-            },
+            }, 
             render: function () {
                 var me = this,requiredOptions;
                 var objj=me.model.getConfiguredOptions();
@@ -259,8 +259,15 @@ require(
                 me.model.set('isConfigure', false);
                 if(me.model.get('productUsage')==="Configurable"){
                     if(objj.length > 0){
+                            //Check all required options value are filled(model value prop shoud not be empty and it should be required).
+                            var filled_required_fileds=0;
+                            me.model.get('options').toJSON().forEach(function(ele,i){
+                                if(ele.hasOwnProperty('value') && ele.isRequired){
+                                    filled_required_fileds+=1;
+                                }
+                            });
                         requiredOptions = _.where(me.model.get('options').toJSON(),{"isRequired":true});
-                        if(objj.length===requiredOptions.length){
+                        if(filled_required_fileds===requiredOptions.length){
                             me.model.set('isConfigure', true);
                         }
                     }
@@ -395,13 +402,7 @@ require(
                     }
                 });
                 $("#video-frame").hide();
-                $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
-                var interTimeObj = setInterval(function(){
-                    if($(".at4-share-outer.addthis-smartlayers.addthis-smartlayers-desktop").length > 0) {
-                        $(".at4-share-outer.addthis-smartlayers.addthis-smartlayers-desktop").remove();
-                        clearInterval(interTimeObj);
-                    }
-                }, 200);
+            
                 var proCodes = $('ul[color-swatch-data]').attr('color-swatch-data');
                 if(proCodes){
                     var procodeArray = proCodes.split(',');
@@ -420,7 +421,16 @@ require(
                 $(".addToWishlist-btn-extra").click(function(){
                     me.addToWishlist();
                 });
-
+                  if(window.addthis!==undefined){
+                    //Update addthis to currect product model and rerender.
+                    try{
+                        addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
+                        addthis.update('share', 'title',me.model.toJSON().content.productName); 
+                       addthis.toolbox(".addthis_toolbox");
+                    }catch(err){
+                        console.log("Error on addthis "+err);
+                    }
+                }
                 getReviewFromPLP(this.productCode);
             },
             getExtraProduct: function(productCode){
@@ -924,6 +934,46 @@ require(
                                 }
                                 if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': cartitemModel.attributes.product.productCode , 'sku' : sku });}
                                 //end
+
+                //google analytics code for add to cart event
+                  var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    }
+
+                    if(ga!==undefined){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'BuyPlp');
+                        ga('send', 'event', 'buy', 'buyquickview', gaitem.product.name);  
+ 
+                    }
+                                        
+                                         
                                 //Facebook pixel add to cart event
                                  var track_price=product.get("price").toJSON().price;
                                  if(product.get("price").toJSON().salePrice){
@@ -953,6 +1003,16 @@ require(
                                         }]
                                     });
                                  }
+                                  if(window.addthis!==undefined){
+                                    ///Update addthis to currect product model and rerender.
+                                    try{
+                                        addthis.update('share', 'url',window.location.origin+product.toJSON().url );
+                                        addthis.update('share', 'title',product.toJSON().content.productName); 
+                                       addthis.toolbox(".addthis_toolbox");
+                                    }catch(err){
+                                        console.log("Error on addthis "+err);
+                                    }
+                                }
                             });
                         } else {
                             product.trigger("error", { message: Hypr.getLabel('unexpectedError') });

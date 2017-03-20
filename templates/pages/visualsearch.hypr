@@ -1,0 +1,12 @@
+{% extends "page" %}
+
+{% block body-content %}
+
+{% require_script "pages/category" %}
+{% require_script "pages/guided-search" %}
+
+<div data-mz-category-guided class="mz-l-container">
+    {% include "modules/search-results" %}
+</div>
+
+{% endblock body-content %}

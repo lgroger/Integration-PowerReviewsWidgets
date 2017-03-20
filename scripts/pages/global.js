@@ -186,6 +186,18 @@ if(pageContext.pageType==="confirmation"){
             lazyLoadImage();
         });
 
+        /*$('.mega-menu-container a').click(function(){
+            if(ga!==undefined){
+                ga('send', {
+            hitType: 'event',
+            eventCategory: 'Navigation',
+            eventAction: 'MegaMenu',
+            eventLabel: $(this).attr('href')
+            });
+            }
+            
+        });*/
+
         
 
 		      var errCtr=0,now=0,chg=0,
@@ -471,19 +483,7 @@ if(pageContext.pageType==="confirmation"){
 	            };
            }
             //user holiday email preferences - marketo - end
-            //if url has #whislist, make wishlist section active
-            //console.log(window.location);
-            if(window.location.hash==="#wishlist"){
-            	$('div#tab_5').css('display','block');
-				$('div#tab_5').siblings('.account_tab-content').css("display","none");
-				$('a#tab_5').parent().addClass('active_my_account_menu');
-				$('a#tab_5').parent().siblings().removeClass('active_my_account_menu');
-			}else if(window.location.hash==="#rewardAcc"){
-                $('div#tab_6').css('display','block');
-                $('div#tab_6').siblings('.account_tab-content').css("display","none");
-                $('a#tab_6').parent().addClass('active_my_account_menu');
-                $('a#tab_6').parent().siblings().removeClass('active_my_account_menu');
-            }
+            
         }
 
         var btn_email_signup = document.getElementById('subscribe_email');

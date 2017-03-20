@@ -198,10 +198,27 @@
             <div id="product-detail" class="mz-productdetail mz-l-stack">
                {% include "modules/product/product-detail-custom" %}
             </div>
-            <div class="product-share">
+           <div class="product-share">
                  <span>Share: </span>        
                  <!-- Go to www.addthis.com/dashboard to customize your tools -->
-                 <div id="addThis-conainer" style="display: inline-block;vertical-align: middle;" class="addthis_sharing_toolbox addthis_32x32_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
+                 <div  style="display: inline-block;vertical-align: middle;" class="addthis_toolbox addthis_button_compact addthis_default_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
+                     <a class="addthis_button_facebook">
+                      <i class="fa fa-facebook-square"></i>
+                    </a>
+                    <a  class="addthis_button_twitter">
+                       <i class="fa fa-twitter-square"></i>
+                    </a>
+                    <a class="addthis_button_pinterest_share">
+                       <i class="fa fa-pinterest-square"></i>
+                    </a>
+                     <a class="addthis_button_google_plusone_share">
+                        <i class="fa fa-google-plus-square"></i>
+                    </a>
+                    <a class="addthis_button_email">
+                      <i class="fa fa-envelope"></i>
+                    </a>
+
+                   
                  </div>
             </div>
             {% dropzone "instock-notice" scope="template" %}

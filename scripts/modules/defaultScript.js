@@ -8,7 +8,7 @@ define(
     	$(this).parent().siblings().removeClass('active_my_account_menu');
     	var tab = $(this).attr("href");
         $(".account_tab-content").not(tab).css("display", "none");
-        $(tab).fadeIn(); 
+        $("div"+tab).fadeIn(); 
         return false;
 	});
 	var faq_text = $('#mz-drop-zone-faq a').text();
