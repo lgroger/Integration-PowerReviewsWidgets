@@ -3,10 +3,6 @@
     <div class="label-push-down acc-pref-main-sec">
         <input type="checkbox" data-mz-value="isSameBillingShippingAddress" class="check-acc-box" id="isSameShippingAddress" value="true" {% if model.isSameBillingShippingAddress %}checked="checked"{% endif %} />
         <label class="acc-pre-che" for="isSameShippingAddress">{{ labels.useShippingAddress }}</label>
-         {% if model.sameshippingbillingflag %}
-        <div> Please enter billing info manually as Shipping address1 field contains more than 30 characters </div>
-        {% endif %}
-
     </div>
     
     <!-- <label>

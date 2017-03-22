@@ -144,51 +144,6 @@
         </div>
     </div>
      <div class="clear"></div>
-     {% if user.isAnonymous %}
-     <div class="mz-cms-col-12-12 signup-block">
-        <div class="signup-inner">
-            {{ themeSettings.rewardAnonymous | safe }}
-
-            {% comment %}
-              <h1 class="sign-text1">Sign Up For an Account with Us Today</h1>
-              <h3 class="sign-text2">All you need to do is enter password below and we will remember who your are for next time</h3>
-              <h3 class="sign-text3">You've earned 10 points, sign up now to receive 10 points now</h3>
-            {% endcomment %}
-             <!-- adding hidden text fields for creating user with billing contact informations -->
-             <input type="hidden" value="{{model.id}}" name="data-mz-post-order-signup" data-mz-post-order-signup />
-             <input type="hidden" value="{{model.total}}" name="data-mz-post-order-total" data-mz-post-order-total />
-              <input name="emailAddress" data-mz-signup-emailaddress  type="hidden" value="{{model.billingInfo.billingContact.email}}">
-              <input name="firstName" data-mz-signup-firstname type="hidden" value="{{model.billingInfo.billingContact.firstName}}">
-              <input  name="lastName" data-mz-signup-lastname  type="hidden" value="{{model.billingInfo.billingContact.lastNameOrSurname}}">
-              <input name="password" data-mz-signup-password placeholder="Enter a Password" type="password">
-              <input name="confirmPassword" data-mz-signup-confirmpassword placeholder="Confirm Password" type="password">
-              <button class="signup-btn" data-mz-action="order-confirmation-signup-submit">Sign Up</button>
-              <p confirmation-signup-passwordmissmatch style="color: #d43b3b;text-align: left;letter-spacing: .5px;display:none;">
-
-              </p>
-        </div>
-     </div>
-     {% else %}
-        <!-- Show following div only if the user enable-shipping-reward-program custom attribute value is false  -->
-        <div class="mz-cms-col-12-12 confirm_join_rewards" customer-shipping-reward-join style="display:none;">
-            <div class="join_rewards_inner">
-              <div class="mz-cms-col-9-12 join_rewards_text">
-                {{ themeSettings.rewardLoggedin | safe }}
-                {% comment %}
-                  <h2>JOIN THE SHINDIGZ REWARDZ PROGRAM</h2>
-                  <p>Earn Rewardz Dollars on EVERY purchase Join the party and get in on great Rewardz when you shop Shindigz!
-                  Plus, get access to secret sales, bonus Rewardz, double Rewardz months, and special gifts.</p>
-                {% endcomment %}
-              </div>
-              <div class="mz-cms-col-3-12 join_rewards_btn">
-                <a href="#" class="join_btn">{{ themeSettings.rewardLoggedinJoin }}</a>
-              </div>
-              <div class="clear"></div>
-            </div>
-        </div>
-     {% endif %}
-
-     <div class="clear"></div>
 	<!--p>{{ labels.confirmationText }}</p>
 
     <p>{{ labels.yourOrderNumber|string_format(model.orderNumber)|safe }}</p-->
@@ -543,6 +498,7 @@ qty += {{i.quantity}};
 	{% parent %}
   {% block DoubleClick-FloodLight %}
     <script type="text/javascript">
+    requirejs(['jquery'], function( $ ) {
       var ordNumber = {{ model.orderNumber }};
       var ordVal = "000000000" + ordNumber;
       var valu1 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.product.productCode }}{% endfor %}";
@@ -563,6 +519,7 @@ qty += {{i.quantity}};
       $(DCLK_FLIframe).attr('height','1');
       $(DCLK_FLIframe).attr('frameborder','0');
       flDiv.appendChild(DCLK_FLIframe);
+    });
     </script>
   {% endblock DoubleClick-FloodLight %}
 

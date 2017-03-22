@@ -15,46 +15,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         next: function () {
             // wait for blur validation to complete
             var me = this; 
+            var gaid = this.$el.attr('id'); 
             me.editing.savedCard = false;
+            if(gaid === "step-payment-info" && me.model.toJSON().billingContact.address.address1 && me.model.toJSON().billingContact.address.address1.length>30 && me.model.toJSON().paymentType === "CreditCard" ){
+             
+                $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');
+             
+            }
+           else{  
+             
             _.defer(function () {
                 me.model.next();
-            });
-            var gaid = this.$el.attr('id');
-            if( ga!==undefined && window.ga_shippingmethod_sent === undefined && gaid === "step-shipping-method" ){
-                
-                var gashipmethod =  this.model.attributes.shippingMethodName;
-                ga('ec:setAction','checkout', {'step': 2});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initShippingMethod',{'nonInteraction': true});
-                
-                ga('ec:setAction','ShippingMethod', {
-                'step': 2,
-                'option': gashipmethod 
-                });
-                 
-                ga('send', 'event','Enhanced-Ecommerce','ShippingMethod');
-               
-               window.ga_shippingmethod_sent = true;
-             }
-
-
-            if(gaid == "step-payment-info" && ga!==undefined ){
-       
-                 var paymentmethod = me.model.apiModel.data.paymentType;
-
-                 ga('ec:setAction','checkout', {'step': 3});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initPaymentMethod',{'nonInteraction': true});
-                
-                ga('ec:setAction','PaymentMethod', {
-                'step': 3,
-                'option': paymentmethod
-                });
-                
-            ga('send', 'event','Enhanced-Ecommerce','PaymentMethod');
-                
-            }   
-
+            }); 
+           }   
          },
         amazonShippingAndBilling: function() {
             //isLoading(true);
@@ -93,16 +66,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                 }
             });
-             
-             if(this.model.toJSON().shippingMethodName !== undefined){
-                window.ga_shippingmethodfilled = true;
-             }
-
              if(this.model.toJSON().address !==undefined){
-               if(this.model.toJSON().address.postalOrZipCode !== undefined){
-                window.ga_addressprefilled=true;
-               }
-                
                 if((this.model.toJSON().address.countryCode!=="US" && window.usa_only.length>0) || (this.model.toJSON().address.countryCode!=="US" && window.usa_48.length>0)){
                    me.model.set('address.countryCode','US');
                 }else if(this.model.toJSON().address.countryCode=="US" && window.usa_48.length>0 && window.nonlow48.indexOf(this.model.toJSON().address.stateOrProvince)>-1){
@@ -1152,24 +1116,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         additionalEvents:{
             "click a#shipping-addr-edit-link": "updateAddressEditingProperty"
         },
-
-        render:function(){
-              if( window.ga_addressprefilled !== undefined && ga!==undefined && window.ga_addressprefilled === true && window.ga_sent_step1 === undefined ){
-                ga('ec:setAction','checkout', {'step': 1});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initShippingInformation',{'nonInteraction': true});
-                    
-                    ga('ec:setAction','ShippingInformation', {
-                    'step': 1,
-                    'option': 'ShippingInfo'
-                    }); 
-                
-                ga('send', 'event','Enhanced-Ecommerce','ShippingInformation');
-                    window.ga_sent_step1 = true;
-                  }
-
-            CheckoutStepView.prototype.render.apply(this);
-        },
         updateAddressEditingProperty: function(){
           /*   $('.mz-contactselector-contact.mz-contactselector-new.mz-checkoutform-shipping').css('display','table');
             $('.mz-contactselector .mz-addresssummary').hide();   */
@@ -1205,24 +1151,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     $("html, body").animate({ scrollTop: 0}, "slow");
                 }else{
                     me.editing.savedCard = false;
-                    this.model.set("isAddressEditing",  "0");
-                    
-                 
-                if( ga!==undefined && window.ga_sent_step1 === undefined ){
-                ga('ec:setAction','checkout', {'step': 1});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initShippingInformation',{'nonInteraction': true});
-                    
-                    ga('ec:setAction','ShippingInformation', {
-                    'step': 1,
-                    'option': 'ShippingInfo'
-                    });
-                
-                ga('send', 'event','Enhanced-Ecommerce','ShippingInformation');
-                    window.ga_sent_step1 = false;
-                  }
-                
-                 _.defer(function () {
+                     this.model.set("isAddressEditing",  "0");
+                    _.defer(function () {
                         me.model.next();
                     });
                 }
@@ -1240,29 +1170,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         templateName: 'modules/checkout/step-shipping-method',
         renderOnChange: [
             'availableShippingMethods'
-        ],
-        initialize:function(){
-            window.ga_shippingmethod=false;
-        },
-        render:function(){
+        ],render:function(){
              //restrict tenant~safety-d and tenant~safety-k products in grond level only 
-             if( window.ga_shippingmethodfilled !== undefined && window.ga_shippingmethodfilled === true && ga!==undefined && window.ga_shippingmethod_sent === undefined ){
-                
-                var gashipmethod =  this.model.attributes.shippingMethodName;
-                ga('ec:setAction','checkout', {'step': 2});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initShippingMethod',{'nonInteraction': true});
-                
-                ga('ec:setAction','ShippingMethod', {
-                'step': 2,
-                'option': gashipmethod 
-                });
-                
-                ga('send', 'event','Enhanced-Ecommerce','ShippingMethod');
-               
-               window.ga_shippingmethod_sent = true;
-             }
-
             try{
                 var order_item_list=require.mozuData("checkout").items;
                 window.ground_only="";
@@ -1290,8 +1199,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             "change [data-mz-shipping-method]": "updateShippingMethod"
         },
         updateShippingMethod: function (e) {
-            this.model.updateShippingMethod(this.$('[data-mz-shipping-method]:checked').val());            
-    }
+            this.model.updateShippingMethod(this.$('[data-mz-shipping-method]:checked').val());
+        }
     });
 
     var poCustomFields = function() {
@@ -1471,7 +1380,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         render: function() {
             //console.log("render");
-             
+ 
             this.model.set("card.CCSaveFlag",$("select.mz-payment-select-saved-payments").val());
             preserveElements(this, ['.v-button','.p-button', '#amazonButonPaymentSection'], function() {
                 CheckoutStepView.prototype.render.apply(this, arguments);
@@ -1504,10 +1413,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                     yrcontent+='<option '+selected+' val="' + y +'">' + y +'</option>';
                 }
-                $(yearfield).append(yrcontent);
-               
-              
-            
+                $(yearfield).append(yrcontent);   
             
         }, 
         setQuotePaymentData: function(e){
@@ -1706,6 +1612,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
             var couponCodes = this.model.get('couponCodes');
            // console.log("CC ",couponCodes);
+           var tmp_coupon_lower=[];
+            _.each(couponCodes,function (item) {
+               tmp_coupon_lower.push(item.toLowerCase()); 
+            });
             var cartId = this.model.id;  
              var getExistsData = $.cookie('coupon');
             if(getExistsData && getExistsData!== ""){
@@ -1734,13 +1644,20 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             }
                     });
                 }else{
+                    /*Convert Coupon code to lower case to match with cookie. 
+                       If coupon is available in cookie and value is false or coupon is not in cookie remove the coupon with proper case */
+                    
                     $.each(couponObj,function(key,val){
-                        if(_.indexOf(couponCodes,key) > -1 && val===false || _.indexOf(couponCodes,key) ===-1 ){
+                        if(_.indexOf(tmp_coupon_lower,key) > -1 && val===false || _.indexOf(tmp_coupon_lower,key) ===-1 ){
                             try{
                                 me.couponsData[key]= false;
-                                var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
-                                me.model.apiRemoveCoupon(key).then(function (res) {
-                                    //console.log(res);
+                                var remove_coupon=key;
+                                var idx=_.indexOf(tmp_coupon_lower,key);
+                                if(idx>-1){
+                                    remove_coupon=couponCodes[idx];
+                                }
+                                api.request("delete","/api/commerce/orders/"+cartId+"/coupons/"+remove_coupon).then(function(res){
+                                    console.log("Deleted "+res);
                                 });
                             }
                             catch(err){
@@ -1749,18 +1666,21 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         }
                     });  
                 }
-                  
             }else{
                 /*if cookie have one item and model have two or more coupons. We need to remove from coupon model
                 read the cookie array and coupon model find the coupon */
                 var cookie_arr=Object.keys(couponObj);
-                var notin_cookie=_.difference(couponCodes,cookie_arr);
+                var notin_cookie=_.difference(tmp_coupon_lower,cookie_arr);
                 notin_cookie.forEach(function(el,idx){
                     try{
+                            var tmp_idx=_.indexOf(tmp_coupon_lower,el);
+                            var remove_coupon=el;
+                            if(tmp_idx>-1){
+                                remove_coupon=couponCodes[tmp_idx];
+                            }
                             me.couponsData[el]= false;
-                            var url = 'api/commerce/carts/'+cartId+'/coupons/'+el;
-                            me.model.apiRemoveCoupon(el).then(function (res) {
-                                //console.log(res);
+                            api.request("delete","/api/commerce/orders/"+cartId+"/coupons/"+remove_coupon).then(function(res){
+                                console.log("Deleted "+res);
                             });
                         }
                         catch(err){
@@ -1768,19 +1688,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         }
                 });
             }
-           /*  $.each(couponObj,function(key,val){
-                 if(couponCodes.indexOf(key) >= 0 && val === false){
-                     try{
-                         var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
-                         me.model.apiRemoveCoupon(key).then(function (res) {
-                             console.log(res);
-                         });
-                     }
-                     catch(err){
-                         console.log(err);
-                     }
-                 }
-             });*/
            $.cookie("coupon", JSON.stringify(me.couponsData), {  path: '/',expires: 7 });               
         },
         onEnterCouponCode: function (model, code) {
@@ -1801,7 +1708,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                if(getExistsData && getExistsData!== ""){
                   self.couponsData = JSON.parse(getExistsData);
                }
-               self.couponsData[couponCode]= flag;
+               self.couponsData[couponCode.toLowerCase()]= flag;
                $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 });
                //Check
         },
@@ -1823,26 +1730,26 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             $('#coupon-code').prop('disabled',true);
             //check for single or multiple coupon code environment
             if(!Hypr.getThemeSetting('couponCodeMultiple')){
-                //check for product discounts
-                $(self.model.apiModel.data.items).each(function(k,v){
+            	//check for product discounts
+            	$(self.model.apiModel.data.items).each(function(k,v){
                     var isPromoCode=_.pluck(v.productDiscounts,"couponCode");
-                    if(v.productDiscounts.length>0 && isPromoCode.length>0){
+            		if(v.productDiscounts.length>0 && isPromoCode.length>0){
                         if(isPromoCode[0]!==undefined){
-                             disFlag = true;                            
+            			     disFlag = true;                            
                         }
-                    }
-                });
+            		}
+            	});
 
-                //check for more than one orderDiscounts - exclude order auto discount
-                if(self.model.get('orderDiscounts').length > 0 ){
-                    $(self.model.get('orderDiscounts')).each(function(k,v){
-                        if(v.couponCode !== null && v.couponCode !== undefined){
-                            autoDis = false;
-                        }else{
-                            autoDis = true;
-                        }
-                    });
-                }
+            	//check for more than one orderDiscounts - exclude order auto discount
+            	if(self.model.get('orderDiscounts').length > 0 ){
+            		$(self.model.get('orderDiscounts')).each(function(k,v){
+                		if(v.couponCode !== null && v.couponCode !== undefined){
+                			autoDis = false;
+                		}else{
+                			autoDis = true;
+                		}
+                	});
+            	}
 
                 if(self.model.get('shippingDiscounts').length > 0 ){
                     $(self.model.get('shippingDiscounts')).each(function(k,v){
@@ -1856,60 +1763,60 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                      shipDisFlag = true;
                 }
 
-                if(autoDis === false || disFlag ||shipDisFlag===false ){
-                    self.model.unset('couponCode'); //unset couponCode after applying one coupon code
-                    setTimeout(function(){
-                        $('div.mz-messagebar:eq(0)').html('<ul class="is-showing mz-errors"><li class="mz-error-item">Sorry, only one promo code per order.</li></ul>');
-                    },1000);
-                    $('html, body').animate({
+            	if(autoDis === false || disFlag ||shipDisFlag===false ){
+            		self.model.unset('couponCode'); //unset couponCode after applying one coupon code
+	            	setTimeout(function(){
+	            		$('div.mz-messagebar:eq(0)').html('<ul class="is-showing mz-errors"><li class="mz-error-item">Sorry, only one promo code per order.</li></ul>');
+	            	},1000);
+	            	$('html, body').animate({
                     scrollTop: $('div.mz-messagebar:eq(0)').offset().top-100
                 }, 300);
-                }
+            	}
             }
 
-                var customerType = "",
+      			var customerType = "",
                   themeSettings = require('hyprlivecontext').locals.themeSettings;
-                //fetch the customer type attribute of signed in user
-                if(pageContext.user.isAuthenticated){
-                    var customerAttributes_custom = require.mozuData('customer').customer.attributes;
+      			//fetch the customer type attribute of signed in user
+      			if(pageContext.user.isAuthenticated){
+      				var customerAttributes_custom = require.mozuData('customer').customer.attributes;
 
-                    $.each(customerAttributes_custom,function(i,v){
-                        if(customerAttributes_custom[i].fullyQualifiedName === "tenant~customertype" && customerAttributes_custom[i].values[0] === "MLT"){
-                            customerType = customerAttributes_custom[i].values[0];
-                        }
-                    });
-                }
-                //coupon code - SMTPD(Shindigz Military Promotional Discount) applied for only registered user's
-                //if user already in military customer segment(used custom attribute-tenant~customertype) - addCoupon else
-                //verify the user with sheerID, add verified user to military customer segment and add coupon(applies discount)
-                if((lowerCode === 'smtpd' && customerType === "MLT" && pageContext.user.isAuthenticated) || lowerCode !== 'smtpd'){
-                    this.model.addCoupon().ensure(function() {
-                        self_me.$el.removeClass('is-loading');
+      				$.each(customerAttributes_custom,function(i,v){
+      					if(customerAttributes_custom[i].fullyQualifiedName === "tenant~customertype" && customerAttributes_custom[i].values[0] === "MLT"){
+      						customerType = customerAttributes_custom[i].values[0];
+      					}
+      				});
+      			}
+      			//coupon code - SMTPD(Shindigz Military Promotional Discount) applied for only registered user's
+      			//if user already in military customer segment(used custom attribute-tenant~customertype) - addCoupon else
+      			//verify the user with sheerID, add verified user to military customer segment and add coupon(applies discount)
+      			if((lowerCode === 'smtpd' && customerType === "MLT" && pageContext.user.isAuthenticated) || lowerCode !== 'smtpd'){
+      				this.model.addCoupon().ensure(function() {
+      					self_me.$el.removeClass('is-loading');
                         self_me.setCookieCoupon(couponCode,true);
                           setTimeout(function(){
                               self_me.model.unset('couponCode');
                               self_me.render();
                           },100);
 
-                    });
-                    customerType = "";
-                }else if(pageContext.user.isAuthenticated && customerType === "" && lowerCode === "smtpd"){
-                    // Get the modal
-                    var modal = document.getElementById('myModal');
+      				});
+      				customerType = "";
+      			}else if(pageContext.user.isAuthenticated && customerType === "" && lowerCode === "smtpd"){
+      				// Get the modal
+      				var modal = document.getElementById('myModal');
 
-                    $('span.close').click(function(){
+      				$('span.close').click(function(){
 
-                        if(document.getElementById('asset_verify') !== null){
-                            $('iframe#asset_verify').remove();
-                        }
+      					if(document.getElementById('asset_verify') !== null){
+      						$('iframe#asset_verify').remove();
+      					}
 
-                        modal.style.display = "none";
-                        setTimeout(function(){
+      					modal.style.display = "none";
+      					setTimeout(function(){
                   self_me.$el.removeClass('is-loading');
                   self_me.model.unset('couponCode');
                   self_me.render();
-                        },500);
-                    });
+      					},500);
+      				});
 
               $('input[name="servicetype"]').on('change',function(){
                   if($('input[name="servicetype"]:checked').val() === "VETERAN"){
@@ -1919,20 +1826,20 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                   }
               });
 
-                    // When the user clicks anywhere outside of the modal, close it
-                    window.onclick = function(event) {
-                        if (event.target == modal) {
-                            if(document.getElementById('asset_verify') !== null){
-                                $('iframe#asset_verify').remove();
-                            }
-                            modal.style.display = "none";
-                            setTimeout(function(){
+      				// When the user clicks anywhere outside of the modal, close it
+      				window.onclick = function(event) {
+      					if (event.target == modal) {
+      						if(document.getElementById('asset_verify') !== null){
+      							$('iframe#asset_verify').remove();
+      						}
+      						modal.style.display = "none";
+      						setTimeout(function(){
                     self_me.$el.removeClass('is-loading');
-                                self_me.model.unset('couponCode');
-                                self_me.render();
-                            },500);
-                        }
-                    };
+      							self_me.model.unset('couponCode');
+      							self_me.render();
+      						},500);
+      					}
+      				};
 
               $('#firstname,#lastname,#email,#birthdate,#separationdate').on('change keypress keyup',function(e){
                   if($(this).val() !== ""){
@@ -1954,12 +1861,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                   forceParse: 0
               });
 
-                    $('#ref_verify_div').css('display','table-cell');
+      				$('#ref_verify_div').css('display','table-cell');
 
-                    modal.style.display = "block"; //dialog display
+      				modal.style.display = "block"; //dialog display
 
-                    $('#verify-military').click(function(e){
-                        $('#verify-military').addClass('is-loading');
+      				$('#verify-military').click(function(e){
+      					$('#verify-military').addClass('is-loading');
 
                   var arr_req_field = ['#firstname','#lastname','#email','#birthdate','#separationdate'];
                   var err_flag,x,y,z;
@@ -1996,22 +1903,22 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                   if(x && y || z && $('#discharge_div').css('display') !== "none"){
                       err_flag = true;
                   }
-                            var url = Hypr.getThemeSetting('sheerIDAuthUrl'); // the script where you handle the form input.
-                            //serialized form data
-                            var post_data = "firstname="+$('#firstname').val()+"&lastname="+$('#lastname').val()+"&servicetype="+$('input[name="servicetype"]:checked').val()+"&email="+$("#email").val()+"&birthdate="+$('#birthdate').val()+"&separationdate="+$('#separationdate').val()+"&organizationId="+$('select#organizationId option:selected').text();
+        					var url = Hypr.getThemeSetting('sheerIDAuthUrl'); // the script where you handle the form input.
+        					//serialized form data
+        					var post_data = "firstname="+$('#firstname').val()+"&lastname="+$('#lastname').val()+"&servicetype="+$('input[name="servicetype"]:checked').val()+"&email="+$("#email").val()+"&birthdate="+$('#birthdate').val()+"&separationdate="+$('#separationdate').val()+"&organizationId="+$('select#organizationId option:selected').text();
 
                     if(err_flag){
                         $('<div></div>').addClass('page-loading').appendTo(document.body);
                         $('#verify-military').attr('value','PLEASE WAIT');
-                                $.ajax({
-                                   type: "POST",
-                                   url: url,
-                                   dataType: 'json',
-                                   data: post_data,
-                                   success: function(data)
-                                   {
-                                       //if instant verification results true the customer will be added to the MLT- customer segment
-                                       if(data.result === true){
+              					$.ajax({
+              					   type: "POST",
+              					   url: url,
+              					   dataType: 'json',
+              					   data: post_data,
+              					   success: function(data)
+              					   {
+              						   //if instant verification results true the customer will be added to the MLT- customer segment
+              						   if(data.result === true){
                                 var obj = {
                                         "attributes": [
                                             {
@@ -2030,42 +1937,42 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                                     console.log(res);
                                 });
 
-                                            self_me.model.addCoupon();
+          							        self_me.model.addCoupon();
                                 $('.page-loading').remove();
                                 $('#verify-military').attr('value','SUBMIT');
-                                              $('div#model-sheerid').html('Discount Applied. Thank YOU');
+							                  $('div#model-sheerid').html('Discount Applied. Thank YOU');
 
-                                            setTimeout(function(){
-                                                self_me.model.unset('couponCode');
-                                                self_me.render();
-                                            },2000);
-                                        }
-                                    }, //instant verification failed condition, the customer will be asked to upload the supporting document
-                                    error: function(data){
-                                        var html_data = data.responseText;
-                                        //console.log(html_data);
-                                        $('div#model-sheerid').append(html_data);
-                                        $('div#model-sheerid').html("");
-                                        $('div#model-sheerid').css('display','none');
-                                        $(function(){
-                                            $('<iframe id="asset_verify" style="background-color:#fefefe;margin:15%;padding:20px;border:1px solid #888;width:50%;font-family: MonstserratLight;"/>').appendTo('#res_sheerid');
-                                            $('iframe#asset_verify').contents().find('body').append("<h1>Unable to verify</h1><h3>Please upload supporting documentation</h3>");
-                                            $('iframe#asset_verify').contents().find('body').append(html_data);
+              								setTimeout(function(){
+              									self_me.model.unset('couponCode');
+              									self_me.render();
+              								},2000);
+              							}
+              						}, //instant verification failed condition, the customer will be asked to upload the supporting document
+              						error: function(data){
+              							var html_data = data.responseText;
+              							//console.log(html_data);
+              							$('div#model-sheerid').append(html_data);
+              							$('div#model-sheerid').html("");
+              							$('div#model-sheerid').css('display','none');
+              							$(function(){
+              								$('<iframe id="asset_verify" style="background-color:#fefefe;margin:15%;padding:20px;border:1px solid #888;width:50%;font-family: MonstserratLight;"/>').appendTo('#res_sheerid');
+              								$('iframe#asset_verify').contents().find('body').append("<h1>Unable to verify</h1><h3>Please upload supporting documentation</h3>");
+              								$('iframe#asset_verify').contents().find('body').append(html_data);
                               $('.page-loading').remove();
-                                        });
-                                        var success_url = $('iframe#asset_verify').contents().find('input[name="success"]').val();
-                                    }
-                                });
+              							});
+              							var success_url = $('iframe#asset_verify').contents().find('input[name="success"]').val();
+              						}
+              					});
                     }
                     e.preventDefault(); // avoid to execute the actual submit of the form.
-                    });
-                    self_me.$el.removeClass('is-loading');
-                }else if(lowerCode === 'smtpd' && !pageContext.user.isAuthenticated){
-                    // alert("Please register to avail military discount");
-                    self_me.$el.removeClass('is-loading');
-                    self_me.model.unset('couponCode');
-                    self_me.render();
-                }
+      				});
+      				self_me.$el.removeClass('is-loading');
+      			}else if(lowerCode === 'smtpd' && !pageContext.user.isAuthenticated){
+      				// alert("Please register to avail military discount");
+      				self_me.$el.removeClass('is-loading');
+      				self_me.model.unset('couponCode');
+      				self_me.render();
+      			}
 
         },
         removeCoupon: function(e){
@@ -2078,7 +1985,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 if(getExistsData && getExistsData!== ""){
                     self.couponsData = JSON.parse(getExistsData);
                 }
-                self.couponsData[couponCode]= false;
+                self.couponsData[couponCode.toLowerCase()]= false;
                 $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 });
                 self.render();
             });
@@ -2162,20 +2069,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }catch(err){
                 console.log(err);
             }
-                 if(ga!==undefined){
-                
-                ga('ec:setAction','checkout', {'step': 4});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initPlaceOrder',{'nonInteraction': true});
-
-                ga('ec:setAction','PlaceOrder', {
-                'step': 4,
-                'option': 'ReviewOrderandPlace'
-                });
-                 
-                ga('send', 'event','Enhanced-Ecommerce','PlaceOrder');
-                }
-
             _.defer(function () {
             self.model.submit();
 

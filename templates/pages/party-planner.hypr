@@ -24,14 +24,24 @@
       <div class="recaptcha-err-msg" style="display:none;color:red;">Please verify that you are not a robot.</div>       
     </div>
   
-	 <script>    
 
-  	MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoPartyPlanner }}, function(form){
-  		$(".partyPlanner-captcha").insertBefore(".mktoFormRow:last");
-  		//form.getFormElem().find(".mktoButton").hide();
-  		var btn = document.getElementById("partyPlanner");
-  		$('#mktoForm_1200 > div:nth-child(5) input').click(function(){$(this).parent().parent().find(".mktoLabel ").toggleClass("check-highlight")});
-  		 if($(window).width()<=700){
+
+  <script src="https://www.google.com/recaptcha/api.js?onload=loadCaptcha&render=explicit" async defer></script>
+ 
+
+{% dropzone "checkout-party-planner" scope="page" %} <br/>
+
+{% dropzone "body" scope="page" %}
+{% endblock body-content %} 
+  {% block custom-js %}
+<script type="text/javascript">
+ requirejs(['jquery'], function( $ ) {
+    MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoPartyPlanner }}, function(form){
+      $(".partyPlanner-captcha").insertBefore(".mktoFormRow:last");
+      //form.getFormElem().find(".mktoButton").hide();
+      var btn = document.getElementById("partyPlanner");
+      $('#mktoForm_1200 > div:nth-child(5) input').click(function(){$(this).parent().parent().find(".mktoLabel ").toggleClass("check-highlight")});
+       if($(window).width()<=700){
         if((navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))) {
             $("#dateofEvent").addClass('placeholderclass');
             $("#dateofEvent").click(function(){
@@ -46,17 +56,17 @@
             });
           }
           $(".mktoFieldWrap").each(function(){
-            	if($(this).find("input,textarea").parent().hasClass("mktoRequiredField")){
-            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
-            	}else{
-            		$(this).find(".mktoAsterix").remove();
-            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text())
-            	}
+              if($(this).find("input,textarea").parent().hasClass("mktoRequiredField")){
+                $(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
+              }else{
+                $(this).find(".mktoAsterix").remove();
+                $(this).find("input,textarea").attr("placeholder",$(this).find("label").text())
+              }
             });
         }
-  		form.onValidate(function() {		        
-  	   res?form.submittable(!0):form.submittable(!1);		        
-  	  });
+      form.onValidate(function() {            
+       res?form.submittable(!0):form.submittable(!1);           
+      });
 
 
       $("input[type='text'],input[type='tel'],input[type='number']").not('#dateofEvent,#colors,#theme,#City,#Phone').bind('change keyup keypress', function() {
@@ -97,7 +107,7 @@
           startDate: date
       }); */   
  
-  	});
+    });
  
     var captchaContainer = null;
     var res = "";
@@ -112,23 +122,17 @@
     };
     
 
-	  $(document).ready(function(){
+    $(document).ready(function(){
 
-  		if(window.location.search.indexOf('aliId=') >= 1){
-  			$('.party-planner').prepend('<pre class="thank-you" onclick="$(this).fadeOut(1000);">Thank You for submitting form</pre>');
-  		}
+      if(window.location.search.indexOf('aliId=') >= 1){
+        $('.party-planner').prepend('<pre class="thank-you" onclick="$(this).fadeOut(1000);">Thank You for submitting form</pre>');
+      }
 
-  		$("#mktoForm_1200").on("submit",function(){res?$(".recaptcha-err-msg").hide():$(".recaptcha-err-msg").show()});      
+      $("#mktoForm_1200").on("submit",function(){res?$(".recaptcha-err-msg").hide():$(".recaptcha-err-msg").show()});      
     
-		
-	  });
-	</script> 
-
-  <script src="https://www.google.com/recaptcha/api.js?onload=loadCaptcha&render=explicit" async defer></script>
-  <script src="{% make_url "cdn" "/scripts/vendor/bootstrap-datetimepicker.js" %}"></script>
+    }); 
+    });
+  </script> 
+   <script src="{% make_url "cdn" "/scripts/vendor/bootstrap-datetimepicker.js" %}"></script>
 </div> 
-
-{% dropzone "checkout-party-planner" scope="page" %} <br/>
-
-{% dropzone "body" scope="page" %}
-{% endblock body-content %} 
+  {% endblock custom-js %}

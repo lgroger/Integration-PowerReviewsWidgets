@@ -313,7 +313,7 @@
                 {% endcomment %}
                <div class="product-share">
                <span>Share: </span>
-                <div  style="display: inline-block;vertical-align: middle;" class="addthis_toolbox addthis_default_style quickview-addthis  addthis_button_compact">
+                <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_default_style quickview-addthis  addthis_button_compact">
                      <a class="addthis_button_facebook">
                       <i class="fa fa-facebook-square"></i>
                     </a>

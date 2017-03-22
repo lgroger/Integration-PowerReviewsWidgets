@@ -27,11 +27,12 @@
 	{% dropzone "sub-text-header" scope="template" %}
 </div>
 <script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
-<script type="text/javascript">
-	window.MktoForms2 = MktoForms2;
-</script>
+
 <form id="mktoForm_{{ themeSettings.mktoWholesaleProgram }}"></form>
-<script>
+{% endblock body-content %} 
+{% block custom-js %}
+<script type="text/javascript">
+ requirejs(['jquery'], function( $ ) {
 	MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoWholesaleProgram }},function(form){
 	$('#businessType').attr('type','password');
 		window.formMrk = form;
@@ -60,5 +61,7 @@
  
 	});
 	window.mkto = MktoForms2;
+	window.MktoForms2 = MktoForms2;
+});
 </script> 
-{% endblock body-content %} 
+{% endblock custom-js %}

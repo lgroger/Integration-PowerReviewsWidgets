@@ -1,5 +1,3 @@
-
-{% comment %}
 {% if model|length > 0 %}
 	{% for entity in model %}
 	window.ShipTableReference = '{{entity.shipTableReference}}';
@@ -12,5 +10,3 @@
 {% else %}
 {% include_entities "modules/content/entity-list-new" listFQN="abtestlist@shindigz" view="ABTestView" sortBy="createDate desc" pageSize=2 %}
 {% endif %}
-
-{% endcomment %}

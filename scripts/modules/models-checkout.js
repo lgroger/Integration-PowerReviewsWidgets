@@ -1040,16 +1040,16 @@
                 this.on('change:paymentType', this.selectPaymentType);
                 this.selectPaymentType(this, this.get('paymentType'));
                 this.on('change:isSameBillingShippingAddress', function (model, wellIsIt) {
-                    if(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON().address.address1.length>30 && this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON().address.address1){
+                    if(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON().address.address1 && this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON().address.address1.length>30){
                         me.set('isSameBillingShippingAddress', false);
                          me.set('sameshippingbillingflag',true);
                         
-                    }
+                    } 
                     else if (wellIsIt) {
                         billingContact.set(this.parent.get('fulfillmentInfo').get('fulfillmentContact').toJSON(), { silent: true });
                         me.set('sameshippingbillingflag',false);
-                    }
-               });
+                    } 
+                });
                 this.on('change:savedPaymentMethodId', this.syncPaymentMethod);
                 this._cachedDigitalCredits = null;
 

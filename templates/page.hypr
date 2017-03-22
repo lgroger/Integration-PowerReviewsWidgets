@@ -62,8 +62,7 @@
           {% include "modules/json-required-for-hyprlive" %} 
           <link rel="shortcut icon" type="image/ico" href="{{themeSettings.favicon}}"/>
           <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>
-
-          <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
+        
          {{themeSettings.ThirdPartyHeadTag|safe}}
          <!-- Facebook Pixel Code-->
          <script>
@@ -215,6 +214,8 @@
 
               {% include "modules/trailing-scripts" %}
           {% endblock trailing-scripts %}
+          {% block custom-js %}
+          {% endblock custom-js %}
           {% visitor_tracking_pixel %}
 
 
@@ -251,7 +252,7 @@
                    });
               });
         });
-        </script>
+           </script>
       <!--script>
       $('#menu').slicknav();
       </script-->
@@ -278,18 +279,16 @@
 
 
           if(page_context.pageType !== undefined){
-            requirejs(['jquery'], function( $ ) {
-              page_type="/"===window.location.pathname||"main-page"===page_context.cmsContext.template.path?"HOME":$("#recommended_products_slot").length>=1&&"category"===page_context.pageType?"CATEGORY":$("#recommended_products_slot").length<=0&&"category"===page_context.pageType?"CATEGORYLANDING":"no-search-results"===page_context.cmsContext.template.path?"NOSEARCH":"search-results"===page_context.cmsContext.template.path?"SEARCH":"confirmation"===page_context.pageType?"PURCHASE":"my_account"===page_context.pageType?"ACCOUNT":"/compare"===window.location.pathname||"compare"===page_context.cmsContext.template.path?"COMPARE":page_context.pageType.toUpperCase();
+            var recommended_div=document.getElementById("recommended_products_slot");
+              page_type="/"===window.location.pathname||"main-page"===page_context.cmsContext.template.path?"HOME":recommended_div!==null&&"category"===page_context.pageType?"CATEGORY":recommended_div===null&&"category"===page_context.pageType?"CATEGORYLANDING":"no-search-results"===page_context.cmsContext.template.path?"NOSEARCH":"search-results"===page_context.cmsContext.template.path?"SEARCH":"confirmation"===page_context.pageType?"PURCHASE":"my_account"===page_context.pageType?"ACCOUNT":"/compare"===window.location.pathname||"compare"===page_context.cmsContext.template.path?"COMPARE":page_context.pageType.toUpperCase();
                
                if(page_context.pageType === "confirmation"){
                  page_type = "{% if model.billingInfo.paymentType == 'Check' %}QUOTE{% else %}PURCHASE{% endif %}"  
                } 
-            });
           }
       </script> 
       {% if themeSettings.certonaRecomm %}
           <script type="text/javascript">
-          requirejs(['jquery'], function( $ ) {
           var certona = {
               "pagetype" : page_type, //type of page
               "devicetype" : "{% if not pageContext.isDesktop %}Mobile{% else %}Desktop{% endif %}", //type of device isMobile or isDesktop
@@ -318,18 +317,16 @@
               "recommendations" : false
               {% endif %}  //(Boolean value)
           };
-
-          if($("#recommended_products_slot").length>=1 && page_context.pageType === "category"){
+           var recommended=document.getElementById("recommended_products_slot");
+          if(recommended!==null && page_context.pageType === "category"){
              certona.recommendations = true;
           }
-        });
-      </script> 
+      </script>
       {% if pagecontext.pageType != "checkout" %}
           {% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
-              <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/certonanewresoancesvtwo.js"></script>            
+              <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/certonanewresoancesvthree.js"></script>            
           {% endwith %}  
       {% endif %}
-      <script type="text/javascript" src="//edge1.certona.net/cd/67195178/shindigz.com/scripts/resonance.js"></script>
       {% endif %}
 
       <!-- Certona Integration End -->
@@ -469,7 +466,8 @@
      {% endif %}
 
   {% if pageContext.pageType == "confirmation" %}
-     <script>
+     <script type="text/javascript">
+    requirejs(['jquery'], function( $ ) {
     $(document).on('click','.toggle_components',function(e){
         var toggleLinkId = $(this).data('parent-id');
         var targetId = $(e.target).parent().parent().find('.hide_bundle_products').data('parent-id');
@@ -482,15 +480,13 @@
         } else {
             $(this).html('Show Components <i class="fa fa-caret-down"></i>');
         }
-     });
-  </script>
+       $('.print-link').click(function(){
+        $(".order-confirmation").show();
+        window.print();
 
-  <script type="text/javascript">
-     $('.print-link').click(function(){
-      $(".order-confirmation").show();
-      window.print();
-
+       });
      });
+  });
   </script>
   {% endif %}
   {{themeSettings.allThirdPartyScriptTags|safe}}
@@ -555,6 +551,7 @@
       {% endwith %}
 
   {% endif %}
+
       </body>
 
   {% endblock body-tag %}

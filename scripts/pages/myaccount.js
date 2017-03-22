@@ -319,7 +319,16 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 $(".addToWishlist-btn-extra").click(function(){
                     me.addToWishlist();
                 });
-
+              if(window.addthis!==undefined){
+                    //Update addthis to currect product model and rerender.
+                    try{
+                        addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
+                        addthis.update('share', 'title',me.model.toJSON().content.productName); 
+                       addthis.toolbox(".addthis_inline_share_toolbox");
+                    }catch(err){
+                        console.log("Error on addthis "+err);
+                    }
+                }
             },
             getExtraProduct: function(productCode){
                 var product = null;
@@ -955,9 +964,20 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         $('#mz-quick-view-container').fadeOut(100, function() {
                             $('#mz-quick-view-container').remove();
                         });
+                        if(window.addthis!==undefined){
+                            //Update addthis to currect product model and rerender.
+                            try{
+                                addthis.update('share', 'url',window.location.origin+prdmodel.toJSON().url );
+                                addthis.update('share', 'title',prdmodel.toJSON().content.productName); 
+                               addthis.toolbox(".addthis_inline_share_toolbox");
+                            }catch(err){
+                                console.log("Error on addthis "+err);
+                            }
+                        }
                     } else {
                         cartitemModel.trigger("error", { message: Hypr.getLabel('unexpectedError') });
                     }
+
                 });
                 if(self.dndToken!==null){
                     self.model=product;
@@ -1815,7 +1835,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         try{
                             addthis.update('share', 'url',window.location.origin+prod.toJSON().url );
                             addthis.update('share', 'title',prod.toJSON().name); 
-                           addthis.toolbox(".addthis_toolbox");
+                           addthis.toolbox(".addthis_inline_share_toolbox");
                         }catch(err){
                             console.log("Error on addthis "+err);
                         }
@@ -2877,7 +2897,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         }
         function checkNavigation(navItem) {
             if(tab_config[navItem]!==undefined){
-                if($(window).width<660){
+                if($(window).width()<660){
                      $('div#tab_'+tab_config[navItem]+' button').addClass('active');
                      $('div#tab_'+tab_config[navItem]+' button+div').addClass('show');
                 }else{

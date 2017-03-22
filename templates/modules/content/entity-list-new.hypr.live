@@ -1,5 +1,3 @@
-{% comment %}
-
 {% if model|length > 0 %}
 	{% with model|first as entity %}
 	_gaq.push(['_setCustomVar',
@@ -18,6 +16,4 @@
 	      'ShippTableReference',     // The name acts as a kind of category for the user activity. Required parameter.
 	      'A'  // This value of the custom variable.  Required parameter
 	   ]);
-{% endif %} 
-
-{% endcomment %}
+{% endif %}

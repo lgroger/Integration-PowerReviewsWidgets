@@ -1,61 +1,40 @@
-﻿  <!-- Google Analytics -->
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+﻿<script type="text/javascript">
+ window.ShipTableReference=''; 
+ var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', '{{ siteContext.generalSettings.googleAnalyticsCode }}']);
 
-
-ga('create', 'UA-93305235-1', 'auto');
-ga('require', 'ec');
- ga('send', 'pageview');
-
-
-</script>
-<!-- End Google Analytics -->
-
-
-
-{% comment %}<script type="text/javascript">
- 
- // window.ShipTableReference=''; 
- // var _gaq = _gaq || [];
- //    _gaq.push(['_setAccount', '{{ siteContext.generalSettings.googleAnalyticsCode }}']);
-
-    // _gaq.push(['_setCustomVar',
-	   //    1,                   // This custom var is set to slot #1.  Required parameter.
-	   //    'userId',     // The name acts as a kind of category for the user activity.  Required parameter.
-	   //    '{{pageContext.visit.visitId}}'  // This value of the custom variable.  Required parameter
-	   // ]);
+    _gaq.push(['_setCustomVar',
+	      1,                   // This custom var is set to slot #1.  Required parameter.
+	      'userId',     // The name acts as a kind of category for the user activity.  Required parameter.
+	      '{{pageContext.visit.visitId}}'  // This value of the custom variable.  Required parameter
+	   ]);
 	  
-//   {% spaceless %}
-//   	{% if pageContext.pageType == "checkout" or pageContext.pageType == "confirmation" %}
-// 	   {% for attribute in model.attributes %}
-// 	   		{% if attribute.fullyQualifiedName|lower ==  "tenant~str" %}
-// window.ShipTableReference = '{{attribute.values|first}}';
-//   _gaq.push(['_setCustomVar',
-//       2,                   // This custom var is set to slot #1.  Required parameter.
-//       'ShippTableReference',     // The name acts as a kind of category for the user activity.  Required parameter.
-//       '{{attribute.values|first}}'  // This value of the custom variable.  Required parameter
-//    ]);
-// 	   		{% endif %}
-// 	   {% endfor %}
-//    {% else %}
-//    	{% with "userSessionId eq {0}"|string_format(pageContext.visit.visitId) as filterstr %}
-// 		{% include_entities "modules/content/entity-list" listFQN="abtestlist@shindigz" view="ABTestView" filter=filterstr %}
-// 		{% endwith %}
-//    {% endif %}
-//   {% endspaceless %}
+  {% spaceless %}
+  	{% if pageContext.pageType == "checkout" or pageContext.pageType == "confirmation" %}
+	   {% for attribute in model.attributes %}
+	   		{% if attribute.fullyQualifiedName|lower ==  "tenant~str" %}
+window.ShipTableReference = '{{attribute.values|first}}';
+  _gaq.push(['_setCustomVar',
+      2,                   // This custom var is set to slot #1.  Required parameter.
+      'ShippTableReference',     // The name acts as a kind of category for the user activity.  Required parameter.
+      '{{attribute.values|first}}'  // This value of the custom variable.  Required parameter
+   ]);
+	   		{% endif %}
+	   {% endfor %}
+   {% else %}
+   	{% with "userSessionId eq {0}"|string_format(pageContext.visit.visitId) as filterstr %}
+		{% include_entities "modules/content/entity-list" listFQN="abtestlist@shindigz" view="ABTestView" filter=filterstr %}
+		{% endwith %}
+   {% endif %}
+  {% endspaceless %}
 
-  // _gaq.push(['_trackPageview']);
+  _gaq.push(['_trackPageview']);
 
-  //   (function() {
-  //       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-  //       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-  //       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  //   })();
+    (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
 
-
-//</script>
-
- {% endcomment %}
+	
+</script>

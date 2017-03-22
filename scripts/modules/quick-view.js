@@ -222,7 +222,7 @@ require(
                 }
                 $('select.mz-productoptions-option').hide();
                 $('[data-mz-product-option="'+id+'"]').show();
-            }, 
+            },
             render: function () {
                 var me = this,requiredOptions;
                 var objj=me.model.getConfiguredOptions();
@@ -426,7 +426,7 @@ require(
                     try{
                         addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
                         addthis.update('share', 'title',me.model.toJSON().content.productName); 
-                       addthis.toolbox(".addthis_toolbox");
+                       addthis.toolbox(".addthis_inline_share_toolbox");
                     }catch(err){
                         console.log("Error on addthis "+err);
                     }
@@ -934,46 +934,6 @@ require(
                                 }
                                 if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': cartitemModel.attributes.product.productCode , 'sku' : sku });}
                                 //end
-
-                //google analytics code for add to cart event
-                  var gaitem = cartitemModel.apiModel.data;
-                  var proID = gaitem.product.productCode;
-                   
-                   var gaoptionval; 
-                    if(gaitem.product.productUsage == "Configurable" ){
-                      proID = gaitem.product.variationProductCode; 
-                    }
-                    
-                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-                    _.each(gaitem.product.options,function(opt,i){
-                    if(opt.name=="dnd-token"){
-
-                    }
-                    else if(opt.name == 'Color'){
-                    gaoptionval = opt.value;
-                    }
-                    else{
-                    gaoptionval =  opt.value;
-                    }
-                    });  
-                    }
-
-                    if(ga!==undefined){
-                        ga('ec:addProduct', {
-                        'id': proID,
-                        'name': gaitem.product.name,
-                        'category': gaitem.product.categories[0].id,
-                        'brand': 'shindigz',
-                        'variant': gaoptionval,
-                        'price': gaitem.unitPrice.extendedAmount,
-                        'quantity': gaitem.quantity
-                        });
-                        ga('ec:setAction', 'BuyPlp');
-                        ga('send', 'event', 'buy', 'buyquickview', gaitem.product.name);  
- 
-                    }
-                                        
-                                         
                                 //Facebook pixel add to cart event
                                  var track_price=product.get("price").toJSON().price;
                                  if(product.get("price").toJSON().salePrice){
@@ -1008,7 +968,7 @@ require(
                                     try{
                                         addthis.update('share', 'url',window.location.origin+product.toJSON().url );
                                         addthis.update('share', 'title',product.toJSON().content.productName); 
-                                       addthis.toolbox(".addthis_toolbox");
+                                       addthis.toolbox(".addthis_inline_share_toolbox");
                                     }catch(err){
                                         console.log("Error on addthis "+err);
                                     }

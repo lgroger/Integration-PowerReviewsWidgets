@@ -164,67 +164,70 @@
 		</div>
 	</div>
 	<script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
-
-
-	<script>
-	    var captchaContainer = null;
-	    var res = "";
-	    var loadCaptcha = function() {
-	      captchaContainer = grecaptcha.render('captcha_container', {
-	        'sitekey' : '6Lf5vCcTAAAAAKXDMxGQcebgm6QBQr9krzLOzJJR',
-	        'callback' : function(response) {
-	         res = response;	            
-	        }
-	      });
-	    };
-	    MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoPartyDirectory }},function(form){
-        //console.log(form);
-       $(".add-store-form .mktoFormRow:last").insertBefore("#party-join-btn");
-        var btn = document.getElementById("party-join-btn");
-        if($(window).width()<=740){
-          $(".mktoFieldWrap").each(function(){
-            	if($(this).find("input,textarea").parent().hasClass("mktoRequiredField")){
-            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
-            	}else{
-            		$(this).find(".mktoAsterix").remove();
-            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
-            	}
-            	if($(this).find("select").hasClass("mktoRequired")){
-            		$(this).find("select>option:first").prepend("*");            		
-            	}
-            });
-        }
-        btn.onclick = function() {       
-
-            res?MktoForms2.whenReady(function(e){e.submittable(true);e.submit()}):form.submittable(false);
-           
-        };
-    $("input[type='text'],input[type='tel']").bind('change keyup keypress', function() {
-          $(this).val($(this).val().replace(/[!"#$%&'()*+,-./`¨.<>\{\}\[\]\\\Ç¬÷“=?¿;:´'",”?ºª€£¥€••¥£€®©~!¡@#$%^&*()_|+-]/gi, ''));
-    });
-
-    $(input[type='number']).bind('change keyup keypress', function() {
-          $(this).val($(this).val().replace(/[^0-9]/g, ''));
-    });
-
-    $("input[type='tel']").bind('change keyup keypress', function(e) {
-        $(this).val($(this).val().replace(/[A-Za-z\s]/gi,''));
-    });
-        
-    });
-
-    $(document).ready(function(){
-    	if(window.location.search.indexOf('aliId=') >= 1){
-			$('.add-store-form').prepend('<pre class="thank-you" onclick="$(this).fadeOut(1000);">Thank You for submitting the form</pre>');
-			$('body').scrollTop($(".add-store-form").offset().top-100);
-
-		}
-    $("#party-join-btn").on("click",function(){res?$(".recaptcha-err-msg").hide():$(".recaptcha-err-msg").show()});
-    });
-
-	</script>
-
-	<script src="https://www.google.com/recaptcha/api.js?onload=loadCaptcha&render=explicit" async defer></script>
+		<script src="https://www.google.com/recaptcha/api.js?onload=loadCaptcha&render=explicit" async defer></script>
 	
 	{% require_script "pages/party-directory" %}
 {% endblock body-content %}
+{% block custom-js %}
+
+ <script type="text/javascript">
+    var loadCaptcha = function() {
+      captchaContainer = grecaptcha.render('captcha_container', {
+        'sitekey' : '6Lf5vCcTAAAAAKXDMxGQcebgm6QBQr9krzLOzJJR',
+        'callback' : function(response) {
+         res = response;	            
+        }
+      });
+    };
+    requirejs(['jquery'], function( $ ) {
+    var captchaContainer = null;
+    var res = "";
+    MktoForms2.loadForm("//app-sj14.marketo.com", "{{ themeSettings.mktoAccNumber }}", {{ themeSettings.mktoPartyDirectory }},function(form){
+    //console.log(form);
+   $(".add-store-form .mktoFormRow:last").insertBefore("#party-join-btn");
+    var btn = document.getElementById("party-join-btn");
+    if($(window).width()<=740){
+      $(".mktoFieldWrap").each(function(){
+        	if($(this).find("input,textarea").parent().hasClass("mktoRequiredField")){
+        		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
+        	}else{
+        		$(this).find(".mktoAsterix").remove();
+        		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
+        	}
+        	if($(this).find("select").hasClass("mktoRequired")){
+        		$(this).find("select>option:first").prepend("*");            		
+        	}
+        });
+    }
+    btn.onclick = function() {       
+
+        res?MktoForms2.whenReady(function(e){e.submittable(true);e.submit()}):form.submittable(false);
+       
+    };
+$("input[type='text'],input[type='tel']").bind('change keyup keypress', function() {
+      $(this).val($(this).val().replace(/[!"#$%&'()*+,-./`¨.<>\{\}\[\]\\\Ç¬÷“=?¿;:´'",”?ºª€£¥€••¥£€®©~!¡@#$%^&*()_|+-]/gi, ''));
+});
+
+$("input[type='number']").bind('change keyup keypress', function() {
+      $(this).val($(this).val().replace(/[^0-9]/g, ''));
+});
+
+$("input[type='tel']").bind('change keyup keypress', function(e) {
+    $(this).val($(this).val().replace(/[A-Za-z\s]/gi,''));
+});
+    
+});
+
+$(document).ready(function(){
+	if(window.location.search.indexOf('aliId=') >= 1){
+		$('.add-store-form').prepend('<pre class="thank-you" onclick="$(this).fadeOut(1000);">Thank You for submitting the form</pre>');
+		$('body').scrollTop($(".add-store-form").offset().top-100);
+
+	}
+});
+});
+</script>
+{% endblock custom-js %}
+
+
+

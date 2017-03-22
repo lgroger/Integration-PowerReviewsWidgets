@@ -186,18 +186,6 @@ if(pageContext.pageType==="confirmation"){
             lazyLoadImage();
         });
 
-        /*$('.mega-menu-container a').click(function(){
-            if(ga!==undefined){
-                ga('send', {
-            hitType: 'event',
-            eventCategory: 'Navigation',
-            eventAction: 'MegaMenu',
-            eventLabel: $(this).attr('href')
-            });
-            }
-            
-        });*/
-
         
 
 		      var errCtr=0,now=0,chg=0,

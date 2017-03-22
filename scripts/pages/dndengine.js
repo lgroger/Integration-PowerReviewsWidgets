@@ -174,18 +174,6 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
         self.initialize=function(){
             var self = this;
             self.setParameters();
-
-            // GA for personalized code
-                  var galabel = this.model.toJSON().content.productName;
-                    
-                    if(ga!==undefined){
-                        ga('send', {
-                        hitType: 'event',
-                        eventCategory: 'Personalize Product click',
-                        eventAction: 'Personalize',
-                        eventLabel: galabel
-                        });
-                    }
             /*
             Code Added by Asaithambi
             Create IE + others compatible event handler
@@ -236,22 +224,10 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
             }
             $(document).on('click', '.personalize-close', function(){
                 $('.dnd-popup').remove();
-
                 $(self.form).remove(); // LG change - added
                 $('#cboxOverlay').hide();
                 $('body').css({overflow: 'auto'});
                 $('html').removeClass('dnd-active-noscroll');
-                
-                //google analytics code for personlaize close
-                var gapersonalizeclose = self.model.toJSON().content.productName;
-                if(ga!==undefined){
-                    ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Personalize Product click',
-                    eventAction: 'close',
-                    eventLabel: gapersonalizeclose
-                    }); 
-                } 
                 return false;
             });
 
