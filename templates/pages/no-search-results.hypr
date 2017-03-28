@@ -22,7 +22,6 @@
 <div class="mz-l-container">
     <div class="no-search">
         <h1 class="mz-pagetitle">{{ themeSettings.noSearchPageHeading }} <span class="mz-searchresults-query">"{{ pageContext.search.query }}"</span></h1>
-        	{% include 'modules/search/search-bar' with view='_2'%}
         <div class="mz-search-suggestion-container">
 	        {{ themeSettings.noSearchSubText | safe }} 
     	</div>
