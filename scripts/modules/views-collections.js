@@ -185,7 +185,17 @@ define([
                 $('html, body').animate({
                 scrollTop: $(".mz-l-paginatedlist").offset().top - 70 
                 }, 1000);   
-            }   
+            }
+
+             // google analytics for filters
+                 if(ga!==undefined){
+                    ga('send', {
+                    hitType: 'event',
+                    eventCategory: 'Category',
+                    eventAction: 'Filters',
+                    eventLabel: elm.getAttribute('data-mz-facet-value')
+                    });
+                 }   
             //if(!require.mozuData('pagecontext').isMobile && !require.mozuData('pagecontext').isTablet) 
             //{
             if (elm.tagName.toLowerCase() === "select") {

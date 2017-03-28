@@ -453,6 +453,10 @@
       <!-- guided search popup view container -->
       {% if pageContext.pageType == "product" or  pageContext.pageType == "category" or pageContext.pageType == "search" or pageContext.pageType =="my_account" %}
           <script type="text/javascript">
+          var addthis_config = {
+            data_ga_property: '', //replace the GA property with your UA ID
+            data_ga_social: true
+          };
               (function() {
                   var s = document.createElement('script');
                   s.type = 'text/javascript';

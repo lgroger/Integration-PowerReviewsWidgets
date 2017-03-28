@@ -146,11 +146,10 @@
             </div>
 
            {% if model.paymentType == "CreditCard" and user.isAuthenticated %}
-                <div class="mz-l-formfieldgroup-cell select_savedcard">                  
+                <div class="mz-l-formfieldgroup-cell select_savedcard">   
                     <select name="savedPaymentMethods" class="mz-payment-select-saved-payments" data-mz-value="savedPaymentMethodId">
                     <!-- Removed condition : {% if not model.usingSavedCard %}disabled="true"{% endif %} -->
-
-                        <option selected="selected" value="0">{{ labels.addCard }}</option>
+                        <option {% if not model.usingSavedCard %} selected="selected" {% endif %} value="0">{{ labels.addCard }}</option>
                         {% if model.savedPaymentMethods %}
                             {% for card in model.savedPaymentMethods %}
                             <option value="{{ card.id }}" {% if model.savedPaymentMethodId == card.id %} selected="selected" {% endif %}>{{ card.cardType }} {{ card.cardNumberPartOrMask }} {{ labels.expires }} {{ card.expireMonth }}/{{ card.expireYear }}</option>

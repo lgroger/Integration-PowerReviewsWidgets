@@ -1,4 +1,3 @@
-
 /* globals V: true */
 require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api) {
     var CheckoutStepView = EditableView.extend({
@@ -17,10 +16,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var me = this; 
             var gaid = this.$el.attr('id'); 
             me.editing.savedCard = false;
-            if(gaid === "step-payment-info" && me.model.toJSON().billingContact.address.address1 && me.model.toJSON().billingContact.address.address1.length>30 && me.model.toJSON().paymentType === "CreditCard" ){
-             
+            if(gaid === "step-payment-info" && me.model.toJSON().billingContact.address && me.model.toJSON().billingContact.address.address1 && me.model.toJSON().billingContact.address.address1.length>30 && me.model.toJSON().paymentType === "CreditCard" ){
                 $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');
-             
             }
            else{  
              
@@ -28,6 +25,40 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 me.model.next();
             }); 
            }   
+            if( ga!==undefined && window.ga_shippingmethod_sent === undefined && gaid === "step-shipping-method" ){
+                
+                var gashipmethod =  this.model.attributes.shippingMethodName;
+                ga('ec:setAction','checkout', {'step': 2});
+                
+                ga('send', 'event','Enhanced-Ecommerce','initShippingMethod',{'nonInteraction': true});
+                
+                ga('ec:setAction','ShippingMethod', {
+                'step': 2,
+                'option': gashipmethod 
+                });
+                 
+                ga('send', 'event','Enhanced-Ecommerce','ShippingMethod');
+               
+               window.ga_shippingmethod_sent = true;
+             }
+
+
+            if(gaid == "step-payment-info" && ga!==undefined ){
+       
+                 var paymentmethod = me.model.apiModel.data.paymentType;
+
+                 ga('ec:setAction','checkout', {'step': 3});
+                
+                ga('send', 'event','Enhanced-Ecommerce','initPaymentMethod',{'nonInteraction': true});
+                
+                ga('ec:setAction','PaymentMethod', {
+                'step': 3,
+                'option': paymentmethod
+                });
+                
+            ga('send', 'event','Enhanced-Ecommerce','PaymentMethod');
+                
+            }   
          },
         amazonShippingAndBilling: function() {
             //isLoading(true);
@@ -66,7 +97,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                 }
             });
+             if(this.model.toJSON().shippingMethodName !== undefined){
+                window.ga_shippingmethodfilled = true;
+             }
              if(this.model.toJSON().address !==undefined){
+               if(this.model.toJSON().address.postalOrZipCode !== undefined){
+                window.ga_addressprefilled=true;
+               }
                 if((this.model.toJSON().address.countryCode!=="US" && window.usa_only.length>0) || (this.model.toJSON().address.countryCode!=="US" && window.usa_48.length>0)){
                    me.model.set('address.countryCode','US');
                 }else if(this.model.toJSON().address.countryCode=="US" && window.usa_48.length>0 && window.nonlow48.indexOf(this.model.toJSON().address.stateOrProvince)>-1){
@@ -1116,6 +1153,23 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         additionalEvents:{
             "click a#shipping-addr-edit-link": "updateAddressEditingProperty"
         },
+        render:function(){
+              if( window.ga_addressprefilled !== undefined && ga!==undefined && window.ga_addressprefilled === true && window.ga_sent_step1 === undefined ){
+                ga('ec:setAction','checkout', {'step': 1});
+                
+                ga('send', 'event','Enhanced-Ecommerce','initShippingInformation',{'nonInteraction': true});
+                    
+                    ga('ec:setAction','ShippingInformation', {
+                    'step': 1,
+                    'option': 'ShippingInfo'
+                    }); 
+                
+                ga('send', 'event','Enhanced-Ecommerce','ShippingInformation');
+                    window.ga_sent_step1 = true;
+                  }
+
+            CheckoutStepView.prototype.render.apply(this);
+        },
         updateAddressEditingProperty: function(){
           /*   $('.mz-contactselector-contact.mz-contactselector-new.mz-checkoutform-shipping').css('display','table');
             $('.mz-contactselector .mz-addresssummary').hide();   */
@@ -1152,6 +1206,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }else{
                     me.editing.savedCard = false;
                      this.model.set("isAddressEditing",  "0");
+                if( ga!==undefined && window.ga_sent_step1 === undefined ){
+                ga('ec:setAction','checkout', {'step': 1});
+                
+                ga('send', 'event','Enhanced-Ecommerce','initShippingInformation',{'nonInteraction': true});
+                    
+                    ga('ec:setAction','ShippingInformation', {
+                    'step': 1,
+                    'option': 'ShippingInfo'
+                    });
+                
+                ga('send', 'event','Enhanced-Ecommerce','ShippingInformation');
+                    window.ga_sent_step1 = false;
+                  }
                     _.defer(function () {
                         me.model.next();
                     });
@@ -1170,8 +1237,28 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         templateName: 'modules/checkout/step-shipping-method',
         renderOnChange: [
             'availableShippingMethods'
-        ],render:function(){
+        ],
+        initialize:function(){
+            window.ga_shippingmethod=false;
+        },
+        render:function(){
              //restrict tenant~safety-d and tenant~safety-k products in grond level only 
+             if( window.ga_shippingmethodfilled !== undefined && window.ga_shippingmethodfilled === true && ga!==undefined && window.ga_shippingmethod_sent === undefined ){
+                
+                var gashipmethod =  this.model.attributes.shippingMethodName;
+                ga('ec:setAction','checkout', {'step': 2});
+                
+                ga('send', 'event','Enhanced-Ecommerce','initShippingMethod',{'nonInteraction': true});
+                
+                ga('ec:setAction','ShippingMethod', {
+                'step': 2,
+                'option': gashipmethod 
+                });
+                
+                ga('send', 'event','Enhanced-Ecommerce','ShippingMethod');
+               
+               window.ga_shippingmethod_sent = true;
+             }
             try{
                 var order_item_list=require.mozuData("checkout").items;
                 window.ground_only="";
@@ -1370,18 +1457,51 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                   $("#addressEdit").show();
             });
             
-        },
-        resetPaymentData: function (e) {
+        },resetCartForm:function () {
             this.model.unset('card.cardNumberPartOrMask');
             this.model.unset('card.expireMonth');
             this.model.unset('card.expireYear');
+        },
+        resetPaymentData: function (e){
+            try{
+                if($(e.currentTarget).val() === "CreditCard"){
+                    if(this.model.get("lastChoosedCard") && this.model.get("lastChoosedCard")!==0 ){
+                        this.model.setSavedPaymentMethod(this.model.get("lastChoosedCard")); 
+                        this.model.set('usingSavedCard', true);
+                    }else{
+                         if(require.mozuData("user").isAuthenticated && this.model.get("lastChoosedCard") ===undefined){
+                            var userSavedCard_Custom=require.mozuData("checkout").customer.cards;
+                            if(userSavedCard_Custom.length>0){
+                                var primarySavedCard_Custom=_.findWhere(userSavedCard_Custom,{isDefaultPayMethod: true});
+                                if(primarySavedCard_Custom){
+                                    this.model.set('savedPaymentMethodId',primarySavedCard_Custom.id);
+                                }else{
+                                    this.model.set('savedPaymentMethodId',userSavedCard_Custom[0].id);
+                                }
+                            }else{
+                                this.resetCartForm();
+                            }
+                         }else{
+                             this.resetCartForm();
+                         }
+                    }
+                    
+                }else{
+                    this.resetCartForm();
+                }
+             }catch(err){
+                    console.log("Error on resetPaymentData"+err);
+                    this.resetCartForm();
+            }
         },updatePurchaseOrderPaymentTerm: function(e) {
             this.model.setPurchaseOrderPaymentTerm(e.target.value);
         },
         render: function() {
-            //console.log("render");
- 
-            this.model.set("card.CCSaveFlag",$("select.mz-payment-select-saved-payments").val());
+             var SaveCardID=$("select.mz-payment-select-saved-payments").val();
+            if(typeof SaveCardID ==='undefined'&& (this.model.get("lastChoosedCard") && this.model.get("lastChoosedCard")!=="0")){
+                SaveCardID="123";
+            }
+            this.model.set("card.CCSaveFlag",SaveCardID);
             preserveElements(this, ['.v-button','.p-button', '#amazonButonPaymentSection'], function() {
                 CheckoutStepView.prototype.render.apply(this, arguments);
             });
@@ -1429,7 +1549,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         updatePaymentType: function(e) {
             var newType = $(e.currentTarget).val();
-            this.model.set('usingSavedCard', e.currentTarget.hasAttribute('data-mz-saved-credit-card'));
+            var isSavedCard_custom=e.currentTarget.hasAttribute('data-mz-saved-credit-card') || ( $(e.currentTarget).val() === "CreditCard" && this.model.get("lastChoosedCard") && this.model.get("lastChoosedCard")!=="0");
+            this.model.set('usingSavedCard', isSavedCard_custom);
             this.model.set('paymentType', newType);
         },
         beginEditingCard: function() {
@@ -1612,10 +1733,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
             var couponCodes = this.model.get('couponCodes');
            // console.log("CC ",couponCodes);
-           var tmp_coupon_lower=[];
-            _.each(couponCodes,function (item) {
-               tmp_coupon_lower.push(item.toLowerCase()); 
-            });
             var cartId = this.model.id;  
              var getExistsData = $.cookie('coupon');
             if(getExistsData && getExistsData!== ""){
@@ -1644,20 +1761,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             }
                     });
                 }else{
-                    /*Convert Coupon code to lower case to match with cookie. 
-                       If coupon is available in cookie and value is false or coupon is not in cookie remove the coupon with proper case */
-                    
                     $.each(couponObj,function(key,val){
-                        if(_.indexOf(tmp_coupon_lower,key) > -1 && val===false || _.indexOf(tmp_coupon_lower,key) ===-1 ){
+                        if(_.indexOf(couponCodes,key) > -1 && val===false || _.indexOf(couponCodes,key) ===-1 ){
                             try{
                                 me.couponsData[key]= false;
-                                var remove_coupon=key;
-                                var idx=_.indexOf(tmp_coupon_lower,key);
-                                if(idx>-1){
-                                    remove_coupon=couponCodes[idx];
-                                }
-                                api.request("delete","/api/commerce/orders/"+cartId+"/coupons/"+remove_coupon).then(function(res){
-                                    console.log("Deleted "+res);
+                                var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
+                                me.model.apiRemoveCoupon(key).then(function (res) {
+                                    //console.log(res);
                                 });
                             }
                             catch(err){
@@ -1670,17 +1780,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 /*if cookie have one item and model have two or more coupons. We need to remove from coupon model
                 read the cookie array and coupon model find the coupon */
                 var cookie_arr=Object.keys(couponObj);
-                var notin_cookie=_.difference(tmp_coupon_lower,cookie_arr);
+                var notin_cookie=_.difference(couponCodes,cookie_arr);
                 notin_cookie.forEach(function(el,idx){
                     try{
-                            var tmp_idx=_.indexOf(tmp_coupon_lower,el);
-                            var remove_coupon=el;
-                            if(tmp_idx>-1){
-                                remove_coupon=couponCodes[tmp_idx];
-                            }
                             me.couponsData[el]= false;
-                            api.request("delete","/api/commerce/orders/"+cartId+"/coupons/"+remove_coupon).then(function(res){
-                                console.log("Deleted "+res);
+                            var url = 'api/commerce/carts/'+cartId+'/coupons/'+el;
+                            me.model.apiRemoveCoupon(el).then(function (res) {
+                                //console.log(res);
                             });
                         }
                         catch(err){
@@ -1688,6 +1794,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         }
                 });
             }
+           /*  $.each(couponObj,function(key,val){
+                 if(couponCodes.indexOf(key) >= 0 && val === false){
+                     try{
+                         var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
+                         me.model.apiRemoveCoupon(key).then(function (res) {
+                             console.log(res);
+                         });
+                     }
+                     catch(err){
+                         console.log(err);
+                     }
+                 }
+             });*/
            $.cookie("coupon", JSON.stringify(me.couponsData), {  path: '/',expires: 7 });               
         },
         onEnterCouponCode: function (model, code) {
@@ -1708,7 +1827,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                if(getExistsData && getExistsData!== ""){
                   self.couponsData = JSON.parse(getExistsData);
                }
-               self.couponsData[couponCode.toLowerCase()]= flag;
+               self.couponsData[couponCode]= flag;
                $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 });
                //Check
         },
@@ -1985,7 +2104,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 if(getExistsData && getExistsData!== ""){
                     self.couponsData = JSON.parse(getExistsData);
                 }
-                self.couponsData[couponCode.toLowerCase()]= false;
+                self.couponsData[couponCode]= false;
                 $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 });
                 self.render();
             });
@@ -2069,6 +2188,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }catch(err){
                 console.log(err);
             }
+                 if(ga!==undefined){
+                
+                ga('ec:setAction','checkout', {'step': 4});
+                
+                ga('send', 'event','Enhanced-Ecommerce','initPlaceOrder',{'nonInteraction': true});
+
+                ga('ec:setAction','PlaceOrder', {
+                'step': 4,
+                'option': 'ReviewOrderandPlace'
+                });
+                 
+                ga('send', 'event','Enhanced-Ecommerce','PlaceOrder');
+                }
             _.defer(function () {
             self.model.submit();
 

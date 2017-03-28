@@ -10,6 +10,12 @@
 {% if model.billingInfo.paymentType == "PurchaseOrder" %}
     {{ labels.purchaseOrder }} - {{ model.billingInfo.purchaseOrder.purchaseOrderNumber }} <br/>
 {% endif %}
+{% if model.billingInfo.paymentType == "PayWithAmazon" %}
+    Amazon  <br/>
+{% endif %}
+ {% if model.billingInfo.paymentType|lower == "paypalexpress2" %}
+    Paypal Express <br>
+ {% endif %}
                 <!--dl class="mz-propertylist">
                     {% if model.billingInfo.billingContact.email %}
                     <dt>{{ labels.billingEmail }}</dt>

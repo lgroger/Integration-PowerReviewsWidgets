@@ -1,4 +1,4 @@
-﻿{% extends "modules/common/item-listing" %}
+{% extends "modules/common/item-listing" %}
 
 {% block item-details %}
 
@@ -104,7 +104,7 @@
                           {% if products.product.productUsage =="Bundle" %}
                             <button class="addToCart wishlist-cart wishlist-cart-click" productCode="{{ products.product.productCode }}" id="{{products.id}}" >View Details</button>
                           {% else %}
-                            <button class="addToCart wishlist-cart wishlist-cart-click" productCode="{{ products.product.productCode }}" id="{{products.id}}" onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">ADD TO CART</button>
+                            <button class="addToCart wishlist-cart wishlist-cart-click" productCode="{{ products.product.productCode }}" id="{{products.id}}">ADD TO CART</button>
                           {% endif %}
                       {% endif %}
                      <div>
@@ -121,6 +121,22 @@
        </div>
 
 </div>
+
+{% comment %}
+<script>
+ga('send', {
+  hitType: 'event',
+  eventCategory: '{{ siteContext.generalSettings.websiteName }}',
+  eventAction: 'buy',
+  eventLabel: 'addtocart'
+});
+
+</script>
+
+{% endcomment %}
+
+
+
   {% parent %}
   {% comment %}
   <!--div class="mz-itemlisting-quantity">{{ labels.qty }}: {{ model.quantity }}</div>
@@ -141,3 +157,5 @@
 {% endif %}
 {% endcomment %}
 {% endblock item-listing-extras %}
+
+

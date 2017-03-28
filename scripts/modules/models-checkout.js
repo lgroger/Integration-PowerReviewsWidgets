@@ -820,11 +820,13 @@
                 return order.apiVoidPayment(id).then(order.update);
             },
             syncPaymentMethod: function (me, newId) {
-                if (!newId || newId === 'new') {
-                    me.get('billingContact').clear();
-                    me.get('card').clear();
-                    me.get('check').clear();
-                    me.unset('paymentType');
+                if (!newId || newId === '0') {
+                    //Modified from Core reset only cart object item. Quote and Billing address we be same
+                    me.unset('card.cardNumberPartOrMask');
+                    me.unset('card.expireMonth');
+                    me.unset('card.expireYear');
+                   // me.unset('paymentType');
+                    me.set('lastChoosedCard','0');
                     me.set('usingSavedCard', false);
                 } else {
                     me.setSavedPaymentMethod(newId);
@@ -840,6 +842,8 @@
                     me.get('billingContact').set(cardBillingContact.toJSON(), { silent: true });
                     me.get('card').set(card.toJSON());
                     me.set('paymentType', 'CreditCard');
+                    //Set Last Choosed credit card.
+                    me.set('lastChoosedCard',newId);
                     me.set('usingSavedCard', true);
                     if (Hypr.getThemeSetting('isCvvSuppressed')) {
                         me.get('card').set('isCvvOptional', true);

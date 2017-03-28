@@ -217,8 +217,10 @@
         </div> -->
     </div>
 
-    <div class="mz-formstep-next">
-        <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>
-    </div>
+    <div class="mz-formstep-next"> 
+        <button class="mz-button" data-mz-action="next">{{ labels.next }}</button>  
+   
+    </div> 
+    <div class="error-msg"></div>
     <div class="error-msg"></div>
 </div><!-- .mz-panel-wrap -->

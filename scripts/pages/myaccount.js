@@ -319,7 +319,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 $(".addToWishlist-btn-extra").click(function(){
                     me.addToWishlist();
                 });
-              if(window.addthis!==undefined){
+              if(typeof window.addthis!=="undefined"){
                     //Update addthis to currect product model and rerender.
                     try{
                         addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
@@ -946,8 +946,16 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         addedToCart.proFunction(cartitemModel);
 
                         //google analytics ATC event
-                        if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', 'Stumpsparty', 'buy', 'addtocart']); }
+                        //if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', 'Stumpsparty', 'buy', 'addtocart']); }
+                        if(ga!== undefined){
+                            ga('send', {
+                        hitType: 'event',
+                        eventCategory: 'Shindigz',
+                        eventAction: 'buypersonalisewishlist',
+                        eventLabel: 'addtocart'
+                        }); 
 
+                        }
                         //Bloomreach add to cart event start
                         var productUsage = cartitemModel.attributes.product.productUsage,
                             variationProductCode = cartitemModel.attributes.product.variationProductCode,
@@ -964,7 +972,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         $('#mz-quick-view-container').fadeOut(100, function() {
                             $('#mz-quick-view-container').remove();
                         });
-                        if(window.addthis!==undefined){
+                        if(typeof window.addthis!=="undefined"){
                             //Update addthis to currect product model and rerender.
                             try{
                                 addthis.update('share', 'url',window.location.origin+prdmodel.toJSON().url );
@@ -1829,8 +1837,56 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     var cartitemModel = new ProductModels.Product(cartitem.data);
                     cartitemModel.set('quantity', prod.get('quantity'));
                     addedToCart.proFunction(cartitemModel);
+                     //google analytics code for add to cart event
+                     var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    }
+
+                    if(ga!==undefined){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'Buywishlistproduct');
+                        ga('send', 'event', 'buy', 'buywishlist', gaitem.product.name);  
+ 
+                    }
+                    
+
+                    /*if(ga!==undefined){
+                        ga('send', {
+                        hitType: 'event',
+                        eventCategory: 'Shindigz',
+                        eventAction: 'buywishlist',
+                        eventLabel: 'addtocart'
+                        }); 
+                    }*/  
+                    
                     window.removePageLoader();
-                    if(window.addthis!==undefined){
+                    if(typeof window.addthis!=="undefined"){
                        //Update addthis to currect product model and rerender.
                         try{
                             addthis.update('share', 'url',window.location.origin+prod.toJSON().url );
