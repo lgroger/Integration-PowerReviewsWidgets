@@ -176,16 +176,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
             self.setParameters();
 
             // GA for personalized code
-                  var galabel = this.model.toJSON().content.productName;
-                    
-                    if(ga!==undefined){
-                        ga('send', {
-                        hitType: 'event',
-                        eventCategory: 'Personalize Product click',
-                        eventAction: 'Personalize',
-                        eventLabel: galabel
-                        });
-                    }
+                 
             /*
             Code Added by Asaithambi
             Create IE + others compatible event handler
@@ -234,6 +225,33 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
 
                 },false);
             }
+            try{
+                var galabel;
+
+                if(this.model.toJSON().content && this.model.toJSON().content.productName){
+                   galabel = this.model.toJSON().content.productName;
+                } 
+                else if(this.model.toJSON().name){
+                   galabel = this.model.toJSON().name;
+                }
+                
+               
+                    
+                    if(ga!==undefined){
+                        ga('send', {
+                        hitType: 'event',
+                        eventCategory: 'Personalize Product click',
+                        eventAction: 'Personalize',
+                        eventLabel: galabel
+                        });
+                    }
+            }
+
+            catch(err){
+                console.log(err);
+            }
+             
+            
             $(document).on('click', '.personalize-close', function(){
                 $('.dnd-popup').remove();
 
@@ -243,15 +261,29 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                 $('html').removeClass('dnd-active-noscroll');
                 
                 //google analytics code for personlaize close
-                var gapersonalizeclose = self.model.toJSON().content.productName;
-                if(ga!==undefined){
-                    ga('send', {
-                    hitType: 'event',
-                    eventCategory: 'Personalize Product click',
-                    eventAction: 'close',
-                    eventLabel: gapersonalizeclose
-                    }); 
-                } 
+                
+                var gapersonalizeclose;
+                try{
+                     
+                    if(self.model.toJSON().content && self.model.toJSON().content.productName){
+                       gapersonalizeclose = self.model.toJSON().content.productName;
+                    }
+                    else if(self.model.toJSON().name){
+                       gapersonalizeclose = self.model.toJSON().name;
+                    }
+                        if(ga!==undefined){
+                        ga('send', {
+                        hitType: 'event',
+                        eventCategory: 'Personalize Product click',
+                        eventAction: 'close',
+                        eventLabel: gapersonalizeclose
+                        }); 
+                        }
+                }
+                catch(err){
+                   console.log(err);
+                }
+                 
                 return false;
             });
 

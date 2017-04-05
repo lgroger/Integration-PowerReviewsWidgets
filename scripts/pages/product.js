@@ -1277,9 +1277,23 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
 
             $('#tab2').prop('checked', true);
-            $('html, body').animate({
-                    scrollTop: $("#mz-drop-zone-why-shop-wdgt").offset().top
+            if (require.mozuData('pagecontext').isDesktop){
+                 $('html, body').animate({
+                    scrollTop: $("#tab-content2").offset().top - 120
                 }, 1000);
+
+             }
+             else if(require.mozuData('pagecontext').isTablet){
+                 $('html, body').animate({
+                    scrollTop: $("#tab-content2").offset().top - 92
+                }, 1000);
+             }
+             else{ 
+                $('html, body').animate({
+                    scrollTop: $("#tab-content2").offset().top - 72
+                }, 1000);
+
+             } 
             return false;
         });
         

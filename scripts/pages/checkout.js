@@ -17,7 +17,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var gaid = this.$el.attr('id'); 
             me.editing.savedCard = false;
             if(gaid === "step-payment-info" && me.model.toJSON().billingContact.address && me.model.toJSON().billingContact.address.address1 && me.model.toJSON().billingContact.address.address1.length>30 && me.model.toJSON().paymentType === "CreditCard" ){
-                $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');
+                  $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');
             }
            else{  
              
@@ -1465,7 +1465,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         resetPaymentData: function (e){
             try{
                 if($(e.currentTarget).val() === "CreditCard"){
-                    if(this.model.get("lastChoosedCard") && this.model.get("lastChoosedCard")!==0 ){
+                    if(this.model.get("lastChoosedCard") && this.model.get("lastChoosedCard")!=="0"){
                         this.model.setSavedPaymentMethod(this.model.get("lastChoosedCard")); 
                         this.model.set('usingSavedCard', true);
                     }else{
@@ -1725,91 +1725,95 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
             });
 
-            /*coupon cookie code*/
-            var coupon=$.cookie("coupon");
-            var couponObj = {};
-            if(typeof coupon !== 'undefined'){
-                couponObj = $.parseJSON(coupon);
-            }
-            var couponCodes = this.model.get('couponCodes');
-           // console.log("CC ",couponCodes);
-            var cartId = this.model.id;  
-             var getExistsData = $.cookie('coupon');
-            if(getExistsData && getExistsData!== ""){
-                me.couponsData = JSON.parse(getExistsData);
-            }
-            
-             
-            if(Object.keys(couponObj).length >= couponCodes.length){
-                var tmp_cop=[];
-                Object.keys(couponObj).forEach(function(item,i){
-                    if(couponObj[item] && _.indexOf(couponCodes,item) > -1){
-                        tmp_cop.push(item);
-                    }
+            try{
+                var cartId = this.model.id;
+
+                //Check all applied coupon in order model if it's conatin more then one coupon check with last applied coupon in cookie and remove.
+
+                var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined;});
+                var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
+
+                var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
+                var ship_discount_tmp=_.pluck(shipping_discount,'discount');
+                var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
+
+                var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
+                var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+
+                var full_coupon_coupon_code=[];
+                full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
+
+                var lower_coupon_codes=[];
+                _.each(full_coupon_coupon_code,function (item) {
+                    lower_coupon_codes.push(item.toLowerCase());
                 });
-                if(tmp_cop.length>1){
-                    var except_first=_.rest(tmp_cop,[1]);
-                    except_first.forEach(function(cd,idx){
-                        try{
-                                me.couponsData[cd]= false;
-                                var url = 'api/commerce/carts/'+cartId+'/coupons/'+cd;
-                                me.model.apiRemoveCoupon(cd).then(function(res){
+                var last_applied=$.cookie('lastCoupon');
+                if(full_coupon_coupon_code.length>1){
+                    if(last_applied !==undefined && last_applied.length>0 && _.indexOf(lower_coupon_codes,last_applied)>-1){
+                        var coupon_remove=_.without(full_coupon_coupon_code,full_coupon_coupon_code[_.indexOf(lower_coupon_codes,last_applied)]);
+                        _.each(coupon_remove,function (remove_coupon) {
+                            me.model.apiRemoveCoupon(remove_coupon).then(function(res){
+                                me.deleteCoupon(full_coupon_coupon_code,res.data,me);
+                            });
+                        });
+                    }else{
+                        if(last_applied !==undefined && last_applied ===""){
+                            _.each(full_coupon_coupon_code,function (remove_coupon) {
+                                 me.model.apiRemoveCoupon(remove_coupon).then(function(res){
+
+                                 });
+                            });
+                        }else{
+                            var coupon_tobe_removed=_.rest(full_coupon_coupon_code);
+                            $.cookie("lastCoupon", full_coupon_coupon_code[0].toLowerCase(), {  path: '/',expires: 5 });
+                            _.each(coupon_tobe_removed,function (remove_coupon) {
+                                me.model.apiRemoveCoupon(remove_coupon).then(function(res){
+                                    me.deleteCoupon(full_coupon_coupon_code,res.data,me);
                                 });
-                            }
-                            catch(err){
-                                console.log(err);
-                            }
-                    });
-                }else{
-                    $.each(couponObj,function(key,val){
-                        if(_.indexOf(couponCodes,key) > -1 && val===false || _.indexOf(couponCodes,key) ===-1 ){
-                            try{
-                                me.couponsData[key]= false;
-                                var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
-                                me.model.apiRemoveCoupon(key).then(function (res) {
-                                    //console.log(res);
-                                });
-                            }
-                            catch(err){
-                                console.log(err);
-                            }
-                        }
-                    });  
-                }
-            }else{
-                /*if cookie have one item and model have two or more coupons. We need to remove from coupon model
-                read the cookie array and coupon model find the coupon */
-                var cookie_arr=Object.keys(couponObj);
-                var notin_cookie=_.difference(couponCodes,cookie_arr);
-                notin_cookie.forEach(function(el,idx){
-                    try{
-                            me.couponsData[el]= false;
-                            var url = 'api/commerce/carts/'+cartId+'/coupons/'+el;
-                            me.model.apiRemoveCoupon(el).then(function (res) {
-                                //console.log(res);
                             });
                         }
-                        catch(err){
-                            console.log(err);
-                        }
-                });
-            }
-           /*  $.each(couponObj,function(key,val){
-                 if(couponCodes.indexOf(key) >= 0 && val === false){
-                     try{
-                         var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
-                         me.model.apiRemoveCoupon(key).then(function (res) {
-                             console.log(res);
+                    }
+                }
+                if(full_coupon_coupon_code.length===1 && last_applied !==undefined && last_applied ===""){
+                    _.each(full_coupon_coupon_code,function (remove_coupon) {
+                         me.model.apiRemoveCoupon(remove_coupon).then(function(res){
+
                          });
-                     }
-                     catch(err){
-                         console.log(err);
-                     }
-                 }
-             });*/
-           $.cookie("coupon", JSON.stringify(me.couponsData), {  path: '/',expires: 7 });               
-        },
-        onEnterCouponCode: function (model, code) {
+                    });
+                }
+
+            }catch(err){
+                console.log("Error on coupon init",err);
+            }
+        },deleteCoupon:function(full_code,resp,scope){
+            //Check if any new coupons are getting added by mozu if we removed one.
+            var me=scope;
+            var cartId = this.model.id;
+            console.log("Received "+resp);
+            var order_discount_code=_.filter(resp.orderDiscounts,function(dis){ return dis.couponCode!==undefined;});
+            var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
+
+            var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
+            var ship_discount_tmp=_.pluck(shipping_discount,'discount');
+            var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
+
+            var product_discount= _.flatten(_.pluck(resp.items, 'productDiscounts'));
+            var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+
+            var full_coupon_coupon_code=[];
+            full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
+            var newly_added=_.difference(full_coupon_coupon_code,full_code);
+
+            if(newly_added.length>0){
+                me.model.apiRemoveCoupon(newly_added[0]).then(function(res){
+                    me.deleteCoupon(full_code,res.data,me);
+                });
+            }else{
+                setTimeout(function () {
+                    me.render();    
+                },3000);
+            }
+        },onEnterCouponCode: function (model, code) {
             if (code && !this.codeEntered) {
                 this.codeEntered = true;
                 this.$el.find('button').prop('disabled', false);
@@ -1818,8 +1822,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 this.codeEntered = false;
                 this.$el.find('button').prop('disabled', true);
             }
-        },
-        autoUpdate: [
+        },render:function () {
+          this.syncCouponView();
+          Backbone.MozuView.prototype.render.call(this);
+        },autoUpdate: [
             'couponCode'
         ],setCookieCoupon:function(couponCode,flag){
             var self = this;
@@ -1839,10 +1845,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
             var disFlag = "",autoDis="",shipDisFlag="";
             var couponCode = $('#coupon-code').val().toLowerCase();
-            var couponArr = self.model.get('couponCodes');
+           /* var couponArr = self.model.get('couponCodes');
             if(couponArr.indexOf(couponCode.toLowerCase()) < 0){
                 this.setCookieCoupon(couponCode,false);
-            }
+            }*/
             var lowerCode = this.$el.find('#coupon-code').val().toLowerCase().trim();
 
             this.$el.addClass('is-loading');
@@ -1911,7 +1917,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
       			if((lowerCode === 'smtpd' && customerType === "MLT" && pageContext.user.isAuthenticated) || lowerCode !== 'smtpd'){
       				this.model.addCoupon().ensure(function() {
       					self_me.$el.removeClass('is-loading');
-                        self_me.setCookieCoupon(couponCode,true);
+                        if(self_me.checkCouponStatus(couponCode)){
+                            $.cookie("lastCoupon",couponCode, {  path: '/',expires: 5 });
+                        }
                           setTimeout(function(){
                               self_me.model.unset('couponCode');
                               self_me.render();
@@ -2100,15 +2108,54 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var orderId = this.model.id;
             var couponCode = $(e.currentTarget).attr('name');
             self.model.apiRemoveCoupon(couponCode).then(function (res) {
-                var getExistsData = $.cookie('coupon');
-                if(getExistsData && getExistsData!== ""){
-                    self.couponsData = JSON.parse(getExistsData);
-                }
-                self.couponsData[couponCode]= false;
-                $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 });
+                $.cookie("lastCoupon","", {  path: '/',expires: 5 });
                 self.render();
             });
 
+        },checkCouponStatus:function (CCode) {
+            var isApplied=false;
+
+            var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined;});
+            var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
+
+             var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
+            var ship_discount_tmp=_.pluck(shipping_discount,'discount');
+            var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
+
+            var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
+            var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+
+            var full_coupon_coupon_code=[];
+            full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
+            var match_coupon=_.find(full_coupon_coupon_code,function (coupon_item) {
+               if(coupon_item.toLowerCase()===CCode.toLowerCase()){
+                    return true;
+               }
+            });
+            if(match_coupon){
+                isApplied=true;
+            }
+            return isApplied;
+        },syncCouponView:function () {
+            //Check all coupon code available in order object if it's contains one then disable the coupon text box.
+            var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined;});
+            var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
+
+            var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
+           var ship_discount_tmp=_.pluck(shipping_discount,'discount');
+            var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
+
+            var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
+            var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+
+            var full_coupon_coupon_code=[];
+            full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
+
+            if(full_coupon_coupon_code.length>0){
+                this.model.set('allowCoupon',false);                
+            }else{
+                this.model.set('allowCoupon',true);
+            }            
         },
         handleEnterKey: function () {
             this.addCoupon();

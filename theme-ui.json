@@ -758,6 +758,12 @@
                     "xtype": "mz-input-textarea",
                     "name": "myaccounttabs",
                     "width":"60%"
+                },
+                {
+                    "fieldLabel": "My Account Tabs Mobile",
+                    "xtype": "mz-input-textarea",
+                    "name": "myaccounttabsmobile",
+                    "width":"100%"
                 }
             ]
         },

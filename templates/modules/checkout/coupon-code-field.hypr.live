@@ -175,8 +175,8 @@
 	                    </ul>
 					{% endfor %}
 		        </div>
-		        <div class="mz-l-formfieldgroup-cell code_input">
-		            <input type="text" id="coupon-code" class="code_input_box" name="coupon-code" placeholder="Enter Promo Code" value="{{ model.couponCode }}" data-mz-value="couponCode" autocomplete="false">
+		        <div class="mz-l-formfieldgroup-cell code_input {% if model.allowCoupon==false %} hide {% endif %}">
+		            <input type="text" id="coupon-code" class="code_input_box" name="coupon-code" placeholder="{% if model.allowCoupon==false %} {% else %} Enter Promo Code {% endif %}" value="{{ model.couponCode }}" data-mz-value="couponCode" autocomplete="false"  {% if model.allowCoupon==false %} disabled="disabled" {% endif %}>
 		            <button class="mz-button code_input_btn" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
 		        </div>
 			</td>

@@ -350,7 +350,6 @@
                 </div>
                 {% if item.productDiscounts.length > 0 %}
                     <div class="item-offer-stripe">
-                        <!-- Spend another US $19.80 in this theme and get US $5.00 OFF. -->
                             {% for disc in item.productDiscounts %}
                                 {{ disc.discount.name }} : {{ disc.impact | currency }}
                             {% endfor %}

@@ -31,37 +31,63 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                     return false;
                 }
             });
+            try{
+                 var cartId = this.model.id;
+
+                 //Check all applied coupon in order model if it's conatin more then one coupon check with last applied coupon in cookie and remove.
+                 var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined && dis.couponCode !==null;});
+                var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
+
+                var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
+                var shipping_discount_coupons=_.uniq(_.pluck(shipping_discount,'couponCode'));
+                
+                var product_discount= _.flatten(_.pluck(this.model.get('items').toJSON(), 'productDiscounts'));
+                var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+                var full_coupon_coupon_code=[];
+                full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
+                var lower_coupon_codes=[];
+                _.each(full_coupon_coupon_code,function (item) {
+                 lower_coupon_codes.push(item.toLowerCase());
+                });
+                var last_applied=$.cookie('lastCoupon');
+                if(full_coupon_coupon_code.length>1){
+                if(last_applied !==undefined && last_applied.length>0 && _.indexOf(lower_coupon_codes,last_applied)>-1){
+                    var coupon_remove=_.without(full_coupon_coupon_code,full_coupon_coupon_code[_.indexOf(lower_coupon_codes,last_applied)]);
+                    _.each(coupon_remove,function (remove_coupon) {
+                        Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/"+remove_coupon).then(function(res){
+                                console.log("Deleted "+res);
+                        });
+                    });
+                }else{
+                    if(last_applied !==undefined && last_applied ===""){
+                             Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/").then(function (res) {
+                                 console.log("Deleted "+res);
+                             });
+                        }else{
+                            var coupon_tobe_removed=_.rest(full_coupon_coupon_code);
+                            _.each(coupon_tobe_removed,function (remove_coupon) {
+                                Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/"+remove_coupon).then(function(res){
+                                        console.log("Deleted "+res);
+                                });
+                            });
+                        }
+                }
+                }
+                if(full_coupon_coupon_code.length===1 && last_applied !==undefined && last_applied ==="" || full_coupon_coupon_code.length===1 && last_applied !==undefined && full_coupon_coupon_code[0].toLowerCase()!==last_applied){
+                    Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/").then(function (res) {
+                         this.render();
+                     });
+                }
+            }catch(err){
+                console.log("Error on Coupon Remove");
+                console.log(err);
+            }
             this.listenTo(this.model.get('items'), 'quantityupdatefailed', this.onQuantityUpdateFailed, this);
 
             AmazonPay.init(CartModels.Cart.fromCurrent().id);
 
             AmazonPay.init(true);
-           
-
-            /*Coupon cookie code*/
-            var coupon=$.cookie("coupon");
-            var couponObj = {};
-            if(typeof coupon !== 'undefined'){
-                couponObj = $.parseJSON(coupon);
-            }
-            var couponCodes = this.model.get('couponCodes');
-            var cartId = this.model.id;
-            console.log(this.model.attributes.couponCodes);
-           
-            $.each(couponObj,function(key,val){
-                if(couponCodes.indexOf(key) >= 0 && val === false){
-                    try{
-                        var url = 'api/commerce/carts/'+cartId+'/coupons/'+key;
-                        me.model.apiRemoveCoupon(key).then(function (res) {
-                            console.log(res);
-                        });
-                    }
-                    catch(err){
-                        console.log(err);
-                    }
-                }
-            });
-            
+                       
         },
         calculateShippingSurcharge: function(){
             try{
@@ -141,37 +167,13 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 			    return i==allItems.indexOf(item);
 			});
 			
-			if(!Hypr.getThemeSetting('couponCodeMultiple')){
-				if(uniqueList.length>1){
-					$(uniqueList).each(function(ie,ke){
-						if(ie >= 1){
-							var couponCode = uniqueList[ie].toLowerCase();
-							self.model.apiRemoveCoupon(couponCode).then(function (res) {
-				                var getExistsData = $.cookie('coupon');
-				                if(getExistsData && getExistsData!== ""){
-				                    self.couponsData = JSON.parse(getExistsData);
-				                }
-				                self.couponsData[couponCode]= false;
-				                $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 }); 
-				            });
-		                }
-					});
-					
-				}
-			}
         },
         removeCoupon : function(e){
             var self=this;
             var me= this.$el; 
             var orderId = this.model.id;
             var couponCode = $(e.currentTarget).attr('name'); 
-            self.model.apiRemoveCoupon(couponCode).then(function (res) {
-                var getExistsData = $.cookie('coupon');
-                if(getExistsData && getExistsData!== ""){
-                    self.couponsData = JSON.parse(getExistsData);
-                }
-                self.couponsData[couponCode]= false;
-                $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 }); 
+            self.model.apiRemoveCoupon(couponCode).then(function (res) {                
             });
         },
         setestimateShipping:function(){
@@ -710,13 +712,6 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             	disFlag = "",autoDis = "";
             var orderDiscount = self.model.get('orderDiscounts');
             if(couponArr.indexOf(couponCode.toLowerCase()) < 0){
-                var getExistsData = $.cookie('coupon');
-                if(getExistsData && getExistsData!== ""){
-                    self.couponsData = JSON.parse(getExistsData);
-               }
-               self.couponsData[couponCode]= true;
-               $.cookie("coupon", JSON.stringify(self.couponsData), {  path: '/',expires: 7 });
-               
                 //check for single or multiple coupon code environment
                 if(!Hypr.getThemeSetting('couponCodeMultiple')){
                 	//check for product discounts
