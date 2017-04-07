@@ -1,0 +1,30 @@
+{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
+{% with isguidedsearch|length as isGuidedSearchURL %}
+	 <div class="guided-search-search-result-page" data-container="guided-search-search-result-page" {% if isGuidedSearchURL == 1 %}style="display:none;"{% endif %}>
+	        {% include "modules/search/guided-search"  with isGuidedSearchURL=isGuidedSearchURL %}
+	 </div>
+
+		<div class="mz-category-title">
+		    {% dropzone "category-page-top" scope="page" %}
+		    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
+		</div> 
+
+	{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
+
+{% include "modules/product/br-thematic-products" with  model=model.products showAddressType=false and leftnav=model.leftnav and isGuidedSearchURL=isGuidedSearchURL and includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+
+	{% endpartial_cache %}
+	{% dropzone "thematic-seo-zone" scope="page" %}
+	{% dropzone "thematic-page-bottom" scope="page" %}
+	{% if model.content.description %}
+	<div class="mz-category-description">
+		{{model.content.description.header}}
+		<p id="mz-cat-description-hide-more" >
+			{% if model.content.description %}
+				{{ model.content.description }}
+			{% endif %}
+		</p>
+	</div>
+	{% endif %} 
+{% endwith %}
+{% endwith %}

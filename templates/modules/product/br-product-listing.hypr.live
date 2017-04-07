@@ -133,10 +133,11 @@
                             {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}  
                               {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValueStr %}
                                   {% with "{0},{1}"|string_format(model.productCode, prdValueStr) as prdValue %}
-                                    <div class="colorswacthproductcodelist" style="display:none" displaytype="image">{{prdValue}}</div>
                                     <div class="colorbox">
                                         <ul>
+                                         {% if model.mainImage.imageUrl %}
                                             <li><img src="{{model.mainImage.imageUrl}}?max=12" /></li>
+                                         {% endif %}
                                          {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as productCodes %}
                                             {% for imgid in productCodes %}
                                             {% if forloop.counter0 < 5 %}
