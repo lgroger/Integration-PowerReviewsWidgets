@@ -1,5 +1,5 @@
 ﻿
-
+{% if model.pageCount > 1 %} {# hide pages if there is only 1 page #}
 {% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
     {% with isguidedsearch.length as isGuidedSearchURL %}
         {% if isGuidedSearchURL  == 2 %}
@@ -111,3 +111,4 @@
         {% endif %}
     {% endwith %}
 {% endwith %}
+{% endif %}

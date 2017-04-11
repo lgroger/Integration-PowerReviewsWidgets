@@ -1,5 +1,8 @@
  <section class="mz-facetingform">
-    {% if model.hasValueFacets %}
+    {% if model.facets.length > 0 %}
+    <div class="br-facet-form-header">
+        Narrow by
+    </div>
     {% endif %}
     <ul class="mz-l-sidebaritem-mobile">
     {% for facet in model.facets %}
@@ -11,61 +14,83 @@
           {% include "modules/product/hierarchy-facets-mobile" with facet=facet facetValues=facet.values %}
         {% endif %}
         {% endif %}  
-    {% endfor %}   
+    {% endfor %} 
     {% for facet in model.facets %}
     {% if facet.values and facet.facetType != "Hierarchy" %}
+        {% if facet.values.length == 1 and facet.values[0].label == facet.label %}
+            <li class="filter-level-1  sz-singlefacet"><a class="facetheadmob">{{ facet.label }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
+            <ul class="filter-level-2  sz-singlefacet">
+                {% for fval in facet.values %}
+                    <li>
+                        {% set_var checkboxID="mobile_"+{{facet.field|slugify}}+"_"+{{fval.value|slugify}} %}
+                        <input type="checkbox" id="{{ checkboxID }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{ checkboxID }}">{{ fval.label }} <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    </li>
+                {% endfor %}
+            </ul>
+            </li>
+        {% else %}
+
         <li class="filter-level-1"><a class="facetheadmob">{{ facet.label }} <i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
          {% if facet.label == "Rating" %}
          <ul class="filter-level-2 mzsz-rating">
                 {% for fval in facet.values %}
+                    {% set_var checkboxID="mobile_"+{{facet.field|slugify}}+"_"+{{fval.value|slugify}} %}
                     <li>
                     {% if fval.label =="1 to 5" %} 
-                        <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
-                        <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}"><i class=" ratestar fa fa-star" aria-hidden="true"></i> <span class="andup"> &up</span></label>
-                        {% else %}  
-                        {% if fval.label =="2 to 5" %}
-                        <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
-                        <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}"><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i> <span class="andup"> &up</span></label>
-                        {% else %}
-                        {% if fval.label =="3 to 5" %}
-                        <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
-                        <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}"><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i> <span class="andup"> &up</span></label>
-                        {% else %}
-                        {% if fval.label =="4 to 5" %}
-                        <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
-                        <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}"><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i> <i class=" ratestar fa fa-star" aria-hidden="true"></i><i class="nostar fa fa-star-o" aria-hidden="true"></i><span class="andup"> &up</span></label>
-                        {% endif %} 
-                        {% endif %}
-                        {% endif %}
-                        {% endif %}
+                        <input type="checkbox" id="{{checkboxID}}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{checkboxID}}"><i class=" ratestar fa fa-star" aria-hidden="true"></i> <span class="andup"> &amp;up</span>
+                        <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    {% else %}  
+                    {% if fval.label =="2 to 5" %}
+                        <input type="checkbox" id="{{checkboxID}}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{checkboxID}}"><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i> <span class="andup"> &amp;up</span>
+                        <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    {% else %}
+                    {% if fval.label =="3 to 5" %}
+                        <input type="checkbox" id="{{checkboxID}}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{checkboxID}}"><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i> <span class="andup"> &amp;up</span>
+                        <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    {% else %}
+                    {% if fval.label =="4 to 5" %}
+                        <input type="checkbox" id="{{checkboxID}}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{checkboxID}}"><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i><i class=" ratestar fa fa-star" aria-hidden="true"></i> <i class=" ratestar fa fa-star" aria-hidden="true"></i><i class="nostar fa fa-star-o" aria-hidden="true"></i><span class="andup"> &amp;up</span>
+                        <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    {% else %}
+                        <input type="checkbox" id="{{ checkboxID }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{ checkboxID }}">{{ fval.label }} <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    {% endif %} 
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
                     </li>
                 {% endfor %}
             </ul>
          {% else %}
+            {% if facet.label == "Color" %}
+            <ul class="filter-level-2 clearfix">
+                {% for fval in facet.values %}
+                    <li class="br-facet-color br-color-{{ fval.value|slugify|lower }} {% if fval.isApplied %}br-color-selected{% endif %}" title="{{fval.value|title}}">
+                        {% set_var checkboxID="mobile_"+{{facet.field|slugify}}+"_"+{{fval.value|slugify}} %}
+                        <input type="checkbox" id="{{ checkboxID }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{ checkboxID }}">{{ fval.label }} <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% else %}
             <ul class="filter-level-2">
                 {% for fval in facet.values %}
                     <li>
-                      {% if facet.label == "Price" %}
-                        <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
-                        <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}">
-                        {% if fval.label != "Over 150" %}
-                                    ${{fval.rangeQueryValueStart}} to ${{fval.rangeQueryValueEnd}}  
-                                {% else %}
-                                    {% if fval.label == "Over 150"  %}
-                                        Over ${{fval.rangeQueryValueStart}}  
-                                    {% endif %} 
-                                {% endif %}
-
-                        </label>
-                      {% else %}
-                        <input type="checkbox" id="{{facet.field|slugify }}_{{ fval.value|slugify }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
-                        <label class="mz-facetingform-valuelabel" for="{{facet.field|slugify }}_{{ fval.value|slugify }}">{{ fval.label }}</label>
-                        {% endif %}
+                        {% set_var checkboxID="mobile_"+{{facet.field|slugify}}+"_"+{{fval.value|slugify}} %}
+                        <input type="checkbox" id="{{ checkboxID }}" class="mz-facetingform-value" {% if fval.isApplied %}checked="checked"{% endif %} data-mz-facet="{{ facet.field }}" data-mz-facet-value="{{ fval.value }}" data-mz-url="{% make_url "facet" fval %}">
+                        <label class="mz-facetingform-valuelabel" for="{{ checkboxID }}">{{ fval.label }} <span class="mz-facetingform-valuecount">({{fval.count}})</span></label>
                     </li>
                 {% endfor %}
             </ul>
             {% endif %}
+            {% endif %}
         </li>
+    {% endif %}
     {% endif %}
     {% endfor %}
     </ul>

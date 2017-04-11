@@ -3,7 +3,7 @@
   <!-- {{ model.currentSort }}-->
   <select data-mz-value="sortBy" class="mz-pagingcontrols-pagesort-dropdown" autocomplete="off">
     {% block sort-types %}
-	<option data-mz-url="{% make_url "sorting" model with sortBy="createDate desc" %}" value="createDate desc"{% if model.currentSort == "createDate desc" %} selected="selected"{% endif %}>Default</option>
+	<option data-mz-url="{% make_url "sorting" model with sortBy="createDate desc" %}" value="createDate desc"{% if model.currentSort == "createDate desc" %} selected="selected"{% endif %}>Relevance</option>
     <option data-mz-url="{% make_url "sorting" model with sortBy="tenant~rating desc" %}" value="tenant~rating desc"{% if model.currentSort == "tenant~rating desc" %} selected="selected"{% endif %}>Ratings</option>
     {% for sort in model.sorts %}
       {% with sort.value|default(themeSettings.defaultSort) as sortValue %}

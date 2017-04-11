@@ -25,11 +25,6 @@
 </script>
 {% endcomment %}
 
-{% if themeSettings.searchVersion == "AllBloomReach" or (themeSettings.searchVersion == "BloomReachCatOnly" and pageContext.pageType == "category") or (pageContext.pageType == "search" and themeSettings.searchVersion == "BloomReachSearchOnly") %}
-     {% set_var useBR=1 %}
-{% else %}
-     {% set_var useBR=0 %}
-{% endif %}
 {% preload_json model.facets "facets" %}
 
 <!-- element structure for search result category navigation -->
@@ -62,11 +57,7 @@
             {% if model.facets %}
             <div data-mz-facets class="mz-l-sidebar">
                 {% dropzone "sidebar-above-facets" scope="template" %}
-                {% if useBR==1 %}
-                    {% include "modules/product/br-faceting-form" %}
-                {% else %}
-                    {% include "modules/product/faceting-form" %}
-                {% endif %}
+                {% include "modules/product/faceting-form" %}
                 {% dropzone "sidebar-below-facets" scope="template" %}
             </div>
             {% endif %}

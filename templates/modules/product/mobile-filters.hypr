@@ -1,11 +1,7 @@
-{% if themeSettings.searchVersion == "AllBloomReach" or (themeSettings.searchVersion == "BloomReachCatOnly" and pageContext.pageType == "category") or (pageContext.pageType == "search" and themeSettings.searchVersion == "BloomReachSearchOnly") %}
-     {% set_var useBR=1 %}
-{% else %}
-     {% set_var useBR=0 %}
-{% endif %}
 <!-- Mobile filters -->
     <div class="mobile mz-mobile-filter" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
         <div class="mz-l-paginatedlist-header">
+            {% if model.facets %} {# hide filters button if no facets since it won't do anything when tapped #}
             <div class="mz-filters-bar">
                 <div class="mz-filters">
                     <button class="mz-filters-btn">
@@ -31,6 +27,7 @@
                     </select>
                 </div>
             </div>
+            {% endif %}
 
             <div class="mz-filter-mobile-options">
                 <header>
@@ -40,11 +37,7 @@
                 {% if model.facets %}
                 <div data-mz-facets class="mz-l-sidebar">
                 {% if model.facets %}
-                    {% if useBR==1 %}
-                        {% include "modules/product/br-faceting-form-mobile" %}
-                    {% else %}
-                        {% include "modules/product/faceting-form-mobile" %}
-                    {% endif %}
+                    {% include "modules/product/faceting-form-mobile" %}
                 {% endif %}
                 </div>
                 {% endif %}
@@ -56,8 +49,8 @@
             </div>
         </div>
         <div class="mz-page-filters-controls">
-             <div id="selected-filters-mobile-static">
-                {% if model.facets %}
+            {% if model.facets %}
+                <div id="selected-filters-mobile-static">
                     {% if filterSelected %}
                         <button class="mz-button mz-facetingform-clearall selected-filter" style="width:auto !important" data-mz-action="clearFacets" data-mz-url="{% make_url "facet" "clear"  %}">{{ labels.clear }}</button>
                     {% endif %}
@@ -76,8 +69,15 @@
                         {% endfor %}
                     {% endif %}
                     {% endfor %}
-                {% endif %}
-            </div>
+                </div>
+            {% endif %}
+{% set_var minPageSize=999 %}
+{% for size in themeSettings.pageSizeOptions %}
+  {% if model.pageSize < minPageSize %}
+    {% set_var minPageSize=model.pageSize %}
+  {% endif %}
+{% endfor %}
+{% if minPageSize <= model.totalCount %} {# hide page dropdown if it won't make a difference if something different is selected #}
             <div class="mz-pagingcontrols-sortby pull-left">
                 <div data-mz-pagingcontrols class="mz-pagingcontrols">
                     <label class="mz-pagingcontrols-pagesize-label">
@@ -98,6 +98,7 @@
                     </label>
                 </div>
             </div>
+{% endif %}
             {% comment %}
             <div class="pull-right">
                 <a style="padding: 5px; margin-right: 12px;display: inline-block;" class="mz-facetingform-clearall" data-mz-action="clearFacets" data-mz-url="{% make_url "facet" "clear"  %}">{{ labels.clearAllFilters }}</a>

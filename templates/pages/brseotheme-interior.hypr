@@ -9,7 +9,21 @@
 		    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
 		</div> 
 
-	{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
+	{% partial_cache routeData.thematic pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
+	{% comment %}
+	make sure custom routes has this data so that routeData.thematic exists
+	{
+			"template": "trends/{thematic}",
+			"defaults": {
+				"categoryId": 3732
+			},
+			"internalRoute": "Category",
+			"mappings": {},
+			"canonical": true,
+			"validators": {}
+		}
+	{% endcomment %}
+
 
 {% include "modules/product/br-thematic-products" with  model=model.products showAddressType=false and leftnav=model.leftnav and isGuidedSearchURL=isGuidedSearchURL and includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 
