@@ -347,13 +347,13 @@
            window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "viewBasket", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
            <!-- Criteo Integration End -->
        {% endif %}
-       {% if pageContext.pageType == "confirmation" %}
+       {% if pageContext.pageType == "confirmation" and model.billingInfo.paymentType != "check" %}
           window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "trackTransaction", id: "{{ model.orderNumber }}", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
           <!-- Criteo Integration End -->
        {% endif %}
 
 
-       {% if pageContext.pageType == "confirmation" %}
+       {% if pageContext.pageType == "confirmation" and model.billingInfo.paymentType != "check" %}
         <!-- BEGIN COMMISSION JUNCTION TRACKING CODE  - DO NOT MODIFY -->
         <script>
 
@@ -395,7 +395,7 @@
           {% if pageContext.pageType ==  'search' %}
           br_data.search_term = "{{ pageContext.search.query }}";
           {% endif %}
-          {% if pageContext.pageType ==  'confirmation' %}
+          {% if pageContext.pageType ==  'confirmation' and model.billingInfo.paymentType != "check" %}
           br_data.is_conversion = 1;
           br_data.order_id = "{{ model.orderNumber }}";
           br_data.basket_value = "{{ model.total }}";
