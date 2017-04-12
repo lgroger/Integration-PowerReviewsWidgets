@@ -17,4 +17,7 @@
         <button class="mz-searchbox-button" type="submit">{{ labels.search }}</button>
     </span>
     {% require_script "modules/contextify" %}
+    {% if themeSettings.useSearchAutocomplete %}
+        {% require_script "modules/search-autocomplete" %}
+    {% endif %}
 </form>

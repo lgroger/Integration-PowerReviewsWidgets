@@ -1,5 +1,5 @@
 ﻿<script>
-    
+    {% if model.billingInfo.paymentType != "check" %} 
     ga('require', 'ecommerce');
 
     ga('ecommerce:addTransaction', {
@@ -7,9 +7,12 @@
     'affiliation': '{{ siteContext.generalSettings.websiteName }}',    
     'revenue': '{{ model.total }}',               
     'shipping': '{{ model.shippingTotal }}',                  
-    'tax': '{{ model.taxTotal }}'                    
-    });
+    'tax': '{{ model.taxTotal }}',
+    'dimension6' : '{{model.billingInfo.paymentType}}',
+    'dimension7' : '{{ model.billingInfo.card.paymentOrCardType }}'
+    }); 
     
+   
 
      {% for item in model.items %}
         ga('ecommerce:addItem', {   
@@ -22,8 +25,10 @@
         });
      {% endfor %} 
 
-     ga('ecommerce:send'); 
+ga('ecommerce:send'); 
+    
+ga('send', 'pageview');   
 
-
+{% endif %}
 
 </script>

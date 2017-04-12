@@ -821,13 +821,13 @@
             },
             syncPaymentMethod: function (me, newId) {
                 if (!newId || newId === '0') {
-                    //Modified from Core reset only cart object item. Quote and Billing address we be same
+                    //Modified from Core reset only card object item. To keeep Quote and Billing address same
                     me.unset('card.cardNumberPartOrMask');
                     me.unset('card.expireMonth');
                     me.unset('card.expireYear');
-                   // me.unset('paymentType');
                     me.set('lastChoosedCard','0');
                     me.set('usingSavedCard', false);
+                    me.set('isSameBillingShippingAddress',true);
                 } else {
                     me.setSavedPaymentMethod(newId);
                     me.set('usingSavedCard', true);
@@ -1474,7 +1474,7 @@
                     if (!allDiscounts || !_.find(allDiscounts, matchesCode))
                     {
                         me.trigger('error', {
-                            message: Hypr.getLabel('promoCodeError', code)
+                            message: Hypr.getLabel('promoCodeError')
                         });
                     }
 

@@ -98,7 +98,7 @@
                 });
                 if (!couponExists) {
                     me.trigger('error', {
-                        message: Hypr.getLabel('promoCodeError', code)
+                        message: Hypr.getLabel('promoCodeError')
                     });
                 }
 

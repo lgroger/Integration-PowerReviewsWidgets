@@ -12,4 +12,99 @@
 		</div> 
     {% endif %}
 {% endblock breadcrumbs %}
+{% block custom-js %}
+{% if pageContext.cmsContext.page.path == "contact-us" or if pageContext.cmsContext.page.path == "contact" %}
+	<script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
 
+<script>
+ requirejs(['jquery'], function( $ ) {
+    MktoForms2.loadForm("//app-sj14.marketo.com", "769-CKK-790", {{themeSettings.mktoContactUs}},function(form){
+        
+        var btn = document.getElementById("contact-us");
+    $("#mktoForm_1153 input[type='text'],#mktoForm_1153 input[type='tel'],#mktoForm_1153 input[type='number']").not('#mktoForm_1153 #orderNumber,#mktoForm_1153 #itemNumber').bind('change keyup keypress', function() {
+          $(this).val($(this).val().replace(/[!"#$%&'()*+,-./`¨.<>\{\}\[\]\\\Ç¬÷"=?¿;:´'","?ºª€£¥€••¥£€®©~!¡@#$%^&*()_|+-]/gi, ''));
+    });
+    $('#mktoForm_1153 #orderNumber,#mktoForm_1153 #itemNumber').bind('change keyup keypress', function() {
+          $(this).val($(this).val().replace(/[^,a-zA-Z0-9]/gi, ''));
+    });
+    form.onValidate(function() {
+        // Get the values
+        if(res){
+          form.submittable(true);
+          $(".recaptcha-err-msg").hide();
+        }else{
+          form.submittable(false);
+          $(".recaptcha-err-msg").show();
+        }
+      });
+        $("#mktoForm_1153 > div:nth-child(4)").insertAfter("#captcha_container");
+          if($(window).width()<=700){
+          $(".mktoFieldWrap").each(function(){
+            	if($(this).find("input,textarea,select").parent().hasClass("mktoRequiredField")){
+            		$(this).find("input,textarea").attr("placeholder",$(this).find("label").text());
+            	}else{
+            		$(this).find(".mktoAsterix").remove();
+            		$(this).find("input,textarea,select").attr("placeholder",$(this).find("label").text())
+            	}
+            		$(this).find("select>option:first").prepend("*");
+            });
+            
+              $(".mktoFieldDescriptor.mktoFormCol:last").css("cssText","width:100% !important");
+        $(".mktoFieldWrap:last").css("cssText","width:100% !important");
+        }else{
+             
+        $("#mktoForm_1153 > div:nth-child(3) div.mktoFieldWrap").css("cssText","width:100% !important");
+        }
+           
+      btn.onclick = function() {
+            
+                
+                if($(window).width()>780){
+                    if($('.mktoError').length>0){
+                        console.log('Scroll top');
+                    document.documentElement.scrollTop =$('#mktoForm_1153').offset().top-210;
+                    }
+                    }else{
+                        if($('.mktoError').length>0){$('body').scrollTop($('.mktoError').offset().top-150);console.log('else part');}
+                    }
+                MktoForms2.whenReady(function(form){
+                    form.submittable(true);
+                    form.submit();
+                });           
+        };
+            
+        
+    });
+    
+
+    $(document).ready(function(){
+         if ( document.documentMode && document.documentMode < 12 ) {
+        $( document ).on( "focus", ":input", function ( event ) {
+            $( window ).on( "scroll", function () {
+                event.target.blur();
+            });
+        });
+    }
+        
+        if(window.location.search.indexOf('aliId=') >= 1){
+            $('#mktoForm_1153').before('<pre class="thank-you" onclick="$(this).fadeOut(1000);">Thank You for submitting form</pre>');
+        }
+        
+    });
+    });
+var captchaContainer = null;
+    var res = "";
+    var loadCaptcha = function() {
+      captchaContainer = grecaptcha.render('captcha_container', {
+        'sitekey' : '6Lf5vCcTAAAAAKXDMxGQcebgm6QBQr9krzLOzJJR',
+        'callback' : function(response) {
+         console.log(response);
+         res = response;
+        }
+      });
+    };
+ 
+</script>
+<script src="https://www.google.com/recaptcha/api.js?onload=loadCaptcha&render=explicit" async defer></script>
+{% endif %}
+{% endblock custom-js %}
