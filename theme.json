@@ -1026,7 +1026,7 @@
     "customerRewardPointAttribute": "tenant~shipping-reward-point-1",
     "rewardProgramEnrolledAttribute": "tenant~rp-enrolled-on",
     "postOrderSignupAttribute": "tenant~post-order-signup",
-    "allProductsCategoryCode": 3732,
+    "allProductsCategoryCode": 4706,
     "isEnableGuidedSearch": false,
     "guidedSearchProperty1Label": "Selected Event Type:",
     "guidedSearchProperty2Label": "Theme:",

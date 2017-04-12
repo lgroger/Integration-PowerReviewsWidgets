@@ -17,7 +17,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var gaid = this.$el.attr('id'); 
             me.editing.savedCard = false;
             if(gaid === "step-payment-info" && me.model.toJSON().billingContact.address && me.model.toJSON().billingContact.address.address1 && me.model.toJSON().billingContact.address.address1.length>30 && me.model.toJSON().paymentType === "CreditCard" ){
-                  $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');
+              if(require.mozuData('user').isAnonymous){
+                  $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');       
+                }
+                else{
+                  $('.error-msg').html('Error:Please <a href="/myaccount#addressbook" class="sz-eredit" >edit</a> your billing address. Your address cannot exceed 30 characters');                  
+                }    
             }
            else{  
              
@@ -153,6 +158,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         initialize: function () {
             console.log("init order summary ");
             window.first_load=true;
+            //this.showPersonalizeImage();
+            //this.render();
             /* window.usa_48=_.filter(order_item_list, function(obj) {
                 return  _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').usa48})[0].values[0].value===true;
             });
@@ -187,8 +194,61 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         onOrderCreditChanged: function (order, scope) {
             this.render();
+        },showPersonalizeImage:function () {
+            var me=this,imgsrc,dndToken;
+            var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
+            var personslizeIds = null, personslizeJson=null;
+            var items=_.pluck(this.model.get("items"),'product');
+            _.each(items,function (item,i) {
+
+                if(item.productType !== "Bundle"){
+                personslizeIds = null;
+                personslizeJson = null;
+                var dndCode=_.findWhere(item.options,{'attributeFQN': Hypr.getThemeSetting('productAttributes').dndToken});
+                if(dndCode!==undefined){
+                    personslizeIds=JSON.parse(dndCode.shopperEnteredValue);
+                }
+                if(personslizeIds!==null && personslizeIds!==undefined){
+                personslizeJson={};
+                for(var eku in personslizeIds){
+                    if(eku.indexOf('@')!==-1){
+                        var prdCode = eku.split('@')[0];
+                        personslizeJson[prdCode]=personslizeIds[eku];
+                    }else{
+                        personslizeJson[eku]=personslizeIds[eku];
+                    }
+                }
+                    me.model.get("items")[i].personslizeIds=personslizeJson;
+                }
+                    /*for(var k=0;k<me.model.get("items")[i].product.bundledProducts.length;k++){
+                        if(me.model.get("items")[i].personslizeIds){
+                            dndToken = me.model.get("items")[i].personslizeIds[me.model.get("items")[i].product.bundledProducts[k].productCode];
+                            if(dndToken){
+                                imgsrc=dndEngineUrl+'preview/'+dndToken;
+                                me.model.get("items")[i].product.bundledProducts[k].dndToken= dndToken;
+                                me.model.get("items")[i].product.bundledProducts[k].imageUrl = imgsrc;
+                            }else
+                            {
+                                //imgsrc = $('[componentimageid="'+items.models[i].get('id')+'-'+items.models[i].get('product').get('bundledProducts')[k].productCode+'"]').attr('src');
+                            }
+                        }
+                    }*/
+                    var dndTokenList = me.model.get("items")[i].personslizeIds;
+                    for (var prop in dndTokenList) {
+                        if (dndTokenList.hasOwnProperty(prop)) {
+                            //alert(dndToken[prop]);
+                            dndToken = dndTokenList[prop];
+                            if(dndToken){
+                                imgsrc=dndEngineUrl+'preview/'+dndToken;
+                                me.model.get("items")[i].product.imageUrl=imgsrc;
+                            }  
+                        } 
+                    }
+                }
+            }); 
         },render:function(){
             console.log("render on change");
+            this.showPersonalizeImage();
             $(".mz-pagetitle .total_pay strong").text("$"+parseFloat(this.model.get("total")).toFixed(2));
             var order_obj=window.order.toJSON();
             //var me=this;
@@ -996,7 +1056,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         //tmp_date=tmp_date.toISOString().slice(0,10);
                         //UPSPostBody.TimeInTransitRequest.Pickup.Date=tmp_date.replace(/\//g, '');
                         urlparm+="&sdate="+tmp_date.replace(/\//g, '');
-                        console.log(urlparm);
+                        //console.log(urlparm);
                 $.ajax({
                     "async": true,
                     "url": "/ups-route-custom"+urlparm,
@@ -1045,7 +1105,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         var tmp_date=ship_date.getFullYear()+"/"+("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2);
                         //UPSPostBody.TimeInTransitRequest.Pickup.Date=tmp_date.replace(/\//g, '');
                          urlparm+="&sdate="+tmp_date.replace(/\//g, '');
-                        console.log(urlparm);
+                        //console.log(urlparm);
                         $.ajax({
                             "async": true,
                             "url": "/ups-route-custom"+urlparm,
@@ -1287,13 +1347,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         updateShippingMethod: function (e) {
             this.model.updateShippingMethod(this.$('[data-mz-shipping-method]:checked').val());
+            //Set flag for checking coupon
+            window.ship_changed=true;
         }
     });
 
     var poCustomFields = function() {
-
         var fieldDefs = [];
-
         var isEnabled = HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder &&
             HyprLiveContext.locals.siteContext.checkoutSettings.purchaseOrder.isEnabled;
 
@@ -1305,9 +1365,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                 }, this);
             }
-
         return fieldDefs;
-
     };
 
     var visaCheckoutSettings = HyprLiveContext.locals.siteContext.checkoutSettings.visaCheckout;
@@ -1515,7 +1573,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 this.visaCheckoutInitialized = true;
             }
             this.setQuotePaymentData(); 
-             
+            try{
+                if(this.model.get("isSameBillingShippingAddress")===undefined && this.model.parent.toJSON().fulfillmentInfo.fulfillmentContact.address.address1!==undefined && this.model.parent.toJSON().fulfillmentInfo.fulfillmentContact.address.address1.length>2){
+                    this.model.set("isSameBillingShippingAddress",true);
+                }
+            }catch(err){
+                console.log(err);
+            }
             var today=new Date();
                 var cardselcval = $('.mz-payment-select-saved-payments option:selected').val();
                 
@@ -1558,6 +1622,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             if (!this.model.isExternalCheckoutFlowComplete()) {
                 this.editing.savedCard = true;
                 this.render();
+                try{
+                    if($('input#paywithamazon').prop('disabled')){
+                        $('input#paywithamazon').removeProp('disabled');
+                    }
+                }catch(err){
+                    console.log(err);
+                }
             } else {
                 //this.cancelExternalCheckout();
             }
@@ -1738,7 +1809,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
 
                 var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
-                var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+                var product_discount_tmp=_.filter(product_discount,function (dis) {
+                    return dis.couponCode !==undefined;
+                });
+                var product_discount_coupons=_.uniq(_.pluck(product_discount_tmp,"couponCode"));
 
                 var full_coupon_coupon_code=[];
                 full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
@@ -1753,7 +1827,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         var coupon_remove=_.without(full_coupon_coupon_code,full_coupon_coupon_code[_.indexOf(lower_coupon_codes,last_applied)]);
                         _.each(coupon_remove,function (remove_coupon) {
                             me.model.apiRemoveCoupon(remove_coupon).then(function(res){
-                                me.deleteCoupon(full_coupon_coupon_code,res.data,me);
+                                me.deleteCoupon(full_coupon_coupon_code,res.data,me,1);
                             });
                         });
                     }else{
@@ -1768,7 +1842,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             $.cookie("lastCoupon", full_coupon_coupon_code[0].toLowerCase(), {  path: '/',expires: 5 });
                             _.each(coupon_tobe_removed,function (remove_coupon) {
                                 me.model.apiRemoveCoupon(remove_coupon).then(function(res){
-                                    me.deleteCoupon(full_coupon_coupon_code,res.data,me);
+                                    me.deleteCoupon(full_coupon_coupon_code,res.data,me,1);
                                 });
                             });
                         }
@@ -1777,7 +1851,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 if(full_coupon_coupon_code.length===1 && last_applied !==undefined && last_applied ===""){
                     _.each(full_coupon_coupon_code,function (remove_coupon) {
                          me.model.apiRemoveCoupon(remove_coupon).then(function(res){
-
                          });
                     });
                 }
@@ -1785,28 +1858,31 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }catch(err){
                 console.log("Error on coupon init",err);
             }
-        },deleteCoupon:function(full_code,resp,scope){
-            //Check if any new coupons are getting added by mozu if we removed one.
+        },deleteCoupon:function(full_code,resp,scope,counter){
+            //Check if any new coupons are getting added by mozu if we removed one max 4 recursion.
             var me=scope;
             var cartId = this.model.id;
             console.log("Received "+resp);
             var order_discount_code=_.filter(resp.orderDiscounts,function(dis){ return dis.couponCode!==undefined;});
             var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
 
-            var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
+            var shipping_discount=_.filter(resp.shippingDiscounts,function(dis){ return dis.discount.couponCode!==undefined;});
             var ship_discount_tmp=_.pluck(shipping_discount,'discount');
             var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
 
             var product_discount= _.flatten(_.pluck(resp.items, 'productDiscounts'));
-            var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+            var product_discount_tmp=_.filter(product_discount,function (dis) {
+                return dis.couponCode !==undefined;
+            });
+            var product_discount_coupons=_.uniq(_.pluck(product_discount_tmp,"couponCode"));
 
             var full_coupon_coupon_code=[];
             full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
             var newly_added=_.difference(full_coupon_coupon_code,full_code);
 
-            if(newly_added.length>0){
+            if(newly_added.length>0 && counter < 5){
                 me.model.apiRemoveCoupon(newly_added[0]).then(function(res){
-                    me.deleteCoupon(full_code,res.data,me);
+                   me.deleteCoupon(full_code,res.data,me,counter++);
                 });
             }else{
                 setTimeout(function () {
@@ -2123,7 +2199,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
 
             var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
-            var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+            var product_discount_tmp=_.filter(product_discount,function (dis) {
+                return dis.couponCode !==undefined;
+            });
+            var product_discount_coupons=_.uniq(_.pluck(product_discount_tmp,"couponCode"));
 
             var full_coupon_coupon_code=[];
             full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
@@ -2137,6 +2216,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
             return isApplied;
         },syncCouponView:function () {
+            var me=this;
             //Check all coupon code available in order object if it's contains one then disable the coupon text box.
             var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined;});
             var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
@@ -2146,13 +2226,43 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
 
             var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
-            var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+            var product_discount_tmp=_.filter(product_discount,function (dis) {
+                return dis.couponCode !==undefined;
+            });
+            var product_discount_coupons=_.uniq(_.pluck(product_discount_tmp,"couponCode"));
 
             var full_coupon_coupon_code=[];
             full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
 
             if(full_coupon_coupon_code.length>0){
-                this.model.set('allowCoupon',false);                
+                this.model.set('allowCoupon',false);  
+                try{
+                    if(full_coupon_coupon_code.length>1 && window.ship_changed !== undefined && window.ship_changed===true){
+                         var last_applied=$.cookie('lastCoupon');
+                          var lower_coupon_codes=[];
+                        _.each(full_coupon_coupon_code,function (item) {
+                            lower_coupon_codes.push(item.toLowerCase());
+                        });
+                        if(last_applied !==undefined && last_applied.length>0 && _.indexOf(lower_coupon_codes,last_applied)>-1){
+                            var coupon_remove=_.without(full_coupon_coupon_code,full_coupon_coupon_code[_.indexOf(lower_coupon_codes,last_applied)]);
+                            _.each(coupon_remove,function (remove_coupon) {
+                                me.model.apiRemoveCoupon(remove_coupon).then(function(res){                                
+                                });
+                            });
+                        }else{
+                            var coupon_tobe_removed=_.rest(full_coupon_coupon_code);
+                            $.cookie("lastCoupon", full_coupon_coupon_code[0].toLowerCase(), {  path: '/',expires: 5 });
+                            _.each(coupon_tobe_removed,function (remove_coupon) {
+                                me.model.apiRemoveCoupon(remove_coupon).then(function(res){
+                                });
+                            });
+                        }
+                        window.ship_changed=false;
+                    }               
+                }catch(err){
+                    console.log("Error or syncCouponView "+err);
+                    window.ship_changed=false;
+                }              
             }else{
                 this.model.set('allowCoupon',true);
             }            
@@ -2337,7 +2447,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         window.checkoutViews = checkoutViews;
         //non lower 48 states array
-
+        try{
+            if(!require.mozuData("user").isAuthenticated && !checkoutModel.get("fulfillmentInfo.fulfillmentContact.address").attributes.hasOwnProperty("address1")){
+                window.checkoutViews.orderSummary.render();
+            }
+        }catch(err){
+            console.log(err);
+        }
         checkoutModel.on('complete', function() {
             CartMonitor.setCount(0);
             if (window.amazon)

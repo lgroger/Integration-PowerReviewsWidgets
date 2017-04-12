@@ -65,7 +65,7 @@
                                             {% for prodcode in productCodes %}
                                             {% if forloop.counter0 < 5 %}
                                             <li  style="display:none;" {% if not pageContext.isMobile %}class="quick-view"{% endif %}><a class="swatch-color" data-pro-id={{prodcode}}>
-                                                <img data-color-prdcode='{{prodcode}}' alt={{prodcode}} /></a></li>
+                                                <img data-color-prdcode='{{prodcode}}' /></a></li>
                                             {% endif %}
                                             {% endfor%}
                                         {% endwith %}

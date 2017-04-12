@@ -1353,6 +1353,18 @@
 		text-transform: uppercase;
 	}
 }
+.contact-us #mktoForm_1153{
+	> div:nth-child(3){
+		.mktoFormCol{
+			float: none;
+			textarea{
+				float: left;
+				clear: both;
+				width: 730px !important;
+			}
+		}
+	}
+}
 @media only screen and (max-width: 1195px)  {
 	.contact-us {
 		fieldset .mktoFieldWrap {
@@ -1369,6 +1381,11 @@
 			div.mktoFormCol{
 				margin-right: 30px;
 			}
+			> div:nth-child(3){
+			.mktoFormCol textarea{
+				width: 580px !important;
+				}
+			}
 		}
 	}
 }
@@ -1379,6 +1396,16 @@
 		}
 		fieldset .mktoFieldWrap {
 		    width: 100% !important;
+		}
+		#mktoForm_1153{
+			div.mktoFormCol{
+				margin-right: 0;
+			}
+			> div:nth-child(3){
+			.mktoFormCol textarea{
+				width: 100% !important;
+				}
+			}
 		}
 		#mktoForm_1153 .mktoFormCol {
 		    margin-right: 10px;

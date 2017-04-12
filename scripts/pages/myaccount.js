@@ -23,7 +23,12 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         window.extrasProducts=[];
 
         Api.on("error", function(e) {
+            $('.se-pre-con').remove();
             $(".mz-messagebar").empty().html(e.message);
+            $("html, body").animate({
+            scrollTop: 0
+        }, 800);
+        return false;
         });
 
         var getPropteryValueByAttributeFQN = function(product, attributeFQN){
@@ -1830,6 +1835,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 //end
                 productModel.on('error', function(a){
                     console.log(a);
+                    $('.se-pre-con').hide(); 
                     $('.addtocart-error').remove();
                     $(e.target).parents('.orders-body').prepend('<p class="addtocart-error" style="color:red;">'+a.message+'</p>');
                 });
@@ -2206,7 +2212,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     fulfillMethod = (me.get('goodsType') === 'Physical') ? ProductModels.Product.Constants.FulfillmentMethods.SHIP : ProductModels.Product.Constants.FulfillmentMethods.DIGITAL;
                 }
                 me.apiAddToCart({
-                    options: me.getConfiguredOptions(),
+                    options: me.get("options").toJSON(),
                     fulfillmentMethod: fulfillMethod,
                     quantity: me.get("quantity")
                 }).then(function (item) {
@@ -2946,7 +2952,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         var tab_config={
             "#wishlist":5,
             "#myorders":4,
-            "#myquotes":7
+            "#myquotes":7,
+            "#addressbook":3
         };
         if(window.location.hash.length>1){
             checkNavigation(window.location.hash);

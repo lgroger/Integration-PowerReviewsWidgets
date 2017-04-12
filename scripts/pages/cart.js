@@ -38,13 +38,15 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                  var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined && dis.couponCode !==null;});
                 var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
 
-                var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
-                var shipping_discount_coupons=_.uniq(_.pluck(shipping_discount,'couponCode'));
                 
                 var product_discount= _.flatten(_.pluck(this.model.get('items').toJSON(), 'productDiscounts'));
-                var product_discount_coupons=_.uniq(_.pluck(product_discount,"couponCode"));
+                var product_discount_tmp=_.filter(product_discount,function (dis) {
+                    return dis.couponCode !==undefined && dis.couponCode !==null;
+                });
+                var product_discount_coupons=_.uniq(_.pluck(product_discount_tmp,"couponCode"));
+
                 var full_coupon_coupon_code=[];
-                full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(shipping_discount_coupons).concat(product_discount_coupons);
+                full_coupon_coupon_code=full_coupon_coupon_code.concat(order_discount_coupons).concat(product_discount_coupons);
                 var lower_coupon_codes=[];
                 _.each(full_coupon_coupon_code,function (item) {
                  lower_coupon_codes.push(item.toLowerCase());
@@ -54,29 +56,29 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 if(last_applied !==undefined && last_applied.length>0 && _.indexOf(lower_coupon_codes,last_applied)>-1){
                     var coupon_remove=_.without(full_coupon_coupon_code,full_coupon_coupon_code[_.indexOf(lower_coupon_codes,last_applied)]);
                     _.each(coupon_remove,function (remove_coupon) {
-                        Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/"+remove_coupon).then(function(res){
-                                console.log("Deleted "+res);
+                        me.model.apiRemoveCoupon(remove_coupon).then(function (res) {
                         });
                     });
                 }else{
                     if(last_applied !==undefined && last_applied ===""){
-                             Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/").then(function (res) {
-                                 console.log("Deleted "+res);
-                             });
+                         _.each(full_coupon_coupon_code,function (remove_coupon) {
+                            me.model.apiRemoveCoupon(remove_coupon).then(function (res) {
+                            });
+                         });
                         }else{
                             var coupon_tobe_removed=_.rest(full_coupon_coupon_code);
                             _.each(coupon_tobe_removed,function (remove_coupon) {
-                                Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/"+remove_coupon).then(function(res){
-                                        console.log("Deleted "+res);
-                                });
+                            me.model.apiRemoveCoupon(remove_coupon).then(function (res) {
+                            });
                             });
                         }
                 }
                 }
                 if(full_coupon_coupon_code.length===1 && last_applied !==undefined && last_applied ==="" || full_coupon_coupon_code.length===1 && last_applied !==undefined && full_coupon_coupon_code[0].toLowerCase()!==last_applied){
-                    Api.request("delete","/api/commerce/carts/"+cartId+"/coupons/").then(function (res) {
-                         this.render();
-                     });
+                   _.each(full_coupon_coupon_code,function (remove_coupon) {
+                            me.model.apiRemoveCoupon(remove_coupon).then(function (res) {
+                            });
+                         });
                 }
             }catch(err){
                 console.log("Error on Coupon Remove");
