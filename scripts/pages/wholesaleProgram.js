@@ -2,7 +2,11 @@ require(["modules/jquery-mozu",
     "hyprlive", 
     "modules/backbone-mozu",   
     "modules/api"], function ($, Hypr, Backbone, api){   
-    	$(document).ready(function(){	    	
+    	$(document).ready(function(){	 
+            $(document).on("click",".compare-error-container button",function () {
+                $(".compare-full-error-container").remove();
+                window.location.reload();
+            }); 	
     		
     		$('#businessType').prop('type','password');
 	    	$('#cUSTTYPE').prop('placeholder','Describe your Business');  
@@ -144,7 +148,8 @@ require(["modules/jquery-mozu",
     		var x,y;
     		//form submit
 	    	$('#mktoForm_1169 .mktoButton').click(function(){
-	    		  
+
+                $(".checkbox-mandatory-message,.other-business-desc").remove();
 	    		var email = $('#custEmailAddress').val();
 	    		var firstName = $('#FirstName').val();
 	    		var lastName = $('#LastName').val();
@@ -176,7 +181,7 @@ require(["modules/jquery-mozu",
                 			x = 0;
                 			$('#cUSTTYPE').parent().append('<div class="other-business-desc" style="color:brown;font-weight:bold;">Please enter Business description.</div>');
                 			$(document).scrollTop($('#custEmailAddress').offset().top);
-                			setTimeout(function(){$('.other-business-desc').remove();},4000);
+                			//setTimeout(function(){$('.other-business-desc').remove();},10000);
                 			window.formMrk.submittable(false);
                 		}
                 	}else{                		
@@ -186,9 +191,10 @@ require(["modules/jquery-mozu",
                 }
                 else{
                 	x = 0; 
-                	$(document).scrollTop($('#businessType').offset().top); 
+                    //document.documentElement.scrollTop =parseInt($('label[for="businessType1"]').offset().top-250,10);
+                    $('body').scrollTop($('label[for="businessType1"]').offset().top-250);
+                    $('.checkbox-mandatory-message').remove();
                 	$('fieldset legend').append('<span class="checkbox-mandatory-message">&nbsp;&nbsp;&nbsp;Select atleast one option</span>');
-                	setTimeout(function(){$('.checkbox-mandatory-message').remove();},3000); 
                 	window.formMrk.submittable(false);
                 }
                 
@@ -202,7 +208,7 @@ require(["modules/jquery-mozu",
 								window.formMrk.onSuccess(function(values, followUpUrl) {
 				                    // Return false to prevent the submission handler continuing with its own processing
 				                    if($('.compare-full-error-container').length === 0){
-				                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thank You.<br>Request Submitted Successfully.<button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();window.location.reload();'>OK</button></div></div>");
+				                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thank You.<br>Request Submitted Successfully.<button id='session-btn-rd'>OK</button></div></div>");
 				                    }	                    
 				                    return false;
 								});
@@ -266,7 +272,7 @@ require(["modules/jquery-mozu",
 						window.formMrk.onSuccess(function(values, followUpUrl) {
 		                    // Return false to prevent the submission handler continuing with its own processing
 		                    if($('.compare-full-error-container').length === 0){
-		                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thank You.<br>Request Submitted Successfully.<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();window.location.reload();'>OK</button></div></div>");
+		                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thank You.<br>Request Submitted Successfully.<br><button id='session-btn-rd' >OK</button></div></div>");
 		                    }	                    
 		                    return false;
 						});
@@ -275,12 +281,20 @@ require(["modules/jquery-mozu",
 	                	
                     // Return false to prevent the submission handler continuing with its own processing
                     if($('.compare-full-error-container').length === 0){
-                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Please provide registered email id, "+require.mozuData('user').email+"<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Please provide registered email id, "+require.mozuData('user').email+"<br><button id='session-btn-rd'>OK</button></div></div>");
                     }
                     
                 	
                 }
-           
+                    if($(window).width()>780){
+                    if($('.mktoError').length>0){
+                    document.documentElement.scrollTop =$('#mktoForm_1169').offset().top-210;
+                    }
+                    }else{
+                        if($('.mktoError').length>0){
+                            $('body').scrollTop($('.mktoError').offset().top-150);
+                      }
+                    }
 			});
 
     	}); //ready function end

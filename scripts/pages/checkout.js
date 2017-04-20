@@ -1240,6 +1240,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.model.set('contactId', 'new');
         },next:function(){
             this.validateShipItem(this);
+            window.ship_changed=true;
         },validateShipItem:function(scope_obj){
             //Validate shipping address before moving to next step. Check for tenant~safety-j(USA only) and tenant~safety-k(USA 48 states) only.
             var me = scope_obj;
@@ -1834,7 +1835,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         if(last_applied !==undefined && last_applied ===""){
                             _.each(full_coupon_coupon_code,function (remove_coupon) {
                                  me.model.apiRemoveCoupon(remove_coupon).then(function(res){
-
+                                    me.deleteCoupon(full_coupon_coupon_code,res.data,me,1);
                                  });
                             });
                         }else{
@@ -2246,7 +2247,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         if(last_applied !==undefined && last_applied.length>0 && _.indexOf(lower_coupon_codes,last_applied)>-1){
                             var coupon_remove=_.without(full_coupon_coupon_code,full_coupon_coupon_code[_.indexOf(lower_coupon_codes,last_applied)]);
                             _.each(coupon_remove,function (remove_coupon) {
-                                me.model.apiRemoveCoupon(remove_coupon).then(function(res){                                
+                                me.model.apiRemoveCoupon(remove_coupon).then(function(res){   
+                                    me.deleteCoupon(full_coupon_coupon_code,res.data,me,1);                             
                                 });
                             });
                         }else{
@@ -2254,6 +2256,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             $.cookie("lastCoupon", full_coupon_coupon_code[0].toLowerCase(), {  path: '/',expires: 5 });
                             _.each(coupon_tobe_removed,function (remove_coupon) {
                                 me.model.apiRemoveCoupon(remove_coupon).then(function(res){
+                                    me.deleteCoupon(full_coupon_coupon_code,res.data,me,1);
                                 });
                             });
                         }

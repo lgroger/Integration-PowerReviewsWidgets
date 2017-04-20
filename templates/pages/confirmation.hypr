@@ -120,10 +120,10 @@
           <a href="/request-quote" class="request-link">{{ labels.reuestQuoteLnk }}</a>
           {% endcomment %}
           {{ labels.quoteConfirmation }}
-          <span class="print-link"><u>Print Receipt</u></span>
+          <span class="print-link" onClick="window.print()"><u>Print Receipt</u></span>
         {% else %}
           {{ labels.orderConfirmation }}
-          <span class="print-link"><u>Print Receipt</u></span></h1>
+          <span class="print-link" onClick="window.print()"><u>Print Receipt</u></span></h1>
         {% endif %}
     </h1>
     <div class="mz-cms-col-12-12 confrim-block">
@@ -588,4 +588,20 @@ qty += {{i.quantity}};
   </noscript>
 {% endif %}
   {% endblock Google-Conversion-Tag %}
+{% if model.billingInfo.paymentType != "check"%}
+<!-- BizRate Survey -->
+<script type="text/javascript">
+  var _cnx = _cnx || [];
+  _cnx.push(['mid', 29028]);{# unique per brand 29028 - Shindigz #}
+  _cnx.push(['surveyType', 'pos']);
+  _cnx.push(['orderId', '{{model.orderNumber}}']);
+  (function (w, d, t) {
+    var s = d.createElement(t);
+    s.async = true;
+    s.src= '//insights.bizrate.com/js/init.js';
+    var h = d.getElementsByTagName(t)[0]; h.parentNode.insertBefore(s, h);
+  })(window, document, 'script');
+</script>
+<!-- end BizRate Survey -->
+{% endif %}
 {% endblock trailing-scripts %}

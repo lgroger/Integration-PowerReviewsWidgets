@@ -347,8 +347,12 @@
            window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "viewBasket", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
            <!-- Criteo Integration End -->
        {% endif %}
-       {% if pageContext.pageType == "confirmation" and model.billingInfo.paymentType != "check" %}
-          window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "trackTransaction", id: "{{ model.orderNumber }}", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
+       {% if pageContext.pageType == "confirmation" %}
+          {% if model.billingInfo.paymentType != "check" %}
+              window.criteo_q.push( { event: "setAccount", account: "{{ themeSettings.criteoAccNum }}" }, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["{{ user.email }}"]}, { event: "trackTransaction", id: "{{ model.orderNumber }}", item: [ {% for item in model.items %}{% if forloop.index!=1 %},{% endif %}{ id: "{{ item.product.productCode }}", price: {{ item.unitPrice.extendedAmount }}, quantity: {{ item.quantity }} } {% endfor %} ]}); </script>
+          {% else %}
+            </script>
+          {% endif %}
           <!-- Criteo Integration End -->
        {% endif %}
 
