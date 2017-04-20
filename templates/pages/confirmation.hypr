@@ -52,7 +52,7 @@
 .ech-shi-top-header{display: none;}
 .header-block.floatheader{display: none !important;}
 .confirm_join_rewards{display: none;}
-.mega-menu-wrapper, #mz-drop-zone-promo-adds, .signup-block, .help-sec, .print-link, .confiramtion-slider, #mz-drop-zone-body-bottom, .ech-shi-footer, .ech-shi-ourother-sites, .mz-ordersummary-item-availability h3{display: none;}
+.mega-menu-wrapper, #mz-drop-zone-promo-adds, .signup-block, .help-sec, .print-link, .confiramtion-slider, #mz-drop-zone-body-bottom, .ech-shi-footer, .ech-shi-ourother-sites, .mz-ordersummary-item-availability h3,.confrim-block{display: none;}
 .clear{height: 1px;}
 .print_header{display: inline-block !important;width: 94%;margin:0 3%;padding-bottom:15px;border-bottom:1px solid #eee;}
 .logo_box{width:30%;float:left;}
@@ -66,15 +66,17 @@
 .order-confirmation .confirm-block .payment-sec{width:90%;}
 .order-confirmation .confirm-block h4.order-det1{font-size: 11px;}
 .order-confirmation .confirm-block h4.order-det1 span{font-size: 13px;}
-.order-confirmation .confrim-block .order-det2{font-size: 16px;}
-.order-confirmation .confrim-block .order-det2 span{font-size: 20px;}
-.order-confirmation .shipping-info .shipping-head{font-size: 18px;}
+.order-confirmation .confrim-block .order-det2{font-size: 14px;}
+.order-confirmation .confrim-block .order-det2 span{font-size: 14px;}
+.order-confirmation .shipping-info .shipping-head{font-size: 14px;}
 .order-confirmation .shipping-info hr{margin:12px -5px 15px;}
 .order-confirmation .shipping-info .block1{min-width: 90px;}
-.order-confirmation .shipping-info .block1 .ship-text1{font-size:15px;font-weight:500;}
-.order-confirmation .shipping-info .block2 .ship-text2{font-size:15px;font-weight:500;}
+.order-confirmation .shipping-info .block1 .ship-text1{font-size:14px;font-weight:500;}
+.order-confirmation .shipping-info .block2 .ship-text2{font-size:14px;font-weight:500;}
 .order-confirmation .shipping-info .block2 .confirmation_address{min-height: 90px;}
-.order-confirmation .shipping-info .block2 .confirmation_address span.address_name {font-size: 15px;font-weight:500;}
+.order-confirmation .shipping-info .block2 .confirmation_address span.address_name {font-size: 12px;font-weight:500;}
+.order-confirmation .billing-info.shipping-info .billing-block .mz-addresssummary span.address_name{font-size:14px;}
+.order-confirmation .billing-info.shipping-info .billing-block dt{font-size:14px;}
 .confirm_orders .orders-heading{font-size: 18px;text-transform: capitalize;}
 .confirm_orders hr{margin:12px -5px 15px;}
 .confirm_orders .mz-ordersummary th{padding: 15px 1.5%;font-size: 13px;box-sizing: border-box;}
@@ -103,7 +105,12 @@
     <img src="/resources/images/Logo_Shindigz.png" height="60px">
   </div>
   <div class="text_box">
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut imperdiet volutpat rhoncus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae
+      {% if model.billingInfo.paymentType == 'Check' %}
+          Your quote number is <span>{{ model.orderNumber }}</span>
+      {% else %}
+          Your order number is <span>{{ model.orderNumber }}</span>
+      {% endif %}
+      TOTAL: <span>{{ model.total|currency }}</span>
   </div>
 </div>
 <div class="mz-l-container order-confirmation">
@@ -113,10 +120,10 @@
           <a href="/request-quote" class="request-link">{{ labels.reuestQuoteLnk }}</a>
           {% endcomment %}
           {{ labels.quoteConfirmation }}
-          <span class="print-link"><u>Print Receipt</u></span>
+          <span class="print-link" onClick="window.print()"><u>Print Receipt</u></span>
         {% else %}
           {{ labels.orderConfirmation }}
-          <span class="print-link"><u>Print Receipt</u></span></h1>
+          <span class="print-link" onClick="window.print()"><u>Print Receipt</u></span></h1>
         {% endif %}
     </h1>
     <div class="mz-cms-col-12-12 confrim-block">
@@ -478,6 +485,7 @@
     </div>
 </div>
 
+{% if model.billingInfo.paymentType != "check"%} 
 <script type="text/javascript">
 var qty=0,url="";
 {% for i in model.items %}
@@ -491,12 +499,14 @@ qty += {{i.quantity}};
   var units_ordered  = ''+qty;
 </script> 
 <script language="javascript" src="https://s1.cnnx.io/api/roi_tracker.min.js?v=1"></script>
+{% endif %}
 
 {% endblock body-content %}
 
 {% block trailing-scripts %}
-	{% parent %}
+	{% parent %} 
   {% block DoubleClick-FloodLight %}
+{% if model.billingInfo.paymentType != "check"%} 
     <script type="text/javascript">
     requirejs(['jquery'], function( $ ) {
       var ordNumber = {{ model.orderNumber }};
@@ -521,10 +531,11 @@ qty += {{i.quantity}};
       flDiv.appendChild(DCLK_FLIframe);
     });
     </script>
+{% endif %}
   {% endblock DoubleClick-FloodLight %}
 
   {% block Nextag %}
-   
+{% if model.billingInfo.paymentType != "check"%}   
    <script type="text/javascript">
 
     function getCookie(name)
@@ -550,10 +561,11 @@ qty += {{i.quantity}};
 </script>
 
 <script type="text/javascript" src="https://imgsrv.nextag.com/imagefiles/includes/roitrack.js"></script> 
-
+{% endif %}
   {% endblock Nextag %}
 
   {% block Google-Conversion-Tag %}
+{% if model.billingInfo.paymentType != "check"%}
   <!-- Google Code for Conversion Conversion Page -->
   <script type="text/javascript">
   /* <![CDATA[ */
@@ -563,7 +575,7 @@ qty += {{i.quantity}};
   var google_conversion_color = "{{ themeSettings.gConvColor }}";
   var google_conversion_label = "{{ themeSettings.gConvLabel }}";
   var google_conversion_currency = "{{ themeSettings.gConvCur }}";
-  var google_conversion_value = {{ themeSettings.gConvValue|floatformat(2) }};
+  var google_conversion_value = {{ model.total|floatformat(2) }};
   var google_remarketing_only = {{ themeSettings.gRemarketing|lower }};
   /* ]]> */
   </script>
@@ -571,8 +583,25 @@ qty += {{i.quantity}};
   </script>
   <noscript>
   <div style="display:inline;">
-  <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/{{ themeSettings.gConvId }}/?value={{ themeSettings.gConvValue|floatformat(2) }}&amp;currency_code={{ themeSettings.gConvCur }}&amp;label={{ themeSettings.gConvLabel }}&amp;guid=ON&amp;script=0"/>
+  <img height="1" width="1" style="border-style:none;" alt="" src="//www.googleadservices.com/pagead/conversion/{{ themeSettings.gConvId }}/?value={{ model.total|floatformat(2) }}&amp;currency_code={{ themeSettings.gConvCur }}&amp;label={{ themeSettings.gConvLabel }}&amp;guid=ON&amp;script=0"/>
   </div>
   </noscript>
+{% endif %}
   {% endblock Google-Conversion-Tag %}
+{% if model.billingInfo.paymentType != "check"%}
+<!-- BizRate Survey -->
+<script type="text/javascript">
+  var _cnx = _cnx || [];
+  _cnx.push(['mid', 29028]);{# unique per brand 29028 - Shindigz #}
+  _cnx.push(['surveyType', 'pos']);
+  _cnx.push(['orderId', '{{model.orderNumber}}']);
+  (function (w, d, t) {
+    var s = d.createElement(t);
+    s.async = true;
+    s.src= '//insights.bizrate.com/js/init.js';
+    var h = d.getElementsByTagName(t)[0]; h.parentNode.insertBefore(s, h);
+  })(window, document, 'script');
+</script>
+<!-- end BizRate Survey -->
+{% endif %}
 {% endblock trailing-scripts %}
