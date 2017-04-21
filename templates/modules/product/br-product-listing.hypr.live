@@ -160,7 +160,12 @@
                 {% endif %}
             </div></a>
         <p class="product-mainname"><a href="{{model.content.seoFriendlyUrl}}">{{model.content.productName}}</a></p>
-        <a href="{{model.content.seoFriendlyUrl}}">{% include "modules/product/price-stack" %}</a>
+        <a href="{{model.content.seoFriendlyUrl}}">
+          {% if model.volumePriceBands.length > 0 %}
+            <div class="br-aslowas{% if model.priceRange %} br-aslowas-range{% endif %}">As low as</div>
+          {% endif %}
+          {% include "modules/product/price-stack" %}
+        </a>
         {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
