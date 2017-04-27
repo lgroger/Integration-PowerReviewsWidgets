@@ -22,12 +22,12 @@
     }
   }
 
-.andup {
+.andup { 
     color: #dddddd;
 }  
 #recommended_products_slot{
     clear: both;
-} 
+}  
   
     .bundle-compo-more {
     padding: 0 0 0 20px;
@@ -40,7 +40,7 @@
             padding: 0;
             cursor: pointer;
             font-family: 'ArvoRegular';
-            font-size: 12px;
+            font-size: 11px;
             text-transform: none;
         }
         .sz-seemoretitle{
@@ -57,7 +57,7 @@
     border-top: 1px solid #c7c7c7;
     .seemorecaret{
         color: #0971ce;
-        font-size: 25px;
+        font-size: 22px;
         float: right;
         margin-right: 5%; 
     }
@@ -69,7 +69,7 @@
 
 } 
 .cate-head{
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     padding-left: 6px;
 }
@@ -93,14 +93,15 @@
 .catgeory-facets{
     .mz-facetingform-link{
         font-family: 'Montserrat-Regular', sans-serif;
-        padding-left: 20px; 
+        padding-left: 20px;
+        font-size: 13px; 
     }
 }
 .mz-facetingform-valuelabel:before {
         content: '';
         display: inline-block;
-        width: 18px;
-        height: 16px;
+        width: 16px;
+        height: 15px;
         background: none;
         margin: 1px 9px;
         vertical-align: bottom;
@@ -120,9 +121,11 @@
     margin: 0 auto;
     padding-right: 3%;
     .mz-pagingcontrols-pagestate-label {
-        margin-top: 5px;
+        margin-top: 12px;
         font-family: MontserratRegular;
         color:#777;
+        font-size: 12px;
+        margin-left: 3%;
     }    
     .mz-pagingcontrols,
     .mz-sortby {
@@ -620,7 +623,7 @@ text-align: center;
             }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) 
+@media only screen and (min-width: 768px) and (max-width: 1280px) 
    {
     .mz-category .mz-l-paginatedlist, .mz-searchresults .mz-l-paginatedlist {
      width: 75% !important;   
@@ -631,7 +634,7 @@ text-align: center;
     display: none;
 } 
 
-.mz-mobile-filter {
+.mz-mobile-filter { 
     display: block;
 }
     .mz-page-filters-controls .mz-pagingcontrols-pagestate-label {
@@ -640,7 +643,14 @@ text-align: center;
     }
 } 
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+@media only screen and (min-width: 1026px) and (max-width: 1280px) and (orientation: landscape){
+            .mz-mobile-filter .mz-filters .mz-filters-btn {
+                width: 617px !important;
+                
+            } 
+}
+
+@media only screen and (min-width: 768px) and (max-width: 1280px) and (orientation: landscape) {
 
 .mz-l-paginatedlist .mz-l-paginatedlist-footer .mz-pagenumbers {
     margin-left: 8px !important;

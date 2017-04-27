@@ -422,7 +422,19 @@ $(document).ready(function () {
                             //console.log("removed for "+ $(this).siblings("a").text());
                         }
                     });
-                }
+                }   
+
+                $("#mz-drop-zone-megamenu .mega-menu-container").each(function(){
+                    equalHeight($(this).find(".menu-column-block"));            
+                    $(this).find(".menu-column-block:last").addClass("last-child");
+                });
+
+                $("body").on("mouseover",".float-mega-menu .megamenu-wrapper-new.Menuloaded>ul>li",function(){
+                $(this).find(".mega-menu-container").each(function(){
+                equalHeight($(this).find(".menu-column-block"));            
+                $(this).find(".menu-column-block:last").addClass("last-child");
+                });
+          });
             });
             $('.mz-accountaddressbook-list.mz-l-tiles li').each(function(i, el){
                 $(this).find('h3 span').text(i+1);

@@ -49,7 +49,7 @@
 
     .pr-snippet-stars .pr-stars-small, .pr-modal-container .pr-stars {
         float: none;
-        height: 20px;
+        height: 19px;
         line-height: 20px;
         width: 103px;
         margin: 0 auto;
@@ -134,7 +134,7 @@
     border: 1px solid #EEEEEE;;
     border-radius: 2px;
     /* height: 386px; */
-    width: 100%;
+    width: 96%;
     padding: 20px 10px; 
     box-sizing: border-box;
     position: relative;
@@ -216,7 +216,7 @@
             position: relative;
             width: 1.1em;
             &:hover:before,
-            &:hover ~ span:before {
+            &:hover ~ span:before { 
                 content: "\f005";
                 position: absolute;
                 top: -15px;
@@ -224,14 +224,14 @@
                 color: orangered;
                 transition: .9s color;
             }
-        }
+        } 
         > span.rated {
             content: "\f005";
             color: #FC8204;
         }
     }
-    .product-mainname{
-        font-size: 15px;
+    .product-mainname{ 
+        font-size: 14px;
     }
     .mz-pricestack {
         .mz-price {
@@ -386,15 +386,15 @@
         }
     }
     .mz-sales-ribbon, .mz-clearance-ribbon{
-        position: absolute;
-        top: 0px;
-        left: -10px;
-        padding: 4px 12px;
-        cursor: pointer;
-        background-color: #D70056;
-        font-family: ArvoRegular;
-        font-size: 17px;
-        > .is-saleprice, span{
+            position: absolute; 
+            top: 0px;
+            left: -10px;
+            padding: 4px 12px;
+            cursor: pointer;
+            background-color: #d70056;
+            font-family: ArvoRegular;
+            font-size: 14px;
+        > .is-saleprice, span{ 
             color: #fff;
         }
         &:after {
@@ -407,8 +407,8 @@
             border-left: 10px solid #D70056;
             top: 0;
             right: -10px;
-        }
-        &:before {
+        } 
+        &:before { 
             content: '';
             position: absolute;
             width: 0;
@@ -416,8 +416,8 @@
             border-top: 16px solid transparent;
             border-bottom: 0px solid transparent;
             border-left: 10px solid #D70056;
-            top: 15px;
-            right: -10px;
+            top: 11px; 
+            right: -10px; 
         }
     }
 	.mz-new-ribbon {
@@ -428,7 +428,7 @@
         cursor: pointer;
         background-color: #94D60A;
         font-family: ArvoRegular;
-        font-size: 17px;
+        font-size: 14px;
         > .new-ribbon {
             color: #fff;
         }
@@ -443,15 +443,15 @@
             top: 0;
             right: -10px;
         }
-        &:before {
+        &:before { 
             content: '';
-            position: absolute;
+            position: absolute; 
             width: 0;
             height: 0;
             border-top: 16px solid transparent;
             border-bottom: 0px solid transparent;
             border-left: 10px solid #94D60A;
-            top: 15px;
+            top: 11px;
             right: -10px;
         }
     }
@@ -1159,3 +1159,30 @@
 }
 
 }
+
+@media only screen and (min-width:1500px){
+    .mz-sales-ribbon, .mz-clearance-ribbon{
+        max-height: 19px !important;  
+        &:before,&:after{ 
+          right: -9px !important;
+        }   
+            }
+    .mz-new-ribbon { 
+       max-height: 19px !important;
+       &:before,&:after{
+          right: -9px !important;
+        }
+     } 
+ }   
+
+@media only screen and (min-width: 1600px){
+   .mz-sales-ribbon, .mz-clearance-ribbon{
+
+        max-height: 18px !important;     
+        
+            }
+    .mz-new-ribbon { 
+       max-height: 18px !important;
+           }
+} 
+ 
