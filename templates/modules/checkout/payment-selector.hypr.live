@@ -72,7 +72,7 @@
                                 <div class="mz-digitalwallets acc-pref-main-sec radio-acc">
                                     <input data-mz-value="paymentType" data-mz-payment-type id="paypalexpress2" name="paymentType" type="radio" class="mz-paymenttype-input check-acc-box" value="paypalexpress2" {% if model.paymentType == "paypalexpress2" %}checked="checked"{% endif %} />
                                     <label class="mz-paymentselector-label mz-checkoutform-radio acc-pre-che label-paypal" for="paypalexpress2">
-                                        <img id="btn_xpressPaypal" class="p-button" alt="Checkout with PayPal" role="button" src="../resources/images/paypal.jpg" height="24px"/> 
+                                        <img id="btn_xpressPaypal" class="p-button" alt="Checkout with PayPal" role="button" src="../resources/images/paypal.jpg" height="22px"/> 
                                     </label>
                                 </div>                                                         
                                 <script>
@@ -124,7 +124,7 @@
                                 <div class="mz-digitalwallets mz-paymenttype acc-pref-main-sec radio-acc" id="amazonButonPaymentSection">
                                     <input data-mz-value="paymentType" data-mz-payment-type id="paywithamazon" name="paymentType" type="radio" class="mz-paymenttype-input check-acc-box" value="paywithamazon" {% if model.paymentType == "paywithamazon" %}checked="checked"{% endif %} />
                                     <label class="mz-paymentselector-label mz-checkoutform-radio acc-pre-che label-amazon" for="paywithamazon">
-                                        <img src="../resources/images/amazon.jpg" height="24px" alt="Checkout with Amazon">
+                                        <img src="../resources/images/amazon.jpg" height="22px" alt="Checkout with Amazon">
                                     </label>                                   
                                 </div>    
                             {% endif %}

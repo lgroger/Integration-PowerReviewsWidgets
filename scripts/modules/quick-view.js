@@ -905,6 +905,7 @@ require(
             /* OPEN */
             $(document).on('click', '.quick-view > a[data-pro-id]', function(e){
                 window.showPageLoader();
+                $('body').css({overflow : 'hidden'});
                 var btn=$(this);
                 var productCode = $(this).attr('data-pro-id'),
                     sku = "";
@@ -1034,14 +1035,14 @@ require(
                     }
                     window.productView.render();
                     window.removePageLoader();
-                    $('#mz-quick-view-container').fadeIn(350);
+                    $('#mz-quick-view-container').fadeIn(350); 
 
                     //bloomreach quickview integration start
                     if(product.attributes.productUsage === "Configurable" || product.attributes.productUsage === "Bundle"){
                       if(product.attributes.variations.length){
                         sku = product.attributes.productCode;
                       }
-                    }
+                    } 
                     if(BrTrk !== undefined && BrTrk !== 'undefined'){
 	                	BrTrk.getTracker().logEvent(
           						  'product', // event group
@@ -1059,6 +1060,7 @@ require(
             });
             /* CLOSE */
             $(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
+                $('body').css({overflow : 'scroll'});
                 if(e.target !== e.currentTarget) return;
                 $('#mz-quick-view-container').fadeOut(350);
                 $('#mz-quick-view-container').remove();

@@ -14,12 +14,12 @@
                             <!-- {{modelItem.logo}} -->
                         {% endif %}
                         <div align="center" class="catg_list_name">
-                            <p class="">{{modelItem.name|safe}}</p> 
+                            <p class="catg_list_name_p">{{modelItem.name|safe}}</p> 
                             <!-- catg_list_name -->
                         </div>
                     </div>
                 </a>
-                </li>
+                </li> 
 {% endfor %}
 <style type="text/css">
     img.brand_logo {
