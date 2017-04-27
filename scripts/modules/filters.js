@@ -101,7 +101,12 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
         });    
 
         $(document).on('click','.facetsclick',function(e){ 
-          $(this).parents().prevAll('.mz-facetingform-facet').find('li:gt(5)').slideToggle();  
+            var cnt = $(this).attr("show-count");
+            if(parseInt(cnt,10)!=cnt)
+                cnt = 5;
+            else
+                cnt = parseInt(cnt,10)-1;
+          $(this).parents().prevAll('.mz-facetingform-facet').find('li:gt('+cnt+')').slideToggle();  
           //$(this).next('i').toggleClass('fa-caret-down').toggleClass('fa-caret-up'); 
           $(this).children('i').toggleClass('fa-caret-down').toggleClass('fa-caret-up'); 
          var a =  $(this).find('.facets-more').text();
