@@ -27,7 +27,7 @@
          <div class="tab-content-inner">
             <h3>{{ model.content.productName }}</h3>
             
-            <p> 
+            <p>
                <span style="color:#0d3762;font-weight: 600;">
                {{ labels.productCode }}</span> : {{ model.variationProductCode|default(model.productCode) }}
                </span>

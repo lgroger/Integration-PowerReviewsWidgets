@@ -18,7 +18,7 @@
            {% endwith %}
           {% endif %}
         {% endif %}
-      {% else %}
+      {% else %} 
       <span style="color:#d70056;"> {% if not model.purchasableState.isPurchasable %}
         <span class="product-status">
             {% if not model.purchasableState.isPurchasable %}

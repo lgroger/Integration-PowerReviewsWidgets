@@ -185,36 +185,36 @@
                         {% with rating.values|first|prop("value")|floatformat as totalRating %}
                             <div class="pr-snippet-stars">
 
-                              {% if totalRating == 5 %}
+                              {% if totalRating >= 4.8 %}
                                  <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating > 4 and totalRating <= 4.9 %}
+                              {% if totalRating >= 4.3 and totalRating <= 4.7 %}
                                  <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
-                              {% endif %}                                
-                              {% if totalRating == 4 %}
+                              {% endif %}                              
+                              {% if totalRating >= 3.8 and totalRating <= 4.2 %}
                                  <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating > 3 and totalRating <= 3.9 %}
+                              {% if totalRating >= 3.3 and totalRating <= 3.7 %}
                                  <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating == 3 %}
+                              {% if totalRating >= 2.8 and totalRating <= 3.2 %}
                                  <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating > 2 and totalRating <= 2.9 %}
+                              {% if totalRating >= 2.3 and totalRating <= 2.7 %}
                                  <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating == 2 %}
+                              {% if totalRating >= 1.8 and totalRating <= 2.2 %}
                                  <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
                               {% endif %}
-                               {% if totalRating > 1 and totalRating <= 1.9 %}
+                               {% if totalRating >= 1.3 and totalRating <= 1.7 %}
                                  <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating == 1 %}
+                              {% if totalRating >= 0.8 and totalRating <= 1.2 %}
                                  <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
                               {% endif %}
-                              {% if totalRating > 0 and totalRating <= 0.9 %}
+                              {% if totalRating > 0 and totalRating <= 0.7 %}
                                  <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
-                              {% endif %}
+                              {% endif %} 
                             </div>
                         {% endwith %}
                     {% endif %}

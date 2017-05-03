@@ -22,7 +22,7 @@
                         </div>
                         <div>
                         
-                           <button id="add-to-cart" data-productid="{{ product.productCode }}" class="btn-themes btn-cart " onClick="BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': '{{model.productCode}}' });">Add to Cart</button>
+                           <button id="add-to-cart" data-productid="{{ product.productCode }}" class="btn-themes btn-cart" onClick="BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': '{{model.productCode}}' });">Add to Cart</button>
                            
                            <button id="add-to-wishlist" data-productid="{{ product.productCode }}" class="addToWishlist mz-productdetail-addtowishlist mz-button " data-mz-action="addToWishlist"></button> 
                            
