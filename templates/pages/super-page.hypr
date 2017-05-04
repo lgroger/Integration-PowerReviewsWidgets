@@ -50,6 +50,8 @@
 </div>
 {% endif %}
 {% dropzone "super-page-top-seo" scope="page" %}
+
+
  <div  class="super-page-product-wrap clearfix" data-mz-category="{{model.categoryCode}}">
    <div data-mz-superpagelisting class="echi-shi-party-packs" style="width:100%;">
     {% include "templates/pages/super-page-interior" with pmodel=model and chil=model.childrenCategories %}
@@ -60,12 +62,7 @@
 <!-- Make Product Slider Here -->
 
 {% dropzone "super-recommended-title" scope="page" %}
-<div id="static">
-  <h2>You Might Be Interested In</h2>
-</div>
-<div data-mz-recommendedProducts id="recommended_products_slot">
 
-</div>
 {% if model.content.description or  model.content.metaTagDescription %}
 <div class="mz-category-description">
     <!-- <h2>{{ model.name|safe }}</h2> -->

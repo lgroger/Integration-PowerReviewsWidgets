@@ -68,11 +68,13 @@ var certonaRecommendations = function(response){
         htmltemp += '</div>';
         var isPersionalize=false;
         var prod_obj;
+        
+
         if(window.recommendedproducts.resonance.schemes.length > 1){
 	         if(_.findWhere(window.recommendedproducts.resonance.schemes[0].items,{id:v.productCode})!== undefined){
 	         	 prod_obj=_.findWhere(window.recommendedproducts.resonance.schemes[0].items,{id:v.productCode});
 		         	if(prod_obj!==undefined){
-		         		if(prod_obj==="True"){
+		         		if(prod_obj.Personalized==="True"){
 		         			isPersionalize=true;
 		         		}else{
 		         			isPersionalize=false;
@@ -80,7 +82,7 @@ var certonaRecommendations = function(response){
 		         	}
 	         }else if(_.findWhere(window.recommendedproducts.resonance.schemes[1].items,{id:v.productCode})!== undefined){
 			if(prod_obj!==undefined){
-		         		if(prod_obj==="True"){
+		         		if(prod_obj.Personalized==="True"){
 		         			isPersionalize=true;
 		         		}else{
 		         			isPersionalize=false;
@@ -98,14 +100,20 @@ var certonaRecommendations = function(response){
          		}
          	}
          }
+         var recs;
          if(isPersionalize){
+         	var pagetype = require.mozuData('pagecontext').pageType;
+        	
+         if(pagetype === "search" || pagetype === "category" ){
+         	 recs = '?rrec=true'; 
+         }
         htmltemp += '<div class="mz-productlisting-is-personalize">';
-        htmltemp += '<a href="javascript:void(0)">PERSONALIZE</a>';
+        htmltemp += '<a href="/'+recomm[i].content.seoFriendlyUrl+'/p/'+recomm[i].productCode+''+recs+'">PERSONALIZE</a>';
         htmltemp += '</div>';
          }
+        htmltemp += '</div>'; 
         htmltemp += '</div>';
-        htmltemp += '</div>';
-        htmltemp += '</div>';
+        htmltemp += '</div>'; 
         	
    		}); 
       $(divid).html('<div class="pdp-related-products"><div class="clear"></div><div class="echi-shi-related-products-slider"><div class="owl-carousel owl-theme">'+htmltemp+'</div></div></div>');

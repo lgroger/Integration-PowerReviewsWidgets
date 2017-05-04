@@ -94,36 +94,36 @@
                     {% if rating.values|first|prop("value") != "" %}
                         {% with rating.values|first|prop("value")|floatformat as totalRating %}
                             <div class="pr-snippet-stars">
-                                  {% if totalRating > 4.5 %}
-                                   <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating == 4.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
-                                   {% endif %}                              
-                                   {% if totalRating > 3.5 and totalRating < 4.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating == 3.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating > 2.5 and totalRating < 3.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating == 2.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating > 1.5 and totalRating < 2.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
-                                   {% endif %}
-                                    {% if totalRating == 1.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating > 0.5 and totalRating < 1.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
-                                   {% endif %}
-                                   {% if totalRating > 0 and totalRating <= 0.5 %}
-                                      <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
-                                   {% endif %}
+                                  {% if totalRating >= 4.8 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating >= 4.3 and totalRating <= 4.7 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
+                              {% endif %}                              
+                              {% if totalRating >= 3.8 and totalRating <= 4.2 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating >= 3.3 and totalRating <= 3.7 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating >= 2.8 and totalRating <= 3.2 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating >= 2.3 and totalRating <= 2.7 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating >= 1.8 and totalRating <= 2.2 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
+                              {% endif %}
+                               {% if totalRating >= 1.3 and totalRating <= 1.7 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
+                              {% endif %}  
+                              {% if totalRating >= 0.8 and totalRating <= 1.2 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
+                              {% endif %}
+                              {% if totalRating > 0 and totalRating <= 0.7 %}
+                                 <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
+                              {% endif %}
                             </div>
                         {% endwith %}
                     {% endif %}
@@ -217,7 +217,7 @@
                           <button data-product_id="{{product.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button  mz-button-large {% if not product.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not product.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
                         {% endif %}
                       {% endwith %}
-                    {% else %}
+                    {% else %} 
                          <button data-product_id="{{product.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button  mz-button-large {% if not product.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not product.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
                     {% endif %}
             {% endif %}
