@@ -37,9 +37,10 @@ $(function(){
 				var uomdiv="";
 				if(item.uom.length > 0)
 					uomdiv=' <span>'+item.uom+'</span>';
-				var pricediv='<div class="autocomplete-price">$' + item.price + uomdiv + '</div>';
+				var pricediv='<div class="autocomplete-price">'+(item.volumepricing == 'true'?'As low as ':'')+'$' + item.price + uomdiv + '</div>';
 				if(item.pricerange[0] != item.pricerange[1])
-					pricediv='<div class="autocomplete-price-range">$' + item.pricerange[0] + ' to $' + item.pricerange[1] + uomdiv + '</div>';
+					pricediv='<div class="autocomplete-price-range">'+(item.volumepricing == 'true'?'As low as ':'')+'$' + item.pricerange[0] + ' to $' + item.pricerange[1] + uomdiv + '</div>';
+				
 				if(item.ptype =='THEMEPAGE'){
 					item.classname+=' br-suggest-theme';
 					pricediv='<a class="br-theme-page">Shop theme</a>';
@@ -74,7 +75,9 @@ $(function(){
 	$("[id='search_text']").autoCompleteSearch({ // #search_text is on page twice, once for desktop, once for mobile
 		delay: 0,
 		source: function( req, add ) {
-			var searchsuggestURL = "//brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
+			//var searchsuggestURL = "//brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
+			var searchsuggestURL = "//brm-staging-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";
+			
 			var randomID = function() {
 				var chars = '0123456789'.split('');
 				var str = '';
@@ -125,7 +128,8 @@ $(function(){
 										pricerange: item.sale_price_range,
 										uom:(typeof item.unitofmeasure_attr == 'undefined'?'':item.unitofmeasure_attr),
 										classname:"br-suggest-product-"+pcnt,
-										ptype: item.mozuproducttype
+										ptype: item.mozuproducttype,
+										volumepricing: (typeof item.volumepricing == 'undefined'?'':item.volumepricing)
 									};
 							});
 						}
