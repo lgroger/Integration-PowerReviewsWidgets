@@ -652,6 +652,12 @@ span.rounded-cart-color{
                 text-align:right;
                 font-size:18px;
                 color:#000;
+                &.tax{
+                    text-align: right;
+                    padding: 0 10px 0;
+                    font-size: 13px;
+                    color: #6f0404;
+                }
             }
             td.tax_note{
                 padding-top: 0px !important;
@@ -1122,6 +1128,12 @@ tr.mz-carttable-item-shipping-info{
             }
         }
     }
+    .summary_estimate_price{
+        font-size: 21px !important;
+    }
+    .summary_estimate_label{
+        font-size: 16px !important;
+    }
 }
 @media only screen and (min-width:992px){
     .cart-items-summary.shopcart_top{
@@ -1315,6 +1327,11 @@ tr.mz-carttable-item-shipping-info{
                         .summary_box_price{
                             font-size: 15px;
                             font-weight: 600;
+                            &.tax{
+                                padding: 0 10px 0;
+                                font-size: 13px;
+                                color: #6f0404;
+                            }
                         }
                     } 
                     .summary_zip_code{

@@ -1,0 +1,24 @@
+<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+
+    {% if model.hasPriceRange %}
+    Starting at
+    <span itemprop="minPrice">
+      {% include "modules/common/price" with model=model.priceRange.lower %}
+    </span>
+    {% else %}
+        {% include "modules/common/price" with model=model.price %}
+    {% endif %} 
+     {% if model.hasPriceRange %}
+         {% if model.priceRange.lower.discount.discount %}
+            <span class="discount-block">
+              <span class="mz-price-discountname">You Save &nbsp;{{model.priceRange.lower.discount.discount.name}}</span>
+            </span>
+        {% endif %}
+     {% else %}
+        {% if model.price.discount.discount.name %}      
+            <span class="discount-block">
+                <span class="mz-price-discountname">  You Save &nbsp; {{model.price.discount.discount.name}}</span>
+            </span>
+        {% endif %}
+     {% endif %}           
+</div>

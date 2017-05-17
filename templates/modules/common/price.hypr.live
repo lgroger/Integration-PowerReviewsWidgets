@@ -1,5 +1,5 @@
 ﻿ {% if model.onSale %}
- <span class="mz-price is-crossedout">
+ <span class="mz-price {% if pageContext.cmsContext.template.path == "product" %} hide {% endif %} is-crossedout">
      {{model.price|currency}}
  </span>
  <span itemprop="price" class="mz-price is-saleprice">  
@@ -21,12 +21,3 @@
  {% if themeSettings.showMSRP and model.msrp %}
  <span class="mz-price-msrp">{{ labels.msrp}}: <span class="mz-price">{{ model.msrp|currency }}</span></span>
  {% endif %}
- {% comment %}
- {% if model.discount.discount.name %}      
-          <span class="discount-block">
-<span class="mz-price discount-price is-crossedout">
-     {{model.price|currency}}
- </span> 
-&nbsp;    You Save &nbsp;<span class="mz-price-discountname">{{model.discount.discount.name}}</span></span>
-{% endif %}
-{% endcomment %}

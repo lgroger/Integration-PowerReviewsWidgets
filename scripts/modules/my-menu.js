@@ -181,13 +181,7 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
        		setCookie("guidedcategory",guidedcat,1);
        		window.location.href="/guided-search";  
        	}); 
-		
-         $('#morelink').click(function(){        	
-        	$('#tab1').prop('checked', true); 
-        	$('html, body').animate({
-                    scrollTop: $("#mz-drop-zone-why-shop-wdgt").offset().top
-                }, 1000);        	
-        });        
+		     
          $(document).on("click","#det-btn",function(){           	
         	$('#tab1').prop('checked', true); 
         	$('html, body').animate({

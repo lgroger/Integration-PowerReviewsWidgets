@@ -1,9 +1,6 @@
-<h3 class="mz-formstep-header mz-checkoutform-header">
-    3. {{ labels.paymentInformation }}
-    {%if not model.isExternalCheckoutFlowComplete || model.visaCheckoutFlowComplete%}
+{%if not model.isExternalCheckoutFlowComplete || model.visaCheckoutFlowComplete%}
     <a href="javascript:;" class="mz-formstep-edit" data-mz-action="edit">{{ labels.edit }}</a>
-    {%endif%}
-</h3>
+{%endif%}
 <div class="mz-formstep-body">
     <div class="mz-formstep-summary mz-l-stack">
         {% for payment in model.activePayments %}
@@ -127,9 +124,6 @@
                     <label class="steps_subhead">Payment Methods</label>
                 </div>
             </div>
-        </div>
-        <div class="mz-l-stack-section mz-formfieldgroup-row mz-paymentselector-separator mz-checkoutform mz-giftcard">
-            {% include "modules/checkout/checkout-digital-credit" %}
         </div>
         {% if model.nonStoreCreditTotal > 0 %}
 

@@ -1397,7 +1397,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 }
 .product-description span {
-    font-family: @fontMontserratRegular !important;
+    font-family: 'Montserrat', sans-serif !important;
 }
 .product-review a {
     font-family: @fontMontserratRegular !important;
@@ -1416,14 +1416,15 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .saveYourAmount{
         clear: left;
         display: block;
+        margin-left: 11%;
     }
-    .mz-price {
-        color: #0d3762;
-        font-family: @fontArvo;
-        font-size: 1.4em;
-        line-height: 55px !important;
-        margin-left: 10px;
-    }
+ /*    .mz-price {
+     color: #0d3762;
+     font-family: @fontArvo;
+     font-size: 1.4em;
+     line-height: 55px !important;
+     margin-left: 10px;
+ } */
     .mz-pricestack-price-lower+.mz-pricestack-price-upper .mz-price{
         margin-left: 0px;
     }
@@ -1599,8 +1600,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     /* display: inherit; */
 }
 .morelink-pdp {
-    color: #0971ce !important;
+    color: #000;
     font-family: MontserratSemiBold !important; 
+    text-decoration: underline;
+    cursor: pointer;
 }
 .morelink-pdp:hover {
     color: #0d3762 !important;
@@ -1639,6 +1642,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .mz-price {
         margin-left: 6%;
+        color: #0d3762;
+        font-family: ArvoRegular;
+        font-size: 1.4em;
+        line-height: 55px !important;
     }
     .custom-qty {
         margin-left: 9%;
@@ -1675,14 +1682,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     margin-top: 10px;
 }
 .pdp-detail {
-    .container-right .mz-productdetail-price h4 {
-        line-height: 60px;
-    }
+   
     .mz-quick-view-wrapper .container-left .product-image iframe {
         min-height: 390px;
     }
     .product-image {
-        min-height: 390px;
+        min-height: 450px;
+        -webkit-user-select: none;  -khtml-user-select: none;   -moz-user-select: none; -o-user-select: none;    user-select: none;
     }
     #add-to-cart {
         width: 235px !important;
@@ -1724,9 +1730,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .mz-productdetail-conversion-controls {
         display: block;
-    }
-    .product-share {
-        margin-top: 2%;
     }
     .pr-stars {
         margin: 0;
@@ -2336,16 +2339,17 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     padding-top: 0;
 }
 .shop-fixed {
-    height: 130px;
+    height: 100px;
     background-color: @dark-blue;
-    display: inline-block;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 23%;
     float: left;
     h3 {
         color: #fff;
         font-weight: 400;
         font-size: 1.3em;
-        padding: 51.5px 0px 0px;
         text-align: center;
         margin: 0%;
         font-family: @fontArvo;
@@ -2362,7 +2366,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     width: 77%;
     background-color: #dceaf6;
     float: left;
-    height: 130px;
+    height: 100px;
 }
 .shop-wd-1:after {
     content: '';
@@ -2444,7 +2448,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .shop-wd-1 {
     width: 25%;
-    height: 130px;
+    height: 100px;
     background-color: #dceaf6;
     display: inline-block;
     text-align: center;
@@ -2536,7 +2540,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .shop-wd-1 {
         width: 50%;
         height: auto;
-        min-height: 150px;
+        min-height: 100px;
     }
     .shop-wd {
         width: 100%;
@@ -2545,7 +2549,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .shop-fixed {
         height: auto;
         h3 {
-            padding: 25px 0%;
+            padding: 18px 0%;
             font-size: 1.2em;
         }
     }
@@ -2646,6 +2650,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .mz-productlisting-title {
         height: 40px;
     }
+
+    .cerumo {
+    margin-left: 8px;
+}
     
     .mz-pricestack-price-lower,.mz-pricestack-price-up {
 
@@ -2737,6 +2745,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         .mz-productlisting .mz-productlisting-info .mz-productlisting-title{
             text-transform: capitalize;
         }
+        .mz-pricestack{
+            margin-bottom: 10px;
+        }
     }
     .echi-shi-related-products-slider .owl-prev {
         left: 0 !important;
@@ -2771,7 +2782,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         padding: 0% 6% 0%;
     }
 }
-.bundle-block {
+
+/* .bundle-block {
     padding: 2% 8%;
     width: 84%;
     display: inline-block;
@@ -2851,7 +2863,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         }
     }
  
-}
+} */
 @media only screen and (max-width:400px) {
     .echi-shi-bundle-products-slider {
         .mz-productlist-item .mz-productlisting.mz-productlist-tiled {
@@ -4049,7 +4061,42 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .mz-product .pdp-related-products{
     clear: both;
 }
-@media only screen and (max-width:1024px){
+
+    @media only screen 
+    and (min-device-width: 768px) 
+    and (max-device-width: 1024px) 
+    and (orientation: landscape){
+        .echi-shi-related-products-slider .mz-pricestack-price-lower, .echi-shi-related-products-slider .mz-pricestack-price-up {
+            font-size: 15px;
+
+        }
+
+        .echi-shi-related-products-slider .cerumo {
+            margin-left: 3px;
+            font-size: 13px;
+        }
+
+    }
+
+    @media only screen 
+  and (min-device-width: 320px) 
+  and (max-device-width: 767px)
+   {
+
+    .echi-shi-related-products-slider .cerumo {
+        margin-left: 3px;
+        font-size: 13px;
+        display: block;
+    }
+
+    .echi-shi-related-products-slider .mz-pricestack-price-lower, .echi-shi-related-products-slider .mz-pricestack-price-up {
+        font-size: 15px;
+    }
+
+} 
+
+@media only screen and (max-width:1024px){    
+
     .echi-shi-party-packs .party_packs_qty{
         float: none !important;
         width: auto !important;

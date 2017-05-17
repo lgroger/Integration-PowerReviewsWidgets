@@ -31,45 +31,12 @@
                <span style="color:#0d3762;font-weight: 600;">
                {{ labels.productCode }}</span> : {{ model.variationProductCode|default(model.productCode) }}
                </span>
-               {% if model.productUsage == "Bundle"  %}
-                  <div class="bundle-comp-pdp-section">
-                     <a class="show-cmp-bundle"><span>Show Components </span><i class="fa-chevron-circle-right"></i></a>
-                     <div class="bundle-items-wrap-pdp">
-                        {% include "modules/product/pdp-bundle-products" %}                 
-                     </div>   
-                  </div>
-               {% endif %}
-               {% comment %}
-               <span style="color:#0d3762;font-weight: 600;">Availability</span> :
-               {% if model.inventoryInfo.manageStock == true %}
-               {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-               <span style="color:#00af9a;"> In Stock </span>
-               {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
-               {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}                                    
-               - {{  prod_time.values|first|prop("value") }}  Business Days&nbsp;
-               {% endwith %}
-               {% endif %}
-               {% else %}
-               <span style="color:#d70056;">  Out of Stock </span>
-               {% endif%}
-               {% else %}
-               <span style="color:#00af9a;">   In Stock </span>
-               {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
-               {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}                                    
-               - {{  prod_time.values|first|prop("value") }}  Business Days&nbsp;
-               {% endwith %}
-               {% endif %}
-               {% endif%}
-               {% endcomment %}
             </p>
             <p> 
                {{ model.content.productFullDescription|safe }}
-            </p>
-            
-            
+            </p>         
             {% if themeSettings.safetyFlags %}
                {% for safetyFlg in themeSettings.safetyFlags %}
-                  
                   {% if model|get_product_attribute(safetyFlg.code) %}
                      {% with model|get_product_attribute(safetyFlg.code) as safetyValues %}
                      {% with safetyValues.values|first as val %}

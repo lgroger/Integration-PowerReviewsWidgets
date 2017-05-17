@@ -490,11 +490,10 @@
 	    line-height: normal;
 	}
 	.product-description, .product-description span{
-		font-size:12px !important;
 		line-height:inherit;
 	}
 	.product-rating-review .product-rating{
-		padding-top:8px;
+		padding-top:0;
 		padding-bottom: 0px;
 	}
 	.product-rating-review .product-rating .pr-snippet-stars{
@@ -503,9 +502,6 @@
 	}
 	.mz-l-stack .mz-l-stack-section{
 		margin-bottom:10px;
-		.mz-l-stack-sectiontitle{
-			margin:10px 0px;
-		}
 		.mz-productoptions-optioncontainer{
 			.mz-productoptions-optionlabel{
 				text-transform: capitalize;
@@ -535,22 +531,18 @@
 			}
 		}
 	}
-	.product-quantity .mz-qty-label{
-		width:65px;
-		display:inline-block;
-	}
 	.mz-productdetail-conversion-controls{
 		margin-top:5px;
 	}
 	.mz-l-stack .mz-productdetail-price.mz-l-stack-section{
 		margin-top:10px;
-		.mz-l-stack-sectiontitle{
+		/* .mz-l-stack-sectiontitle{
 			margin:0px;
 			line-height: 57px;
 		}
 		.mz-price{
 			line-height: 50px;
-		}
+		} */
 	}
 	.product-cart-wishlist{
 		form{
@@ -568,14 +560,11 @@
 	    	margin-bottom:5px;
 		}
 		#add-to-wishlist{
-			display: inline-block;
 			box-sizing: border-box;
 			vertical-align: top;
 			height:52px;
 		    border-radius: 5px;
-		    font-weight: 600;
 		    font-family: MontserratRegular;
-		    text-transform: uppercase;
 		    position: inherit;
 		    margin-left:0px;
 	    	margin-bottom:5px;
@@ -590,17 +579,12 @@
 		    cursor: not-allowed;
 		 }
 	}
-	.product-share{
-		font-family:MontserratRegular;
-		margin-top:15px;
-	}
 }
 .mz-product .echi-shi-pro-desc-fix .fixed-top .fixed-top-left .prodct-name-color .color-head{
 	margin-top:5px;
 }
  @media only screen and (min-width:641px){
 	.mz-product .mz-quick-view-wrapper .container-left{
-	padding: 10px 30px 20px 80px;
 	}
 	.mz-product .mz-quick-view-wrapper .container-right {
     	padding: 10px 30px 10px 60px;
@@ -617,7 +601,7 @@
  @media only screen and (max-width:994px) and (min-width:641px){
 	.mz-product{
 		.mz-quick-view-wrapper .container-right {
-	    	padding: 10px 30px 10px 30px;
+	    	padding: 10px 16px 10px 10px;
 		}
 		.pdp-related-products{
 			.echi-shi-related-products-slider .mz-productlist-item {
@@ -904,10 +888,16 @@
 	.mz-product .mz-quick-view-wrapper .container-left{
 		min-height:260px;
 	}
+	.pdp-page-custom .product-review{
+		font-size: 14px;
+	}
 	.mz-product .mz-quick-view-wrapper .container-right #add-to-wishlist {
 	    line-height: 37px;
 	    text-indent: -9999px;
 	    width: 60px !important;
+		float: left;
+		border: 1px solid #c2c2c2 !important;
+		margin-left: 20px !important;
 	}
 	.mz-product .fixed-mob-bottom .fixed-mob-bottom1 .fixed-mob-bottom-left .box-custom-pad .main-price span{
 		font-size: 0.8rem;
@@ -1110,7 +1100,7 @@
 				margin:0 auto;
 			}
 			.mz-productlisting .mz-productlisting-info .mz-productlisting-title{
-				font-size: 12px;
+				font-size: 11px;
 				padding: 5px 5px 0;
 			}
 			.mz-productlisting-image .mz-sales-ribbon{

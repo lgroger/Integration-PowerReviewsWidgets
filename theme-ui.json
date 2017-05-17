@@ -602,6 +602,11 @@
                     "xtype": "mz-input-checkbox",
                     "name": "couponCodeMultiple",
                     "fieldLabel": "Enable/Disable Multiple Coupon Code"
+                },{
+                     "xtype": "mz-input-textarea",
+                    "name":"productTypeDefaultImg",
+                    "fieldLabel":"Enable default Image for product type.Proudct type name in lower case and seperated by comma: Example for banner(banner:Show Chart). Image name should be saved as producttype-default-pdp.jpg in file manager",
+                    "width":"60%"
                 }
 
             ]
@@ -1399,7 +1404,7 @@
                 },
                 {
                     "fieldLabel" : "Safety-M",
-                    "height": 60,
+                    "height": 70,
                     "width": "100%",
                     "xtype": "mz-input-text",
                     "name": "safety-m"

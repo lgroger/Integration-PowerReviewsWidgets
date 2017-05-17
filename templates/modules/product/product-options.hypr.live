@@ -14,7 +14,7 @@
         </select><br/>
         {% for option in model.options %}
             {% if option.attributeFQN|lower != "tenant~outdoor-banner-with-slits" and option.attributeFQN|lower != "tenant~dnd-token" %}
-                <select class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" {% if option.value %}style="display:block"{% else %} style="display:none"{% endif %}>
+               <select class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" {% if option.value %}style="display:block"{% else %} style="display:none"{% endif %}>
                     <option value="">Size*</option>
                 {% for value in option.values %}
                     <option value="{{value.value}}" {% if value.isSelected %}selected="true"{% endif %}>{{ value.stringValue }}</option>
@@ -40,7 +40,7 @@
                     {% for value in option.values %}
                     <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
                     {% endfor %}
-                </select>
+                </select>                
             {% else %}
                 {% if option.attributeDetail.inputType == "YesNo" %}
                     <input class="mz-productoptions-option" type="checkbox" {% if option.shopperEnteredValue %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />

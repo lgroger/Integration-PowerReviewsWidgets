@@ -14,7 +14,7 @@ var certonaRecommendations = function(response){
    		htmltemp += '<div class="mz-productlisting mz-productlist-tiled" data-mz-product="'+recomm[i].id+'">';
    		htmltemp += '<div class="mz-productlisting-image">';
    		htmltemp += '<a href="'+recomm[i].Detail_URL+'?rrec=true">';
-        htmltemp += '<img src="'+ recomm[i].Image_URL+'?max=210" alt="'+recomm[i].Name+'">';
+        htmltemp += '<img src="'+ recomm[i].Image_URL.replace("http:","")+'?max=210" alt="'+recomm[i].Name+'">';
     	htmltemp += '</a>';
         htmltemp += '<div class="quick-view">';
         htmltemp += '<a href="javascript:void(0)" data-pro-id="'+recomm[i].id+'">QUICK VIEW';
