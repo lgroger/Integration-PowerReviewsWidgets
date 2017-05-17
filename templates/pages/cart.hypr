@@ -20,11 +20,6 @@
 <div class="cart_page_head mz-cms-col-12-12">
 	{% dropzone "cart-head" scope="template" %}
 	<style>.mz-breadcrumbs:first-child{display:none;}</style> 
-	<div class="mz-breadcrumbs">
-		<a href="../../" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
-	   <span class="mz-breadcrumb-separator"> / </span>
-	   <span class="mz-breadcrumb-current">{{pageContext.cmsContext.template.path|safe}}</span> 
-	</div>
 </div>
 
 <div class="cart_bundle_box" style="display:none;">

@@ -143,7 +143,7 @@ ga('send', {
 <div class="mz-itemlisting-price">{{ labels.price }}: {{ model.product.price.price|currency }}</div-->
 {% endblock %}
 {% block item-listing-actions %}
-    <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="addItemToCart" data-mz-item-id="{{ model.id }}" onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</a>
+    <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="addItemToCart" data-mz-item-id="{{ model.id }}">{{ labels.addToCart }}</a>
     <a class="mz-itemlisting-action" href="javascript:;" data-mz-action="beginRemoveItem" data-mz-item-id="{{ model.id }}">{{ labels.removeFromWishlist }}</a>
 {% endblock item-listing-actions %}
 {% block item-listing-extras %}

@@ -33,24 +33,9 @@
                             {% endif %}
                           {% endfor %}  
                         {% endif %}
-                          <!-- <p><span class="sd_label">Color:</span><span class="sd_color_box" style="background:#594d42;"></span></p>
-                          <p><span class="sd_label">Type:</span><span class="sd_text">Outdoor Banner with Slits</span></p>
-                          <p><span class="sd_label">Size:</span><span class="sd_text">lorem ipsum</span></p> -->
                         </div>
-                        
-                        <!-- {% if item.product.bundledProducts.length %}
-                          <dl class="mz-propertylist">
-                          {% for bundledProduct in item.product.bundledProducts %}
-                            <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                            <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                          {% endfor %}
-                          </dl>
-                        {% endif %} -->
                     </td>
                     <td>{{ item.quantity }}</td>
-                    <!--<td>
-                        {% include "modules/common/item-price" %}
-                    </td>-->
                     <td class="mz-ordersummary-item-price">
                       {% include "modules/common/item-total" %}
                     </td>
@@ -67,7 +52,6 @@
                                       <div class="bb_labels">
                                           <h3 class="bundle_quantity"><span>X</span>{{ bundledProduct.quantity }}</h3>
                                           <h3 class="bundle_heading">{{ bundledProduct.name }}</h3>
-                                          <!-- <span class="edit_component"><a href="">Edit Personalization</a></span> -->
                                       </div>
                                   </div>
                               {% endfor %}
@@ -75,8 +59,12 @@
                       </div>
                   {% endif %}
                    <span class="availability_highlight_{{ item.product.productCode }}">
-                    {% if item.est_date.length > 0 %}
-                       Est. delivery :  {{ item.est_date}}
+                    {% if item.productionTime %}
+                      {% if item.productionTime > 1 %}
+                          {{ item.productionTime }} business day(s) processing + Shipping                      
+                        {% else %}
+                          Availability: <span class="highlight-green">In Stock</span>
+                        {% endif %}
                     {% endif %}
                    </span>
                   </td>
@@ -133,7 +121,10 @@
               </tr>
             {% endif %}
             {% endif %}
-
+          <tr class="mz-ordersummary-grandtotal">
+                <td><span class="mz-ordersummary-totalname">{% if pageContext.pageType == 'checkout' %} {{ labels.total }} {% else %} {{ labels.total }} {% endif %}</span></td>
+                <td><span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span></td>
+            </tr>
            
         </tbody>
     </table>

@@ -1,15 +1,15 @@
 {% if model.items.length > 0 %}
 {% with model.items|first as product %}
-	<a href='{{product.url}}'><img class="bundle-img" style="" src="{{product.mainImage.src}}" alt="{{product.content.productName}}" /></a>
+	<a href='{{product.url}}'><img class="bundle-img" style="" src="{{product.mainImage.src}}?max=100" alt="{{product.content.productName}}" /></a>
 	<input type="hidden" name="productUsage" value="{{product.productUsage}}"/>
 	{% if product|get_product_attribute('Tenant~dndcode') %}
-		{% with  product|get_product_attribute_values('Tenant~dndcode') as dndValues %}
+		{% with  product|get_product_attribute_values('tenant~dndcode') as dndValues %}
 		<input type="hidden" class="bundleItemDndCode" value="{{dndValues|first}}"/>
 		<input type="hidden" class="bundleItemMfgPartNumber" value="{{product.mfgPartNumber}}"/>
 		{% endwith %}
 	{% endif %}
-	{% if product|get_product_attribute('Tenant~design-code') %}
-		{% with  product|get_product_attribute_values('Tenant~design-code') as dndValues %}
+	{% if product|get_product_attribute('tenant~design-code') %}
+		{% with  product|get_product_attribute_values('tenant~design-code') as dndValues %}
 			<input type="hidden" class="bundleItemDesignCode" value="{{dndValues|first}}"/>
 		{% endwith %} 
 	{% endif %}

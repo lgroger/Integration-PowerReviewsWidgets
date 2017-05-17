@@ -71,9 +71,19 @@
             <div class="mz-formstep mz-checkoutform-shippingmethod" id="step-shipping-method" {% if not model.requiresFulfillmentInfo %}style="display:none"{% endif %}>
                 {% include "modules/checkout/step-shipping-method" %}
             </div>
-
-            <div class="mz-formstep mz-checkoutform-paymentinfo" id="step-payment-info">
-                {% include "modules/checkout/step-payment-info" %}
+            
+            <div class="mz-formstep mz-checkoutform-paymentinfo" >
+                <h3 class="mz-formstep-header mz-checkoutform-header">
+                    3. {{ labels.paymentInformation }}
+                </h3>
+                <div class="checkout_coupan">
+                    <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
+                        {% include "modules/checkout/coupon-code-field" %}
+                    </div>
+                </div>
+                <div id="step-payment-info">
+                    {% include "modules/checkout/step-payment-info" %}
+                </div>
             </div>
 
             <div class="mz-formstep mz-checkoutform-review" id="step-review">
@@ -88,17 +98,7 @@
                 {% include "modules/checkout/checkout-order-summary" %}
             </div>
 
-            <div class="checkout_coupan">
-                <div class="mz-checkoutform-couponcode mz-l-formfieldgroup-row" id="coupon-code-field" >
-                    {% include "modules/checkout/coupon-code-field" %}
-                </div>
-                <!--{% if themeSettings.showCheckoutCommentsField %}
-                <div class="mz-checkoutform-comments mz-l-formfieldgroup-row" id="comments-field" >
-                    {% include "modules/checkout/comments-field" %}
-                </div>-->
-                {% endif %}
-            </div>
-
+           
 
         </div>        
     </div>    

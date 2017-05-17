@@ -92,7 +92,7 @@
     <table class="mz-ordersummary">
         <tbody>
 		<tr>
-			<td colspan="2" class="mz-ordersummary-coupanfield">
+			<td colspan="2" class="mz-ordersummary-coupanfield {% if model.allowCoupon==false %} coupon-applied {% endif %}">
 				<div class="mz-l-formfieldgroup-cell">
 		            <label for="coupon-code" class="summary_promo_label">{{ labels.couponCode }}</label>
 		            <p>{% if themeSettings.couponCodeMultiple %}{{ themeSettings.multipleCouponCodeLabel }}{% else %}{{ themeSettings.singleCouponCodeLabel }}{% endif %}</p>
@@ -181,10 +181,6 @@
 		        </div>
 			</td>
 		</tr>
-		<tr class="mz-ordersummary-grandtotal">
-                <td><span class="mz-ordersummary-totalname">{% if pageContext.pageType == 'checkout' %} {{ labels.total }} {% else %} {{ labels.total }} {% endif %}</span></td>
-                <td><span class="mz-ordersummary-totalvalue">{{ model.total|currency }}</span></td>
-            </tr>
             {% if model.billingInfo and model.billingInfo.digitalCreditPaymentTotal %}
               <tr class="mz-ordersummary-digitalcreditpayment">
                 <td><span class="mz-ordersummary-totalname">{{ labels.digitalCreditTotal }}</span></td>

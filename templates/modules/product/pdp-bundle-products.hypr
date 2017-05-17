@@ -1,15 +1,17 @@
-<div class="bundle-block">	
+<div class="bundle-block clearfix">
+	<a class="pdp-bundle-close">x</a>	
 	<h3>WHAT'S INSIDE</h3>
-	<div class="mz-cms-col-12-12">
+	<div class="bundle-inside-container">
 	{% for components in model.bundledProducts %}	
-		<div class="mz-cms-col-3-12 block1" productcode="{{components.productCode}}">
-			<div class="block-img-sec"  style="";>
-				{% include_products "modules/product/bundle-item" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+		<div class="bundle-inside-item" productcode="{{components.productCode}}">
+			<div class="item-highlight">
+				<div class="block-img-sec"  style="";>
+					{% include_products "modules/product/bundle-item" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+				</div>
+				<div class="bundle-count">
+					x {{components.quantity}}
+				</div>
 			</div>
-			<div class="bundle-count">
-				x {{components.quantity}}
-			</div>
-			<div class="clear"></div>
 			<h3>{{components.content.productName}}</h3>
 			<h3 class="uom" style="display:none;"></h3>
 		</div>

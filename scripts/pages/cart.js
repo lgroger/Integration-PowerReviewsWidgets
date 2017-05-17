@@ -35,7 +35,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                  var cartId = this.model.id;
 
                  //Check all applied coupon in order model if it's conatin more then one coupon check with last applied coupon in cookie and remove.
-                 var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined && dis.couponCode !==null;});
+                var order_discount_code=_.filter(this.model.get('orderDiscounts'),function(dis){ return dis.couponCode!==undefined && dis.couponCode !==null;});
                 var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
 
                 
@@ -91,6 +91,97 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             AmazonPay.init(true);
                        
         },
+        getProductionTime:function(scope_obj) {
+            var mozu_order_obj=scope_obj.model.toJSON().items;
+            var order_products=_.pluck(mozu_order_obj,'product');
+            var products_production=_.filter(order_products, function(obj) {
+                return _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').productionTime}).length > 0;
+            });
+            console.log(products_production);
+             var ext_product_time=[];
+            var ext_time_arr=[];
+            order_products.forEach(function(obj,idl){
+                if(obj.productUsage==="Standard" && obj.options.length >1 || obj.productUsage =="Standard" && obj.options.length===1 && _.findWhere(obj.options,{'attributeFQN':"tenant~dnd-token"}) ===undefined){
+                    products_production.push(obj);
+                    if(obj.bundledProducts.length>0){
+                        if(ext_product_time[obj.bundledProducts[0].productCode]===undefined && window.product_withExtra === undefined ){
+                            var pcode=obj.bundledProducts[0].productCode;
+                            ext_product_time[pcode]=0;
+                            ext_time_arr.push(pcode);
+                        }
+                    }
+                }
+            });
+            scope_obj.getExtraProductType(ext_product_time,products_production,0,ext_time_arr,scope_obj);
+        },getExtraProductType:function(ext_prop,products_production,idx,ext_arr,scope_obj){
+            //Get Production time & zip for extra products usign api call append result zip,production time in property ext_prop
+            if(ext_arr.length===0){
+                if(window.product_withExtra!==undefined){
+                    scope_obj.setProductionTime(products_production,scope_obj,window.product_withExtra);
+                }else{
+                    scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                }
+            }else{
+                try{
+                     Api.request('GET','/api/commerce/catalog/storefront/products/'+ext_arr[idx]+'?responseFields=properties,productCode').then(function(res){
+                       var pc=res.productCode;
+                       var product_zip=res.productCode+"_zipcd";
+                       var melt_code=pc+"_melt";
+                       var pdt= _.where(res.properties, {'attributeFQN':Hypr.getThemeSetting('productAttributes').productionTime});
+                       var zipcode= _.where(res.properties, {'attributeFQN':Hypr.getThemeSetting('productAttributes').shipZip});
+                       var isMelt=_.findWhere(res.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').productMelt});
+                       if(pdt.length >0){
+                         //ext_product_time.push({pc:pdt[0].values[0].value});
+                         ext_prop[pc]=pdt[0].values[0].value;
+                       }
+                       idx++;
+                       if(idx<ext_arr.length){
+                        scope_obj.getExtraProductType(ext_prop,products_production,idx,ext_arr,scope_obj);
+                       }else{
+                            scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                       }
+                    },function(err){
+                        idx++;
+                        if(idx<ext_arr.length){
+                        scope_obj.getExtraProductType(ext_prop,products_production,idx,ext_arr,scope_obj);
+                       }else{
+                            scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                       }
+                    });
+                }catch(ex){
+                    console.log("Error on getExtraProductType "+ex);
+                    scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                }
+            }
+        },setProductionTime:function(products_production,scope_obj,ext_prop) {
+            var order_items=scope_obj.model.toJSON().items;
+            var order_products=_.pluck(order_items,'product');
+            window.product_withExtra=ext_prop;
+            var items = scope_obj.model.get('items');
+            order_products.forEach(function(obj,i){
+                var prod_time=_.findWhere(obj.properties, {'attributeFQN':  Hypr.getThemeSetting('productAttributes').productionTime});
+                if(prod_time===undefined){
+                    if(obj.bundledProducts.length>0){
+                        if(ext_prop[obj.bundledProducts[0].productCode]!==undefined){
+                            prod_time=ext_prop[obj.bundledProducts[0].productCode];
+                        }else{
+                            prod_time=1;
+                        }
+                    }else{
+                        prod_time=1;
+                    }
+                }else if(prod_time.values.length>0){
+                    prod_time=prod_time.values[0].value;
+                }else{
+                    prod_time=1;
+                }
+                if(prod_time<1){
+                    prod_time=1;
+                }
+                items.models[i].get('product').set('prodTime',prod_time);
+            });
+            Backbone.MozuView.prototype.render.call(scope_obj);
+        },
         calculateShippingSurcharge: function(){
             try{
                 var self = this;
@@ -124,6 +215,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var me= this;
             me.showPersonalizeImage();
             me.calculateShippingSurcharge();
+            if(me.model.get('items').length>0){
+                me.getProductionTime(this);
+                me.model.set("shippingCost",7.99);
+            }
             preserveElement(this, ['.v-button','.p-button', '#AmazonPayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
@@ -132,10 +227,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
         },
         afterRender: function(){
             if($.cookie('szcontinueurl')){
-        var sxurl = $.cookie('szcontinueurl');
-        //console.log(sxurl);
-        $('.mz-sz-continue').attr("href",sxurl);
-     }
+            var sxurl = $.cookie('szcontinueurl');
+            //console.log(sxurl);
+            $('.mz-sz-continue').attr("href",sxurl);
+        }
      else{
         $('.mz-sz-continue').attr("href","/");
      }
@@ -288,92 +383,6 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 mod.set('cartItemId', prodId);
                 Wishlist.initoWishlist(mod);
             }
-        },
-        estimateShippingCost:function(e){
-            var self = this;
-            var zip = $('[name="zipcode"]').val();
-            var zipCode = self.model.get('estimateZipValue');
-            var zipRegEx = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
-
-            if(zip.length > 0){
-                    self.model.set({estimateZipValue:zip});
-                    idx=self.model.get('estimateZipValue');
-                     self.getZipCodeInfo(self.model.get('estimateZipValue'));
-            }  else{
-                    $('.error-zipCode').text('Please enter valid zip-code').show();
-                    self.model.set('shippingCost',0);
-                    self.model.set('estimateZipValue','');
-                    self.model.unset('estimateEntity');
-                    setTimeout(function(){
-                        $('.error-zipCode').hide();
-                        self.render();    
-                    },4000); 
-                    
-                }
-            
-        },
-        getZipCodeInfo:function(zipcd){
-              /*
-            //hided zipcode google api.As client requested to hide zip and promo code from cart.
-              var self = this;
-             window.geocoder.geocode({'componentRestrictions': { 'postalCode': zipcd}},function(res,status){                         
-                if (status === 'OK') {
-                    var country_code_shipping;
-                    var state_code_shipping;
-                    res[0].address_components.forEach(function(element,index){
-                        for(var i=0;i<element.types.length;i++){
-                        //console.log(element.types[i] );
-                            if(element.types[i] == "country"){
-                                country_code_shipping=element.short_name;
-                            }else if(element.types[i] == "administrative_area_level_1"){
-                                state_code_shipping=element.short_name;
-                            }
-                        }
-                    });
-                   // console.log(res);
-                    if(country_code_shipping==="US"){
-                          if(state_code_shipping=="AK" || state_code_shipping=="HI" || state_code_shipping=="PR"){
-                            self.calEstimatedCost("usaak");  
-                         }else{
-                            self.calEstimatedCost("usa");                                   
-                         }
-                    }else if(country_code_shipping=="VI"){
-                            self.calEstimatedCost("usat");
-                    }else if(country_code_shipping==="CA"){
-                          self.calEstimatedCost("ca");
-                    }else{
-                         self.calEstimatedCost("global");
-                    }
-                }else{
-                    console.log("Issue on google geo location api "+status);
-                }
-               
-            },function(err){
-                console.log("Error ");
-                console.log(err);
-            });*/
-        },getEstimate:function(ent){ 
-            var self = this;
-            //Api.request('GET','/api/platform/entitylists/'+ent+'/entities')
-            Api.action('entityList','entityList',{listName:"countryus@shindigz"}).then(function(resp){
-                console.log(resp);
-                var data = [];
-                for(var index =0; index<resp.length;index++)
-                {
-                   data.push(resp[index].data); 
-                }    
-
-                self.model.set({estimateEntity:data});
-                //self.calEstimatedCost();
-                //self.model.set({estimatedTotal:estimatedTotal});
-                self.render();
-            },function(err){
-                console.log("Error on ship method ");
-                console.log(err);
-            });  
-        },
-        enableZipCode:function(e){
-            this.$el.find('.code_input_btn').prop('disabled',false);
         },
         getExtraProduct: function(productCode){
             var product = null;

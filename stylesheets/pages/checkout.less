@@ -51,13 +51,61 @@ ul.coupon-list-custom{
 .mz-checkoutform-shipping-edit {
     padding-left: 5px;
 }
-
 .mz-l-formfieldgroup-cell {
     > .mz-contactselector {
         width: 100%;
     }
 }
 
+#step-shipping-method{
+    .drop-ship-items{
+        background: #093863;
+        border-radius: 5px;
+        padding: 10px;
+        margin:0 10px;
+        max-height: 250px;
+        overflow-y: auto;
+        color: #fff;
+        position: relative;
+        float: right;
+        width: 33%;
+        font-family: MonstserratLight;
+        font-size: 12px;
+        h4{
+            margin :10px 0;
+            color: #32af9b;
+        }
+        ul{
+            padding-left: 25px;
+        }
+        i{
+            display: none;
+            position: absolute;
+            margin: auto;
+            top: 29%;
+            left: 44%;
+            font-size: 42px;
+            color: #35beb1;
+        }
+    }
+    &.is-loading{
+        .drop-ship-items{
+            i{
+                display: block;
+            }
+        }
+    }
+    .mz-l-formfieldgroup-cell{
+        float: left;
+        width: 60%;
+        label{
+            display: inline-block;
+            margin-right: 30px;
+            min-width: 50%;
+            max-width: 55%;
+        }
+    }
+}
 .mz-formstep-header {
     &.mz-checkoutform-header {
         background-color: #666666;
@@ -68,6 +116,24 @@ ul.coupon-list-custom{
             padding-right: 10px;
         }
     }
+}
+.delivery-date{
+    font-family: MontserratRegular;
+    font-size: 15px;
+    color: #666666;
+    display: inline-block;
+    vertical-align: top;
+    .mobile-caption{
+        display: none;
+    }
+}
+.delivery-title{
+    margin: 0 0 10px;
+    color: #093863;
+    padding-left: 50%;
+    font-size: 15px;
+    font-family: MontserratRegular;
+    font-weight: 400;
 }
 
 .mz-formstep-body {
@@ -360,7 +426,7 @@ ul.coupon-list-custom{
         }
         td.mz-ordersummary-item-availability {
             font-family: MonstserratLight;
-            font-size: 13px;
+            font-size: 14px;
             color: @dark-grey;
             padding:0px 5px 10px;
             position: relative;
@@ -515,6 +581,7 @@ ul.coupon-list-custom{
     } 
     .mz-ordersummary-grandtotal {
         border-top:0px;
+        border-bottom: 1px solid #dddddd;
         td:first-child {
             font-size: 18px;
             line-height:50px;
@@ -535,12 +602,55 @@ ul.coupon-list-custom{
         }
     }
 }
+.mz-checkoutform-paymentinfo{
+    position: relative;
+    &.is-incomplete{
+        .checkout_coupan{
+            display: block;
+        }
+    }
+    &.is-new{
+          .checkout_coupan{
+            display: none;
+        }
+    }
+    &.is-complete{
+        .mz-ordersummary-coupanfield{
+            display: none;
+        }
+        .mz-ordersummary-coupanfield.coupon-applied{
+            display: block;
+            border-bottom: none !important;
+            .remove-coupon-link{
+                display: none;
+            }
+        }
+    }
+    .mz-formstep-edit{
+        top: 16px;
+        height: 25px;
+        color: #00af9b;
+        text-transform: capitalize;
+        font-family: MonstserratLight;
+        text-decoration: underline;
+        padding-right: 25px;
+    }
+}
 .checkout_coupan{
     padding: 0 5px;
-    background: #f0faf9;
-    border: 1px solid #ddd;
     border-top: 0px;
-    margin-bottom: 25px;
+    margin: 15px 0;
+    .checkout_ostable_total .mz-ordersummary{
+        background: none;
+        .mz-ordersummary-coupanfield{
+            border-top: none !important;
+            &.coupon-applied{
+                .mz-l-formfieldgroup-cell{
+                    width: 100% !important;
+                }
+            }
+        }
+    }
     .mz-checkoutform-couponcode{
         display: block;
         width: 100%;
@@ -556,9 +666,10 @@ ul.coupon-list-custom{
         }
         .mz-l-formfieldgroup-cell{
             display: inline-block;
-            width:100%;
-            margin:0px 0px 0px;
-        }
+            width: 30%;
+            margin: 0px 0px 0px;
+            float: left;
+          }
         ul{
             margin: 0;
             padding: 0 0 0px;
@@ -602,9 +713,10 @@ ul.coupon-list-custom{
         }
         .code_input{
             display: inline-block;
-            width: 100%;
+            width: 62%;
             text-align: center;
             box-sizing: border-box;
+            float: left;
         }
         .code_input_box {
             background: #fff;
@@ -1079,9 +1191,9 @@ span.contact-text{
     /*input[type="radio"]{
         display: none;
     }*/
-    .shippingmethod-list{
-        display: none;
-    }
+/*     .shippingmethod-list{
+    display: none;
+} */
 }
 .mz-formstep.mz-checkoutform-shippingmethod.is-incomplete .shippingmethod-selected{
         display: none;
@@ -1555,6 +1667,19 @@ span.contact-text{
         }
     }
 }
+@media only screen and (max-width:1250px){
+    #step-shipping-method{
+        .drop-ship-items{
+            width: auto;
+            float: none;
+            margin: 20px 10px 0;
+        }
+        .mz-l-formfieldgroup-cell{
+            float: none;
+            width: 100%;
+        }
+    } 
+}
 @media only screen and (max-width:991px){
     .checkout_cols .checkout_col_left{float:none;width:100%;margin-right:0;}
     .checkout_cols .checkout_col_right{float:none;width:100%;}
@@ -1614,6 +1739,9 @@ span.contact-text{
     .checkout_coupan{
         border:0px;
         border-bottom: 1px solid #dddddd;
+        .mz-l-formfieldgroup-cell{
+            width: 100% !important;
+        }
         .mz-checkoutform-couponcode{
             .mz-ordersummary-coupanfield{
                 padding: 12px 10px 18px;
@@ -2083,8 +2211,18 @@ span.contact-text{
         }
     }
 }
-@media only screen and (max-width:479px){
-
+@media only screen and (max-width:550px){
+    .delivery-date{
+        margin: 10px 0px;
+        display: block;
+        font-size: 14px;
+        .mobile-caption{
+            display: inline;
+        }
+    }
+    .delivery-title{
+        display: none;
+    }
 }
 /*---------------------------Checkout Header--------------------------*/
 .mz-checkout{

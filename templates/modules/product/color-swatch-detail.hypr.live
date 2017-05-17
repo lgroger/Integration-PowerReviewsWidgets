@@ -1,5 +1,5 @@
 {% if model.items %}
-<span>Color: </span>
+<span class="color-blue">Color: </span>
 	<ul style="text-align: left; display: inline-block;">
 		{% for prod in model.items %}
 			{% if prod|get_product_attribute_values(themeSettings.productAttributes.colorHex) %}

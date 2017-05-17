@@ -736,7 +736,7 @@
         "groundOnly":"tenant~safety-d",
         "surCharge":"tenant~pnhsurcharge",
         "clearanceFlag":"tenant~clearanceitem",
-        "dndColor": "tenant~dndcolorize",
+        "dndColor": "tenant~dndcolorize", 
         "guidedSearchNavField":"tenant~product-type"
     },
     "usStates": [
@@ -1086,7 +1086,8 @@
     "nexttag":4889912,
     "facebookPixel":1000000,
     "pinterestTagID":100000,
-    "favicon":"//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico"
+    "favicon":"//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico",
+    "productTypeDefaultImg":""
   },
   "layoutWidgets": [
     {

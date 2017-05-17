@@ -84,14 +84,14 @@
                                     {% with themeSettings.userListForDndTotenAccess|split(',') as userList %}
                                         {% for userId in userList %}
                                             {% if userId == user.accountId %}
-                                                <dt class="sd_label" style="color:#b3282d;">{{ option.name }}</dt>&nbsp;
+                                                <dt class="sd_label" style="color:#b3282d;">{{ option.name }}</dt>
                                                 <dd class="sd_text" style="color: #b3282d;font-size:11px;font-weight:normal;">{{ option.shopperEnteredValue }}</dd>
                                             {% endif %}
                                         {% endfor %}
                                     {% endwith %}
                                     {% endif %}
                                 {% else %}
-                                    <dt class="sd_label">{{ option.name }}</dt>&nbsp;
+                                    <dt class="sd_label">{{ option.name }}</dt>
                                     <dd class="sd_text">
                                         {% if option.name == 'Color' %}
                                             <span class="rounded-cart-color"><span style="background-color:{{option.stringValue}};"></span>
@@ -177,23 +177,20 @@
                         </div>
                     </div>
                 {% endif %}
-                <div class="item-availability">
-                    Availability:
-                    <span class='avail-value'>In Stock </span>
-                    <span class="avail-shipping-time">
-                        {% for prop in item.product.properties %}
-                            {% if prop.name == 'productionTime' %}
-                                {% for val in prop.values %}
-                                    {% if val.value !== '' %}
-                                        {{ val.value }} business day processing + shipping
-                                        <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                                            <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
-                                        </span>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-                    </span>
+               <div class="item-availability">
+                    {% if item.product.prodTime and item.product.prodTime > 1 %}
+                        <span class="avail-shipping-time">
+                            {{ item.product.prodTime }} business day processing + shipping
+                            <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                            </span>
+                        </span>
+                    {% else %}
+                        {% if item.product.prodTime and item.product.prodTime ==1 %}
+                            Availability:
+                            <span class='avail-value'>In Stock</span>
+                        {% endif %}
+                    {% endif %}
                 </div>
                 {% if item.productDiscounts.length > 0 %}
                     <div class="item-offer-stripe">
@@ -245,7 +242,7 @@
                                     {% for option in item.product.options %}
                                         {% if option.name=="dnd-token" %}
                                         {% else %}
-                                            <dt class="sd_label">{{ option.name }}</dt>&nbsp;
+                                            <dt class="sd_label">{{ option.name }}</dt>
                                             <dd class="sd_text">
                                                 {% if option.name == 'Color' %}
                                                     <span class="rounded-cart-color"><span style="background-color:{{option.value}};"></span>
@@ -316,23 +313,17 @@
                     </div>
                 {% endif %}
                 <div class="item-availability">
-                    Availability:
-                    <span class='avail-value'>In Stock</span>
-                    <span class="avail-shipping-time">
-                        {% for prop in item.product.properties %}
-                            {% if prop.name == 'productionTime' %}
-                                {% for val in prop.values %}
-                                    {% if val.value !== '' %}
-                                        {{ val.value }} business day processing + shipping
-                                    {% endif %}
-                                {% endfor %}
-                            {% endif %}
-                        {% endfor %}
-
-                        <a href="javascript:void(0);">
-                            <i class="fa fa-question-circle-o fa-1" aria-hidden="true"></i>
-                        </a>
-                    </span>
+                    {% if item.product.prodTime and item.product.prodTime > 1 %}
+                        <span class="avail-shipping-time">
+                            {{ item.product.prodTime }} business day processing + shipping
+                            <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                                <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                            </span>
+                        </span>
+                    {% else %}
+                        Availability:
+                        <span class='avail-value'>In Stock</span>
+                    {% endif %}
                 </div>
                 <div class="edit_wishlist_cart">
                     <span class="f_left">
@@ -401,7 +392,6 @@
                             {% comment %}{% dropzone "continue-shopping-link" scope="template" %}{% endcomment %}
                         </div>
                         <div class="mz-cms-col-2-12">
-                            {% if not model.isEmpty %}<a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">{{ labels.removeAll }}</a>{% endif %}
                             <a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty" style="display:none;">
                             <button id="cart-checkout" class="mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
 
@@ -434,14 +424,14 @@
                 {% for discount in model.orderDiscounts %}
                     {% if not discount.excluded %}
                     <tr>
-                        <td class="summary_box_label">Discount</td>
-                        <td class="summary_box_price">{{ discount.impact|currency }}</td>
+                        <td class="summary_box_label">Discount </td>
+                        <td class="summary_box_price">- {{ discount.impact|currency }}</td>
                     </tr>
                     {% endif %}
                 {% endfor %}
-                <tr class="hide">
+                <tr>
                     <td class="summary_box_label">Estimated Shipping</td>
-                    <td class="summary_box_price estimated-cost">{% if model.shippingCost %} {{model.shippingCost | currency}} {% else %}$0.00{% endif %}</td>
+                    <td class="summary_box_price estimated-cost">{% if model.isEmpty %} $0.00{% else %} $7.99{% endif %}</td>
                 </tr>
                 {% if model.enableSurCharge %}
                 <tr>
@@ -451,95 +441,11 @@
                 {% endif %}
                 <tr>
                     <td class="summary_box_label">Tax</td> <!-- <span class="star_note">*</span> -->
-                    <td class="summary_box_price">$0.00</td>
+                    <td class="summary_box_price tax"><span class="star_note">*</span>Calculated in Checkout</td>
                 </tr>
-                <tr>
-                    <td colspan="2" class="tax_note" style="color:brown;"><span class="star_note">*</span>To be calculated on Checkout</td>
-                </tr>
+              
             </table>
-           <!--  <div class="summary_zip_code">
-               <h4 class="summary_zip_label">{{themeSettings.cartZipLabel}}</h4>
-               <p>{{themeSettings.cartZipDesc}}</p>
-               <div class="code_input">
-                   <input type="text" name="zipcode" class="code_input_box" placeholder="{{themeSettings.cartZipPlaceholder}}" value="{{model.estimateZipValue}}" data-mz-value="zipCode"/>
-                   <input type="button" class="code_input_btn" value="Check" disabled="disabled"/>
-                   <span class="error-zipCode" style="display:none;"></span>
-               </div>
-           </div> 
-            <div class="mz-carttable-checkout-couponcode" id="coupon-code-field">
-                <div class="mz-l-formfieldgroup-cell">
-                    <label for="coupon-code">{{ themeSettings.cartCouponLabel }} </label>
-                    <p class="multiple-promo-text">{% if themeSettings.couponCodeMultiple %}{{ themeSettings.multipleCouponCodeLabel }}{% else %}{{ themeSettings.singleCouponCodeLabel }}{% endif %}</p>                    
-                </div>
-               
-               	{# product discounts #}
-                {% for item in model.items %}
-	                {% if item.productDiscounts.length > 0 %}	                
-		                {% for disc in item.productDiscounts %}
-		                    <ul>
-		                        <li> 
-		                            <span>Coupon <strong>{{disc.couponCode|upper}}</strong> successfully applied</span>
-		                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc.couponCode}}" class="remove-coupon-link">&times;</a>
-		                        </li>
-		                    </ul>
-		                {% endfor %}
-	                {% endif %}
-                {% endfor %}
-                
-                {# order discounts #}
-                {% for coupon in model.orderDiscounts %}
-                	{% if coupon.couponCode %}
-                    <ul>
-                        <li>
-                            <span>Coupon <strong>{{coupon.couponCode|upper}}</strong> successfully applied</span>
-                            <a href="javascript:void(0);" id="{{model.id}}" name="{{coupon.couponCode}}" class="remove-coupon-link">&times;</a>
-                        </li>
-                    </ul>
-                    {% else %}
-                    {% for discount in model.orderDiscounts %}
-	                    {% if not discount.excluded %}
-	                    <ul>
-                        	<li>
-	                        	<span>{{ discount.discount.name }}: - <strong>{{ discount.impact|currency }}</strong></span>
-		                    </li>
-	                    </ul>
-	                    {% endif %}
-	                {% endfor %}
-                    {% endif %}
-                {% endfor %}
-                
-                {# Shipping Discounts #}
-                {% for disc in model.shippingDiscounts %}
-                    <ul>
-                        <li> 
-                            <span>Coupon <strong>{{disc.discount.couponCode|upper}}</strong> successfully applied</span>
-                            <a href="javascript:void(0);" id="{{model.id}}" name="{{disc.discount.couponCode}}" class="remove-coupon-link">&times;</a>
-                        </li>
-                    </ul>
-                {% endfor %}
-                
-                {% include "modules/common/coupon-code-field" %}
-                
-            </div>-->
-            <!-- DO NOT DELETE BELOW CODE.-->
-            <!-- <div class="summary_promo_code mz-carttable-checkout-couponcode" id="coupon-code-field" > -->
-                <!-- <h4 class="summary_promo_label">Promo Code</h4> -->
-                <!-- <p>Enter Promo Code</p> -->
-                <!-- <div class="mz-carttable-checkout-couponcode" id="coupon-code-field" >
-                    {% include "modules/common/coupon-code-field" %}
-                </div> -->
-                <!-- <div class="mz-l-formfieldgroup-cell code_input">
-                    <input type="text" id="coupon-code" class="code_input_box" name="coupon-code" placeholder="Enter Promo Code" value="{{ model.couponCode }}" data-mz-value="couponCode">
-                    <button type="button" id="cart-coupon-code" class="mz-button code_input_btn" data-mz-action="addCoupon" {% if not model.couponCode %} disabled="disabled" {% endif %}>{{ labels.apply }}</button>
-                </div> -->
-                {% comment %}
-                    {% if model.tentativeCoupon %}
-                        <div>
-                            <span>{{labels.couponDisclaimer|string_format(model.tentativeCoupon)|safe}}</span>
-                        </div>
-                    {% endif %}
-                {% endcomment %}
-            <!-- </div> -->
+            
             <div class="summary_total">
                 <hr>
                 <p>
@@ -561,18 +467,6 @@
                 <button id="cart-checkout" class="checkout_btn mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">Secure Checkout</button>
             {% endif %}
 
-        <!--    <div class="pay_options">
-                <div class="pay_options_box">
-                    <a href="#" class="pay_option_btn">
-                        <span>Checkout with</span><img src="../resources/images/paypal.jpg">
-                    </a>
-                </div>
-                <div class="pay_options_box">
-                    <a href="#" class="pay_option_btn">
-                        <span>Checkout with</span><img src="../resources/images/amazon.jpg">
-                    </a>
-                </div>
-            </div> -->
 
         <!-- Added from third-party files. -->
         {% if not model.isEmpty %}

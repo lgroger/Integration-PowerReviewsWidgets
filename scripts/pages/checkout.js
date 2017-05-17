@@ -135,6 +135,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },
         render: function () {
             this.$el.removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
+            if(this.$el.attr('id') == 'step-payment-info'){
+                $(".mz-checkoutform-paymentinfo").removeClass('is-new is-incomplete is-complete is-invalid').addClass('is-' + this.model.stepStatus());
+            }
             EditableView.prototype.render.apply(this, arguments);
             this.resize();
 
@@ -249,9 +252,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },render:function(){
             console.log("render on change");
             this.showPersonalizeImage();
+            //var me=this;
             $(".mz-pagetitle .total_pay strong").text("$"+parseFloat(this.model.get("total")).toFixed(2));
             var order_obj=window.order.toJSON();
             //var me=this;
+            //Ship date order logic starts here. Find algorithm in basecamp https://echidnainc.basecamphq.com/projects/13342594-shindigz-mozu-implementation/posts/100487811/comments#comment_356061338
+            // Update 05/10 removed UPS call as per checkout improvements
             var new_address=this.model.get("fulfillmentInfo.fulfillmentContact.address").toJSON();
             var add_obj={
                 "cc":new_address.countryCode,
@@ -263,14 +269,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 if(order_obj.fulfillmentInfo.fulfillmentContact.address.countryCode=="CA"){
                     this.setOrderDate(this,false);
                 }else if(order_obj.fulfillmentInfo.fulfillmentContact.address.countryCode=="US"){
-                    if(order_obj.fulfillmentInfo.fulfillmentContact.address.stateOrProvince=="PR" || order_obj.fulfillmentInfo.fulfillmentContact.address.stateOrProvince=="AK" || order_obj.fulfillmentInfo.fulfillmentContact.address.stateOrProvince=="HI"){
-                         this.setOrderDate(this,false);
-                     }else{
-                        console.log("connect to UPS");
                         this.setOrderDate(this,true);
-                     }
                 }else{
-                    //console.log("Internation Shipping"+this.model.get("items").length);
                     /*GET UST from hyper file element and making google api call to get offset and daylight
                           time next calc EST time it will return 30mins more so order after 2.30 is consider as next day.
                         */
@@ -341,17 +341,60 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         this.skip_holidays(estTime,1,shipping_holidays_list,this.setShippingStartDate,i,this);
                      }*/
                      var cus_ele="";
-                    _.pluck(window.order.toJSON().items,'est_date').forEach(function(el){
-                    cus_ele+=el+":::";
-                    });
+                      var selected_shipping=this.model.get("fulfillmentInfo.shippingMethodCode")+"_shipMethod";
+             var est_delivery_dates=_.pluck(this.model.get("items"),'est_date');
+             if(this.model.get("fulfillmentInfo.availableShippingMethods")){
+                 this.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
+                     var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
+                     if(min_day.toString()!=="Invalid Date"){
+                         this.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
+                         var date_str=window.dateFormatArr[0];
+                         if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
+                            date_str=window.dateFormatArr[min_day.getDate()%10];
+                         }
+                         this.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
+                     }
+                 });
+             }
+            this.model.set("fulfillmentInfo.drop_items",[]);
+            if(this.model.get("fulfillmentInfo.availableShippingMethods")){
+                 _.each(est_delivery_dates,function(ele,idx) {
+                    var ship_key=me.model.get("fulfillmentInfo.availableShippingMethods")[0].shippingMethodCode+"_shipMethod";
+                    if(me.model.get("items")[idx].est_date[selected_shipping]){
+                         var prodDate=me.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[me.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+me.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>th</sup></strong>";    
+                         if(me.model.get("items")[idx].est_date[selected_shipping].getDate()<=3 || me.model.get("items")[idx].est_date[selected_shipping].getDate()>=21 && window.dateFormatArr[me.model.get("items")[idx].est_date[selected_shipping].getDate()%10]){
+                            prodDate=me.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[me.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+me.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>"+window.dateFormatArr[me.model.get("items")[idx].est_date[selected_shipping].getDate()%10]+"</sup></strong>";
+                         }
+                        if(me.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) && ele[ship_key].toString()!==me.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
+                            me.model.get("fulfillmentInfo.drop_items").push(prodDate);
+                        } 
+                    }
+                 });
+            }
+             _.pluck(est_delivery_dates,selected_shipping).forEach(function(el){
+                    if(el!==undefined){
+                        cus_ele+=("0" + (el.getMonth() + 1)).slice(-2)+"/"+("0" + el.getDate()).slice(-2)+"/"+el.getFullYear()+":::";
+                    }else{
+                        cus_ele+="No Data:::";   
+                    }
+                });
                     var ship_attr="";
                     _.pluck(window.order.toJSON().items,'ship_date').forEach(function(el){
                         ship_attr+=el+":::";
+                    });
+                    var prod="";
+                     _.pluck(window.order.toJSON().items,'productionTime').forEach(function(el){
+                        if(el!==undefined){
+                            prod+=el+":";
+                        }else{
+                            prod+="No Data:";
+                        }
                     });
                     this.model.set("orderAttribute-tenant~est-delivery-date",cus_ele);
                     this.model.set("orderAttribute-tenant~est-ship-date",ship_attr);
                     window.ship_start_str=ship_attr;
                     window.ship_est_str=cus_ele;
+                    window.productionTime=prod;
                 }
                 window.address_obj=add_obj;
                 window.first_load=false;
@@ -372,19 +415,60 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                     this.model.set("orderAttribute-tenant~est-ship-date",window.ship_start_str);
                 }
+                if(window.prodT!==undefined){
+                    var prodArr=window.prodT.split(":");
+                    for (var i = 0; i < this.model.get("items").length; i++) {
+                        this.model.get("items")[i].productionTime=prodArr[i];
+                    }
+                }
             }
+            window.checkoutViews.steps.shippingInfo.render();
             Backbone.MozuView.prototype.render.call(this);
         },renderCustomAfterShip:function(scope_obj){
             try{
              var cus_ele="";
-             _.pluck(window.order.toJSON().items,'est_date').forEach(function(el){
+             var selected_shipping=scope_obj.model.get("fulfillmentInfo.shippingMethodCode")+"_shipMethod";
+             var est_delivery_dates=_.pluck(scope_obj.model.get("items"),'est_date');
+             if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
+                 scope_obj.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
+                     var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
+                     if(min_day.toString()!=="Invalid Date"){                        
+                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
+                        var date_str=window.dateFormatArr[0];
+                         if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
+                            date_str=window.dateFormatArr[min_day.getDate()%10];
+                         }
+                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
+                     }
+
+                 });
+             }
+            scope_obj.model.set("fulfillmentInfo.drop_items",[]);
+            if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
+                 _.each(est_delivery_dates,function(ele,idx) {
+                    var ship_key=scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].shippingMethodCode+"_shipMethod";
+                    if(scope_obj.model.get("items")[idx].est_date[selected_shipping]){
+                            var prodDate=scope_obj.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>th</sup></strong>";    
+                         if(scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()<=3 || scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()>=21 && window.dateFormatArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()%10]){
+                            prodDate=scope_obj.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>"+window.dateFormatArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()%10]+"</sup></strong>";
+                         }
+                        
+                        if(scope_obj.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) && ele[ship_key].toString()!==scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
+                            scope_obj.model.get("fulfillmentInfo.drop_items").push(prodDate);
+                        } 
+                    }
+                 });
+            }
+
+             _.pluck(est_delivery_dates,selected_shipping).forEach(function(el){
                     if(el!==undefined){
-                        cus_ele+=el+":::";                        
+                        cus_ele+=("0" + (el.getMonth() + 1)).slice(-2)+"/"+("0" + el.getDate()).slice(-2)+"/"+el.getFullYear()+":::";
                     }else{
                         cus_ele+="No Data:::";   
                     }
                 });
                  var ship_attr="";
+                 var prod="";
                 _.pluck(window.order.toJSON().items,'ship_date').forEach(function(el){
                     if(el!==undefined){
                         ship_attr+=el+":::";
@@ -392,15 +476,25 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         ship_attr+="No Data:::";
                     }
                 });
+                _.pluck(window.order.toJSON().items,'productionTime').forEach(function(el){
+                    if(el!==undefined){
+                        prod+=el+":";
+                    }else{
+                        prod+="No Data:";
+                    }
+                });
             // scope_obj.model.get('attributes')."orderAttribute-tenant~est-delivery-date"=cus_ele;
             scope_obj.model.set("orderAttribute-tenant~est-delivery-date",cus_ele);
                 scope_obj.model.set("orderAttribute-tenant~est-ship-date",ship_attr);
             window.ship_est_str=cus_ele;
                 window.ship_start_str=ship_attr;
+                window.prodT=prod;
             //console.log( scope_obj.model.get('attributes'));
+            window.checkoutViews.steps.shippingInfo.render();
             Backbone.MozuView.prototype.render.call(scope_obj);
             }catch(err){
                 console.log(err);
+                window.checkoutViews.steps.shippingInfo.render();
                 Backbone.MozuView.prototype.render.call(scope_obj);
             }
         },setOrderDate:function(scope_obj,isUSA){
@@ -447,10 +541,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 return _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').productionTime}).length > 0;
             });
             order_products.forEach(function(obj,idl){
-                if(obj.productUsage==="Standard" && obj.options.length >1){
+                if(obj.productUsage==="Standard" && obj.options.length >1 || obj.productUsage =="Standard" && obj.options.length===1 && _.findWhere(obj.options,{'attributeFQN':"tenant~dnd-token"}) ===undefined){
                     products_production.push(obj);
                     if(obj.bundledProducts.length>0){
-                        if(ext_product_time[obj.bundledProducts[0].productCode]===undefined){
+                        if(ext_product_time[obj.bundledProducts[0].productCode]===undefined && window.product_withExtra === undefined ){
                             var pcode=obj.bundledProducts[0].productCode;
                             ext_product_time[pcode]=0;
                             ext_time_arr.push(pcode);
@@ -458,15 +552,16 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                 }
             });
-            console.log("ext_product_time");
-            console.log(products_production);
             scope_obj.getExtraProductType(ext_product_time,products_production,0,ext_time_arr,scope_obj,order_date,isUSA);
         },getExtraProductType:function(ext_prop,products_production,idx,ext_arr,scope_obj,order_date,isUSA){
             //Get Production time & zip for extra products usign api call append result zip,production time in property ext_prop
             if(ext_arr.length===0){
-                scope_obj.startProductShiping(products_production,order_date,isUSA,scope_obj,ext_prop);
+                if(window.product_withExtra!==undefined){
+                    scope_obj.startProductShiping(products_production,order_date,isUSA,scope_obj,window.product_withExtra);
+                }else{
+                    scope_obj.startProductShiping(products_production,order_date,isUSA,scope_obj,ext_prop);
+                }
             }else{
-
                 try{
                      api.request('GET','/api/commerce/catalog/storefront/products/'+ext_arr[idx]+'?responseFields=properties,productCode').then(function(res){
                        var pc=res.productCode;
@@ -480,7 +575,6 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                          ext_prop[pc]=pdt[0].values[0].value;
                        }
                        if(zipcode.length>0){
-                        console.log(product_zip+" -- "+zipcode[0].values[0].stringValue);
                         window.zipArr[product_zip]=zipcode[0].values[0].stringValue;
                         }
                        if(isMelt!==undefined){
@@ -516,8 +610,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             //get preload json from custom document for holiday
             var holiday_prop=_.pluck(require.mozuData("holidaylist"),'properties');
             var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
-            //console.log(shipping_holidays_list);
-
+            window.product_withExtra=ext_prop;
+            this.model.set("fulfillmentInfo.drop_items",[]);
             var me=this;
             //Group all ship from indiana items and find max date and product index.
             var indiana_package=[];
@@ -545,6 +639,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     prod_time=prod_time.values[0].value;
                 }else{
                     prod_time=1;
+                }
+                me.model.get("items")[i].est_date={};
+                if(prod_time<1){
+                    me.model.get("items")[i].productionTime=1;
+                }else{
+                    me.model.get("items")[i].productionTime=prod_time;
                 }
                  //console.log(obj.productCode+" - "+prod_time);
                 if(ship_zip!==undefined){
@@ -589,7 +689,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
                 if(isMelt!==undefined){
                     if(isMelt.values[0].value===true && window.indina_idx_arr.indexOf(i)>=0){
-                        contains_melts=true;
+                        if(me.model.get("items")[i].product.productType==="CandyBar"){
+                            if( _.findWhere(me.model.get("items")[i].product.options,{"attributeFQN":"tenant~cdyper-choice"}).value !== "cdyperw-option"){
+                                contains_melts=true;
+                            }
+                        }else{
+                            contains_melts=true;
+                        }
                     }else if(obj.bundledProducts.length>0){
                     var melt_idx=obj.bundledProducts[0].productCode+"_melt";
                      if(window.meltArr[melt_idx]!==undefined && window.indina_idx_arr.indexOf(i)>=0){
@@ -614,7 +720,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         if(contains_melts && (result_date.getDay()>=4||result_date.getDay()===0)){
                             scope_obj.get_meltPackage_start(result_date,shipping_holidays_list,scope_obj,indiana_prd_idx);
                         }else{
-                            scope_obj.UPSWebEstimate(result_date,indiana_prd_idx,shipping_holidays_list,scope_obj,false,true);
+                            scope_obj.USADeliveryDate(result_date,indiana_prd_idx,shipping_holidays_list,scope_obj,false,true);
                             window.indina_idx_arr.forEach(function(idx){
                                 scope_obj.model.get("items")[idx].ship_date=("0" + (result_date.getMonth() + 1)).slice(-2)+"/"+("0" + result_date.getDate()).slice(-2)+"/"+result_date.getFullYear();
                             });
@@ -641,20 +747,20 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             if(window.meltArr[melt_idx]!==undefined  && (ship_date.getDay()>=3||ship_date.getDay()===0)){
                                 scope_obj.est_date_usa(ship_date,idx,shipping_holidays_list,scope_obj);
                             }else{
-                                scope_obj.UPSWebEstimate(ship_date,idx,shipping_holidays_list,scope_obj,true);                                
+                                scope_obj.USADeliveryDate(ship_date,idx,shipping_holidays_list,scope_obj,true);                                
                             }
                         }else{
-                             scope_obj.UPSWebEstimate(ship_date,idx,shipping_holidays_list,scope_obj,true);
+                             scope_obj.USADeliveryDate(ship_date,idx,shipping_holidays_list,scope_obj,true);
                         }
                     }else if(scope_obj.model.get("items")[idx].product.bundledProducts.length>0){
                         var melt_idx1=scope_obj.model.get("items")[idx].product.bundledProducts[0].productCode+"_melt";
                         if(window.meltArr[melt_idx1]!==undefined  && (ship_date.getDay()>=3||ship_date.getDay()===0)){
                              scope_obj.est_date_usa(ship_date,idx,shipping_holidays_list,scope_obj);
                     }else{
-                             scope_obj.UPSWebEstimate(ship_date,idx,shipping_holidays_list,scope_obj,true);
+                             scope_obj.USADeliveryDate(ship_date,idx,shipping_holidays_list,scope_obj,true);
                         }
                     }else{
-                        scope_obj.UPSWebEstimate(ship_date,idx,shipping_holidays_list,scope_obj,true);
+                        scope_obj.USADeliveryDate(ship_date,idx,shipping_holidays_list,scope_obj,true);
                     }
                 });
                 var arr_idx=[];
@@ -768,10 +874,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                                //scope_obj.est_date_usa(result_date,idx,holidays,scope_obj);
                             }else{
                                 if(noBusDays===0){
-                                    scope_obj.UPSWebEstimate(result_date,idx,shipping_holidays_list,scope_obj,true);
+                                    scope_obj.USADeliveryDate(result_date,idx,shipping_holidays_list,scope_obj,true);
                                 }else{
                                     scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,function(result_date,idx,holiday_list,scope_obj){
-                                       scope_obj.UPSWebEstimate(result_date,idx,holiday_list,scope_obj,false);
+                                       scope_obj.USADeliveryDate(result_date,idx,holiday_list,scope_obj,false);
                                     },idx,scope_obj);
                                 }
                              }
@@ -782,19 +888,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                                     scope_obj.skip_holidays(result_date,1,shipping_holidays_list,scope_obj.est_date_usa,idx,scope_obj);
                                  }else{
                                     if(noBusDays===0){
-                                        scope_obj.UPSWebEstimate(result_date,idx,shipping_holidays_list,scope_obj,true);
+                                        scope_obj.USADeliveryDate(result_date,idx,shipping_holidays_list,scope_obj,true);
                                     }else{
                                         scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,function(result_date,idx,holiday_list,scope_obj){
-                                           scope_obj.UPSWebEstimate(result_date,idx,holiday_list,scope_obj,false);
+                                           scope_obj.USADeliveryDate(result_date,idx,holiday_list,scope_obj,false);
                                         },idx,scope_obj);
                                     }
                                  }
                              }else{
                                 if(noBusDays===0){
-                                        scope_obj.UPSWebEstimate(result_date,idx,shipping_holidays_list,scope_obj,true);
+                                        scope_obj.USADeliveryDate(result_date,idx,shipping_holidays_list,scope_obj,true);
                                     }else{
                                         scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,function(result_date,idx,holiday_list,scope_obj){
-                                           scope_obj.UPSWebEstimate(result_date,idx,holiday_list,scope_obj,false);
+                                           scope_obj.USADeliveryDate(result_date,idx,holiday_list,scope_obj,false);
                                         },idx,scope_obj);
                                     }
 
@@ -809,30 +915,28 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     },idx,scope_obj);
                      }else{
                          if(noBusDays===0){
-                              scope_obj.skip_holidays(production_end_date,1,shipping_holidays_list,scope_obj.UPSWebEstimate,idx,scope_obj);                
+                              scope_obj.skip_holidays(production_end_date,1,shipping_holidays_list,scope_obj.USADeliveryDate,idx,scope_obj);                
                          }else{
-                            scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,scope_obj.UPSWebEstimate,idx,scope_obj);
+                            scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,scope_obj.USADeliveryDate,idx,scope_obj);
                          }
                      }
                 }else{
                      if(noBusDays===0){
-                          scope_obj.skip_holidays(production_end_date,1,shipping_holidays_list,scope_obj.UPSWebEstimate,idx,scope_obj);                
+                          scope_obj.skip_holidays(production_end_date,1,shipping_holidays_list,scope_obj.USADeliveryDate,idx,scope_obj);                
                      }else{
-                        scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,scope_obj.UPSWebEstimate,idx,scope_obj);
+                        scope_obj.skip_holidays(production_end_date,noBusDays,shipping_holidays_list,scope_obj.USADeliveryDate,idx,scope_obj);
                      }
                 }
             }
         },setShippingStartDate:function(result_date,idx,shipping_holidays_list,scope_obj){
             //Set Shipping Start Date
-            //console.log(result_date);
-            //scope_obj.model.get("items")[idx].ship_date=result_date.toISOString().slice(0,10).replace(/\-/g,"/");
             scope_obj.model.get("items")[idx].ship_date=("0" + (result_date.getMonth() + 1)).slice(-2)+"/"+("0" + result_date.getDate()).slice(-2)+"/"+result_date.getFullYear();
         },final_shipping_end:function(shipping_start_date,idx,shipping_holidays_list,scope_obj,add_day,isIndiana) {
             var me=this; var shipBusday;
             var ship_date=new Date(shipping_start_date);
             shipBusday=_.pluck(require.mozuData("shipBusDate"),'properties');
             shipBusday= _.findWhere(shipBusday,{'ship_code':scope_obj.model.toJSON().fulfillmentInfo.shippingMethodCode});
-            //console.log("no of shipping_start_date "+ no_of_shipping_days);
+            var ship_date_config=_.pluck(require.mozuData("shipBusDate"),"properties");
             console.log('shipping start date '+new Date(shipping_start_date).toISOString().slice(0,10));
             if(add_day===undefined){
                 add_day=false;
@@ -846,18 +950,31 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             if(add_day){
                 scope_obj.skip_holidays(shipping_start_date,1,shipping_holidays_list,scope_obj.setShippingStartDate,idx,scope_obj);
                      if(shipBusday!==undefined){
-                        scope_obj.skip_holidays(shipping_start_date,shipBusday,shipping_holidays_list,function(final_delivery_date){
-                            //scope_obj.model.get("items")[idx].est_date=final_delivery_date.toDateString();
-                            scope_obj.model.get("items")[idx].est_date=("0" + (final_delivery_date.getMonth() + 1)).slice(-2)+"/"+("0" + final_delivery_date.getDate()).slice(-2)+"/"+final_delivery_date.getFullYear();
-                            if(isIndiana){
-                                var fin_date=("0" + (final_delivery_date.getMonth() + 1)).slice(-2)+"/"+("0" + final_delivery_date.getDate()).slice(-2)+"/"+final_delivery_date.getFullYear();
-                                var ship_day=("0" + (shipping_start_date.getMonth() + 1)).slice(-2)+"/"+("0" + shipping_start_date.getDate()).slice(-2)+"/"+shipping_start_date.getFullYear();
-                                window.indina_idx_arr.forEach(function(estidx){
-                                    scope_obj.model.get("items")[estidx].est_date=fin_date;
-                                      scope_obj.model.get("items")[estidx].ship_date=ship_day;
-                                });
-                            }
-                        },idx,scope_obj);
+                        var ship_day_ca=("0" + (shipping_start_date.getMonth() + 1)).slice(-2)+"/"+("0" + shipping_start_date.getDate()).slice(-2)+"/"+shipping_start_date.getFullYear();
+                        if(scope_obj.model.get('fulfillmentInfo.availableShippingMethods')){
+                            scope_obj.model.get('fulfillmentInfo.availableShippingMethods').forEach(function(ship_method) {
+                                var ship_method_key=ship_method.shippingMethodCode+"_shipMethod";
+                              var no_of_days=parseInt(_.findWhere(ship_date_config,{'ship_code':ship_method.shippingMethodCode}).no_business_day,10);
+                                if(isIndiana){
+                                    scope_obj.setShippingStartDate(ship_date,idx,shipping_holidays_list,scope_obj);
+                                    scope_obj.skip_holidays(ship_date,no_of_days,shipping_holidays_list,function(est_ups) {
+                                         scope_obj.model.get("items")[idx].est_date[ship_method_key]=est_ups;
+                                         if(isIndiana){
+                                            window.indina_idx_arr.forEach(function(ind_idx){
+                                                scope_obj.model.get("items")[ind_idx].est_date[ship_method_key]=est_ups;
+                                                  scope_obj.model.get("items")[ind_idx].ship_date=ship_day_ca;
+                                            });
+                                        }
+                                    },idx,scope_obj);
+                                    /*scope_obj.renderCustomAfterShip(scope_obj);*/
+                                }else{
+                                     scope_obj.setShippingStartDate(ship_date,idx,shipping_holidays_list,scope_obj);
+                                    scope_obj.skip_holidays(ship_date,no_of_days,shipping_holidays_list,function(est_ups) {
+                                         scope_obj.model.get("items")[idx].est_date[ship_method_key]=est_ups;
+                                    },idx,scope_obj);
+                                }
+                            });
+                        }
                      }else{
                          scope_obj.model.get("items")[idx].est_date="No Data";
                         if(isIndiana){
@@ -872,19 +989,31 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }else{
                 scope_obj.setShippingStartDate(new Date(shipping_start_date),idx,shipping_holidays_list,scope_obj);
                 if(shipBusday!==undefined){ 
-                    scope_obj.skip_holidays(shipping_start_date,shipBusday-1,shipping_holidays_list,function(final_delivery_date){
-                        console.log("Final Arrival Date "+final_delivery_date.toISOString().slice(0,10));
-                        //scope_obj.model.get("items")[idx].est_date=final_delivery_date.toDateString();
-                        scope_obj.model.get("items")[idx].est_date=("0" + (final_delivery_date.getMonth() + 1)).slice(-2)+"/"+("0" + final_delivery_date.getDate()).slice(-2)+"/"+final_delivery_date.getFullYear();
-                        if(isIndiana){
-                            var fin_date=("0" + (final_delivery_date.getMonth() + 1)).slice(-2)+"/"+("0" + final_delivery_date.getDate()).slice(-2)+"/"+final_delivery_date.getFullYear();
-                             var ship_day=("0" + (shipping_start_date.getMonth() + 1)).slice(-2)+"/"+("0" + shipping_start_date.getDate()).slice(-2)+"/"+shipping_start_date.getFullYear();
-                            window.indina_idx_arr.forEach(function(eidx){
-                                scope_obj.model.get("items")[eidx].est_date=fin_date;
-                                scope_obj.model.get("items")[eidx].ship_date=ship_day;
+                             var ship_day_start=("0" + (shipping_start_date.getMonth() + 1)).slice(-2)+"/"+("0" + shipping_start_date.getDate()).slice(-2)+"/"+shipping_start_date.getFullYear();
+                            if(scope_obj.model.get('fulfillmentInfo.availableShippingMethods')){
+                                scope_obj.model.get('fulfillmentInfo.availableShippingMethods').forEach(function(ship_method) {
+                                    var ship_method_key=ship_method.shippingMethodCode+"_shipMethod";
+                                  var no_of_days=parseInt(_.findWhere(ship_date_config,{'ship_code':ship_method.shippingMethodCode}).no_business_day,10);
+                                    if(isIndiana){
+                                        scope_obj.setShippingStartDate(ship_date,idx,shipping_holidays_list,scope_obj);
+                                        scope_obj.skip_holidays(ship_date,no_of_days,shipping_holidays_list,function(est_ups) {
+                                             scope_obj.model.get("items")[idx].est_date[ship_method_key]=est_ups;
+                                             if(isIndiana){
+                                                window.indina_idx_arr.forEach(function(ind_idx){
+                                                    scope_obj.model.get("items")[ind_idx].ship_date=ship_day_start;
+                                                    scope_obj.model.get("items")[ind_idx].est_date[ship_method_key]=est_ups;
+                                                });
+                                            }
+                                        },idx,scope_obj);
+                                        /*scope_obj.renderCustomAfterShip(scope_obj);*/
+                                    }else{
+                                         scope_obj.setShippingStartDate(ship_date,idx,shipping_holidays_list,scope_obj);
+                                        scope_obj.skip_holidays(ship_date,no_of_days,shipping_holidays_list,function(est_ups) {
+                                             scope_obj.model.get("items")[idx].est_date[ship_method_key]=est_ups;
+                                        },idx,scope_obj);
+                                    }
                             });
                         }
-                    },idx,scope_obj);
                 }else{
                     scope_obj.model.get("items")[idx].est_date="No Data";
                         if(isIndiana){
@@ -924,13 +1053,16 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },setCA_ship_start:function(shipping_start_date,shipping_holidays_list,scope_obj,idx,isIndiana){
             var ship_start=new Date(shipping_start_date);
             var noDays;
-
-            if(ship_start.getDay()<4){
+            //Check if result date is with in Monday to Wednesday and not a holiday
+            if(shipping_holidays_list.indexOf(ship_start.getFullYear()+"-"+("0" + (ship_start.getMonth() + 1)).slice(-2)+"-"+("0" + ship_start.getDate()).slice(-2))!==-1 || ship_start.getDay()<4){
                 noDays=4-ship_start.getDay();
-                scope_obj.skip_holidays(ship_start,noDays,shipping_holidays_list,function(re){
-                    //Check if result date is with in Monday to Wednesday
+                if(noDays===0){
+                    noDays=1;
+                }
+                scope_obj.skip_holidays(ship_start,noDays,[],function(re){
+                    //Check if result date is with in Monday to Wednesday and not a holiday
                     var res_date=new Date(re);
-                    if(res_date.getDay()<4){
+                    if(shipping_holidays_list.indexOf(res_date.getFullYear()+"-"+("0" + (res_date.getMonth() + 1)).slice(-2)+"-"+("0" + res_date.getDate()).slice(-2))!==-1 || res_date.getDay() < 4){
                         scope_obj.setCA_ship_start(res_date,shipping_holidays_list,scope_obj,idx,isIndiana);
                     }else{
                     //Receive no of shipping and calc devlivery date
@@ -960,7 +1092,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         scope_obj.get_meltPackage_start(res_date,shipping_holidays_list,scope_obj,idx);
                     }else{
                     //Receive no of shipping and calc devlivery date
-                    scope_obj.UPSWebEstimate(res_date,idx,shipping_holidays_list,scope_obj,false,true);
+                    scope_obj.USADeliveryDate(res_date,idx,shipping_holidays_list,scope_obj,false,true);
                     window.indina_idx_arr.forEach(function(ind){
                         scope_obj.model.get("items")[ind].ship_date=("0" + (res_date.getMonth() + 1)).slice(-2)+"/"+("0" + res_date.getDate()).slice(-2)+"/"+res_date.getFullYear();
                     });
@@ -974,7 +1106,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         scope_obj.get_meltPackage_start(res_date,shipping_holidays_list,scope_obj,idx);
                     }else{
                         //Receive no of shipping and calc devlivery date
-                       scope_obj.UPSWebEstimate(res_date,idx,shipping_holidays_list,scope_obj,false,true);
+                       scope_obj.USADeliveryDate(res_date,idx,shipping_holidays_list,scope_obj,false,true);
                     window.indina_idx_arr.forEach(function(ind){
                         scope_obj.model.get("items")[ind].ship_date=("0" + (res_date.getMonth() + 1)).slice(-2)+"/"+("0" + res_date.getDate()).slice(-2)+"/"+res_date.getFullYear();
                     });
@@ -983,7 +1115,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }else{
                 //console.log("Go Here");
                scope_obj.skip_holidays(shipping_start_date,1,shipping_holidays_list,function(res){
-                    scope_obj.UPSWebEstimate(res,idx,shipping_holidays_list,scope_obj,false,true);
+                    scope_obj.USADeliveryDate(res,idx,shipping_holidays_list,scope_obj,false,true);
                     window.indina_idx_arr.forEach(function(ind){
                         scope_obj.model.get("items")[ind].ship_date=("0" + (res.getMonth() + 1)).slice(-2)+"/"+("0" + res.getDate()).slice(-2)+"/"+res.getFullYear();
                     });
@@ -1004,7 +1136,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         scope_obj.est_date_usa(res_date,idx,shipping_holidays_list,scope_obj);
                     }else{
                     //Receive no of shipping and calc devlivery date
-                     scope_obj.UPSWebEstimate(res_date,idx,shipping_holidays_list,scope_obj,false);
+                     scope_obj.USADeliveryDate(res_date,idx,shipping_holidays_list,scope_obj,false);
                     }
                 });
             }else if(ship_start.getDay()===0){
@@ -1015,7 +1147,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         scope_obj.est_date_usa(res_date,idx,shipping_holidays_list,scope_obj);
                     }else{
                         //Receive no of shipping and calc devlivery date
-                     scope_obj.UPSWebEstimate(res_date,idx,shipping_holidays_list,scope_obj,false);
+                     scope_obj.USADeliveryDate(res_date,idx,shipping_holidays_list,scope_obj,false);
                     }
                 });
             }else{
@@ -1023,161 +1155,48 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 scope_obj.model.get("items")[idx].est_date="No Data";
                scope_obj.skip_holidays(ship_start,1,shipping_holidays_list,scope_obj.setShippingStartDate,idx,scope_obj);
             }
-        },UPSWebEstimate:function(ship_date,idx,holidays,scope_obj,add_day,isIndiana){
-           //Connect to UPS for USA alone
-            
-
-                var ship_address_json=scope_obj.model.toJSON().fulfillmentInfo.fulfillmentContact.address;
-                var ship_zip=_.findWhere(scope_obj.model.get("items")[idx].product.properties, {'attributeFQN':  Hypr.getThemeSetting('productAttributes').shipZip});
-    
-                if(ship_zip!==undefined){
-                    ship_zip=ship_zip.values[0].stringValue;
-                }else{
-                    if(scope_obj.model.get("items")[idx].product.bundledProducts.length>0){
-                        var zipidx=scope_obj.model.get("items")[idx].product.bundledProducts[0].productCode+"_zipcd";
-                     if(window.zipArr[zipidx]!==undefined){
-                            ship_zip=window.zipArr[zipidx];
-                            window.order.get("items")[idx].zipcode=ship_zip;
-                        }else{
-                           ship_zip='46787';
+        },USADeliveryDate:function(ship_date,idx,holidays,scope_obj,add_day,isIndiana){
+            try{
+                var ship_date_config=_.pluck(require.mozuData("shipBusDate"),"properties");
+            if(scope_obj.model.get('fulfillmentInfo.availableShippingMethods')){
+                scope_obj.model.get('fulfillmentInfo.availableShippingMethods').forEach(function(ship_method) {
+                    var ship_method_key=ship_method.shippingMethodCode+"_shipMethod";
+                    var date_doc=_.findWhere(ship_date_config,{'ship_code':ship_method.shippingMethodCode});
+                    var no_of_days=5;
+                    if(date_doc){
+                        no_of_days=parseInt(date_doc.no_business_day,10);
+                        if(ship_method.shippingMethodCode===80){
+                            no_of_days=parseInt(date_doc.no_business_day,10);
                         }
-                    }else{
-                        ship_zip='46787';
                     }
-                }
-    
-               
-                //Create URL for Arc.js custom route param start with s(spc=send from post code) will be shipfrom and d will be delivery (dpc=delivery post code) 
-                var urlparm="?spc="+ship_zip+"&dst="+ship_address_json.stateOrProvince+"&dct="+ship_address_json.cityOrTown+"&dpc="+ship_address_json.postalOrZipCode;
-                if(add_day){
-                    //scope_obj.skip_holidays(ship_date,1,holidays,scope_obj.setShippingStartDate,idx,scope_obj);
-                    scope_obj.skip_holidays(ship_date,1,holidays,function(res_date,idx,holidays,scope_obj){
-                        var tmp_date=res_date.getFullYear()+"/"+("0" + (res_date.getMonth() + 1)).slice(-2)+"/"+("0" + res_date.getDate()).slice(-2);
-                        //tmp_date=tmp_date.toISOString().slice(0,10);
-                        //UPSPostBody.TimeInTransitRequest.Pickup.Date=tmp_date.replace(/\//g, '');
-                        urlparm+="&sdate="+tmp_date.replace(/\//g, '');
-                        //console.log(urlparm);
-                $.ajax({
-                    "async": true,
-                    "url": "/ups-route-custom"+urlparm,
-                    "method": "GET",
-                    "headers": {
-                    "content-type": "application/json"
-                    },
-                    error:function(xhr, textStatus, errorThrown){
-                        scope_obj.model.get("items")[idx].est_date="No Data";
-                        scope_obj.setShippingStartDate(res_date,idx,holidays,scope_obj);
-                        scope_obj.renderCustomAfterShip(scope_obj);
-                    },
-                    success: function(res) {
-                    try{
-                      if(res.TimeInTransitResponse.TransitResponse!==undefined){
-                          var ups_service=res.TimeInTransitResponse.TransitResponse.ServiceSummary;
-                          var shipBusday=_.pluck(require.mozuData("shipBusDate"),'properties');
-                          shipBusday= _.findWhere(shipBusday,{'ship_code':scope_obj.model.toJSON().fulfillmentInfo.shippingMethodCode});
-                          ups_service= _.filter(ups_service,function(obj){return obj.Service.Code ==shipBusday.no_business_day; });
-                          var est_ups=new Date(ups_service[0].EstimatedArrival.Arrival.Date.slice(0,4)+"/"+ups_service[0].EstimatedArrival.Arrival.Date.slice(4,6)+"/"+ups_service[0].EstimatedArrival.Arrival.Date.slice(6,9));
-                          //If UPS service is ground add one day if weekend roll up to nearest monday.
-                          if(shipBusday.no_business_day==="GND"){
-                                    scope_obj.setShippingStartDate(res_date,idx,holidays,scope_obj);
-                                     var holiday_prop=_.pluck(require.mozuData("shipUPSDate"),'properties');
-                                    var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
-                            scope_obj.skip_holidays(est_ups,1,shipping_holidays_list,scope_obj.endUPSShipping,idx,scope_obj);
-                          }else{
-                                      scope_obj.setShippingStartDate(res_date,idx,holidays,scope_obj);
-                                      scope_obj.model.get("items")[idx].est_date=("0" + (est_ups.getMonth() + 1)).slice(-2)+"/"+("0" + est_ups.getDate()).slice(-2)+"/"+est_ups.getFullYear();
-                                      scope_obj.renderCustomAfterShip(scope_obj);
-                                  }
-                              }else{
-                                  scope_obj.model.get("items")[idx].est_date="No Data";
-                                 scope_obj.setShippingStartDate(res_date,idx,holidays,scope_obj);
-                                  scope_obj.renderCustomAfterShip(scope_obj);
-                              }
-                              }catch(err){
-                               scope_obj.model.get("items")[idx].est_date="No Data";
-                               scope_obj.setShippingStartDate(res_date,idx,holidays,scope_obj);
-                              scope_obj.renderCustomAfterShip(scope_obj);
-                          }
+                    if(isIndiana){
+                        scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
+                        var ship_ind=("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2)+"/"+ship_date.getFullYear();
+                        scope_obj.skip_holidays(ship_date,no_of_days,holidays,function(est_ups) {
+                             scope_obj.model.get("items")[idx].est_date[ship_method_key]=est_ups;
+                             if(isIndiana){
+                                window.indina_idx_arr.forEach(function(ind_idx){
+                                    scope_obj.model.get("items")[ind_idx].ship_date=ship_ind;
+                                    scope_obj.model.get("items")[ind_idx].est_date[ship_method_key]=est_ups;
+                                });
                             }
-                        });
-                    },idx,scope_obj);
-                      }else{
-                        var tmp_date=ship_date.getFullYear()+"/"+("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2);
-                        //UPSPostBody.TimeInTransitRequest.Pickup.Date=tmp_date.replace(/\//g, '');
-                         urlparm+="&sdate="+tmp_date.replace(/\//g, '');
-                        //console.log(urlparm);
-                        $.ajax({
-                            "async": true,
-                            "url": "/ups-route-custom"+urlparm,
-                            "method": "GET",
-                            "headers": {
-                            "content-type": "application/json"
-                            },
-                           error:function(xhr, textStatus, errorThrown){
-                                scope_obj.model.get("items")[idx].est_date="No Data";
-                                 if(isIndiana){
-                                    var ship_start_tmp1= ("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2)+"/"+ship_date.getFullYear();
-                                     window.indina_idx_arr.forEach(function(ind_idx){
-                                        scope_obj.model.get("items")[ind_idx].ship_date=ship_start_tmp1;
-                                    });
-                                 }else{
-                                    scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
-                                 }
-                                scope_obj.renderCustomAfterShip(scope_obj);
-                           },
-                            success: function(res) {
-                             // console.log("Done..!");
-                            try{
-                              if(res.TimeInTransitResponse.TransitResponse!==undefined){
-                                  var ups_service=res.TimeInTransitResponse.TransitResponse.ServiceSummary;
-                                  var shipBusday=_.pluck(require.mozuData("shipBusDate"),'properties');
-                                  shipBusday= _.findWhere(shipBusday,{'ship_code':scope_obj.model.toJSON().fulfillmentInfo.shippingMethodCode});
-                                  ups_service= _.filter(ups_service,function(obj){return obj.Service.Code ==shipBusday.no_business_day; });
-                                  var est_ups=new Date(ups_service[0].EstimatedArrival.Arrival.Date.slice(0,4)+"/"+ups_service[0].EstimatedArrival.Arrival.Date.slice(4,6)+"/"+ups_service[0].EstimatedArrival.Arrival.Date.slice(6,9));
-                                  //If UPS service is ground add one day if weekend roll up to nearest monday.
-                                  if(shipBusday.no_business_day==="GND"){
-                                    scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
-                                     var holiday_prop=_.pluck(require.mozuData("shipUPSDate"),'properties');
-                                    var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
-                                    if(isIndiana){
-                                         scope_obj.skip_holidays(est_ups,1,shipping_holidays_list,function(resDate){
-                                           var ship_start_tmp= ("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2)+"/"+ship_date.getFullYear();
-                                            window.indina_idx_arr.forEach(function(ind_idx){
-                                                scope_obj.model.get("items")[ind_idx].ship_date=ship_start_tmp;
-                                                scope_obj.model.get("items")[ind_idx].est_date=("0" + (resDate.getMonth() + 1)).slice(-2)+"/"+("0" + resDate.getDate()).slice(-2)+"/"+resDate.getFullYear();
-                                            });
-                                        },idx,scope_obj);
-                                        scope_obj.renderCustomAfterShip(scope_obj);
-                                    }else{
-                                        scope_obj.skip_holidays(est_ups,1,shipping_holidays_list,scope_obj.endUPSShipping,idx,scope_obj);
-                                    }
-                                  }else{
-                                     scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
-                                     scope_obj.model.get("items")[idx].est_date=("0" + (est_ups.getMonth() + 1)).slice(-2)+"/"+("0" + est_ups.getDate()).slice(-2)+"/"+est_ups.getFullYear();
-                                     if(isIndiana){
-                                        window.indina_idx_arr.forEach(function(ind_idx){
-                                            scope_obj.model.get("items")[ind_idx].est_date=("0" + (est_ups.getMonth() + 1)).slice(-2)+"/"+("0" + est_ups.getDate()).slice(-2)+"/"+est_ups.getFullYear();
-                                        });
-                                     }
-                                      //scope_obj.model.get("items")[idx].est_date=est_ups.toISOString().slice(0,10).replace(/\-/g,"/");
-                                      //console.log("Date "+scope_obj.model.get("items")[idx].est_date);
-                                      scope_obj.renderCustomAfterShip(scope_obj);
-                                  }
-                              }else{
-                                  scope_obj.model.get("items")[idx].est_date="No Data";
-                                  scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
-                                  scope_obj.renderCustomAfterShip(scope_obj);
-                              }
-                              }catch(err){
-                                console.log("error ");
-                                console.log(err);
-                               scope_obj.model.get("items")[idx].est_date="No Data";
-                               scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
-                               scope_obj.renderCustomAfterShip(scope_obj);
-                            }
-                            }
-                        });
-                }
+                        },idx,scope_obj);
+                        /*scope_obj.renderCustomAfterShip(scope_obj);*/
+                    }else{
+                         scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
+                        scope_obj.skip_holidays(ship_date,no_of_days,holidays,function(est_ups) {
+                             scope_obj.model.get("items")[idx].est_date[ship_method_key]=est_ups;
+                        },idx,scope_obj);
+                    }
+                });
+                scope_obj.renderCustomAfterShip(scope_obj);
+            }
+            }catch(err){
+                console.log(err);
+                scope_obj.setShippingStartDate(ship_date,idx,holidays,scope_obj);
+                scope_obj.renderCustomAfterShip(scope_obj);
+            }
+            
         },endUPSShipping:function(ship_date,idx,holidays,scope_obj){
             scope_obj.model.get("items")[idx].est_date=("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2)+"/"+ship_date.getFullYear();
              //scope_obj.model.get("items")[idx].est_date=ship_date.toISOString().slice(0,10).replace(/\-/g,"/");
@@ -2484,6 +2503,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
     });
      window.zipArr=[];
      window.meltArr=[];
+     window.monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+     window.weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+     window.dateFormatArr=["th","st","nd","rd"];
     // $(document).on('click','a#shipping-addr-edit-link',function(){
     //     $('.mz-contactselector-contact.mz-contactselector-new.mz-checkoutform-shipping').css('display','table');
     //     $('.mz-contactselector .mz-addresssummary').hide();
