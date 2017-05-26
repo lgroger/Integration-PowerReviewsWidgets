@@ -267,7 +267,7 @@
                                     {%  with attr.values.0|split(":::") as estd %}
                                       {% for est in estd %}
                                         {% if forloop.counter0 == idx %}
-                                          <br> Est Delivery Date : {{est}}
+                                          <br> Delivered by: {{est}}
                                         {% endif %}
                                       {% endfor %}
                                     {% endwith %}

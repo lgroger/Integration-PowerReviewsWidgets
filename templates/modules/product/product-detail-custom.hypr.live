@@ -29,7 +29,10 @@
               Get it by <strong> {{ model.delDate|safe }}</strong> with Standard Shipping
             </span>
              <br>
-              Get it by <strong> {{ model.expressDate|safe }}</strong> with Express Shipping <br>
+             {% if not model.groundOnly %}
+              <span>Get it by <strong> {{ model.expressDate|safe }}</strong> with Express Shipping </span><br>
+              Get it by <strong> {{ model.overnightDate|safe }}</strong> with Overnight Shipping <br>
+              {% endif %}
          </span>
          {% endif %}
       {% else %}

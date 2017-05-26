@@ -1,5 +1,5 @@
 {# test the value of seoFriendlyUrl to verify that the result was created by bloomreach api #}
-{% if model.content.seoFriendlyUrl == model.content.seoFriendlyUrl|replace("http://", "") %}
+{% if model.content.seoFriendlyUrl == model.content.seoFriendlyUrl|replace("http://", "") and model.content.seoFriendlyUrl == model.content.seoFriendlyUrl|replace("https://", "") %}
   {# fall back to default product-listing #}
   {% include "modules/product/product-listing" %}
 {% else %}

@@ -14,7 +14,7 @@
 <!--[if IE]>
 <style>
    .display-fixed-mob #add-to-wishlist{
-   max-height: none; 
+   max-height: none;
    }
 </style>
 <[endif]-->
@@ -61,7 +61,7 @@
                                 {% for video in videos %} 
                                 {% with video|split("=") as vCode %}
                                  <div class="video-panel">
-                                    <iframe width="95%" height="95%" class="video-slide" style="" src="http://www.youtube.com/embed/{{ vCode|last }}"></iframe>
+                                    <iframe width="95%" height="95%" class="video-slide" style="" src="//www.youtube.com/embed/{{ vCode|last }}"></iframe>
                                  </div>
                               {% endwith %}
                               {% endfor %}
@@ -84,7 +84,7 @@
                <div class="{% if videos.length > 1 %}enable-slideshow{% endif %} video-slider" data-cycle-log="false" data-cycle-fx=carousel data-cycle-timeout=0 data-cycle-next="#next-vdo-btn" data-cycle-prev="#prev-vdo-btn" data-cycle-carousel-visible=1 data-cycle-carousel-vertical=true>
                   {% for video in videos %} 
                   {% with video|split("=") as vCode %}
-                     <img src="http://img.youtube.com/vi/{{ vCode|last }}/default.jpg" data-video="{{ vCode|last }}">
+                     <img src="//img.youtube.com/vi/{{ vCode|last }}/0.jpg" data-video="{{ vCode|last }}">
                   {% endwith %}
                   {% endfor %}
                </div>
@@ -216,14 +216,14 @@
                   {% else%}
                     {% if model.volumePriceRange  and model.volumePriceRange.lower %}
                      <div class="starting-price">
-                    <span class="color-blue">{{ labels.price }} : </span>
-                      <div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
-                        As low as
-                        <span itemprop="minPrice">
-                          {% include "modules/common/price" with model=model.volumePriceRange.lower %}
-                        </span>
-                      </div>
-                    </diV>
+                        <span class="color-blue">{{ labels.price }} : </span>
+                          <div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+                            As low as
+                            <span itemprop="minPrice">
+                              {% include "modules/product/as-low-price" with model=model.volumePriceRange.lower %}
+                            </span>
+                          </div>
+                    </div>
                     {% endif %}
                 {% endif %}
 

@@ -1,9 +1,5 @@
-﻿ {% if model.onSale %}
- <span class="mz-price {% if pageContext.cmsContext.template.path == "product" %} hide {% endif %} is-crossedout">
-     {{model.price|currency}}
- </span>
+ {% if model.onSale %}
  <span itemprop="price" class="mz-price is-saleprice">  
-
      {{model.salePrice|currency}}
 	  {% if model.priceType == "MAP" %}
 		<div>add to cart to see final price</div>
@@ -11,7 +7,11 @@
  </span>
  {% else %}
  <span itemprop="price" class="mz-price">
-     {{model.price|currency}}
+	{% if model.salePrice %}
+		{{ model.salePrice|currency }}
+		{% else %}
+     	{{ model.price|currency }}
+	{% endif %}
 	 {% if model.priceType == "MAP" %}
 		<div>add to cart to see final price</div>
      {% endif %}

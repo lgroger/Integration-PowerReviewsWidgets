@@ -28,7 +28,7 @@ define(['modules/jquery-mozu', '//www.youtube.com/iframe_api'],
 
             $this.data('id', id);
 
-            address = '\'http://img.youtube.com/vi/' + id + '/maxresdefault.jpg\'';
+            address = '\'//img.youtube.com/vi/' + id + '/maxresdefault.jpg\'';
 
             $cover = $this.find('.mz-cms-video-cover').css({
                 'background-image': 'url(' + address + ')',

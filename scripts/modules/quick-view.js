@@ -398,7 +398,7 @@ require(
                 $("div[video-data] > img").click(function(){
                     if($(this).parent().attr("video-data")){
                         $(".product-image > img").hide();
-                        $(".product-image > iframe").attr('src', 'http://www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
+                        $(".product-image > iframe").attr('src', '//www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
                     }
                 });
                 $("#video-frame").hide();
