@@ -197,6 +197,9 @@ body.mz-product {
         font-family: 'Montserrat', sans-serif;
         margin-bottom: 20px;
         font-size: 16px;
+        span.discount-block{
+            display:none;
+        }
         .color-blue{
             font-size: 14px;
         }
@@ -235,10 +238,14 @@ body.mz-product {
         text-align: left;
         font-size: 14px;
     }
-    .delivery-date span{
-        display: inline-block;
-        margin-bottom: 5px;
-    }
+    .delivery-date{
+        color: #000;
+        span{
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+    } 
+        
 }
 }
 .pdp-page-custom .product-qty-cart{
@@ -639,6 +646,9 @@ body.mz-product {
            }
         }
     }
+    .add-cart #recommended_products_slot_cart .mz-pricestack{
+        display: inline !important;
+    }
     .pdp-page-custom{
         .container-right select{
                 width: 220px;
@@ -787,4 +797,20 @@ body.mz-product {
             }
         }
     } 
+}
+@media only screen and (min-width:768px){
+    .add-cart #recommended_products_slot_cart .mz-productlisting-image{
+        margin-bottom: 0 !important;
+    }
+}
+.add-cart #recommended_products_slot_cart .mz-pricestack{
+    padding: 0 10px;
+    margin: 0 auto;
+    display: table;
+    >span{
+        display: inline-block;
+    }
+}
+.add-cart #recommended_products_slot_cart .cerumo {
+    display: inline-block;
 }

@@ -39,7 +39,7 @@
                                     {% for video in videos %}
                                         {% with video|split("=") as vCode %}
                                             <div class="item" video-data="{{ vCode|last }}">
-                                                <img src="http://img.youtube.com/vi/{{ vCode|last }}/default.jpg" width="100%" height="72px">
+                                                <img src="//img.youtube.com/vi/{{ vCode|last }}/default.jpg" width="100%" height="72px">
                                                 <span class="video-icon"></span>
                                             </div>
                                         {% endwith %}

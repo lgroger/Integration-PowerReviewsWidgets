@@ -757,6 +757,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     option = me.model.get('options').get(id);
                 
                         if(me.model.get('productType')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+                            window.isStd=false;
                             Api.get('product',{productCode:newValue}).then(function(res){
                                 var product = new ProductModels.Product(res.data);
                                 var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
@@ -768,25 +769,24 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                     me.model.set('inventoryInfo',inventoryInfo);
                                 }
                                 var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                var melt=false;
-                                var melt_obj=getPropteryValueByAttributeFQN(me.model, productAttributes.productMelt);
-                                if(melt_obj===undefined){
-                                    melt=false;
+                                if(productionTime ===null || productionTime===0){
+                                    productionTime=1;
                                 }
-                                 var isIndiana_obj=getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                if(isIndiana_obj && isIndiana_obj!=="46787"){
-                                    window.isIndiana=true;
-                                    me.model.set("isIndiana",false);
+                                var melt=true;
+                                var melt_obj=getPropteryValueByAttributeFQN(me.model, productAttributes.productMelt);
+                                if(melt_obj===null){
+                                    melt=false;
+                                }else if(melt_obj===false){
+                                    melt=false;
                                 }
                                 if(productionTime){
                                     me.model.set('productionTime',productionTime);
                                     me.model.set('data',productionTime);
                                     var holidays=window.holidayList || [];
                                     if(melt){
-                                        me.skip_holidays(estTime,productionTime,holidays,me,true,me.calcMeltProduct);
+                                        me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
                                     }else{
-                                        me.skip_holidays(estTime,productionTime,holidays,me,false,me.setDeliveryDate,5);
-                                        me.skip_holidays(estTime,productionTime,holidays,me,false,me.setExpressDeliveryDate,2);
+                                        me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
                                     }
                                 }
                                 dndCode = getPropteryValueByAttributeFQN(me.model, productAttributes.dndCode);
@@ -814,17 +814,28 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         });
                     }else{
                         if(objj.length > 0){
+                            window.isStd=false;
                                 var selected_id = objj[0].attributeFQN;
                                 var selected_newValue = objj[0].value;
                                 var selected_option = me.model.get('options').get(id);
-                                if(me.model.get('productType')==='CandyBar' && selected_option.get('attributeDetail').usageType ==="Option" && selected_newValue==="cdyperw-option"){
+                                if(me.model.get('productType')==='CandyBar' && selected_option.get('attributeDetail').usageType ==="Option"){
                                     var productionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
                                     var holidays=window.holidayList || [];
-                                    if(productionTime===undefined || productionTime===0){
+                                    if(productionTime===null || productionTime===0){
                                         productionTime=1;
                                     }
-                                    me.skip_holidays(estTime,productionTime,holidays,me,false,me.setDeliveryDate,5);
-                                    me.skip_holidays(estTime,productionTime,holidays,me,false,me.setExpressDeliveryDate,2);
+                                    if(selected_newValue==="cdyperw-option"){
+                                        me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
+                                    }else{
+                                        me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
+                                    }
+                                }else if(me.model.get('productType')!=='CandyBar'){
+                                     var productionTime1 = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
+                                    var holidays1=window.holidayList || [];
+                                    if(productionTime1===undefined || productionTime1===null || productionTime1===0){
+                                        productionTime1=1;
+                                    }
+                                    me.skip_holidays(estTime,productionTime1,window.holidayList,me,false);
                                 }
                         }
                         Backbone.MozuView.prototype.render.apply(me);
@@ -834,60 +845,92 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     Backbone.MozuView.prototype.render.apply(this);
                 }
 
-        },skip_holidays:function(date,noBusDays,holidays,scope_obj,isMelt,callback,noOfDays){
+        },skip_holidays:function(date,noBusDays,holidays,scope_obj,isMelt){
             /*Function to skip saturday,sunday and holiday list and call the callback function
               With result date.
             */
-            if (noBusDays < 1) {
+            var produtionTime=noBusDays;
+            if (noBusDays < 1 && !isMelt) {
+                noBusDays=1;
+                produtionTime=1;
+            }
+            var result_date=new Date(date);
+            var addedDays = 0;
+            noBusDays+=5;
+            while (addedDays < noBusDays) {
+                result_date.setDate(result_date.getDate()+1);
+                if (result_date.getDay()<6 && result_date.getDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2))==-1) {
+                    ++addedDays;
+                    if(addedDays===produtionTime+1){
+                        var dateEndFormat="<sup>th</sup>";
+                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && window.dateFormatArr[result_date.getDate()%10]){
+                         dateEndFormat="<sup>"+window.dateFormatArr[result_date.getDate()%10]+"</sup>";
+                        }
+                        var overDate=window.weekdayArr[result_date.getDay()]+", "+window.monthArr[result_date.getMonth()]+" "+result_date.getDate()+dateEndFormat;
+                        scope_obj.model.set("overnightDate",overDate);
+                    }else if(addedDays===produtionTime+2){
+                        var expressEndFormat="<sup>th</sup>";
+                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && window.dateFormatArr[result_date.getDate()%10]){
+                         expressEndFormat="<sup>"+window.dateFormatArr[result_date.getDate()%10]+"</sup>";
+                        }
+                        var expressDate=window.weekdayArr[result_date.getDay()]+", "+window.monthArr[result_date.getMonth()]+" "+result_date.getDate()+expressEndFormat;
+                        scope_obj.model.set("expressDate",expressDate);
+                    }else if(addedDays===produtionTime+5){
+                        var stdEndFormat="<sup>th</sup>";
+                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && window.dateFormatArr[result_date.getDate()%10]){
+                         stdEndFormat="<sup>"+window.dateFormatArr[result_date.getDate()%10]+"</sup>";
+                        }
+                        var stdDate=window.weekdayArr[result_date.getDay()]+", "+window.monthArr[result_date.getMonth()]+" "+result_date.getDate()+stdEndFormat;
+                        scope_obj.model.set("delDate",stdDate);
+                    }
+                }
+            }
+             if(window.initload && $(".delivery-date").length===0 && window.isStd){
+                setTimeout(function() {
+                    var delivery_html="<span class='delivery-date'> <span>Get it by <strong>";
+                    if(scope_obj.model.get("delDate")){
+                        delivery_html=delivery_html+""+scope_obj.model.get("delDate")+"</strong> With Standard Shipping </span> <br> ";
+                        if(scope_obj.model.get("groundOnly")===undefined){
+                            delivery_html=delivery_html+"<span>Get it by <strong>"+scope_obj.model.get("expressDate")+"</strong> with Express Shipping  </span> <br> Get it by <strong>"+scope_obj.model.get("overnightDate")+" </strong> with Overnight Shipping <br> ";
+                        }
+                    }
+                    $("#product-detail > p ").after(delivery_html);
+                    if($(".delivery-date").length>1){
+                        $(".delivery-date").eq(0).remove();
+                    }
+                },500);
+             }
+            /*result_date.setDate(result_date.getDate());
+            //console.log("idx "+idx+" res "+result_date);
+            var delDate=new Date(result_date);
+            callback(delDate,noBusDays,holidays,scope_obj);*/
+        }, onOptionChange: function (e) {
+            return this.configure($(e.currentTarget));
+        },calc_only_productionTime:function(date,noBusDays,holidays,scope_obj,callback){
+            /*Function to skip saturday,sunday and holiday list and call the callback function
+            With result date.
+            */
+            if (noBusDays < 1){
                 noBusDays=1;
             }
             var result_date=new Date(date);
             var addedDays = 0;
-            if(!isMelt){ noBusDays+=noOfDays; }
             while (addedDays < noBusDays) {
                 result_date.setDate(result_date.getDate()+1);
                 if (result_date.getDay()<6 && result_date.getDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2))==-1) {
                     ++addedDays;
                 }
             }
-            result_date.setDate(result_date.getDate());
-            //console.log("idx "+idx+" res "+result_date);
             var delDate=new Date(result_date);
             callback(delDate,noBusDays,holidays,scope_obj);
-        }, onOptionChange: function (e) {
-            return this.configure($(e.currentTarget));
         },calcMeltProduct:function (ddate,prod_time,holidayList,scope_obj,noOfDays){
             if(ddate.getDay()>=4){
-                scope_obj.skip_holidays(ddate,1,holidayList,scope_obj,true,scope_obj.calcMeltProduct,0);
+                scope_obj.calc_only_productionTime(ddate,1,holidayList,scope_obj,scope_obj.calcMeltProduct);
             }else{
-                 scope_obj.skip_holidays(ddate,5,holidayList,scope_obj,true,scope_obj.setDeliveryDate,0);
-                 scope_obj.skip_holidays(ddate,2,holidayList,scope_obj,true,scope_obj.setExpressDeliveryDate,0);
+                 scope_obj.skip_holidays(ddate,0,holidayList,scope_obj,true);
+                 //scope_obj.skip_holidays(ddate,2,holidayList,scope_obj,true,scope_obj.setExpressDeliveryDate,0);
             }
-        },setDeliveryDate:function (ddate,prod_time,holidayList,scope_obj) {
-            var dateEndFormat="<sup>th</sup>";
-            if(ddate.getDate()<=3 || ddate.getDate()>=21 && window.dateFormatArr[ddate.getDate()%10]){
-                dateEndFormat="<sup>"+window.dateFormatArr[ddate.getDate()%10]+"</sup>";
-             }
-            var delDate=window.weekdayArr[ddate.getDay()]+", "+window.monthArr[ddate.getMonth()]+" "+ddate.getDate()+dateEndFormat;
-
-            scope_obj.model.set("delDate",delDate);
-            if(window.initload && $(".delivery-date").length===0){
-                $("#product-detail > p ").after('<span class="delivery-date"> <span>Get it by <strong>'+delDate+'</strong> With Standard Shipping </span> <br>');
-            }
-        },setExpressDeliveryDate:function (ddate,prod_time,holidayList,scope_obj) {
-                  var dateEndFormat="<sup>th</sup>";
-            if(ddate.getDate()<=3 || ddate.getDate()>=21  && window.dateFormatArr[ddate.getDate()%10] ){
-                dateEndFormat="<sup>"+window.dateFormatArr[ddate.getDate()%10]+"</sup>";
-             }
-            var delDate=window.weekdayArr[ddate.getDay()]+", "+window.monthArr[ddate.getMonth()]+" "+ddate.getDate()+dateEndFormat;            
-             scope_obj.model.set("expressDate",delDate);
-             if(window.initload && $(".delivery-date").length===0){
-                setTimeout(function() {
-                    $("#product-detail > p + span").append('Get it by <strong>'+delDate+'</strong> With Express Shipping <br>');                    
-                },500);
-             }
-        },
-        configure: function ($optionEl) {
+        },configure: function ($optionEl) {
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var me= this;
             me.model.set('mfgPartNumber',"");
@@ -1240,7 +1283,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             $(".video-slider img").click(function(){
                 if($(this).data("video")){    
                     $(".product-image > img").hide();
-                    $(".product-image > iframe").attr('src', 'http://www.youtube.com/embed/' + $(this).data("video")+"?autoplay=1").show();
+                    $(".product-image > iframe").attr('src', '//www.youtube.com/embed/' + $(this).data("video")+"?autoplay=1").show();
                 }
             });
             $("#video-frame").hide();
@@ -1264,7 +1307,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             //me.setSelectedOptions();
 
             var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/ShippingholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
-            var hd_list=$.cookie("hdList");
             var localStorageSupport=false;
             window.holidayList=[];
              try {
@@ -1272,10 +1314,13 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
               } catch (e) {
                 localStorageSupport= false;
               }
-               var tmp= new Date($('#time-custom-now').text().replace(/"/g, ''));
-               tmp.setHours(tmp.getHours()-4);
-               window.timeNow=tmp;
-               var unix_timestamp = Math.round(+tmp/1000);
+              
+            //Read UTC time from server and reset 4 hours to convert as EST.
+            var tmp= new Date($('#time-custom-now').text().replace(/"/g, ''));
+            tmp.setHours(tmp.getHours()-4);
+            window.timeNow=new Date(tmp);
+            var estTime= window.timeNow || new Date();
+            var unix_timestamp = Math.round(+tmp/1000);
 
             var prodTime=1;
             var prod_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productionTime});
@@ -1285,12 +1330,17 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 melt=melt_obj.values[0].value;
             }
             
-            var isIndiana_obj=_.findWhere(require.mozuData("product"), {'attributeFQN':  Hypr.getThemeSetting('productAttributes').shipZip});
-            me.model.set("isIndiana",true);
-            if(isIndiana_obj && isIndiana_obj.values[0].stringValue!=="46787"){
-                me.model.set("isIndiana",false);
+            //Check if product only need to ship via ground if yes then hide express and overnight dates
+            var is_safety_d=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.groundOnly});
+            var is_safety_k=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.usa48});
+            if(is_safety_d !==undefined && is_safety_d.values[0].value){
+                me.model.set("groundOnly",true);
+            }else if(is_safety_k !==undefined && is_safety_k.values[0].value){
+                me.model.set("groundOnly",true);
             }
-            var estTime= window.timeNow || new Date();
+
+            try{
+                //Check if holiday list is already available in Local Storage(LS) and expire stamp is less then current time then read holiday list form LS and process else make api call.
               if(localStorageSupport && localStorage.getItem("hdList") && JSON.parse(localStorage.getItem("hdList")).expire > unix_timestamp){
                  window.holidayList=JSON.parse(localStorage.getItem("hdList")).value;
                   if(prod_obj){
@@ -1299,12 +1349,57 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         me.model.set('productionTime',prodTime);
                         me.model.set('data',prodTime);
                     }
-                    if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
+                        if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===0){
+                            if(melt){
+                                me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                            }else{
+                                me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                            }
+                        }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
+                            if(melt){ 
+                                me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                            }else{
+                                me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                            }
+                        }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
+                            var idx1=-1;
+                            me.model.get("options").toJSON().forEach(function(option,i) {
+                               if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
+                                idx1=i;
+                               } 
+                            });
+                            if(idx1>-1){
+                                var opt1=me.model.get("options").toJSON();
+                                delete opt1[idx1];
+                                opt1.splice(idx1,1);
+                                if(opt1[0].values.length===1){
+                                    if(melt){ 
+                                        me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                    }else{
+                                        me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                                    }
+                                }
+                            }
+                        }else if(this.model.get("productUsage")==="Bundle"){
+                            if(melt){ 
+                                me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                            }else{
+                                me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                            }
+                        }
                     }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===0){
-                        if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
-                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':"tenant~dnd-token"}) !==undefined ){
-                        if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
-                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':"tenant~dnd-token"}) !==undefined){
+                        if(melt){ 
+                            me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                        }else{
+                            me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                        }
+                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
+                        if(melt){ 
+                            me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                        }else{
+                            me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                        }
+                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
                         var idx=-1;
                         me.model.get("options").toJSON().forEach(function(option,i) {
                            if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
@@ -1316,31 +1411,83 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                             delete opt[idx];
                             opt.splice(idx,1);
                             if(opt[0].values.length===1){
-                                if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,5);}
+                                if(melt){ 
+                                    me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                }else{
+                                    me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
+                                }
                             }
                         }
                     }
               }else{
+                    //Get holiday list from custom document and store in local storeage with expire time.
                      Api.request('GET',requestConfigure).then(function(res){
                          window.holidayList=_.pluck(_.pluck(res.items,"properties"),"holiday");
+                         var current_time=window.timeNow || new Date();
                           if(localStorageSupport){
                             tmp.setDate(tmp.getDate()+1);
                             var cacheData={value: window.holidayList,"expire":Math.round(+tmp/1000)};
                                 localStorage.setItem("hdList",JSON.stringify(cacheData));
                             }
                             window.initload=true;
+                            window.isStd=true;
                             if(prod_obj){
                             prodTime=prod_obj.values[0].value;
-                            if(prodTime>0){
-                                me.model.set('productionTime',prodTime);
-                                me.model.set('data',prodTime);
-                            }
-                                if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
-                            }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===0){
-                                if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
-                            }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':"tenant~dnd-token"}) !==undefined ){
-                                if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
-                            }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':"tenant~dnd-token"}) !==undefined){
+                                if(prodTime>0){
+                                    me.model.set('productionTime',prodTime);
+                                    me.model.set('data',prodTime);
+                                }
+                                if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===0){
+                                    if(melt){ 
+                                        me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                    }else{
+                                        me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                    }
+                                }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
+                                    if(melt){ 
+                                        me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                    }else{
+                                       me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                    }
+                                }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
+                                    var idx1=-1;
+                                    me.model.get("options").toJSON().forEach(function(option,i) {
+                                       if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
+                                        idx1=i;
+                                       } 
+                                    });
+                                    if(idx1>-1){
+                                        var opt1=me.model.get("options").toJSON();
+                                        delete opt1[idx1];
+                                        opt1.splice(idx1,1);
+                                        if(opt1[0].values.length===1){
+                                            if(melt){ 
+                                                me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                            }else{
+                                                me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                            }
+                                        }
+                                    }
+                                }else if(me.model.get("productUsage")==="Bundle"){
+                                    if(melt){ 
+                                            me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                        }else{
+                                            me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                        }
+                                }
+                            }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===0){
+                                if(melt){
+                                    me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                }else{
+                                    me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                }
+                            }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
+                                if(melt){ 
+                                    me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                }else{
+                                    me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                }
+                            }else if(me.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
                                 var idx=-1;
                                 me.model.get("options").toJSON().forEach(function(option,i) {
                                    if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
@@ -1352,12 +1499,27 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                     delete opt[idx];
                                     opt.splice(idx,1);
                                     if(opt[0].values.length===1){
-                                        if(melt){ me.skip_holidays(estTime,prodTime,window.holidayList,me,true,me.calcMeltProduct);}else{me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setDeliveryDate,5);me.skip_holidays(estTime,prodTime,window.holidayList,me,false,me.setExpressDeliveryDate,2);}
+                                        if(melt){ 
+                                            me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                        }else{
+                                            me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                        }
                                     }
                                 }
+                            }else if(me.model.get("productUsage")==="Bundle"){
+                                if(melt){ 
+                                    me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+                                }else{
+                                    me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+                                }
                             }
+                    },function(err) {
+                        console.log("Error in reading holidays",err);
                     });
                 }
+            }catch(err){
+                console.log(err);    
+            }
            
 
             if(options.length > 2){

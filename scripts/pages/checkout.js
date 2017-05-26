@@ -689,18 +689,14 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
                 if(isMelt!==undefined){
                     if(isMelt.values[0].value===true && window.indina_idx_arr.indexOf(i)>=0){
-                        if(me.model.get("items")[i].product.productType==="CandyBar"){
-                            if( _.findWhere(me.model.get("items")[i].product.options,{"attributeFQN":"tenant~cdyper-choice"}).value !== "cdyperw-option"){
-                                contains_melts=true;
-                            }
-                        }else{
-                            contains_melts=true;
-                        }
+                        contains_melts=true;
                     }else if(obj.bundledProducts.length>0){
                     var melt_idx=obj.bundledProducts[0].productCode+"_melt";
                      if(window.meltArr[melt_idx]!==undefined && window.indina_idx_arr.indexOf(i)>=0){
                         contains_melts=true;
-                     }
+                     }else if(me.model.get("items")[i].product.productType==="CandyBar" &&  _.findWhere(me.model.get("items")[i].product.options,{"attributeFQN":"tenant~cdyper-choice"}).value !== "cdyperw-option"){
+                            contains_melts=true;
+                    }
                 }
                 }else if(obj.bundledProducts.length>0){
                     var melt_idx1=obj.bundledProducts[0].productCode+"_melt";
@@ -1157,6 +1153,11 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
         },USADeliveryDate:function(ship_date,idx,holidays,scope_obj,add_day,isIndiana){
             try{
+                if(add_day){
+                    scope_obj.skip_holidays(ship_date,1,holidays,function(est_ups) {
+                        ship_date=est_ups;
+                    });
+                }
                 var ship_date_config=_.pluck(require.mozuData("shipBusDate"),"properties");
             if(scope_obj.model.get('fulfillmentInfo.availableShippingMethods')){
                 scope_obj.model.get('fulfillmentInfo.availableShippingMethods').forEach(function(ship_method) {
