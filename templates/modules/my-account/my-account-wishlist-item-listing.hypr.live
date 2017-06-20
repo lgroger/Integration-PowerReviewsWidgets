@@ -1,7 +1,6 @@
 {% extends "modules/common/item-listing" %}
 
 {% block item-details %}
-
 <button class="accordion">
 <span class="wishlist_name">{{model.name}}</span>
 {% for eventadets in model.extendedProperties %}

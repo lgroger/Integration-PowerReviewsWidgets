@@ -64,7 +64,6 @@
 											<!-- catg_list_name -->
 											<p align="center" class="" title="{{childcategory.content.name}}">{{childcategory.content.name}}</p>
 										</div>
-									<!-- <img src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4" width="100" height="100"/> -->
 								</a>
 							</li>
 						{% else %}
@@ -84,20 +83,12 @@
 										        	<span class="mz-productlisting-imageplaceholdertext">[no image]</span>
 										        </span>
 									        </div>
-											<!-- <img src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4?max=330" alt="{{childcategory.content.name}}"/> -->
 										{% endif %}
 								</div>
 								<div class="catg_list_name">
 											<!-- catg_list_name -->
 											<p align="center" class="" title="{{childcategory.content.name}}">{{childcategory.content.name}}</p>
 										</div>
-
-									<!-- <div class="catg_list_img">
-										<img src="http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4"/>
-										<div class="catg_list_name">
-											<h3 align="center" title="{{childcategory.content.name}}">{{childcategory.content.name}}</h3>
-										</div>
-									</div> -->
 								</a>
 							</li>
 						{% endif %}
