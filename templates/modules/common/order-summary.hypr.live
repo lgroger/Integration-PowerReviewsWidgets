@@ -15,6 +15,15 @@
                       {% if item.product.imageUrl and themeSettings.showCartItemImage %}
                         <div class="cp_image">
                           <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
+                          {% if item.product.options && item.product.productType != "Bundle" %}
+                            {% for opt in item.product.options %}
+                              {% if opt.name == "dnd-token" %}
+                                {%  with opt.shopperEnteredValue |split(":") as token %}
+                                  <span data-dndtoken={{ token|last|replace("}","") }} {% if item.product.productType == "Bundle"%}data-prdType="bundle"{% endif %}></span>
+                                 {% endwith %}
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
                         </div>
                       {% endif %}
                     </td>
@@ -26,7 +35,7 @@
                             {% if opt.name=="dnd-token" %}
                             {% else %}
                                 {% if opt.name == 'Color' %}
-                                  <p><span class="sd_label">Color:</span><span class="sd_color_box" style="background:{{ opt.value }};"></span></p>
+                                  <p><span class="sd_label">Color:</span><span class="sd_text">{{ opt.value }}</span></p>
                                 {% else %}
                                   <p><span class="sd_label">{{ opt.name }}:</span><span class="sd_text">{{ opt.value }}</span></p>
                                 {% endif %}

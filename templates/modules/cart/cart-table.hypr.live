@@ -3,9 +3,9 @@
         <span class="label">ESTIMATED TOTAL: &nbsp;</span>
         <span class="estimate-value">
             {% if model.shippingCost %}
-                {{ model.discountedTotal|add(model.shippingCost)|add(model.totalSurAmount)|currency }}
+                {{ model.discountedTotal|add(model.shippingCost)|add(model.handlingTotal)|currency }}
             {%  else %}
-                {{ model.discountedTotal|add(model.totalSurAmount)|currency }}
+                {{ model.discountedTotal|add(model.handlingTotal)|currency }}
             {% endif %}
         </span>
     </div>
@@ -94,7 +94,7 @@
                                     <dt class="sd_label">{{ option.name }}</dt>
                                     <dd class="sd_text">
                                         {% if option.name == 'Color' %}
-                                            <span class="rounded-cart-color"><span style="background-color:{{option.stringValue}};"></span>
+                                            <span class="color-val">{{option.stringValue}}
                                             </span>
                                         {% else %}
                                             {% if option.stringValue %}
@@ -139,8 +139,8 @@
             </td>
              {% if model.enableSurCharge %}
             <td class="mz-carttable-item-ship-charge">
-                {% if item.handlingfee > 0 %}
-                   <span class="mz-item-surcharge">{{ item.handlingfee |currency }}</span>
+                {% if item.handlingAmount > 0 %}
+                   <span class="mz-item-surcharge">{{ item.handlingAmount |divide(item.quantity) |currency }}</span>
                 {% else %}
                     <!--  <span class="mz-item-surcharge"> <i class="fa fa-minus" aria-hidden="true"></i></span> -->
                 {% endif %}
@@ -180,7 +180,7 @@
                <div class="item-availability">
                     {% if item.product.prodTime and item.product.prodTime > 1 %}
                         <span class="avail-shipping-time">
-                            {{ item.product.prodTime }} business day processing + shipping
+                            {{ item.product.prodTime }} business day Production time + Shipping
                             <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                                 <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                             </span>
@@ -245,7 +245,7 @@
                                             <dt class="sd_label">{{ option.name }}</dt>
                                             <dd class="sd_text">
                                                 {% if option.name == 'Color' %}
-                                                    <span class="rounded-cart-color"><span style="background-color:{{option.value}};"></span>
+                                                    <span class="color-val">{{option.stringValue}}</span>
                                                     </span>
                                                 {% else %}
                                                     {% if option.value %}
@@ -272,8 +272,8 @@
                     {% if model.enableSurCharge %}
                         <tr>
                             <td colspan="2" class="mz-carttable-item-ship-charge">
-                                {% if item.handlingfee > 0 %}
-                                   <span class="mz-item-surcharge">{{ item.handlingfee |currency }}</span>
+                                {% if item.handlingAmount  > 0 %}
+                                   <span class="mz-item-surcharge">{{ item.handlingAmount |divide(item.quantity)|currency }}</span>
                                 {% else %}
                                      <!-- <span class="mz-item-surcharge"> <i class="fa fa-minus" aria-hidden="true"></i></span> -->
                                 {% endif %}
@@ -436,7 +436,7 @@
                 {% if model.enableSurCharge %}
                 <tr>
                     <td class="summary_box_label">Shipping Surcharge</td>
-                    <td class="summary_box_price estimated-cost">{{ model.totalSurAmount | currency }}</td>
+                    <td class="summary_box_price estimated-cost">{{ model.handlingTotal | currency }}</td>
                 </tr>
                 {% endif %}
                 <tr>
@@ -452,9 +452,9 @@
                     <span class="f_left summary_estimate_label">Estimated Total</span>
                     <span class="f_right summary_estimate_price estimate-value">
                     {% if model.shippingCost %}
-                        {{ model.discountedTotal|add(model.shippingCost)|add(model.totalSurAmount)|currency }}
+                        {{ model.discountedTotal|add(model.shippingCost)|add(model.handlingTotal )|currency }}
                     {%  else %}
-                        {{ model.discountedTotal|add(model.totalSurAmount)|currency }}
+                        {{ model.discountedTotal|add(model.handlingTotal )|currency }}
                     {% endif %}
                     </span>
                 </p>
@@ -500,6 +500,7 @@
                 {% endif %}
             {%endwith%}
         {% endif %}
+        <!-- <a class="mz-carttable-emptylink">Remove All</a> -->
             <div class="continue_shopping mob_show">
               <a href="/">{{ themeSettings.continueShoppingLink }}</a>
             </div>

@@ -218,12 +218,19 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
    
  	$(document).on('change','.custom-qty .qty',function(){
  		var qunty=$(this).val();
- 		$('.custom-qty .qty').val(qunty);  				
+ 		$(this).val(qunty);			
  	});
  		
 		$(document).on('click','button.accordion1,button.accordion',function(){
 		 	$(this).toggleClass('active');
 			$(this).next().toggleClass('show');
+			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
+				$(this).next().find("img").each(function() {
+					if($(this).parent().next().data("dndtoken")){
+						$(this).attr("src","//upload.shindigz.com/dnd/preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
+					}
+				});
+			}
 		 });
 
  		$('.mz-productdetail-qty').on('change keyup', function() { 			

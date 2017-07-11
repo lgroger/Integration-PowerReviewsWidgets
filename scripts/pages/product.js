@@ -636,6 +636,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             this.hideExtras();
             var extrasProductInfo = me.getSelectedExtrasInfo(objj);
             if(extrasProductInfo){me.model.set('extrasProductInfo',extrasProductInfo);}
+            if(me.model.apiModel.data.price){
+                me.model.attributes.price.attributes=me.model.apiModel.data.price;
+            }
             this.renderConfigure();
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
@@ -764,7 +767,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                     me.model.set('uom',uom);
                                 }
                                 var inventoryInfo = product.get('inventoryInfo');
-                                if(inventoryInfo.manageStock){
+                                if(inventoryInfo.manageStock) {
                                     me.model.set('inventoryInfo',inventoryInfo);
                                 }
                                 var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);

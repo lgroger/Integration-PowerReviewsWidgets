@@ -19,7 +19,7 @@
 {% preload_json model "cart" %}
 <div class="cart_page_head mz-cms-col-12-12">
 	{% dropzone "cart-head" scope="template" %}
-	<style>.mz-breadcrumbs:first-child{display:none;}</style> 
+	<style>.mz-breadcrumbs{display:none;}</style> 
 </div>
 
 <div class="cart_bundle_box" style="display:none;">

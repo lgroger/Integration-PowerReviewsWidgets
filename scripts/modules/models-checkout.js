@@ -995,15 +995,19 @@
                     contacts = order ? order.get('customer').get('contacts') : null;
                 if(purchaseOrderEnabled) {
                     if(currentPurchaseOrder.selected && contacts.length > 0) {
-                        var foundBillingContact = contacts.models.find(function(item){
-                            return item.get('isPrimaryBillingContact');
-                                
-                        });
-
-                        if(foundBillingContact) {
-                            this.set('billingContact', foundBillingContact, {silent: true});
-                            currentPurchaseOrder.set('usingBillingContact', true);
+                        try{
+                            var foundBillingContact = contacts.models.find(function(item){
+                                return item.get('isPrimaryBillingContact');
+                                    
+                            });
+                            if(foundBillingContact) {
+                                this.set('billingContact', foundBillingContact, {silent: true});
+                                currentPurchaseOrder.set('usingBillingContact', true);
+                            }
+                        }catch(err){
+                            console.log(err);
                         }
+
                     }
                 }
             },

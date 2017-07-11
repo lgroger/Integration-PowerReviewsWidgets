@@ -228,8 +228,16 @@ body.mz-product {
             font-weight: 600;
             font-size: 16px;
         }
+        .mz-pricestack{
+            color: @color-dark-blue;
+        }
         .is-saleprice{
             color: @color-dark-blue;
+        }
+        .mz-pricestack-range{
+            .mz-price{
+                color: @color-dark-blue;
+            }
         }
     }
     .delivery-date,.prod-time,.product-short-description,.starting-price>div{
@@ -645,6 +653,10 @@ body.mz-product {
                 top: 2%;
            }
         }
+    }
+    #mz-added-to-cart .popup .mz-quick-view-wrapper.add-cart .container-left .product_optionbox ul{
+        padding-left: 0;
+        font-size: 14px;
     }
     .add-cart #recommended_products_slot_cart .mz-pricestack{
         display: inline !important;

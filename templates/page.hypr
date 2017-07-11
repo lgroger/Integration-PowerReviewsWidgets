@@ -98,17 +98,19 @@
                           <link rel="canonical" href="{% if pageContext.isSecure %}https{% else %}http{% endif %}://{{ siteContext.domains.current.domainName }}">
                       {% else %}
                           {% if model.name and templateType != "categorylanding" and templateType!="category" and templateType != "product" and templateType!="super-page" and templateType !="parent-category" %}
-                            {% if pageContext.isSecure %}
+                            {% if pageContext.isSecure %} 
                               {{ '<link  rel="canonical" href="https://{0}/{1}">'|string_format(domainName, model.name) }}
                             {% else %}
                               {{ '<link  rel="canonical" href="http://{0}/{1}">'|string_format(domainName, model.name) }}
                             {% endif %}
                           {% else %}
                             {% if model.url %}
-                             {% if pageContext.isSecure %}
-                              {{ '<link rel="canonical" href="https://{0}{1}">'|string_format(domainName, model.url) }}
-                             {% else %}
-                                {{ '<link rel="canonical" href="http://{0}{1}">'|string_format(domainName, model.url) }}
+                              {% if pageContext.search and not pageContext.search.facets %}
+                                {% if pageContext.isSecure %}
+                                  {{ '<link rel="canonical" href="https://{0}{1}">'|string_format(domainName, model.url) }}
+                                {% else %}
+                                  {{ '<link rel="canonical" href="http://{0}{1}">'|string_format(domainName, model.url) }}
+                                {% endif %}
                               {% endif %}
                           {% else %}
 

@@ -185,26 +185,38 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
         calculateShippingSurcharge: function(){
             try{
                 var self = this;
-                var flag=false;
-                var items = self.model.get('items');
                 var totalSurAmount=0;
-                for(var i=0;i<items.models.length;i++){
-                    var productProperties = items.models[i].get('product').get('properties');
-                    var surAmount=_.where(productProperties,{'attributeFQN': Hypr.getThemeSetting('productAttributes').surCharge});
-                    if(surAmount.length>0){
-                        if(surAmount[0].values[0].value>0){
-                            //console.log("found "+surAmount[0].values[0].value+"  id "+i);
-                            items.models[i].set('handlingfee',surAmount[0].values[0].value);
-                            totalSurAmount=totalSurAmount+(parseFloat(surAmount[0].values[0].value)*items.models[i].get('quantity'));
-                            flag=true;
+                Api.request("GET","/api/commerce/carts/current",{}).then(function(res) {
+                    //console.log("Done ",res);
+                    if(res.handlingTotal && res.handlingTotal!==null  &&(self.model.get("enableSurChargeCustom")===undefined || !self.model.get("enableSurChargeCustom"))){
+                        self.model.set("enableSurCharge",true);
+                        Backbone.MozuView.prototype.render.call(self);
+                    }else{
+                        var prod_items=res.items;
+                        var pr=_.pluck(prod_items,"product");
+                        var item_model=self.model.get("items").models;
+                        var isMozuHandlingNotEnabled=false;
+                        _.each(pr,function(prod,i){
+                        var sur=_.findWhere(prod.properties,{'attributeFQN': Hypr.getThemeSetting('productAttributes').surCharge});
+                            if(sur && sur.values[0].value !=="0" && (prod_items[i].handlingAmount===undefined || prod_items[i].handlingAmount===null)){
+                                totalSurAmount=parseFloat(totalSurAmount+(sur.values[0].value*prod_items[i].quantity));
+                                item_model[i].set("handlingAmount",parseFloat(sur.values[0].value*prod_items[i].quantity));
+                                isMozuHandlingNotEnabled=true;
+                            }
+                        });
+                        if(isMozuHandlingNotEnabled){
+                            console.log("Setting not enabled");
+                            self.model.set("enableSurCharge",true);
+                            self.model.set("enableSurChargeCustom",true);
+                            self.model.set("handlingTotal",totalSurAmount);
+                        }else{
+                            self.model.set("enableSurCharge",false);
+                            self.model.set("enableSurChargeCustom",false);
+                            self.model.unset("handlingTotal");
+                            Backbone.MozuView.prototype.render.call(self);
                         }
                     }
-                }
-                self.model.set("enableSurCharge",flag);
-                //if(totalSurAmount > 0){
-                    var stotal = parseFloat(totalSurAmount.toFixed(2));
-                    self.model.set("totalSurAmount",stotal);
-                //}
+                });
 
             }catch(err){
                 console.log(err);
@@ -213,10 +225,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
         render: function() {
             console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
-            me.showPersonalizeImage();
-            me.calculateShippingSurcharge();
             if(me.model.get('items').length>0){
+                me.showPersonalizeImage();
                 me.getProductionTime(this);
+                me.calculateShippingSurcharge();
                 me.model.set("shippingCost",7.99);
             }
             preserveElement(this, ['.v-button','.p-button', '#AmazonPayButton'], function() {
