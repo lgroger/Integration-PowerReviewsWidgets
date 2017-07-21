@@ -2521,6 +2521,15 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         $('.summary_edit').slideToggle();
         $('.summarybox_toggle .fa').toggleClass('fa-minus');
     });
+     try{
+         $(".checkout_ostable .cp_image img").each(function(){
+            if($(this).next().data("dndtoken") && $(this).next().data("prdtype")===undefined){
+                $(this).attr("src","//upload.shindigz.com/dnd/preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+            }
+         });
+     }catch(err){
+        console.log(err);
+     }
     $(document).on('click','#paypalexpress2',function(){ $('#btn_xpressPaypal').trigger('click'); });
     $(document).on('click','#paywithamazon',function(){ $('#OffAmazonPaymentsWidgets0').trigger('click'); });
 

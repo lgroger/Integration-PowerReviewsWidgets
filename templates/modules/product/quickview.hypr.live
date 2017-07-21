@@ -207,7 +207,6 @@
                             <input class="mz-productdetail-qty" type="number" name="quantity" max="9999" maxlength="4"  value="{{ model.quantity }}" min="{{ model.quantity }} class="qty" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onchange="maxLengthCheck(this)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" oninput="maxLengthCheck(this)">
                             <input type="button" value="+" class="qtyplus" field="quantity">
                         </span>
-                        <!--input class="mz-productdetail-qty" type="number" value="1" min="1" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" /-->
                         <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
                     </div>
                 </div>
@@ -244,12 +243,12 @@
                           {% if isPersonalize.values|first|prop("value") != "" or model.enablePersonalise %}
                               {% if model.inventoryInfo.manageStock == true %}
                                 {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-                                    <button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
+                                    <button class="personalize mz-productdetail-addtocart mz-button mz-button-large" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>PERSONALIZE</button>
                                 {% else %}
                                     <button class="personalize mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">PERSONALIZE</button>
                                 {% endif %}
                               {% else %}
-                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
+                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>PERSONALIZE</button>
                               {% endif %}
                           {% else %}
                               {% if model.inventoryInfo.manageStock == true %}

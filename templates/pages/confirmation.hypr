@@ -255,7 +255,22 @@
                             <td class="mz-ordersummary-item-image">
                               {% if item.product.imageUrl and themeSettings.showCartItemImage %}
                                 <div class="cp_image">
+                                  {% if item.product.options and item.product.productType != "Bundle" %}
+                                    {% set_var hasDND=false %}
+                                    {% for option in item.product.options %}
+                                      {% if option.attributeFQN == themeSettings.productAttributes.dndToken %}
+                                          {%  with option.shopperEnteredValue |split(":") as token %}
+                                          {% set_var hasDND=true %}
+                                            <img src="https://upload.shindigz.com/dnd/preview/{{ token|last|replace("\"","")|replace("}","")}}?max=80" alt="">
+                                          {% endwith %}
+                                      {% endif %}
+                                    {% endfor %}
+                                    {% if hasDND==false %}
+                                       <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
+                                    {% endif %}
+                                  {% else %}
                                   <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
+                                  {% endif %}
                                 </div>
                               {% endif %}
                             </td>

@@ -49,6 +49,11 @@
                     "name":"bannerProductTypes",
                     "width":"60%",
                     "fieldLabel":"Banner Product Types"
+                },{
+                    "xtype":"mz-input-text",
+                    "name":"dndEngineUrl",
+                    "width":"60%",
+                    "fieldLabel":"DND URL"
                 }
 
             ]

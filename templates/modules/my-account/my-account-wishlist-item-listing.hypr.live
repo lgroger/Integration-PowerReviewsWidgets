@@ -1,7 +1,6 @@
 {% extends "modules/common/item-listing" %}
 
 {% block item-details %}
-
 <button class="accordion">
 <span class="wishlist_name">{{model.name}}</span>
 {% for eventadets in model.extendedProperties %}
@@ -98,15 +97,23 @@
 
                 </div>
                 <div class="order-blocks5">
+                  {% if products.purchasableStatusType=="purchasable" %}
                       {% if products.isPersonalize %}
                         <button class="wishlist-cart wishlist-cart-click mz-click-personalize" productCode="{{ products.product.productCode }}" id="{{products.id}}">PERSONALIZE</button>
                       {% else %}
                           {% if products.product.productUsage =="Bundle" %}
                             <button class="addToCart wishlist-cart wishlist-cart-click" productCode="{{ products.product.productCode }}" id="{{products.id}}" >View Details</button>
                           {% else %}
+                          {% if products.product.productType=="ExtrasLikeVariants" %}
+                          <button class="addToCart wishlist-cart wishlist-cart-click finalize-btn" productCode="{{ products.product.productCode }}" id="{{products.id}}">Finalize and Add to Cart</button>
+                          {% else %}
                             <button class="addToCart wishlist-cart wishlist-cart-click" productCode="{{ products.product.productCode }}" id="{{products.id}}">ADD TO CART</button>
                           {% endif %}
+                          {% endif %}
                       {% endif %}
+                    {% else %}
+                      <button class="addToCart wishlist-cart wishlist-cart-click" productCode="{{ products.product.productCode }}" id="{{products.id}}" location="quickview">View Details</button>
+                    {% endif %}
                      <div>
                        <button class="add-wishlist moveToWishlist" id="{{ products.id }}" original-id="{{ products.product.productCode }}">Move to Another Wishlist</button>
                        <a class="remove-item" id="{{ products.id }}" removeWishlistItem="{{ products.id }}">Remove</a>

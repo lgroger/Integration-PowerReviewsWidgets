@@ -447,13 +447,13 @@ span.rounded-cart-color{
         }
         td.mz-carttable-item-qty{
             span{
-                background-color: #f7f7f7;
-                padding: 0px;
                 color: gray;
-                border-radius: 20px;
-                border: 1px solid #e6e6e6;
-                min-width: 90px;
-                display: inline-block;
+              background-color: #f7f7f7;
+              padding: 0px;
+              border-radius: 20px;
+              border: 1px solid #e6e6e6;
+              min-width: 90px;
+            display: inline-block;
                 input[type="button"] {
                     border: 0px;
                     background-color: transparent;
@@ -1637,6 +1637,10 @@ tr.mz-carttable-item-shipping-info{
         td.mz-carttable-item-qty{
             span {
                 text-align:center;
+                &.color-val{
+                    background: none;
+                    border: none;
+                }
                 input[type="button"]{
                     line-height: 30px;
                 }            
@@ -2041,4 +2045,12 @@ tr.mz-carttable-item-shipping-info{
     #mz-drop-zone-cart-theme-slider h2:before, #mz-drop-zone-cart-theme-slider h2:after{
         width:8%;
     }
+}
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .mz-cart #btn_xpressPaypal {
+    min-height: 52px;
+    background: url(../resources/images/paypal.jpg) no-repeat;
+    background-position: center;
+    background-size: 64%;
+   }
 }

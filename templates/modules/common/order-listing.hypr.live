@@ -28,7 +28,18 @@
                 {% endif %}           
                 {% if item.product.imageUrl %}
                 <div class="order-blocks1">
-                   <a href="/p/{{ item.product.productCode }}"> <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} ></a>
+                   <a href="/p/{{ item.product.productCode }}">
+                    <img class="mz-carttable-item-image" src="{{item.product.imageUrl}}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} ></a>
+                   </a>
+                   {% if item.product.options && item.product.productUsage !="Bundle" %}
+                      {% for opt in item.product.options %}
+                        {% if opt.name == "dnd-token" %}
+                          {%  with opt.shopperEnteredValue |split(":") as token %}
+                            <span data-dndtoken={{ token|last|replace("}","") }}></span>
+                           {% endwith %}
+                        {% endif %}
+                      {% endfor %}
+                    {% endif %}
                 </div>
                 {% endif %}
                 <div class="order-blocks2">
@@ -64,7 +75,23 @@
                       {% endif %}
 
 
-                      <span class="track-order"><a href="#" class="">Track Order</a></span>
+                      <span class="track-order">
+                         {% if model.packages.length > 1 %}
+                              {% for track in model.packages %}
+                                {% for items in track.items %}
+                                  {% if items.productCode == item.product.productCode %}
+                                    <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                                  {% endif %}
+                                {% endfor %}
+                              {% endfor %}
+                            {% else %}
+                                {% if model.packages.length == 1 %}
+                                    {% for track in model.packages %}
+                                    <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                      </span>
                       <span class="price-tag">{% include "modules/common/item-total" %}</span>
                     </div>
                 </div>
@@ -215,7 +242,7 @@
 
  </div>
         <div class="cart-rec"><br/>
-            {% if model.viewtype=="quote" %} <a href="javascript:void(0)" style="text-decoration:underline;cursor:pointer" data-mz-action="reloadThisQuote" currentOrderId="{{order.id}}">Reload this quote</a> {% endif %}
+            {% if model.viewtype=="quote" %} <a href="javascript:void(0)" style="text-decoration:underline;cursor:pointer" class="quote-btn-myaccount" data-mz-action="reloadThisQuote" currentOrderId="{{order.id}}">Reload this quote</a> {% endif %}
             <div class="cart-summary mz-cms-col-12-12">
                 <h3 class="cart-head">ORDER SUMMARY</h3>
             </div>

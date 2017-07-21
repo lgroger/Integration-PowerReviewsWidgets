@@ -7,6 +7,10 @@ define(
 		$(this).parent().addClass('active_my_account_menu');
     	$(this).parent().siblings().removeClass('active_my_account_menu');
     	var tab = $(this).attr("href");
+    	$(".enable-print").removeClass("enable-print");
+    	$("div[id='"+tab.replace("#","")+"'] > button").addClass("enable-print");
+    	$("div[id='"+tab.replace("#","")+"']").find("mz-orderhistory-section").addClass("enable-print");
+    	$("div[id='"+tab.replace("#","")+"'] > button").next().addClass("enable-print");
         $(".account_tab-content").not(tab).css("display", "none");
         $("div"+tab).fadeIn(); 
         return false;

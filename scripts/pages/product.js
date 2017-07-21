@@ -458,7 +458,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         },showBundle:function () {
             $("body").css("overflow-y","hidden");
             $(".bundle-items-wrap-pdp").fadeIn();
-
         },increaseQty: function(e){
 
             $('.mz-productdetail-addtocart').prop('disabled',true);
@@ -637,6 +636,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             this.hideExtras();
             var extrasProductInfo = me.getSelectedExtrasInfo(objj);
             if(extrasProductInfo){me.model.set('extrasProductInfo',extrasProductInfo);}
+            if(me.model.apiModel.data.price){
+                me.model.attributes.price.attributes=me.model.apiModel.data.price;
+            }
             this.renderConfigure();
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
@@ -765,7 +767,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                     me.model.set('uom',uom);
                                 }
                                 var inventoryInfo = product.get('inventoryInfo');
-                                if(inventoryInfo.manageStock){
+                                if(inventoryInfo.manageStock) {
                                     me.model.set('inventoryInfo',inventoryInfo);
                                 }
                                 var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
@@ -1172,14 +1174,19 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             /*if(me.model.get('productUsage')==="Bundle" && me.model.get('bundledProducts').length>0){
                 $('.addToCart').addClass('is-disabled').attr('disabled',true);
             }*/
-
-            var selectgreetingCardVal = $('[data-mz-product-option="'+productAttributes.giantGreetingCardSize+'"]').val();
-            if(selectgreetingCardVal!==""){
-                $('[data-mz-product-option="'+productAttributes.optionalEnvelope+'"]').find('option').each(function(){
+            //greeting Card
+            var selectgreetingCardVal =$('[data-mz-product-option="'+productAttributes.giantGreetingCardSize+'"]:checked').val();
+            if(selectgreetingCardVal){
+                $('[data-mz-product-option="'+productAttributes.optionalEnvelope+'"]').each(function(idx,ele){
                     var splitvalue = $(this).attr('value').split('_');
                     if(splitvalue.length>1){
                         if(splitvalue[0]!==selectgreetingCardVal && splitvalue[0].toLowerCase()!=='no'){
-                            $(this).remove();
+                            //me.model.get('options').get(productAttributes.optionalEnvelope).unset("value");
+                            if(me.model.get("options").get("tenant~optional-envelope") && $(ele).is(":checked")){
+                                me.model.get("options").get("tenant~optional-envelope").unset("value");
+                            }
+                            $(ele).parent().next("br").remove();
+                            $(ele).parent().remove();
                         }
                     }
                 });
@@ -1329,7 +1336,11 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             if(melt_obj){
                 melt=melt_obj.values[0].value;
             }
-            
+            var extraHide=getPropteryValueByAttributeFQN(this.model, 'tenant~extrastohide');
+            var optionsInDND=false;
+            if(extraHide!==null && prod_obj!==undefined){
+               optionsInDND=true;
+            }
             //Check if product only need to ship via ground if yes then hide express and overnight dates
             var is_safety_d=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.groundOnly});
             var is_safety_k=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.usa48});
@@ -1349,7 +1360,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         me.model.set('productionTime',prodTime);
                         me.model.set('data',prodTime);
                     }
-                        if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===0){
+                        if((this.model.get("productUsage")==="Standard" && this.model.get("options").length===0) || optionsInDND){
                             if(melt){
                                 me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
                             }else{
@@ -1437,7 +1448,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                     me.model.set('productionTime',prodTime);
                                     me.model.set('data',prodTime);
                                 }
-                                if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===0){
+                                if((me.model.get("productUsage")==="Standard" && me.model.get("options").length===0)||optionsInDND){
                                     if(melt){ 
                                         me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
                                     }else{

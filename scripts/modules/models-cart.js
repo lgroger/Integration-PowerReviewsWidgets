@@ -5,7 +5,7 @@
         mainImage: function() {
             var imgs = this.get("productImages"),
                 img = imgs && imgs[0],
-                imgurl = 'http://placehold.it/160&text=' + Hypr.getLabel('noImages');
+                imgurl = '//placehold.it/160&text=' + Hypr.getLabel('noImages');
             return img || { ImageUrl: imgurl, imageUrl: imgurl }; // to support case insensitivity
         },
         initialize: function() {

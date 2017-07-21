@@ -1770,7 +1770,14 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             "click .remove-item": "deleteItemFromWishlist",
             "click .moveToWishlist": "moveToWishlist",
             "click .mz-click-personalize":"editPersonalize",
-            "click .addToCart": "addToCart"
+            "click .addToCart": "addToCart",
+            "change [data-mz-value='quantity']": "onQuantityChange"
+        },onQuantityChange:function(e) {
+            var $qField = $(e.currentTarget),
+              newQuantity = parseInt($qField.val(), 10);
+              if(newQuantity===0){
+                $qField.val(1);
+              }
         },
         editPersonalize: function(e){
             window.showPageLoader();
@@ -1816,9 +1823,42 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     break;
                 }
             }
-            //console.log(currentItem);
+            var isDND=false;
+            if(_.findWhere(currentItem.product.options,{attributeFQN:productAttributes.dndToken})!==undefined){
+                isDND=true;
+            }
             if(currentItem.product.productUsage ==="Bundle"){
                 window.location.href="/p/"+currentItem.product.productCode;
+            }else if(target.attr("location")==="quickview"){
+                Api.get('product',currentItem.product.productCode).then(function(res) {
+                    var productModel1 = new ProductModels.Product(res.data);
+                    $('body').append('<div id="mz-quick-view-container"></div>');
+                        window.productView = new ProductView({
+                            el: $('#mz-quick-view-container'),
+                            messagesEl: $('[data-mz-message-bar]'),
+                            model:productModel1,
+                            productCode: productModel1.id
+                        });
+                        window.productView.render();
+                        window.removePageLoader();
+                        $('#mz-quick-view-container').fadeIn(350);
+                        $(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
+                            if(e.target !== e.currentTarget) return;
+                            $('#mz-quick-view-container').fadeOut(350);
+                            $('#mz-quick-view-container').remove();
+                        });                
+                },function(err) {
+                    console.log(err);
+                    window.removePageLoader();
+                });
+            }else if(currentItem.product.productType==="ExtrasLikeVariants" && currentItem.product.bundledProducts.length>0){
+                console.log("Do Nothing");
+                var prodArr=_.pluck(currentItem.product.bundledProducts,"productCode");
+                if(isDND){
+                    this.editPersonalize(e);
+                }else{
+                    this.checkOptionsDNDEnabled(prodArr,0,this,currentItem.product.productCode,currentItem.product.options);
+                }   
             }else{
                 currentItem.product.wishlistlineitemId=itemid;
                 var productModel = new ProductModels.Product(currentItem.product);
@@ -1913,6 +1953,59 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             Wishlist.deleteWishlist($(me).attr('id')).then(function(res){
                 $(me).parents(".wishlist-item").remove();
             });
+        },checkOptionsDNDEnabled:function(productArr,idx,scope_obj,prod_code,options) {
+                if(productArr.length===0){
+                    scope_obj.showQuickViewExtra(prod_code,options);
+                }else{
+                Api.request('GET','/api/commerce/catalog/storefront/products/'+productArr[idx]+'?responseFields=properties,productCode').then(function(res){
+                    var isDNDCode=_.findWhere(res.properties, {'attributeFQN': productAttributes.designCode});
+                    idx++;
+                    if(isDNDCode===undefined && idx<productArr.length){
+                        scope_obj.checkOptionsDNDEnabled(productArr,idx,scope_obj,prod_code,options);
+                   }else{
+                        scope_obj.showQuickViewExtra(prod_code,options);
+                    }
+
+                },function(err) {
+                    console.log(err);
+                    idx++;
+                if(idx<productArr.length){
+                    scope_obj.checkOptionsDNDEnabled(productArr,idx,scope_obj,prod_code.options);
+                   }else{
+                        scope_obj.showQuickViewExtra(prod_code,options);
+                   }
+                });
+            }
+        },showQuickViewExtra:function(prod_code,options) {
+            console.log("here");
+              Api.get('product',prod_code).then(function(res) {
+                    var productModel1 = new ProductModels.Product(res.data);
+                    var objj =options;
+                    if(objj){
+                        _.each(objj, function(objoptions) {
+                            var val = objoptions.value?objoptions.value:objoptions.shopperEnteredValue;
+                            productModel1.get('options').get(objoptions.attributeFQN).set("value",val);
+                        });
+                    }
+                    $('body').append('<div id="mz-quick-view-container"></div>');
+                        window.productView = new ProductView({
+                            el: $('#mz-quick-view-container'),
+                            messagesEl: $('[data-mz-message-bar]'),
+                            model:productModel1,
+                            productCode: productModel1.id
+                        });
+                        window.productView.render();
+                        window.removePageLoader();
+                        $('#mz-quick-view-container').fadeIn(350);
+                        $(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
+                            if(e.target !== e.currentTarget) return;
+                            $('#mz-quick-view-container').fadeOut(350);
+                            $('#mz-quick-view-container').remove();
+                        });                
+                },function(err) {
+                    console.log(err);
+                    window.removePageLoader();
+                });
         },
         deleteItemFromWishlist: function(e) {
             var viewM = this;
