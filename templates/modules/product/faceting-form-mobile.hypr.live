@@ -1,10 +1,20 @@
  <section class="mz-facetingform">
-    {% if model.facets.length > 0 %}
+    {% if model.facets.length > 0  or pageModel.childrenCategories.length > 0 %}
     <div class="br-facet-form-header">
         Narrow by
     </div>
     {% endif %}
     <ul class="mz-l-sidebaritem-mobile">
+        {% if pageModel.childrenCategories.length > 0 %}
+        <li class="filter-level-1"><a class="facetheadmob">Category<i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
+            <ul class="filter-level-2  sz-childcat">
+                {% for l in pageModel.childrenCategories %}
+                    <li><a href="{{l.url}}">{{l.name}} <span class="mz-facetingform-valuecount">({{l.count}})</span></a></li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+
     {% for facet in model.facets %}
     
         {% if facet.values and facet.facetType == "Hierarchy" %}

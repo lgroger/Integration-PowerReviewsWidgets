@@ -9,12 +9,25 @@
          
         {% endif %}
           {% endcomment %}
-{% if model.facets.length > 0 %}
+{% if model.facets.length > 0 or pageModel.childrenCategories.length > 0 %}
     <div class="br-facet-form-header">
         Narrow by
     </div>
 {% endif %}
-
+{% if pageModel.childrenCategories.length > 0 %}
+        <div class="facet-heading"> 
+           <span class="cate-head" containerid="category"><a>Category</a></span> <i class="seemorecaret fa fa-caret-up" aria-hidden="true"></i>
+        </div>
+        <div class="mz-l-sidebaritem sz-childcat">
+            <div>
+                <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+                {% for l in pageModel.childrenCategories %}
+                    <li style="display:list-item;"><a href="{{l.url}}">{{l.name|replace(pageModel.name, '')}} {#<span class="mz-facetingform-valuecount">({{l.count}})</span> #}</a></li>
+                 {% endfor %}
+                 </ul>
+             </div>
+        </div>
+{% endif %}
         {% for facet in model.facets %}
           {% if facet.values and facet.facetType == "Hierarchy" %}
          
@@ -54,6 +67,14 @@
             {% set_var hideToStart=0 %}
             {% if facet.label == "Collection" or facet.label == "Holiday" or facet.label == "Sport/College" %}
                 {% set_var hideToStart=1 %}
+                {% for fval in facet.values %}
+                    {% if fval.isApplied %}
+                        {# don't hide since some are applied #}
+                        {% set_var hideToStart=0 %}
+                    {% endif %}
+                {% endfor %}
+
+
             {% endif %}
            <span class="cate-head" containerid={{facet.field|replace('~','-')}}><a>{{ facet.label }}</a></span>
             {% if hideToStart==1 %}
