@@ -77,7 +77,7 @@
                 <div class="order-blocks3">
                    <span class="custom-qty">
                       <input type="button" value="-" class="qtyminus" field="quantity">
-                      <input class="mz-productdetail-qty qty" type="number" value="{{products.quantity}}" min="1" max="999" maxlength="3" data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
+                      <input class="mz-productdetail-qty qty" type="number" value="{{products.quantity}}" min="1" max="9999" maxlength="4" data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57">
                       <input type="button" value="+" class="qtyplus" field="quantity">
                     </span>
                     <p class="mob_show">

@@ -70,7 +70,7 @@
                    <span class="availability_highlight_{{ item.product.productCode }}">
                     {% if item.productionTime %}
                       {% if item.productionTime > 1 %}
-                          {{ item.productionTime }} business day(s) processing + Shipping                      
+                          {{ item.productionTime }} business day(s) Production Time +  Shipping                      
                         {% else %}
                           Availability: <span class="highlight-green">In Stock</span>
                         {% endif %}

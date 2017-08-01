@@ -1943,7 +1943,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         }
                     }
                 });
-                productModel.set('quantity', $(e.target).parents(".wishlist-item").find('[data-mz-value=quantity]').val());
+                productModel.set('quantity', $(e.target).parents(".orders-body").find('[data-mz-value=quantity]').val());
                 productModel.addToCart();
             }
         },
@@ -2151,10 +2151,15 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 var qntBox = $(this).parent().children("[data-mz-value=quantity]");
                 var qntyVal = $(qntBox).val();
                 var currentVal = parseInt(qntyVal, 10);
-                if (!isNaN(currentVal)) {
-                    $(qntBox).val(currentVal + 1);
-                } else {
-                    $(qntBox).val(1);
+                if(currentVal >= 9999){
+                    currentVal=9999;
+                    $(qntBox).val(9999);
+                 }else{
+                    if (!isNaN(currentVal)) {
+                        $(qntBox).val(currentVal + 1);
+                    } else {
+                        $(qntBox).val(1);
+                    }
                 }
             });
             $('.custom-qty .qtyminus').click(function(e){

@@ -20,7 +20,7 @@
 }
 </style>
   
-
+{% dropzone "common-category-top" scope="page" %}
 <div class="mz-category-title">   
     <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
 </div> 

@@ -125,14 +125,14 @@
                     {% if model.inventoryInfo.onlineStockAvailable > 0 %}
                       <span style="color:#00af9a;"> In Stock </span>
                       {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
-                         - {{model.productionTime }} Business Days Processing+Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                         - {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                          <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                     {% else %}
                       {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
                        {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
                           {% with prod_time.values|first|prop("value") as productionTime %}
                           {% if productionTime !=0 and productionTime != "0" %}
-                         - {{  prod_time.values|first|prop("value") }} Business Days Processing+Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                         - {{  prod_time.values|first|prop("value") }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                          <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                          {% endif %}
                          {% endwith %}
@@ -178,7 +178,7 @@
                     <span style="color:#00af9a;">   In Stock </span>
                     {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
                       {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
-                        - {{  prod_time.values|first|prop("value") }}  Business Days Processing+Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                        - {{  prod_time.values|first|prop("value") }}  Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                         <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                       {% endwith %}
                     {% endif %}

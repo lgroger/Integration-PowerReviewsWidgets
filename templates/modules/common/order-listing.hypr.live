@@ -242,6 +242,7 @@
 
  </div>
         <div class="cart-rec"><br/>
+            <a href="javascript:print()" class="order-print-btn">Print Order</a>
             {% if model.viewtype=="quote" %} <a href="javascript:void(0)" style="text-decoration:underline;cursor:pointer" class="quote-btn-myaccount" data-mz-action="reloadThisQuote" currentOrderId="{{order.id}}">Reload this quote</a> {% endif %}
             <div class="cart-summary mz-cms-col-12-12">
                 <h3 class="cart-head">ORDER SUMMARY</h3>

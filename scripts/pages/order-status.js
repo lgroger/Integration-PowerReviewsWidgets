@@ -12,7 +12,7 @@ require(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext','
 							var tokens=dnd.split(":");
 							if(tokens.length>0){
 								var finalDND=tokens[1].replace(/"/g, "").replace("}","");
-								$(".order-items-list").eq(idx).find(".mz-carttable-item-image").attr("src","https://upload.shindigz.com/dnd/preview/"+finalDND+"?max=80");							
+								$(".order-items-list").eq(idx).find(".mz-carttable-item-image").attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+finalDND+"?max=80");							
 							}
 						}
 					}

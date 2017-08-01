@@ -75,7 +75,15 @@
                             {% comment %}
                                 Changed to New custom option box.
                             {% endcomment %}
-                            <form>
+                            {% if model.option6plus %}
+                                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" usageType={{option.attributeDetail.usageType}}>
+                                    {% if not option.isMultiValue %}<option value="">Select {{ option.attributeDetail.name }}</option>{% endif %}
+                                    {% for value in option.values %}
+                                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
+                                    {% endfor %}
+                                </select>
+                            {% else %}
+                                <form>
                                 {% for value in option.values %}
                                     <label class="{% if not value.isEnabled %} is-disabled {% endif %}">
                                         <input type="radio" value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}" usageType="{{option.attributeDetail.usageType}}" name="{{ option.attributeFQN }}" {% if value.isSelected %} checked {% endif %} {% if not value.isEnabled %} disabled {% endif %}> 
@@ -83,7 +91,8 @@
                                         {{value.stringValue|default(value.value)}} 
                                     </label><br>
                                 {% endfor %}
-                            </form>              
+                            </form>
+                            {% endif %}
                         {% else %}
                             {% if option.attributeDetail.inputType == "YesNo" %}
                                 <input class="mz-productoptions-option" type="checkbox" {% if option.shopperEnteredValue %}checked="checked"{% endif %} data-mz-product-option="{{ option.attributeFQN }}" />

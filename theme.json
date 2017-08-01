@@ -737,7 +737,9 @@
         "surCharge":"tenant~pnhsurcharge",
         "clearanceFlag":"tenant~clearanceitem",
         "dndColor": "tenant~dndcolorize", 
-        "guidedSearchNavField":"tenant~product-type"
+        "guidedSearchNavField":"tenant~product-type",
+        "dontshiptoIllinois":"tenant~safety-m",
+        "dontshiptoCalifornia":"tenant~safety-l",
     },
     "usStates": [
       {

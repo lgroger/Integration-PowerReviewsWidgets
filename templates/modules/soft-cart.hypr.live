@@ -1,19 +1,11 @@
 <div class="pointer"></div>
 <div class="soft-cart{% if model.items.length == 0 %} is-empty{% endif %}">
-  <!-- <h2>{#{ labels.cart }#}</h2> -->
-  <!-- <div class="soft-cart-controls">
-    <a class="soft-cart-control soft-cart-control-checkout" data-mz-action="goToCart" href="/cart">
-      {{ labels.editOrCheckout }} Go to Cart
-    </a>
-  </div> -->
   <div class="soft-cart-items-label"> 
-   <!-- {{ labels.items }} -->
    {% if model.items.length === 1 %}
       {{ model.items.length }} item added in  your cart
   {% else %}
      {{ model.items.length }} items added in  your cart
   {% endif %}    
-    <!-- <a id="soft-cart-close" class="close" href="javascript:void(0);">&times;</a> -->
   </div> 
   <ul class="soft-cart-items">
     {% for item in model.items %}
@@ -27,7 +19,17 @@
                   </span>
                 </div>
               {% else %}
+
                 <img class="soft-cart-item-image" src="{{ item.product.imageUrl }}?max=80" alt="{{ item.product.name }}" />
+                 {% if item.product.options && item.product.productType != "Bundle" %}
+                            {% for opt in item.product.options %}
+                              {% if opt.name == "dnd-token" %}
+                                {%  with opt.shopperEnteredValue |split(":") as token %}
+                                  <span data-dndtoken={{ token|last|replace("}","") }} {% if item.product.productType == "Bundle"%}data-prdType="bundle"{% endif %}></span>
+                                 {% endwith %}
+                              {% endif %}
+                            {% endfor %}
+                          {% endif %}
                 {% endif %}
             </div>
             <section class="item-name-qty-ops mz-cms-col-8-12">
@@ -50,14 +52,7 @@
                 </div>
                 <div class="item-price mz-cms-col-4-12">
                     <span class="soft-cart-item-total">{{ item.total|currency }}</span>
-                     <!-- <a class="soft-cart-item-action soft-cart-item-action-remove" data-mz-action="removeItem" data-mz-cart-item="{{ item.id }}" href="javascript:;" title="Remove">&#x2715;</a> -->
                 </div>
-                <!-- <span class="item-ops">
-                    <a class="soft-cart-item-action soft-cart-item-action-more" data-mz-action="increaseQuantity" data-mz-cart-item="{{ item.id }}" href="javascript:;" title="More">&#xFE3F;</a>
-                    {% if item.quantity > 1 %}
-                        <a class="soft-cart-item-action soft-cart-item-action-less" data-mz-action="decreaseQuantity" data-mz-cart-item="{{ item.id }}" href="javascript:;" title="Less">&#xFE40;</a>
-                    {% endif %}
-                </span> -->
             </section>
             <div class="clear"></div>
         </div>
@@ -82,8 +77,6 @@
 	    <input type="submit" class="soft-cart-btn chkout-minicart-btn" value="CHECKOUT" />
 	</form>
 {% endif %}
- <!--   <button class="soft-cart-btn chkout-minicart-btn" data-mz-action="gotoCheckout">CHECKOUT</button>  -->
-
-  </div>
+   </div>
 </div>
  

@@ -261,7 +261,7 @@
                                       {% if option.attributeFQN == themeSettings.productAttributes.dndToken %}
                                           {%  with option.shopperEnteredValue |split(":") as token %}
                                           {% set_var hasDND=true %}
-                                            <img src="https://upload.shindigz.com/dnd/preview/{{ token|last|replace("\"","")|replace("}","")}}?max=80" alt="">
+                                            <img src="{{themeSettings.dndEngineUrl}}/preview/{{ token|last|replace("\"","")|replace("}","")}}?max=80" alt="">
                                           {% endwith %}
                                       {% endif %}
                                     {% endfor %}
@@ -520,35 +520,6 @@ qty += {{i.quantity}};
 
 {% block trailing-scripts %}
 	{% parent %} 
-  {% block DoubleClick-FloodLight %}
-{% if model.billingInfo.paymentType != "check"%} 
-    <script type="text/javascript">
-    requirejs(['jquery'], function( $ ) {
-      var ordNumber = {{ model.orderNumber }};
-      var ordVal = "000000000" + ordNumber;
-      var valu1 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.product.productCode }}{% endfor %}";
-      var valu2 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.product.name }}{% endfor %}";
-      var valu3 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.subtotal }}{% endfor %}";
-      var valu4 = "{% for item in model.items %}{% if forloop.index!=1 %}^{% endif %}{{ item.quantity }}{% endfor %}";
-      var tag_url = 'https://fls.doubleclick.net/activityi;src={{ themeSettings.dclk_src }};type={{ themeSettings.dclk_type }};cat={{ themeSettings.dclk_cat }};u1='+valu1+';u2='+valu2+';u3='+valu3+';u4='+valu4+';x='+valu1+';y='+valu2+';z='+valu3+';da1='+valu4+';qty=1;cost={{ model.subtotal }};ord='+ordVal.substr(ordVal.length - ordNumber.length)+'?';
-      if(document.getElementById("DCLK_FLDiv")){
-        var flDiv=document.getElementById("DCLK_FLDiv");
-      }else{
-        var flDiv=document.body.appendChild(document.createElement("div"));flDiv.id="DCLK_FLDiv";flDiv.style.display="none";
-      }
-
-      var DCLK_FLIframe=document.createElement("iframe");
-      DCLK_FLIframe.id="DCLK_FLIframe_"+Math.floor(Math.random()*999999);
-      DCLK_FLIframe.src=tag_url;
-      $(DCLK_FLIframe).attr('width','1');
-      $(DCLK_FLIframe).attr('height','1');
-      $(DCLK_FLIframe).attr('frameborder','0');
-      flDiv.appendChild(DCLK_FLIframe);
-    });
-    </script>
-{% endif %}
-  {% endblock DoubleClick-FloodLight %}
-
   {% block Nextag %}
 {% if model.billingInfo.paymentType != "check"%}   
    <script type="text/javascript">

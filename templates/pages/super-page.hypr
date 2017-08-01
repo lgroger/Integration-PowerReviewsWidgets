@@ -24,6 +24,7 @@
 <![endif]--> 
 
 
+{% dropzone "common-category-top" scope="page" %}
 {% if model.content.categoryImages|length > 1 %} 
 <div class="super-page">
    <div class="pdp-banner">  
@@ -60,7 +61,7 @@
  </div> 
 
 <!-- Make Product Slider Here -->
-
+{% dropzone "category-seo-zone" scope="page" %}
 {% dropzone "super-recommended-title" scope="page" %}
 
 {% if model.content.description or  model.content.metaTagDescription %}
