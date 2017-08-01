@@ -739,7 +739,7 @@
         "dndColor": "tenant~dndcolorize", 
         "guidedSearchNavField":"tenant~product-type",
         "dontshiptoIllinois":"tenant~safety-m",
-        "dontshiptoCalifornia":"tenant~safety-l",
+        "dontshiptoCalifornia":"tenant~safety-l"
     },
     "usStates": [
       {
