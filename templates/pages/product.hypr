@@ -298,4 +298,7 @@
 {% include "modules/product/product-description-tabs" %}
 {% include "modules/product/product-description-inspiration" %}   
 {% include "modules/product/pdp-related-products" %}
+
+{% include "modules/bloomreach_seo" %}
+
 {% endblock body-content %}

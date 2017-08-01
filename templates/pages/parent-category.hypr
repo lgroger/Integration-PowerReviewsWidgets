@@ -148,6 +148,9 @@
 		</div>
     </div>
 </div>
+
+{% include "modules/bloomreach_seo" %}
+
 {% endblock body-content %}
 
 

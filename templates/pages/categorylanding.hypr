@@ -43,6 +43,9 @@
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container category-landing">
     {% include "pages/categorylanding-interior" %}
 </div>
+
+{% include "modules/bloomreach_seo" %}
+
 {% require_script "modules/filters" %}
 {% require_script "modules/my-menu" %}
 {% require_script "modules/quick-view" %}

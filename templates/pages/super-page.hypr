@@ -86,4 +86,6 @@
    {% dropzone "superpage-seo-content" scope="template" %}
 </div>
 
+{% include "modules/bloomreach_seo" %}
+
 {% endblock body-content %}
