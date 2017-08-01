@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/api', 'vendor/jQuery.selectric'], function ($, api) {
+define(['modules/jquery-mozu', 'modules/api','hyprlive', 'vendor/jQuery.selectric'], function ($,api,Hypr) {
 	
 	 function setCookie(cname, cvalue, exdays) {
 	    var d = new Date();
@@ -227,7 +227,7 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
 			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
 				$(this).next().find("img").each(function() {
 					if($(this).parent().next().data("dndtoken")){
-						$(this).attr("src","//upload.shindigz.com/dnd/preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
+						$(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"/preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
 					}
 				});
 			}

@@ -3,6 +3,7 @@
 {% else %}
      {% set_var useBR=0 %}
 {% endif %}
+	{% dropzone "common-category-top" scope="page" %}
 {% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
 {% with isguidedsearch|length as isGuidedSearchURL %}
 	 <div class="guided-search-search-result-page" data-container="guided-search-search-result-page" {% if isGuidedSearchURL == 1 %}style="display:none;"{% endif %}>

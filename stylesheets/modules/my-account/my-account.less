@@ -1826,7 +1826,7 @@ span.field-error{
 		input[type="text"],input[type="number"]{
 			margin: 0;
 		    padding: 0 !important;
-		    font-size: 20px;
+		    font-size: 16px;
 		    max-width:35px;
 		}
     }
@@ -2033,7 +2033,7 @@ span.field-error{
 			}
 			input[type="number"]{
 				padding: 0px;
-				width: 30px;
+				width: 38px;
 				font-size: 16px;
 			}
 		}
@@ -3412,4 +3412,96 @@ span.field-error{
 		.order-print-btn{
 			display: none;
 		}
+		 #tab_5 .custom-qty input[type="button"] {
+			padding: 6px;
+		}
 	}
+@media print {
+@page {size: landscape;}
+body.my-account{
+	overflow: visible;
+	page-break-after:always;
+	transform: scale(.9);
+	zoom: 90%;
+}
+	.my-account-body-content .my_account_left,.ech-shi-top-header,.header-block.floatheader,.float-nav,#mz-drop-zone-megamenu,#mz-drop-zone-promo-adds,.my_account_heading,.my_account_page_breadcrumbs,.ech-shi-footer,.mz-pagenumbers,#mz-drop-zone-myaccount-tab4,.mz-l-stack-sectiontitle.order-head,.cart-rec .order-print-btn{
+		display: none !important;
+	}
+	.my-account-body-content .my_acc_ri{
+		padding-left: 10px !important;
+	}
+	.mz-myaccount {
+		.my_account_right{
+			float: none !important;
+			width: 100% !important;
+			border-left: none !important;
+		}
+		a::after{
+			content: "";
+		}
+		.mz-orderhistory-section .panel{
+			display: none;
+		}
+		.mz-orderhistory-section .panel.show{
+			display: block !important;
+			border-top: 1px solid rgba(128, 128, 128, 0.35) !important;
+		}
+		.account-order-history{
+			display: none;
+		}
+		.account-order-history.active{
+			display: block !important;
+		}
+	}
+	.mz-anonymous-account a::after{
+		content: "";
+	}
+	.mz-anonymous-account{
+		.panel .order-blocks1{
+			margin-right: 8px;
+		}
+		.panel .product-name{
+			font-size: 12px;
+		}
+	} 
+	.my-account-body-content{
+		border-bottom: none !important;
+	}
+}
+@media print and (min-width: 400px) {
+.my_acc_ri button.accordion1{
+	display: none !important;
+	&.active,&.enable-print{
+		//display: block !important;
+	}
+}
+html {
+            height: 94%;
+            page-break-after: avoid;
+            margin : 0;
+            padding: 0;
+            page-break-before: avoid;
+            border: 1px solid #000;
+        }
+        body{
+        	line-height: normal !important;
+        }
+.quote-btn-myaccount{
+	display: none !important;
+}
+.enable-print{
+	display: block !important;
+	opacity: 1 !important;
+	page-break-after: avoid;
+	}
+	.mob-blocks .order_qty{
+		display: block;
+	}
+	.orders-body > div > br,.mob-blocks > br{
+		display: none;
+	}
+	 .my-account-body-content .my_account_right { padding-top: 0 !important; }
+ .guided-search-div,.ech-shi-ourother-sites{ display: none; }
+ .my-account-body-content { padding: 0px 30px 0px !important; }
+ .panel.show > .orders-sec{ display: block; }
+}

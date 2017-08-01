@@ -1,9 +1,10 @@
 define([
     'modules/jquery-mozu',
     'modules/backbone-mozu',
-    'modules/models-cart'  
+    'modules/models-cart',
+    'hyprlive'
   ],
-function($, Backbone, CartModels) {
+function($, Backbone, CartModels,Hypr) {
   // declare a MozuView that can rewrite its contents with a Hypr template
   // var cartUpdate = this.model.apiGet();
   function setLoginForCheckout(){
@@ -43,6 +44,14 @@ function($, Backbone, CartModels) {
     },
     decreaseQuantity: function(e) {
       return this.changeQuantity(e, -1);
+    },
+    render:function() {
+      Backbone.MozuView.prototype.render.call(this);
+      $(".soft-cart-items .soft-cart-item img").each(function() {
+          if($(this).next().data("dndtoken")){
+            $(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+          }
+      });
     },
     removeItem: function(e) {
       var $removeButton = $(e.currentTarget),
@@ -130,6 +139,9 @@ function($, Backbone, CartModels) {
         /*
         cart-form submit functionality.
         */
+        if($(this).parent().next().data("dndtoken")){
+            $(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
+          }
         $(document).on('click', '.soft-cart-btn.chkout-minicart-btn', function() {
           $('#cartform').submit(); 
         });

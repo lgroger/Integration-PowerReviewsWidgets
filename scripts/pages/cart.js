@@ -564,10 +564,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var $qField = $(e.currentTarget).parent().find('input.mz-carttable-qty-field'),
             newQuantity = parseInt($qField.val(),10);
             newQuantity = newQuantity+1;
-            if(newQuantity==100000){
+            if(newQuantity==9999){
                 $(e.currentTarget).parent().find('.mz-qtyincrease').addClass('disabled');   
             }
-            if(newQuantity > 1 && newQuantity < 100000)
+            if(newQuantity > 1 && newQuantity < 10000)
             {
                 $qField.val(newQuantity);
                 var id = $qField.data('mz-cart-item'),
@@ -677,6 +677,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 $('.dnd-popup').remove();
                 $('body').css({overflow: 'auto'});
                 $('#cboxOverlay').hide();
+                SoftCart.update();
             });     
         },
         removeItem: function(e) {

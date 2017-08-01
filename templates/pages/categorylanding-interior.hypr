@@ -15,7 +15,7 @@
 {% endpartial_cache %}
 </div>  
 <!-- Make Product Slider Here --> 
-  
+ {% dropzone "category-seo-zone" scope="page" %}
 {% dropzone "category-landing-page-bottom" scope="page" %}
 <!-- Make Product Slider Here -->
 <div id="static" class="recommended_products">

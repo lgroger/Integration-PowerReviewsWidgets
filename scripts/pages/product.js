@@ -48,6 +48,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             $('.dnd-popup').remove();
             $('body').css({overflow: 'auto'});
             $('html').removeClass('dnd-active-noscroll');
+            $('html').css({position:'static'});
             $('#cboxOverlay').hide();
         });
         product.on('addedtocart', function (cartitem, prod) {
@@ -638,6 +639,13 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             if(extrasProductInfo){me.model.set('extrasProductInfo',extrasProductInfo);}
             if(me.model.apiModel.data.price){
                 me.model.attributes.price.attributes=me.model.apiModel.data.price;
+            }
+            /* Custom logic for Radio to Select */
+            var option6Plus = _.filter(this.model.get("options").toJSON(), function(current) {
+                return (current.values.length > 6);
+            });
+            if(option6Plus.length > 0) {
+                this.model.set("option6plus", true);
             }
             this.renderConfigure();
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {

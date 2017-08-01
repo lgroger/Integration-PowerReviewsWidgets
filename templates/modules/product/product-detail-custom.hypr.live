@@ -6,7 +6,7 @@
         
         {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
             <div class="prod-time">
-               {{model.productionTime }} Business Day(s) Processing + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+               {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
             </div>
         {% else %}
@@ -15,7 +15,7 @@
               {% with prod_time.values|first|prop("value") as productionTime %}
               {% if productionTime !=0 and productionTime != "0" %}
               <div class="prod-time">
-                 {{  prod_time.values|first|prop("value") }} Business Day(s) Processing + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                 {{  prod_time.values|first|prop("value") }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                  <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
               </div>
              {% endif %}
@@ -154,7 +154,7 @@
               <span class="mz-qty-label">{{ labels.qty }} </span>
               <span class="custom-qty">
                   <input type="button" value="-" class="qtyminus" field="quantity" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>
-                  <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="999" maxlength = "3" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                  <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
                   <input type="button" value="+" class="qtyplus" field="quantity" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>
               </span>
               <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>

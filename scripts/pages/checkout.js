@@ -10,18 +10,47 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             if(id == "step-shipping-method"){
                 this.$el.children().find('[data-mz-action="next"]').hide();
             }
+        },validateBillingInfo: function(){
+            var me = this;
+            var error = [];
+            if(me.model.get("billingContact")) {
+                var obj = me.model.get("billingContact").toJSON();
+                if(obj.firstName && obj.firstName.length > 15) {
+                    error.push("First name cannot exceed 15 characters");
+                }
+                if(obj.lastNameOrSurname && obj.lastNameOrSurname.length > 15) {
+                    error.push("Last name cannot exceed 15 characters");
+                }
+                if(obj.companyOrOrganization && obj.companyOrOrganization.length > 30) {
+                    error.push("Company name cannot exceed 30 characters");
+                }
+                if(obj.address && obj.address.address1 && obj.address.address1.length > 30) {
+                    error.push("Address 1 cannot exceed 30 characters");
+                }
+                if(obj.address && obj.address.address2 && obj.address.address2.length > 30) {
+                    error.push("Address 2 cannot exceed 30 characters");
+                }
+                if(obj.address && obj.address.cityOrTown && obj.address.cityOrTown.length > 30) {
+                    error.push("City name cannot exceed 30 characters");
+                }
+                if(obj.phoneNumbers && obj.phoneNumbers.mobile && obj.phoneNumbers.mobile.length > 30) {
+                    error.push("Mobile cannot exceed 30 characters");
+                } 
+            }
+            return error;
         },
         next: function () {
             // wait for blur validation to complete
             var me = this; 
             var gaid = this.$el.attr('id'); 
             me.editing.savedCard = false;
-            if(gaid === "step-payment-info" && me.model.toJSON().billingContact.address && me.model.toJSON().billingContact.address.address1 && me.model.toJSON().billingContact.address.address1.length>30 && me.model.toJSON().paymentType === "CreditCard" ){
+            var creaditCardErros = me.validateBillingInfo();
+            if(gaid === "step-payment-info" && creaditCardErros.length > 0 && me.model.toJSON().paymentType === "CreditCard" ){
               if(require.mozuData('user').isAnonymous){
-                  $('.error-msg').html('Error:Please edit your billing address. Your address cannot exceed 30 characters');       
+                  $(".error-msg").html('Billing Address is not valid. Please edit your saved address<ul><li>'+creaditCardErros.join("</li><li>")+"</li></ul>");
                 }
                 else{
-                  $('.error-msg').html('Error:Please <a href="/myaccount#addressbook" class="sz-eredit" >edit</a> your billing address. Your address cannot exceed 30 characters');                  
+                  $(".error-msg").html('Billing Address is not valid. Please <a href="/myaccount#tab_2">Edit</a> your saved address<ul><li>'+creaditCardErros.join("</li><li>")+"</li></ul>");                  
                 }    
             }
            else{  
@@ -102,6 +131,24 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }
                 }
             });
+              window.notToIL="";
+             window.notToIL=_.filter(order_item_list, function(obj) {
+                 var notIL=_.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').dontshiptoIllinois});
+                  if(notIL.length>0){
+                    if(notIL[0].values[0].value){
+                        return obj;
+                    }
+                }
+            });
+            window.notToCA="";
+            window.notToCA=_.filter(order_item_list, function(obj) {
+                 var notCA=_.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').dontshiptoCalifornia});
+                  if(notCA.length>0){
+                    if(notCA[0].values[0].value){
+                        return obj;
+                    }
+                }
+            });
              if(this.model.toJSON().shippingMethodName !== undefined){
                 window.ga_shippingmethodfilled = true;
              }
@@ -113,6 +160,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                    me.model.set('address.countryCode','US');
                 }else if(this.model.toJSON().address.countryCode=="US" && window.usa_48.length>0 && window.nonlow48.indexOf(this.model.toJSON().address.stateOrProvince)>-1){
                     me.model.set('address.countryCode','US');
+                    me.model.set('address.stateOrProvince','');
+                }else if(this.model.toJSON().address.countryCode=="US" && this.model.toJSON().address.stateOrProvince==="IL" && window.notToIL.length>0){
+                    me.model.set('address.stateOrProvince','');
+                }else if(this.model.toJSON().address.countryCode=="US" && this.model.toJSON().address.stateOrProvince==="CA" && window.notToCA.length>0){
                     me.model.set('address.stateOrProvince','');
                 }
              }
@@ -1284,22 +1335,38 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     err_msg+="<li>Please remove these items from your cart or change your ship to address</li></ul>";
                     $(".mz-messagebar").html(err_msg);
                     $("html, body").animate({ scrollTop: 0}, "slow");
+                }else if(this.model.toJSON().address.countryCode=="US" && this.model.toJSON().address.stateOrProvince==="IL" && window.notToIL.length>0){
+                    err_msg+="<li class='mz-error-item'>You have items that cannot ship to the state of Illinois</li>";
+                    window.notToIL.forEach(function(el){
+                        err_msg+="<li class='mz-error-item'><strong>"+el.name+"</strong></li>";
+                    });
+                    err_msg+="<li>Please remove these items from your cart or change your ship to address</li></ul>";
+                    $(".mz-messagebar").html(err_msg);
+                    $("html, body").animate({ scrollTop: 0}, "slow");
+                }else if(this.model.toJSON().address.countryCode=="US" && this.model.toJSON().address.stateOrProvince==="CA" && window.notToCA.length>0){
+                    err_msg+="<li class='mz-error-item'>You have items that cannot ship to the state of California</li>";
+                    window.notToCA.forEach(function(el){
+                        err_msg+="<li class='mz-error-item'><strong>"+el.name+"</strong></li>";
+                    });
+                    err_msg+="<li>Please remove these items from your cart or change your ship to address</li></ul>";
+                    $(".mz-messagebar").html(err_msg);
+                    $("html, body").animate({ scrollTop: 0}, "slow");
                 }else{
                     me.editing.savedCard = false;
-                     this.model.set("isAddressEditing",  "0");
-                if( ga!==undefined && window.ga_sent_step1 === undefined ){
-                ga('ec:setAction','checkout', {'step': 1});
-                
-                ga('send', 'event','Enhanced-Ecommerce','initShippingInformation',{'nonInteraction': true});
-                    
-                    ga('ec:setAction','ShippingInformation', {
-                    'step': 1,
-                    'option': 'ShippingInfo'
-                    });
-                
-                ga('send', 'event','Enhanced-Ecommerce','ShippingInformation');
-                    window.ga_sent_step1 = false;
-                  }
+                    this.model.set("isAddressEditing",  "0");
+                    if( ga!==undefined && window.ga_sent_step1 === undefined ){
+                        ga('ec:setAction','checkout', {'step': 1});
+
+                        ga('send', 'event','Enhanced-Ecommerce','initShippingInformation',{'nonInteraction': true});
+
+                        ga('ec:setAction','ShippingInformation', {
+                            'step': 1,
+                            'option': 'ShippingInfo'
+                        });
+
+                        ga('send', 'event','Enhanced-Ecommerce','ShippingInformation');
+                        window.ga_sent_step1 = false;
+                    }
                     _.defer(function () {
                         me.model.next();
                     });
@@ -2243,8 +2310,16 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
 
             var shipping_discount=_.filter(this.model.get('shippingDiscounts'),function(dis){ return dis.discount.couponCode!==undefined;});
-           var ship_discount_tmp=_.pluck(shipping_discount,'discount');
+            var ship_discount_tmp=_.pluck(shipping_discount,'discount');
             var shipping_discount_coupons=_.uniq(_.pluck(ship_discount_tmp,'couponCode'));
+            var freeShip = _.findWhere(shipping_discount, {"methodCode": me.model.get("fulfillmentInfo").get("shippingMethodCode")});
+            if(freeShip !== undefined) {
+                me.model.get("fulfillmentInfo").set("freeShip", freeShip);
+                window.checkoutViews.steps.shippingInfo.render();
+            }else {
+                me.model.get("fulfillmentInfo").unset("freeShip");
+                window.checkoutViews.steps.shippingInfo.render();
+            }
 
             var product_discount= _.flatten(_.pluck(this.model.get('items'), 'productDiscounts'));
             var product_discount_tmp=_.filter(product_discount,function (dis) {
@@ -2524,7 +2599,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
      try{
          $(".checkout_ostable .cp_image img").each(function(){
             if($(this).next().data("dndtoken") && $(this).next().data("prdtype")===undefined){
-                $(this).attr("src","//upload.shindigz.com/dnd/preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+                $(this).attr("src",Hypr.getThemeSetting('dndEngineUrl')+"preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
             }
          });
      }catch(err){

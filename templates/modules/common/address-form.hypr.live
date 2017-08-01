@@ -5,7 +5,7 @@
             <label for="firstname"><span class="is-required">* </span>{{ labels.firstName }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="firstname" placeholder="*{{ labels.firstName }}" data-mz-value="{{ addresscontext }}firstName" value="{{ model.firstName }}" maxlength="200">
+            <input type="text" name="firstname" placeholder="*{{ labels.firstName }}" data-mz-value="{{ addresscontext }}firstName" value="{{ model.firstName }}" maxlength="30">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}firstName"></span>
         </div>
     </div>
@@ -14,7 +14,7 @@
             <label for="lastname"><span class="is-required">* </span>{{ labels.lastName }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="lastname" placeholder="*{{ labels.lastName }}" data-mz-value="{{ addresscontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}" maxlength="200">
+            <input type="text" name="lastname" placeholder="*{{ labels.lastName }}" data-mz-value="{{ addresscontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}" maxlength="30">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}lastNameOrSurname"></span>
         </div>
     </div>
@@ -23,7 +23,7 @@
             <label for="company">{{ labels.company }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="company" placeholder="{{ labels.company }}" data-mz-value="{{ addresscontext }}companyOrOrganization" value="{{ model.companyOrOrganization }}" maxlength="200">
+            <input type="text" name="company" placeholder="{{ labels.company }}" data-mz-value="{{ addresscontext }}companyOrOrganization" value="{{ model.companyOrOrganization }}" maxlength="30">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}company"></span>
         </div>
     </div>

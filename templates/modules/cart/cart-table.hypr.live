@@ -133,7 +133,7 @@
             <td class="mz-carttable-item-qty">
                 <span>
                     <input type='button' value='-' class='mz-qtydecrease {% if item.quantity <= 1 %} disabled {% endif %}' title="Decrease QTY" field='quantity' /> <!-- qtyminus  -->
-                    <input class='qty mz-carttable-qty-field' type='text' min="1" max="999" maxlength="3" name='quantity' {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" autocomplete="off" />
+                    <input class='qty mz-carttable-qty-field' type='text' min="1" max="9999" maxlength="4" name='quantity' {% if model.isLoading %}disabled="disabled"{% endif %} data-mz-cart-item="{{ item.id }}" data-mz-value="quantity" value="{{ item.quantity }}" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" autocomplete="off" />
                     <input type='button' value='+' class='mz-qtyincrease' title="Increase QTY" field='quantity' /><!-- qtyplus -->
                 </span>
             </td>
@@ -180,7 +180,7 @@
                <div class="item-availability">
                     {% if item.product.prodTime and item.product.prodTime > 1 %}
                         <span class="avail-shipping-time">
-                            {{ item.product.prodTime }} business day Production time + Shipping
+                            {{ item.product.prodTime }} business day(s) Production time + Shipping
                             <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                                 <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                             </span>
@@ -315,7 +315,7 @@
                 <div class="item-availability">
                     {% if item.product.prodTime and item.product.prodTime > 1 %}
                         <span class="avail-shipping-time">
-                            {{ item.product.prodTime }} business day processing + shipping
+                            {{ item.product.prodTime }} business day(s) production time + shipping
                             <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                                 <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                             </span>
