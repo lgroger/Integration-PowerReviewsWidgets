@@ -1,12 +1,14 @@
-.br-found-thumbwrap {
-    height: 380px;
-    width: auto;
-    overflow-x: auto;
-    overflow-y: hidden;
-    white-space: nowrap;
+#br-related-searches-widget {
+    @media only screen and (min-width: 1190px) {
+        text-align: center;
+    }
 }
-.br-found-heading {
-    margin-bottom: 15px;
+.br-found-thumbwrap {
+    margin: 0 auto;
+    text-align: center;
+    @media screen and (min-width: 768px) {
+        height: 410px;
+    }
 }
 .br-related-heading, .br-found-heading {
     border: 1px solid #ddeaf5;
@@ -22,6 +24,8 @@
     border-top-left-radius: 5px;
     -webkit-border-top-left-radius: 5px;
     -moz-border-top-left-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
 }
 .br-related-query {
     font-family: 'Montserrat-Regular',sans-serif;
@@ -30,13 +34,38 @@
     vertical-align: top;
     text-transform: capitalize;
     position: relative;
-    padding: 8px 0 0 5px;
+    padding: 0 0 10px 1%;
+    box-sizing: border-box;
+    text-align: center;
+    @media only screen and (min-width: 480px) {
+        width: 49%;
+        display: inline-block;
+    }
+    @media only screen and (min-width: 900px) {
+        width: 23%;
+        margin: 0 5%;
+    }
+    @media only screen and (min-width: 1190px) {
+        width: 16%;
+        margin: 0;
+    }
 }
 .br-sf-widget {
     display: inline-block;
-    width: 150px;
+    width: 47%;
     height: 300px;
     vertical-align: text-top;
+    margin: 0 1% 15px 1%;
+    @media screen and (min-width: 480px) {
+        max-width: 220px;
+    }
+    @media screen and (min-width: 715px) {
+        max-width: 240px;
+    }
+    @media screen and (min-width: 768px) {
+        width: 22%;
+        height: 350px;
+    }
 }
 .br-sf-widget-merchant-cont {
     border: 1px solid #eee;
@@ -63,6 +92,9 @@
     margin-bottom: 10px;
     vertical-align: middle;
     position: relative;
+    @media screen and (min-width: 768px) {
+        margin-bottom: 60px;
+    }
 }
 .br-sf-widget-merchant-img img {
     max-width: 100% !important;
@@ -74,15 +106,55 @@
     font-family: MontserratRegular;
     height: 60px;
     overflow: hidden;
+    @media screen and (min-width: 768px) {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
 }
 .br-sf-widget-merchant-desc {
     font-size: 11px;
+    @media screen and (min-width: 768px) {
+        font-size: 13px;
+    }
 }
 .br-related-query .br-related-query-link:hover {
     color: #00b09b;
 }
 .br-sf-widget-merchant-qv {
     display: none;
+    @media screen and (min-width: 768px) {
+        position: absolute;
+        top: 145px;
+        left: 0;
+        right: 0;
+        margin: auto;
+        cursor: pointer;
+        & a {
+            display: inline-block;
+            vertical-align: middle;
+            line-height: normal;
+            margin: 0 auto;
+            border: 2px solid #0d3762;
+            border-radius: 3px;
+            padding: 10px 16px;
+            text-decoration: none;
+            font-family: MontserratRegular;
+            font-size: 14px;
+            color: #0d3762;
+            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            background-color: #fff;
+            &:hover {
+                color: #fff;
+                border: 2px solid #0d3762;
+                background-color: #0d3762;
+            }
+        }    
+    }
+}
+.br-sf-widget-merchant-cont:hover .br-sf-widget-merchant-qv {
+    @media screen and (min-width: 768px) {
+        display: block;
+    }
 }
 .br-rp-qv-show {
     width: 100%;
@@ -196,67 +268,3 @@
     
 }
 
-@media screen and (min-width: 768px) {
-    .br-found-thumbwrap {
-        height: 410px;
-    }
-    .br-sf-widget {
-        width: 200px;
-        height: 330px;
-        margin-right: 15px;
-    }
-    .br-sf-widget-merchant-title {
-        font-size: 15px;
-        margin-bottom: 10px;
-    }
-    .br-sf-widget-merchant-desc {
-        font-size: 13px;
-    }
-    .br-sf-widget-merchant-img {
-        margin-bottom: 60px;
-    }
-    .br-sf-widget-merchant-qv {
-        position: absolute;
-        top: 145px;
-        left: 0;
-        right: 0;
-        margin: auto;
-        cursor: pointer;
-    }
-    .br-sf-widget-merchant-cont:hover .br-sf-widget-merchant-qv {
-        display: block;
-    }
-    .br-sf-widget-merchant-qv a {
-        display: inline-block;
-        vertical-align: middle;
-        line-height: normal;
-        margin: 0 auto;
-        border: 2px solid #0d3762;
-        border-radius: 3px;
-        padding: 10px 16px;
-        text-decoration: none;
-        font-family: MontserratRegular;
-        font-size: 14px;
-        color: #0d3762;
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
-        background-color: #fff;
-    }    
-    .br-sf-widget-merchant-qv a:hover {
-        color: #fff;
-        border: 2px solid #0d3762;
-        background-color: #0d3762;
-    }
-}
-@media only screen and (max-width: 1024px) and (min-width: 768px) and (orientation: landscape) {
-    .br-related-query {
-        width: 49%;
-        display: inline-block;
-    }
-}
-@media only screen and (min-width: 1024px) {
-    .br-related-query {
-        width: 33%;
-        display: inline-block;
-        padding: 8px 60px 0;
-    }
-}
