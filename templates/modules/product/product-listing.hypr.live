@@ -1,5 +1,5 @@
 ﻿<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
-    
+
     <div class="mz-productlisting-image">
         {% block product-image %}
         <a href="{% make_url "product" model %}">
@@ -21,10 +21,23 @@
         <div class="mz-productlisting-productcode">{{model.productCode}}</div>
         {% endif %}
         {% endblock product-code %}
-        {% include "modules/product/price-stack" %}
-        {% include "modules/product/pr-review-listing" %}
-       
-         {% block product-extrainfo %}
+
+        {% if model.volumePriceRange %}
+        <div class="mz-volume-pricing">
+            <span itemprop="minPrice" class="mz-volume-price-lower">
+                {% include "modules/common/volume-price" with model=model.volumePriceRange.lower %}
+            </span>
+            <span itemprop="maxPrice" class="mz-volume-price-upper">
+                {% include "modules/common/volume-price" with model=model.volumePriceRange.upper %}
+            </span>
+        </div>
+        {% else %}
+            {% include "modules/product/price-stack" %}
+        {% endif %}
+        <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating" data-mz-product-code="{{ model.productCode }}">
+          <div id="pr-snippet-{{model.productCode}}" ></div>
+        </div>
+        {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
             {% if model.price.discount.impact %}

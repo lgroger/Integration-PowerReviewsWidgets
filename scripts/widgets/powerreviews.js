@@ -1,275 +1,255 @@
 /* jshint scripturl: true */
 /* global POWERREVIEWS */
 
-define(['modules/jquery-mozu', 'hyprlive', "modules/backbone-mozu", "modules/models-product", "modules/api", 'modules/models-orders', 'hyprlivecontext'],
-    function($, Hypr, Backbone, ProductModels, Api, OrderModels, HyprLiveContext) {
+define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu", "modules/models-product", "modules/api", 'modules/models-orders', 'hyprlivecontext'],
+    function($, _, Hypr, Backbone, ProductModels, Api, OrderModels, HyprLiveContext) {
+      var prScript = "//ui.powerreviews.com/stable/4.0/ui.js";
+      var prTrackerScript = "//static.powerreviews.com/t/v1/tracker.js";
+      var returnUrl = window.location.href;
 
-        var res = Api.get('entity', {
-            listName: Hypr.getThemeSetting('powerReviewsSettingsList'),
-            id: Api.context.site
-        });
+      var mzPowerReview = {
+         getConfig: function() {
+           return Api.get('entity', {
+               listName: Hypr.getThemeSetting('powerReviewsSettingsList'),
+               id: Api.context.site
+           }).then(function(result){
+             return result.data;
+           });
+         },
+         displayReviewsAnQA: function(config) {
+           var self = this;
+           $.ajax( { url: prScript } ).done(function(script, textStatus) {
+               var currentProduct = require.mozuData("product");
+               console.log(currentProduct);
+               var product = {
+                 name: currentProduct.content.productName,
+                 url: window.location.protocol+"//"+window.location.host+currentProduct.url,
+                 description: currentProduct.content.productShortDescription
+               };
 
-        var merchantGroupId;
-        var merchantId;
-        var siteId = '';
-        var zip_location;
-        var prStylesReview;
-        var prMerchantStyles2;
-        var locale = "en_US";
-        var returnUrl;
+               if (currentProduct.price) {
+                 product.price = currentProduct.price.price;
+               } else if (currentProduct.priceRange) {
+                  product.price = currentProduct.priceRange.lower.price;
+               }
+               if (currentProduct.upcs)
+                 product.upc = currentProduct.upcs[0];
 
-        function writeProductListBoxes() {
-            $(document.body).append('<link rel="stylesheet" href=\"' + prStylesReview + '\" type="text/css" id="prBaseStylesheet">');
-            $(document.body).append('<link rel="stylesheet" href=\"' + prMerchantStyles2 + '\" type="text/css" id="prMerchantOverrideStylesheet">');
-            $(document.body).append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category.css" type="text/css" id="prCategory">');
-            $(document.body).append('<link rel="stylesheet" href="/stylesheets/widgets/pr_category_styles_review_override.css" type="text/css" id="prCategoryBaseStylesheetOverride">');
+               if (currentProduct.mfgPartNumbers)
+                  product.manufacturer_id = currentProduct.mfgPartNumbers[0];
 
-            var allInlineRatings = $('.pr-inline-rating');
+               if (currentProduct.mainImage)
+                   product.image_url = window.location.protocol+currentProduct.mainImage.imageUrl;
 
-            Api.get('entityList', {
-                listName: Hypr.getThemeSetting('powerReviewsRatingsList'),
-                filter: 'productCode  eq ' + allInlineRatings.map(function() {
-                    return $(this).data('mzProductCode');
-                }).get().join(' or productCode  eq ')
-            }).then(function(collection) {
-                // turn from array of ids into map with key
-                var productsMap = collection.data.items.reduce(function(memo, item) {
-                    memo[item.productCode] = item;
-                    return memo;
-                }, {});
-                allInlineRatings.each(function() {
-                    var $this = $(this);
-                    returnUrl = document.location;
-                    var productCode = $this.data('mzProductCode');
-                    var data = productsMap[productCode];
-                    if (data) {
-                        var fullReviewCount = data.fullReviews;
-                        var fullReviewCountText;
-                        if (data.fullReviews > 1) {
-                            fullReviewCountText = "(" + data.fullReviews + " reviews)";
-                        } else if (data.fullReviews == 1) {
-                            fullReviewCountText = "(" + data.fullReviews + " review)";
-                        }
+               var in_stock = 'True';
+               if (currentProduct.inventoryInfo.manageStock && currentProduct.inventoryInfo.onlineStockAvailable === 0 && currentProduct.inventoryInfo.outOfStockBehavior === "")
+                 in_stock = 'False';
 
-                        if (data.averageDecimalRating > 0 && data.merchantGrpId == merchantGroupId) {
-                            $("#PRInlineRating-" + productCode).show();
-                            $("#PRInlineRating-" + productCode).find(".pr-snippet-write-review").show();
-                            $("#PRInlineRating-" + productCode).find(".pr-snippet-read-reviews").show();
-                            $("#PRInlineRating-" + productCode).find(".pr-snippet-write-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId=' + productCode + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&zipLocation=' + zip_location + '&returlUrl=' + returnUrl);
-                            $("#PRInlineRating-" + productCode).find(".pr-snippet-read-reviews").find("a.pr-snippet-link").find("#pr-snippet-read-review-count").text(fullReviewCount);
-                            $("#PRInlineRating-" + productCode).find("#pr-snippet-rating-decimal").text(data.averageDecimalRating);
-                            $("#PRInlineRating-" + productCode).find("#pr-snippet-review-count").text(fullReviewCountText);
-                            $("#PRInlineRating-" + productCode).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-" + data.averageOverallRating + "-sm");
-                        } else {
-                            $("#PRInlineRating-" + productCode).show();
-                            $("#PRInlineRating-" + productCode).find(".pr-snippet-write-first-review").show();
-                            $("#PRInlineRating-" + productCode).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId=' + productCode + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&zipLocation=' + zip_location + '&returlUrl=' + returnUrl);
-                            $("#PRInlineRating-" + productCode).find("#pr-snippet-rating-decimal").text("0.0");
-                            $("#PRInlineRating-" + productCode).find("#pr-snippet-review-count").text("(No reviews)");
-                            $("#PRInlineRating-" + productCode).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-0_0-sm");
-                        }
-                    } else {
-                        $("#PRInlineRating-" + productCode).show();
-                        $("#PRInlineRating-" + productCode).find(".pr-snippet-write-first-review").show();
-                        $("#PRInlineRating-" + productCode).find(".pr-snippet-write-first-review").find("a.pr-snippet-link").attr("href", '/write-a-review?pageId=' + productCode + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&zipLocation=' + zip_location + '&returlUrl=' + returnUrl);
-                        $("#PRInlineRating-" + productCode).find("#pr-snippet-rating-decimal").text("0.0");
-                        $("#PRInlineRating-" + productCode).find("#pr-snippet-review-count").text("(No reviews)");
-                        $("#PRInlineRating-" + productCode).find("#pr-snippet-star-image").addClass("pr-stars").addClass("pr-stars-small").addClass("pr-stars-0_0-sm");
+               product.in_stock  = in_stock;
+               if (currentProduct.categories)
+               {
+                 var primary = _.find(currentProduct.categories, function(category) {
+                   return category.sequence === 1;
+                 });
+                 if (!primary) primary = currentProduct.categories[0];
+                  product.category_name = primary.content.name; //"build category hierarchy";
+               }
 
-                    }
-                });
-
-            });
-
-        }
-
-        $(document).ready(function() {
-
-            res.then(function(r) {
-                var data = r.data;
-                var isWidget = $("#prProductDetail").val() == 1;
-                var isROIWidget = $("#prROIWidget").val() == 1;
-                var isReviewSnippet = $("#productReviewSnippet").val() == 1;
-                var isSocialAnswerSnippet = $("#productSocialAnswerSnippet").val() == 1;
-                var isReviewDisplay = $("#productReviewDisplay").val() == 1;
-                var isSocialAnswerDisplay = $("#productSocialAnswerDisplay").val() == 1;
-                var isTabEnabled = $("#reviewSocialAnswerTab").val() == 1;
-                returnUrl = document.location;
-
-                if (data.locale !== null)
-                    locale = data.locale;
-
-                merchantGroupId = data.merchantGrpId;
-                merchantId = data.merchantId;
-
-                if (data.merchantSiteId !== null) {
-                    siteId = data.merchantSiteId;
-                }
-
-                zip_location = "/staticContent/pwr/" + merchantGroupId + "/";
-
-                var host = HyprLiveContext.locals.siteContext.cdnPrefix,
-                prScript = host + zip_location + "pwr/engine/js/full.js?t="+Date.now();
-                prStylesReview = host + zip_location + "pwr/engine/pr_styles_review.css";
-                prMerchantStyles2 = host + zip_location + "pwr/engine/merchant_styles2.css";
+               if (currentProduct.properties) {
+                 var brandProperty = _.find(currentProduct.properties, function(property){
+                   return property.attributeFQN === "tenant~brand";
+                 });
+                 if (brandProperty)
+                  product.brand_name  = brandProperty.values[0].stringValue; //Get from property
+               }
 
 
-                $.ajax( { url: prScript } ).done(function(script, textStatus) {
-                    var currentProduct = ProductModels.Product.fromCurrent();
-                    if (isWidget) {
+               //TODO: add variants
+               var components = {};
+               if ($("#pr-reviewsnippet").length > 0) components.ReviewSnippet = "pr-reviewsnippet";
+               if ($("#pr-reviewdisplay").length > 0) components.ReviewDisplay = "pr-reviewdisplay";
+               if ($("#pr-qasnippet").length > 0) components.QuestionSnippet = "pr-qasnippet";
+               if ($("#pr-qadisplay").length > 0) components.QuestionDisplay = "pr-qadisplay";
+               if ($("#pr-wyb").length > 0) components.WhydYouBuyDisplay = "pr-wyb";
 
-                        $('head').append('<link rel="stylesheet" href=\"' + prStylesReview + '\" type="text/css" id="prBaseStylesheet">');
-                        $('<script>')
+                var prConfig = self.getPrConfig(config, currentProduct.productCode);
+                if ($("#reviewDisplayType").val() === "paging")
+                  prConfig.REVIEW_DISPLAY_PAGINATION_TYPE="VERTICAL";
+                else if ($("#reviewDisplayType").val() === "paging")
+                  prConfig.REVIEW_DISPLAY_LIST_TYPE ='CONDENSED';
+                else
+                  prConfig.REVIEW_DISPLAY_SNAPSHOT_TYPE ='SIMPLE';
+
+                prConfig.style_sheet = "/widgets/powerreview.css";
+                prConfig.review_wrapper_url = '/write-a-review?pr_page_id='+currentProduct.productCode+'&locale='+config.locale+'&pr_returnUrl=' + returnUrl;
+                prConfig.product = product;
+                prConfig.components = components;
+
+                POWERREVIEWS.display.render(prConfig);
+
+
+             }).fail(function(jqxhr, settings, exception) {
+                 console.log(jqxhr);
+             });
+         },
+         displayRoi: function(config) {
+
+           var order = require.mozuData('order');
+           $.getScript(prTrackerScript).done(function(script, textStatus) {
+
+               try {
+                   var tracker = POWERREVIEWS.tracker.createTracker({
+                       merchantGroupId: config.merchantGrpId
+                   });
+                   var customerId = "";
+                   var firstName;
+                   var lastName;
+                   if (order.customerAccountId !== null)
+                       customerId = order.customerAccountId;
+                   if (order.fulfillmentInfo !== null && order.fulfillmentInfo.fulfillmentContact !== null) {
+                       firstName = order.fulfillmentInfo.fulfillmentContact.firstName;
+                       lastName = order.fulfillmentInfo.fulfillmentContact.lastNameOrSurname;
+                   } else {
+                       firstName = order.billingInfo.billingContact.firstName;
+                       lastName = order.billingInfo.billingContact.lastNameOrSurname;
+                   }
+
+                   var items = [];
+                   var item = {};
+
+                   order.items.forEach(function(lineItem){
+                     console.log(lineItem);
+                     //var lineItem = order.items.models[i].attributes;
+                     item.pageId = lineItem.product.productCode;
+                     item.unitPrice = lineItem.total;
+                     item.qty = lineItem.quantity;
+                     item.name = lineItem.product.name;
+                     if (lineItem.product.imageUrl !== null)
+                         item.imageURL = lineItem.product.imageUrl;
+                     items.push(item);
+                   });
+
+                   tracker.trackPageview("c", {
+                       merchantId: config.merchantId,
+                       locale: config.locale,
+                       merchantUserId: customerId,
+                       marketingOptIn: order.acceptsMarketing,
+                       userEmail: order.email,
+                       userFirstName: firstName,
+                       userLastName: lastName,
+                       orderId: order.orderNumber,
+                       orderSubtotal: order.total,
+                       orderNumberOfItems: items.length,
+                       orderItems: items
+                       //orderDate: TODO
+                   });
+
+                 } catch(e){
+                   console.log(e);
+                 }
+           }).fail(function(jqxhr, settings, exception) {
+                   console.log(jqxhr);
+           });
+
+           if ($(".pr-wyb")) {
+             $.getScript(prScript).done(function(script, textStatus) {
+               var item = _.max(order.items, function(item) {
+                 return item.total;
+               });
+               //Get expensive items
+
+               POWERREVIEWS.display.render({
+                 api_key: config.apiKey,
+                 locale: config.locale,
+                 merchant_group_id: config.merchantGrpId,
+                 merchant_id: config.merchantId,
+                 page_id: item.product.productCode,
+                 components: {
+                   WhydYouBuy: 'pr-wyb'
+                 }});
+             }).fail(function(jqxhr, settings, exception) {
+                     console.log(jqxhr);
+             });
+           }
+
+           if ($("#includeSellerRatings").val() === "1") {
+             var script = "(function(p, o, w, e, r) {"+
+                  "p.POWERREVIEWS = p.POWERREVIEWS || {config: {}};"+
+                  "p.POWERREVIEWS.config.merchant_id = "+config.merchantId+";"+
+                  "p.POWERREVIEWS.config.page_id = '"+$("#sellerRatingPageId").val()+";"+
+                  "p.POWERREVIEWS.config.locale = "+config.locale+";"+
+                  "p.POWERREVIEWS.config.srwVariant = 'mini';"+
+                  "r = o.getElementsByTagName('body')[0]; e = o.createElement('div');"+
+                  "e.id = 'pr-srw-container'; e.className = 'p-w-r'; r.appendChild(e, r);"+
+                  "if (!document.getElementById('pwr-ui')) {"+
+                  "  e = o.createElement(w);"+
+                  "  e.src = '//ui.powerreviews.com/stable/3.0/ui.js';"+
+                  "  e.id = 'pwr-ui';"+
+                  "  e.onload = function() {POWERREVIEWS.display.renderSRW;};"+
+                  "  r.appendChild(e, r);"+
+                  "}"+
+                "}(window, document, 'script'))";
+
+              $('<script>')
                             .attr('type', 'text/javascript')
-                            .text('var pr_locale=\"' + locale + '\";var pr_zip_location=\"' + zip_location + '\";var pr_style_sheet=\"/stylesheets/widgets/pr_product_styles_review_override.css\"')
+                            .text(script)
                             .appendTo('head');
+           }
+         },
+         displayInlineRatings: function(config) {
+           var allInlineRatings = $('.pr-inline-rating');
+           console.log(allInlineRatings);
+           var productReviews = allInlineRatings.map(function() {
+              var productCode = $(this).data('mzProductCode');
 
-                        if (isReviewSnippet) {
-                            if (isTabEnabled) {
-                                POWERREVIEWS.display.snippet({
-                                    write: function(content) {
-                                        $("#reviewSnippetProduct").append(content);
-                                    }
-                                }, {
-                                    pr_page_id: currentProduct.id,
-                                    pr_read_review: 'javascript:activateTab(\'reviews\');',
-                                    pr_write_review: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl
-                                });
-                            } else {
-                                POWERREVIEWS.display.snippet({
-                                    write: function(content) {
-                                        $("#reviewSnippetProduct").append(content);
-                                    }
-                                }, {
-                                    pr_page_id: currentProduct.id,
-                                    pr_read_review: '#ReviewHeader',
-                                    pr_write_review: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl
-                                });
-                            }
-                        }
-                        if (isSocialAnswerSnippet) {
-                            if (isTabEnabled) {
-
-                                POWERREVIEWS.display.productAnswersSnippet({
-                                    write: function(content) {
-                                        $("#socialAnswerSnippet").append(content);
-                                    }
-                                }, {
-                                    pr_page_id: currentProduct.id,
-                                    pr_ask_question: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl + '&appName=askQuestion',
-                                    pr_answer_question: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl + '&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
-                                    pr_read_qa: 'javascript:activateTab(\'socialAnswer\');'
-                                });
-                            } else {
-                                POWERREVIEWS.display.productAnswersSnippet({
-                                    write: function(content) {
-                                        $("#socialAnswerSnippet").append(content);
-                                    }
-                                }, {
-                                    pr_page_id: currentProduct.id,
-                                    pr_ask_question: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl + '&appName=askQuestion',
-                                    pr_answer_question: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl + '&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
-                                    pr_read_qa: '#QAHeader'
-                                });
-                            }
-
-                        }
-                        if (isReviewDisplay || isTabEnabled) {
-                            POWERREVIEWS.display.engine({
-                                write: function(content) {
-                                    $("#reviewDisplayProduct").append(content);
-                                }
-                            }, {
-                                pr_page_id: currentProduct.id,
-                                pr_write_review: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl
-                            });
-                        }
-                        if (isSocialAnswerDisplay || isTabEnabled) {
-                            POWERREVIEWS.display.productAnswers({
-                                write: function(content) {
-                                    $("#socialAnswerDisplay").append(content);
-                                }
-                            }, {
-                                pr_page_id: currentProduct.id,
-                                pr_ask_question: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl + '&appName=askQuestion',
-                                pr_answer_question: '/write-a-review?pageId=' + currentProduct.id + '&merchantGroupId=' + merchantGroupId + '&merchantId=' + merchantId + '&siteId=' + siteId + '&locale=' + locale + '&returlUrl=' + returnUrl + '&appName=answerQuestion&questionId=@@@QUESTION_ID@@@',
-                                pr_read_qa: '#QAHeader'
-                            });
-                        }
-                    } else if (isROIWidget) {
-
-                        var prTrackerScript = "//static.powerreviews.com/t/v1/tracker.js";
-                        $.getScript(prTrackerScript).done(function(script, textStatus) {
-
-                            var tracker = POWERREVIEWS.tracker.createTracker({
-                                merchantGroupId: merchantGroupId
-                            });
-
-                            var order = OrderModels.Order.fromCurrent().attributes;
-                            var customerId = "";
-                            var firstName;
-                            var lastName;
-                            if (order.customerAccountId !== null)
-                                customerId = order.customerAccountId;
-                            if (order.fulfillmentInfo !== null && order.fulfillmentInfo.fulfillmentContact !== null) {
-                                firstName = order.fulfillmentInfo.fulfillmentContact.firstName;
-                                lastName = order.fulfillmentInfo.fulfillmentContact.lastNameOrSurname;
-                            } else {
-                                firstName = order.billingInfo.billingContact.firstName;
-                                lastName = order.billingInfo.billingContact.lastNameOrSurname;
-                            }
-
-                            var items = [];
-                            var item = {};
-
-                            for (var i = 0; i < order.items.models.length; i++) {
-                                var lineItem = order.items.models[i].attributes;
-                                item.pageId = lineItem.product.attributes.productCode;
-                                item.unitPrice = lineItem.total;
-                                item.qty = lineItem.quantity;
-                                item.name = lineItem.product.attributes.name;
-                                if (lineItem.product.attributes.imageUrl !== null)
-                                    item.imageURL = lineItem.product.attributes.imageUrl;
-                                items[i] = item;
-                            }
-
-                            tracker.trackPageview("c", {
-                                merchantId: merchantId,
-                                locale: locale,
-                                merchantUserId: customerId,
-                                marketingOptIn: order.acceptsMarketing,
-                                userEmail: order.email,
-                                userFirstName: firstName,
-                                userLastName: lastName,
-                                orderId: order.orderNumber,
-                                orderSubtotal: order.total,
-                                orderNumberOfItems: items.length,
-                                orderItems: items
-                            });
-                            console.log("sent order data to PowerReviews");
-                        })
-                            .fail(function(jqxhr, settings, exception) {
-                                console.log(jqxhr);
-                            });
-
-                    } else {
-
-                        writeProductListBoxes();
-
-                    }
-                })
-                    .fail(function(jqxhr, settings, exception) {
-                        console.log(jqxhr);
-                    });
+              return {
+                locale: config.locale,
+                merchant_group_id: config.merchantGrpId,
+                page_id: productCode,
+                merchant_id: config.merchantId,
+                enable_client_side_structured_data: true,
+                api_key: config.apiKey,
+                review_wrapper_url: '/write-a-review?pr_page_id='+productCode+'&locale='+config.locale+'&returnUrl=' + returnUrl,
+                components: {
+                  CategorySnippet: 'pr-snippet-'+productCode
+                }
+              };
+            }).get();
+            console.log(productReviews);
+            $.ajax( { url: prScript } ).done(function(script, textStatus) {
+                POWERREVIEWS.display.render(productReviews);
             });
+        },
+        getPrConfig : function(config, pageId) {
+          var prConfig = {
+              api_key: config.apiKey,
+              locale: config.locale,
+              merchant_group_id: config.merchantGrpId,
+              merchant_id: config.merchantId
+           };
 
+           if (pageId)
+            prConfig.page_id =  pageId;
+
+          return prConfig;
+        }
+      };
+
+
+
+      $(document).ready(function() {
+        var isProductDetail = $("#prProductDetail").val() == 1;
+        var isROIWidget = $("#prROIWidget").val() == 1;
+
+        mzPowerReview.getConfig().then(function(config){
+          if (isProductDetail) {
+            mzPowerReview.displayReviewsAnQA(config);
+          } else if (isROIWidget) {
+            mzPowerReview.displayRoi(config);
+          } else {
+            mzPowerReview.displayInlineRatings(config);
+          }
 
         });
-
-        return {
-            writeProductListBoxes: function() {
-                return res.then(writeProductListBoxes);
-            }
-        };
-
-    });
+      });
+});

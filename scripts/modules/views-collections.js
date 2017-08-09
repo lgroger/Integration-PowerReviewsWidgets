@@ -8,9 +8,8 @@ define([
     'underscore',
     'modules/url-dispatcher',
     'modules/intent-emitter',
-    'modules/get-partial-view',
-    'widgets/powerreviews'
-], function(Backbone, _, UrlDispatcher, IntentEmitter, getPartialView, PowerReviewsWidget) {
+    'modules/get-partial-view'
+], function(Backbone, _, UrlDispatcher, IntentEmitter, getPartialView) {
 
     function factory(conf) {
 
@@ -23,7 +22,6 @@ define([
             _$body.html(response.body);
             if (url) _dispatcher.replace(url);
             _$body.removeClass('mz-loading');
-            PowerReviewsWidget.writeProductListBoxes();
         }
 
         function showError(error) {
@@ -43,7 +41,7 @@ define([
             if (url && url[0] != "/") {
                 var parser = document.createElement('a');
                 parser.href = url;
-                url = parser.pathname + parser.search;
+                url = window.location.pathname + parser.search;
             }
             return url;
         }

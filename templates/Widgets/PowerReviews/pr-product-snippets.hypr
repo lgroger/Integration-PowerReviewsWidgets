@@ -1,0 +1,13 @@
+{% if model.config.widgetType == "reviewSnippet" %}
+    {% if pageContext.isEditMode == 'true' %}
+      Power Reviews snippet widget
+    {% endif %}
+    <div id="pr-reviewsnippet" class="pr-reviewsnippet"></div>
+{% endif %}
+
+{% if model.config.widgetType == "socialAnswerSnippet" %}
+    {% if pageContext.isEditMode == 'true' %}
+      Power Reviews Q&A Snippet widget
+    {% endif %}
+    <div id="pr-qasnippet" class="pr-qasnippet"></div>
+{% endif %}
