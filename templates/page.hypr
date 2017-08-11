@@ -52,7 +52,6 @@
           {% if PageContext.pageType == 'product' %}
           <meta name="twitter:card" content="summary_large_image"/>
           <meta name="twitter:site" content="@shindigz"/>
-          <meta name="twitter:creator" content="@echidnainc"/>
           <meta name="twitter:title" content="{{ model.content.productName }}"/>
           <meta name="twitter:description" content="{{ PageContext.MetaDescription }}"/>
           <meta name="twitter:image" content="{{ model.mainImage.src }}"/>

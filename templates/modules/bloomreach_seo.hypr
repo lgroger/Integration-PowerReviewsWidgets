@@ -1,7 +1,3 @@
-﻿<div class="br-found-container">
-<div class="br-found-thumbwrap">
-{{viewData.brmore|safe}}
-</div>
-</div>
+﻿{{viewData.brmore|safe}}
 
 {{viewData.brrelated|safe}}

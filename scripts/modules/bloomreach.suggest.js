@@ -75,8 +75,9 @@ $(function(){
 	$("[id='search_text']").autoCompleteSearch({ // #search_text is on page twice, once for desktop, once for mobile
 		delay: 0,
 		source: function( req, add ) {
-			//var searchsuggestURL = "//brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
-			var searchsuggestURL = "//brm-staging-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";
+
+			var searchsuggestURL = "//brm-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";	
+			//searchsuggestURL = "//brm-staging-suggest-0.brsrvr.com/api/v1/suggest/?callback=?";
 			
 			var randomID = function() {
 				var chars = '0123456789'.split('');
@@ -126,6 +127,7 @@ $(function(){
 										category:catname,
 										rating: item.rating,
 										pricerange: item.sale_price_range,
+										volumepricing: (typeof item.volumepricing == 'undefined'?"false":item.volumepricing),
 										uom:(typeof item.unitofmeasure_attr == 'undefined'?'':item.unitofmeasure_attr),
 										classname:"br-suggest-product-"+pcnt,
 										ptype: item.mozuproducttype,
