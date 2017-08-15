@@ -26,7 +26,7 @@
 {% endcomment %}
 
 {% preload_json model.facets "facets" %}
-
+{% comment %}
 <!-- element structure for search result category navigation -->
 <div class="bottom-category-list-container"
     {% if isGuidedSearchURL %}
@@ -52,7 +52,7 @@
         </div>
     </div>
 </div>       
-  
+{% endcomment %}
 <div class="mz-filter-options">
             {% if model.facets %}
             <div data-mz-facets class="mz-l-sidebar">
