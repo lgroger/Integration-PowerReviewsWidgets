@@ -22,7 +22,7 @@
             <div>
                 <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
                 {% for l in pageModel.childrenCategories %}
-                    <li style="display:list-item;"><a href="{{l.url}}">{{l.name|replace(pageModel.name, '')}} {#<span class="mz-facetingform-valuecount">({{l.count}})</span> #}</a></li>
+                    <li style="display:list-item;"><a href="{{l.url}}" title="{{l.content.pageTitle}}">{{l.content.pageTitle}}{# <span class="mz-facetingform-valuecount">({{l.count}})</span> #}</a></li>
                  {% endfor %}
                  </ul>
              </div>

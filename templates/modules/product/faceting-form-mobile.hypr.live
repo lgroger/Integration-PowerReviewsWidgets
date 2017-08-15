@@ -9,7 +9,7 @@
         <li class="filter-level-1"><a class="facetheadmob">Category<i class="pull-right fa fa-plus" aria-hidden="true"></i></a>
             <ul class="filter-level-2  sz-childcat">
                 {% for l in pageModel.childrenCategories %}
-                    <li><a href="{{l.url}}">{{l.name}} <span class="mz-facetingform-valuecount">({{l.count}})</span></a></li>
+                    <li><a href="{{l.url}}">{{l.content.pageTitle}}{# <span class="mz-facetingform-valuecount">({{l.count}})</span>#}</a></li>
                 {% endfor %}
             </ul>
         </li>
