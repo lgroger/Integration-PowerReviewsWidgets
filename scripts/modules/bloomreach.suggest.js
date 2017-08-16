@@ -127,7 +127,7 @@ $(function(){
 										category:catname,
 										rating: item.rating,
 										pricerange: item.sale_price_range,
-										volumepricing: (typeof item.volumepricing == 'undefined'?"false":item.volumepricing),
+										/*volumepricing: (typeof item.volumepricing == 'undefined'?"false":item.volumepricing),*/
 										uom:(typeof item.unitofmeasure_attr == 'undefined'?'':item.unitofmeasure_attr),
 										classname:"br-suggest-product-"+pcnt,
 										ptype: item.mozuproducttype,

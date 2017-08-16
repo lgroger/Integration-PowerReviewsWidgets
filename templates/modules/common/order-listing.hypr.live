@@ -54,7 +54,7 @@
                       <span class="order-details-font1"> {{ model.auditInfo.createDate|date("F j, Y") }} </span><br/>
                      
                      {% if pageContext.pageType == 'my_account'%}
-                      <span class="order-details-font account-order-number11">Order Shipped:</span>
+                      <span class="order-details-font account-order-number11">Status:</span>
                       <span class="order-details-font1"> 
                         {% if item.fulfillmentDateBasedOnPackage %}
                           {{ item.fulfillmentDateBasedOnPackage|date("F j, Y") }}
@@ -107,7 +107,7 @@
                         <span class="order-details-font1"> {{ model.auditInfo.createDate|date("F j, Y") }} </span><br/>
                         
                         {% if pageContext.pageType == 'my_account'%}
-                        <span class="order-details-font account-order-number11">Order Shipped:</span>
+                        <span class="order-details-font account-order-number11">Status:</span>
                         <span class="order-details-font1"> 
                         {% if item.fulfillmentDateBasedOnPackage %}
                             {{ item.fulfillmentDateBasedOnPackage|date("F j, Y") }}
@@ -160,8 +160,9 @@
                 <div class="block2">
                     <span class="ship-text2" style=""></span>
                     <span class="ship-address">
-                       {{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}
-                      {{model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}<br>
+                      {{ model.fulfillmentInfo.fulfillmentContact.firstName }} {{ model.fulfillmentInfo.fulfillmentContact.lastNameOrSurname }}<br>
+                      {{ model.fulfillmentInfo.fulfillmentContact.address.address1 }}<br>
+                      {{ model.fulfillmentInfo.fulfillmentContact.address.cityOrTown }}<br>
                       {{ model.fulfillmentInfo.fulfillmentContact.address.stateOrProvince }}<br>
                       {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}<br>
                       {{ model.fulfillmentInfo.fulfillmentContact.address.countryCode }}<br>
@@ -212,7 +213,7 @@
                            <span class="ship-text1">{{ labels.billingAddress }}:</span>
                         </div>
                         <div class="block2">
-                            <span class="mz-addresssummary ship-address">
+                            <span class="mz-addresssummary ship-address"> 
                                 {% include "modules/common/address-summary" with model=admodel.billingInfo.billingContact %}
                             </span>
                         </div>

@@ -33,9 +33,15 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 if(obj.address && obj.address.cityOrTown && obj.address.cityOrTown.length > 30) {
                     error.push("City name cannot exceed 30 characters");
                 }
+                if(obj.address && obj.address.postalOrZipCode && obj.address.postalOrZipCode.length > 30) {
+                    error.push("Zip Code cannot exceed 30 characters");
+                }
                 if(obj.phoneNumbers && obj.phoneNumbers.mobile && obj.phoneNumbers.mobile.length > 30) {
                     error.push("Mobile cannot exceed 30 characters");
                 } 
+                if(obj.phoneNumbers && obj.phoneNumbers.home && obj.phoneNumbers.home.length > 30) {
+                    error.push("Phone cannot exceed 30 characters");
+                }
             }
             return error;
         },
@@ -2576,6 +2582,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
         window.removePageLoader();
 
+        /* For Number Input Maxlength restriction */ 
+        $(document).on("keypress paste", 'input[name="zip"],input[name="postal-code"],input[name="postal-town"],input[name="shippingphone"]', function(){
+            if(jQuery(this).val().length >= 30) {
+                jQuery(this).val( jQuery(this).val().slice(0,30) );
+                return false;
+            }
+        });
     });
      window.zipArr=[];
      window.meltArr=[];
