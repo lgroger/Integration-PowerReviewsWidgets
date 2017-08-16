@@ -37,6 +37,14 @@
                 {% endif %}
                 {% endif %}
             </span>
+
+{% set_var minPageSize=999 %}
+{% for size in themeSettings.pageSizeOptions %}
+  {% if model.pageSize < minPageSize %}
+    {% set_var minPageSize=model.pageSize %}
+  {% endif %}
+{% endfor %}
+{% if minPageSize <= model.totalCount %}{# hide page dropdown if it won't make a difference if something different is selected #}
             <label class="mz-pagingcontrols-pagesize-label">
               <span class="mz-paging-title">{{ labels.show }} </span>
               <select data-mz-value="pageSize" class="mz-pagingcontrols-pagesize-dropdown" autocomplete="off">
@@ -53,6 +61,7 @@
                 {% endblock page-sizes %}
               </select>
             </label>
+{% endif %}
         {% endif %}
     {% endwith %}
 {% endwith %}
