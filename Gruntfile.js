@@ -122,7 +122,7 @@ module.exports = function (grunt) {
       quickcompile: {
         command: 'compile',
         opts: {
-          skipminification: true
+          skipminification: false
         }
       }
     },
