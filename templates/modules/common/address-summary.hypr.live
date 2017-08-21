@@ -2,6 +2,9 @@
     {% if model.companyOrOrganization %}
         <span>{{ model.companyOrOrganization }}</span>
     {% endif %}
+    {% if model.email %}
+        <span>{{ model.email }}</span>
+    {% endif %}
     <span>{{ model.address.address1 }}</span>
     {% if model.address.address2 %} 
         <span>{{ model.address.address2 }}</span>

@@ -1250,9 +1250,11 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
              }
             
-            if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1){
+            if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1) {
+                if(this.$('[data-mz-product-option]').find('option').length === 0){
                     this.$('[data-mz-product-option]').parents('form').hide();
                     this.$('[data-mz-product-option]').parents('.mz-productoptions-container').hide();
+                }
             }
 
             /*if(this.model.get('productUsage')==='Bundle'){

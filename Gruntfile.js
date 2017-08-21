@@ -31,7 +31,7 @@ module.exports = function (grunt) {
                 if (!depPkg.main) {
                   try {
                     depPkg = require(dep + '/bower.json');
-                  } catch (e) {}
+                  } catch (e) {console.log(e);}
                 }
                 return dep + (depPkg.main ? '/' + depPkg.main : '/**/*');
               }
@@ -62,12 +62,24 @@ module.exports = function (grunt) {
         browser: true,
         undef: true,
         nonstandard: true,
-        ignores: ['scripts/vendor/**/*.js'],
+        ignores: ['scripts/vendor/**/*.js','scripts/modules/jquery-ui-1.8.21.min.js'],
         globals: {
           JSON: true,
           define: true,
           require: true,
-          Modernizr: true
+          Modernizr: true,
+			console: true,
+			globalNameSpace: true,
+			sessioncamConfiguration: true,
+			lpAddVars: true,
+			certona: true,
+			BrTrk: true,
+			ga: true,
+			_gaq: true,
+			fbq:true,
+			pintrk:true,
+			addthis:true,
+			jQuery:true
         }
       }
     },
@@ -110,7 +122,7 @@ module.exports = function (grunt) {
       quickcompile: {
         command: 'compile',
         opts: {
-          skipminification: true
+          skipminification: false
         }
       }
     },
@@ -223,6 +235,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', [
     'build',
-    'mozusync:upload'
+    'mozusync:upload',
+	'mozutheme:check'
     ]);
 };

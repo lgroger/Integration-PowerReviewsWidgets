@@ -5,7 +5,7 @@
             <label for="firstname"><span class="is-required">* </span>{{ labels.firstName }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="firstname" placeholder="*{{ labels.firstName }}" data-mz-value="{{ addresscontext }}firstName" value="{{ model.firstName }}" maxlength="30">
+            <input type="text" name="firstname" placeholder="*{{ labels.firstName }}" data-mz-value="{{ addresscontext }}firstName" value="{{ model.firstName }}" maxlength="15">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}firstName"></span>
         </div>
     </div>
@@ -14,7 +14,7 @@
             <label for="lastname"><span class="is-required">* </span>{{ labels.lastName }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="text" name="lastname" placeholder="*{{ labels.lastName }}" data-mz-value="{{ addresscontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}" maxlength="30">
+            <input type="text" name="lastname" placeholder="*{{ labels.lastName }}" data-mz-value="{{ addresscontext }}lastNameOrSurname" value="{{ model.lastNameOrSurname }}" maxlength="15">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}lastNameOrSurname"></span>
         </div>
     </div>
@@ -78,7 +78,7 @@
         </div>
             <div class="mz-addressform-autocompletefields">
                 <label for="autocomplete-state">{{ labels.state }}</label><input type="text" name="state" placeholder="{{ labels.state }}" data-mz-value="{{ addresscontext }}address.stateOrProvince" value="{{ model.address.stateOrProvince }}" maxlength="30"/>
-                <label for="autocomplete-zip">{{ labels.zip }}</label><input type="number" name="zip" placeholder="{{ labels.zip }}" data-mz-value="{{ addresscontext }}address.postalOrZipCode" maxlength="20" value="{{ model.address.postalOrZipCode }}" />
+                <label for="autocomplete-zip">{{ labels.zip }}</label><input type="number" name="zip" placeholder="{{ labels.zip }}" data-mz-value="{{ addresscontext }}address.postalOrZipCode" maxlength="30" value="{{ model.address.postalOrZipCode }}" />
             </div>
     </div>
     <div class="mz-l-formfieldgroup-row mz-addressform-state" {% if countryCode == "US" %} style="display: none"{% endif %}>
@@ -115,7 +115,7 @@
             <label for="postal-code"><span class="is-required">* </span>{{ labels.postalCode }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input {% if model.address.countryCode == "US" %} type="number" {% else %} type="text" {% endif %} name="postal-code" placeholder="{% if pageContext.isTablet or pageContext.isMobile %}*{% endif %}{{ labels.postalCode }}" data-mz-value="{{ addresscontext }}address.postalOrZipCode" {% if model.address.countryCode == "US" %} value="{{ model.address.postalOrZipCode|split('-')|first }}" {% else %} value="{{ model.address.postalOrZipCode }}" {% endif %} maxlength="20">
+            <input {% if model.address.countryCode == "US" %} type="number" {% else %} type="text" {% endif %} name="postal-code" placeholder="{% if pageContext.isTablet or pageContext.isMobile %}*{% endif %}{{ labels.postalCode }}" data-mz-value="{{ addresscontext }}address.postalOrZipCode" {% if model.address.countryCode == "US" %} value="{{ model.address.postalOrZipCode|split('-')|first }}" {% else %} value="{{ model.address.postalOrZipCode }}" {% endif %} maxlength="30">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}address.postalOrZipCode"></span>
         </div>
     </div>
@@ -133,7 +133,7 @@
             <label for="shippingphone"><span class="is-required">* </span>{{ labels.phonenumber }}</label>
         </div>
         <div class="mz-l-formfieldgroup-cell">
-            <input type="number" name="shippingphone" placeholder="{% if pageContext.isTablet or pageContext.isMobile %}*{% endif %}{{ labels.phone }}" data-mz-value="{{ addresscontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}" maxlength="20">
+            <input type="number" name="shippingphone" placeholder="{% if pageContext.isTablet or pageContext.isMobile %}*{% endif %}{{ labels.phone }}" data-mz-value="{{ addresscontext }}phoneNumbers.home" value="{{ model.phoneNumbers.home }}" maxlength="30">
             <span class="mz-validationmessage" data-mz-validationmessage-for="{{ addresscontext }}phoneNumbers.home"></span>
             {% if pageContext.cmsContext.template.path == "checkout" %}
                  <span class="contact-text">Enter numbers only, no dashes or spaces.</span>

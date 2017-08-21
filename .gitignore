@@ -16,3 +16,5 @@ node_modules/
 .yo-rc.json
 mozu.config.json
 
+!node_modules/bootstrap/js/popover.js
+
