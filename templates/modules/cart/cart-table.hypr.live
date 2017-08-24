@@ -392,8 +392,7 @@
                             {% comment %}{% dropzone "continue-shopping-link" scope="template" %}{% endcomment %}
                         </div>
                         <div class="mz-cms-col-2-12">
-                            <a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty" style="display:none;">
-                            <button id="cart-checkout" class="mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">{{ labels.proceedToCheckout }}</button>
+                            <a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty" style="display:none;">Empty Cart</a>
 
                             {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
                                 <div>
