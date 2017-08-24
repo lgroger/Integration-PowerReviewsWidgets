@@ -431,7 +431,7 @@
                 {% endfor %}
                 <tr>
                     <td class="summary_box_label">Estimated Shipping</td>
-                    <td class="summary_box_price estimated-cost">{% if model.isEmpty %} $0.00{% else %} $7.99{% endif %}</td>
+                    <td class="summary_box_price estimated-cost">{% if model.shippingCost %} {{model.shippingCost | currency}} {% else %}$0.00{% endif %}</td>
                 </tr>
                 {% if model.enableSurCharge %}
                 <tr>
