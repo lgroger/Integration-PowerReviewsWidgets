@@ -401,7 +401,6 @@
                                     src="{{pageContext.visaCheckoutButtonUrl}}"/>
                                 </div>
                             {% endif %}
-                            </a>
                         </div>
                     </div>
                 </td>
