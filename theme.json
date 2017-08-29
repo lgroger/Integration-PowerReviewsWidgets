@@ -1089,7 +1089,8 @@
     "facebookPixel":1000000,
     "pinterestTagID":100000,
     "favicon":"//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico",
-    "productTypeDefaultImg":""
+    "productTypeDefaultImg":"",
+    "numberOfDaysMarketo": 13
   },
   "layoutWidgets": [
     {

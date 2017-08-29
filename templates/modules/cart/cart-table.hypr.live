@@ -386,7 +386,7 @@
                     </div> -->
                     <div class="cart_bottom_line mz-cms-col-12-12">
                         <div class="mz-cms-col-10-12">
-                            <a class="mz-sz-continue" href="javascript:;" style="">
+                            <a class="mz-sz-continue" href="/" style="">
                                 {{ themeSettings.continueShoppingLink }}
                             </a>
                             {% comment %}{% dropzone "continue-shopping-link" scope="template" %}{% endcomment %}

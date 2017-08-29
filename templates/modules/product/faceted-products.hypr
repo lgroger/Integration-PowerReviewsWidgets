@@ -9,18 +9,18 @@
 {# know you need it.                                                    #}
 <script type="text/json" id="data-mz-preload-facetedproducts">
 {
-	"facets": {% json model.facets %},
-	"currentPage": {{ model.currentPage }},
-	"firstIndex": {{ model.firstIndex }},
-	"hasNextPage": {{ model.hasNextPage|lower }},
-	"hasPreviousPage": {{ model.hasPreviousPage|lower }},
-	"lastIndex": {{ model.lastIndex }},
-	"middlePageNumbers": {% json model.middlePageNumbers %},
-	"pageCount": {{ model.pageCount }},
-	"pageSize": {{ model.pageSize }},
-	"startIndex": {{ model.startIndex }},
-	"totalCount": {{ model.totalCount }},
-	"currentSort": "{{ model.currentSort }}"
+    "facets": {% json model.facets %},
+    "currentPage": {{ model.currentPage }},
+    "firstIndex": {{ model.firstIndex }},
+    "hasNextPage": {{ model.hasNextPage|lower }},
+    "hasPreviousPage": {{ model.hasPreviousPage|lower }},
+    "lastIndex": {{ model.lastIndex }},
+    "middlePageNumbers": {% json model.middlePageNumbers %},
+    "pageCount": {{ model.pageCount }},
+    "pageSize": {{ model.pageSize }},
+    "startIndex": {{ model.startIndex }},
+    "totalCount": {{ model.totalCount }},
+    "currentSort": "{{ model.currentSort }}"
 }
 </script>
 {% endcomment %}

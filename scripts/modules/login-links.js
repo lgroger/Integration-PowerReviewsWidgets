@@ -397,7 +397,8 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                             window.location.href = "/cart/checkout";
                         }
                         else{
-                            window.location.reload();
+                            //window.location.reload();
+                            window.location.href = "/myaccount";
                         }
                     }
                     if(optMarketing){

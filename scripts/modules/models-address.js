@@ -30,9 +30,47 @@
                 this.unset('stateOrProvince');
             },
             validation: {
+                address2: {
+                    fn: function (value) {
+                        value = value || "";
+                        value = value.replace(/\./g, '');
+                        value = value.replace(/\s\s+/g, ' ');
+                        var result = value.toLowerCase().match("/|po box|p o box|pobox");
+                        if(require.mozuData("pagecontext").pageType == "my_account" && this.get('editingContact').get('isShippingContact')) {
+                            if(result) {
+                                return Hypr.getLabel('poBoxFound');
+                            }
+                        }else if(require.mozuData("pagecontext").pageType != "my_account") {
+                            if(result && this.get('email')) {
+                                return Hypr.getLabel('poBoxFound');
+                            }
+                        }
+                    } 
+                },
                 address1: {
+                    /*
                     required: true,
                     msg: Hypr.getLabel("streetMissing")
+                    */
+                    fn: function (value) {
+                        value = value || "";
+                        value = value.replace(/\./g, '');
+                        value = value.replace(/\s\s+/g, ' ');
+                        if(value.length > 0) {
+                            var result = value.toLowerCase().match("/|po box|p o box|pobox");
+                            if(require.mozuData("pagecontext").pageType == "my_account" && this.get('editingContact').get('isShippingContact')) {
+                                if(result) {
+                                    return Hypr.getLabel('poBoxFound');
+                                }
+                            }else if(require.mozuData("pagecontext").pageType != "my_account") {
+                                if(result && this.get('email')) {
+                                    return Hypr.getLabel('poBoxFound');
+                                }
+                            }
+                        }else {
+                            return Hypr.getLabel("streetMissing");
+                        }
+                    }
                 },
                 cityOrTown: {
                     required: true,

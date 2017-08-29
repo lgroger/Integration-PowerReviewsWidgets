@@ -373,6 +373,7 @@
   "genericNotFound"      : "Item was not found",
   "phoneMissing"         : "Phone number required",
   "streetMissing"        : "Street address required",
+  "poBoxFound"           : "We cannot ship to a PO Box, please enter a physical shipping address.",
   "cityMissing"          : "City or town required",
   "stateProvMissing"     : "State or province required",
   "postalCodeMissing"    : "Postal code required",

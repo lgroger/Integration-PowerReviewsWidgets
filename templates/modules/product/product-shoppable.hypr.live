@@ -8,15 +8,15 @@
             </span>
             <div class="product-details">
                 <div class="img-container">
-                    <a href="/p/{{item.productCode}}">
+                    <a href="/{{item.content.seoFriendlyUrl}}/p/{{item.productCode}}">
                         <img dsrc="/resources/images/product_place_holder.jpg"
                             src="{{item.mainImage.imageUrl}}?max=120"
                             alt="{{item.content.productName|safe}}" />
                     </a>
                 </div>
                 <div class="details">
-                    <p class="shop_product_title"><a href="/p/{{item.productCode}}">{{item.content.productName|safe}} {{item.productCode}}</a></p>
-                    <a action="add-to-cart" href="/p/{{item.productCode}}" pcode="{{item.productCode}}">View Details</a>
+                    <p class="shop_product_title"><a href="/{{item.content.seoFriendlyUrl}}/p/{{item.productCode}}">{{item.content.productName|safe}} {{item.productCode}}</a></p>
+                    <a action="add-to-cart" href="/{{item.content.seoFriendlyUrl}}/p/{{item.productCode}}" pcode="{{item.productCode}}">View Details</a>
                 </div>
             </div>
         </div>

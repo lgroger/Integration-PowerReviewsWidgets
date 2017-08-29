@@ -4,7 +4,7 @@
 <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" style="margin: 0px auto; background-color: rgb(255, 255, 255);" data-module="Mdl28" data-thumb="http://emailtemplatebuilders.com/Metrospective/03_TBThumbnails/module-27.jpg">
    <tr>
       <td width="30" class="wz"></td>
-      <td align="center">
+      <td align="left">
  {% with pageContext.cmsContext.page.document.properties.html_3 as  message%}
      {% with message|replace('{{bill_firstname}}', model.billingInfo.billingContact.firstName) as message1 %}
        {% with message1|replace('{{bill_lastname}}', model.billingInfo.billingContact.lastNameOrSurname) as message2 %}
@@ -25,6 +25,7 @@
       <td align="center">
          <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" bgcolor="#e0e7f0" data-bgcolor="TemplateBGColor" class="table600Min" style="table-layout: fixed; margin: 0px auto; min-width: 668px; background-color: rgb(255, 255, 255);">
             <tr>
+              <td width="30" class="wz"></td>
                <td align="center" class="table600st" style="min-width:668px;">
                   <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0" class="table600Min" style="min-width:629px;">
                      <tr>
@@ -44,8 +45,8 @@
                                           <td colspan="3" height="10" style="font-size:0;line-height:0;">&nbsp;</td>
                                        </tr>
                                        <tr>
-                                          <td width="30" class="wz"></td>
-                                          <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
+                                          <!-- <td width="30" class="wz"></td> -->
+                                          <td class="RegularTextTD" width="100%" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
                                              {% for package in model.packages %}
                                              <table  style="border-collapse: collapse;" width="100%" cellpadding="1" cellspacing="1" width="100%">
                                                 <thead>
@@ -86,7 +87,7 @@
                                         
                                              {% endfor %}
                                           </td>
-                                          <td width="30" class="wz"></td>
+                                          <!-- <td width="30" class="wz"></td> -->
                                        </tr>
                                        <tr>
                                             <td class="RegularTextTD" data-color="ModuleRegularTXT" data-link-style="text-decoration:none; color:#ff675f;" data-link-color="ModuleTextLink" style="color: #000000;font-family: sans-serif;font-size: 13px;font-weight: lighter;text-align: left;line-height: 22px;">
@@ -102,6 +103,7 @@
                      </tr>
                   </table>
                </td>
+              <td width="30" class="wz"></td>
             </tr>
          </table>
       </td>

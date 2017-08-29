@@ -955,6 +955,12 @@
                           "name": "mktoAccNumber",
                           "width":"20%",
                           "allowBlank": false
+                      },
+                      {
+                          "xtype": "mz-input-number",
+                          "name": "numberOfDaysMarketo",
+                          "fieldLabel": "Enter # of days for quote orders to be sent to Marketo",
+                          "allowBlank": false
                       }
                   ]
                 },
@@ -1011,6 +1017,7 @@
                       }
                   ]
                 },
+                /*
                 {
                   "xtype": "panel",
                   "title": "NexTag ROI Optimizer",
@@ -1026,6 +1033,7 @@
                       }
                   ]
                 },
+                */
                 {
                   "xtype": "panel",
                   "title": "Criteo",
@@ -1098,7 +1106,7 @@
                     ]
                 },
                 {
-                    "xtype":"panel",
+		    "xtype":"panel",
                     "title":"Facebook Pixel Account ID",
                     "collapsed":false,
                     "flex":"1",

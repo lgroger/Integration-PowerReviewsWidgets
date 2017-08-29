@@ -519,36 +519,39 @@ qty += {{i.quantity}};
 {% endblock body-content %}
 
 {% block trailing-scripts %}
-	{% parent %} 
+	{% parent %}
+
+  {% comment %}
   {% block Nextag %}
-{% if model.billingInfo.paymentType != "check"%}   
-   <script type="text/javascript">
+    {% if model.billingInfo.paymentType != "check"%}   
+       <script type="text/javascript">
 
-    function getCookie(name)
-  {
-    var re = new RegExp(name + "=([^;]+)");
-    var value = re.exec(document.cookie);
-    return (value != null) ? unescape(value[1]) : null;
-  }
-    var cookval =   getCookie("pageurlclick");
-    var finalcook = cookval.replace(/,/g , '|');
-    
-    /* NexTag ROI Optimizer Data */
-    var id = '{{ themeSettings.nexttag }}'; 
-    var rev = '{{ model.total }}';
-    var order = '{{ model.orderNumber}}';
-    var cats = '{% for item in model.items %}{% for cat in item.product.categories %}{{ cat.id }}{% if not forloop.last %}|{% endif %}{% endfor %}{% endfor %}';
-    var prods = '{% for item in model.items %}{{ item.product.productCode }}{% if not forloop.last %}|{% endif %}{% endfor %}';
-    var units = '{% for item in model.items %}{{ item.quantity }}{% if not forloop.last %}|{% endif %}{% endfor %}';
-    var itemrevs = '{% for item in model.items %}{{ item.unitPrice.extendedAmount }}{% if not forloop.last %}|{% endif %}{% endfor %}';
-     var click = ''+finalcook;
-    var type = 'product';  
+        function getCookie(name)
+      {
+        var re = new RegExp(name + "=([^;]+)");
+        var value = re.exec(document.cookie);
+        return (value != null) ? unescape(value[1]) : null;
+      }
+        var cookval =   getCookie("pageurlclick");
+        var finalcook = cookval.replace(/,/g , '|');
+        
+        /* NexTag ROI Optimizer Data */
+        var id = '{{ themeSettings.nexttag }}'; 
+        var rev = '{{ model.total }}';
+        var order = '{{ model.orderNumber}}';
+        var cats = '{% for item in model.items %}{% for cat in item.product.categories %}{{ cat.id }}{% if not forloop.last %}|{% endif %}{% endfor %}{% endfor %}';
+        var prods = '{% for item in model.items %}{{ item.product.productCode }}{% if not forloop.last %}|{% endif %}{% endfor %}';
+        var units = '{% for item in model.items %}{{ item.quantity }}{% if not forloop.last %}|{% endif %}{% endfor %}';
+        var itemrevs = '{% for item in model.items %}{{ item.unitPrice.extendedAmount }}{% if not forloop.last %}|{% endif %}{% endfor %}';
+         var click = ''+finalcook;
+        var type = 'product';  
 
-</script>
+    </script>
 
-<script type="text/javascript" src="https://imgsrv.nextag.com/imagefiles/includes/roitrack.js"></script> 
-{% endif %}
+    <script type="text/javascript" src="https://imgsrv.nextag.com/imagefiles/includes/roitrack.js"></script> 
+    {% endif %}
   {% endblock Nextag %}
+  {% endcomment %}
 
   {% block Google-Conversion-Tag %}
 {% if model.billingInfo.paymentType != "check"%}
