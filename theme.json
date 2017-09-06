@@ -79,8 +79,8 @@
         ],
         "priority": 1
     },{
-      "id": "ship_days@mozu",
-      "path": "ship_days.js",
+      "id": "shipping_days_list",
+      "path": "shipping-days-list.js",
       "documentTypes": [
             "shippingDate@shindigz"
         ],
