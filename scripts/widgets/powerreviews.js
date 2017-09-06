@@ -80,7 +80,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 else
                   prConfig.REVIEW_DISPLAY_SNAPSHOT_TYPE ='SIMPLE';
 
-                prConfig.style_sheet = "/widgets/powerreview.css";
+                prConfig.style_sheet = "/stylesheets/widgets/powerreview.css";
                 prConfig.review_wrapper_url = '/write-a-review?pr_page_id='+currentProduct.productCode+'&locale='+config.locale+'&pr_returnUrl=' + returnUrl;
                 prConfig.product = product;
                 prConfig.components = components;
