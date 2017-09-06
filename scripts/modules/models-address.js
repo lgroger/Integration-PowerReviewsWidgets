@@ -19,7 +19,7 @@
                 }
             }
         }),
-
+ 
         StreetAddress = Backbone.MozuModel.extend({
             mozuType: 'address',
             initialize: function() {
@@ -33,6 +33,7 @@
                 address2: {
                     fn: function (value) {
                         value = value || "";
+                        var isShipping = window.jQuery("#step-shipping-address").hasClass("is-incomplete") || jQuery("#step-shipping-address").hasClass("is-invalid");
                         value = value.replace(/\./g, '');
                         value = value.replace(/\s\s+/g, ' ');
                         var result = value.toLowerCase().match("/|po box|p o box|pobox");
@@ -41,7 +42,7 @@
                                 return Hypr.getLabel('poBoxFound');
                             }
                         }else if(require.mozuData("pagecontext").pageType != "my_account") {
-                            if(result && this.get('email')) {
+                            if(result && isShipping) {
                                 return Hypr.getLabel('poBoxFound');
                             }
                         }
@@ -54,6 +55,7 @@
                     */
                     fn: function (value) {
                         value = value || "";
+                        var isShipping = window.jQuery("#step-shipping-address").hasClass("is-incomplete") || jQuery("#step-shipping-address").hasClass("is-invalid");
                         value = value.replace(/\./g, '');
                         value = value.replace(/\s\s+/g, ' ');
                         if(value.length > 0) {
@@ -63,7 +65,7 @@
                                     return Hypr.getLabel('poBoxFound');
                                 }
                             }else if(require.mozuData("pagecontext").pageType != "my_account") {
-                                if(result && this.get('email')) {
+                                if(result && isShipping) {
                                     return Hypr.getLabel('poBoxFound');
                                 }
                             }

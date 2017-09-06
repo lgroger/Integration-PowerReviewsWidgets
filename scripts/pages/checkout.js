@@ -9,6 +9,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             this.model.edit();
             if(id == "step-shipping-method"){
                 this.$el.children().find('[data-mz-action="next"]').hide();
+            }else if(id == "step-shipping-address") {
+                this.model.get('address').set('candidateValidatedAddresses', false);
+                this.render();
             }
         },validateBillingInfo: function(){
             var me = this;
@@ -1310,6 +1313,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         updateAddressEditingProperty: function(){
           /*   $('.mz-contactselector-contact.mz-contactselector-new.mz-checkoutform-shipping').css('display','table');
             $('.mz-contactselector .mz-addresssummary').hide();   */
+            this.model.get('address').set('candidateValidatedAddresses', false);
             this.model.set("isAddressEditing",  "1");
             this.render();
         },
