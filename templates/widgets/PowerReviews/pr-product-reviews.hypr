@@ -1,143 +1,30 @@
-<link rel="stylesheet" href="/stylesheets/pages/pr_product.css" type="text/css">
 <div data-mz-pr-config="{%json_attribute model.config%}"></div>
 
 <input type="hidden" id="prProductDetail" value="1">
 
 
-<script type="text/javascript">
-
-    function activateTab(tabName) {
-        {{ model.config.tabCode|safe }}
-    }
-</script>
-{% if model.config.widgetType == "reviewSnippet" %}
-    <input type="hidden" id="productReviewSnippet" value="1">
-        <div id="reviewSnippetProduct" style="width:272px; float:left;">
-
-         </div>
-{% endif %}  
-
-{% if model.config.widgetType == "socialAnswerSnippet" %}
-    <input type="hidden" id="productSocialAnswerSnippet" value="1">
-        <div id="socialAnswerSnippet"  style="width:272px; float:left;">
-           
-        </div>
-  
-{% endif %}
-    
-{% if model.config.widgetType == "reviewDisplay"  and model.config.isTab == false%}
-
-     <input type="hidden" id="productReviewDisplay" value="1">
-     <div id="reviewDisplayProduct">
-            {% with "siteId eq '{0}'" as qFormat%}
-                {% with qFormat|string_format(siteContext.siteId) as q %}
-                    {% include_entities "widgets/PowerReviews/pr-seo-rating-template" listFQN=themeSettings.powerReviewsSettingsList query=q %}
-                {% endwith %}   
-             {% endwith %}   
-     </div>
-  
+{% if model.config.widgetType == "reviewDisplay" %}
+    <input type="hidden" id="reviewDisplayType" value="{{model.config.displayType}}" >
+    {% if pageContext.isEditMode == 'true' %}
+      Power Reviews Display widget
+    {% endif %}
+     <div id="pr-reviewdisplay"></div>
 {% endif %}
 
-{% if model.config.widgetType == "socialAnswerDisplay"  and model.config.isTab == false%}
-  <input type="hidden" id="productSocialAnswerDisplay" value="1">
-  <div id="socialAnswerDisplay">
-        {% with "siteId eq '{0}'" as qFormat%}
-            {% with qFormat|string_format(siteContext.siteId) as q %}
-                {% include_entities "widgets/PowerReviews/pr-seo-question-template" listFQN=themeSettings.powerReviewsSettingsList query=q %}
-            {% endwith %}   
-         {% endwith %}  
-   </div>
-  
+{% if model.config.widgetType == "socialAnswerDisplay" %}
+      <input type="hidden" id="qaDisplayType" value="{{model.config.displayType}}" >
+  {% if pageContext.isEditMode == 'true' %}
+    Power Reviews Q&A widget
+  {% endif %}
+  <div id="pr-qadisplay" ></div>
+{% endif %}
+
+{% if model.config.widgetType == "whydYouBuyDisplay" %}
+    <input type="hidden" id="wybDisplayType" value="{{model.config.displayType}}" >
+  {% if pageContext.isEditMode == 'true' %}
+    Power Reviews Why did you buy widget
+  {% endif %}
+  <div id="pr-wyb" ></div>
 {% endif %}
 
 {% require_script "widgets/powerreviews" %}
-
-<!-- Code for implementing Tab -->
- 
-{% if model.config.isTab == true %}
-<input type="hidden" id="reviewSocialAnswerTab" value="1">
-{% endif %}
-    
-
-   
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
