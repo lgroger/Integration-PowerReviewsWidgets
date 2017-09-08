@@ -2232,11 +2232,24 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 });
             }
         },
+        searchInPackage: function(pack){
+            for(var k = 0; k < pack.items.length; k++) {
+                if(pack.items[k].productCode == window.currentItem) {
+                    break;
+                }
+            }
+            if(pack.items.length > 0 && k < pack.items.length) {
+                return true;
+            }else {
+                return false;
+            }
+        },
         /**
             * loop throguh each items and check if there is any informations related to the items
             * in packages array. if there add new property for the line item to hold fullfilment date info
         **/
         updateShippingDateForLineItems:function(){
+            /*
             console.log("Order updating");
             console.log(this.model);
             for(var i=0; i<this.model.get('items').models.length; i++){
@@ -2257,6 +2270,22 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }
                 }
             }
+            */
+            var order =  this.model.get('items'); 
+            var i = 0;
+            for(i = 0; i < order.length; i++){
+                order.models[i].set('viewtype', 'quote');
+                
+                for(var j = 0; j < order.models[i].get('items').length; j++) {
+                    window.currentItem = order.models[i].get('items').models[j].get('product').get('productCode');
+                    var obj = _.filter(order.models[i].get('packages'), this.searchInPackage);
+                    if(obj.length > 0) {
+                        order.models[i].get('items').models[j].set("shipmentFlag", true);
+                    }else {
+                        order.models[i].get('items').models[j].set("shipmentFlag", false);
+                    }
+                }
+            }
             console.log(this.model);
         },
         render: function(){
@@ -2272,10 +2301,33 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             'rma.quantity',
             'rma.comments'
         ],
+        searchInPackage: function(pack){
+            for(var k = 0; k < pack.items.length; k++) {
+                if(pack.items[k].productCode == window.currentItem) {
+                    break;
+                }
+            }
+            if(pack.items.length > 0 && k < pack.items.length) {
+                return true;
+            }else {
+                return false;
+            }
+        },
         initialize: function () {
             var order =  this.model.get('items');
-            for(var i=0;i < order.length; i++){
+            var i = 0;
+            for(i = 0; i < order.length; i++){
                 order.models[i].set('viewtype', 'quote');
+                
+                for(var j = 0; j < order.models[i].get('items').length; j++) {
+                    window.currentItem = order.models[i].get('items').models[j].get('product').get('productCode');
+                    var obj = _.filter(order.models[i].get('packages'), this.searchInPackage);
+                    if(obj.length > 0) {
+                        order.models[i].get('items').models[j].set("shipmentFlag", true);
+                    }else {
+                        order.models[i].get('items').models[j].set("shipmentFlag", false);
+                    }
+                }
             }
             //this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.myAccountQuoteChangePageSize, this.model));

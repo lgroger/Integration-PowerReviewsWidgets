@@ -78,14 +78,16 @@
             "Shippingholiday@shindigz"
         ],
         "priority": 1
-    },{
+    },
+    {
       "id": "shipping_days_list",
       "path": "shipping-days-list.js",
       "documentTypes": [
             "shippingDate@shindigz"
         ],
         "priority": 1
-    },{
+    },
+    {
       "id": "ship_more_then@mozu",
       "path": "ship_more_then.js",
       "documentTypes": [
@@ -586,25 +588,25 @@
     "userListForDndTotenAccess":"",
     "bannerProductTypes":"Banner,BannerRectangle,BannerVertical,BackgroundVBG",
     "safetyFlags":[
-        {"code":"tenant~safety-1","field":"safety-1"},
-        {"code":"tenant~safety-2","field":"safety-2"},
-        {"code":"tenant~safety-3","field":"safety-3"},
-        {"code":"tenant~safety-4","field":"safety-4"},
-        {"code":"tenant~safety-5","field":"safety-5"},
-        {"code":"tenant~safety-6","field":"safety-6"},
-        {"code":"tenant~safety-a","field":"safety-a"},
-        {"code":"tenant~safety-b","field":"safety-b"},
-        {"code":"tenant~safety-c","field":"safety-c"},
-        {"code":"tenant~safety-d","field":"safety-d"},
-        {"code":"tenant~safety-e","field":"safety-e"},
-        {"code":"tenant~safety-f","field":"safety-f"},
-        {"code":"tenant~safety-g","field":"safety-g"},
-        {"code":"tenant~safety-h","field":"safety-h"},
-        {"code":"tenant~safety-i","field":"safety-i"},
-        {"code":"tenant~safety-j","field":"safety-j"},
-        {"code":"tenant~safety-k","field":"safety-k"},
-        {"code":"tenant~safety-l","field":"safety-l"},
-        {"code":"tenant~safety-m","field":"safety-m"}
+      {"code":"Tenant~safety-1","field":"safety-1"},
+      {"code":"Tenant~safety-2","field":"safety-2"},
+      {"code":"Tenant~safety-3","field":"safety-3"},
+      {"code":"Tenant~safety-4","field":"safety-4"},
+      {"code":"Tenant~safety-5","field":"safety-5"},
+      {"code":"Tenant~safety-6","field":"safety-6"},
+      {"code":"Tenant~safety-a","field":"safety-a"},
+      {"code":"Tenant~safety-b","field":"safety-b"},
+      {"code":"Tenant~safety-c","field":"safety-c"},
+      {"code":"Tenant~safety-d","field":"safety-d"},
+      {"code":"Tenant~safety-e","field":"safety-e"},
+      {"code":"Tenant~safety-f","field":"safety-f"},
+      {"code":"Tenant~safety-g","field":"safety-g"},
+      {"code":"Tenant~safety-h","field":"safety-h"},
+      {"code":"Tenant~safety-i","field":"safety-i"},
+      {"code":"Tenant~safety-j","field":"safety-j"},
+      {"code":"Tenant~safety-k","field":"safety-k"},
+      {"code":"Tenant~safety-l","field":"safety-l"},
+      {"code":"Tenant~safety-m","field":"safety-m"}
     ],
     "safety-1":"",
     "safety-2":"",
@@ -633,7 +635,7 @@
     "googleMapApiKey":"AIzaSyA142qRIX0TvWVQnJs-OOtFRPaXKUNS1_M",
     "daysForNewRibbon":25,
     "powerReviewsFQNID": "@mzint",
-    "dndEngineUrl": "//pers.shindigz.com/dnd/",
+    "dndEngineUrl": "//upload.shindigz.com/dnd/",
     "iframeloadurlafterlogin":"/about-us",
     "backofficeDateTimeFormat": "m/d/Y H:i:s O",
     "extendedPropertiesEnabled": false,
@@ -714,32 +716,32 @@
     "instaImageCount": 10,
     "socialShareAddThis": "",
     "productAttributes":{
-        "displayCrossSell": "tenant~displaycrosssells",
-        "productCrossSell":"tenant~product-crosssell",
-        "productionTime":"tenant~productiontime",
-        "colorHex":"tenant~colorhex",
-        "dndCode":"tenant~dndcode",
-        "designCode":"tenant~design-code",
-        "dndToken":"tenant~dnd-token",
-        "color":"tenant~color",
-        "video":"tenant~szvideo",
-        "unitOfMeasure":"tenant~uom",
-        "giantGreetingCardSize":"tenant~giant-greeting-card-size",
-        "optionalEnvelope":"tenant~optional-envelope",
-        "newFlag":"tenant~display-new-ribbon",
-        "shipZip":"tenant~shipfromzip",
-        "productMelt":"tenant~melts",
-        "usaOnly":"tenant~safety-j",
-        "usa48":"tenant~safety-k",
-        "outdoorbanner":"tenant~outdoor-banner",
-        "outdoorbannerslits":"tenant~outdoor-banner-with-slits",	
-        "groundOnly":"tenant~safety-d",
-        "surCharge":"tenant~pnhsurcharge",
-        "clearanceFlag":"tenant~clearanceitem",
-        "dndColor": "tenant~dndcolorize", 
-        "guidedSearchNavField":"tenant~product-type",
-        "dontshiptoIllinois":"tenant~safety-m",
-        "dontshiptoCalifornia":"tenant~safety-l"
+      "displayCrossSell": "Tenant~displaycrosssells",
+      "productCrossSell":"tenant~product-crosssell",
+      "productionTime":"Tenant~productiontime",
+      "colorHex":"tenant~colorhex",
+      "dndCode":"Tenant~dndcode",
+      "designCode":"Tenant~design-code",
+      "dndToken":"Tenant~dnd-token",
+      "color":"tenant~color",
+      "video":"Tenant~szvideo",
+      "unitOfMeasure":"Tenant~uom",
+      "giantGreetingCardSize":"Tenant~giant-greeting-card-size",
+      "optionalEnvelope":"tenant~optional-envelope",
+      "newFlag":"tenant~display-new-ribbon",
+      "shipZip":"Tenant~shipfromzip",
+      "productMelt":"Tenant~melts",
+      "usaOnly":"Tenant~safety-j",
+      "usa48":"Tenant~safety-k",
+      "dontshiptoIllinois":"Tenant~safety-m",
+      "dontshiptoCalifornia":"Tenant~safety-l",
+      "outdoorbanner":"Tenant~outdoor-banner",
+      "outdoorbannerslits":"Tenant~outdoor-banner-with-slits",
+      "groundOnly":"Tenant~safety-d",
+      "surCharge":"Tenant~pnhsurcharge",
+      "clearanceFlag":"Tenant~clearanceitem",
+      "dndColor": "Tenant~dndcolorize",
+      "guidedSearchNavField":"tenant~product-type"
     },
     "usStates": [
       {
@@ -1932,4 +1934,3 @@
     }
   ]
 }
-
