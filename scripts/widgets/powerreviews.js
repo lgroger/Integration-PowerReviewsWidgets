@@ -52,7 +52,8 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                    return category.sequence === 1;
                  });
                  if (!primary) primary = currentProduct.categories[0];
-                  product.category_name = primary.content.name; //"build category hierarchy";
+                 if (primary)
+                   product.category_name = primary.content.name; //"build category hierarchy";
                }
 
                if (currentProduct.properties) {
