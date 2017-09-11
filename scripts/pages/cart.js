@@ -271,7 +271,6 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 me.showPersonalizeImage();
                 me.getProductionTime(this);
                 me.calculateShippingSurcharge();
-                me.model.set("shippingCost",7.99);
             }
             preserveElement(this, ['.v-button','.p-button', '#AmazonPayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
