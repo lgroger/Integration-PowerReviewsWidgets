@@ -1,0 +1,15 @@
+{% if track.trackingNumber %}
+  {% with track.trackingNumber as trackingNumber %}
+    {% with trackingNumber|split("1Z") as trackObj %}
+      {% if trackObj|first == "" %}
+        <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+      {% else %}
+        {% if track.length == 22 or track.length == 13  track.length == 10 %}
+          <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/USPS?tracking_numbers={{ trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+        {% else %}
+          <a class="deleteWishlist1">Shipped by Truck with Tracking Number: {{ track.trackingNumber }}</a>
+        {% endif %}
+      {% endif %}
+    {% endwith %}
+  {% endwith %}
+{% endif %} 

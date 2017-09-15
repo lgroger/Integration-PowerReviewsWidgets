@@ -1,11 +1,11 @@
         {% for order in model.items %}
         {% if pageContext.pageType != 'my_anonymous_account' %}
-        	<button class="accordion account-order-history">#{{order.orderNumber}}&nbsp;-&nbsp;ORDER PLACED: <strong>{{ order.submittedDate|date("F j, Y") }}</strong> 
-        	 <span><i class="fa fa-plus" aria-hidden="true"></i></span> 
+            <button class="accordion account-order-history">#{{order.orderNumber}}&nbsp;-&nbsp;ORDER PLACED: <strong>{{ order.submittedDate|date("F j, Y") }}</strong> 
+             <span><i class="fa fa-plus" aria-hidden="true"></i></span> 
              <span><i class="fa fa-minus" aria-hidden="true"></i></span></button>
         {% endif %}
 
-	        <div class="panel">
-	        	{% include "modules/my-account/order-history-order-listing" with model=order %}
-	        </div>
+            <div class="panel">
+                {% include "modules/my-account/order-history-order-listing" with model=order payment="quote" %}
+            </div>
         {% endfor %}

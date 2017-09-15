@@ -158,7 +158,6 @@
 
       </head>
       {% endblock head-tag %}
-
       {% block body-tag %}
 
       {% block open-body-tag %}
