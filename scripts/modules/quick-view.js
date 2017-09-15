@@ -129,7 +129,7 @@ require(
                     if(swatchProduct.items[i].content.productImages.length > 0 && swatchProduct.items[i].content.productImages[0].imageUrl !== "") {
                         src = swatchProduct.items[i].content.productImages[0].imageUrl + "?max=50";
                         objA = document.createElement("a");
-                        $(objA).attr("href", "/p/" + swatchProduct.items[i].productCode);
+                        $(objA).attr("href", "/p/" + swatchProduct.items[i].productCode).attr("title",swatchProduct.items[i].content.productName);
                         $("<img/>").attr('src', src).appendTo(objA);
                         objLI = document.createElement("li");
                         $(objLI).addClass("swatch-image").css('border-radius', '50%').append(objA);
@@ -329,9 +329,11 @@ require(
                         $('.mz-productoptions-option:visible').val()!==""){
                         $('.mz-quick-view-wrapper .personalize').prop('disabled', false);
                         $('.custom-qty input').prop('disabled', false);
+                        $('.personalize').attr('title', "");
                     }else{
                         $('.mz-quick-view-wrapper .personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
+                        $('.personalize').attr("title", "Please select a material and size above.");
                     }
                 }
 
@@ -355,13 +357,14 @@ require(
                 /** Product Typ candbary check options are selected or not **/
                 
                     if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){ 
-                        if(me.model.get('purchasableState').isPurchasable && $('.mz-productoptions-option:visible:eq(1)').val()!==undefined &&
-                                    $('.mz-productoptions-option:visible:eq(1)').val()!==""){
-                                    $('.mz-quick-view-wrapper .personalize').prop('disabled', false);
-                                    $('.custom-qty input').prop('disabled', false);
+                        if(me.model.get('purchasableState').isPurchasable && (($("[data-mz-product-option='tenant~pcdypcb']").length > 0 && typeof $("[data-mz-product-option='tenant~pcdypcb']").val()!== "undefined" && $("[data-mz-product-option='tenant~pcdypcb']").val()!=="") || $("[data-mz-product-option='tenant~pcdypcb']").length === 0)){
+                            $('.mz-quick-view-wrapper .personalize').prop('disabled', false);
+                            $('.custom-qty input').prop('disabled', false);
+                            $('.personalize').attr('title', "");
                         }else{ 
                             $('.mz-quick-view-wrapper .personalize').prop('disabled', true);
                             $('.custom-qty input').prop('disabled', true);
+                            $('.personalize').attr('title', "Please select an option above.");
                         }
                     }
                 }

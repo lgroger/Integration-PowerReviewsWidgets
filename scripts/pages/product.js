@@ -252,7 +252,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     function getBundleProductDetails(arr){
         if(BundleItems.length>0){
                 Api.get('product',{"productCode":arr[loopcounter]}).then(function(res){
-                    console.log(res);
+                    //console.log(res);
                     var product = new ProductModels.Product(res.data);
                     var productImage = product.get('content.productImages');
                     if(productImage.length>0){
@@ -997,7 +997,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 option = this.model.get('options').get(productAttributes.outdoorbannerslits);
                 if (option) {
                     newValue = oldValue+'S';
-                    console.log(newValue);
+                    //console.log(newValue);
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue);
                     }
@@ -1006,7 +1006,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 option = this.model.get('options').get(productAttributes.outdoorbanner);
                 if (option) {
                     newValue = oldValue.split('S')[0];
-                    console.log(newValue);
+                    //console.log(newValue);
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue);
                     }
@@ -1247,7 +1247,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }else{
                         $('.personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
-                        $('.personalize').attr("title", "Please select a banner material and size above.");
+                        $('.personalize').attr("title", "Please select a material and size above.");
                     }
 
              }
@@ -1283,7 +1283,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }else{ 
                         $('.personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
-                        $('.personalize').attr('title', "Please select a type of chocolate above.");
+                        $('.personalize').attr('title', "Please select an option above.");
                     }
                 }
             }
@@ -1584,7 +1584,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
       
         try{
             $('.enable-slideshow').cycle();
-            console.log("cycle  started");
+            //console.log("cycle  started");
         }catch(err){
             console.log(err);
         }
@@ -1603,7 +1603,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 standardProducts.push($(this).attr('productCode'));
             }
         });
-        console.log(BundleItems);
+        //console.log(BundleItems);
         if(standardProducts.length > 0 || BundleItems.length>0){
             window.showPageLoader();
             getStandardProductDetails(standardProducts);
