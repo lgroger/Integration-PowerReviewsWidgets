@@ -249,9 +249,11 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         $('.mz-productoptions-option:visible').val()!==""){
                         $('.personalize').prop('disabled', false);
                         $('.custom-qty input').prop('disabled', false);
+                        $('.personalize').attr("title", "");
                     }else{
                         $('.personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
+                        $('.personalize').attr("title", "Please select a material and size above.");
                     }
                 }
 
@@ -274,14 +276,15 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }
                 /** Product Typ candbary check options are selected or not **/
                 
-                    if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){ 
-                        if(me.model.get('purchasableState').isPurchasable && $('.mz-productoptions-option:visible:eq(1)').val()!==undefined &&
-                                    $('.mz-productoptions-option:visible:eq(1)').val()!==""){
-                                    $('.personalize').prop('disabled', false);
-                                    $('.custom-qty input').prop('disabled', false);
+                    if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){
+                        if(me.model.get('purchasableState').isPurchasable && (($("[data-mz-product-option='tenant~pcdypcb']").length > 0 && typeof $("[data-mz-product-option='tenant~pcdypcb']").val()!== "undefined" && $("[data-mz-product-option='tenant~pcdypcb']").val()!=="") || $("[data-mz-product-option='tenant~pcdypcb']").length === 0)){
+                            $('.personalize').prop('disabled', false);
+                            $('.custom-qty input').prop('disabled', false);
+                            $('.personalize').attr('title', "");
                         }else{ 
                             $('.personalize').prop('disabled', true);
                             $('.custom-qty input').prop('disabled', true);
+                            $('.personalize').attr('title', "Please select an option above.");
                         }
                     }
                 }
@@ -315,7 +318,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 }
                 $("div[video-data] > img").click(function(){
                     $(".product-image > img").hide();
-                    $(".product-image > iframe").attr('src', 'http://www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
+                    $(".product-image > iframe").attr('src', '//www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
                 });
                 $("#video-frame").hide();
                 

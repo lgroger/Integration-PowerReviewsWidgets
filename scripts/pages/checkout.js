@@ -219,7 +219,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         templateName: 'modules/checkout/checkout-order-summary',
         self:this,
         initialize: function () {
-            console.log("init order summary ");
+            //console.log("init order summary ");
             window.first_load=true;
             //this.showPersonalizeImage();
             //this.render();
@@ -310,7 +310,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
             }); 
         },render:function(){
-            console.log("render on change");
+           // console.log("render on change");
             this.showPersonalizeImage();
             //var me=this;
             $(".mz-pagetitle .total_pay strong").text("$"+parseFloat(this.model.get("total")).toFixed(2));
@@ -578,7 +578,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         estTime.setFullYear(tmp.getFullYear());
                         estTime.setHours(utcTime-(timeOffset-dl));
                         estTime.setMinutes(tmp.getMinutes());
-                        console.log(estTime);
+                       // console.log(estTime);
                         scope_obj.checkProductionTime(scope_obj,isUSA,estTime);
                     }else{
                         scope_obj.checkProductionTime(scope_obj,isUSA,tmp);
@@ -640,7 +640,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                        if(isMelt!==undefined){
                             if(isMelt.values[0].value){
                                 window.meltArr[melt_code]=isMelt.values[0].value;
-                                console.log("melt "+pc);
+                                //console.log("melt "+pc);
                             }
                        }
                        idx++;
@@ -750,19 +750,17 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 if(isMelt!==undefined){
                     if(isMelt.values[0].value===true && window.indina_idx_arr.indexOf(i)>=0){
                         contains_melts=true;
-                    }else if(obj.bundledProducts.length>0){
+                    }
+                }
+                if(!contains_melts && obj.bundledProducts.length>0){
                     var melt_idx=obj.bundledProducts[0].productCode+"_melt";
                      if(window.meltArr[melt_idx]!==undefined && window.indina_idx_arr.indexOf(i)>=0){
                         contains_melts=true;
-                     }else if(me.model.get("items")[i].product.productType==="CandyBar" &&  _.findWhere(me.model.get("items")[i].product.options,{"attributeFQN":"tenant~cdyper-choice"}).value !== "cdyperw-option"){
-                            contains_melts=true;
-                    }
-                }
-                }else if(obj.bundledProducts.length>0){
-                    var melt_idx1=obj.bundledProducts[0].productCode+"_melt";
-                     if(window.meltArr[melt_idx1]!==undefined && window.indina_idx_arr.indexOf(i)>=0){
-                        contains_melts=true;
                      }
+                }
+                // removing tenant~pcdypcb from candybar since we will only offer milk chocolate now - if tenant~cdyper-choice is cdyper-option, set as melts
+                if(!contains_melts && me.model.get("items")[i].product.productType==="CandyBar" &&  _.findWhere(me.model.get("items")[i].product.options,{"attributeFQN":"tenant~cdyper-choice"}).value === "cdyper-option"){
+                    contains_melts=true;
                 }
             });
             //Divide the drop ship item with total order object 
@@ -993,7 +991,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             shipBusday=_.pluck(require.mozuData("shipBusDate"),'properties');
             shipBusday= _.findWhere(shipBusday,{'ship_code':scope_obj.model.toJSON().fulfillmentInfo.shippingMethodCode});
             var ship_date_config=_.pluck(require.mozuData("shipBusDate"),"properties");
-            console.log('shipping start date '+new Date(shipping_start_date).toISOString().slice(0,10));
+            //console.log('shipping start date '+new Date(shipping_start_date).toISOString().slice(0,10));
             if(add_day===undefined){
                 add_day=false;
             }
@@ -1960,7 +1958,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             //Check if any new coupons are getting added by mozu if we removed one max 4 recursion.
             var me=scope;
             var cartId = this.model.id;
-            console.log("Received "+resp);
+            //console.log("Received "+resp);
             var order_discount_code=_.filter(resp.orderDiscounts,function(dis){ return dis.couponCode!==undefined;});
             var order_discount_coupons=_.uniq(_.pluck(order_discount_code,'couponCode'));
 
@@ -2398,8 +2396,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }, this);
 
         }
-        console.log("fields");
-        console.log(fields);
+        //console.log("fields");
+        //console.log(fields);
 
         return fields;
     };

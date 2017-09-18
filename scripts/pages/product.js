@@ -252,7 +252,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     function getBundleProductDetails(arr){
         if(BundleItems.length>0){
                 Api.get('product',{"productCode":arr[loopcounter]}).then(function(res){
-                    console.log(res);
+                    //console.log(res);
                     var product = new ProductModels.Product(res.data);
                     var productImage = product.get('content.productImages');
                     if(productImage.length>0){
@@ -997,7 +997,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 option = this.model.get('options').get(productAttributes.outdoorbannerslits);
                 if (option) {
                     newValue = oldValue+'S';
-                    console.log(newValue);
+                    //console.log(newValue);
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue);
                     }
@@ -1006,7 +1006,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 option = this.model.get('options').get(productAttributes.outdoorbanner);
                 if (option) {
                     newValue = oldValue.split('S')[0];
-                    console.log(newValue);
+                    //console.log(newValue);
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue);
                     }
@@ -1243,9 +1243,11 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         $('.mz-productoptions-option:visible').val()!==""){
                         $('.personalize').prop('disabled', false);
                         $('.custom-qty input').prop('disabled', false);
+                        $('.personalize').attr("title", "");
                     }else{
                         $('.personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
+                        $('.personalize').attr("title", "Please select a material and size above.");
                     }
 
              }
@@ -1274,13 +1276,14 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             /** Product Typ candbar check options are selected or not **/
             
                 if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){ 
-                    if(me.model.get('purchasableState').isPurchasable && $('.mz-productoptions-option').val()!==undefined &&
-                                $('.mz-productoptions-option').val()!==""){
-                                $('.personalize').prop('disabled', false);
-                                $('.custom-qty input').prop('disabled', false);
+                    if(me.model.get('purchasableState').isPurchasable && (($("[data-mz-product-option='tenant~pcdypcb']").length > 0 && typeof $("[data-mz-product-option='tenant~pcdypcb']").val()!== "undefined" && $("[data-mz-product-option='tenant~pcdypcb']").val()!=="") || $("[data-mz-product-option='tenant~pcdypcb']").length === 0)) {
+                        $('.personalize').prop('disabled', false);
+                        $('.custom-qty input').prop('disabled', false);
+                        $('.personalize').attr('title', "");
                     }else{ 
                         $('.personalize').prop('disabled', true);
                         $('.custom-qty input').prop('disabled', true);
+                        $('.personalize').attr('title', "Please select an option above.");
                     }
                 }
             }
@@ -1581,7 +1584,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
       
         try{
             $('.enable-slideshow').cycle();
-            console.log("cycle  started");
+            //console.log("cycle  started");
         }catch(err){
             console.log(err);
         }
@@ -1600,7 +1603,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 standardProducts.push($(this).attr('productCode'));
             }
         });
-        console.log(BundleItems);
+        //console.log(BundleItems);
         if(standardProducts.length > 0 || BundleItems.length>0){
             window.showPageLoader();
             getStandardProductDetails(standardProducts);

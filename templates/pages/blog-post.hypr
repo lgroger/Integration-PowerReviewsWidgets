@@ -16,7 +16,7 @@
 
 {% block body-content %}
 	{% dropzone "blog-top" scope="template" %}		
-	<div class="blog-post-content">
+	<div class="blog-post-content" itemscope itemtype="http://schema.org/Article">
 		{% dropzone "single-post-zone" scope="page" %}
 	</div>
 

@@ -4,7 +4,7 @@
 		{% for prod in model.items %}
 			{% if prod.mainImage.imageUrl %}
             	<li  class="item">
-            		<a href="{% make_url "product" prod %}">
+            		<a href="{% make_url "product" prod %}" title="{{ prod.content.productName }}">
                 		<img src="{% make_url "image" prod.mainImage with max=themeSettings.listProductThumbSize as_parameter %}" {% if prod.mainImage.altText %}alt="{{ prod.mainImage.altText }}"{% else %}alt="{{ prod.content.productName }}"{% endif %} width="80px" />
                 	</a>
                 </li>
