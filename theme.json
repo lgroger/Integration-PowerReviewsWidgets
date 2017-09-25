@@ -635,7 +635,7 @@
     "googleMapApiKey":"AIzaSyA142qRIX0TvWVQnJs-OOtFRPaXKUNS1_M",
     "daysForNewRibbon":25,
     "powerReviewsFQNID": "@mzint",
-    "dndEngineUrl": "//upload.shindigz.com/dnd/",
+    "dndEngineUrl": "//pers.shindigz.com/dnd/",
     "iframeloadurlafterlogin":"/about-us",
     "backofficeDateTimeFormat": "m/d/Y H:i:s O",
     "extendedPropertiesEnabled": false,
