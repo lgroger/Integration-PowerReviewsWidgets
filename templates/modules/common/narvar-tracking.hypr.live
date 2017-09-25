@@ -7,7 +7,7 @@
         {% if track.length == 22 or track.length == 13  track.length == 10 %}
           <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/USPS?tracking_numbers={{ trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
         {% else %}
-          <a class="deleteWishlist1">Shipped by Truck with Tracking Number: {{ track.trackingNumber }}</a>
+          <a class="deleteWishlist1">Shipped by Freight Truck with Tracking Number: {{ track.trackingNumber }}</a>
         {% endif %}
       {% endif %}
     {% endwith %}
