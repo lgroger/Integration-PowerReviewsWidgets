@@ -31,6 +31,48 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                     return false;
                 }
             });
+
+            //Get Login user default shipping address and calc shipping amount
+            if(!require.mozuData('user').isAnonymous){
+             var user_account_id=require.mozuData("user").accountId;
+             Api.request("GET","/api/commerce/customer/accounts/"+user_account_id+"/contacts").then(function(res){
+               var prop=_.pluck(res.items,"types");
+               prop.forEach(function(element,index){
+                if(element.length >0 ){
+                     if(element[0].isPrimary && element[0].name=="Shipping"){
+                       idx=res.items[index].address.postalOrZipCode;
+                       ship_default=res.items[index].address;
+                    }
+                }
+               });
+               if(ship_default===undefined){
+                  me.calEstimatedCost("usa");
+               }else if(ship_default.countryCode==="US"){
+                if(ship_default.stateOrProvince=="AK" || ship_default.stateOrProvince=="HI" || ship_default.stateOrProvince=="PR"){
+                        me.calEstimatedCost("usaak");  
+                 }else if(ship_default.stateOrProvince=="AA" || ship_default.stateOrProvince=="AE" || ship_default.stateOrProvince=="AP" ){
+                    me.calEstimatedCost("usaapo");                                   
+                 }else if(ship_default.stateOrProvince=="VI"){
+                        me.calEstimatedCost("usat");
+                }else{
+                    me.calEstimatedCost("usa");
+                 }
+                }else if(ship_default.countryCode==="CA"){
+                      me.calEstimatedCost("ca");
+                }else{
+                     me.calEstimatedCost("global");
+                }
+             },function(err){
+               console.log(err);
+                me.calEstimatedCost("usa");
+             });
+            }else{
+                me.calEstimatedCost("usa");              
+            }
+
+            /*Coupon cookie code*/
+           
+            //Coupon code validation starts here
             try{
                  var cartId = this.model.id;
 
@@ -229,7 +271,6 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 me.showPersonalizeImage();
                 me.getProductionTime(this);
                 me.calculateShippingSurcharge();
-                me.model.set("shippingCost",7.99);
             }
             preserveElement(this, ['.v-button','.p-button', '#AmazonPayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
@@ -395,6 +436,120 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 mod.set('cartItemId', prodId);
                 Wishlist.initoWishlist(mod);
             }
+        },
+        estimateShippingCost:function(e){
+            var self = this;
+            var zip = $('[name="zipcode"]').val();
+            var zipCode = self.model.get('estimateZipValue');
+            var zipRegEx = /(^\d{5}$)|(^\d{5}-\d{4}$)/;
+
+            if(zip.length > 0){
+                    self.model.set({estimateZipValue:zip});
+                    idx=self.model.get('estimateZipValue');
+                     self.getZipCodeInfo(self.model.get('estimateZipValue'));
+            }  else{
+                    $('.error-zipCode').text('Please enter valid zip-code').show();
+                    self.model.set('shippingCost',0);
+                    self.model.set('estimateZipValue','');
+                    self.model.unset('estimateEntity');
+                    setTimeout(function(){
+                        $('.error-zipCode').hide();
+                        self.render();    
+                    },4000); 
+                    
+                }
+            
+        },
+        getZipCodeInfo:function(zipcd){
+        },getEstimate:function(ent){ 
+            var self = this;
+            //Api.request('GET','/api/platform/entitylists/'+ent+'/entities')
+            Api.action('entityList','entityList',{listName:"countryus@shindigz"}).then(function(resp){
+                console.log(resp);
+                var data = [];
+                for(var index =0; index<resp.length;index++)
+                {
+                   data.push(resp[index].data); 
+                }    
+
+                self.model.set({estimateEntity:data});
+                //self.calEstimatedCost();
+                //self.model.set({estimatedTotal:estimatedTotal});
+                self.render();
+            },function(err){
+                console.log("Error on ship method ");
+                console.log(err);
+            });  
+        },updateShippingAmount:function(){
+            if(ship_default===undefined){
+                  this.calEstimatedCost("usa");
+               }else if(ship_default.countryCode==="US"){
+                if(ship_default.stateOrProvince=="AK" || ship_default.stateOrProvince=="HI" || ship_default.stateOrProvince=="PR"){
+                        this.calEstimatedCost("usaak");  
+                 }else if(ship_default.stateOrProvince=="AA" || ship_default.stateOrProvince=="AE" || ship_default.stateOrProvince=="AP" ){
+                    this.calEstimatedCost("usaapo");                                   
+                 }else if(ship_default.stateOrProvince=="VI"){
+                        this.calEstimatedCost("usat");
+                }else{
+                    this.calEstimatedCost("usa");
+                 }
+                }else if(ship_default.countryCode==="CA"){
+                      this.calEstimatedCost("ca");
+                }else{
+                     this.calEstimatedCost("global");
+                }
+        },
+        calEstimatedCost: function(country_code){
+            //Refer Arc.js shipping application for more info.
+            var self=this;
+            var orderTotal = this.model.get("discountedSubtotal");
+            console.log("order amount "+orderTotal+" country_code "+country_code);
+            if(orderTotal===0){
+                 self.model.set({shippingCost:0});
+                 self.render(); 
+            }else{
+                var ship_amount=[];
+                   Api.request("GET","/api/content/documentlists/shippingList@shindigz/views/shippingView/documents?pageSize=100&filter=properties.country_code eq "+country_code).then(function(resp){
+                    for(var i=0;i<resp.items.length;i++){
+                    if(parseFloat(resp.items[i].properties.min_amount) <= orderTotal && parseFloat(resp.items[i].properties.max_amount) >= orderTotal ){
+                        ship_amount.push(parseFloat(resp.items[i].properties.shipping_charges));
+                     }
+                    }
+                     if(ship_amount.length>0){
+                        var min_ship_amout=Math.min.apply(null, ship_amount);
+                        console.log("Min amount_to_be_added "+min_ship_amout);
+                        self.model.set({shippingCost:min_ship_amout});
+                        self.render();                    
+                        console.log("Final ship min "+min_ship_amout);
+                    }else{
+                        Api.request("GET","/api/content/documentlists/shippingMoreThenList@shindigz/views/shippingMoreThenView/documents?pageSize=100&filter=properties.country_code eq "+country_code).then(function(resp){
+                            for (var i = 0; i < resp.items.length; i++) {
+                               if(orderTotal>=parseFloat(resp.items[i].properties.more_then)){
+                                    ship_amount.push(resp.items[i].properties.amount_to_be_added);
+                               }
+                            }
+                            if(ship_amount.length>0){
+                                var min_more_ship=Math.min.apply(null, ship_amount);
+                                var idx_shipping=ship_amount.indexOf(""+min_more_ship.toFixed(2));
+                                var ex_price=(Math.floor((orderTotal-0.01)/resp.items[idx_shipping].properties.for_each)-Math.floor(parseFloat(resp.items[idx_shipping].properties.more_then)/resp.items[idx_shipping].properties.for_each)+1)*parseFloat(resp.items[idx_shipping].properties.amount_to_be_added);
+                                ex_price=ex_price+parseFloat(resp.items[idx_shipping].properties.base_value);
+                                 self.model.set({shippingCost:ex_price});
+                                 console.log("Final ship "+ex_price);
+                                self.render();          
+                            }
+                        },function(err){
+                            console.log(err);
+                        });
+                        
+                    }
+                     //console.log("  CC "+country_code_shipping+" State "+state_code_shipping);
+                },function(err){
+                    console.log(err);
+                });
+            }
+        },
+        enableZipCode:function(e){
+            this.$el.find('.code_input_btn').prop('disabled',false);
         },
         getExtraProduct: function(productCode){
             var product = null;

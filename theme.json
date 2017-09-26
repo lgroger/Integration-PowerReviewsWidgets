@@ -78,14 +78,16 @@
             "Shippingholiday@shindigz"
         ],
         "priority": 1
-    },{
+    },
+    {
       "id": "shipping_days_list",
       "path": "shipping-days-list.js",
       "documentTypes": [
             "shippingDate@shindigz"
         ],
         "priority": 1
-    },{
+    },
+    {
       "id": "ship_more_then@mozu",
       "path": "ship_more_then.js",
       "documentTypes": [
@@ -715,18 +717,18 @@
     "socialShareAddThis": "",
     "productAttributes":{
         "displayCrossSell": "tenant~displaycrosssells",
-        "productCrossSell":"tenant~product-crosssell",
+      "productCrossSell":"tenant~product-crosssell",
         "productionTime":"tenant~productiontime",
-        "colorHex":"tenant~colorhex",
+      "colorHex":"tenant~colorhex",
         "dndCode":"tenant~dndcode",
         "designCode":"tenant~design-code",
         "dndToken":"tenant~dnd-token",
-        "color":"tenant~color",
+      "color":"tenant~color",
         "video":"tenant~szvideo",
         "unitOfMeasure":"tenant~uom",
         "giantGreetingCardSize":"tenant~giant-greeting-card-size",
-        "optionalEnvelope":"tenant~optional-envelope",
-        "newFlag":"tenant~display-new-ribbon",
+      "optionalEnvelope":"tenant~optional-envelope",
+      "newFlag":"tenant~display-new-ribbon",
         "shipZip":"tenant~shipfromzip",
         "productMelt":"tenant~melts",
         "usaOnly":"tenant~safety-j",
@@ -1932,4 +1934,3 @@
     }
   ]
 }
-
