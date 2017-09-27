@@ -6,7 +6,7 @@ var certonaRecommendations = function(response){
 	
 	var htmltemp = " ";
 
-   		console.log(recomm);
+   		//console.log(recomm);
       _.each(recomm,function(v,i){	
         	
         htmltemp += '<div class="item">';
@@ -30,7 +30,7 @@ var certonaRecommendations = function(response){
         htmltemp += '<a class="mz-productlisting-title" href="'+recomm[i].Detail_URL+'?rrec=true">'+recomm[i].Name+'</a>';
         htmltemp += '<div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">';
         htmltemp += '<span>';
-        if(recomm[i].MaxPrice > recomm[i].Price){
+        if(parseFloat(recomm[i].MaxPrice) > parseFloat(recomm[i].Price)){
         htmltemp += '<span itemprop="minPrice" class="mz-pricestack-price-lower">$'+parseFloat(recomm[i].Price).toFixed(2)+'</span>';
          htmltemp += '<span itemprop="maxPrice" class="mz-pricestack-price-up">$'+parseFloat(recomm[i].MaxPrice).toFixed(2)+'</span>';
         //htmltemp += '</span>'; 
@@ -168,7 +168,7 @@ var certonaRecommendations = function(response){
 				}
 				}
 				else if(recomms.resonance.schemes[i].scheme === "product2_rr" ){
-                console.log(resp);
+//                console.log(resp);
 				htmlfun(resp,prd2_rcc);
 
 				if( response.items.length>0  && recomms.resonance.schemes[i].display === "yes" ){
@@ -201,7 +201,7 @@ var certonaRecommendations = function(response){
 		var overlay_flag = 0;
 
 			globalNameSpace.callRecomm = function(recomm){
-				console.log("CallBackFunction Trigger");
+				//console.log("CallBackFunction Trigger");
 					
 					
 	    		if(recomm){
