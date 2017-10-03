@@ -59,7 +59,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                   $(".error-msg").html('Billing Address is not valid. Please edit your saved address<ul><li>'+creaditCardErros.join("</li><li>")+"</li></ul>");
                 }
                 else{
-                  $(".error-msg").html('Billing Address is not valid. Please <a href="/myaccount#tab_2">Edit</a> your saved address<ul><li>'+creaditCardErros.join("</li><li>")+"</li></ul>");                  
+                  $(".error-msg").html('Billing Address is not valid. Please <a href="/myaccount#tab_2">Edit</a> your saved address<ul><li>'+creaditCardErros.join("</li><li>")+"</li></ul>");
                 }    
             }
            else{  

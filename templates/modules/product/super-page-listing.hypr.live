@@ -20,44 +20,50 @@
               </p>
             </div>
             <div class="party_packs_btns">
-
-            {% if products|get_product_attribute(themeSettings.productAttributes.dndCode) %}
-          {% with products|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
-              {% if isPersonalize.values|first|prop("value") != "" %}
-                      {% if products.inventoryInfo.manageStock == true %}
-                          {% if products.inventoryInfo.onlineStockAvailable > 0 %}
-                              <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button></a>
-                          {% else %}
-                              <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">PERSONALIZE</button></a>
-                          {% endif %}
-                      {% else %}
-                          <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button></a>
-                      {% endif %}
-              {% else %}
-                  {% if products.inventoryInfo.manageStock == true %}
+            {% if products.productType == "Bundle" %}
+              {% comment %}
+              <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button></a>
+              {% endcomment %}
+              <span class="quick-view visible-panel">
+                <a {% if pageContext.isMobile %}href="{{product.url}}" {% else %} data-pro-id="{{product.productCode}}"{% endif %} > Options</a>
+              </span>
+            {% else %}
+              {% if products|get_product_attribute(themeSettings.productAttributes.dndCode) %}
+                {% with products|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
+                  {% if isPersonalize.values|first|prop("value") != "" %}
+                    {% if products.inventoryInfo.manageStock == true %}
                       {% if products.inventoryInfo.onlineStockAvailable > 0 %}
-                          <button data-product_id="{{products.productCode}} id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</button>
+                        <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button></a>
                       {% else %}
-                          <button data-product_id="{{products.productCode}} id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >Out of Stock</button>
+                        <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">PERSONALIZE</button></a>
                       {% endif %}
+                    {% else %}
+                      <a href="{{products.url}}"><button class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button></a>
+                    {% endif %}
                   {% else %}
+                    {% if products.inventoryInfo.manageStock == true %}
+                      {% if products.inventoryInfo.onlineStockAvailable > 0 %}
+                        <button data-product_id="{{products.productCode}} id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</button>
+                      {% else %}
+                        <button data-product_id="{{products.productCode}} id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >Out of Stock</button>
+                      {% endif %}
+                    {% else %}
                       <button data-product_id="{{products.productCode}} id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+                    {% endif %}
                   {% endif %}
-              {% endif %}
-          {% endwith %}
-      {% else %}
-
-             {% if products.inventoryInfo.manageStock == true %}
-                      {% if products.inventoryInfo.onlineStockAvailable > 0 %}
-                          <button data-product_id="{{products.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not products.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not products.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</button>
-                      {% else %}
-                          <button data-product_id="{{products.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >Out of Stock</button>
-                      {% endif %}
+                {% endwith %}
+              {% else %}
+                {% if products.inventoryInfo.manageStock == true %}
+                  {% if products.inventoryInfo.onlineStockAvailable > 0 %}
+                    <button data-product_id="{{products.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not products.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not products.purchasableState.isPurchasable %} disabled="disabled" {% endif %} onclick="if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', '{{ siteContext.generalSettings.websiteName }}', 'buy', 'addtocart']); }">{{ labels.addToCart }}</button>
                   {% else %}
-                      <button data-product_id="{{products.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not products.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not products.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+                    <button data-product_id="{{products.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >Out of Stock</button>
                   {% endif %}
-                  {% endif %}
-
+                {% else %}
+                  <button data-product_id="{{products.productCode}}" id="add-to-cart" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not products.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not products.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
+                {% endif %}
+              {% endif %}
+            {% endif %}
 
             <!--button data-product_id="{{products.productCode}}" class="btn-cart addToCart mz-productdetail-addtocart mz-button mz-button-large">Add TO Cart</button-->
               <button data-product_id="{{products.productCode}}" id="add-to-wishlist" class="mz-productdetail-addtowishlist mz-button addToWishlist" data-mz-action="addToWishlist"></button>

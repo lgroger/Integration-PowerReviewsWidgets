@@ -37,10 +37,10 @@
                          {% for items in track.items %}
                            {% if items.productCode == item.product.productCode %}
                              <br>
-                             {% comment %}
                              {% include "modules/common/narvar-tracking" %}
-                             {% endcomment %}
+                             {% comment %}
                              <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                             {% endcomment %}
                            {% endif %}
                          {% endfor %}
                        {% endfor %}
@@ -48,10 +48,10 @@
                          {% if model.packages.length == 1 %}
                              {% for track in model.packages %}
                              <br>
-                             {% comment %}
                              {% include "modules/common/narvar-tracking" %}
-                             {% endcomment %}
+                             {% comment %}
                              <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
+                             {% endcomment %}
                              {% endfor %}
                          {% endif %}
                      {% endif %}

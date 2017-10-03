@@ -416,7 +416,7 @@
                 <tr>
                     <td class="summary_box_label">Subtotal</td>
                     <td class="summary_box_price subtotal_value" value="{{model.discountedTotal}}" >
-                         {{ model.discountedTotal|currency }}
+                        {% comment %}{{model.discountedTotal|currency}}{% endcomment %}{{ model.discountedSubtotal|currency }} 
                     </td>
                 </tr>
                 {% for discount in model.orderDiscounts %}
