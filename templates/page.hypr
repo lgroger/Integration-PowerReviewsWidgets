@@ -566,7 +566,7 @@
       {% endwith %}
 
   {% endif %}
-      {% include "modules/common/google-dynamic-remarketing-tags" %}
+      {% comment %}{% include "modules/common/google-dynamic-remarketing-tags" %}{% endcomment %}
       </body>
 
   {% endblock body-tag %}
