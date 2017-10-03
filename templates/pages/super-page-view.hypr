@@ -146,7 +146,7 @@
           <!-- <button ></button> -->
               {% if product.inventoryInfo.manageStock == true %}
                 {% if product.inventoryInfo.onlineStockAvailable > 0 %}
-                    {% if product.productType == "Bundle" %}
+                    {% if product.productType == "Bundle" or product.productType|split("Bundle")|length > 1 %}
                       <span class="quick-view visible-panel">
                         <a {% if pageContext.isMobile %}href="{{product.url}}" {% else %} data-pro-id="{{product.productCode}}"{% endif %} > Options</a>
                       </span>
