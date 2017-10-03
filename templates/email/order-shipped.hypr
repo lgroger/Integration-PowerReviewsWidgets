@@ -53,12 +53,13 @@
                                                    <tr>
                                                       <td bgcolor="#fff" colspan="2">
                                                          {{ labels.orderShippedPkgHeader|string_format(package.fulfillmentDate, package.shippingMethodName) }}
+                                                         {% comment %}
                                                          {% with package as track %}
                                                           {% include "modules/common/narvar-tracking" %}
                                                          {% endwith%}
-                                                         {% comment %}
+                                                         {% endcomment %}
                                                           <a class="trackorder" style="display:inline-block;margin-left:10px;" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ package.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if package.shippingMethodCode != '' %}&service={{ package.shippingMethodCode }}{% endif %}">Track Order</a>
-                                                          {% endcomment %}
+                                                          
                                                          <br/>
                                                       </td>
 
