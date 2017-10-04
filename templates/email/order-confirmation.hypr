@@ -21,7 +21,7 @@
                   {% for attribute in model.attributes %}
                     {% if attribute.fullyQualifiedName=="tenant~QOFLAG" %}
                       {% with attribute.values|first as isQuote %}
-                        {% if isQuote %}
+                        {% if isQuote == "true" %}
                         {% set_var quoteFlag=1 %}
                         {% endif %}
                       {% endwith %}
