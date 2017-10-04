@@ -78,9 +78,15 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
             self.addParameter('quantity',qty);
             self.addParameter('itemDescription',this.model.get('content.productName'));
             if(this.pageType.toLowerCase() === 'cart'){
-                self.addParameter('price',this.model.get('price').price);
+				if(parseInt(this.model.get('price').salePrice,10) > 0)
+                    self.addParameter('price',this.model.get('price').salePrice);
+                else
+                    self.addParameter('price',this.model.get('price').price);
             }else{
-                self.addParameter('price',this.model.get('price').get('price'));
+                if(parseInt(this.model.get('price').get('salePrice'),10) > 0)
+                    self.addParameter('price',this.model.get('price').get('salePrice'));
+                else
+                	self.addParameter('price',this.model.get('price').get('price'));
             }
             if(self.lineitemID){
                 self.addParameter('lineitemID',this.lineitemID);
@@ -105,6 +111,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                     volobj.minQty = volumePriceBands[i].minQty;
                     volobj.maxQty = volumePriceBands[i].maxQty;
                     if(volumePriceBands[i].price){
+						// TO DO - check for sale price?
                         volobj.price = volumePriceBands[i].price.price;
                     }else{
                        if(volumePriceBands[i].priceRange){
