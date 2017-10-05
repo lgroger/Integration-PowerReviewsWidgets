@@ -5,7 +5,6 @@
  
    } 
 }
-
 #mz-drop-zone-prmo-text .save-promoslot {
     font-size: 13px;
 }
@@ -127,6 +126,7 @@ ul.br-seo-mobile-items {
 }
 /* END BLOOMREACH SEO */
 /* Bloomreach Guided Search */
+/* missed from default-css when merging 08/16/17 LG */
 .bundle-compo-more li:hover  {
 	background: none;
 }
@@ -137,6 +137,8 @@ ul.br-seo-mobile-items {
 .autocomplete-price .mz-product-rating .pr-snippet-stars .pr-stars-small, .pr-modal-container .pr-stars {
 	background-size: 107px 201px !important;
 }
+/* end missed LG */
+
 .mz-productlisting.mz-productlist-tiled.br-theme-tile, .br-suggest-right.br-suggest-theme {
 	border: 1px solid #00b09b;
 	text-align: center;
@@ -6619,3 +6621,129 @@ h2.promo-slide-title{
 #top-cat-left-nav .mz-filter-options .mz-l-sidebaritem li a, #top-cat-left-nav .facet-heading a {
     text-decoration: none !important;
 }
+
+/* add size chart to pdp 08/18/17 GW */
+a.sizechart {
+    margin-top: 10px;
+    display: block;
+    color: #000 !important;
+}
+a.sizechart: visited {
+    color: #000 !important;
+}
+
+/* remove HOME from breadcrumbs */
+.mz-breadcrumb-link:first-child, .mz-breadcrumb-link:first-child+span {
+    display: none;
+}
+
+/* copied eveyone's css from default site template widget 10/05/17 GW */
+.float-menu-block .megamu-wrapper.megamenu-wrapper-new>ul{
+    padding: 0;
+}
+.megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(7):hover .main-drop-down.menu-col-3{
+left: 42%;
+right: 0;
+}
+.float-mega-menu .megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(7):hover .main-drop-down.menu-col-3{
+left: 23%;
+right: 0;
+}
+.float-mega-menu .megamu-wrapper.megamenu-wrapper-new.Menuloaded>ul>li:nth-child(5):hover .main-drop-down.menu-col-4{
+        left: -8% !important;
+    right: 0;
+}
+.LPMcontainer {
+    height: 110px !important;
+    width: 25px !important;
+    z-index: 500 !important;
+    background-color: rgb(3, 99, 173) !important;
+}  
+.LPMcontainer img {
+    height: 90% !important;
+    width: auto !important;
+    z-index: 499 !important;
+}
+#mz-drop-zone-footer-baloon-content h2 {
+    background-color: #0D3762 !important;
+}
+
+@media only screen and (min-width: 0px) {
+    .mega-menu-container .menu-column-block h3 {
+        font-family: ArvoRegular;    
+        text-align: left ;
+        font-weight :bold;
+    }
+    .nighttoshine {
+          margin: 10px auto 30px auto;
+          text-align: center;
+      }
+      .ech-shi-newletter1 input[type="text"] {
+            margin-left: 5px;
+        }
+        .nighttoshine img {
+            max-width: 300px;
+            width: 100%;
+            height: auto;
+        }
+        .guided-search-button .fa-plus:before {
+	content: "\f00e" !important;
+}
+    }
+     @media only screen and (min-width: 768px) {
+    .LPMcontainer {
+        height: 120px !important;
+         width: 27px !important;
+    }  
+      .nighttoshine {
+          text-align: right;
+          float: right;
+          margin: 0;
+      }
+      .join-newsletter {
+          float: left;
+      }
+      .nighttoshine img {
+            max-width: 260px;
+            width: 100%;
+            height: auto;
+        }
+        .ech-shi-newletter1{
+            margin-top: -45px !important;
+        }
+    }
+    @media only screen and (min-width: 900px) {
+        .join-newsletter {
+            float: none;
+            position: absolute;
+            right: -97.5%;
+            margin-top: -70px !important;
+            text-align: center;
+        }
+        .nighttoshine {
+            top: -50px;
+            position: absolute;
+        }
+        .nighttoshine img {
+            max-width: 350px;
+            width: 100%;
+            height: auto;
+        }
+        .ech-shi-footer-contianer {
+            padding: 8% 5% 0 !important; 
+        }
+        .ech-shi-newletter1 input[type="text"] {
+            margin-left: -1px;
+        }
+        .ech-shi-newletter1{
+            margin-top: 5px !important;
+        }
+    }
+    @media only screen and (min-width: 1100px) {
+        .nighttoshine img {
+            max-width: 400px;
+        }
+        .ech-shi-footer-contianer {
+            padding: 5% 5% 0 !important; 
+        }
+    }
