@@ -2310,6 +2310,33 @@ input::-webkit-inner-spin-button {
 .mob-header-logo img{
     max-width:190px;
     min-width: 130px;
+    display: none;
+}
+/* for new branding so we can have different brandmarks for mob vs desktop */
+.mob-header-logo #mz-drop-zone-logo_upload a {
+    background: url(../resources/images/ShindigzBrandmark.png) center center no-repeat;
+    display: block;
+    height: 50px;
+    width: 125px;
+	background-size: contain;
+	margin: -4px 0 0 0;
+	@media (min-width: 769px) {
+		margin: -1px 0 0;
+	}
+	@media (min-width: 781px) {
+		margin: 15px 0 0;
+	}
+	@media (min-width: 1026px) {
+		background: url(../resources/images/ShindigzBrandmark_HorizontalLockUp.png) center center no-repeat;
+		height: 50px;
+    	width: 100%;
+    	background-size: 100%;
+    	margin: 8px 0 0 -11px;
+    	height: 70px;
+	}
+	@media (min-width: 1900px) {
+		background-size: 70%
+	}
 }
 .mz-prom-banner > footer > ul > li {
     vertical-align: text-top;
@@ -5674,6 +5701,7 @@ h2.promo-slide-title{
         .mob-header-logo img{
             margin-top: -10px;
             position: relative;
+            display: none;
         }
         .ech-shi-homeSlider .slider-caption{
             z-index:99;

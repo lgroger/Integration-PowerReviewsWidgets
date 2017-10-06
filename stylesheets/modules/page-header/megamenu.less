@@ -334,22 +334,29 @@ label:focus {
   display: block;
   padding: 0; 
   text-indent: -9999px;
-  background: url('../resources/images/menu.png') 50% 50% no-repeat;
+  background: url('../resources/images/menuBranded.png') 50% 50% no-repeat;
   top:38px;   
   background-size:25px 18px; 
 }
 label.menu-toggle {
   position: absolute;
-  top: 14px;
+  top: 12px;
   left: 12px;  
   width: 23px;
   height: 26px;
-  background: url('../resources/images/menu.png') 50% 58% no-repeat;
+  background: url('../resources/images/menuBranded.png') 50% 58% no-repeat;
   background-size: 95%;
-  display: none;
+  display: block;
   span {
     display: none;
   }
+  @media (min-width: 781px) {
+    top: 27px;
+  }
+  @media only screen and (min-width:1025px) {
+        display: none;
+        margin-top: 25px;
+  }  
 }
 .float-nav label.menu-toggle {
   top: 14px !important;
@@ -686,6 +693,15 @@ min-height: 40%;
   text-align:center;
   float:left;
 }
+.header-float-logo a {
+    background: url(../resources/images/ShindigzBrandmark.png) center center no-repeat;
+    display: block;
+    height: 50px;
+    width: 125px;
+    background-size: contain;
+    position: relative;
+    top: 6px;
+}
 .menu-icon img{
 display:none;
 }
@@ -700,11 +716,7 @@ display:none;
  float: left; 
  text-align: center;
 }
-@media (min-width:961px){
-  label.menu-toggle {
-      display: none;
-  } 
-}
+
 /* ––––––––––––––––––––––––––––––––––––––––––––––––––
 Mobile style's
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -873,10 +885,6 @@ Mobile style's
     .float-menu-block .mega-menu-wrapper .megamu-wrapper{
       display: none !important;
     }
-   label.menu-toggle {
-        display: block;
-        margin-top: 25px;
-    }  
     .mz-checkout  label.menu-toggle{
       display: none;
     }
@@ -890,11 +898,6 @@ Mobile style's
       margin-left:11%;
     }
 }
-  @media only screen and (max-width:850px){
-     label.menu-toggle {
-      margin-top: 11px;
-     }
-  }
 @media only screen and (min-width:320px) and (max-width: 780px) {
   /*supriya code*/    
     
