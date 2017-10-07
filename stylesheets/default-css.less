@@ -2321,7 +2321,7 @@ input::-webkit-inner-spin-button {
     height: 50px;
     width: 125px;
 	background-size: contain;
-	margin: -4px 0 0 0;
+	margin: -8px 0 0 0;
 	@media (min-width: 769px) {
 		margin: -1px 0 0;
 	}
@@ -2664,6 +2664,8 @@ span.tt-suggestions {
 .ech-shi-top-header{
     border-bottom: 1px solid rgba(128, 128, 128, 0.08);
     padding: 0px 0px 2px 25px !important;
+    /* added for new Branding 100617 GW */
+    display: none;
 }
 .ech-shi-top-header .mz-cms-content{
     padding: 11px 10px 0px !important;
@@ -2766,9 +2768,6 @@ button{
     img{
     width:25px; 
     }
-    svg{
-        width:25px;    
-    }
 }
 .my-fixed-header-bar ul li .fi-icon-1:hover svg{
     background-image: url('../resources/images/myaccount.svg');
@@ -2776,15 +2775,6 @@ button{
     background-size: 37px 36px;
     background-position: center;
 }
-.fi-icon img, .fi-icon svg{
-    width: 40px;
-    margin-top: 1px;
-}
-.fi-icon-2 img, .fi-icon-2 svg{
-    width:30px; 
-    margin-top:6px;
-    margin-left: 5px;
-} 
 .mz-productlisting .mz-productlisting-info .mz-productlisting-title {
     display: inline-block;
     height: 40px;
@@ -3413,35 +3403,7 @@ h2.promo-slide-title{
         top:40%;
     }
 }
-.my-fixed-header-bar{
-    height: 30px;
-    display: inline-block; 
-} 
-
-    
-@media only screen and (max-width: 1288px) and (min-width:960px){
-    .my-fixed-header-bar{
-        float: right;
-        width: 240px;
-        margin-top: -65px;
-        margin-right: 12px;
-    }
-}
-@media only screen and (max-width: 959px) and (min-width:781px){
-    .my-fixed-header-bar{
-        float: right;
-        width: 240px;
-        margin-top: -50px;
-        margin-right: 12px;
-    }
-}
 @media only screen and (max-width: 780px){
-    .my-fixed-header-bar{
-        float: right;
-        width: 240px;
-        margin-top: -63px;
-        margin-right: 12px;
-    }
     .logo-float {
         margin-top: 4px;
     }
@@ -4338,7 +4300,12 @@ h2.promo-slide-title{
     margin-top:5px;
 }
 .ech-shi-icons{
-    margin-top:7px;
+	height: inherit;
+}
+.ech-shi-icons ul {
+	float: right;
+	margin: 0;
+	padding: 0;
 }
 #mz-drop-zone-instagram-sub-heading .mz-cms-content{
     padding:0px;
@@ -4681,12 +4648,6 @@ h2.promo-slide-title{
         width: 30%;
     }
 }
-@media (min-width:960px){
-    .ech-shi-icons {
-        margin-top: -6px;
-    }
-
-} 
 @media (max-width:960px){
     .sticky{
         top:-10px !important;
@@ -4723,9 +4684,6 @@ h2.promo-slide-title{
         display: inline-block;
         font-size: 16px;
         color: #0c0c0c;
-    }
-    .ech-shi-icons{
-        margin-top:3px;
     }
     .echi-shi-testimonials .cd-testimonials-wrapper{
         margin:0 auto;
@@ -5017,7 +4975,7 @@ h2.promo-slide-title{
     }*/
     .echi_shi_clearing_fixed_header{
         clear:both;
-        display:block; 
+        display: inline-block; 
     }
     .popups .close{
         right: 6.8%;
@@ -5093,10 +5051,6 @@ h2.promo-slide-title{
         padding:0px;
        /* border-bottom: 2px dotted #c7c7c7;*/
     }
-    .my-fixed-header-bar .badge{
-        margin-right: 0px;
-        margin-top: -44px !important;
-    }
     .mz-prom-banner > footer > ul > li:last-child{
         border:0px;
     } 
@@ -5109,9 +5063,6 @@ h2.promo-slide-title{
     .icon-3 img{
         width: 43px !important;
     }
-    .ech-shi-icons ul li{
-        width: 45px;
-    }
     .ech-shi-top-header .mz-cms-content {
         padding: 10px 0px 0px !important;
     }
@@ -5123,17 +5074,6 @@ h2.promo-slide-title{
     }
     .icon-collection .icon-final-swap img{
         width: 24px !important;
-    }
-    .badge{
-        margin-top: -45px;
-        margin-right: -23%;
-    }
-}
-@media (max-width:1050px){
-    .header-block.floatheader{
-        .badge{
-            margin-right: -35% !important;
-        }
     }
 }
 @media (max-width: 768px){
@@ -5947,17 +5887,8 @@ h2.promo-slide-title{
         .icon-3 img{
             width: 37px !important;
         }
-        .ech-shi-icons ul li{
-            width: 35px; 
-        }
-        .my-fixed-header-bar .ech-shi-icons ul{
-            margin: 20px 0px;
-        }
         .fi-icon-2 img{
             width: 30px;
-        }
-        .ech-shi-icons li .badge{
-            margin-top: -40px !important;
         }
     }
 
@@ -6506,11 +6437,6 @@ h2.promo-slide-title{
     }
 }
 @media only screen and (max-width:1340px){
-    .header-float.sticky .ech-shi-icons > ul{
-        padding: 0 5px;
-        float: right;
-        margin-top: 20px;
-    }
     .float-menu-block {
          .megamu-wrapper ul li{
             font-size: 13px !important;
@@ -6554,17 +6480,8 @@ h2.promo-slide-title{
     display:block !important;
 }
 @media (max-width:767px){
-    label.menu-toggle {
-        width: 24px;
-	}
     .mob-header-logo {
         margin-left: 10px !important;
-    }
-    .header-float-logo{
-        margin-left:35px !important;
-    }
-    .header-float.sticky .ech-shi-icons>ul {
-        margin-top: 17px;
     }
     .filter-compare-btn {
         display: none;

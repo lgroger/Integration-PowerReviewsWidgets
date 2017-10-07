@@ -60,6 +60,11 @@ width:88% !important;
 .my-fixed-header-bar{
       ul li svg{
         max-height: 40px;
+        height: 100%;
+        width: auto;
+        & .st0 {
+            fill: #363fc8;
+        }
     }
 }
 .ech-shi-footer-links .hide-mobile{
@@ -270,21 +275,19 @@ text-align:right;right:10%;
 			}
 			.badge {
 				    display: inline-block;
-					padding: 3px 7px;
 					font-size: 10px;
 					font-weight: 700;
 					line-height: 1;
-					color: #fff;
-					text-align: center;
+					color: #cc20b8;
 					white-space: nowrap;
 					vertical-align: middle; 
-					background-color: @latel-green !important; 
-					border-radius: 10px;
-					margin-top: -43px;
-					float: right;
 					position:relative;
                     z-index:9;
-					margin-right: -4%;
+                    right: 1px;
+                    bottom: 25px;
+                    @media (min-width: 768px) {
+                        bottom: 29px;
+                    }
 			}
 
 /*
@@ -499,8 +502,5 @@ font-size: 16px;
 @media only screen and (max-width:640px){
     .logo-float{
         margin-top: 4px;
-    }
-    .my-fixed-header-bar{
-        margin-top: -63px !important;
     }
 }
