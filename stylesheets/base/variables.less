@@ -2,6 +2,64 @@
 Fonts Import
 */
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+@font-face{ 
+    font-family: 'GT-Walsheim-Black';
+    src: url(../resources/fonts/GT-Walsheim-Black.eot);
+    src: url(../resources/fonts/GT-Walsheim-Black?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Black.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Black.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Black-Oblique';
+    src: url(../resources/fonts/GT-Walsheim-Black-Oblique.eot);
+    src: url(../resources/fonts/GT-Walsheim-Black-Oblique?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Black-Oblique.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Black-Oblique.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Bold';
+    src: url(../resources/fonts/GT-Walsheim-Bold.eot);
+    src: url(../resources/fonts/GT-Walsheim-Bold?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Bold.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Bold.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Bold-Oblique';
+    src: url(../resources/fonts/GT-Walsheim-Bold-Oblique.eot);
+    src: url(../resources/fonts/GT-Walsheim-Bold-Oblique?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Bold-Oblique.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Bold-Oblique.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Medium';
+    src: url(../resources/fonts/GT-Walsheim-Medium.eot);
+    src: url(../resources/fonts/GT-Walsheim-Medium?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Medium.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Medium.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Medium-Oblique';
+    src: url(../resources/fonts/GT-Walsheim-Medium-Oblique.eot);
+    src: url(../resources/fonts/GT-Walsheim-Medium-Oblique?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Medium-Oblique.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Medium-Oblique.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Light';
+    src: url(../resources/fonts/GT-Walsheim-Light.eot);
+    src: url(../resources/fonts/GT-Walsheim-Light?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Light.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Light.ttf) format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Light-Oblique';
+    src: url(../resources/fonts/GT-Walsheim-Light-Oblique.eot);
+    src: url(../resources/fonts/GT-Walsheim-Light-Oblique?iefix) format('eot'),
+         url(../resources/fontsGT-Walsheim-Light-Oblique.woff) format('woff'),
+         url(../resources/fontsGT-Walsheim-Light-Oblique.ttf) format('truetype');
+}
+
 @font-face{
 	font-family : 'ArvoRegular';
 	src: url(../resources/fonts/Arvo-Regular.ttf);
@@ -31,8 +89,14 @@ Fonts Import
     src: url(../resources/fonts/Montserrat-Hairline.ttf);
 }
 
- 
-
+@fontGTWalsheimLight: 'GT-Walsheim-Light', Verdana, sans-serif;;
+@fontGTWalsheimLightItalic: 'GT-Walsheim-Light-Obique', Verdana, sans-serif;;
+@fontGTWalsheimMedium: 'GT-Walsheim-Medium', Verdana, sans-serif;
+@fontGTWalsheimMediumItalic: GT-Walsheim-Medium-Obique, Verdana, sans-serif;
+@fontGTWalsheimBold: GT-Walsheim-Bold, Verdana, sans-serif;
+@fontGTWalsheimBoldItalic: GT-Walsheim-Bold-Obique, Verdana, sans-serif;;
+@fontGTWalsheimBlack: GT-Walsheim-Black, Verdana, sans-serif;;
+@fontGTWalsheimBlackItalic: GT-Walsheim-Black-Obique, Verdana, sans-serif;;
 @fontArvo: ArvoRegular;
 @fontRoboto: RobotoLight;
 @RobotoRegular: RobotoRegular;
@@ -45,7 +109,7 @@ Fonts Import
 
 
 
-@fontFamily:            @fontMontserratLight;
+@fontFamily:            @fontGTWalsheimMedium;
 @fontSize:              {{ themeSettings.fontSize }};
 @fontSizeSmall:         @fontSize - 2px;
 @fontSizeLarger:        @fontSize + 2px;
