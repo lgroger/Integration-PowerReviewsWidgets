@@ -1190,6 +1190,9 @@ a.br-theme-page:hover {
         font-size: 9px;
         margin-left: 10px;
     }
+    .float-mega-menu .megamu-wrapper>ul>li:after {
+        margin-left: 3px;
+    }
     .megamu-wrapper ul li ul li:after {
         content: '';
     } 
@@ -2769,12 +2772,6 @@ button{
     width:25px; 
     }
 }
-.my-fixed-header-bar ul li .fi-icon-1:hover svg{
-    background-image: url('../resources/images/myaccount.svg');
-    background-repeat: no-repeat;
-    background-size: 37px 36px;
-    background-position: center;
-}
 .mz-productlisting .mz-productlisting-info .mz-productlisting-title {
     display: inline-block;
     height: 40px;
@@ -2786,17 +2783,29 @@ button{
 #mz-drop-zone-category-page-top .mz-cms-content{
     height: 277px !important;
 }
-.my-fixed-header-bar ul li .fi-icon-2:hover svg{
-    
-    width: 32px !important;
-    margin-top: 5px;
-    .heart-st0,.heart-st1{
-        fill:#d91a60;
-    }
-    .heart-star
-    {
-        fill:#ffffff;
-    }
+.ech-shi-icons #party-ideas_icon svg {
+	display:none;
+	&:hover #Layer_1 .st0 {
+    	fill: #30c3c5;
+	}
+	@media (min-width: 768px) {
+		display: block;
+	}
+}
+.ech-shi-icons #search_icon svg:hover #Layer_1 .st0 {
+    fill: #30c3c5;
+}
+.ech-shi-icons #float-login svg:hover #Layer_1 .st0 {
+    fill: #30c3c5;
+}
+.ech-shi-icons .fi-icon-2 svg:hover #Layer_1_1_ .st0 {
+    fill: #30c3c5;
+}
+.ech-shi-icons .fi-icon-2 svg:hover #Layer_1_1_ .st1 {
+    fill: #363fc8;
+}
+.ech-shi-icons .icon-3 svg:hover #Layer_1 .st0 {
+    fill: #30c3c5;
 }
 .mob-head-promo.mob-promo-phone a{
     color: #00af9a !important;
@@ -3166,7 +3175,7 @@ h2.promo-slide-title{
     padding: 0px 10px;
     height: 46px;
     font-size: 16px;
-    border: 1px solid #ccc;
+    border: 1px solid #363fc8;
     border-right: 0px;
     margin-right: 0;
     margin-left: 0;
@@ -3175,29 +3184,29 @@ h2.promo-slide-title{
     float: left;
     box-sizing: border-box;
     transition: all 0.15s;
-    background-color: #f8f8f8 !important;
-    font-family: @fontMontserratRegular;
-	border-top-left-radius: 5px;
-	border-bottom-left-radius: 5px;
+    background-color: #fff !important;
+    font-family: 'GT-Walsheim-Bold';
+	border-top-left-radius: 7px;
+	border-bottom-left-radius: 7px;
 }
-::-webkit-input-placeholder { /* WebKit browsers */
-    color: #9A9A9A;
+#search_text::-webkit-input-placeholder { /* WebKit browsers */
+    color: #363fc8;
 }
-:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: #9A9A9A;
+#search_text:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #363fc8;
 }
-::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color: #9A9A9A;
+#search_text::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #363fc8;
 }
-:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: #9A9A9A;
+#search_text:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #363fc8;
 }
 .mz-filters > .mz-filters-btn:hover{
     background-color: #00ceb3; 
 }
 #search_button {
     border: 0 none;
-    background: #00b09b url('../resources/images/search-white.svg') center no-repeat;
+    background: #ede8e8 url('../resources/images/searchBarIcon.svg') center no-repeat;
     background-size: 28px 28px;
     width: 12%;
     float: right;
@@ -3205,7 +3214,7 @@ h2.promo-slide-title{
     text-align: center;
     height: 46px;
     cursor: pointer;
-    border-radius: 0 2px 2px 0;
+    border-radius: 0 7px 7px 0;
 }
 .searchNav .option{
     width:15%;
@@ -3280,10 +3289,6 @@ h2.promo-slide-title{
         #options a#s_cat_2, #options a#s_cat_2:hover, .searchNav #options > a#s_cat_2:hover .caret-all{
             background: #fff;
         }
-    }
-    .icon-collection ul>li{
-        margin: 0px 6px;
-        text-align: center;
     }
     .ech-shi-homeSlider{
         .owl-controls .owl-nav .owl-prev{
@@ -4295,9 +4300,6 @@ h2.promo-slide-title{
 }
 #mz-drop-zone-megamenu .nopad{
     margin-top:0px !important;
-}
-.icon-collection{
-    margin-top:5px;
 }
 .ech-shi-icons{
 	height: inherit;
@@ -6546,11 +6548,10 @@ h2.promo-slide-title{
 }
 
 /* Halloween override for nav */
-.megamu-wrapper.megamenu-wrapper-new.Menuloaded>ul>li:nth-child(7) {
+.megamu-wrapper.megamenu-wrapper-new.Menuloaded>ul>li:nth-child(7) h2 a  {
     background: darkorange;
-}
-.megamu-wrapper>ul>li:nth-child(7):after {
-    color: white;
+    padding: 2px 5px 3px 5px;
+    border-radius: 4px;
 }
 .megamu-wrapper.megamenu-wrapper-new.Menuloaded>ul>li:nth-child(7) .main-drop-down {
     background-color: #fdbe71;
