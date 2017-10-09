@@ -3,12 +3,12 @@
 {% if pageContext.pageType != "checkout" %} 
 
 	{% include "modules/page-header/promoslot" %}
-	<div class="" style="z-index: 99999;    background: rgb(255, 255, 255);">
+	<div class="header-block-container">
 		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} " style="">
 		
 			<div style="display:block;">
 				<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
-					<div class="mob-header-logo" style="margin-left: 11px;margin-top:-5px;">
+					<div class="mob-header-logo">
 							{% if pageContext.cmsContext.template.path == "main-page" %}
 								<h1>
 									{% include "modules/page-header/logo" %}
@@ -371,12 +371,12 @@
 
 {%else%}
 
-	<div class="" style="z-index: 99999;    background: rgb(255, 255, 255);">
+	<div class="header-block-container">
 		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} " style="">
 		
 			<div style="display:block;">
 				<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
-					<div class="mob-header-logo" style="margin-left: 11px;margin-top:-5px;">
+					<div class="mob-header-logo">
 							{% include "modules/page-header/logo" %}
 					</div>
 				</div> 
