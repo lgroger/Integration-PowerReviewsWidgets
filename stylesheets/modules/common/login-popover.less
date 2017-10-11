@@ -49,11 +49,10 @@
                 margin-left: 5px;
                 display:block;
                 color: #fff;
-                background-color:#0971CE;
+                background-color: @primaryCTA;
                 width: 90%;
                 padding: 16px;
                 font-size: initial;
-                font-weight: bold;
                 border: none;
             }
         }
@@ -110,14 +109,14 @@
         padding: 5px;
         box-sizing: border-box;
         h2{
-            color: #093863;
+            color: @textHeaderColor;
             margin: 0px auto;
             font-size: 18px;
         }
         small{
             display:block;
             font-size: inherit; 
-            color: #7B7B7B;
+            color: @textColor;
             margin: 8px 0 12px;
         }
     }
@@ -155,21 +154,19 @@
         }
     }
     .cont-to-signup{
-        border: 1px solid #0B2F60;
+        border: 1px solid @primaryCTA;
         border-radius: 4px;
-        color:#0B2F60;
+        color: @primaryCTA;
         background-color: white;
         font-size: medium;
-        font-weight: bold;
         padding: 10px;
         margin: 5px 5px 20px;
         float: none;
         transition: 0.3s ease-in-out;
     }
     .cont-to-signup:hover{
-        color: white;
-        background-color: #0B2F60;
-        border:1px solid #0B2F60;
+        border:1px solid @primaryCTAhover;
+        color: @primaryCTAhover;
     }
 
 }
@@ -184,7 +181,7 @@
         a{
             font-size: 15px;
             color: #093863;
-            font-family: @fontMontserratRegular;
+            font-family: @fontFamily;
             &:hover{
                 text-decoration:none;
                 color: #d60057;
@@ -216,7 +213,6 @@
             width: 86%;
             padding: 16px;
             font-size: initial;
-            font-weight: bold;
             border: none;
         }
         .cancel-reset-container{

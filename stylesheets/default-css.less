@@ -48,7 +48,6 @@
     letter-spacing: 1px;
     cursor: pointer;
     font-size: 11px;
-    font-weight: 900;
     outline: none;
     -webkit-transform: rotate(270deg);
     transform: rotate(270deg);
@@ -174,7 +173,6 @@ a.br-theme-page {
 	padding: 5px 5px 5px 15px;	
 	font-family: RobotoRegular;
 	font-size: 17px;
-	font-weight: bold;
 	border-top-right-radius: 5px;
 	-webkit-border-top-right-radius: 5px;
 	-moz-border-top-right-radius: 5px;
@@ -852,8 +850,7 @@ a.br-theme-page:hover {
 }
 .mz-address-heading{
     color: #999;
-    font-weight: normal;
-    font-family:ArvoRegular;
+    font-family: @fontGTWalsheimBold;
 }
 .item{
     display: inline-block;
@@ -1126,14 +1123,15 @@ a.br-theme-page:hover {
     padding: 0;
     background: none;
     > li > a, > li > h2 >a {
-        color: #fff;
+        color: @primaryWhite;
         @media (min-width: 1025px) {
-        	line-height: 1.8;
+        	line-height: 1.2;
         }
     }
     @media (min-width: 1025px) {
     	margin: 0;
     	height: auto;
+    	height: 30px;
     }
 }
 
@@ -1176,17 +1174,21 @@ a.br-theme-page:hover {
     }
 
     .megamu-wrapper.megamenu-wrapper-new .menu-column-block>h3 a{
-        color: #303030;
+        color: @linkColor;
     }
     .megamu-wrapper ul li ul li {
         font-size: 15px;
-        font-family:@fontMontserratRegular;
+        font-family: @fontGTWalsheimBold;
     }
      .megamu-wrapper.megamenu-wrapper-new ul li ul li {
         font-size: 12px !important;
      }
     #mz-drop-zone-megamenu .mz-cms-col-12-12{
         height:60px; 
+        @media (min-width: 1025px) {
+        	height: 30px;
+        	margin: -43px 0 10px 0;
+        }
     } 
     .megamu-wrapper>ul>li:after {
         content: '\f005';
@@ -1340,13 +1342,13 @@ a.br-theme-page:hover {
         
         h3{
             margin: 0 8px;
-            color: #303030;
+            color: @textHeaderColor;
             font-size: 14px;
             padding: 5px 0 2px;
             text-align: left;
             line-height: 1.2;
             &:hover,&:focus{
-                 color: #19dD72;
+                 color: @secondaryBlue;
             }
         }
         ul{
@@ -1358,14 +1360,14 @@ a.br-theme-page:hover {
                 margin-right: 15px;
                 a{
                     padding: 2px 15px;
-                    color: #303030 !important;
+                    color: @linkColor !important;
                     display: block;
                     border-radius: 5px;
                     border: 1px solid transparent;
                     transition: background 0.2s ease-in-out;
                     &:hover,&:focus{
                         color: #fff !important;
-                        background: #00af9a;
+                        background: @secondaryBlue;
                     }
                 }
             }
@@ -1489,11 +1491,10 @@ a.br-theme-page:hover {
         color:@dark-grey !important;
     }
     .final_third_list li a:hover{
-        color:#0d3762 !important;
+        color: #0d3762 !important;
     }
     .final_third_list p{
         color: #0d3762 !important;
-        font-weight: bold;
         font-size: 15px;
         margin-top: 9px;
         margin-bottom: 9px;
@@ -1728,11 +1729,10 @@ a.br-theme-page:hover {
                 display: none;
             }
             h3{
-                font-size: 17px;
-                font-weight: 400;
+                font-size: 14px;
                 padding: 7px 5px;
                 &:hover,&:focus{
-                     color: #303030;
+                     color: @secondaryBlue;
                 }
                 a{
                     display: inline-block;
@@ -1840,7 +1840,7 @@ a.br-theme-page:hover {
 			clear: both;
 			display: inline;
 			margin: 2px 0;
-			font-size: 15px !important;
+			font-size: 14px !important;
         }
         .megamu-wrapper ul li ul li{
             border-left: 0px !important;
@@ -1902,7 +1902,7 @@ a.br-theme-page:hover {
         .megamu-wrapper > ul > li > span{
             float: right;
             display: block;
-            color: #a5a3a3;
+            color: @primaryWhite;
         }
     }
 
@@ -2002,17 +2002,14 @@ a.br-theme-page:hover {
         font-size: 16px;
         text-transform: uppercase;
         color: #fff !important;
-        font-weight:bold;
     }
     .mktoForm fieldset legend{
         color: inherit;
         font-size: 23px;
-        font-weight: normal;
         margin: 0px 0 10px;
         padding-left: 10px;
     }
     .mktoForm label{
-        font-weight: normal !important;
         font-size: 18px;
         padding-bottom: 7px;
         padding-top: 18px;
@@ -2082,9 +2079,6 @@ a.br-theme-page:hover {
             font-family: @fontMontserratRegular;
             font-size: 15px;
         }
-        label.check-highlight{
-            font-weight: 600 !important;
-        }
         .mktoCheckboxList > label{
             position: absolute;
             margin-left: 0;
@@ -2121,7 +2115,6 @@ a.br-theme-page:hover {
         height: 22px !important;
         font-size: 18px;
         line-height: 1.4 !important;
-        font-weight: 700;
         text-align: center;
     }
 }
@@ -2335,10 +2328,10 @@ input::-webkit-inner-spin-button {
 		left: 35px;
 	}
 	@media (min-width: 1025px) {
-		left: initial;
+		left: -6px;
 		float: none;
-		width: 370px;
-		top: 5px;
+		width: 280px;
+		top: 0;
 	}
 	& .mob-header-logo h1 {
     	margin: 0;
@@ -2577,7 +2570,6 @@ span.tt-suggestions {
                 color: #093863;
                 font-size: 29px;
                 text-align: center;
-                font-weight: 400;
                 margin-bottom: 0px;
                 font-family: ArvoRegular;
                 margin-bottom: 20px;
@@ -2667,7 +2659,7 @@ span.tt-suggestions {
     @media (min-width: 1025px) {
     	display: block;
     	position: relative;
-    	top: 75px;
+    	top: 65px;
     	height: 30px;
     	box-sizing: border-box;
     	border: none;
@@ -2889,6 +2881,9 @@ a{
         width: 82%;
         position: relative;
         margin: 0;
+        @media (min-width: 1025px) {
+        	width: 79%;
+        }
     }
 .searchNav li#options{
     border: 1px solid #ccc;
@@ -3185,9 +3180,6 @@ h2.promo-slide-title{
     font-family: 'GT-Walsheim-Bold';
 	border-top-left-radius: 7px;
 	border-bottom-left-radius: 7px;
-	@media (min-width: 1025px) {
-		font-size: 13px;
-	}
 }
 #search_text::-webkit-input-placeholder { /* WebKit browsers */
     color: #363fc8;
@@ -3220,12 +3212,10 @@ h2.promo-slide-title{
     border-radius: 0 7px 7px 0;
 }
 #search_button:hover{
-    background-color: #363fc8;
+    background: #211d5e url('../resources/images/searchBarIcon-white.svg') center no-repeat;
+    background-size: 20px 20px;
 }
-#search_button:hover svg #Layer_1 .st0 {
-    fill: #fff;
-}
-.searchNav .option{
+searchNav .option{
     width:15%;
 }
 #options a{
@@ -3267,7 +3257,6 @@ h2.promo-slide-title{
 .subnav li a {
     cursor: pointer;
     font-size: 12px;
-    font-weight: normal;
     line-height: 36px;
     color: #666;
 }
@@ -3379,11 +3368,10 @@ h2.promo-slide-title{
 .login-popover-title{
     padding: 0px 10px;
     h2{
-        font-family: @fontArvo;
-        font-weight: normal;
+        font-family: @fontGTWalsheimBold;
     }
     small{
-        font-family: @fontMontserratLight;
+        font-family: @fontGTWalsheimLight;
         font-size: 0.8rem !important; 
     }
     .popover.bottom {
@@ -3391,8 +3379,8 @@ h2.promo-slide-title{
     }
 }
 .popoverLoginForm .sign_up_link_container small, .popoverSignupForm .signup-popover-title small{
-    font-family: @fontMontserratLight;
-    font-size: 0.8rem !important; 
+    font-family: @fontGTWalsheimLight;
+    font-size: 0.7rem !important; 
     margin-bottom: 10px;
 }
 .twitter-typeahead #search_text{
@@ -6132,7 +6120,6 @@ h2.promo-slide-title{
           user-select: none;
 }
 .selectric-items .selectric-group .selectric-group-label {
-  font-weight: bold;
   padding-left: 10px;
   cursor: default;
   -webkit-user-select: none;
@@ -6570,14 +6557,13 @@ right: 0;
     z-index: 499 !important;
 }
 #mz-drop-zone-footer-baloon-content h2 {
-    background-color: #0D3762 !important;
+    background-color: @textColor !important;
 }
 
 @media only screen and (min-width: 0px) {
     .mega-menu-container .menu-column-block h3 {
-        font-family: ArvoRegular;    
+        font-family: @fontGTWalsheimBold;    
         text-align: left ;
-        font-weight :bold;
     }
     .nighttoshine {
           margin: 10px auto 30px auto;

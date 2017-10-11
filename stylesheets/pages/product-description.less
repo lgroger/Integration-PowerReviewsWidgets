@@ -214,8 +214,7 @@
         position: relative !important;
     }
     .product-section-title{
-        font-family: 'RobotoRegular';
-        font-weight: 400;
+        font-family: @fontMontserratLight;
         font-size: 25px;
         padding: 0 10px;
         display: none;
@@ -332,7 +331,6 @@
                       span.btn-index{
                         margin-right: 24px;
                         display: inline-block;
-                        font-weight: 800;
                         padding-right: 5px;
                         margin: 0;
                       }
@@ -429,7 +427,6 @@
                     &.btn-index{
                         font-size: 24px;
                         padding-right: 5px;
-                        font-weight: 800;
                     }
                 }
 
@@ -554,7 +551,6 @@
             vertical-align: middle;
             &.btn-index{
                 font-size: 24px;
-                font-weight: 800;
                 padding-right: 8px;
             }
         }
@@ -885,8 +881,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     #add-to-wishlist {
         height: 28px;
         border-radius: 5px;
-        font-weight: 600;
-        font-family: MontserratRegular;
+        font-family: @fontFamily;
         text-transform: uppercase;
         position: absolute;
         margin-left: 10px;
@@ -904,7 +899,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     }
 }
 .mz-popover-signup-register:hover {
-    background-color: rgb(13,55,98) !important;
+    background-color: @primaryCTAhover !important;
 }
 .mob-tag {
     display: none;
@@ -913,9 +908,8 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     padding: 0 5%;
     background: linear-gradient(#fff,#f7f7f7);
     h2 {
-        font-family: ArvoRegular;
+        font-family: @fontGTWalsheimBold;
         font-size: 2em;
-        font-weight: normal;
         color: #0d3762;
     }
     p {
@@ -1068,7 +1062,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     font {
         font-family: @fontMontserratLight;
-        font-weight: normal;
     }
 }
 .container-right .addToCart:hover {
@@ -1095,7 +1088,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         margin: 0;
         margin-left: 5%;
         font-size: 18px;
-        font-weight: 600;
     }
     .super-page-product-wrap  .product-section-title{
         font-size: 18px;
@@ -1410,7 +1402,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .container-right {
     .mz-l-stack-sectiontitle {
         font-family: @fontMontserratRegular;
-        font-weight: normal;
     }
     .mz-pricestack{
         color:@dark-grey;
@@ -1673,7 +1664,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     h2 {
         font-family: @fontArvo;
         font-size: 2em;
-        font-weight: normal;
         color: #0d3762;
         p {
             font-size: 16px !important;
@@ -1788,7 +1778,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     width: 14%;
     min-height: 38px;
     font-size: 16px;
-    font-weight: normal;
     text-decoration: none;
     text-align: center;
     line-height: 2;
@@ -1852,9 +1841,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     h3{
         color: #444;
-        font-family: ArvoRegular;
+        font-family: @fontGTWalsheimBold;
         font-size: 21px;
-        font-weight: normal;
         margin: 0px 0px 15px;
     }
 }
@@ -1947,7 +1935,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .qa-question {
     font-size: 16px !important;
-    font-weight: 600;
     margin: 0;
 }
 .qa-q {
@@ -1988,7 +1975,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .header {
     background: url('../resources/images/tabs_down.svg') no-repeat;
     font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
     background-position-x: 96% !important;
 }
@@ -1999,7 +1985,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .header-rev {
     background: url('../resources/images/review-icon-down.svg') no-repeat;
     font-size: 16px;
-    font-weight: 600;
     cursor: pointer;
     padding: 1.5%;
     background-color: #0d3762;
@@ -2097,7 +2082,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     font-size: 2.2em;
     text-align: left;
     line-height: 1;
-    font-weight: 400;
     margin: 0;
     color: @dark-blue;
 }
@@ -2157,7 +2141,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .span-head {
     color: #0d3762;
     font-size: 20px;
-    font-weight: 600;
     margin-left: 12%;
 }
 .block-1, .block-2, .block-3 {
@@ -2200,8 +2183,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         padding: 15px 5px;
         background-position-x: 100%;
         background-size: 5% 70%;
-        font-family: MonstserratLight;
-        font-weight: normal;
+        font-family: @fontMontserratLight;
         margin-bottom: 2px;
     }
     .container-des {
@@ -2303,7 +2285,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .mz-popover-login {
     .mz-button:hover {
         color: white;
-        background-color: #0b2f60 !important;
+        background-color: @primaryCTAhover !important;
     }
 }
 .mz-popover-signup-register {
@@ -2351,7 +2333,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     float: left;
     h3 {
         color: #fff;
-        font-weight: 400;
         font-size: 1.3em;
         text-align: center;
         margin: 0%;
@@ -2463,7 +2444,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         text-align: center;
         color: #0d3762;
         margin-bottom: 0;
-        font-weight: 100;
         font-family: MonstserratLight;
         font-size: 14px; 
     }
@@ -2517,7 +2497,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             width:25%;
             box-sizing: border-box;
             font-size: 14px;
-            font-weight: 600;
             line-height: 40px;
             border-width: 1px;
         }
@@ -2603,7 +2582,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: #093863;
         font-size: 31px;
         text-align: center;
-        font-weight: 400;
         margin-bottom: 0px;
         font-family: ArvoRegular;
         margin-bottom: 20px;
@@ -2676,9 +2654,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: #093863;
         font-size: 31px;
         text-align: center;
-        font-weight: 400;
         margin-bottom: 0px;
-        font-family: ArvoRegular;
+        font-family: @fontMontserratBold;
         margin-bottom: 20px;
         margin-top: 40px;
     }
@@ -2832,7 +2809,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .uom{
             color: @dark-grey;
-    font-weight: normal;
         min-height: auto;
     }
 }
@@ -2897,8 +2873,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     h3 {
         margin: 0;
         font-size: 13px;  
-        font-weight: normal;
-        font-family: MontserratRegular;
+        font-family: @fontGTWalsheimBold;
         padding: 0px 5px;
     }
     .owl-carousel .owl-item {
@@ -2912,7 +2887,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: #093863;
         font-size: 29px;
         text-align: center;
-        font-weight: 400;
         margin-bottom: 0px;
         font-family: ArvoRegular;
         margin-bottom: 20px;
@@ -3104,8 +3078,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         position: inherit;
     }
     h3 {
-        font-weight: normal;
-        font-family: @fontArvo;
+        font-family: @fontGTWalsheimBold;
     }
     .owl-carousel .owl-item {
         text-align: center;
@@ -3118,7 +3091,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: #093863;
         font-size: 29px;
         text-align: center;
-        font-weight: 400;
         margin-bottom: 0px;
         font-family: ArvoRegular;
         margin-bottom: 20px;
@@ -3195,8 +3167,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     h3 {
         margin: 0;
         font-size: 13px;
-        font-weight: normal;
-        font-family: MontserratRegular;
+        font-family: @fontGTWalsheimBold;
     }
     .owl-stage-outer {
         margin: 0% 2%;
@@ -3212,9 +3183,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: #093863;
         font-size: 29px;
         text-align: center;
-        font-weight: 400;
         margin-bottom: 0px;
-        font-family: ArvoRegular;
+        font-family: @fontGTWalsheimBold;
         margin-bottom: 20px;
         margin-top: 40px;
     }
@@ -3406,9 +3376,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: #093863;
         font-size: 29px;
         text-align: center;
-        font-weight: 400;
         margin-bottom: 0px;
-        font-family: ArvoRegular;
+        font-family: @fontGTWalsheimBold;
         margin-bottom: 20px;
         margin-top: 40px;
     }
@@ -3504,9 +3473,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .btn-cart:hover {
         background: #0d3762;
-    }
-    h3 {
-        font-weight: normal;
     }
     .products-title{
         height: 60px;  
@@ -3718,7 +3684,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             width: 59px;
             display: inline-block;
             border: none;
-            font-weight: normal;
         }
         .mz-pricestack-range{
                 display: inline-block;
@@ -3794,9 +3759,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     h2 {
         text-align: center;
         color: #0d3762;
-        font-family: ArvoRegular;
+        font-family: @fontGTWalsheimBold;
         font-size: 1.8em;
-        font-weight: normal;
         margin-bottom: 0;
     }
     h2:before {

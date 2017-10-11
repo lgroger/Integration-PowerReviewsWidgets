@@ -6,12 +6,12 @@ body {
     margin: 0 auto;
     height: 100%;
     background-color: @bodyBackgroundColor;
-	  font-family: @RobotoRegular;
+	  font-family: @fontFamily;
     font-size: @fontSize;
 	  color: @textColor; 
 }
 h1, h2, h3, h4, h5, h6 {
-    color: @textColor;
+    color: @textHeaderColor;
 }
 a {
     color: @linkColor;
@@ -146,7 +146,6 @@ button {
 
 .mz-page-headernote {
     margin-left: 133px;
-	font-weight: normal;
 }
 
 .mz-auxiliary-text {
@@ -171,7 +170,7 @@ button {
         position: absolute;
         right: -22px;
         color: white;
-        background-color: #0b3862;
+        background-color: @primaryDarkBlue;
         font-size: 30px;
         border-radius: 5px;
         padding: 5px 13px;
@@ -179,7 +178,7 @@ button {
         top: -22px;
         margin: 0;
         &:hover{
-          background-color: #00af9a;
+          background-color: @secondaryBlue;
         }
       }
 
@@ -193,7 +192,9 @@ button {
     overflow:hidden;
  }
 .mz-messagebar{
-  color:red;
+  color: @secondaryRed;
+  font-size: 12px;
+  padding-left: 5px;
 }
 @media only screen and (max-width:676px){
   .dnd-popup{
