@@ -106,9 +106,6 @@ Fonts Import
 @fontMontserratHairline: MontserratHairline;
 
 
-
-
-
 @fontFamily:            @fontGTWalsheimMedium;
 @fontSize:              {{ themeSettings.fontSize }};
 @fontSizeSmall:         @fontSize - 2px;
@@ -116,6 +113,8 @@ Fonts Import
 @fontSizeLarge:         @fontSize + 6px;
 @storeBrandingFontSize: 36px;
 
+
+/* colors */
 @primaryBlue: #363fc8;
 @primaryDarkBlue: #211d5e;
 @primaryWhite: #ffffff;
@@ -126,26 +125,36 @@ Fonts Import
 @secondaryLightPink: #eeb3d1;
 @secondaryWhite: #ede8e8;
 
-@dark-blue:#0d3762;
-@latel-green:#00af9a;
-@latel-grey:#dceaf6;
+@primaryCTA:            @secondaryPink;
+@primaryCTAhover:       @secondaryBlue;
+/* reverse secondaryCTA w primaryCTA borders/white fill: cancel, wishlist etc. */   
+@tertiaryCTA:           @secondaryBlue;
+@tertiaryCTAhover:      @primaryDarkBlue;
+
+@linkColor:             @primaryBlue;
+@linkHoverColor:        @secondaryBlue;
+@linkVisitedColor:      @primaryDarkBlue;
+
+@dark-blue: @primaryDarkBlue;
+@latel-green: @secondaryBlue;
+@latel-grey: @secondaryWhite;
 @dark-grey:#303030;
 @disabled-grey:#707070;
 @active-grey:#000;
 
+/* this color is the new dark blue in theme settings as of 10/11/17 GW */
 @textColor:             {{ themeSettings.textColor }};
-@linkColor:             #4F4F4F;
-@linkHoverColor:        #666;
-@linkVisitedColor:      #3F3F3F;
-@errorText:             #b94a48;
-@errorBackground:       #f2dede;
-@warningText:           @textColor;
-@warningBackground:     #ffefcf;
-@successText:           @textColor;
-@successBackground:     #eef2ee;
 
-@availableText:         #237e0e;
-@unavailableText:       #ae1231;
+@textHeaderColor:       @primaryBlue;
+
+@errorText:             @secondaryRed;
+@errorBackground:       @secondaryWhite;
+@warningText:           @primaryDarkBlue;
+@warningBackground:     @secondaryWhite;
+@successText:           @primaryDarkBlue;
+@successBackground:     @secondaryWhite;
+@availableText:         @secondaryBlue;
+@unavailableText:       @secondaryRed;
 
 @bodyBackgroundColor:   {{ themeSettings.bodyBackgroundColor }};
 
@@ -170,8 +179,8 @@ Fonts Import
 @productListingThumbSize: {{ themeSettings.listProductThumbSize }}px;
 
 
-@background: #dceaf6;
-@backgroundSeconderyCTA: #00af9a;
+@background: @secondaryWhite;
+@backgroundSeconderyCTA: @secondaryBlue;
 @disabledBTN: #d1d2d4;
 
 

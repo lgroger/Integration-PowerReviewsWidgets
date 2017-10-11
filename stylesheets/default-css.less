@@ -877,30 +877,25 @@ a.br-theme-page:hover {
     .megamu-wrapper.megamenu-wrapper-new{
         background-color: @primaryBlue;
         h2{
-            font-size: 14px;
+            font-size: @fontSize;
             margin: 0;
             padding: 6px;
             display: inline;
             font-family: @fontGTWalsheimBold;
             line-height: 0;
+            @media (min-width: 1025px) {
+            	font-size: 15px;
+            	padding: 0;
+            	display: block;
+            }
         }
     }
-    .float-mega-menu .megamu-wrapper.megamenu-wrapper-new{
-        background: none;
-    }
-    .float-menu-block .float-mega-menu h2>a{
-        color: @primaryBlue !important;
-        font-size: 16px;
-    }
-
     .cta-mobile-menu-section{
         display: none;
-        margin-top: 20px;
-        border-top: 1px solid #1d4870;
-        width: 95%;
+        border-top: 1px solid #211d5e;
         margin: 0 auto;
-        padding-top: 15px;
-        font: 14px @fontArvo !important;
+        padding: 25px 12px;
+        font: 14px @fontFamily !important;
         a{
             color: #fff;
             text-decoration: none;
@@ -920,6 +915,9 @@ a.br-theme-page:hover {
                     text-decoration: none;
                 }
             }
+        }
+        p {
+        	color: @secondaryBlue !important;
         }
     }
 #mz-drop-zone-party-planner-banner .mz-cms-content{
@@ -1124,12 +1122,18 @@ a.br-theme-page:hover {
         background: none;
     }
     .megamu-wrapper.megamenu-wrapper-new>ul{
-    max-width: 1250px;
-    margin: 0 auto;
+    margin: 0 auto 10px;
     padding: 0;
     background: none;
-    >li>a,>li>h2>a{
+    > li > a, > li > h2 >a {
         color: #fff;
+        @media (min-width: 1025px) {
+        	line-height: 1.8;
+        }
+    }
+    @media (min-width: 1025px) {
+    	margin: 0;
+    	height: auto;
     }
 }
 
@@ -1137,25 +1141,32 @@ a.br-theme-page:hover {
         list-style-type: none;
         display: inline;
     }
-    .megamu-wrapper.megamenu-wrapper-new > ul > li{
-        padding: 6px;
-        width: 100px;
+    .megamu-wrapper.megamenu-wrapper-new > ul > li {
+    	font-family: @fontFamily;
+    	font-size: @fontSize;
+        padding: 12px 12px 12px 6px;
+        width: 100%;
         box-sizing: border-box;
-        border-left: 2px solid #fff;
-        border-right: 2px solid #fff;
-        &:first-child {
-        	border-left: none;
-        }
-        &:last-child {
-        	border-right: none;
+        @media (min-width: 1025px) {
+	        display: inline;
+	        float: left;
+	        padding: 6px 0;
+	        width: 12.5%;
+	        font-size: 15px;
+	    	border-right: 3px solid #fff;
+			&:last-child {
+		    	border-right: none;
+			}
         }
     }
+    .float-mega-menu .megamu-wrapper.megamenu-wrapper-new > ul > li {
+	    font-size: @fontSize;
+	    border: none;
+	}
     .menu-column-block>ul>li{
         padding: 0;
     }
-    .megamu-wrapper ul li:hover{
-        background-color: red;
-    }
+
      .megamu-wrapper.megamenu-wrapper-new ul li:hover{
         background:none;
     }
@@ -1651,13 +1662,6 @@ a.br-theme-page:hover {
         }
         
     }
-    .float-menu-block .megamu-wrapper.megamenu-wrapper-new > ul{
-        display: block !important;
-        padding: 0 2% !important;
-        li h2 a{
-            font-size: 11px !important;
-        }
-    }
 }
     @media (max-width: 1024px){
         .main-drop-down{
@@ -1805,11 +1809,7 @@ a.br-theme-page:hover {
         #mz-drop-zone-megamenu .mz-cms-col-12-12{
             height:inherit;
         }
-        .megamu-wrapper ul{
-            top:-15px;
-            padding-left:10px;
-        }
-         .megamu-wrapper ul li:after {
+        .megamu-wrapper ul li:after {
             content:'';
          }
         .megamu-wrapper ul li{
@@ -1847,10 +1847,13 @@ a.br-theme-page:hover {
         }
         .back-direction-icon{
             display: block !important;
-            background-color: #0d3762;
+            background-color: @primaryDarkBlue;
             z-index: 11;
             position: relative;
             padding: 5px 0px 5px 10px;
+            margin: 0 0 10px 0;
+            font-family: @fontFamily;
+            font-size: @fontSize;
         }
         .megamu-wrapper.MenuCls ul li ul li .third-level-div{
             right: 100%;
@@ -1873,8 +1876,8 @@ a.br-theme-page:hover {
             float: right;
             width: 35px;
             height: 31px;
-            background-color: #3A6082;
-            margin-top: -17px;
+            background-color: transparent;
+            margin-top: -8px;
             text-align: center;
             margin-right: 0px;
             z-index: 1;
@@ -1893,7 +1896,7 @@ a.br-theme-page:hover {
             top: 6px;
         }
         .megamenu_cat{
-            visibility: hidden;
+            visibility: visible;
             cursor: pointer;
         }
         .megamu-wrapper > ul > li > span{
@@ -2317,13 +2320,10 @@ input::-webkit-inner-spin-button {
 	@media (min-width: 1025px) {
 		background: url(../resources/images/ShindigzBrandmark_HorizontalLockUp.png) center center no-repeat;
 		height: 50px;
-    	width: 100%;
+    	width: 99%;
     	background-size: 100%;
-    	margin: 8px 0 0 -11px;
-    	height: 70px;
-	}
-	@media (min-width: 1900px) {
-		background-size: 70%
+    	margin: 0;
+    	height: 50px;
 	}
 }
 .mz-prom-banner > footer > ul > li {
@@ -2336,6 +2336,9 @@ input::-webkit-inner-spin-button {
 	}
 	@media (min-width: 1025px) {
 		left: initial;
+		float: none;
+		width: 370px;
+		top: 5px;
 	}
 	& .mob-header-logo h1 {
     	margin: 0;
@@ -2661,6 +2664,18 @@ span.tt-suggestions {
     padding: 0px 0px 2px 25px !important;
     /* added for new Branding 100617 GW */
     display: none;
+    @media (min-width: 1025px) {
+    	display: block;
+    	position: relative;
+    	top: 75px;
+    	height: 30px;
+    	box-sizing: border-box;
+    	border: none;
+    	padding: 0 !important;
+    }
+    & .ech-shi-tollfree {
+    	width: auto;
+    }
 }
 .ech-shi-top-header .mz-cms-content{
     padding: 11px 10px 0px !important;
@@ -2681,7 +2696,7 @@ span.tt-suggestions {
     font-family: @fontArvo;
 }
 .mz-utilitynav-list li a:hover{
-    color: #00b09b;
+    color: @linkHoverColor;
 }
 .custom-menu-align{
     text-align:center;
@@ -2774,19 +2789,22 @@ button{
 .ech-shi-icons .icon-3 svg:hover #Layer_1 .st0 {
     fill: #30c3c5;
 }
+.icon-collection #party-ideas_icon svg:hover #Layer_1 .st0 {
+    	fill: #30c3c5;
+}
 .icon-collection #search_icon svg:hover #Layer_1 .st0 {
     fill: #30c3c5;
 }
-.icon-collection #float-login svg:hover #Layer_1 .st0 {
+.icon-collection .icon-swap-1.icon-final-swap svg:hover #Layer_1 .st0 {
     fill: #30c3c5;
 }
-.icon-collection .fi-icon-2 svg:hover #Layer_1_1_ .st0 {
+.icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_1_1_ .st0 {
     fill: #30c3c5;
 }
-.icon-collection .fi-icon-2 svg:hover #Layer_1_1_ .st1 {
+.icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_1_1_ .st1 {
     fill: #363fc8;
 }
-.icon-collection .icon-3 svg:hover #Layer_1 .st0 {
+.icon-collection .icon-cart.icon-swap-3 svg:hover #Layer_1 .st0 {
     fill: #30c3c5;
 }
 .mob-head-promo.mob-promo-phone a{
@@ -2849,7 +2867,7 @@ li.mz-sitenav-item.third-level-cat-up {
     margin-top:-13px;
 }
 li.promoslot-customer, li.sb-desktop-only{
-    font-family: @fontMontserratRegular;
+    font-family: @fontGTWalsheimBold;
 }
 a{
     text-decoration:none;
@@ -2859,21 +2877,18 @@ a{
         height:185px;
     }
 }
-.mz-utilitynav .mz-utilitynav-item:first-child{
-    padding-bottom:2px !important;
-}
 .search{
     width: 85%;
 }
  .searchNav {
         padding: 0;
         border-right:0px;
-        height: 45px;
+        height: 30px;
         display: inline-block;
         border-radius: 2px;
         width: 82%;
-        font-family: @fontMontserratLight;
         position: relative;
+        margin: 0;
     }
 .searchNav li#options{
     border: 1px solid #ccc;
@@ -3155,8 +3170,8 @@ h2.promo-slide-title{
 #search_text{
     width: 88%;  
     padding: 0px 10px;
-    height: 46px;
-    font-size: 16px;
+    height: 30px;
+    font-size: 11px;
     border: 1px solid #363fc8;
     border-right: 0px;
     margin-right: 0;
@@ -3170,6 +3185,9 @@ h2.promo-slide-title{
     font-family: 'GT-Walsheim-Bold';
 	border-top-left-radius: 7px;
 	border-bottom-left-radius: 7px;
+	@media (min-width: 1025px) {
+		font-size: 13px;
+	}
 }
 #search_text::-webkit-input-placeholder { /* WebKit browsers */
     color: #363fc8;
@@ -3192,12 +3210,12 @@ h2.promo-slide-title{
     border-bottom: 1px solid #363fc8;
     border-left: none;
     background: #fff url('../resources/images/searchBarIcon.svg') center no-repeat;
-    background-size: 28px 28px;
+    background-size: 20px 20px;
     width: 12%;
     float: right;
     padding: 0;
     text-align: center;
-    height: 46px;
+    height: 30px;
     cursor: pointer;
     border-radius: 0 7px 7px 0;
 }
@@ -4561,9 +4579,6 @@ h2.promo-slide-title{
        width:150px; 
        max-width: 100%;
     }
-    .custom-menu-align{
-      margin-top: 0px;
-    } 
     .ech-shi-homeSlider .owl-next span{
         background-size: 25% 35%;
     }
@@ -4704,12 +4719,6 @@ h2.promo-slide-title{
         .owl-next{
              right: -10%;
         }
-    }
-}
-@media (max-width: 1171px) and (min-width: 781px){
-    .custom-menu-align{
-        margin-top:-11px;
-        margin-bottom: -8px;
     }
 }
 @media (max-width:1024px) and (min-width:998px){
@@ -6346,9 +6355,17 @@ h2.promo-slide-title{
     }
 }
 .float-menu-block{
-    .megamu-wrapper ul li{
+    .megamu-wrapper.megamenu-wrapper-new > ul > li {
         font-size: 15px !important;
         padding:0 5px 10px !important;
+        @media (min-width: 1025px) {
+        	width: 95px;
+        	padding: 0 !important;
+        	border: none;
+        }
+        @media (min-width: 1200px) {
+        	width: 110px;
+        }
     }
     .main-drop-down{
         top:28px !important;
@@ -6362,20 +6379,37 @@ h2.promo-slide-title{
         width: auto;
         left: auto;
         top:20px !important;
-
+        background: none;
+    }
+	.megamu-wrapper.megamenu-wrapper-new h2 {
+        @media (min-width: 1025px) {
+        	font-size: 11px;
+        }
+        @media (min-width: 1200px) {
+        	font-size: 15px;
+        }
+    }
+    .megamu-wrapper.megamenu-wrapper-new > ul > li > a, .megamu-wrapper.megamenu-wrapper-new > ul > li > h2 > a {
+    	@media (min-width: 1025px) {
+        	color: @primaryBlue !important;
+        	&:hover {
+        		color: @secondaryBlue;
+        	}
+        }
+    }
+    .megamu-wrapper.megamenu-wrapper-new > ul > li:hover > a, .megamu-wrapper.megamenu-wrapper-new > ul > li:hover > h2 > a {
+    	@media (min-width: 1025px) {
+        	color: @secondaryBlue !important;
+        }
     }
     .megamu-wrapper ul li a{
         color: #203863;
-    }
-    .megamu-wrapper ul{
-        background-color:inherit;
     }
     .megamu-wrapper>ul{
         margin: 25px 0 0;
         padding: 0;
     }
     .megamu-wrapper.megamenu-wrapper-new>ul{
-        max-width: 1250px;
         padding: 0 4%;
         display: table;
         margin: 8px auto 0;
@@ -6398,15 +6432,6 @@ h2.promo-slide-title{
     }
 }
 @media only screen and (max-width:1340px){
-    .float-menu-block {
-         .megamu-wrapper ul li{
-            font-size: 13px !important;
-            padding: 0 3px 10px !important;
-         }
-         .megamu-wrapper ul li h2 a{
-            font-size: 13px !important;
-         }
-    }
     .float-mega-menu .megamu-wrapper.megamenu-wrapper-new.Menuloaded{
          & > ul > li:nth-child(5):hover .main-drop-down.menu-col-2{
             left: 30% !important;
@@ -6423,15 +6448,6 @@ h2.promo-slide-title{
                 left: 0% !important;
                 right: auto !important;
            }
-    }
-}
-
-@media only screen and (max-width:1150px){
-    .float-menu-block {
-         .megamu-wrapper ul li{
-            font-size: 10px !important;
-            padding: 0 2px 10px !important;
-         }
     }
 }
 .search-item-name:hover{
@@ -6530,9 +6546,6 @@ a.sizechart: visited {
 }
 
 /* copied eveyone's css from default site template widget 10/05/17 GW */
-.float-menu-block .megamu-wrapper.megamenu-wrapper-new>ul{
-    padding: 0;
-}
 .megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(7):hover .main-drop-down.menu-col-3{
 left: 42%;
 right: 0;
@@ -6817,12 +6830,6 @@ right: 0;
 }
 .mz-cms-col-1-6, .mz-cms-col-2-12 {
     width: 17%;
-}
-@media (max-width: 1171px) and (min-width: 781px) {
-.custom-menu-align {
-    margin-top: 0;
-    margin-bottom: 0;
-}
 }
 /* STYLES FOR SEARCH BAR */
 /*STYLE FOR HEIGHT OF SEARCH RESULTS */

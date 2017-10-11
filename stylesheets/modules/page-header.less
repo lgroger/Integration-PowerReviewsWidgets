@@ -4,7 +4,10 @@
 @utilityNavHeight: @headerBaseline - (@gutter / 2) - @searchBoxHeight;
  
 #page-wrapper {
-    margin: 0 50px;
+    margin: 0 2px;
+    @media (min-width: 1025px) {
+        margin: 0 50px;
+    }
 }
 .styled-select select {
    background: transparent;
@@ -234,6 +237,11 @@ transition: all 0.1s ease;
     right: 0;
     top: 8px;
     width: auto !important;
+    @media (min-width: 1025px) {
+        position: relative !important;
+        float: none !important;
+        top: 0px;
+    }
 }
 		.icon-collection {
             height: inherit;
@@ -249,9 +257,25 @@ transition: all 0.1s ease;
                 text-align: center;
                 float: left;
                 padding: 0 3px;
+                &:first-child {
+                    display: none;
+                    @media (min-width: 1025px) {
+                        display: block
+                    }
+                }
+                &.icon-swap-search {
+                    @media (min-width: 1025px) {
+                        display: none;
+                    }
+                }
                 @media (min-width: 480px) {
                     padding: 0 5px;
                 }
+                @media (min-width: 1025px) {
+                    width: 50px;
+                    padding: 0 4px;
+                }
+
 			}
 			.badge {
 				    display: inline-block;
@@ -265,6 +289,12 @@ transition: all 0.1s ease;
                     z-index:9;
                     right: 1px;
                     bottom: 37px;
+                    .header-block.floatheader & {
+                        @media (min-width: 1025px) {
+                            font-size: 10px;
+                            bottom: 46px;
+                        }
+                    }            
 			}
 
 /*
@@ -384,6 +414,11 @@ font-size: 16px;
      /*   top: @gutter/2;*/
         right: @gutter;
         height: @utilityNavHeight;
+        @media (min-width: 1025px) {
+            position: relative;
+            right: initial;
+            left: 20px;
+        }
     }
 
     .mz-searchbox {
