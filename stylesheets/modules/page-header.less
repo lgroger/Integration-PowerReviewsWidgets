@@ -58,9 +58,8 @@ width:88% !important;
 } 
 .my-fixed-header-bar{
       ul li svg{
-        max-height: 40px;
-        height: 100%;
-        width: auto;
+        height: 40px;
+        width: 40px;
     }
 }
 .ech-shi-footer-links .hide-mobile{
@@ -231,7 +230,7 @@ transition: all 0.1s ease;
 
 
 .icon-block {
-    position: fixed !important;
+    position: absolute !important;
     right: 0;
     top: 8px;
     width: auto !important;
@@ -262,6 +261,10 @@ transition: all 0.1s ease;
                         display: block
                     }
                 }
+                & svg {
+                    height: 35px;
+                    width: 35px;
+                }
                 &.icon-swap-search {
                     @media (min-width: 1025px) {
                         display: none;
@@ -273,6 +276,10 @@ transition: all 0.1s ease;
                 @media (min-width: 1025px) {
                     width: 50px;
                     padding: 0 4px;
+                    & svg {
+                        height: 50px;
+                        width: 50px;
+                    }
                 }
 
 			}
@@ -286,13 +293,22 @@ transition: all 0.1s ease;
 					position:relative;
                     z-index:9;
                     right: 1px;
-                    bottom: 37px;
-                    .header-block.floatheader & {
+                    bottom: 36px;
+                    @media (min-width: 1025px) {
+                        font-size: 10px;
+                        bottom: 48px;
+                    }
+                    .my-fixed-header-bar & {
+                        right: initial;
+                        left: 2px;
+                        bottom: 39px;
                         @media (min-width: 1025px) {
                             font-size: 10px;
-                            bottom: 46px;
+                            bottom: 39px;
+                            left: initial;
+                            right: 1px;
                         }
-                    }            
+                    }              
 			}
 
 /*

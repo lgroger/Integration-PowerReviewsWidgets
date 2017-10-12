@@ -10,7 +10,7 @@
 	float: left;
 	width: 50%;
 	color: #666;
-	font-family: @fontMontserratLight;
+	font-family: @fontGTWalsheimLight;
 	p{
 		padding-top: 0px;
 		margin-top: 0px;
@@ -64,7 +64,7 @@
     cursor: pointer;
 }
 .ech-shi-footer-about{
-	background-image: url('../resources/images/footer_image.png');
+	background-image: url('../resources/images/footer_image_newclr2.png');
 	background-repeat: no-repeat;
 	background-size: cover;
 	min-height: 237px;
@@ -82,16 +82,16 @@
 	margin-right: 30px;
 }
 .ech-shi-footer-links{
-    background-color: #093863;
+    background-color: @primaryDarkBlue;
  /*   padding: 5% 5% 2% 5%;*/
     color: #D6D6D6;
-    font-family: @fontMontserratLight;
+    font-family: @fontGTWalsheimLight;
 }
 .ech-shi-bottom-footer{
-    background-color: #093863;
+    background-color: @primaryDarkBlue;
     padding: 0% 5%;
     color: #D6D6D6;
-    font-family: @fontMontserratLight;
+    font-family: @fontGTWalsheimLight;
 }
 .ech-shi-footer-links ul{
 	text-align: left;
@@ -238,10 +238,20 @@
 .ech-shi-left{
 	float: left;
 	width: 30%;
+	@media (min-width: 1025px) {
+		position: relative;
+		top: 80px;
+	}
 }
 .ech-shi-right{
 	float: left;
 	width: 70%;
+	@media (min-width: 1025px) {
+		position: relative;
+		top: 90px;
+		float: right;
+	}
+
 }
 .ech-shi-bottom-footer{
  	font-family: 'RobotoRegular';
@@ -436,14 +446,6 @@ button#add-to-cart.is-disabled {
 	.ech-shi-footer-links {
  		 padding: 5% 5% 2% 0%;
 	}
-	.ech-shi-footer-abt-cont{
-		&>center{
-			&>svg{
-				width: 75px;
-			}
-		}
-	}
-	
 }
 @media (max-width: 438px){
 	.ech-shi-newletter1 input[type="email"]{
@@ -454,4 +456,7 @@ button#add-to-cart.is-disabled {
 	.ech-shi-newletter1 input[type="email"]{
 		width: 148px;
 	}
+}
+.ech-shi-footer-abt-cont > center > svg {
+	display: none;
 }

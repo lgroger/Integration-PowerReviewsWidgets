@@ -952,7 +952,7 @@ a.br-theme-page:hover {
     }
     .main-drop-down.menu-col-5{
         right: auto;
-        left: 6%;
+        left: 0;
     }
     .main-drop-down.menu-col-4{
         right: auto;
@@ -1226,15 +1226,15 @@ a.br-theme-page:hover {
         -o-transition:350ms;
         transition:350ms; */
         position:absolute;
-       left: 0px;
-        top: 43px;
+        left: 0px;
+        top: 30px;
         width: 100%;
         z-index:1;
         max-height:0;
-       text-align: left;
-        background-color: #dceaf6;
+        text-align: left;
+        background-color: @secondaryWhite;
         height: 500px;
-        border-bottom: 2px solid #dceaf6;
+        border-bottom: 2px solid @secondaryWhite;
         z-index: 10;
         //overflow-y:auto;
         overflow: auto;
@@ -1652,7 +1652,7 @@ a.br-theme-page:hover {
         & > ul > li:nth-child(2):hover{
             .main-drop-down.menu-col-5{
                 right: 16%;
-                left: 2%;
+                left: 0;
             }  
         }
         & ul > li:nth-child(4):hover{
@@ -3433,7 +3433,7 @@ searchNav .option{
 @media only screen and (max-width:1270px){
 
 	.megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(3):hover .main-drop-down.menu-col-6 {
-    left: 1%;
+    left: 0;
     right: 0;
 }
 }
@@ -4299,7 +4299,7 @@ searchNav .option{
 	margin: 0;
 	padding: 0;
 	@media (min-width: 1025px){
-		margin-right: -35px;
+		margin-right: -5px;
 	}
 }
 #mz-drop-zone-instagram-sub-heading .mz-cms-content{
@@ -6346,9 +6346,11 @@ searchNav .option{
         font-size: 15px !important;
         padding:0 5px 10px !important;
         @media (min-width: 1025px) {
-        	width: 95px;
+        	width: 90px;
         	padding: 0 !important;
         	border: none;
+        	font-size: 13px !important;
+        	margin-top: 4px;
         }
         @media (min-width: 1200px) {
         	width: 110px;
@@ -6435,6 +6437,10 @@ searchNav .option{
                 left: 0% !important;
                 right: auto !important;
            }
+         & > ul > li:nth-child(6):hover .main-drop-down.menu-col-5{
+            left: auto;
+    		right: -10%; 
+         } 
     }
 }
 .search-item-name:hover{
