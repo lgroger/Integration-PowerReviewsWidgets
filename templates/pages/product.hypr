@@ -31,11 +31,11 @@
    <div class="mz-productdetail-wrap1">
       <div class="mz-quick-view-wrapper">
          <div class="container-left {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video) %} hasSlider {% endif %}">
-               {% if model.content.productImages|length >1 %}
+               {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video)|first|length > 0 %}{# if has video, show thumbnail so you can get back to image after clicking on video #}
                   {% if pageContext.isDesktop %} 
                     <div class="slider-wrap">
-                       <div class="slideshow vertical {%  if model.content.productImages|length > 3 %} enable-slideshow {% endif %} {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %} hasVideo {% endif %}" data-cycle-log="false"  {%  if model.content.productImages|length > 3 %}  data-cycle-prev="#prev-slider-btn"
-        data-cycle-next="#next-slider-btn"  data-cycle-fx=carousel data-cycle-timeout=0 {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %} data-cycle-carousel-visible=3 {% else %} data-cycle-carousel-visible=4 {% endif %} data-cycle-carousel-vertical=true {% endif %}>
+                       <div class="slideshow vertical {%  if model.content.productImages|length > 3 %} enable-slideshow {% endif %} {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and model|get_product_attribute_values(themeSettings.productAttributes.video)|first|length > 0  %}{% if model.content.productImages|length == 1 %} singleImage{% else %} hasVideo{% endif%}{% endif %}" data-cycle-log="false"  {%  if model.content.productImages|length > 3 %}  data-cycle-prev="#prev-slider-btn"
+        data-cycle-next="#next-slider-btn"  data-cycle-fx=carousel data-cycle-timeout=0 {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and model|get_product_attribute_values(themeSettings.productAttributes.video)|first|length > 0 %} data-cycle-carousel-visible=3 {% else %} data-cycle-carousel-visible=4 {% endif %} data-cycle-carousel-vertical=true {% endif %}>
                                {% for image in model.content.productImages %}
                                      <img class="mz-productimages-thumbimage"  src="{% make_url "image" image with max=80 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
                                {% endfor %}
@@ -57,6 +57,7 @@
                                {% endfor %}
                                  {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %}
                                 {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
+                                {% if videoURLs|first|length > 0 %}
                                 {% with videoURLs|first|split(",") as videos %}
                                 {% for video in videos %} 
                                 {% with video|split("=") as vCode %}
@@ -66,6 +67,7 @@
                               {% endwith %}
                               {% endfor %}
                           {% endwith %}
+                          {% endif %}
                           {% endwith %}
                           {% endif %}
                         </div>
@@ -73,12 +75,13 @@
                     </div>
                      <div class="center">
                             <span id="prev-carousel-btn"></span>
-                            <span id="next-carousel-btn"></span>
+                            <span id{="next-carousel-btn"></span>
                         </div>
                   {% endif %}
                  {% endif %}
                {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and pageContext.isDesktop %}
             {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
+            {% if videoURLs|first|length > 0 %}
             {% with videoURLs|first|split(",") as videos %}
             <div class="video-slider-wrap">
                <div class="{% if videos.length > 1 %}enable-slideshow{% endif %} video-slider" data-cycle-log="false" data-cycle-fx=carousel data-cycle-timeout=0 data-cycle-next="#next-vdo-btn" data-cycle-prev="#prev-vdo-btn" data-cycle-carousel-visible=1 data-cycle-carousel-vertical=true>
@@ -96,6 +99,7 @@
                 {% endif %}
             </div>
             {% endwith %}
+            {% endif %}
             {% endwith %}
             {% endif %}
             <div class="product-image {% if not pageContext.isDesktop and  model.content.productImages|length >1 %} hide {% endif %}">
