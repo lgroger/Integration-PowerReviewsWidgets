@@ -65,7 +65,11 @@ var google_tag_params = {
 	{% endif %}
 
 	{% if  pageContext.pageType == "web_page" %}
-		ecomm_pagetype: 'other'
+		{{% if pageContext.title == "Home" or pageContext.title == "Home Page" or pageContext.title == "home-page" or pageContext.title == "Event Supplies" %} 
+			ecomm_pagetype: 'home'
+		{% else %}
+			ecomm_pagetype: 'other'
+		{% endif %}
 	{% endif %}
 };
 </script>
