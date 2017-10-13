@@ -32,7 +32,7 @@
 	clear: both;
 }
 .ech-shi-news-header{
-	font-family: @fontArvo;
+	font-family: @fontGTWalsheimBold;
 	font-size: 26px; 
 	color: #00B09B;
 }
@@ -69,6 +69,7 @@
 	background-size: cover;
 	min-height: 237px;
 	font-family: @fontRoboto;
+	display: none;
 }
 .ech-shi-footer-abt-cont{
 	padding: 0% 5%;
@@ -82,8 +83,7 @@
 	margin-right: 30px;
 }
 .ech-shi-footer-links{
-    background-color: @primaryDarkBlue;
- /*   padding: 5% 5% 2% 5%;*/
+    background-color: @secondaryBlue;
     color: #D6D6D6;
     font-family: @fontGTWalsheimLight;
 }
@@ -95,14 +95,14 @@
 }
 .ech-shi-footer-links ul{
 	text-align: left;
-    padding: 0px 10px;
+    padding: 0;
     margin: 0 auto;
 }
 .ech-shi-footer-links ul li{
 	display: inline-block;
 	vertical-align: top;
     list-style-type: none;
-    width: 19%;
+    width: 19.7%;
     text-align: left;
     font-size: 13px;
 }
@@ -114,8 +114,9 @@
     text-transform: capitalize;
 }
 .ech-shi-footer-links ul li ul li a{
-	 color: #bbb;
-	 text-decoration: none;
+	 color: @primaryDarkBlue;
+	 text-decoration: none !important;
+	 font-family: @fontFamily;
 }
 .ech-shi-footer-links ul li ul li a:hover{
 	 color: #fff;
@@ -123,17 +124,10 @@
 .ech-shi-footer-links ul li ul li:first-child{
     font-size: 20px;
    	margin-bottom: 15px !important;
-	color: #fff;
+	color: @primaryDarkBlue;
 	pointer-events: none;
-	font-family: @fontMontserratRegular;
+	font-family: @fontGTWalsheimBold;
 	margin-top: 50px;
-}
-.ech-shi-footer-links ul li ul li.ech-shi-connect{
-    font-size: 20px;
-    color: #fff;
-    pointer-events: none;
-    font-family: @fontMontserratRegular;
-    margin-top: 70px;
 }
 .ech-shi-footer-links ul li ul li ul li{
 	display: inline;
@@ -459,4 +453,9 @@ button#add-to-cart.is-disabled {
 }
 .ech-shi-footer-abt-cont > center > svg {
 	display: none;
+}
+
+/* added from widget for footer */
+.recommended_products{
+	clear:both;
 }
