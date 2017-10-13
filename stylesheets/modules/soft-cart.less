@@ -49,29 +49,26 @@
 
         .soft-cart-btn{
             font-size: 14px;
-            font-weight: bold;
             border: none;
             padding: 20px 0px;
             float: left;
         }
         .view-minicart-btn{
             width: 44%;
-            color: #093863;
-            background-color: #E0EDF7;
-            font-family: @fontMontserratRegular;
+            color: @primaryBlue;
+            background-color: @secondaryWhite;
+            font-family: @fontGTWalsheimMedium;
             &:hover{
-              background-color: #093863;
-              color: #fff;
+              color: @primaryDarkBlue;
             }
         }
         .chkout-minicart-btn{
             width: 56%;
             color: #fff;
-            background-color:#0871CE; 
-            font-family: @fontMontserratRegular;
+            background-color: @primaryCTA; 
+            font-family: @fontGTWalsheimMedium;
             &:hover{
-              background-color: #093863;
-              color: #fff;
+              background-color: @primaryCTAhover;
             }
         }
     }
@@ -95,7 +92,7 @@
       font-size: 38px;
       line-height: 12px;
       color: #093863;
-      font-family: MonstserratLight;
+      font-family: @fontGTWalsheimLight;
       background-color: transparent; 
       height: auto;
       position: absolute;
@@ -105,7 +102,6 @@
   h2 {
     margin: {{themeSettings.gutterWidth}}/2;
     color: #6C6D70;;
-    font-weight: normal;
     text-transform: uppercase;
   }
   .soft-cart-controls {
@@ -123,31 +119,30 @@
     overflow: auto;
     font-size: 1.1em; 
     margin-top: 0.5px;
-    font-weight: bold;
     text-transform: uppercase;
     padding: 10px 20px;
     background-color: #fff;
   }
   .soft-cart-total-label {
     text-align: left;
-    color: #666666;
+    color: @primaryDarkBlue;
     padding-top: inherit;
-     font-family:@fontMontserratLight; 
+     font-family:@fontGTWalsheimBold; 
   }
   .soft-cart-total-amount {
     font-size: 1.2em;
-    color: #093863;
-    font-family: @fontArvo;
+    color: @primaryDarkBlue;
+    font-family: @fontGTWalsheimBold;
     text-align:right;
   }
   .soft-cart-items-label {
     font-size: 15.5px; 
     margin-top: 0.5px;
     text-transform: uppercase;
-    background-color:#F5F6F5;
+    background-color:@secondaryWhite;
     padding: 13px 20px 17px; 
-    color:#093863;
-    font-family: @fontArvo;
+    color: @primaryDarkBlue;
+    font-family: @fontGTWalsheimBold;
     position: relative;
   }
   .soft-cart-items {
@@ -208,7 +203,7 @@
     }
     .item-name-qty-ops{
         text-align: left;
-        font-family: @fontMontserratRegular;
+        font-family: @fontGTWalsheimMedium;
         .item-price{
           text-align: right;
         }
@@ -219,7 +214,7 @@
       font-size: 12px;
     }
     .soft-cart-item-quantity span.q_number{
-      font-family: ArvoRegular;
+      font-family: @fontGTWalsheimMedium;
       font-size:1.1em;
       margin-left: 5px;
       vertical-align: middle;
@@ -239,8 +234,8 @@
   .soft-cart-item-title {
     display: block;
     font-size:13px;
-    color:#121214;
-    font-family: @fontMontserratRegular;
+    color: @primaryDarkBlue;
+    font-family: @fontGTWalsheimMedium;
     margin-bottom: 25px;
   }
   /*.soft-cart-item-quantity {
@@ -260,7 +255,7 @@
   .soft-cart-item-total {
     font-size: 1.3em;
     color: #093863;
-    font-family: ArvoRegular;
+    font-family: @fontGTWalsheimMedium;
   }
 }
 /*.soft-cart {
@@ -276,8 +271,7 @@ span.item-name {
 /*-------------------*/
 div.welcome-text-container div.mz-cms-col-12-12 ul li{
   p, a{
-      font-family: MonstserratLight;
-      font-weight: 400;
+      font-family: @fontGTWalsheimLight;
   }
 }
 /*-------------------*/

@@ -868,7 +868,8 @@ a.br-theme-page:hover {
     }
     .megamu-wrapper{
         color: #fff;
-        z-index: 999;
+        z-index: 998;
+        
         position: relative;
     } 
     .megamu-wrapper.megamenu-wrapper-new{
@@ -1081,6 +1082,15 @@ a.br-theme-page:hover {
      }
     }
 }
+/* for Halloween 2017 */
+.megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(7) {
+	&:hover{
+     	.main-drop-down{
+       	 	left: auto;
+        	right: 0;
+     	}
+    }
+}
 @-moz-document url-prefix() {
  
  .mz-sales-ribbon, .mz-clearance-ribbon, .mz-new-ribbon{
@@ -1178,7 +1188,7 @@ a.br-theme-page:hover {
     }
     .megamu-wrapper ul li ul li {
         font-size: 15px;
-        font-family: @fontGTWalsheimBold;
+        font-family: @fontGTWalsheimMedium;
     }
      .megamu-wrapper.megamenu-wrapper-new ul li ul li {
         font-size: 12px !important;
@@ -1347,9 +1357,15 @@ a.br-theme-page:hover {
             padding: 5px 0 2px;
             text-align: left;
             line-height: 1.2;
-            &:hover,&:focus{
-                 color: @secondaryBlue;
+            &:hover a,&:focus a{
+                 color: @linkHoverColor;
             }
+        }
+        h3:hover a {
+           color: @linkHoverColor;
+        }
+        h3:focus a {
+           color: @linkHoverColor;
         }
         ul{
             margin: 5px 0 15px;
@@ -2312,11 +2328,10 @@ input::-webkit-inner-spin-button {
 	margin: 0;
 	@media (min-width: 1025px) {
 		background: url(../resources/images/ShindigzBrandmark_HorizontalLockUp.png) center center no-repeat;
-		height: 50px;
+		height: 60px;
     	width: 99%;
     	background-size: 100%;
     	margin: 0;
-    	height: 50px;
 	}
 }
 .mz-prom-banner > footer > ul > li {
@@ -2328,9 +2343,9 @@ input::-webkit-inner-spin-button {
 		left: 35px;
 	}
 	@media (min-width: 1025px) {
-		left: -6px;
+		left: -11px;
 		float: none;
-		width: 280px;
+		width: 390px;
 		top: 0;
 	}
 	& .mob-header-logo h1 {
@@ -3180,6 +3195,10 @@ h2.promo-slide-title{
     font-family: 'GT-Walsheim-Bold';
 	border-top-left-radius: 7px;
 	border-bottom-left-radius: 7px;
+	@media (min-width: 1200px) {
+		height: 40px;
+		font-size: 13px;
+	}
 }
 #search_text::-webkit-input-placeholder { /* WebKit browsers */
     color: #363fc8;
@@ -3210,6 +3229,9 @@ h2.promo-slide-title{
     height: 30px;
     cursor: pointer;
     border-radius: 0 7px 7px 0;
+    @media (min-width: 1200px) {
+    	height: 40px;
+    }
 }
 #search_button:hover{
     background: #211d5e url('../resources/images/searchBarIcon-white.svg') center no-repeat;
@@ -6374,7 +6396,7 @@ searchNav .option{
         @media (min-width: 1025px) {
         	font-size: 11px;
         }
-        @media (min-width: 1200px) {
+        @media (min-width: 1297px) {
         	font-size: 15px;
         }
     }
@@ -6539,12 +6561,8 @@ a.sizechart: visited {
 }
 
 /* copied eveyone's css from default site template widget 10/05/17 GW */
-.megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(7):hover .main-drop-down.menu-col-3{
-left: 42%;
-right: 0;
-}
 .float-mega-menu .megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(7):hover .main-drop-down.menu-col-3{
-left: 23%;
+left: auto;
 right: 0;
 }
 .float-mega-menu .megamu-wrapper.megamenu-wrapper-new.Menuloaded>ul>li:nth-child(5):hover .main-drop-down.menu-col-4{

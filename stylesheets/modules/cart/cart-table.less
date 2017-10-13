@@ -193,7 +193,7 @@ ul.mz-table.mz-table-cart{
             text-align: center;
             margin: 0px 0px 15px;
             padding: 22px 5px;
-            color: #222;
+            color: @primaryDarkBlue;
             span span{
                 font-size:22px;
                 color: #ff8300;
@@ -301,7 +301,7 @@ span.rounded-cart-color{
             font-family: @fontGTWalsheimBold;
             text-transform: uppercase;
             font-size: 17px;
-            color: #000;
+            color: @primaryDarkBlue;
         }
     }
     .cart-table-items table{
@@ -313,6 +313,8 @@ span.rounded-cart-color{
             text-transform:uppercase;
             font-family: @fontGTWalsheimLight;
             border:0px;
+            /* to override th global setting */
+            font-weight: normal;
         }    
         th.mz-carttable-header-product{
             padding-left:3%;
@@ -344,7 +346,7 @@ span.rounded-cart-color{
             padding: 25px 0.5% 20px 1.5%;
         }
         td.mz-carttable-item-description{
-            font-family:MonstserratLight;
+            font-family: @fontFamily;
             position: relative;
             width:35%;
             padding-bottom: 40px;
@@ -364,7 +366,7 @@ span.rounded-cart-color{
             }
         }
         .mz-carttable-item-title{
-            color:#222;
+            color: @primaryDarkBlue;
             text-decoration:none;
             font-size:15px;
             margin-bottom:5px;
@@ -382,6 +384,7 @@ span.rounded-cart-color{
                 color: @linkColor;
                 text-decoration: underline;
                 font-size: 13px;
+                text-transform: uppercase;
             }
             a:hover{
                 color: @linkHoverColor;
@@ -395,7 +398,7 @@ span.rounded-cart-color{
             display:block;
             width:100%;
             margin: 20px 0px 0px;
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             p{
                 margin:10px 0px 0px;
             }
@@ -408,7 +411,7 @@ span.rounded-cart-color{
                 clear:both;
             }
             .sd_text{
-                color:#222;
+                color: @primaryDarkBlue;
                 font-size:14px;
                 margin-bottom:8px;
                 margin-left:0px;
@@ -506,29 +509,30 @@ span.rounded-cart-color{
                 color: #bbb;
                 line-height: 21px;
                 text-indent: inherit;
-                font-family: MonstserratLight;
+                font-family: @fontGTWalsheimLight;
             }
             .mz-icon.mz-icon-close:hover{
                 color:#666;
             }
             a.cart_wishlist{
                 line-height: 20px;
-                font-family: MonstserratLight;
-                color: #093863;
+                font-family: @fontGTWalsheimMedium;
+                color: @linkColor;
                 position: absolute;
                 right: 15px;
                 bottom: 20px;
-                font-size: 15px;
+                font-size: 13px;
                 text-decoration: underline;
                 min-width: 135px;
+                text-transform: uppercase;
             }
             a.cart_wishlist:hover{
                 text-decoration:none;
-                color:#22ab93;
+                color: @linkHoverColor;
             }
         }
         td.mz-carttable-item-stock{    
-            font-family:MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             font-size:13px;
             color:#666;
             padding:0px 1.5% 25px;
@@ -544,11 +548,11 @@ span.rounded-cart-color{
                 border-bottom:1px dotted #ff8300;
                 margin-top:15px;
                 .offer_line_highlight{
-                    color:#093863;
+                    color: @primaryDarkBlue;
                 }
             }
             .move_to_wishlist{
-                color: #093863;
+                color:  @primaryDarkBlue;
                 position:absolute;
                 right:15px;
                 top:-20px;
@@ -566,11 +570,11 @@ span.rounded-cart-color{
         }
         td.mz-carttable-item-total{
             font-size:18px;
-            color:#093863;
+            color:@primaryDarkBlue;
         }
         td.mz-carttable-item-total{
             font-size:18px;
-            color:#093863;
+            color: @primaryDarkBlue;
         }
     }
     .mz-carttable-item-ship-charge, .mz-carttable-item-total, .mz-carttable-item-price, .mz-carttable-header-surcharge, .mz-carttable-header-total, .mz-carttable-header-price, .mz-carttable-header-qty, .mz-carttable-item-qty, .mz-carttable-noitems{
@@ -603,7 +607,7 @@ span.rounded-cart-color{
             text-transform: capitalize;
         }
         .f_left a{
-            color:#093863;
+            color: @primaryDarkBlue;
             text-transform:uppercase;
         }
     }
@@ -617,7 +621,7 @@ span.rounded-cart-color{
         table{
             width:100%;
             border:0px;
-            font-family:MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             margin-bottom:20px;
             td{
                 padding:10px 15px;
@@ -633,7 +637,7 @@ span.rounded-cart-color{
                 font-family: @fontGTWalsheimBold;
                 text-align:right;
                 font-size:18px;
-                color:#000;
+                color: @primaryDarkBlue;
                 &.tax{
                     text-align: right;
                     padding: 0 10px 0;
@@ -840,16 +844,16 @@ span.rounded-cart-color{
             }
             .summary_estimate_label{
                 display:inline-block;
-                font-size:18px; 
-                color:#666;
+                font-size:17px; 
+                color: @primaryDarkBlue;
                 line-height:40px;
                 text-transform:uppercase;
-                font-family: @fontGTWalsheimLight;
+                font-family: @fontGTWalsheimBold;
             }
             .summary_estimate_price{
                 display:inline-block;
                 font-size:24px; 
-                color:#093863;
+                color: @primaryDarkBlue;
                 line-height:40px;
                 font-family: @fontGTWalsheimBold;
             }
@@ -891,7 +895,7 @@ span.rounded-cart-color{
             .pay_option_btn{
                 display: block;
                 border:1px solid #375d80;
-                color:#093863;
+                color: @primaryDarkBlue;
                 cursor:pointer;
                 background: #fff;
                 span{
@@ -918,8 +922,8 @@ span.rounded-cart-color{
                 }
             }
             .pay_option_btn:hover {
-                border-color: #222;
-                color: #222;
+                border-color: @primaryDarkBlue;
+                color: @primaryDarkBlue;
                 background: #fdfdfd;
                 box-shadow: 0px 2px 7px #ccc;
             }
@@ -1041,7 +1045,8 @@ tr.mz-carttable-item-shipping-info{
             margin: 0 0 0px 0;
 
             span.avail-value{
-                color: #22AB93;
+                color: #30c3c5;
+                font-family: 'GT-Walsheim-Medium';
             }
             .avail-shipping-time{
                 color:#727272;
@@ -1066,6 +1071,9 @@ tr.mz-carttable-item-shipping-info{
     .echi-shi-related-products-slider .owl-carousel{
         max-height: inherit !important;
     }
+}
+.mz-cart .confiramtion-slider h2 {
+    color: @primaryDarkBlue;
 }
 .mz-cart #AmazonPayButton{
     display: none !important;
