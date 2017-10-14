@@ -168,10 +168,10 @@ a.br-theme-page {
 	margin-bottom: 90px !important;	
 }
 .br-facet-form-header {
-	background-color: #0D3762;
+	background-color: @primaryDarkBlue;
 	color: #FFF;
 	padding: 5px 5px 5px 15px;	
-	font-family: RobotoRegular;
+	font-family: @fontFamily;
 	font-size: 17px;
 	border-top-right-radius: 5px;
 	-webkit-border-top-right-radius: 5px;
@@ -1369,7 +1369,7 @@ a.br-theme-page:hover {
         }
         ul{
             margin: 0;
-            padding: 0 0 10px 5px;
+            padding: 0 0 15px 5px;
             li {
                 display: block;
                 text-align: left;
@@ -1766,7 +1766,7 @@ a.br-theme-page:hover {
                 &.show-menu-sub{
                 	.clearfix;
 						display: block;
-						margin: 12px 0 0;
+						margin: 0;
 						padding-left: 10px;
                 }
             }
@@ -2769,7 +2769,7 @@ button{
 }
 .ech-shi-icons #party-ideas_icon svg {
 	display:none;
-	&:hover #Layer_1 .st0 {
+	&:hover #Layer_1 .st0, &:hover #Layer_2 .st0 {
     	fill: #30c3c5;
 	}
 	@media (min-width: 1025px) {
@@ -2781,37 +2781,40 @@ button{
 		display: none;
 	}
 }
-.ech-shi-icons #search_icon svg:hover #Layer_1 .st0 {
+.ech-shi-icons #search_icon svg:hover #Layer_1 .st0, .ech-shi-icons #search_icon svg:hover #Layer_2 .st0  {
     fill: #30c3c5;
 }
-.ech-shi-icons #float-login svg:hover #Layer_1 .st0 {
+.ech-shi-icons #float-header-login svg:hover #Layer_1 .st0, .ech-shi-icons #float-header-login svg:hover #Layer_2_1_ .st0 {
     fill: #30c3c5;
 }
-.ech-shi-icons .fi-icon-2 svg:hover #Layer_1_1_ .st0 {
+.ech-shi-icons #float-login svg:hover #Layer_1 .st0, .ech-shi-icons #float-login svg:hover #Layer_2_1_ .st0 {
     fill: #30c3c5;
 }
-.ech-shi-icons .fi-icon-2 svg:hover #Layer_1_1_ .st1 {
+.ech-shi-icons .fi-icon-2 svg:hover #Layer_1_1_ .st0, .ech-shi-icons .fi-icon-2 svg:hover #Layer_2 .st0  {
+    fill: #30c3c5;
+}
+.ech-shi-icons .fi-icon-2 svg:hover #Layer_1_1_ .st1, .ech-shi-icons .fi-icon-2 svg:hover #Layer_2 .st1 {
     fill: #363fc8;
 }
-.ech-shi-icons .icon-3 svg:hover #Layer_1 .st0 {
+.ech-shi-icons .icon-3 svg:hover #Layer_1 .st0, .ech-shi-icons .icon-3 svg:hover #Layer_2 .st0 {
     fill: #30c3c5;
 }
-.icon-collection #party-ideas_icon svg:hover #Layer_1 .st0 {
+.icon-collection #party-ideas_icon svg:hover #Layer_1 .st0, .icon-collection #party-ideas_icon svg:hover #Layer_2 .st0 {
     	fill: #30c3c5;
 }
-.icon-collection #search_icon svg:hover #Layer_1 .st0 {
+.icon-collection #search_icon svg:hover #Layer_1 .st0, .icon-collection #search_icon svg:hover #Layer_2 .st0 {
     fill: #30c3c5;
 }
-.icon-collection .icon-swap-1.icon-final-swap svg:hover #Layer_1 .st0 {
+.icon-collection .icon-swap-1.icon-final-swap svg:hover #Layer_1 .st0, .icon-collection .icon-swap-1.icon-final-swap svg:hover #Layer_2_1_ .st0  {
     fill: #30c3c5;
 }
-.icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_1_1_ .st0 {
+.icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_1_1_ .st0, .icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_2 .st0 {
     fill: #30c3c5;
 }
-.icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_1_1_ .st1 {
+.icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_1_1_ .st1, .icon-collection .icon-swap-2.icon-final-swap-1 svg:hover #Layer_2 .st1 {
     fill: #363fc8;
 }
-.icon-collection .icon-cart.icon-swap-3 svg:hover #Layer_1 .st0 {
+.icon-collection .icon-cart.icon-swap-3 svg:hover #Layer_1 .st0, .icon-collection .icon-cart.icon-swap-3 svg:hover #Layer_2 .st0 {
     fill: #30c3c5;
 }
 .mob-head-promo.mob-promo-phone a{
@@ -3133,6 +3136,10 @@ h2.promo-slide-title{
     float: left;
     list-style-type: none;
     position: relative;
+        height: 30px;
+    @media (min-width: 1200px) {
+    	height: 40px;
+    }
 }
 .searchNav li a {
     font-size: 16px;
@@ -3213,7 +3220,7 @@ h2.promo-slide-title{
     color: #363fc8;
 }
 .mz-filters > .mz-filters-btn:hover{
-    background-color: #00ceb3; 
+	opacity: .7;
 }
 #search_button {
     border-top: 1px solid #363fc8;
@@ -3842,7 +3849,7 @@ searchNav .option{
     .mz-l-paginatedlist{
     overflow: inherit; 
     float: right;
-    width: 80%;
+    width: 79%;
 }
 }  
 .mz-l-paginatedlist{
@@ -4278,8 +4285,11 @@ searchNav .option{
     border:0px !important;
     } 
     .mz-paging-title{
-        margin-top: 7px;
+        margin-top: 1px;
         width: 20px;
+    }
+    .selectric-mz-pagingcontrols-pagesize-dropdown .button{
+    	top: -13px;
     }
 }
 .add_z_index{
@@ -4443,6 +4453,7 @@ searchNav .option{
 } 
 .mz-filter-options .mz-facetingform.mz-filters{
     margin-top:-7px;
+    width: 100%;
 }
 .ech-shi-homeSlider .vt-slider{
     display:none;
@@ -4577,6 +4588,22 @@ searchNav .option{
 }
 .ech-shi-homeSlider .imagevideocaraousel .vt-slider .third-line:hover{
      background-color: #0d3762 !important;
+}
+.mz-filters-bar .mz-sort{
+        .mz-sort-btn{
+            margin-top: 3px;
+        }
+        .selectric-responsive {
+            width: 88%;
+            margin-top: -2px;
+            margin-left: 30px;
+            text-align: left;
+        }
+        .selectric .label{
+            margin-left: 0px;
+            font-size: 17px;
+            line-height: 2.7;
+        }
 }
 @media (min-width: 995px){
     .fixed-mob-bottom{
@@ -4843,11 +4870,7 @@ searchNav .option{
         }      
     }
 } 
-@media only screen and (min-width: 641px){
-    .mz-filters .mz-filters-btn i{
-        margin-top:15px !important;
-    }
-}
+
 @media (max-width: 950px){
     .ech-shi-homeSlider .owl-prev span, {
         background-size: 19% 40%;
@@ -4877,11 +4900,11 @@ searchNav .option{
             padding: 0px 6px;
         }
     }
-    .mz-mobile-filter .mz-filters .mz-filters-btn{
-        padding: 6px 0px 0px;
+    .mz-mobile-filter .mz-filters .mz-filters-btn img{
+        display: none;
     }
     .mz-filters .mz-filters-btn i{
-        margin: 9px 16px 15px;
+        margin: -2px 16px 0;
     }
     /*
 	commented by asaithambi
@@ -5331,9 +5354,7 @@ searchNav .option{
     }
 
  .mz-productlisting-image .mz-sales-ribbon:before {
-  
     top: 10px;
-    
 }
 
 .mz-productlisting-image .mz-clearance-ribbon:before{
@@ -5385,30 +5406,6 @@ searchNav .option{
     .hide_mob_icon{
         background-size: 0px 20px !important;
     }
-    .mz-filters-bar .mz-sort{
-        img{
-            display: inline-block;
-            margin-top: 14px;
-            float: left;
-        }  
-        .mz-sort-btn{
-            margin-top: 3px;
-        }
-        .selectric-responsive {
-            width: 88%;
-            margin-top: -2px;
-            margin-left: 30px;
-            text-align: left;
-        }
-        .selectric .label{
-            margin-left: 0px;
-            font-size: 17px;
-        }
-        .selectric-items{
-            margin-left: -4px;
-            margin-top: 5px;
-        }
-    }
     .quick-view{
         display: none;
     }
@@ -5423,8 +5420,8 @@ searchNav .option{
         padding: 5px;
     }
     .selectric{
-        border: 1px solid #DDEAF5 !important;
-        background: #DDEAF5 !important; 
+        border: 1px solid @secondaryWhite !important;
+        background: @secondaryWhite !important; 
     }
     .display_in_mob{
         display: block;
@@ -5458,17 +5455,13 @@ searchNav .option{
     .mz-mobile-filter .mz-filter-mobile-options header i:before{
         width: 30px;
         height: 30px;
-        background-color: #6B88A1;
+        background-color: @primaryBlue;
         padding: 7px;
         font-size: 18px;
         color: #fff;
     }
     .hide_in_mobile{ 
         display: none;
-    }
-    .mz-sort .selectric .label{
-        height: 44px !important;
-        line-height: 51px !important;
     }
     .mz-mobile-filter .mz-filters{
         vertical-align: top;
@@ -5920,11 +5913,8 @@ searchNav .option{
   Selectric v1.9.6
 ======================================*/
  .selectric, .selectric-items{
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
     }
-.mz-page-filters-controls .mz-pagingcontrols, .mz-page-filters-controls .mz-sortby{
-    width: 260px;
-}
 .color-swatch{
     height:40px;
     position: relative;
@@ -5958,6 +5948,9 @@ searchNav .option{
         display: inline-block;
         float: left;
         width: 150px;
+        @media (min-width: 1151px) {
+        	border: 1px solid #eee;
+        }
     }
 }
 .selectric-wrapper {
@@ -5970,7 +5963,6 @@ searchNav .option{
 }
 
 .selectric {
-  border: 1px solid #DDD;
   position: relative;
   border-radius: 2px;
 }
@@ -5988,9 +5980,11 @@ searchNav .option{
   text-overflow: ellipsis;
   margin: 0 38px 0 10px;
   font-size: 11px;
-  line-height: 35px;
-  color: #444;
+  color: @primaryDarkBlue;
   height: 35px;
+  @media (min-width: 1151px) {
+  	line-height: 3.2;
+  }
 }
 .selectric .button {
   display: block;
@@ -6017,11 +6011,11 @@ searchNav .option{
   border: 6px solid transparent;
   border-top-color: #BBB;
   border-bottom: none;
-  border-top-color: #0d3762;
+  border-top-color: @primaryDarkBlue;
  
 }
 .mz-l-paginatedlist-header .selectric .button:after{
-     margin-top: 22px;
+     margin-top: 19px;
 }
 .selectric-hover .selectric {
   border-color: #C4C4C4;
@@ -6091,12 +6085,20 @@ searchNav .option{
 .selectric-items {
   display: none;
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: 48px;
+  left: -20px;
   background: #F8F8F8;
   border: 1px solid #C4C4C4;
   z-index: -1;
   box-shadow: 0 0 10px -6px;
+  @media (min-width: 768px) {
+  	top: 54px;
+  	left: 0;
+  }
+  @media (min-width: 1151px) {
+  	top: 35px;
+  	left: 0;
+  }
 }
 .selectric-items .selectric-scroll {
   height: 100%;
@@ -6110,9 +6112,12 @@ searchNav .option{
   list-style: none;
   padding: 0;
   margin: 0;
-  font-size: 11px;
+  font-size: 13px;
   line-height: 20px;
   min-height: 20px;
+  @media (min-width: 768px) {
+  	font-size: 15px;
+  }
 }
 .selectric-items li {
   display: block;
