@@ -34,7 +34,7 @@
 .ech-shi-news-header{
 	font-family: @fontGTWalsheimBold;
 	font-size: 26px; 
-	color: #00B09B;
+	color: @primaryDarkBlue;
 }
 .ech-shi-newletter1 form {
 	position: relative;
@@ -69,7 +69,6 @@
 	background-size: cover;
 	min-height: 237px;
 	font-family: @fontRoboto;
-	display: none;
 }
 .ech-shi-footer-abt-cont{
 	padding: 0% 5%;
@@ -84,6 +83,7 @@
 }
 .ech-shi-footer-links{
     background-color: @secondaryBlue;
+ /*   padding: 5% 5% 2% 5%;*/
     color: #D6D6D6;
     font-family: @fontGTWalsheimLight;
 }
@@ -92,17 +92,18 @@
     padding: 0% 5%;
     color: #D6D6D6;
     font-family: @fontGTWalsheimLight;
+    display: none;
 }
 .ech-shi-footer-links ul{
 	text-align: left;
-    padding: 0;
+    padding: 0px 10px;
     margin: 0 auto;
 }
 .ech-shi-footer-links ul li{
 	display: inline-block;
 	vertical-align: top;
     list-style-type: none;
-    width: 19.7%;
+    width: 19%;
     text-align: left;
     font-size: 13px;
 }
@@ -116,7 +117,6 @@
 .ech-shi-footer-links ul li ul li a{
 	 color: @primaryDarkBlue;
 	 text-decoration: none !important;
-	 font-family: @fontFamily;
 }
 .ech-shi-footer-links ul li ul li a:hover{
 	 color: #fff;
@@ -129,12 +129,22 @@
 	font-family: @fontGTWalsheimBold;
 	margin-top: 50px;
 }
+.ech-shi-footer-links ul li ul li.ech-shi-connect{
+    font-size: 20px;
+    color: #fff;
+    pointer-events: none;
+    font-family: @fontGTWalsheimBold;
+    margin-top: 70px;
+}
 .ech-shi-footer-links ul li ul li ul li{
 	display: inline;
 } 
 .ech-shi-footer-links ul li ul li ul li i{
     font-size: 20px;
     margin-right: 10px;
+}
+.footer_open_color {
+	@primaryDarkBlue;
 }
 .ech-shi-bottom-footer-one{
 	float: left;
@@ -178,8 +188,7 @@
     margin-top: 10px;
 }
 .ech-shi-ourother-sites{
-	width: 100%;
-	margin: 0 auto; 
+	display: none;
 }
 .ech-shi-ourother-sites-contianer{
     padding: 0% 5% 0%; 
@@ -265,6 +274,95 @@ button#add-to-cart.is-disabled {
 		color:#c1c9d2;
 	}
 }
+
+
+/* new CSS for new branding 2017 */
+.ech-shi-footer-about {
+	display: none;
+}
+#mz-drop-zone-footer-section h2 {
+	color: @primaryDarkBlue;
+	font-family: @fontGTWalsheimBold
+}
+#mz-drop-zone-footer-section .mz-cms-row:first-child {
+	text-align: center;
+	padding: 0 10px;
+	& .mz-cms-col-4-12:nth-child(2) {
+		border-top: 1px solid #efefef;
+    	padding: 30px 0;
+	}
+	& .mz-cms-col-5-12 {
+		border-top: 1px solid #efefef;
+    	padding: 30px 0;
+	}
+	& .ech-shi-news-header span {
+		background-color: @secondaryLightPink;
+		padding: 5px;
+	}
+}
+#mz-drop-zone-footer-section .mz-cms-image {
+	width: 175px;
+	margin: 0 auto;
+}
+#mz-drop-zone-footer-section .mz-cms-content .mz-cms-image-maintain {
+	height: auto;
+}
+#mz-drop-zone-footer-section .mz-cms-col-4-12:first-child {
+	font-size: 10px;
+	margin: 40px 0 20px;
+	& .mz-cms-row .mz-cms-content {
+		padding: 0 10px !important;
+		& p {
+			padding: 0 10px;
+			width: 225px;
+			margin: 0 auto;
+			text-align: center;
+		}
+	}
+}
+#mz-drop-zone-footer-section .mz-cms-col-4-12:nth-child(2) {
+	& .mz-cms-content {
+		padding: 0 !important;
+	}
+	& .mz-cms-image {
+    	width: 100%;	
+  	}
+  	.phone-container {
+		text-align: center;
+	    font-size: 22px;
+	    font-family: @fontGTWalsheimBold;
+	    position: absolute;
+	    top: -30px;
+	    width: 50%;
+	    margin: 0 25% 0;
+	}
+}
+#mz-drop-zone-footer-section .mz-cms-col-4-12:last-child {
+	margin-top: 40px;
+	& mz-cms-col-12-12 .mz-cms-row:first-child {
+		display: none;
+	}
+	.mz-cms-row:last-child {
+		text-align: center;
+		margin-top: -50px;
+		& .mz-cms-content {
+			padding: 0 10px;
+		}
+	}
+	.mz-cms-col-6-12 {
+		width: 40% !important;
+        display: inline-block;
+    	box-sizing: border-box;
+        vertical-align: top;
+	}
+	& .mz-cms-image {
+    	width: 90px;
+	}
+}
+
+/* end new 2017 CSS */
+
+
 @media (max-width: 1249px){
 	.ech-shi-developed{
 		text-align: left;
@@ -380,9 +478,6 @@ button#add-to-cart.is-disabled {
 	}
 }    
 @media (max-width: 676px){
-	.ech-shi-mobi-hide, .ech-shi-bottom-footer ul li.ech-shi-mobi-hide{
-		display: none; 
-	} 
 	.display-inmobile-social{
 		display: block;
 	}
@@ -453,9 +548,4 @@ button#add-to-cart.is-disabled {
 }
 .ech-shi-footer-abt-cont > center > svg {
 	display: none;
-}
-
-/* added from widget for footer */
-.recommended_products{
-	clear:both;
 }
