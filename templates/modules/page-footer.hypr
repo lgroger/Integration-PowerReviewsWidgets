@@ -60,7 +60,6 @@
 				<div class="ech-shi-bottom-footer">
 					<div class="ech-shi-bottom-footer1">
 						<div class="ech-shi-bottom-footer-one ech-shi-mobi-hide">
-							<!-- <a href="http://www.shindigz.com/servicepage.cfm?pgp=SZSECURE" target="_blank"><img src="/resources/images/mcaffe_new.png"></a>  -->
 							{% dropzone 'mac-afe' scope="site" %}
 						</div>
 						<div class="ech-shi-bottom-footer-two">
