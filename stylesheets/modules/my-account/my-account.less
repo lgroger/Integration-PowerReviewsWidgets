@@ -3412,6 +3412,10 @@ span.field-error{
 	.print-header {
 		display: none;
 	}
+	
+    .invoice-number{
+	    display: none;
+	}
 }
 @media only screen and (max-width:1024px){
 	.order-print-btn{
@@ -3422,7 +3426,7 @@ span.field-error{
 	}
 }
 @media print {
-	@page {size: landscape;}
+	
 	body.my-account{
 		overflow: visible;
 		page-break-after:always;
@@ -3472,8 +3476,51 @@ span.field-error{
 	.my-account-body-content{
 		border-bottom: none !important;
 	}
-}
-@media print and (min-width: 400px) {
+	
+	#tab_4{
+		.mz-accountorderhistory{
+			.mz-orderhistory-section{
+            	.invoice-number{
+            	    display: none;
+            	}
+            	.invoice-number.diplayprint{
+            	    display: block !important;
+            	    margin-top: 0;
+            	    text-align: right;
+            	}
+				button.accordion.active{
+					.fa-minus{
+						display: none;
+					}
+				}
+				.panel{
+					.orders-sec{
+						.orders{
+							.orders-header{
+								.order-blocks1{
+									width: 30%;
+								}
+								.order-blocks2{
+								    display: none;
+								}
+							}
+							.orders-body{
+							    padding-top: 0;
+								.order-blocks1{
+									display: none;
+								}
+								.order-blocks2{
+							        width: 30%;
+                                    text-align: center;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	.mz-orderhistory-section {
 		.print-header {
 			display: block;

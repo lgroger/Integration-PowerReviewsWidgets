@@ -224,6 +224,7 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
 		$(document).on('click','button.accordion1,button.accordion',function(){
 		 	$(this).toggleClass('active');
 			$(this).next().toggleClass('show');
+			$(this).prev().toggleClass("diplayprint");
 			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
 				$(this).next().find("img").each(function() {
 					if($(this).parent().next().data("dndtoken")){
