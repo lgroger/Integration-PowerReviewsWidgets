@@ -99,7 +99,6 @@ button#add-to-cart.is-disabled {
 	}
 }
 
-
 /* new CSS for new branding 2017 */
 #mz-drop-zone-footer-section {
 	padding: 10px;
@@ -121,6 +120,12 @@ button#add-to-cart.is-disabled {
 	color: @primaryDarkBlue;
 	font-family: @fontGTWalsheimBold;
 	font-size: 25px;
+	@media (min-width: 768px) {
+		font-size: 23px;
+	}
+	@media (min-width: 992px) {
+		font-size: 29px;
+	}
 }
 /* #1 .mz-cms-row in .mz-drop-zone-footer-section styling */
 /* .stay-in-touch-container styling */
@@ -128,6 +133,14 @@ button#add-to-cart.is-disabled {
 	border-top: 2px solid @primaryDarkBlue;
 	border-bottom: 2px solid @primaryDarkBlue;
 	padding: 40px 0;
+	@media (min-width: 768px) {
+		height: 185px;
+		box-sizing: border-box;
+		border-top: none;
+		border-bottom: none;
+		border-left: 2px solid @primaryDarkBlue;
+		border-right: 2px solid @primaryDarkBlue;
+	}
 	& h2 { 
 		margin-top: 0;
 	}
@@ -167,12 +180,24 @@ button#add-to-cart.is-disabled {
 /* .sign-up-container styling */
 .sign-up-container {
 	margin: 35px 0;
+	@media (min-width: 768px) {
+		height: 185px;
+		margin: 0;
+		box-sizing: border-box;
+		padding: 30px 0;
+	}
 	& .ech-shi-news-header{
         font-size: 25px;
         font-family: @fontGTWalsheimBold;
         & span {
         	padding: 2px 5px;
         	background-color: @secondaryLightPink;
+        }
+        @media (min-width: 768px) {
+        	font-size: 23px;
+        }
+        @media (min-width: 992px) {
+        	font-size: 29px;
         }
     }
 	& .sign-up-input-email {
@@ -189,6 +214,12 @@ button#add-to-cart.is-disabled {
 		    left: 8px;
 		    @media (min-width: 480px) {
 		    	max-width: 270px;
+		    }
+		    @media (min-width: 768px) {
+		    	max-width: 165px;
+		    }
+		    @media (min-width: 992px) {
+		    	max-width: 215px;
 		    }
 		}
 		& #subscribe_email {
@@ -218,6 +249,13 @@ button#add-to-cart.is-disabled {
 .ech-shi-footer-links ul{
 	text-align: left;
     padding: 0;
+    @media (min-width: 768px) {
+    	padding: 0 0 0 32px;
+    }
+     @media (min-width: 1200px) {
+    	padding: 0 0 0 28px;
+    	margin: 0;
+    }
 }
 .ech-shi-footer-links ul > li{
 	display: inline-block;
@@ -226,33 +264,62 @@ button#add-to-cart.is-disabled {
     width: 100%;
     text-align: left;
     font-size: 15px;
+    @media (min-width: 768px) {
+    	width: 32.8%;
+    }
+    @media (min-width: 1200px) {
+    	width: 19.6%;
+    }
 }
 .ech-shi-footer-links ul > li >  ul > li {
-	display: inherit;
+	display: none;
     list-style-type: none;
     width: 100%;
     padding: 10px 0;
     text-transform: capitalize;
     font-family: @fontFamily;
+    @media (min-width: 768px) {
+         display: block;
+         padding: 7px 0;
+    }
+    @media (min-width: 1200px) {
+         padding: 2px 0;
+    }
 	&:first-child {
 		padding: 0;
+		display: block;
 	    font-size: 20px;
 	    pointer-events: inherit;
 	    margin: 0 0 10px 0 !important;
 	    color: @textColor !important;
 	    font-family: @fontGTWalsheimBold;
 	    & span {
+	    	display: block;
 			float: right;
 			color: @textColor !important;
+			@media (min-width: 768px) {
+    			display: none;
+    		}
 		}
 	}
 }
 .ech-shi-footer-links ul > li >  ul.footer-binding-links { 
 	margin: 10px 0 !important;
 }
+.ech-shi-footer-links ul > li >  ul > li >ul > li {
+	@media (min-width: 768px) {
+		display:inline !important;
+	}
+}
 /* #3 .mz-cms-row in .mz-drop-zone-footer-section styling */
 .other-sites-container {
 	margin: 20px 0;
+	@media (min-width: 768px) {
+		margin: 0;
+	    height: 180px;
+	    padding: 35px 0;
+	    box-sizing: border-box;
+	}
 	& .other-sites-image1 img {
 		max-width: 190px;
 	}
@@ -260,12 +327,30 @@ button#add-to-cart.is-disabled {
 		font-size: 12px;
 		margin: 0 auto;
 		max-width: 190px;
+		& p {
+			color: @textColor;
+			@media (min-width: 768px) {
+				text-align: left;
+				margin: 0;
+				padding-left: 5px;
+				font-size: ;
+			}
+		}
 	}
 }
 .site-logo-container {
 	margin: 20px 0;
+	@media (min-width: 768px) {
+		margin: 0;
+	    height: 180px;
+	    padding: 8px 0;
+	    box-sizing: border-box;
+	}
 	& img {
-		max-width: 310px;
+		max-width: 225px;
+		@media (min-width: 768px) {
+			max-width: 290px;
+		}
 	}
 	& .phone-container {
 		text-align: center;
@@ -279,6 +364,14 @@ button#add-to-cart.is-disabled {
 #mz-drop-zone-footer-section .copyright-info-main-container {
 	margin-top: 30px;
 	box-sizing: border-box;
+	@media (min-width: 768px) {
+		margin: 0;
+	    height: 180px;
+	    padding: 23px 0;
+	}
+	@media (min-width: 768px) {
+	    padding: 30px 0;
+	}
 	& .mcafee-container {
 		display: inline-block;
 		box-sizing: border-box;
@@ -309,6 +402,9 @@ button#add-to-cart.is-disabled {
 	& p {
 		margin: 0;
 		font-size: 12px;
+		@media (min-width: 768px) {
+			font-size: 11px;
+		}
 	}
 }
 
@@ -372,17 +468,8 @@ button#add-to-cart.is-disabled {
 		padding: 0px !important;
 	}
 }
-@media (max-width: 496px) {
-	.ech-shi-footer-links ul li ul li {
-   		display: none;
-	}
-	.ech-shi-footer-links ul li ul li:first-child, .ech-shi-footer-links ul li ul li:first-child span {
-    	display: block;
-	}
-	.ech-shi-footer-links ul li ul li:first-child {
-		pointer-events: inherit;
-	}
-}
+
+
 
 
 

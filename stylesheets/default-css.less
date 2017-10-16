@@ -5729,14 +5729,6 @@ searchNav .option{
             }
         } 
     }
-    @media (min-width:497px){
-        .ech-shi-footer-links ul li ul li{
-            display:block !important;
-        }
-        .ech-shi-footer-links ul li ul li ul li{
-            display:inline !important;
-        }
-    }
     @media (max-width: 480px){
         .mob-header-logo img{
             max-width:130px;
@@ -6570,40 +6562,40 @@ right: 0;
         text-align: left ;
     }
     .nighttoshine {
-          margin: 30px 0;
-          text-align: center;
-      }
-      .ech-shi-newletter1 input[type="text"] {
-            margin-left: 5px;
-        }
-        .nighttoshine img {
-            max-width: 220px;
+        margin: 30px 0;
+        text-align: center;
+        & img {
+        	max-width: 220px;
             width: 100%;
             height: auto;
         }
-        .guided-search-button .fa-plus:before {
-	content: "\f00e" !important;
-}
+    }
+    .ech-shi-newletter1 input[type="text"] {
+        margin-left: 5px;
+    }
+    .guided-search-button .fa-plus:before {
+		content: "\f00e" !important;
+	}
     }
      @media only screen and (min-width: 768px) {
     .LPMcontainer {
         height: 120px !important;
          width: 27px !important;
     }  
-      .nighttoshine {
-          text-align: right;
-          float: right;
+    .nighttoshine {
           margin: 0;
-      }
-      .join-newsletter {
-          float: left;
-      }
-      .nighttoshine img {
-            max-width: 260px;
-            width: 100%;
-            height: auto;
-        }
-        .ech-shi-newletter1{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 185px;
+          & img {
+          	width: 80%;
+          }
+    }
+    .join-newsletter {
+        float: left;
+    }
+    .ech-shi-newletter1{
             margin-top: -45px !important;
         }
     }
@@ -6615,15 +6607,6 @@ right: 0;
             margin-top: -70px !important;
             text-align: center;
         }
-        .nighttoshine {
-            top: -50px;
-            position: absolute;
-        }
-        .nighttoshine img {
-            max-width: 350px;
-            width: 100%;
-            height: auto;
-        }
         .ech-shi-footer-contianer {
             padding: 8% 5% 0 !important; 
         }
@@ -6634,10 +6617,13 @@ right: 0;
             margin-top: 5px !important;
         }
     }
+    @media only screen and (min-width: 992px) {
+    	.nighttoshine img {
+    		width: 100%;
+    		max-width: 250px;
+    	}
+    }
     @media only screen and (min-width: 1100px) {
-        .nighttoshine img {
-            max-width: 400px;
-        }
         .ech-shi-footer-contianer {
             padding: 5% 5% 0 !important; 
         }
