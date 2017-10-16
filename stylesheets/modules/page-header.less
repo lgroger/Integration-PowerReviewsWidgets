@@ -1,4 +1,4 @@
-﻿@headerHeight: 154px;
+@headerHeight: 154px;
 @headerBaseline: 66px;
 @searchBoxHeight: 28px;
 @utilityNavHeight: @headerBaseline - (@gutter / 2) - @searchBoxHeight;
@@ -271,6 +271,14 @@ transition: all 0.1s ease;
                     padding: 0 5px;
                 }
                 @media (min-width: 1025px) {
+                    width: 50px;
+                    padding: 0 10px;
+                    & svg {
+                        height: 50px;
+                        width: 50px;
+                    }
+                }
+                @media (min-width: 1200px) {
                     width: 59px;
                     padding: 0 10px;
                     & svg {
@@ -289,20 +297,26 @@ transition: all 0.1s ease;
 					position:relative;
                     z-index:9;
                     right: 1px;
-                    bottom: 36px;
+                    bottom: 37px;
                     @media (min-width: 1025px) {
+                        font-size: 9px;
+                        bottom: 46px;
+                    }
+                    @media (min-width: 1200px) {
                         font-size: 12px;
                         bottom: 52px;
                     }
                     .my-fixed-header-bar & {
                         right: initial;
                         left: 2px;
-                        bottom: 39px;
+                        bottom: 40px;
                         @media (min-width: 1025px) {
-                            font-size: 10px;
-                            bottom: 39px;
+                            font-size: 7px;
                             left: initial;
-                            right: 1px;
+                            right: -2px;
+                        }
+                        @media (min-width: 1200px) {
+                           right: 1px;
                         }
                     }              
 			}
@@ -333,10 +347,28 @@ div.welcome-text-container{
     display: none;
     position:fixed;
     z-index: 99999;
-    top: 30px;
-    right: -20px;   
+    top: 25px;
+    right: -21px;   
     div.top-gap-container {
         height: 20px;
+    } 
+    @media (min-width: 1025px) {
+        top: 40px;
+        right: -8px;
+    }
+    @media (min-width: 1200px) {
+        top: 50px;
+        right: -5px;
+    }
+    .my-fixed-header-bar & {
+        top: 30px;
+        right: -24px;
+        @media (min-width: 1025px) {
+            right: -27px;
+        }
+        @media (min-width: 1200px) {
+            right: -23px;
+        }
     }
     div.pop-tip{
         content: '';
@@ -370,7 +402,7 @@ div.welcome-text-container{
                     text-align: left;
                     box-sizing: border-box;
                     &:hover{
-                        background-color:#0d3762;
+                        background-color: @primaryCTA;
                         p{
                             color: white;
                         }
