@@ -6,6 +6,7 @@
 {% if pageContext.pageType != "checkout" %} 
 
 <div class="ech-shi-footer">
+	{% comment %}
 			<!-- #Footer newsletter starts here -->
 	<!-- comment out for new branding 101617 GW
 			<div class="ech-shi-footer-contianer">
@@ -51,9 +52,11 @@
 
 			</div>
 	-->
+	{% endcomment %}
+
 				{% dropzone "footer-section" scope="site" %}
 
- 
+ 	{% comment %}
 				<div class="ech-shi-bottom-footer">
 					<div class="ech-shi-bottom-footer1">
 						<div class="ech-shi-bottom-footer-one ech-shi-mobi-hide">
@@ -95,7 +98,7 @@
 				</div> 
 			</div>
 		-->
-			
+	{% endcomment %}		
 {% endif %}
 			
 	
