@@ -18,16 +18,35 @@
 }
 
 .soft-cart-wrap {
-   background: #fff;
+  background: #fff;
   position: absolute;
   display: none;
-  right: -435px;
-  top: 50px !important;
+  right: -5px;
+  top: 45px;
   .box-shadow(~"0 0 15px rgba(0,0,0,0.2)");
   width: 417px;
-  /*.transition(~"right 0.2s ease");*/
+  z-index: 9999;
+  box-shadow: 0px 0px 25px 0px;
+  @media (min-width: 1025px) {
+    right: 8px;
+    top: 60px !important;
+  }
+  @media (min-width: 1200px) {
+    right: 12px;
+    top: 70px !important;
+  }
+  .float-wrap-soft-cart & {
+    top: 50px !important;
+    right: 0;
+    @media (min-width: 1025px) {
+      right: -3px;
+    }
+    @media (min-width: 1200px) {
+      right: 4px;
+    }
+  }
 
-  .pointer{
+  .pointer {
     content: '';
     position: absolute;
     top: -10px;
@@ -36,81 +55,58 @@
     border-right: 10px solid transparent;
     border-bottom: 11px solid #f5f6f5;
   }
-    
-  /*&.is-active, {
-    display: block;*/
-    right: 21px; 
-    z-index: 9999;
-    box-shadow: 0px 0px 25px 0px;
-
-    .soft-cart-link{
-        /*position: absolute;*/
+  .soft-cart-link{
         bottom: 0;
-
         .soft-cart-btn{
             font-size: 14px;
-            font-weight: bold;
             border: none;
             padding: 20px 0px;
             float: left;
-        }
+            }
         .view-minicart-btn{
             width: 44%;
-            color: #093863;
-            background-color: #E0EDF7;
-            font-family: @fontMontserratRegular;
+            color: @primaryBlue;
+            background-color: @secondaryWhite;
+            font-family: @fontGTWalsheimMedium;
             &:hover{
-              background-color: #093863;
-              color: #fff;
+              color: @primaryDarkBlue;
             }
         }
         .chkout-minicart-btn{
             width: 56%;
             color: #fff;
-            background-color:#0871CE; 
-            font-family: @fontMontserratRegular;
+            background-color: @primaryCTA; 
+            font-family: @fontGTWalsheimMedium;
             &:hover{
-              background-color: #093863;
-              color: #fff;
+              background-color: @primaryCTAhover;
             }
         }
     }
-  /*}  */
 } 
-.wrap-soft-cart {
-    a.mz-utilitynav-link-cart {
-        padding: 6%;
-    }
-}
 .soft-cart {
     max-width: 100%;
     min-width: 100%;
     height: 100%;
     position: relative;
-  a {
-    color: #6c6d70;
-    text-decoration: none;
-    /*&:hover {
-      color: #ffffff;
-      background: #292929;
-    }*/
-  }
-  a.close{
+    a {
+      color: #6c6d70;
+      text-decoration: none;
+    }
+    a.close{
       float: none;
       font-size: 38px;
       line-height: 12px;
       color: #093863;
-      font-family: MonstserratLight;
+      font-family: @fontGTWalsheimLight;
       background-color: transparent; 
       height: auto;
       position: absolute;
       right: 5px;
       top: 17px;
-  }
+    }
   h2 {
     margin: {{themeSettings.gutterWidth}}/2;
     color: #6C6D70;;
-    font-weight: normal;
     text-transform: uppercase;
   }
   .soft-cart-controls {
@@ -128,31 +124,30 @@
     overflow: auto;
     font-size: 1.1em; 
     margin-top: 0.5px;
-    font-weight: bold;
     text-transform: uppercase;
     padding: 10px 20px;
     background-color: #fff;
   }
   .soft-cart-total-label {
     text-align: left;
-    color: #666666;
+    color: @primaryDarkBlue;
     padding-top: inherit;
-     font-family:@fontMontserratLight; 
+     font-family:@fontGTWalsheimBold; 
   }
   .soft-cart-total-amount {
     font-size: 1.2em;
-    color: #093863;
-    font-family: @fontArvo;
+    color: @primaryDarkBlue;
+    font-family: @fontGTWalsheimBold;
     text-align:right;
   }
   .soft-cart-items-label {
     font-size: 15.5px; 
     margin-top: 0.5px;
     text-transform: uppercase;
-    background-color:#F5F6F5;
+    background-color:@secondaryWhite;
     padding: 13px 20px 17px; 
-    color:#093863;
-    font-family: @fontArvo;
+    color: @primaryDarkBlue;
+    font-family: @fontGTWalsheimBold;
     position: relative;
   }
   .soft-cart-items {
@@ -213,7 +208,7 @@
     }
     .item-name-qty-ops{
         text-align: left;
-        font-family: @fontMontserratRegular;
+        font-family: @fontGTWalsheimMedium;
         .item-price{
           text-align: right;
         }
@@ -224,7 +219,7 @@
       font-size: 12px;
     }
     .soft-cart-item-quantity span.q_number{
-      font-family: ArvoRegular;
+      font-family: @fontGTWalsheimMedium;
       font-size:1.1em;
       margin-left: 5px;
       vertical-align: middle;
@@ -244,8 +239,8 @@
   .soft-cart-item-title {
     display: block;
     font-size:13px;
-    color:#121214;
-    font-family: @fontMontserratRegular;
+    color: @primaryDarkBlue;
+    font-family: @fontGTWalsheimMedium;
     margin-bottom: 25px;
   }
   /*.soft-cart-item-quantity {
@@ -265,7 +260,7 @@
   .soft-cart-item-total {
     font-size: 1.3em;
     color: #093863;
-    font-family: ArvoRegular;
+    font-family: @fontGTWalsheimMedium;
   }
 }
 /*.soft-cart {
@@ -281,31 +276,14 @@ span.item-name {
 /*-------------------*/
 div.welcome-text-container div.mz-cms-col-12-12 ul li{
   p, a{
-      font-family: MonstserratLight;
-      font-weight: 400;
+      font-family: @fontFamily;
+      font-size: 15px;
+      color: @primaryBlue;
   }
 }
 /*-------------------*/
-@media only screen and (min-width: 668px){
-  .wrap-soft-cart{
-    &:hover{
-        .soft-cart-wrap {
-            display:block !important;
-            right:-10px;
-        }
-    }
-  }
-  .float-wrap-soft-cart{
-    &:hover{
-        .soft-cart-wrap {
-            display:block !important;
-            right: 6px;
-      }
-    }
-  }
-}
-@media only screen and (max-width:780px){
+@media only screen and (min-width: 781px){
     .wrap-soft-cart:hover .soft-cart-wrap, .float-wrap-soft-cart:hover .soft-cart-wrap {
-        display: none !important;
+        display: block !important;
     }
 }
