@@ -206,11 +206,11 @@ ul.mz-table.mz-table-cart{
             margin-bottom: 6px;
             .label{
                 font-size: 18px;
-                color: #666666;    
-                font-family: @fontGTWalsheimLight;             
+                color: @textColor;    
+                font-family: @fontGTWalsheimBold;             
             }
             .estimate-value{
-                color: @textHeaderColor;
+                color: @textColor;
                 font-size: 22px;
                 font-family: @fontGTWalsheimBold;
             }
@@ -273,14 +273,15 @@ span.rounded-cart-color{
             width: 100%;
             margin-bottom: 10px;
             span.label{
-                color: @textColor; 
-                font-size: 16px;
+                color: #666; 
+                font-size: 14px;
                 text-transform: lowercase;
-                font-family: @fontFamily;
+                font-family: @fontGTWalsheimLight;
             }
             .cart_price_total {
                 color: @textColor;
                 font-size: 17px;
+                font-family: @fontGTWalsheimBold
             }
         }
     }
@@ -310,8 +311,7 @@ span.rounded-cart-color{
             background:#f5f5f5;
             padding:10px 1.5%;
             font-size:14px;
-            text-transform:uppercase;
-            font-family: @fontGTWalsheimLight;
+            font-family: @fontFamily;
             border:0px;
             /* to override th global setting */
             font-weight: normal;
@@ -332,7 +332,6 @@ span.rounded-cart-color{
         td .cp_image{
             text-align:center;
             min-height: 115px;
-            border:1px solid #eee;
             img{
                 padding:0px;
                 float:none;
@@ -404,15 +403,15 @@ span.rounded-cart-color{
             }
             .sd_label{
                 color:#666;
-                font-size:14px;
+                font-size:12px;
                 display:inline-block;
                 margin-right:10px;
                 margin-bottom: 8px;
                 clear:both;
             }
             .sd_text{
-                color: @primaryDarkBlue;
-                font-size:14px;
+                color: #666;
+                font-size:12px;
                 margin-bottom:8px;
                 margin-left:0px;
                 text-transform: capitalize;
@@ -505,7 +504,7 @@ span.rounded-cart-color{
                 width: auto;
                 height: auto;
                 background-image: none;
-                font-size: 38px;
+                font-size: 24px;
                 color: #bbb;
                 line-height: 21px;
                 text-indent: inherit;
@@ -533,7 +532,7 @@ span.rounded-cart-color{
         }
         td.mz-carttable-item-stock{    
             font-family: @fontGTWalsheimLight;
-            font-size:13px;
+            font-size:11px;
             color:#666;
             padding:0px 1.5% 25px;
             position:relative;
@@ -621,7 +620,7 @@ span.rounded-cart-color{
         table{
             width:100%;
             border:0px;
-            font-family: @fontGTWalsheimLight;
+            font-family: @fontFamily;
             margin-bottom:20px;
             td{
                 padding:10px 15px;
@@ -631,7 +630,6 @@ span.rounded-cart-color{
                 text-align:left;
                 font-size:15px; 
                 color:#666;
-                text-transform:uppercase;
             }
             .summary_box_price{
                 font-family: @fontGTWalsheimBold;
@@ -641,22 +639,22 @@ span.rounded-cart-color{
                 &.tax{
                     text-align: right;
                     padding: 0 10px 0;
-                    font-size: 13px;
+                    font-size: 12px;
                     color: @secondaryRed;
                 }
             }
             td.tax_note{
                 padding-top: 0px !important;
                 padding-bottom: 5px;
-                font-size: 13px;
+                font-size: 11px;
                 text-align: left;
                 .star_note{
                     vertical-align: middle;
                 }
             }
             .star_note{
-                color: #0d3762;
-                font-size: 20px;
+                color: @secondaryRed;
+                font-size: 15px;
                 line-height: 5px;
             }
         }
@@ -1683,6 +1681,16 @@ tr.mz-carttable-item-shipping-info{
         }
     }
 }
+
+.confiramtion-slider h3 {
+    color: #666;
+    font-family: @fontGTWalsheimLight;
+    font-size: 14px;
+}
+.confiramtion-slider h3 a{
+    font-family: @fontFamily;
+}
+
 /*-------------------Checkout login-signup popup---------------*/
 .popoverLoginForm .chkout-popover-wrap .mz-popover-login .mz-login-form .mz-popover-action{
     padding:0px 0px;
