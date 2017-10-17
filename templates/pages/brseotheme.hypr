@@ -7,13 +7,11 @@
 {% block body-content %}
 {% require_script "pages/brseotheme" %}  {# this specifies the template which gets set as a header on the ajax call to retrieve the partial page view when interacting with filters #}
 
-{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
-    {% with isguidedsearch|length as isGuidedSearchURL %}
+
 		<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
-		    {% include "pages/brseotheme-interior" with isGuidedSearchURL=isGuidedSearchURL %}
+		    {% include "pages/brseotheme-interior" %}
 		</div>
-	{% endwith %}
-{% endwith %}
+
 {% require_script "modules/filters" %}
 {% require_script "modules/quick-view" %}
 {% require_script "pages/compare-list" %}

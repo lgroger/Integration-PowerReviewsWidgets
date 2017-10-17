@@ -1,8 +1,4 @@
-{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
-{% with isguidedsearch|length as isGuidedSearchURL %}
-	 <div class="guided-search-search-result-page" data-container="guided-search-search-result-page" {% if isGuidedSearchURL == 1 %}style="display:none;"{% endif %}>
-	        {% include "modules/search/guided-search"  with isGuidedSearchURL=isGuidedSearchURL %}
-	 </div>
+
 
 		<div class="mz-category-title">
 		    {% dropzone "category-page-top" scope="page" %}
@@ -25,7 +21,7 @@
 	{% endcomment %}
 
 
-{% include "modules/product/br-thematic-products" with  model=model.products showAddressType=false and leftnav=model.leftnav and isGuidedSearchURL=isGuidedSearchURL and includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+{% include "modules/product/br-thematic-products" with  model=model.products showAddressType=false and leftnav=model.leftnav and includeFacets=themeSettings.showCategoryFacets and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
 
 	{% endpartial_cache %}
 	{% dropzone "thematic-seo-zone" scope="page" %}
@@ -40,5 +36,3 @@
 		</p>
 	</div>
 	{% endif %} 
-{% endwith %}
-{% endwith %}

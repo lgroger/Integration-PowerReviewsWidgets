@@ -44,7 +44,6 @@
                 'modules/quick-view',
                 'modules/added-to-cart',
 				'pages/global',
-                'pages/guided-search',
 				'modules/floating-header',
                 'pages/dndengine',
                 'widgets/footer-links',
