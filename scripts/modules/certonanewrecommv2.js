@@ -159,6 +159,10 @@ var certonaRecommendations = function(response){
 				//var catprod = response.items;
 				htmlfun(response.items,cat1_rr); 
 				}
+				else if(recomms.resonance.schemes[i].scheme === "nosearch1_rr"){
+				//var catprod = response.items;
+				htmlfun(response.items,cat1_rr); 
+				}
 				else if(recomms.resonance.schemes[i].scheme === "product1_rr" ){
 				
 				htmlfun(response.items,prd1_rcc); 
