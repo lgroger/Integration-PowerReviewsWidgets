@@ -9,6 +9,9 @@
         margin: 0 50px;
     }
 }
+.header-block.floatheader.mz-pageheader, .header-block.floatheader.mz-pageheader > div {
+    height: inherit;
+}
 .styled-select select {
    background: transparent;
    width: 53px;  
@@ -233,9 +236,10 @@ transition: all 0.1s ease;
     width: auto !important;
     @media (min-width: 1025px) {
         position: relative !important;
-        float: none !important;
-        top: -9px;
+        float: right !important;
         right: 10px;
+        bottom: 17px;
+        top: initial;
     }
 }
 		.icon-collection {
@@ -449,20 +453,6 @@ font-size: 16px;
     &.mz-pageheader-hasbanner .mz-storebranding {
         text-indent: -9999px;
     }
-
-    .mz-utilitynav {
-        position: absolute;
-     /*   top: @gutter/2;*/
-        right: @gutter;
-        height: @utilityNavHeight;
-        @media (min-width: 1025px) {
-            position: relative;
-            right: initial;
-            left: 10px;
-            top: 10px;
-        }
-    }
-
     .mz-searchbox {
         position: absolute;
         top: @utilityNavHeight + ( @gutter / 2 );

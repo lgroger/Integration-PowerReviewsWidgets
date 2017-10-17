@@ -1197,7 +1197,10 @@ a.br-theme-page:hover {
         height:60px; 
         @media (min-width: 1025px) {
         	height: 30px;
-        	margin: -43px 0 10px 0;
+        	margin: -34px 0 10px 0;
+        }
+        @media (min-width: 1200px) {
+        	margin: -33px 0 10px 0;
         }
     } 
     .megamu-wrapper>ul>li:after {
@@ -2313,10 +2316,24 @@ input::-webkit-inner-spin-button {
             font-size: 1rem;
             background-color: initial; 
         }
-.mob-header-logo img{
-    max-width:190px;
-    min-width: 130px;
-    display: none;
+.header-block.floatheader.mz-pageheader .mob-logo-sec {
+	display: inline-block;
+	height: inherit;
+	float: none;
+	@media (min-width: 1025px) {
+		height: 60px;
+		display: block;
+	}
+}
+.mob-header-logo {
+	& h1 {
+		margin: 0;
+	}
+	& img {
+	    max-width:190px;
+	    min-width: 130px;
+	    display: none;
+	}
 }
 /* for new branding so we can have different brandmarks for mob vs desktop */
 .mob-header-logo #mz-drop-zone-logo_upload a {
@@ -2336,21 +2353,6 @@ input::-webkit-inner-spin-button {
 }
 .mz-prom-banner > footer > ul > li {
     vertical-align: text-top;
-}
-.mz-cms-col-3-12.mob-logo-sec {
-	left: 25px;
-	@media (min-width: 480px) {
-		left: 35px;
-	}
-	@media (min-width: 1025px) {
-		left: -11px;
-		float: none;
-		width: 390px;
-		top: 0;
-	}
-	& .mob-header-logo h1 {
-    	margin: 0;
-    }
 }
 .menu-category-promo-image img{
     height:auto !important;
@@ -2667,21 +2669,24 @@ span.tt-suggestions {
     font-family: @fontMontserratRegular;
 }
 .ech-shi-top-header{
-    border-bottom: 1px solid rgba(128, 128, 128, 0.08);
-    padding: 0px 0px 2px 25px !important;
-    /* added for new Branding 100617 GW */
     display: none;
     @media (min-width: 1025px) {
-    	display: block;
+    	display: inline-block;
     	position: relative;
-    	top: 65px;
+    	top: 0;
     	height: 30px;
     	box-sizing: border-box;
     	border: none;
     	padding: 0 !important;
+    	left: 16px;
+    	width: auto;
+    }
+    @media (min-width: 1200px) {
+    	top: -11px;
     }
     & .ech-shi-tollfree {
     	width: auto;
+    	float: none;
     }
 }
 .ech-shi-top-header .mz-cms-content{
@@ -2900,7 +2905,7 @@ a{
         position: relative;
         margin: 0;
         @media (min-width: 1025px) {
-        	width: 79%;
+        	width: 100%;
         }
     }
 .searchNav li#options{
