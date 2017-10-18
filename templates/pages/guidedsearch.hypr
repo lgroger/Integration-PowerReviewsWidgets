@@ -15,7 +15,6 @@
 </div>
 {% require_script "modules/filters" %}
 {% require_script "modules/guided-search-quickview" %}  
-{% require_script "pages/compare-list" %}
   
 <script>
 	/*var page_url_fetch = window.location.search;

@@ -560,14 +560,6 @@
       "userCreatable": true
     },
     {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "CompareProducts",
-      "template": "compare",
-      "title": "CompareProducts",
-      "userCreatable": true
-    },
-    {
       "documentType":"web_page",
       "entityType":"webpage",
       "id":"ShippingInfo",
@@ -711,8 +703,6 @@
     "textColor": "#444444",
     "changeShipping": false,
     "instaAcountID": "",
-    "compareProductFlag": false,
-    "compareCategoriesList":[],
     "instaImageCount": 10,
     "socialShareAddThis": "",
     "productAttributes":{

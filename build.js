@@ -52,8 +52,7 @@
                 'modules/search-category-dropdown',
                 'modules/defaultScript',
                 'vendor/wishlist',
-                'modules/filters',
-                'pages/compare-list'
+                'modules/filters'
             ],
             exclude: ['jquery'],
         },

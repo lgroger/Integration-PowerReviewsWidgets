@@ -31,21 +31,6 @@
             <div class="quick-view">  
                 <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">QUICK VIEW</a>
             </div>
-            {% if themeSettings.compareProductFlag and themeSettings.compareCategoriesList|length > 0 %}
-              {% if pageContext.pageType == "search" %}
-                  <div class="compare-btn">  
-                        <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">ADD TO COMPARE</a>
-                  </div>
-              {% else %}
-                  {% for categoryId in themeSettings.compareCategoriesList %}
-                    {% if pageContext.categoryId == categoryId %}
-                    <div class="compare-btn">  
-                        <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">ADD TO COMPARE</a>
-                    </div>
-                    {% endif %}
-                  {% endfor %}
-              {% endif %}
-            {% endif %}
         {% endif %}
         {% if model|get_product_attribute(themeSettings.productAttributes.dndColor) %} 
             {% with model|get_product_attribute(themeSettings.productAttributes.dndColor) as dndColor %}

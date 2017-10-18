@@ -38,9 +38,6 @@
                     <div class="quick-view">  
                         <a href="javascript:void(0)" data-pro-id="{{item.productCode}}">QUICK VIEW</a>
                     </div>
-                    <!--<div class="compare-btn">  
-                        <a href="javascript:void(0)" data-pro-id="{{item.productCode}}">ADD TO COMPARE</a>
-                    </div>-->
                     <div class="wishlist-icon" id="{{item.productCode}}">
                       <a href="#" id="{{item.productCode}}"></a>
                     </div>

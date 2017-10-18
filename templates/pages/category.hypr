@@ -18,5 +18,4 @@
 
 {% require_script "modules/filters" %}
 {% require_script "modules/quick-view" %}
-{% require_script "pages/compare-list" %}
 {% endblock body-content %} 
