@@ -1140,7 +1140,6 @@ a.br-theme-page:hover {
     }
     @media (min-width: 1025px) {
     	margin: 0;
-    	height: auto;
     	height: 30px;
     }
 }
@@ -4338,11 +4337,13 @@ searchNav .option{
 	height: inherit;
 }
 .ech-shi-icons ul {
-	float: right;
 	margin: 0;
 	padding: 0;
-	@media (min-width: 1025px){
-		margin-right: -5px;
+	@media (min-width: 1025px) {
+		float: none;
+		height: inherit;
+		box-sizing: border-box;
+		padding-right: 5px;
 	}
 }
 #mz-drop-zone-instagram-sub-heading .mz-cms-content{
@@ -6363,24 +6364,25 @@ searchNav .option{
         	padding: 0 !important;
         	border: none;
         	font-size: 13px !important;
-        	margin-top: 4px;
         }
         @media (min-width: 1200px) {
         	width: 110px;
         }
     }
     .main-drop-down{
-        top:28px !important;
+        top: 28px;
         width: 145.1%;
         left: -19%;
         >ul>li:first-child{
             padding: 10px 10px 10px !important;
         }
+        @media (min-width: 1025px) {
+        	top: 60px;
+        }
     } 
     .megamu-wrapper.megamenu-wrapper-new{
         width: auto;
         left: auto;
-        top:20px !important;
         background: none;
     }
 	.megamu-wrapper.megamenu-wrapper-new h2 {
@@ -6393,10 +6395,17 @@ searchNav .option{
     }
     .megamu-wrapper.megamenu-wrapper-new > ul > li > a, .megamu-wrapper.megamenu-wrapper-new > ul > li > h2 > a {
     	@media (min-width: 1025px) {
-        	color: @primaryBlue !important;
+    		height: 60px;
+    		line-height: 5;
+    		display: block;
+    		color: @primaryBlue !important;
         	&:hover {
         		color: @secondaryBlue;
         	}
+    	}
+        @media (min-width: 1297px) {
+    		height: 60px;
+    		line-height: 4;
         }
     }
     .megamu-wrapper.megamenu-wrapper-new > ul > li:hover > a, .megamu-wrapper.megamenu-wrapper-new > ul > li:hover > h2 > a {
@@ -6414,7 +6423,7 @@ searchNav .option{
     .megamu-wrapper.megamenu-wrapper-new>ul{
         padding: 0 4%;
         display: table;
-        margin: 8px auto 0;
+        margin: 0 auto 0;
     }
     .megamu-wrapper ul li ul li{
         width: 19%;
@@ -6426,7 +6435,7 @@ searchNav .option{
     }
 
     .megamu-wrapper ul > li > a{
-        color:#203863; 
+        color: @linkColor; 
     } 
     .megamu-wrapper > ul > li:hover{
         background-color:inherit !important;

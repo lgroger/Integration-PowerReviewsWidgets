@@ -188,29 +188,33 @@ border-radius: 5px 0px 0px 5px;
     width: auto;
   }
   @media (min-width: 1025px) {
-    width: 80%;
-    position: fixed;
-    display: block !important;
-    top: -9px;
-    margin: 0 10%;
+    width: 73.5%;
+    position: relative;
+    display: inline-block !important;
+    margin: 0;
+    left: 2%;
   }
 } 
-.my-fixed-header-bar{
+.my-fixed-header-bar {
     position: fixed;
     right: 0;
     top: 7px;
-    @media (min-width: 961px) {
+    @media screen and (min-width: 961px) {
       right: 5px;
       top: 12px;
     }
-    @media (min-width: 1200px) {
-      top: 10px;
+    @media screen and (min-width: 1025px) {
+      width: 15.5%;
+      position: relative;
+      display: inline-block;
+      right: auto;
+      top: auto;
+      height: 60px;
     }
 } 
 .mob-hr{
 display:none;
 } 
-  
 .menu-icon{
 display:none;
 }
@@ -700,6 +704,9 @@ min-height: 40%;
   display:inline-block;
   text-align:center;
   float:left;
+  @media (min-width: 1025px) {
+    width: 11%;
+  }
 }
 .header-float-logo a {
     background: url(../resources/images/ShindigzBrandmark.png) center center no-repeat;
@@ -724,13 +731,16 @@ min-height: 40%;
   }
   @media (min-width: 1025px) {   
     padding: 0 1px;
-  }
-  @media (min-width: 1200px) {   
-    width: 40px;
+    height: inherit;
+    width: 25%;
+    box-sizing: border-box;
   }
 }
 .ech-shi-icons ul li:first-child {
   margin-left: -35px;
+  @media (min-width: 1025px) {
+    margin-left: 0;
+  }
 }
 
 /* ––––––––––––––––––––––––––––––––––––––––––––––––––
@@ -950,7 +960,7 @@ Mobile style's
   }
   .promoslot-customer{
       float: right !important;
-    margin-right:6% !important;
+      margin-right:6% !important;
   }
   .float-menu-block{
   min-width:0% !important;
