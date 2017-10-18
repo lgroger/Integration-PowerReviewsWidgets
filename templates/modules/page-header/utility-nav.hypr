@@ -10,12 +10,13 @@
 		<li class="mz-utilitynav-item sb-desktop-only" >			
 			{% dropzone "faq" scope="site" %}
 		</li>
+		{% comment %}
 		<li class="mz-utilitynav-item sb-desktop-only" >
 			{% dropzone "about-us" scope="site" %}
 		</li>
 		<li class="mz-utilitynav-item sb-desktop-only" >
 			{% dropzone "our-services" scope="site" %}
 		</li>		
-       
+        {% endcomment %}
     </ul>
 </nav>
