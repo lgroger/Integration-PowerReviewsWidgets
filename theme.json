@@ -106,10 +106,6 @@
       "path": "homepagecaraousel.js"
     },
     {
-      "id": "testimonial_widget",
-      "path": "testimonial_widget.js"
-    },
-    {
       "id": "layout",
       "path": "layout.js"
     },
@@ -1291,16 +1287,8 @@
           "width": 500
         }
       ]
-    }
-    ,{
-      "displayName": "Mega Menu",
-      "displayTemplate": "misc/megaMenu",
-      "customEditor": "menu-edit",
-      "id": "menu-edit",
-      "validPageTypes": [
-        "*"
-      ]
-    },{
+    },
+    {
       "displayName": "Mega Menu New",
       "displayTemplate": "misc/megaMenuNew",
       "customEditor": "menu-editNew",
@@ -1362,19 +1350,6 @@
             "type": "Taco.store.Categories"
           }
         }
-      ]
-    },
-    {
-      "defaultConfig": {
-        "title": "Testimonial Widget"
-      },
-      "displayName": "Testimonial Widget",
-      "customEditor": "testimonial_widget",
-      "displayTemplate": "misc/testimonial",
-      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
-      "id": "testimonial_widget",
-      "validPageTypes": [
-        "*"
       ]
     },
     {

@@ -260,9 +260,7 @@
               });
         });
            </script>
-      <!--script>
-      $('#menu').slicknav();
-      </script-->
+
       <div id="popup1" class="overlay">
           <div class="popups">
               <div>

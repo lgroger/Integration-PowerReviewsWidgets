@@ -1,4 +1,4 @@
-define(["jquery","jqueryui"], function ($) {
+define(["modules/jquery-mozu","jqueryui"], function ($) {
 $(function(){
 	$.widget( "custom.autoCompleteSearch", $.ui.autocomplete, {
 		_create: function() {
