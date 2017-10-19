@@ -1,5 +1,5 @@
 <!-- Mobile filters -->
-    <div class="mobile mz-mobile-filter" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
+    <div class="mobile mz-mobile-filter">
         <div class="mz-l-paginatedlist-header">
             {% if model.facets %} {# hide filters button if no facets since it won't do anything when tapped #}
             <div class="mz-filters-bar">
