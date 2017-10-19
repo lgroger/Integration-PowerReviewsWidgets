@@ -562,31 +562,6 @@
             ]
         },
         {
-            "fieldLabel":"Categories to Compare Product",
-            "xtype": "panel",
-            "title": "Compare Product",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype":"checkbox",
-                    "name":"compareProductFlag",
-                    "width": 500,
-                    "fieldLabel":"Show/Hide Compare Feature"
-                },
-                {
-                    "xtype":"boxselect",
-                    "name":"compareCategoriesList",
-                    "width": 500,
-                    "displayField": "name",
-                    "valueField": "id",
-                    "queryMode": "local",
-                    "store": {
-                        "type": "Taco.store.Categories"
-                    }
-                }
-            ]
-        },
-        {
             "xtype": "panel",
             "title": "Custom Settings",
             "collapsed": false,

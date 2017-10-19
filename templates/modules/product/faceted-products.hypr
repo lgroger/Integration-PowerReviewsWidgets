@@ -82,29 +82,8 @@
             {% if model.facets %}
                 {% include "modules/product/filter-selected" %}
             {% endif %}
-            {% if themeSettings.compareProductFlag and themeSettings.compareCategoriesList|length > 0 %}
-                {% if pageContext.pageType == "search" %}
-                    <div class="filter-compare-btn"><button>COMPARE <i class="fa fa-caret-up" aria-hidden="true"></i></button></div>
-                {% else %}
-                    {% for categoryId in themeSettings.compareCategoriesList %}
-                        {% if pageContext.categoryId == categoryId %}
-                    <div class="filter-compare-btn"><button>COMPARE <i class="fa fa-caret-up" aria-hidden="true"></i></button></div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-             {% endif %}   
         </div>
         {% endcomment %}
-
-
-        <div class="compare-product-container">
-            <div class="compare-product" id="mz-cp-01"></div>
-            <div class="compare-product" id="mz-cp-02"></div>
-            <div class="compare-product" id="mz-cp-03"></div>
-            <div class="btn-contianer">
-                <button class="compare-btn" id="mz-cmp-btn">COMPARE</button>
-            </div>
-        </div>
     </div>
     <div class="mz-page-filters-controls desktop" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
         <div class="mz-page-count-info">

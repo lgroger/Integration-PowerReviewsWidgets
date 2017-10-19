@@ -49,8 +49,7 @@
                 'modules/footer-collapse',
                 'modules/defaultScript',
                 'vendor/wishlist',
-                'modules/filters',
-                'pages/compare-list'
+                'modules/filters'
             ],
             exclude: ['jquery'],
         },
