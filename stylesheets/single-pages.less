@@ -872,7 +872,6 @@
 }
 
 /*********** Blog Styles ************/
-
 .blog-nav{
 	padding: 10px;
 	border-top: 1px solid #e8e8e8;
@@ -898,8 +897,13 @@
 }
 .blog-main-page .blog-home-content{
 	font-family: @fontArvo;
+	margin-top: -10px;
+	& .mz-cms-content {
+		padding: 0;
+	}
 	h2{
 		font-size: 20px;
+		margin-top: 0;
 	}
 	.blog-content-container{
 		max-height: 1400px;
@@ -1298,7 +1302,7 @@ hr {
 	}
 }
 .blog-header {
-      min-height: 250px;
+      min-height: 210px;
 }
 #blog-nav
 		{
@@ -1306,7 +1310,7 @@ hr {
 			font-family: 'MontserratRegular', sans-serif;
 			font-weight: 400;
 			position: absolute;
-			top: 200px;
+			top: 170px;
 			left: 50%;
 			margin-left: -30em; /* 30 480 */
 			padding-bottom: 50px;
@@ -1436,7 +1440,7 @@ hr {
 				position: absolute;
 				top: auto;
 				left: auto;
-				width: 250px;				
+				width: 210px;				
 				margin: 0;
 				background-color: #FFF;
 				z-index: 199;
@@ -1741,11 +1745,6 @@ hr {
 	}
 }
 
-
-
-.blog-header {
-      min-height: 250px;
-}
 #blog-nav
 		{
 			width: 60em; /* 1000 */
@@ -1874,9 +1873,7 @@ hr {
 	
 	@media only screen and ( max-width: 1025px ) 
 		{
-		    .blog-header {
-                min-height: 30px;
-            }
+		    
 			#blog-nav
 			{
 				position: absolute;
