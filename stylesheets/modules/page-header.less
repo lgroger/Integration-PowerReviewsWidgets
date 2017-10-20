@@ -9,6 +9,9 @@
         margin: 0 50px;
     }
 }
+.header-block.floatheader.mz-pageheader, .header-block.floatheader.mz-pageheader > div {
+    height: inherit;
+}
 .styled-select select {
    background: transparent;
    width: 53px;  
@@ -33,10 +36,7 @@ input:placeholder-shown {
 .twitter-typeahead{
 width:88% !important; 
 }
-.ech-shi-footer-links ul{
-    max-width:1266px;
-    margin:0 auto;
-}
+
 .ech-shi-bottom-footer1{
     max-width:1266px;
     margin:0 auto;
@@ -60,6 +60,11 @@ width:88% !important;
       ul li svg{
         height: 40px;
         width: 40px;
+        margin: 0 auto;
+        @media (min-width: 1025px) {
+            padding: 10px 0;
+            height: initial;
+        }
     }
 }
 .ech-shi-footer-links .hide-mobile{
@@ -71,7 +76,12 @@ width:88% !important;
 .sticky-icons{
 	margin-top:20px !important;
 	transition: all 0.4s ease;
-	}
+    @media (min-width: 1025px) {
+        margin-top: 0 !important;
+        display: block;
+        height: inherit;
+    }
+}
 .searchbox-float{
 top:15px !important;
 }
@@ -236,9 +246,10 @@ transition: all 0.1s ease;
     width: auto !important;
     @media (min-width: 1025px) {
         position: relative !important;
-        float: none !important;
-        top: -9px;
+        float: right !important;
         right: 10px;
+        bottom: 17px;
+        top: initial;
     }
 }
 		.icon-collection {
@@ -304,22 +315,26 @@ transition: all 0.1s ease;
                     @media (min-width: 1025px) {
                         font-size: 9px;
                         bottom: 46px;
+                        line-height: initial;
+                        vertical-align: initial;
                     }
                     @media (min-width: 1200px) {
                         font-size: 12px;
                         bottom: 52px;
                     }
                     .my-fixed-header-bar & {
-                        right: initial;
+                        right: auto;
                         left: 2px;
                         bottom: 40px;
                         @media (min-width: 1025px) {
                             font-size: 7px;
-                            left: initial;
-                            right: -2px;
-                        }
-                        @media (min-width: 1200px) {
-                           right: 1px;
+                            left: -1px;
+                            bottom: 100%;
+                            width: 100%;
+                            display: flex;
+                            height: 85%;
+                            align-items: center;
+                            justify-content: center; 
                         }
                     }              
 			}
@@ -334,6 +349,9 @@ login welcome panel
         display: block;
         position: absolute;
         width: 175px;
+    }
+    @media (min-width: 1200px) {
+        top: 0;
     }
 }
 /*
@@ -350,7 +368,7 @@ div.welcome-text-container{
     display: none;
     position:fixed;
     z-index: 99999;
-    top: 25px;
+    top: 22px;
     right: -21px;   
     div.top-gap-container {
         height: 20px;
@@ -367,10 +385,11 @@ div.welcome-text-container{
         top: 30px;
         right: -24px;
         @media (min-width: 1025px) {
-            right: -27px;
+            right: -22px;
+            top: 39px;
         }
         @media (min-width: 1200px) {
-            right: -23px;
+            right: -19px;
         }
     }
     div.pop-tip{
@@ -452,7 +471,6 @@ font-size: 16px;
     &.mz-pageheader-hasbanner .mz-storebranding {
         text-indent: -9999px;
     }
-
     .mz-utilitynav {
         position: absolute;
      /*   top: @gutter/2;*/
@@ -460,12 +478,11 @@ font-size: 16px;
         height: @utilityNavHeight;
         @media (min-width: 1025px) {
             position: relative;
-            right: initial;
+            right: auto;
             left: 10px;
-            top: 10px;
+            height: inherit;
         }
     }
-
     .mz-searchbox {
         position: absolute;
         top: @utilityNavHeight + ( @gutter / 2 );

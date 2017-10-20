@@ -6,12 +6,14 @@
 {% if pageContext.pageType != "checkout" %} 
 
 <div class="ech-shi-footer">
+	{% comment %}
 			<!-- #Footer newsletter starts here -->
+	<!-- comment out for new branding 101617 GW
 			<div class="ech-shi-footer-contianer">
 				<div class="ech-shi-newletter">
 				{% dropzone "newsletter-section" scope="site" %}
-					<!--p class="ech-shi-news-header">Join Our Newsletter!</p>
-					<p>Exiting News about latest products and promotions</p-->
+					<p class="ech-shi-news-header">Join Our Newsletter!</p>
+					<p>Exiting News about latest products and promotions</p>
 				</div>
 				<div class="ech-shi-newletter1">
 					<form action="" method="post" name="newsletter-form" style="position: relative;">
@@ -22,8 +24,10 @@
 				</div>
 				<div class="clear"></div>
 			</div> 
+	-->
 			<!-- #Footer newsletter ends here -->
 			<!-- #Footer about shindigz starts here -->
+	<!-- comment out for new branding 101617 GW
 			<div class="ech-shi-footer-about">  
 				<div class="ech-shi-footer-abt-cont">
 				<center>
@@ -45,14 +49,17 @@
 					</div>
 					<div class="clear"></div>
 				</div>
+
 			</div>
+	-->
+	{% endcomment %}
+
 				{% dropzone "footer-section" scope="site" %}
 
- 
+ 	{% comment %}
 				<div class="ech-shi-bottom-footer">
 					<div class="ech-shi-bottom-footer1">
 						<div class="ech-shi-bottom-footer-one ech-shi-mobi-hide">
-							<!-- <a href="http://www.shindigz.com/servicepage.cfm?pgp=SZSECURE" target="_blank"><img src="/resources/images/mcaffe_new.png"></a>  -->
 							{% dropzone 'mac-afe' scope="site" %}
 						</div>
 						<div class="ech-shi-bottom-footer-two">
@@ -64,6 +71,7 @@
 			<!-- #Footer links ends here -->
 		</div>
 		<!-- #our other sites starts here -->
+		<!-- commented out for new branding 101617 GW
 			<div class="ech-shi-ourother-sites">
 				<div class="ech-shi-ourother-sites-contianer">
 					<div class="ech-shi-our-sit-one">
@@ -88,7 +96,8 @@
 					<div class="clear"></div>
 				</div> 
 			</div>
-			
+		-->
+	{% endcomment %}		
 {% endif %}
 			
 	

@@ -2,11 +2,11 @@
 
 {% if pageContext.pageType != "checkout" %} 
 
-	{% include "modules/page-header/promoslot" %}
 	<div class="header-block-container">
 		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} " style="">
 		
 			<div style="display:block;">
+				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
 				<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
 					<div class="mob-header-logo">
 							{% if pageContext.cmsContext.template.path == "main-page" %}
@@ -18,6 +18,8 @@
 							{% endif %}
 					</div>
 				</div> 
+
+				{% include "modules/page-header/promoslot" %}
 				 
 				<div class="mz-cms-col-7-12 mob-search-box custom-menu-align">
 				{% include 'modules/search/search-bar' with view='' %}
@@ -25,10 +27,13 @@
 				<div class="mz-cms-col-2-12 icon-block custom_cart_styles">
 				{% include "modules/page-header/icons" %}
 				</div> 
-				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
-			</div>		
+				<div style="clear:both;"></div>
+				</div>		
+			
 		</header>
+		{% comment %}
 		<div class="custom_margin"></div>
+		{% endcomment %}
 	</div>  
 
 	<div class="header-float menu-container float-nav" style="box-shadow: rgba(136, 136, 136, 0.34902) 0px 10px 15px;z-index: 99;    background: rgb(255, 255, 255);">
@@ -396,8 +401,9 @@
 
 	<div class="header-block-container">
 		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} " style="">
-		
+
 			<div style="display:block;">
+				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
 				<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
 					<div class="mob-header-logo">
 							{% include "modules/page-header/logo" %}
@@ -406,17 +412,15 @@
 				<div class="mz-cms-col-9-12 checkout-header-links ech-shi-tollfree">
 					<nav class="mz-utilitynav">
 					    <ul class="mz-utilitynav-list">
-							<li class="mz-utilitynav-item customer_care">
-							 	{% dropzone "customer-care" scope="site" %}
-							</li>							
-							<li class="mz-utilitynav-item sb-desktop-only" >								
-								<div id="lpchatbuttondiv">
-									<a href="/faq">FAQs</a>
-								</div>						
+							<li class="mz-utilitynav-item">
+								{% dropzone "customer-care" scope="site" %}
 							</li>
 							<li class="mz-utilitynav-item promoslot-customer">
 								{% dropzone "customer-support" scope="site" %}
-							</li>  
+							</li>
+							<li class="mz-utilitynav-item sb-desktop-only" >			
+								{% dropzone "faq" scope="site" %}
+							</li> 
 							<li class="mz-utilitynav-item user_log">
 			        			{% if not user.isAnonymous %}
 			        				<a href="/logout" data-mz-action="logout" class="mz-utilitynav-link">Logout</a>
@@ -430,7 +434,11 @@
 				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
 			</div>		
 		</header>
+		{% comment %}		
 		<div class="custom_margin"></div>
+		{% endcomment %}
 	</div>  
 
 {% endif %}
+
+

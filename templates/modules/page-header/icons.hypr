@@ -340,10 +340,11 @@
 
 					</a>
 					<span class="badge mz-cartmonitor" data-mz-role="cartmonitor">0</span>
-		        	{% require_script "modules/cart-monitor" %}
+					{% require_script "modules/cart-monitor" %}
 			        {% require_script "modules/soft-cart" %}
 			        <div class="soft-cart-wrap" data-mz-role="soft-cart"></div>
 				</li>
 			</ul>
+
 		</div>
-		
+		<div style="clear:both;"></div>
