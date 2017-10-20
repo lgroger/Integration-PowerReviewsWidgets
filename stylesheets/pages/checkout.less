@@ -254,12 +254,12 @@ ul.coupon-list-custom{
         padding:0px 25px 0px;
     }
     .mz-pagetitle{
-        color:#093863;
+        color: @textColor;
         font-size:24px !important;
         border-bottom:0px solid #eee;
         padding: 0px 0px;
         font-family: @fontGTWalsheimBold;
-        margin: 40px 0px 25px;
+        margin: 25px 0px 25px;
         position: relative;
         .total_pay{
             position: absolute;
@@ -284,6 +284,18 @@ ul.coupon-list-custom{
             max-width:100%;
         }
     }
+}
+.mz-checkout .checkout-header-links.ech-shi-tollfree {
+    float: none;
+    width: 74.5%;
+    height: auto;
+    display: inline-block;
+    & .mz-utilitynav-item {
+        padding: 9px 15px 10px 30px;
+    }
+}
+.mz-checkout .mz-cms-col-3-12.mob-logo-sec {
+    display: inline-block !important;
 }
 .checkout_cols {
     .checkout_col_left{
@@ -2175,16 +2187,19 @@ span.contact-text{
 }
 /*---------------------------Checkout Header--------------------------*/
 .mz-checkout{
+    & .header-block-container {
+        height: 70px;
+    }
     .header-block.floatheader {
         display: inline-block !important;
         width: 100%;
         box-sizing: border-box;
-        height: auto !important;
+        height: inherit;
+        & > div {
+            height: inherit;
+        }
         &media (min-width: 1025px) {
             height: 75px;
-        }
-        .mob-header-logo{
-            margin-left:-10px !important;
         }
         .checkout-header-links.ech-shi-tollfree{
             .mz-utilitynav{
@@ -2222,10 +2237,11 @@ span.contact-text{
 
 .mz-checkout .header-block.floatheader .checkout-header-links.ech-shi-tollfree .mz-utilitynav {
     @media only screen and (max-width: 1024px) {
-        margin-top: 15px;
+        margin-top: 18px;
+        margin-bottom: 0;
     }
     @media only screen and (min-width: 1025px) {
-        margin-top: 25px;
+        margin-top: 0;
     }
     @media only screen and (min-width: 1200px) {
         margin-top: 15px;
