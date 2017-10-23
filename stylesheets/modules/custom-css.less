@@ -665,6 +665,15 @@
         display: none;
     }
 }
+.mz-filters {
+    width: 49%;
+    & .mz-filters-btn {
+        width: 100%;
+    }
+}
+.mz-mobile-filter .mz-filters{
+    vertical-align: top;
+}
 
 @media only screen {
     .mz-productlisting-title {
@@ -715,11 +724,6 @@
             margin-top: 12px;
             padding: 0px 18px;
         }
-        .mz-l-sidebar {
-            float: none;
-            padding-right: none;
-            padding: 12.5px 0;
-        }
         .mz-l-paginatedlist-header {
             background: #fff;
         }
@@ -761,8 +765,10 @@
 .mz-filter-options {
     display: none;
 }
+.mz-mobile-filter .mz-filters{
+    vertical-align: top;
+}
         .mz-filters {
-            width: 49%;
             > .mz-filters-btn {
                 width: 100%;
             }
@@ -802,6 +808,11 @@
         }
     }
 
+.mz-l-sidebar {
+        float: none;
+        padding-right: 0;
+        padding: 12.5px 0;
+}
     /* Responsive Code For Devices Less Then 400 px */
     @media (max-width: 400px) {
 

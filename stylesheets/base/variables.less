@@ -1,7 +1,65 @@
-﻿/*
+/*
 Fonts Import
 */
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
+
+@font-face{ 
+    font-family: 'GT-Walsheim-Black';
+    src: url('../resources/fonts/GT-Walsheim-Black.eot');
+    src: url('../resources/fonts/GT-Walsheim-Black?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Black.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Black.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Black-Oblique';
+    src: url('../resources/fonts/GT-Walsheim-Black-Oblique.eot');
+    src: url('../resources/fonts/GT-Walsheim-Black-Oblique?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Black-Oblique.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Black-Oblique.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Bold';
+    src: url('../resources/fonts/GT-Walsheim-Bold.eot');
+    src: url('../resources/fonts/GT-Walsheim-Bold?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Bold.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Bold.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Bold-Oblique';
+    src: url('../resources/fonts/GT-Walsheim-Bold-Oblique.eot');
+    src: url('../resources/fonts/GT-Walsheim-Bold-Oblique?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Bold-Oblique.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Bold-Oblique.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Medium';
+    src: url('../resources/fonts/GT-Walsheim-Medium.eot');
+    src: url('../resources/fonts/GT-Walsheim-Medium?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Medium.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Medium.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Medium-Oblique';
+    src: url('../resources/fonts/GT-Walsheim-Medium-Oblique.eot');
+    src: url('../resources/fonts/GT-Walsheim-Medium-Oblique?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Medium-Oblique.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Medium-Oblique.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Light';
+    src: url('../resources/fonts/GT-Walsheim-Light.eot');
+    src: url('../resources/fonts/GT-Walsheim-Light?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Light.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Light.ttf') format('truetype');
+}
+@font-face{ 
+    font-family: 'GT-Walsheim-Light-Oblique';
+    src: url('../resources/fonts/GT-Walsheim-Light-Oblique.eot');
+    src: url('../resources/fonts/GT-Walsheim-Light-Oblique?iefix') format('eot'),
+         url('../resources/fonts/GT-Walsheim-Light-Oblique.woff') format('woff'),
+         url('../resources/fonts/GT-Walsheim-Light-Oblique.ttf') format('truetype');
+}
+
 @font-face{
 	font-family : 'ArvoRegular';
 	src: url(../resources/fonts/Arvo-Regular.ttf);
@@ -31,8 +89,14 @@ Fonts Import
     src: url(../resources/fonts/Montserrat-Hairline.ttf);
 }
 
- 
-
+@fontGTWalsheimLight: 'GT-Walsheim-Light', Verdana, sans-serif;
+@fontGTWalsheimLightItalic: 'GT-Walsheim-Light-Obique', Verdana, sans-serif;
+@fontGTWalsheimMedium: 'GT-Walsheim-Medium', Verdana, sans-serif;
+@fontGTWalsheimMediumItalic: 'GT-Walsheim-Medium-Obique', Verdana, sans-serif;
+@fontGTWalsheimBold: 'GT-Walsheim-Bold', Verdana, sans-serif;
+@fontGTWalsheimBoldItalic: 'GT-Walsheim-Bold-Obique', Verdana, sans-serif;
+@fontGTWalsheimBlack: 'GT-Walsheim-Black', Verdana, sans-serif;
+@fontGTWalsheimBlackItalic: 'GT-Walsheim-Black-Obique', Verdana, sans-serif;
 @fontArvo: ArvoRegular;
 @fontRoboto: RobotoLight;
 @RobotoRegular: RobotoRegular;
@@ -42,36 +106,55 @@ Fonts Import
 @fontMontserratHairline: MontserratHairline;
 
 
-
-
-
-@fontFamily:            @fontMontserratLight;
+@fontFamily:            @fontGTWalsheimMedium;
 @fontSize:              {{ themeSettings.fontSize }};
 @fontSizeSmall:         @fontSize - 2px;
 @fontSizeLarger:        @fontSize + 2px;
 @fontSizeLarge:         @fontSize + 6px;
 @storeBrandingFontSize: 36px;
 
-@dark-blue:#0d3762;
-@latel-green:#00af9a;
-@latel-grey:#dceaf6;
+
+/* colors */
+@primaryBlue: #363fc8;
+@primaryDarkBlue: #211d5e;
+@primaryWhite: #ffffff;
+@secondaryBlue: #30c3c5;
+@secondaryRed: #f95152;
+@secondaryPink: #cc20b8;
+@secondaryYellow: #f5bd24;
+@secondaryLightPink: #eeb3d1;
+@secondaryWhite: #ede8e8;
+
+@primaryCTA:            @secondaryPink;
+@primaryCTAhover:       rgba(204, 32, 184, .7);
+/* reverse secondaryCTA w primaryCTA borders/white fill: cancel, wishlist etc. */   
+@tertiaryCTA:           @secondaryBlue;
+@tertiaryCTAhover:      rgba(48, 195, 197, .7);
+
+@linkColor:             @primaryBlue;
+@linkHoverColor:        @secondaryBlue;
+@linkVisitedColor:      @primaryDarkBlue;
+
+@dark-blue: @primaryDarkBlue;
+@latel-green: @secondaryBlue;
+@latel-grey: @secondaryWhite;
 @dark-grey:#303030;
 @disabled-grey:#707070;
 @active-grey:#000;
 
+/* this color is the new dark blue in theme settings as of 10/11/17 GW */
 @textColor:             {{ themeSettings.textColor }};
-@linkColor:             #4F4F4F;
-@linkHoverColor:        #666;
-@linkVisitedColor:      #3F3F3F;
-@errorText:             #b94a48;
-@errorBackground:       #f2dede;
-@warningText:           @textColor;
-@warningBackground:     #ffefcf;
-@successText:           @textColor;
-@successBackground:     #eef2ee;
 
-@availableText:         #237e0e;
-@unavailableText:       #ae1231;
+@textHeaderColor:       @primaryBlue;
+
+@errorText:             @secondaryRed;
+@errorBackground:       @secondaryWhite;
+@warningText:           @primaryDarkBlue;
+@warningBackground:     @secondaryWhite;
+@successText:           @primaryDarkBlue;
+@successBackground:     @secondaryWhite;
+@availableText:         @secondaryBlue;
+@unavailableText:       @secondaryRed;
 
 @bodyBackgroundColor:   {{ themeSettings.bodyBackgroundColor }};
 
@@ -96,8 +179,8 @@ Fonts Import
 @productListingThumbSize: {{ themeSettings.listProductThumbSize }}px;
 
 
-@background: #dceaf6;
-@backgroundSeconderyCTA: #00af9a;
+@background: @secondaryWhite;
+@backgroundSeconderyCTA: @secondaryBlue;
 @disabledBTN: #d1d2d4;
 
 

@@ -70,10 +70,7 @@
         vertical-align: middle;
     }
 
-        .mz-item-discount {
-        font-weight: bold;
-
-        .mz-item-discountamt {
+    .mz-item-discountamt {
             color: #900;
         }
     }
@@ -112,7 +109,6 @@ div.popover-wrap.chkout-popover-wrap{
                 max-width: 100%; 
                 padding: 16px;
                 font-size: initial;
-                font-weight: bold;
                 border: none;
             }
 
@@ -122,18 +118,16 @@ div.popover-wrap.chkout-popover-wrap{
                 padding: 15px 15px 15px 35px;
                 color: lightgrey;
                 font-size: large;
-                font-weight: bolder;
             }
         } 
         .default-hide{  
             button#continue-as-guest-btn { 
-                color: #14b4a0;
-                border: 3px solid #14b4a0;   
+                color: @primaryCTA;
+                border: 3px solid @primaryCTA;   
                 background-color: white;
                 border-radius: 5px;
                 padding: 15px;
                 font-size: 15px;
-                font-weight: bolder;
             }
         }
     }/*main-end*/ 
@@ -181,7 +175,7 @@ div.cartLoginPopover{
 .cart_cols .cart-items-summary .cart_off .mz-content-widget-inner-wrap div {
     border: 1px dotted #ff8300 !important;
     font-size: 18px !important;
-    font-family: ArvoRegular !important;
+    font-family: @fontGTWalsheimBold !important;
     text-align: center !important;
     padding: 22px 0 !important;
 }
@@ -192,15 +186,14 @@ ul.mz-table.mz-table-cart{
     .cart-items-summary{
         margin-top: 0px;
         .cart_off{
-            font-family: ArvoRegular;
+            font-family: @fontGTWalsheimBold;
             background: #fff9f2;
             border: 1px dotted #ff8300;
             font-size: 18px;
-            font-weight: 400;
             text-align: center;
             margin: 0px 0px 15px;
             padding: 22px 5px;
-            color: #222;
+            color: @primaryDarkBlue;
             span span{
                 font-size:22px;
                 color: #ff8300;
@@ -213,15 +206,13 @@ ul.mz-table.mz-table-cart{
             margin-bottom: 6px;
             .label{
                 font-size: 18px;
-                font-weight: bold; 
-                color: #666666;    
-                font-family: MonstserratLight;             
+                color: @textColor;    
+                font-family: @fontGTWalsheimBold;             
             }
             .estimate-value{
-                color: #093863;
+                color: @textColor;
                 font-size: 22px;
-                font-weight: bold;
-                font-family: ArvoRegular;
+                font-family: @fontGTWalsheimBold;
             }
         }
     }
@@ -264,14 +255,14 @@ span.rounded-cart-color{
     display:inline-block;
     width:100%;
     .mz-pagetitle{
-        color:#093863;
+        color: @textHeaderColor;
         font-size:24px;
-        font-weight:200;
         border-bottom:1px solid #eee;
         padding: 0px 0px 10px !important;
-        font-family: ArvoRegular;
+        font-family: @fontGTWalsheimBold;
         margin-bottom: 25px;
         margin-top:0;
+        text-transform: uppercase;
     }
     .cart-table-items{
         width:67.5%;
@@ -282,16 +273,15 @@ span.rounded-cart-color{
             width: 100%;
             margin-bottom: 10px;
             span.label{
-                font-weight: normal;
-                color: #414142; 
-                font-size: 16px;
-                text-transform: uppercase;
-                font-family: 'ArvoRegular';
+                color: #666; 
+                font-size: 14px;
+                text-transform: lowercase;
+                font-family: @fontGTWalsheimLight;
             }
             .cart_price_total {
-                color: #093863;
-                font-weight: bold;
+                color: @textColor;
                 font-size: 17px;
+                font-family: @fontGTWalsheimBold
             }
         }
     }
@@ -299,21 +289,20 @@ span.rounded-cart-color{
         width:31%;
         float:left;
         .cart_off #mz-drop-zone-cart-page-offers-pr span{
-            font-family: ArvoRegular !important;
+            font-family: @fontGTWalsheimBold !important;
             span{
                 font-size: 22px;
                 color: #ff8300;
             }
         } 
         .cart_summary h2{
-            background:#e1edf8;
+            background: @secondaryWhite;
             padding: 16px 15px;
             margin: 0px 0px 0px;
-            font-family: ArvoRegular;
-            font-weight: 400;
+            font-family: @fontGTWalsheimBold;
             text-transform: uppercase;
             font-size: 17px;
-            color: #000;
+            color: @primaryDarkBlue;
         }
     }
     .cart-table-items table{
@@ -321,11 +310,11 @@ span.rounded-cart-color{
         th{
             background:#f5f5f5;
             padding:10px 1.5%;
-            font-weight:100;
             font-size:14px;
-            text-transform:uppercase;
-            font-family:MonstserratLight;
+            font-family: @fontFamily;
             border:0px;
+            /* to override th global setting */
+            font-weight: normal;
         }    
         th.mz-carttable-header-product{
             padding-left:3%;
@@ -335,7 +324,7 @@ span.rounded-cart-color{
             padding: 10px 0px;
         }
         td{
-            font-family:ArvoRegular;
+            font-family: @fontGTWalsheimBold;
             padding:25px 1.5% 20px;
             vertical-align:top;
             box-sizing: border-box;
@@ -343,7 +332,6 @@ span.rounded-cart-color{
         td .cp_image{
             text-align:center;
             min-height: 115px;
-            border:1px solid #eee;
             img{
                 padding:0px;
                 float:none;
@@ -357,7 +345,7 @@ span.rounded-cart-color{
             padding: 25px 0.5% 20px 1.5%;
         }
         td.mz-carttable-item-description{
-            font-family:MonstserratLight;
+            font-family: @fontFamily;
             position: relative;
             width:35%;
             padding-bottom: 40px;
@@ -377,8 +365,7 @@ span.rounded-cart-color{
             }
         }
         .mz-carttable-item-title{
-            color:#222;
-            font-weight:bold;
+            color: @primaryDarkBlue;
             text-decoration:none;
             font-size:15px;
             margin-bottom:5px;
@@ -393,12 +380,13 @@ span.rounded-cart-color{
             width:100%;
             float:none;
             a{
-                color:#666;
+                color: @linkColor;
                 text-decoration: underline;
                 font-size: 13px;
+                text-transform: uppercase;
             }
             a:hover{
-                color:#22ab93;
+                color: @linkHoverColor;
                 text-decoration: none;
             }
         }
@@ -409,22 +397,21 @@ span.rounded-cart-color{
             display:block;
             width:100%;
             margin: 20px 0px 0px;
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             p{
                 margin:10px 0px 0px;
             }
             .sd_label{
                 color:#666;
-                font-size:14px;
+                font-size:12px;
                 display:inline-block;
                 margin-right:10px;
                 margin-bottom: 8px;
                 clear:both;
             }
             .sd_text{
-                color:#222;
-                font-weight:bold;
-                font-size:14px;
+                color: #666;
+                font-size:12px;
                 margin-bottom:8px;
                 margin-left:0px;
                 text-transform: capitalize;
@@ -494,11 +481,11 @@ span.rounded-cart-color{
         td.mz-carttable-item-ship-charge{
             font-size: 18px;
             line-height: 1.6;
-            font-family: @fontArvo;
+            font-family: @fontGTWalsheimBold;
             color: #444444;
             position:relative;
             a.cart_wishlist{
-                color: #093863;
+                color: @linkColor;
                 position: absolute;
                 right: -40px;
                 bottom: 20px;
@@ -508,7 +495,7 @@ span.rounded-cart-color{
             }
             a.cart_wishlist:hover{
                 text-decoration:none;
-                color:#22ab93;
+                color:@linkHoverColor;
             }
         }
         td.mz-carttable-item-remove{
@@ -517,34 +504,35 @@ span.rounded-cart-color{
                 width: auto;
                 height: auto;
                 background-image: none;
-                font-size: 38px;
+                font-size: 24px;
                 color: #bbb;
                 line-height: 21px;
                 text-indent: inherit;
-                font-family: MonstserratLight;
+                font-family: @fontGTWalsheimLight;
             }
             .mz-icon.mz-icon-close:hover{
                 color:#666;
             }
             a.cart_wishlist{
                 line-height: 20px;
-                font-family: MonstserratLight;
-                color: #093863;
+                font-family: @fontGTWalsheimMedium;
+                color: @linkColor;
                 position: absolute;
                 right: 15px;
                 bottom: 20px;
-                font-size: 15px;
+                font-size: 13px;
                 text-decoration: underline;
                 min-width: 135px;
+                text-transform: uppercase;
             }
             a.cart_wishlist:hover{
                 text-decoration:none;
-                color:#22ab93;
+                color: @linkHoverColor;
             }
         }
         td.mz-carttable-item-stock{    
-            font-family:MonstserratLight;
-            font-size:13px;
+            font-family: @fontGTWalsheimLight;
+            font-size:11px;
             color:#666;
             padding:0px 1.5% 25px;
             position:relative;
@@ -559,11 +547,11 @@ span.rounded-cart-color{
                 border-bottom:1px dotted #ff8300;
                 margin-top:15px;
                 .offer_line_highlight{
-                    color:#093863;
+                    color: @primaryDarkBlue;
                 }
             }
             .move_to_wishlist{
-                color: #093863;
+                color:  @primaryDarkBlue;
                 position:absolute;
                 right:15px;
                 top:-20px;
@@ -581,13 +569,11 @@ span.rounded-cart-color{
         }
         td.mz-carttable-item-total{
             font-size:18px;
-            color:#093863;
-            font-weight:bold;
+            color:@primaryDarkBlue;
         }
         td.mz-carttable-item-total{
             font-size:18px;
-            color:#093863;
-            font-weight:bold;
+            color: @primaryDarkBlue;
         }
     }
     .mz-carttable-item-ship-charge, .mz-carttable-item-total, .mz-carttable-item-price, .mz-carttable-header-surcharge, .mz-carttable-header-total, .mz-carttable-header-price, .mz-carttable-header-qty, .mz-carttable-item-qty, .mz-carttable-noitems{
@@ -597,20 +583,20 @@ span.rounded-cart-color{
         padding: 0px 1.5% !important;
     }
     .cart_bottom_line{
-        font-family:MonstserratLight;
+        font-family: @fontFamily;
         padding:15px 0px;
         margin-top: 10px;
         
         a{                
             text-transform: uppercase;
-            color: #093863 !important;
+            color: @linkColor !important;
             font-size:14px !important;
             color:#0a3963;
             text-decoration:underline;
         }
         a:hover, .mz-carttable-emptylink:hover{
             text-decoration:none !important;
-            color:#22ab93 !important;
+            color: @linkHoverColor !important;
         }
         .mz-carttable-emptylink{
             text-decoration: underline;
@@ -620,7 +606,7 @@ span.rounded-cart-color{
             text-transform: capitalize;
         }
         .f_left a{
-            color:#093863;
+            color: @primaryDarkBlue;
             text-transform:uppercase;
         }
     }
@@ -634,7 +620,7 @@ span.rounded-cart-color{
         table{
             width:100%;
             border:0px;
-            font-family:MonstserratLight;
+            font-family: @fontFamily;
             margin-bottom:20px;
             td{
                 padding:10px 15px;
@@ -644,35 +630,31 @@ span.rounded-cart-color{
                 text-align:left;
                 font-size:15px; 
                 color:#666;
-                text-transform:uppercase;
-                font-weight: bold;
             }
             .summary_box_price{
-                font-family:ArvoRegular;
+                font-family: @fontGTWalsheimBold;
                 text-align:right;
                 font-size:18px;
-                color:#000;
+                color: @primaryDarkBlue;
                 &.tax{
                     text-align: right;
                     padding: 0 10px 0;
-                    font-size: 13px;
-                    color: #6f0404;
+                    font-size: 12px;
+                    color: @secondaryRed;
                 }
             }
             td.tax_note{
                 padding-top: 0px !important;
                 padding-bottom: 5px;
-                font-size: 13px;
+                font-size: 11px;
                 text-align: left;
-                font-weight: normal;
                 .star_note{
                     vertical-align: middle;
                 }
             }
             .star_note{
-                font-weight: normal;
-                color: #0d3762;
-                font-size: 20px;
+                color: @secondaryRed;
+                font-size: 15px;
                 line-height: 5px;
             }
         }
@@ -714,8 +696,7 @@ span.rounded-cart-color{
                     border: 1px dotted #ff8300;
                     margin: 0px 0px 0px;
                     font-size: 14px;
-                    font-family: MonstserratLight;
-                    font-weight: 400;
+                    font-family: @fontGTWalsheimLight;
                     border-radius: 5px;
                     position: relative;
                     a{
@@ -742,7 +723,6 @@ span.rounded-cart-color{
                 color:#666;
                 /*margin:0px 0 10px;*/ 
                 padding:0px 0px 5px;
-                font-weight: 600;
                 display: block;
                 width: 100%;
                 cursor: inherit;
@@ -801,7 +781,6 @@ span.rounded-cart-color{
             
             .error-zipCode{
                 color: brown;
-                font-weight: bold;
                 float: left;
                 margin-left: 12%;
             }
@@ -863,27 +842,25 @@ span.rounded-cart-color{
             }
             .summary_estimate_label{
                 display:inline-block;
-                font-size:18px; 
-                color:#666;
-                font-weight:600;
+                font-size:17px; 
+                color: @primaryDarkBlue;
                 line-height:40px;
                 text-transform:uppercase;
-                font-family:MonstserratLight;
+                font-family: @fontGTWalsheimBold;
             }
             .summary_estimate_price{
                 display:inline-block;
                 font-size:24px; 
-                color:#093863;
-                font-weight:600;
+                color: @primaryDarkBlue;
                 line-height:40px;
-                font-family:ArvoRegular;
+                font-family: @fontGTWalsheimBold;
             }
         }
     }
     .summary_checkout{
         padding:20px 0px;
         .checkout_btn{
-            background:#0971ce;
+            background: @primaryCTA;
             color:#fff;
             border:0px;
             border-radius:0px;
@@ -891,12 +868,11 @@ span.rounded-cart-color{
             width:100%;
             text-align:center;
             text-transform:uppercase;
-            font-family:MonstserratLight;
-            font-weight:600;
+            font-family: @fontFamily;
             font-size:15px;
         }
         .checkout_btn:hover{
-            background: #0d3762;
+            background: @primaryCTAhover;
         }
         .checkout_btn[disabled], .checkout_btn[disabled]:hover{
             background-color: #ccc;
@@ -917,7 +893,7 @@ span.rounded-cart-color{
             .pay_option_btn{
                 display: block;
                 border:1px solid #375d80;
-                color:#093863;
+                color: @primaryDarkBlue;
                 cursor:pointer;
                 background: #fff;
                 span{
@@ -927,8 +903,7 @@ span.rounded-cart-color{
                     padding: 10px 5px 10px 10px;
                     box-sizing: border-box;
                     vertical-align: middle;
-                    font-family: MonstserratLight;
-                    font-weight: 600;
+                    font-family: @fontGTWalsheimLight;
                     text-transform: uppercase;
                     font-size: 11px;
                 }
@@ -945,8 +920,8 @@ span.rounded-cart-color{
                 }
             }
             .pay_option_btn:hover {
-                border-color: #222;
-                color: #222;
+                border-color: @primaryDarkBlue;
+                color: @primaryDarkBlue;
                 background: #fdfdfd;
                 box-shadow: 0px 2px 7px #ccc;
             }
@@ -963,15 +938,15 @@ span.rounded-cart-color{
         margin-top: 15px;
         margin-bottom:-10px;
         a{
-            color: #0971ce;
+            color: @linkColor;
             text-transform: uppercase;
-            font-family: MontserratRegular;
+            font-family: @fontFamily;
             text-decoration: underline;
             font-size: 14px;
         }
         a:hover{
             text-decoration: none;
-            color: #22ab93;
+            color: @linkHoverColor;
         }
     }       
 }
@@ -988,7 +963,7 @@ span.rounded-cart-color{
     cursor:pointer; 
     min-width:150px;
     color: #666;
-    font-family: MontserratRegular;
+    font-family: @fontFamily;
     font-size: 14px;
 }
 .toggle_components .fa{
@@ -1036,22 +1011,19 @@ span.rounded-cart-color{
                     margin:0px;
                     padding: 5px 0px 0px 10px;
                     font-size: 22px;
-                    font-family: ArvoRegular;
-                    font-weight: 400;
+                    font-family: @fontGTWalsheimBold;
                     span{
                         font-size:14px;
                         margin-right: 4px;
-                        font-weight: 600;
                     }
                 }
                 .edit_component{
                     padding-left: 10px;
                     font-size: 12px;
                     text-decoration: underline;
-                    font-weight: 400;
                     margin-top: 5px;
                     display: inline-block;
-                    font-family: MontserratRegular;
+                    font-family: @fontFamily;
                     a{
                         color: #666;
                         cursor: pointer;
@@ -1068,11 +1040,11 @@ tr.mz-carttable-item-shipping-info{
         color:#727272;
 
         .item-availability{
-            font-weight:bold;
             margin: 0 0 0px 0;
 
             span.avail-value{
-                color: #22AB93;
+                color: #30c3c5;
+                font-family: 'GT-Walsheim-Medium';
             }
             .avail-shipping-time{
                 color:#727272;
@@ -1097,6 +1069,9 @@ tr.mz-carttable-item-shipping-info{
     .echi-shi-related-products-slider .owl-carousel{
         max-height: inherit !important;
     }
+}
+.mz-cart .confiramtion-slider h2 {
+    color: @primaryDarkBlue;
 }
 .mz-cart #AmazonPayButton{
     display: none !important;
@@ -1273,7 +1248,6 @@ tr.mz-carttable-item-shipping-info{
             .cart-header{
                 span.label{
                     font-size: 12px;
-                    font-weight: 600;
                 }
                 .cart_price_total {
                     font-size: 15px;
@@ -1302,7 +1276,6 @@ tr.mz-carttable-item-shipping-info{
                 font-size: 13px !important;
                 margin: 0px !important;
                 padding: 10px 0px !important;
-                font-weight: 600 !important;
                 span span{
                     font-size: 16px !important;
                 }
@@ -1312,7 +1285,6 @@ tr.mz-carttable-item-shipping-info{
                 margin-right: -5px;
                 h2{
                     font-size: 14px;
-                    font-weight: 600;
                 }
                 .cart_summary_box{
                     border:0px;
@@ -1326,11 +1298,10 @@ tr.mz-carttable-item-shipping-info{
                         }
                         .summary_box_price{
                             font-size: 15px;
-                            font-weight: 600;
                             &.tax{
                                 padding: 0 10px 0;
                                 font-size: 13px;
-                                color: #6f0404;
+                                color: @secondaryRed;
                             }
                         }
                     } 
@@ -1382,7 +1353,6 @@ tr.mz-carttable-item-shipping-info{
                         }
                         div span.error-zipCode{
                             color: brown;
-                            font-weight: bold;
                             float: left;
                             margin-left: 12%;
                         }
@@ -1595,10 +1565,12 @@ tr.mz-carttable-item-shipping-info{
                 margin-top:10px;
             }
             .move-to-wishlist-link {
-                color: #093863;
-                font-weight: 600;
+                color: @linkColor;
                 text-decoration: underline;
                 font-size: 13px;
+                &:hover {
+                    color: @linkHoverColor;
+                }
             }
         }
     }
@@ -1624,7 +1596,7 @@ tr.mz-carttable-item-shipping-info{
                     color: #bbb;
                     line-height: 20px;
                     text-indent: inherit;
-                    font-family: MonstserratLight;
+                    font-family: @fontGTWalsheimLight;
                 }
                 .mz-icon.mz-icon-close:hover{
                     color:#666;
@@ -1667,22 +1639,19 @@ tr.mz-carttable-item-shipping-info{
         td.mz-carttable-item-qty:before {
             content: 'Qty:';
             color: #666;
-            font-weight: bold;
             margin-right: 10px;
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             font-size: 13.5px;
         }
         td.mz-carttable-item-price {
             vertical-align: bottom;
             font-size:16px;
-            font-weight: 600;
         }
         td.mz-carttable-item-price:before {
             content: 'Price:';
             margin-right: 10px;
             color: #666;
-            font-family: MonstserratLight;
-            font-weight: bold;
+            font-family: @fontGTWalsheimLight;
             font-size: 13.5px;
         }
         td.mz-carttable-item-total {
@@ -1692,8 +1661,7 @@ tr.mz-carttable-item-shipping-info{
         td.mz-carttable-item-total:before {
             content: 'Total';
             color: #666;
-            font-family: MonstserratLight;
-            font-weight: bold;
+            font-family: @fontGTWalsheimLight;
             font-size: 13.5px;
             display: block;
             text-align: right;
@@ -1702,8 +1670,7 @@ tr.mz-carttable-item-shipping-info{
             content: 'Shipping Surcharge: ';
             margin-right: 10px;
             color: #666;
-            font-family: MonstserratLight;
-            font-weight: bold;
+            font-family: @fontGTWalsheimLight;
             font-size: 13.5px;
         }
     }
@@ -1714,6 +1681,16 @@ tr.mz-carttable-item-shipping-info{
         }
     }
 }
+
+.confiramtion-slider h3 {
+    color: #666;
+    font-family: @fontGTWalsheimLight;
+    font-size: 14px;
+}
+.confiramtion-slider h3 a{
+    font-family: @fontFamily;
+}
+
 /*-------------------Checkout login-signup popup---------------*/
 .popoverLoginForm .chkout-popover-wrap .mz-popover-login .mz-login-form .mz-popover-action{
     padding:0px 0px;
@@ -1743,7 +1720,7 @@ tr.mz-carttable-item-shipping-info{
                 box-sizing: border-box;
                 .mz-popover-message{
                     width: 100%;
-                    font-family: MontserratRegular;
+                    font-family: @fontFamily;
                     margin-bottom: 5px;
                     .mz-validationmessage{
                         margin:0px;
@@ -1752,15 +1729,14 @@ tr.mz-carttable-item-shipping-info{
                 .login-popover-title-chkout{
                     min-height: auto;
                     h2{
-                        color: #093863;
+                        color: @textHeaderColor;
                         margin: 0px auto 10px;
-                        font-family: ArvoRegular;
-                        font-weight: normal;
+                        font-family: @fontGTWalsheimBold;
                         text-transform: uppercase;
                         font-size: 1.5em;
                     }
                     small{
-                        font-family: MonstserratLight;
+                        font-family: @fontGTWalsheimLight;
                         font-size: 0.8rem !important;
                         margin-bottom: 20px;
                         display: block;
@@ -1777,14 +1753,14 @@ tr.mz-carttable-item-shipping-info{
                 #continue-as-guest-btn{
                     width: 100%;
                     box-sizing: border-box;
-                    border:1px solid #14b4a0;
+                    border: 1px solid @primaryCTA;
                     text-transform: uppercase;
                     padding:16px;
                     font-size: larger;
                 }
                 #continue-as-guest-btn:hover{
-                    border-color: #0b2f60;
-                    color: #0b2f60;
+                    border-color: @primaryCTAhover;
+                    color: @primaryCTAhover;
                 }
                 .mz-popover-action.chkout-login-action{
                     .mz-button{
@@ -1802,7 +1778,7 @@ tr.mz-carttable-item-shipping-info{
                         padding: 17px 0px;
                         text-align: center;
                         font-size: 15px;
-                        font-family: MonstserratLight;
+                        font-family: @fontGTWalsheimLight;
                         color: #a7a9ab;
                     }
                 }
@@ -1814,8 +1790,8 @@ tr.mz-carttable-item-shipping-info{
             padding-bottom: 5px;
             margin-top: -5px;
             a{
-                color: #093863;
-                font-family: MontserratRegular;
+                color: @textColor;
+                font-family: @fontFamily;
             }
         }
         .mz-forgot-password{
@@ -1865,7 +1841,6 @@ tr.mz-carttable-item-shipping-info{
                         min-height: inherit;
                         h2{
                             font-size: 16px;
-                            font-weight: 600;
                             margin-bottom: 7px;
                         }
                         small{
@@ -1942,7 +1917,6 @@ tr.mz-carttable-item-shipping-info{
                     .login-popover-title-chkout{
                         h2{
                             font-size: 15px;
-                            font-weight: 600;
                             margin-bottom: 5px;
                         }
                         small{
@@ -1987,19 +1961,19 @@ tr.mz-carttable-item-shipping-info{
         position: relative;
         text-align: center;
         p {
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             margin: 0 0;
         }
         button {
-            font-family: MonstserratLight;
-            background-color: #093863;
+            font-family: @fontGTWalsheimLight;
+            background-color: @primaryCTA;
             color: white;
             border: 0px;
             padding: 13px 38px;
             border-radius: 5px;
             margin: 30px 5px 5px 5px;
             &:hover {
-                background-color: #00b09b;
+                background-color: @primaryCTAhover;
             }
         }
 }
@@ -2011,10 +1985,9 @@ tr.mz-carttable-item-shipping-info{
 /*-----------------------you may like section css-------------------*/
 #mz-drop-zone-cart-theme-slider h2 {
     text-align: center;
-    color: #0d3762;
-    font-family: ArvoRegular;
+    color: @textColor;
+    font-family: @fontGTWalsheimBold;
     font-size: 1.6em;
-    font-weight: normal;
     margin-bottom: 0;
     text-transform: uppercase;
 }
