@@ -15,9 +15,6 @@
                      <div class="quick-view">  
                         <a href="javascript:void(0)" data-pro-id="{{ productdetails.productCode }}">QUICK VIEW</a>
                      </div>
-                     <div class="compare-btn">  
-                        <a href="javascript:void(0)" data-pro-id="{{ productdetails.productCode }}">ADD TO COMPARE</a>
-                     </div>
                   </div>
                   <div class="mz-productlisting-info">
                      <div class="color-swatch">

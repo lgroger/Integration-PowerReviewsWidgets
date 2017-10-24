@@ -98,132 +98,9 @@
             "collapsed": false,
             "items": [
                 {
-                    "xtype": "mz-input-checkbox",
-                    "name": "isEnableGuidedSearch",
-                    "fieldLabel": "Check to Enable Guided Search feature for this site"
-                },
-                {
                     "xtype": "mz-input-text",
                     "name": "allProductsCategoryCode",
                     "fieldLabel": "Category Id for Party Supplies"
-                },
-                {
-                    "xtype": "colorfield",
-                    "name" : "guidedSearchFloatingButtonColor",
-                    "fieldLabel" : "Button Text Color"
-                },
-                {
-                    "xtype": "colorfield",
-                    "name" : "guidedSearchFloatingButtonHBg",
-                    "fieldLabel" : "Button Hover Background Color"
-                },
-                {
-                    "xtype": "colorfield",
-                    "name" : "guidedSearchFloatingButtonBg",
-                    "fieldLabel" : "Button Background Color"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "name" : "guidedSearchFloatingButtonText",
-                    "fieldLabel" : "Button Text"
-                },
-                {
-                    "xtype": "panel",
-                    "title": "First Option Details",
-                    "collapsed": false,
-                    "flex": "1",
-                    "items": [
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty1Labelq",
-                            "fieldLabel": "Property label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty1Label",
-                            "fieldLabel": "Selected label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty1Labelopt",
-                            "fieldLabel": "Option label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty1",
-                            "fieldLabel": "Paste your first guided property"
-                        },
-                        {
-                            "height": 100,
-                            "width": "100%",
-                            "mode": "json",
-                            "xtype": "mz-input-code",
-                            "name": "guidedSearchProperty1KeyValues",
-                            "fieldLabel": "Key Value JSON Structure"
-                        }
-                    ]
-                },
-                {
-                    "xtype": "panel",
-                    "title": "Second Option Details",
-                    "collapsed": false,
-                    "flex": "1",
-                    "items": [
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty2Labelq",
-                            "fieldLabel": "Property label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty2Label",
-                            "fieldLabel": "Selected label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty2Labelopt",
-                            "fieldLabel": "Option label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty2",
-                            "fieldLabel": "Paste your first guided property"
-                        },
-                        {
-                            "height": 100,
-                            "width": "100%",
-                            "mode": "json",
-                            "xtype": "mz-input-code",
-                            "name": "guidedSearchProperty2KeyValues",
-                            "fieldLabel": "Key Value JSON Structure"
-                        }
-                    ]
-                },
-                {
-                    "xtype": "panel",
-                    "title": "Third Option Details",
-                    "collapsed": false,
-                    "flex": "1",
-                    "items": [
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty3Labelq",
-                            "fieldLabel": "Paste your first guided property label"
-                        },
-                        {
-                            "xtype": "mz-input-text",
-                            "name": "guidedSearchProperty3",
-                            "fieldLabel": "Paste your first guided property"
-                        },
-                        {
-                            "height": 100,
-                            "width": "100%",
-                            "mode": "json",
-                            "xtype": "mz-input-code",
-                            "name": "guidedSearchProperty3KeyValues",
-                            "fieldLabel": "Key Value JSON Structure"
-                        }
-                    ]
                 }
             ]
         },
@@ -558,31 +435,6 @@
                         "type": "Taco.store.Categories"
                     }
 
-                }
-            ]
-        },
-        {
-            "fieldLabel":"Categories to Compare Product",
-            "xtype": "panel",
-            "title": "Compare Product",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype":"checkbox",
-                    "name":"compareProductFlag",
-                    "width": 500,
-                    "fieldLabel":"Show/Hide Compare Feature"
-                },
-                {
-                    "xtype":"boxselect",
-                    "name":"compareCategoriesList",
-                    "width": 500,
-                    "displayField": "name",
-                    "valueField": "id",
-                    "queryMode": "local",
-                    "store": {
-                        "type": "Taco.store.Categories"
-                    }
                 }
             ]
         },
