@@ -1,33 +1,4 @@
-{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
-    {% with isguidedsearch.length as isGuidedSearchURL %}
-        {% if isGuidedSearchURL  == 2 %}
-        <!-- default paginations -->
-            <span class="mz-pagingcontrols-pagestate-label">
-                {% if model.totalCount %}
-                {% if model.totalCount != 1 %}
-                {{ labels.pageStatePlural|string_format(model.firstIndex,model.lastIndex,model.totalCount) }}
-                {% else %}
-                {{ labels.pageStateSingular }}
-                {% endif %}
-                {% endif %}
-            </span>
-            <label class="mz-pagingcontrols-pagesize-label">
-              <span class="mz-paging-title">{{ labels.show }} </span>
-              <select data-mz-value="pageSize" class="mz-pagingcontrols-pagesize-dropdown" autocomplete="off">
-                {% block page-sizes %}
-                  {% for size in themeSettings.pageSizeOptions %}
-                    {% comment %}
-                    {% if forloop.last %}
-                      <option data-mz-url="{% make_url "paging" model with pageSize=size page=1 %}&isguidedsearch=1" {% if model.pageSize == size %}selected="selected"{% endif %} value="{{ size }}">View all</option>
-                    {% else %}
-                    {% endcomment %}
-                      <option data-mz-url="{% make_url "paging" model with pageSize=size page=1 %}&isguidedsearch=1" {% if model.pageSize == size %}selected="selected"{% endif %} value="{{ size }}">{{ size }} per page</option>
-                    {% comment %}{% endif %}{% endcomment %}
-                  {% endfor %}
-                {% endblock page-sizes %}
-              </select>
-            </label>
-        {% else %}
+
             <span class="mz-pagingcontrols-pagestate-label">
                 {% if model.totalCount %}
                 {% if model.totalCount != 1 %}
@@ -53,6 +24,3 @@
                 {% endblock page-sizes %}
               </select>
             </label>
-        {% endif %}
-    {% endwith %}
-{% endwith %}

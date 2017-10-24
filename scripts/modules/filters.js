@@ -180,7 +180,6 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
             var mzShouldBeFixed = mzScrollTop > mzFilterBarY;
             if (mzShouldBeFixed && !mzFilterBarFixed) {
                 $('.mz-l-paginatedlist-header').addClass("mz-l-paginatedlist-header-fixed");
-                //$('.compare-product-container').addClass('fixed');
                 $('#selected-filters-mobile').show();
                 $('#selected-filters-mobile-static').hide();
                 mzFilterBarFixed = true;
@@ -189,7 +188,6 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
             {
                 $('.mz-l-paginatedlist-header')
                     .removeClass("mz-l-paginatedlist-header-fixed");
-                //$('.compare-product-container').removeClass('fixed');
                 $('#selected-filters-mobile').hide();
                 $('#selected-filters-mobile-static').show();
                 mzFilterBarFixed = false;

@@ -14,7 +14,15 @@ var pageContext = require.mozuData('pagecontext');
                 f.onSuccess(function(values, followUpUrl) {
                     // Return false to prevent the submission handler continuing with its own processing
                     if($('.compare-full-error-container').length === 0){
-                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+                        //add overlay, close overlay & remove on click of "OK" button
+                        var closeBtn = $("<button />").text("OK").attr("id","session-btn-rd").click(function(){
+                            $(this).parent().parent().fadeOut(500,function(){
+                                $(this).remove();
+                            });
+                        });
+                        var popupOuter = $("<div />").attr("class","compare-full-error-container");
+                        var popupInner = $("<div />").attr("class","compare-error-container");
+                    	$(document.body).append($(popupOuter).append($(popupInner).append("<div>Thanks for subscribing</div>").append(closeBtn)));
                     }
                     $email.val("");
                     return false;
@@ -615,7 +623,7 @@ if(pageContext.pageType==="confirmation"){
          }
 
         window.isBreadcrumbLoaded=false;
-        console.log("global");
+        //console.log("global");
         if(require.mozuData("pagecontext").cmsContext.template.path!=="checkout"){
             setInterval(function(){
                 if(require.mozuData("pagecontext").url.toLowerCase()!==(window.location.origin+window.location.pathname+window.location.search).toLowerCase() && (!window.isBreadcrumbLoaded)){

@@ -168,19 +168,6 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
         $('#mz-quick-view-container').fadeOut(350);
         $('#mz-quick-view-container').empty();
     };
-
-      
-       	$('.guided-popup').on("click",function(){
-       		$('#guided-overlay').show();
-       	});
-       	$('#guided-close').on("click",function(){
-       		$('#guided-overlay').hide();
-       	});
-       	$('.guided-btn').on("click",function(){
-       		var guidedcat = $(".event-theme").val();
-       		setCookie("guidedcategory",guidedcat,1);
-       		window.location.href="/guided-search";  
-       	}); 
 		     
          $(document).on("click","#det-btn",function(){           	
         	$('#tab1').prop('checked', true); 

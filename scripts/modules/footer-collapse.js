@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/api' , 'modules/jquery.slicknav', 'vendor/testimonial/jquery.flexslider-min','vendor/testimonial/masonry.pkgd.min'], function ($, api) {
+define(['modules/jquery-mozu'], function ($) {
 
 	$(document).ready(function(){
 	$('.ech-shi-footer-links ul li ul li:first-child').click(function(){
