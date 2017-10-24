@@ -64,6 +64,10 @@ var google_tag_params = {
 		ecomm_pagetype: 'category'
 	{% endif %}
 
+	{% if pageContext.pageType == "search" %}
+		ecomm_pagetype: 'search'
+	{% endif %}
+
 	{% if  pageContext.pageType == "web_page" %}
 		{% if pageContext.title == "Home" or pageContext.title == "Home Page" or pageContext.title == "home-page" or pageContext.title == "Event Supplies" %} 
 			ecomm_pagetype: 'home'
