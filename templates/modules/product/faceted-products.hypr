@@ -26,33 +26,7 @@
 {% endcomment %}
 
 {% preload_json model.facets "facets" %}
-{% comment %}
-<!-- element structure for search result category navigation -->
-<div class="bottom-category-list-container"
-    {% if isGuidedSearchURL %}
-        {% if isGuidedSearchURL==2 %}style="display:block;"{% else %}style="display:none;"{% endif %}
-    {% else %}
-        {% if isGuidedSearchURL==2 %}style="display:block;"{% else %}style="display:none;"{% endif %}
-    {% endif %}>
-    <p class="guided-search-t">Search result for your Party</p> 
-    <div class="category-list"> 
-        <div class="button_catlist button-search-slider-loop">
-            <div class="owl-carousel-category-list">
-                {% for facet in model.facets %}
-                    {% if facet.field|lower == themeSettings.productAttributes.guidedSearchNavField %}
-                    {% for value in facet.values %}
-                        
-                            <div class="item">
-                                <a href="{% make_url "facet" value %}{% if isGuidedSearchURL == 2 %}&isguidedsearch=1"{% endif %} data-mz-action="drillDown"  data-mz-facet-value="{{ value.value }}" data-mz-facet="{{ facet.field }}" class="btn_search_loop {% if value.isApplied %}active_btn{% endif %}">{{value.label|safe}} ({{value.count}})</a>
-                            </div>
-                    {% endfor %}
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-</div>       
-{% endcomment %}
+
 <div class="mz-filter-options">
             {% if model.facets %}
             <div data-mz-facets class="mz-l-sidebar">
@@ -63,7 +37,7 @@
             {% endif %}
         </div>
 <div class="mz-l-paginatedlist">
-    <div class="mz-l-paginatedlist-header desktop" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
+    <div class="mz-l-paginatedlist-header desktop">
     
     {% comment %}
         <div class="mz-filters-bar">
@@ -82,31 +56,10 @@
             {% if model.facets %}
                 {% include "modules/product/filter-selected" %}
             {% endif %}
-            {% if themeSettings.compareProductFlag and themeSettings.compareCategoriesList|length > 0 %}
-                {% if pageContext.pageType == "search" %}
-                    <div class="filter-compare-btn"><button>COMPARE <i class="fa fa-caret-up" aria-hidden="true"></i></button></div>
-                {% else %}
-                    {% for categoryId in themeSettings.compareCategoriesList %}
-                        {% if pageContext.categoryId == categoryId %}
-                    <div class="filter-compare-btn"><button>COMPARE <i class="fa fa-caret-up" aria-hidden="true"></i></button></div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-             {% endif %}   
         </div>
         {% endcomment %}
-
-
-        <div class="compare-product-container">
-            <div class="compare-product" id="mz-cp-01"></div>
-            <div class="compare-product" id="mz-cp-02"></div>
-            <div class="compare-product" id="mz-cp-03"></div>
-            <div class="btn-contianer">
-                <button class="compare-btn" id="mz-cmp-btn">COMPARE</button>
-            </div>
-        </div>
     </div>
-    <div class="mz-page-filters-controls desktop" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
+    <div class="mz-page-filters-controls desktop">
         <div class="mz-page-count-info">
             <span class="mz-pagingcontrols-pagestate-label pull-left">
                 {% if model.totalCount %}
@@ -143,7 +96,7 @@
         </div>
         <div class="clear"></div>
     </div>
-    {% include "modules/product/mobile-filters" with isGuidedSearchURL=isGuidedSearchURL %}
+    {% include "modules/product/mobile-filters" %}
     <div data-mz-productlist class="mz-l-paginatedlist-list">
         {% include "modules/product/product-list-tiled" %}
     </div>

@@ -22,14 +22,10 @@
 
 {% require_script "pages/search" %}
 
-{% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
-    {% with isguidedsearch|length as isGuidedSearchURL %}
         <div {% if pageContext.categoryId %}data-mz-category="{{ pageContext.categoryId }}" {% endif %}data-mz-search="{{ pageContext.search.query }}" class="mz-l-container mz-search-result">
-        	{% include "pages/search-interior"  with isGuidedSearchURL=isGuidedSearchURL %}
+        	{% include "pages/search-interior" %}
         </div>
-    {% endwith %}
-{% endwith %}
+
 {% require_script "modules/filters" %}
 {% require_script "modules/quick-view" %}
-{% require_script "pages/compare-list" %}
 {% endblock body-content %}

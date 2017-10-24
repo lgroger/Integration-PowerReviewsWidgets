@@ -211,9 +211,6 @@
                   {% require_script "modules/my-menu" %}
                   {% require_script "modules/floating-header" %}
                   {% require_script "modules/footer-collapse" %}
-                 <!-- requiring script file for guided search -->
-                  {% require_script "pages/guided-search" %}
-                  <!-- included script file for guided search -->
               {% endif %}
               {% require_script "pages/global" %}
               {% require_script "modules/login-links" %}
@@ -260,9 +257,7 @@
               });
         });
            </script>
-      <!--script>
-      $('#menu').slicknav();
-      </script-->
+
       <div id="popup1" class="overlay">
           <div class="popups">
               <div>
@@ -506,66 +501,6 @@
   {% endif %}
   {{themeSettings.allThirdPartyScriptTags|safe}}
 
-      <!-- guided search popup view container -->
-  {% if pagecontext.pageType != "cart" and pagecontext.pageType != "checkout" %}
-      {% with pageContext.url|split('isguidedsearch=1') as isguidedsearch %}
-          {% with isguidedsearch|length as isGuidedSearchURL %}
-                  
-                    
-
-                  <div class="guided-search-div">
-                  <a style="display:none;" href="javascript:void(0)" class="guided-close fa fa-times-circle"></a>
-                   
-                   <div class="guided-circ">
-                  <a href="javascript:void(0)" class="guided-search-button-extra"
-                      {% if isGuidedSearchURL == 2 %}
-                          style="display:none;"
-                      {% else %}
-                          {% if themeSettings.isEnableGuidedSearch %}style="display:block;"{% else %}style="display:none;"{% endif %}
-                      {% endif %}>
-
-                      <div class="guided_icon_inner">
-                          
-                          <span>{{themeSettings.guidedSearchFloatingButtonText}}</span>
-                          <i class="fa fa-arrow-circle-up" aria-hidden="true"></i>
-                      </div>
-                  </a>
-    </div>
-
-                <div class="guided-tri">
-                  <a href="javascript:void(0)" class="guided-search-button" data-mz-action="open-guided-search-popover"
-                      {% if isGuidedSearchURL == 2 %}
-                          style="display:none;" 
-                      {% else %}
-                          {% if themeSettings.isEnableGuidedSearch %}style="display:block;"{% else %}style="display:none;"{% endif %}
-                      {% endif %}>
-
-                      <div class="guided_icon_inner">
-                          <!-- <i class="fa fa-2x fa-plus" aria-hidden="true"></i> -->
-                          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Isolation_Mode" x="0px" y="0px" viewBox="-481.9 485.9 27.3 31.9" style="enable-background:new -481.9 485.9 27.3 31.9;" xml:space="preserve">
-                          <g>
-                              <g>
-                                  <path d="M-471.3,516.5C-471.4,516.5-471.4,516.5-471.3,516.5c-0.6,0-1.3-0.4-1.7-0.9c-0.3-0.3-0.5-0.7-0.6-1.1    c-0.1-0.5,0-1,0.3-1.4c0.3-0.3,0.6-0.4,0.9-0.4c-0.4-0.9-1.4-1.9-2.6-3.1c-2.6-2.6-6.2-6.1-5.7-11.4c0.6-6.5,6.6-11.4,13.5-10.9    l0,0c7.2,0.6,12,6.2,11.5,13.5c-0.5,6-7.9,11.1-14.4,13.8c0.2,0.6,0.1,1.2-0.3,1.5C-470.7,516.3-471,516.5-471.3,516.5z     M-468.3,488.9c-5.6,0-10.3,4-10.7,9.4c-0.4,4.5,2.7,7.6,5.2,10.1c1.6,1.6,3,3,3.2,4.5c6.4-2.7,12.7-7.5,13.2-12.3    c0.5-6.3-3.7-11.2-9.9-11.7l0,0C-467.7,489-468,488.9-468.3,488.9z" style="fill:#fff;"/>
-                              </g>
-                              <g>
-                                  <path d="M-460.1,494.9l-1.5,1.4l0.4,2.1c0.1,0.4-0.2,0.6-0.5,0.4l-1.8-1l-1.8,1c-0.4,0.3-0.6,0-0.5-0.4l0.4-2.1l-1.5-1.4    c-0.3-0.3-0.3-0.6,0.2-0.7l2.1-0.3l0.9-1.9c0.2-0.4,0.5-0.4,0.7,0l0.9,1.9l2.1,0.3C-459.9,494.3-459.7,494.6-460.1,494.9z"  style="fill:#fff;"/>
-                              </g>
-                          </g>
-                          </svg>
-                          <br/>
-                          <span>{{themeSettings.guidedSearchFloatingButtonText}}</span>
-                      </div>
-                  </a>
-   </div>
-
-              </div>
-
-                  <div class="guided-search-container" data-container="guided-search" style="display:none;"></div>
-
-          {% endwith %}
-      {% endwith %}
-
-  {% endif %}
       {% include "modules/common/google-dynamic-remarketing-tags" %}
       </body>
 

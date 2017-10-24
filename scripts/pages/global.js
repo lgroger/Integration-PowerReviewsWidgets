@@ -623,7 +623,7 @@ if(pageContext.pageType==="confirmation"){
          }
 
         window.isBreadcrumbLoaded=false;
-        console.log("global");
+        //console.log("global");
         if(require.mozuData("pagecontext").cmsContext.template.path!=="checkout"){
             setInterval(function(){
                 if(require.mozuData("pagecontext").url.toLowerCase()!==(window.location.origin+window.location.pathname+window.location.search).toLowerCase() && (!window.isBreadcrumbLoaded)){

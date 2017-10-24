@@ -64,7 +64,7 @@
     </div>
 
 <div class="mz-l-paginatedlist">
-    <div class="mz-page-filters-controls desktop" {% if isGuidedSearchURL == 2 %}style="display:none;"{% endif %}>
+    <div class="mz-page-filters-controls desktop">
         <div class="mz-page-count-info">
             <span class="mz-pagingcontrols-pagestate-label pull-left">
                 {% if model.totalCount %}
@@ -95,7 +95,7 @@
         </div>
         <div class="clear"></div>
     </div>
-    {% include "modules/product/mobile-filters" with isGuidedSearchURL=isGuidedSearchURL %}
+    {% include "modules/product/mobile-filters" %}
     <div data-mz-productlist class="mz-l-paginatedlist-list">
         {% include "modules/product/product-list-tiled" %}
     </div>

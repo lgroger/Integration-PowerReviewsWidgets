@@ -6,7 +6,7 @@
 
 /* Cycle2 core engine */
 
-define(["jquery"], function ($) {
+define(["modules/jquery-mozu"], function ($) {
 (function($) {
 "use strict";
 
@@ -606,8 +606,10 @@ $.fn.cycle.API = {
 // default logger
 $.fn.cycle.log = function log() {
     /*global console:true */
+	/* too noisy...
     if (window.console && console.log)
         console.log('[cycle2] ' + Array.prototype.join.call(arguments, ' ') );
+	*/
 };
 
 $.fn.cycle.version = function() { return 'Cycle2: ' + version; };
