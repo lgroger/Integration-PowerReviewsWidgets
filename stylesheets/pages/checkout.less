@@ -59,21 +59,26 @@ ul.coupon-list-custom{
 
 #step-shipping-method{
     .drop-ship-items{
-        background: #093863;
+        background: #fff;
+        border: 2px solid @secondaryPink;
         border-radius: 5px;
         padding: 10px;
-        margin:0 10px;
+        margin: 20px 10px 0;
         max-height: 250px;
         overflow-y: auto;
-        color: #fff;
+        color: @primaryBlue;
         position: relative;
-        float: right;
-        width: 33%;
+        float: none;
+        width: auto;
         font-family: @fontFamily;
         font-size: 12px;
+        & strong {
+            color: @secondaryBlue;
+            font-weight: normal;
+        }
         h4{
             margin :10px 0;
-            color: #32af9b;
+            color: @textColor;
         }
         ul{
             padding-left: 25px;
@@ -96,31 +101,34 @@ ul.coupon-list-custom{
         }
     }
     .mz-l-formfieldgroup-cell{
-        float: left;
-        width: 60%;
+        float: none;
+        width: 100%;
         label{
             display: inline-block;
             margin-right: 30px;
-            min-width: 50%;
-            max-width: 55%;
+            width: 100%;
+            @media (min-width: 768px) {
+                width: 50%;
+            }
         }
     }
 }
 .mz-formstep-header {
     &.mz-checkoutform-header {
-        background-color: #666666;
+        background-color: @textColor;
         color: #ffffff;
         padding-left: 10px;
         > a {
             color: #ffffff;
             padding-right: 10px;
+            font-size: 11px;
         }
     }
 }
 .delivery-date{
     font-family: @fontFamily;
     font-size: 15px;
-    color: #666666;
+    color: @secondaryBlue;
     display: inline-block;
     vertical-align: top;
     .mobile-caption{
@@ -129,10 +137,13 @@ ul.coupon-list-custom{
 }
 .delivery-title{
     margin: 0 0 10px;
-    color: #093863;
-    padding-left: 57%;
+    color: @secondaryBlue;
+    padding-left: 55%;
     font-size: 15px;
     font-family: @fontFamily;
+    @media (min-width: 992px) {
+        padding-left: 56%;
+    }
 }
 
 .mz-formstep-body {
@@ -155,7 +166,11 @@ ul.coupon-list-custom{
     .mz-payment-select-saved-payments {
         width: 260px;
         margin-top: @gutter/4;
+        & option {
+            background-color: @primaryBlue;
+        }
     }
+
 
     .mz-paymenttypes {
         .mz-paymenttype {
@@ -223,7 +238,7 @@ ul.coupon-list-custom{
         content: "\f111";
     }
     .check-acc-box:checked+.acc-pre-che{
-        color:#666;
+        color: @textColor;
     }
     .acc-pre-che:before {
         height:14px;
@@ -233,10 +248,10 @@ ul.coupon-list-custom{
 }
 .mz-checkout{
     .mz-l-formfieldgroup-cell .radio-acc.acc-pref-main-sec .check-acc-box:checked+.acc-pre-che{
-        color:#093863;
+        color: @primaryBlue;
     }
     .acc-pref-main-sec .check-acc-box:checked+.acc-pre-che{
-        color:#666;
+        color: @textColor;
     }
     .mz-breadcrumbs{
         padding: 0px;
@@ -252,6 +267,9 @@ ul.coupon-list-custom{
     }
     .checkout_main_container{
         padding:0px 25px 0px;
+        @media (min-width: 1025px) {
+            padding: 0;
+        }
     }
     .mz-pagetitle{
         color: @textHeaderColor;
@@ -266,7 +284,7 @@ ul.coupon-list-custom{
             right: 0;
             top:0;
             label{
-                color:#666;
+                color: @textColor;
                 font-size: 16px;
                 font-family: @fontFamily;
                 margin-right: 15px;
@@ -274,7 +292,7 @@ ul.coupon-list-custom{
                 cursor:default;
             }
             strong{
-                font-weight: 400;
+                font-weight: normal;
             }
         }
     }
@@ -290,6 +308,16 @@ ul.coupon-list-custom{
     width: 74.5%;
     height: auto;
     display: inline-block;
+    @media (min-width: 768px) {
+        top: 10px;
+    }
+    @media (min-width: 1025px) {
+        top: 15px;
+        width: 56%;
+    }
+    @media (min-width: 1025px) {
+        width: 64%;
+    }
     & .mz-utilitynav-item {
         padding: 9px 15px 10px 30px;
     }
@@ -339,7 +367,7 @@ ul.coupon-list-custom{
         font-family: @fontGTWalsheimBold;
         text-transform: uppercase;
         font-size: 18px;
-        color: #000;
+        color: @textHeaderColor;
     }
     .mz-formstep-header.mz-checkoutform-header>a {
         color: @linkColor;
@@ -391,7 +419,7 @@ ul.coupon-list-custom{
                     max-height: 70px;
                     padding: 0;
                     margin: 5% auto 0;
-                    font-size: 11px;
+                    font-size: 10px;
                 }
             }
         }
@@ -411,7 +439,7 @@ ul.coupon-list-custom{
             margin-top: 10px;
             p{
                 margin: 5px 0px 0px;
-                color: #666;
+                color: @textColor;
             }
             .sd_label {
                 font-size: 12px;
@@ -433,8 +461,8 @@ ul.coupon-list-custom{
         }
         td.mz-ordersummary-item-availability {
             font-family: @fontFamily;
-            font-size: 11px;
-            color: @dark-grey;
+            font-size: 10px;
+            color: #cecaca;
             padding:0px 5px 10px;
             position: relative;
             text-align:left !important;
@@ -462,7 +490,7 @@ ul.coupon-list-custom{
     }
     .mz-ordersummary-checkout{
         .checkout_ostable{
-            border:1px solid #ddd;
+            border:1px solid @secondaryWhite;
             padding:0 6px;
             margin-bottom: 15px;
             .mz-ordersummary td{
@@ -485,7 +513,7 @@ ul.coupon-list-custom{
             }
         }
         .checkout_ostable_total{
-            border:1px solid #ddd;
+            border:1px solid @secondaryWhite;
             border-bottom: 0px;
             background: @secondaryWhite;
             padding-top:10px;
@@ -504,7 +532,7 @@ ul.coupon-list-custom{
     tr td:first-child{
         text-align:left;
         font-size: 15px;
-        color: #666;
+        color: @textColor;
         text-transform: uppercase;
         font-family: @fontFamily;
     }
@@ -512,12 +540,12 @@ ul.coupon-list-custom{
         font-family: @fontGTWalsheimBold;
         text-align: right;
         font-size: 18px;
-        color: #000;
+        color: @textColor;
         font-weight:normal;
     }
     tr.mz-ordersummary-coupanfield td{
         text-align:left;
-        color: #666;
+        color: @textColor;
         padding:0px 5px;
         .mz-checkoutform-couponcode{
             padding:15px 10px 20px;
@@ -576,14 +604,15 @@ ul.coupon-list-custom{
     } 
     .mz-ordersummary-grandtotal {
         border-top:0px;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid @secondaryWhite;
         td:first-child {
             font-size: 18px;
             line-height:50px;
+            color: @textHeaderColor;
         }
         td:last-child .mz-ordersummary-totalvalue{
             font-size: 22px;
-            color: #093863;
+            color: @textHeaderColor;
             line-height: 40px;
             font-weight:normal;
         }
@@ -656,7 +685,7 @@ ul.coupon-list-custom{
                 border-top:1px solid #eee;
                 border-bottom:1px solid #eee;
                 text-align: left !important;
-                color: #666 !important;
+                color: @textColor !important;
             }
         }
         .mz-l-formfieldgroup-cell{
@@ -670,9 +699,10 @@ ul.coupon-list-custom{
             padding: 0 0 0px;
             list-style: none;
             li{
-                background: #fff9f2;
+                background: @secondaryLightPink;
+                opacity: .7;
                 padding: 10px 30px 10px 15px;
-                border: 1px dotted #ff8300;
+                border: 1px dotted @secondaryPink;
                 margin: 0px 0px 10px;
                 font-size: 14px;
                 font-family: @fontFamily;
@@ -809,12 +839,6 @@ ul.coupon-list-custom{
             color: @linkHoverColor;
         }
     }
-    .mz-selected-address{
-        font-size: 16px;
-        color: #444;
-        font-family: @fontFamily;
-        padding: 15px 2% 25px;
-    }
 }
 .checkout_cols label.steps_subhead{
     cursor:default;
@@ -837,7 +861,7 @@ ul.coupon-list-custom{
             text-align:left; 
             font-family: @fontFamily;
             font-size: 15px;
-            color: #666;
+            color: @textColor;
             margin: 0px;
             padding: 0px 0px 0px;
         }
@@ -852,7 +876,7 @@ ul.coupon-list-custom{
 span.contact-text{
     font-family: @fontFamily;
     font-size: 13px; 
-    color: #666;
+    color: #aaa;
     margin-top: 8px;
     float: left;
     text-align: left;
@@ -903,7 +927,7 @@ span.contact-text{
     padding-right: 30px;
 }
 .checkout_cols .mz-formstep-body .mz-button{
-    background:#0971ce;
+    background: @primaryCTA;
     color:#fff;
     font-size:14px;
     text-transform:uppercase;
@@ -916,7 +940,7 @@ span.contact-text{
     font-family: @fontFamily;
 }
 .checkout_cols .mz-formstep-body .mz-button:hover{
-    background: #093863;
+    background: rgba(204, 32, 184, 0.7);
 }
 .checkout_cols .is-required {
     color: #093863;
@@ -948,7 +972,7 @@ span.contact-text{
 }
 .checkout_cols .mz-formstep-summary{
     font-size:14px;
-    color:#444;
+    color: @textColor;
     font-family:@fontFamily;
     padding:0px 2%;
     .mz-checkout-current-payment{
@@ -980,7 +1004,7 @@ span.contact-text{
     padding: 0px;
     font-family: @fontFamily;
     .mz-checkoutform-title{
-        color:#666;
+        color: @textColor;
         margin-bottom: 15px;
         margin-top: -5px;
     }
@@ -991,7 +1015,7 @@ span.contact-text{
             border-collapse: inherit;
         }
         th{
-            color: #666;
+            color: @textColor;
             background-color: #fff;
             text-align:center;
             padding: 15px 5px;
@@ -1100,7 +1124,7 @@ span.contact-text{
         border-radius: 5px;
         outline: none;
         font-family: @fontFamily;
-        color: #666;
+        color: @textColor;
         box-sizing: border-box;
     }
     .mz-button{
@@ -1179,7 +1203,7 @@ span.contact-text{
             margin: 0 2%;
             font-family: @fontFamily;
             font-size: 15px;
-            color: #666;
+            color: @textColor;
         }
     }
     .mz-checkoutform-active{
@@ -1299,12 +1323,8 @@ span.contact-text{
     }
     .mz-addresssummary{
         font-size: 14px;
-        color: #444;
+        color: @textColor;
         font-family: @fontFamily;
-        .address_name{
-            font-size: 16px;
-            color: @primaryDarkBlue;
-        }
     }
     .mz-formstep-fields .mz-addresssummary{
         padding: 0px 2%;
@@ -1370,7 +1390,7 @@ span.contact-text{
         margin-left: 2%;
         margin-right: 2%;
         font-family: @fontFamily;
-        color: #666;
+        color: @textColor;
         font-size: 14px;
         text-transform: capitalize;
         input[type="checkbox"]{
@@ -1468,7 +1488,7 @@ span.contact-text{
                     font-size: 15px;
                     font-family: @fontFamily;
                     text-transform: capitalize;
-                    color: #666;
+                    color: @textColor;
                     width:38%;
                     display: inline-block;
                     vertical-align: middle;
@@ -1576,7 +1596,7 @@ span.contact-text{
       margin: 0;
         .mz-payment-purchase-order-payment-terms{
             font-size: 18px;
-            color: #000;
+            color: @textColor;
         }
     .po-form-element{
         margin: 0;
@@ -1607,14 +1627,14 @@ span.contact-text{
                 width: 44%;
                 float: left;
                 font: 18px @fontFamily;
-                color: #666;
+                color: @textColor;
             }
             .mz-l-formfieldgroup-cell:nth-child(even){
                 width: 49%;
                 float: right;
                 padding-right: 6%;
                 font: 18px @fontFamily;
-                color: #000;
+                color: @textColor;
                 text-align: right;
             }
         }
@@ -1626,19 +1646,6 @@ span.contact-text{
             font-size: 14px;
         }
     }
-}
-@media only screen and (max-width:1250px){
-    #step-shipping-method{
-        .drop-ship-items{
-            width: auto;
-            float: none;
-            margin: 20px 10px 0;
-        }
-        .mz-l-formfieldgroup-cell{
-            float: none;
-            width: 100%;
-        }
-    } 
 }
 @media only screen and (max-width:991px){
     .checkout_cols .checkout_col_left{float:none;width:100%;margin-right:0;}
@@ -1696,7 +1703,7 @@ span.contact-text{
     }
     .checkout_coupan{
         border:0px;
-        border-bottom: 1px solid #dddddd;
+        border-bottom: 1px solid @secondaryWhite;
         .mz-l-formfieldgroup-cell{
             width: 100% !important;
         }
@@ -1820,6 +1827,9 @@ span.contact-text{
                     .shipping_edit_address{
                         float: right;
                         margin-right: 0;
+                        & option {
+                            background-color: red !important;
+                        }
                     }
                 }
             }
@@ -1884,9 +1894,6 @@ span.contact-text{
         .mz-formstep-summary{
             font-size: 14px;
             padding: 0px 5%;
-            .address_name{
-                font-size: 16px;
-            }
         }
         .mz-checkoutform-shippingmethod .mz-l-formfieldgroup .mz-l-formfieldgroup-row{
             width: 90%;
@@ -1955,9 +1962,6 @@ span.contact-text{
             .mz-addresssummary{
                 font-size: 14px;
                 padding: 0 2%;
-                .address_name{
-                    font-size: 16px;
-                }
             }
             .mz-formstep-summary .mz-addresssummary{
                 padding: 0 0%;
@@ -2043,7 +2047,7 @@ span.contact-text{
             }
             .checkout_ostable_total{
                 border:0px;
-                border-top: 1px solid #ddd;
+                border-top: 1px solid @secondaryWhite;
                 .mz-ordersummary{
                     tr{
                         td{
@@ -2164,11 +2168,12 @@ span.contact-text{
         }
     }
 }
-@media only screen and (max-width:550px){
+@media only screen and (max-width:767px){
     .delivery-date{
-        margin: 10px 0px;
+        margin: 10px 0 0 30px;
         display: block;
-        font-size: 14px;
+        font-size: 12px;
+        color: @secondaryBlue;
         .mobile-caption{
             display: inline;
         }
@@ -2180,7 +2185,16 @@ span.contact-text{
 /*---------------------------Checkout Header--------------------------*/
 .mz-checkout{
     & .header-block-container {
-        height: 70px;
+        height: inherit;
+        @media (min-width: 768px) {
+            height: 55px;
+        }
+        @media (min-width: 1025px) {
+            height: 80px;
+        }
+        @media (min-width: 1201px) {
+            height: 95px;
+        }
     }
     .header-block.floatheader {
         display: inline-block !important;
@@ -2189,9 +2203,6 @@ span.contact-text{
         height: inherit;
         & > div {
             height: inherit;
-        }
-        &media (min-width: 1025px) {
-            height: 75px;
         }
         .checkout-header-links.ech-shi-tollfree{
             .mz-utilitynav{
@@ -2204,7 +2215,7 @@ span.contact-text{
                     display:inline-block;
                     li a:hover {
                         color: #00b09b !important;
-                        text-decoration:none;
+                        text-decoration: none !important;
                     }
                     .mz-cms-content{
                         padding:0px !important;
@@ -2213,6 +2224,7 @@ span.contact-text{
                         border-right: 0px;
                         a{
                             font-family: @fontFamily;
+                                text-decoration: none !important;
                         }
                     }
                     .mz-utilitynav-item:first-child{
@@ -2229,8 +2241,7 @@ span.contact-text{
 
 .mz-checkout .header-block.floatheader .checkout-header-links.ech-shi-tollfree .mz-utilitynav {
     @media only screen and (max-width: 1024px) {
-        margin-top: 18px;
-        margin-bottom: 0;
+        margin: 0;
     }
     @media only screen and (min-width: 1025px) {
         margin-top: 0;
@@ -2249,7 +2260,7 @@ span.contact-text{
         }
     }
 }
-@media only screen and (max-width: 780px){
+@media only screen and (max-width: 767px){
     .mz-checkout{
         .header-block.floatheader {
             height: auto !important;
@@ -2276,7 +2287,6 @@ span.contact-text{
 @media only screen and (max-width: 767px){
     .mz-checkout{
         .header-block.floatheader {
-            padding-bottom: 5px;
             .mob-logo-sec{
                 width:100% !important;
                 .mob-header-logo{
@@ -2296,7 +2306,7 @@ span.contact-text{
                 width: auto !important;
                 float: none;
                 position: absolute;
-                top: 0;
+                top: 10px;
                 right: 15px;
                 .mz-utilitynav{
                     .mz-utilitynav-list{
