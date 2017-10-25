@@ -168,7 +168,7 @@ a.br-theme-page {
 	margin-bottom: 90px !important;	
 }
 .br-facet-form-header {
-	background-color: @primaryDarkBlue;
+	background-color: @primaryBlue;
 	color: #FFF;
 	padding: 5px 5px 5px 15px;	
 	font-family: @fontFamily;
@@ -334,7 +334,7 @@ a.br-theme-page {
 	box-sizing: border-box;	
 }
 i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
-	color: #fa8125;	
+	color: @secondaryYellow;	
 } 
 .mz-facetingform-valuelabel:before {
 	float: left;
@@ -1622,7 +1622,9 @@ a.br-theme-page:hover {
 
 }
 @media only screen and (max-width:1150px){
-
+	.mz-mobile-filter .mz-filters .mz-filters-btn img{
+        display: none;
+    }
     .megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(4),.megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(5),.megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(3){
         &:hover{
          .main-drop-down{
@@ -4452,7 +4454,8 @@ searchNav .option{
     margin-bottom:0px;
 }
 .mz-mobile-filter .selectric{
-    margin-top:2px;
+    margin: 0;
+    height: inherit;
 }
 .mz-l-paginatedlist-header.desktop .mz-filters-bar{
     width:auto; 
@@ -4616,18 +4619,16 @@ searchNav .option{
 }
 .mz-filters-bar .mz-sort{
         .mz-sort-btn{
-            margin-top: 3px;
+            margin-top: 0;
         }
         .selectric-responsive {
-            width: 88%;
-            margin-top: -2px;
-            margin-left: 30px;
-            text-align: left;
+            width: 100% !important;
+            text-align: center;
         }
         .selectric .label{
-            margin-left: 0px;
+            margin: 0;
             font-size: 17px;
-            line-height: 2.7;
+            line-height: 2.1;
         }
 }
 @media (min-width: 995px){
@@ -4922,11 +4923,11 @@ searchNav .option{
             padding: 0px 6px;
         }
     }
-    .mz-mobile-filter .mz-filters .mz-filters-btn img{
-        display: none;
-    }
     .mz-filters .mz-filters-btn i{
         margin: -2px 16px 0;
+        @media (min-width: 768px) {
+        	margin: 15px 16px;
+        }
     }
     /*
 	commented by asaithambi
@@ -5436,10 +5437,6 @@ searchNav .option{
     .mz-productlist-item{
         padding: 5px;
     }
-    .selectric{
-        border: 1px solid @secondaryWhite !important;
-        background: @secondaryWhite !important; 
-    }
     .display_in_mob{
         display: block;
         text-align: right;
@@ -5456,7 +5453,7 @@ searchNav .option{
     }
 
     .mz-mobile-filter .mz-filter-mobile-options header{
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
     }
     .mz-filter-mobile-options .filter-level-2{
         background-color: #f5f5f5;
@@ -5472,16 +5469,12 @@ searchNav .option{
     .mz-mobile-filter .mz-filter-mobile-options header i:before{
         width: 30px;
         height: 30px;
-        background-color: @primaryBlue;
         padding: 7px;
-        font-size: 18px;
-        color: #fff;
+        font-size: 15px;
+        color: @primaryDarkBlue;
     }
     .hide_in_mobile{ 
         display: none;
-    }
-    .mz-mobile-filter .mz-filters{
-        vertical-align: top;
     }
     .mz-l-container .no-search{
         margin-top: -40px !important;
@@ -5647,6 +5640,12 @@ searchNav .option{
         .ech-shi-bottom-footer ul li{
             border-right:0px !important;
         }
+        .mz-mobile-filter .mz-filters{
+        vertical-align: top;
+        width: 50%;
+        border: none;
+        height: 35px;
+    }
 }  
 @media only screen and (max-width:700px){
     .promo-slot-1 { 
@@ -5756,8 +5755,8 @@ searchNav .option{
         }
         .mz-mobile-filter .mz-sort .mz-sort-btn{
             width:70% !important;
-            background-color:#DCEAF6;
-            border:0px;
+            background-color:@secondaryWhite;
+            border: none;
             -webkit-appearance:none;
         }
         .mz-category-title>.mz-pagetitle{
@@ -6001,7 +6000,7 @@ searchNav .option{
 .selectric .button:after {
   content: " ";
   position: absolute;
-  top: 0;
+  top: 14px;
   right: 0;
   bottom: 0;
   left: 0;
@@ -6012,10 +6011,12 @@ searchNav .option{
   border-top-color: #BBB;
   border-bottom: none;
   border-top-color: @primaryDarkBlue;
- 
+  @media (min-width: 768px) {
+  	top: 0;
+  }
 }
 .mz-l-paginatedlist-header .selectric .button:after{
-     margin-top: 19px;
+     margin-top: 0;
 }
 .selectric-hover .selectric {
   border-color: #C4C4C4;
@@ -6052,6 +6053,7 @@ searchNav .option{
   overflow: hidden;
   width: 0;
   height: 0;
+  box-sizing: border-box;
 }
 .selectric-hide-select select {
   position: absolute;
@@ -6085,12 +6087,13 @@ searchNav .option{
 .selectric-items {
   display: none;
   position: absolute;
-  top: 48px;
-  left: -20px;
+  top: auto;
+  left: auto;
   background: #F8F8F8;
   border: 1px solid #C4C4C4;
   z-index: -1;
   box-shadow: 0 0 10px -6px;
+  width: 100% !important;
   @media (min-width: 768px) {
   	top: 54px;
   	left: 0;
@@ -6107,6 +6110,7 @@ searchNav .option{
 .selectric-above .selectric-items {
   top: auto;
   bottom: 100%;
+  width: 100% !important;
 }
 .selectric-items ul, .selectric-items li {
   list-style: none;
