@@ -3008,7 +3008,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             orderHistory = accountModel.get('orderHistory'),
             returnHistory = accountModel.get('returnHistory');
             var QuoteOrderAttributeId = Hypr.getThemeSetting('QuoteOrderAttributeId');
-             Api.get('orders', {sortBy:"createDate desc",filter:"attributes.id eq "+QuoteOrderAttributeId+" and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending"}).then(function(res){
+             Api.get('orders', {sortBy:"createDate desc",filter:"attributes.value eq true and attributes.name eq tenant~QOFLAG and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending"}).then(function(res){
                 var orderModel = new OrderModel.OrderCollection(res.data);
                 var quoteOrderHistory = new QuoteOrderHistoryView({
                     el: $quoteOrderHistoryEl.find('[data-mz-quoteorderlist]'),
