@@ -209,8 +209,15 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
  	});
  		
 		$(document).on('click','button.accordion1,button.accordion',function(){
+		 	$(this).next().toggleClass('show');
+			$('.invoice-number').removeClass("diplayprint");
+			if($(this).hasClass("active")){ 
+			    $(this).prev().removeClass("diplayprint");
+			}
+			else{  
+			    $(this).prev().addClass("diplayprint");
+			}
 		 	$(this).toggleClass('active');
-			$(this).next().toggleClass('show');
 			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
 				$(this).next().find("img").each(function() {
 					if($(this).parent().next().data("dndtoken")){
