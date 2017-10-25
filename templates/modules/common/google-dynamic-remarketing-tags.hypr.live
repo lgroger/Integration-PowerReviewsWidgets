@@ -1,3 +1,62 @@
+{% if pType %}
+<script type="text/javascript">
+google_tag_params = {
+	{% if pType == "product" %}
+		ecomm_prodid: '{{ model.productCode }}',
+		ecomm_pagetype: 'product',
+		{% if model.hasPriceRange and not model.volumePriceRange %}
+			{% if model.hasPriceRange %}
+				{% with model.priceRange.lower as prObj %}
+					{% if prObj.onSale %}
+						ecomm_totalvalue: {{ prObj.salePrice }}
+					{% else %}
+						ecomm_totalvalue: {{ prObj.price }}
+					{% endif %}
+				{% endwith %}
+			{% else %}
+				{% with model.price as prObj %}
+					{% if prObj.onSale %}
+						ecomm_totalvalue: {{ prObj.salePrice }}
+					{% else %}
+						ecomm_totalvalue: {{ prObj.price }}
+					{% endif %}
+				{% endwith %}
+			{% endif %}
+		{% else%}
+			{% if model.volumePriceRange  and model.volumePriceRange.lower %}
+				{% with model.volumePriceRange.lower as prObj %}
+					{% if prObj.onSale %}
+						ecomm_totalvalue: {{ prObj.salePrice }}
+					{% else %}
+						{% if prObj.salePrice %}
+							ecomm_totalvalue: {{ prObj.salePrice }}
+						{% else %}
+							ecomm_totalvalue: {{ prObj.price }}
+						{% endif %}
+					{% endif %}
+				{% endwith %}
+			{% else %}
+				{% if model.price.onSale %}
+					ecomm_totalvalue: {{ model.price.salePrice }}
+				{% else %}
+					ecomm_totalvalue: {{ model.price.price }}
+				{% endif %}
+			{% endif %}
+		{% endif %}
+	{% endif %}
+
+	{% if pType == "cart" %}
+		ecomm_prodid: ['{% if model.variationProductCode %}{{model.variationProductCode}}{% else %}{{model.productCode}}{% endif %}'],
+		ecomm_pagetype: 'cart',
+		{% if model.product.price.salePrice %}
+			ecomm_totalvalue: {{model.product.price.salePrice}}
+		{% else %}
+			ecomm_totalvalue: {{model.product.price.price}}
+		{% endif%}
+	{% endif %}
+};
+</script>
+{% else %}
 <script type="text/javascript">
 var google_tag_params = {
 	{% if pageContext.pageType == "product" %}
@@ -77,6 +136,7 @@ var google_tag_params = {
 	{% endif %}
 };
 </script>
+{% endif %}
 
 <script type="text/javascript">
 /* <![CDATA[ */

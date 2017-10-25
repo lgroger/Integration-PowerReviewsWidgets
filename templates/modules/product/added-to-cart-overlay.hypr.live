@@ -1,3 +1,4 @@
+{% dump model %}
 <div class="popup" data-popup="popup-{{model.productCode}}">
    <div class="mz-quick-view-wrapper add-cart">
       <header>
@@ -90,3 +91,4 @@
    </div>
 </div>
 </div>
+{% include "modules/common/google-dynamic-remarketing-tags" with pType="cart" %}
