@@ -492,5 +492,8 @@
   "availableBalance":"Available Balance",
   "searchAll":"All Categories",
    "reviewQuote":"Review &  Request Price Quote",
-  "quotePlace": "Request Price Quote"
+  "quotePlace": "Request Price Quote",
+  "stdShippingWith": " With Standard Shipping ",
+  "expShippingWith": " With Express Shipping ",
+  "ovrShippingWith": " with Premium Shipping "
 }
