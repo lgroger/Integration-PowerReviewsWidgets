@@ -1,14 +1,9 @@
 ﻿{% if pageContext.pageType != 'my_anonymous_account' %}
     <h3 class="mz-l-stack-sectiontitle order-head">My Orders</h3>
 {% endif %}
-<div class="mz-orderhistory-section mz-l-paginatedlist">  
-    <div class="print-header">
-        <img src="//cdn-tp2.mozu.com/16647-25302/cms/files/9152cf0c-a3cd-4529-af56-79c9e7065664?_mzcb=_1498536686469&max=110" style="float: left;width: 110px;">
-        <h3 style="float: right;">Invoice</h3>
-        <div style="clear:both;"></div>
-    </div>
+<div class="mz-orderhistory-section mz-l-paginatedlist">
     {% if model.items %}    
-		<div data-mz-orderlist class="mz-l-paginatedlist-list">
+		<div data-mz-orderlist class="mz-l-paginatedlist-list">  
 			{% include "modules/my-account/order-history-list" %}
 		</div>
     	{% if showPaging %}

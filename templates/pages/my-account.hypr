@@ -36,6 +36,14 @@
  
         </div>
         <div class="my_account_right">
+        
+          
+        <div class="print-header">
+            <img src="//cdn-tp2.mozu.com/17342-26978/cms/files/119e00bf-f4e0-4039-b483-d7b57fd32ef5?_mzcb=_1508523639164&max=230" style="float: left;width: 230px;">
+            <h3 style="float: right;">Invoice</h3>
+            <div style="clear:both;"></div>
+        </div>
+        
         <div class="my_acc_ri">
 
             <div id="account-messages">
