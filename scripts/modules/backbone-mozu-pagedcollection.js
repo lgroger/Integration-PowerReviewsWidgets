@@ -121,13 +121,13 @@
                 return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize') }));
             },
             myAccountChangePageSize: function() {
-                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize'), sortBy:"createDate desc", filter: "attributes.id ne "+QuoteOrderAttributeId+" and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending" }));
+                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize'), sortBy:"createDate desc", filter: "(attributes.name ne tenant~QOFLAG or (attributes.value eq false and attributes.name eq tenant~QOFLAG)) and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending" }));
             },
             myAccountQuoteChangePageSize: function() {
-                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize'), sortBy:"createDate desc", filter: "attributes.id eq "+QuoteOrderAttributeId+" and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending"}));
+                return this.apiGet($.extend(this.lastRequest, { pageSize: this.get('pageSize'), sortBy:"createDate desc", filter: "attributes.value eq true and attributes.name eq tenant~QOFLAG and Status ne Created and Status ne Validated and Status ne Abandoned and Status ne Errored and Status ne Pending"}));
             },
-            firstIndex: function() {
-                return this.get("startIndex") + 1;
+            firstIndex: function() {    
+                return this.get("startIndex") + 1;  
             }, 
 
             lastIndex: function() {
