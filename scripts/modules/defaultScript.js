@@ -6,6 +6,8 @@ define(
 		//event.preventDefault();
 		$(this).parent().addClass('active_my_account_menu');
     	$(this).parent().siblings().removeClass('active_my_account_menu');
+    	
+         $('.button.accordion1.active,button.accordion.active').trigger('click');
     	var tab = $(this).attr("href");
     	$(".enable-print").removeClass("enable-print");
     	$("div[id='"+tab.replace("#","")+"'] > button").addClass("enable-print");
