@@ -213,7 +213,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         },
         validate:function(payload){
-            var emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            var emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
             if (!emailRegex.test(payload.email)) return this.displayMessage(Hypr.getLabel('emailMissing')), false; 
             return true;
         },
@@ -348,7 +348,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (e.which === 13) { this.signup(); }
         },
         validateSignUp: function (payload) {
-            var emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$/;
+            var emailRegex = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
             if (!payload.account.firstName) return this.displayMessage(Hypr.getLabel('firstNameMissing')),false;
             if (!payload.account.lastName) return this.displayMessage(Hypr.getLabel('lastNameMissing')), false;
             if (!payload.account.emailAddress) return this.displayMessage(Hypr.getLabel('emailMissing')), false;
