@@ -230,6 +230,7 @@ a.br-theme-page {
 	line-height: normal;
 	margin: 0;
 	padding: 0;
+	font-size: .84em;
 }
 #ui-id-1 .br-suggest-left,ul#ui-id-3 .br-suggest-left {
 	width: 26%;
@@ -248,6 +249,10 @@ a.br-theme-page {
 	margin-right: 2% !important;
 	text-transform: capitalize;
 	margin-bottom: 8px;	
+	color: @linkColor !important;
+	&:hover {
+		color: @linkHoverColor !important;
+	}
 }
 .br-suggest-right {
 	float: left;
@@ -259,6 +264,7 @@ a.br-theme-page {
 	border: 1px solid #eee;
 	margin: 1% !important;
 	position: absolute;
+	font-size: .84em;
 }
 .mz-product-rating {
 	padding: 3px 6px 3px 0 !important;	
@@ -306,7 +312,7 @@ a.br-theme-page {
 	padding: 0 !important;
 	border: none;
 	position: absolute;
-	top: 5px;
+	top: 10px;
 }
 .autocomplete-priceline {
 	color: #0971ce;	
@@ -330,8 +336,9 @@ a.br-theme-page {
     margin: auto;	
 }
 .ui-autocomplete-category {
-	color: #00b09b;	
+	color: @textColor;	
 	box-sizing: border-box;	
+	text-transform: uppercase;
 }
 i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	color: @secondaryYellow;	
