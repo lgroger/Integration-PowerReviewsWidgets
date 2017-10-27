@@ -257,7 +257,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }
                 }
 
-                if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1){
+				// hides radio button if there is only one extra for specific attributeFQNs (may want to make this theme setting) - NOTE: this differs slightly than code on product.js b/c on pdp it's showing as radio but dropdown on quickview
+                if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1 && (this.$('[data-mz-product-option]').attr('data-mz-product-option') === "tenant~misc.-favor-with-design" || this.$('[data-mz-product-option]').attr('data-mz-product-option') === "tenant~table-top-it-runner-size")){
                     if(this.$('[data-mz-product-option]').find('option').length==2){
                         this.$('[data-mz-product-option]').parents('.mz-productdetail-options').hide();
                     }
