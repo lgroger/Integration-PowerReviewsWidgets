@@ -33,11 +33,6 @@
 </div>
 
 <div class="mz-l-container cart-main-container">
-	<!--<div class="header-part mz-cms-col-12-12">
-		<h1 class="mz-cms-col-8-12 mz-pagetitle">{{ labels.shoppingCart }}</h1>
-		<!-- <h2 class="mz-cms-col-3-12 estimate-cost">{{ labels.estimateTotal | upper }} <small class="estimate-total-value">$506.32</small></h2> -->
-		<!--<div class="clear"></div>
-	</div>-->
 	<div class="mz-cms-col-12-12">{{model.checkoutlag}}</div>
 	<div class="cart_cols mz-cms-col-12-12">
 		<form method="post" action="{{ siteContext.secureHost }}/cart/checkout" id="cartform">
@@ -48,11 +43,7 @@
 				<ul class="mz-table mz-table-cart" id="cart">
 					{% include "modules/cart/cart-table" %}
 				</ul>
-				<!-- <span id="mz-carttable-total" class="mz-carttable-total cart_price_total">
-		          <strong>{{ model.discountedTotal|currency }}</strong>		 -->
 			</div>
-			<!-- <table class="mz-table mz-table-cart" id="cart"> --> 
-			<!-- </table> -->
 			  
 		</form>
 	</div>
@@ -65,8 +56,11 @@
   </div>
 
 </div>
+{% comment %}
+<!-- LG 10/26/17 not being used currently and throwing js error-->
 <script type="text/javascript" src="https://maps.google.com/maps/api/js?key={{themeSettings.googleMapApiKey}}"></script>   
 <script type="text/javascript">
     window.geocoder = new google.maps.Geocoder();
 </script>
+{% endcomment %}
 {% endblock body-content %}
