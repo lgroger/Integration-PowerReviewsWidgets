@@ -81,7 +81,7 @@
 	padding: 0 4%;
 }
 .mz-l-sidebar.sz-brthematic-left li a,.mz-l-sidebaritem.sz-childcat li a{
-	font-family: RobotoRegular;
+	font-family: @fontFamily;
 	text-transform: capitalize;
 	vertical-align: middle;
 	color: 	#444;
@@ -98,7 +98,7 @@
 }
 .br-seo-mobile-heading {
 	color: #0D3762;
-	font-family: ArvoRegular, Arvo, sans-serif;
+	font-family: @fontFamily;
 	font-size: 16px;
 }
 .mobile.br-seo-mobile {
@@ -139,23 +139,23 @@ ul.br-seo-mobile-items {
 /* end missed LG */
 
 .mz-productlisting.mz-productlist-tiled.br-theme-tile, .br-suggest-right.br-suggest-theme {
-	border: 1px solid #00b09b;
+	border: 1px solid @primaryCTA;
 	text-align: center;
 }
 a.br-theme-page {
 	-webkit-appearance: none;
-	background-color: #00b09b;
+	background-color: @primaryCTA;
 	border-radius: 5px;
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
-	border: 1px solid #00b09b;
+	border: 1px solid @primaryCTA;
 	margin: 5px auto 0 auto;
 	text-transform: uppercase;
 	color: #FFF !important;
 	padding: 5px 3px 5px 3px;	
 	display: block;
 	max-width: 90%;
-	font-family: MontserratRegular, Montserrat, sans-serif;	
+	font-family: @fontFamily;	
 	font-size: 92%;
 }
 .ui-menu .br-suggest-left.ui-menu-item {
@@ -186,7 +186,7 @@ a.br-theme-page {
 #ui-id-2,ulul#ui-id-3 {
 	z-index: 10000000 !important;
 	padding: 10px;	
-	font-family: MontserratRegular, Montserrat, RobotoRegular, sans-serif;
+	font-family: @fontFamily;
 	position: fixed;
 	box-shadow: rgba(136,136,136,0.34902) 0px 10px 15px;
 	line-height: normal;
@@ -211,8 +211,8 @@ a.br-theme-page {
 	display: none;
 }
 #ui-id-1 {
-	font-family: MontserratRegular, Montserrat, RobotoRegular, sans-serif;
-	color: #444;
+	font-family: @fontFamily;
+	color: @linkColor;
 	min-width: 50%;
 	max-width: 65%;
 	position: relative;
@@ -315,7 +315,8 @@ a.br-theme-page {
 	top: 10px;
 }
 .autocomplete-priceline {
-	color: #0971ce;	
+	color: #363fc8;
+    padding-top: 5px;
 }
 .br-suggest-product-image {
 	height: 100px;
@@ -334,6 +335,12 @@ a.br-theme-page {
     left: 0;  
     right: 0;  
     margin: auto;	
+}
+.autocomplete-title {
+	color: @linkColor;
+	&:hover {
+		color: @linkHoverColor;
+	}
 }
 .ui-autocomplete-category {
 	color: @textColor;	
@@ -366,8 +373,8 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	padding: 0;	
 }
 .br-suggest-cta.ui-menu-item {
-	background-color: #00b09b;
-	color: #FFF;
+	background-color: #fff;
+	color: @primaryCTA;
 	width: 30%;
 	position: absolute;
 	bottom: 10px;
@@ -378,6 +385,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	-moz-border-radius: 5px;
 	text-align: center;
 	text-transform: uppercase;	
+	border: 2px solid @primaryCTA;
 }
 
 .mz-filter-options .mz-l-sidebaritem li.br-facet-color {
@@ -467,11 +475,12 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	background: none !important;
 }
 .br-suggest-cta.ui-menu-item:hover {
-	background-color: #00ceb3 !important;		
+	border: 2 px solid @primaryCTAhover !important;
+	color: @primaryCTAhover;
 }
 a.br-theme-page:hover {
-	background-color: #00ceb3;
-	border: 1px solid #00ceb3;
+	background-color: @primaryCTAhover;
+	border: 1px solid @primaryCTAhover;
 }
 .ui-menu .ui-state-active {
 	border: none !important;	
@@ -951,8 +960,8 @@ a.br-theme-page:hover {
 	}
 .megamu-wrapper.MenuCls ul li:hover > .main-drop-down ul li:first-child{
     background-color: white;
-    border-left: 5px solid #00af9a;
-    color: #00af9a;
+    border-left: 5px solid @secondaryBlue;
+    color: @secondaryBlue;
 }
 .megamu-wrapper.megamenu-wrapper-new.Menuloaded > ul > li:nth-child(1){
 	 .main-drop-down.menu-col-6{
@@ -1458,15 +1467,15 @@ a.br-theme-page:hover {
     }
     .megamu-wrapper ul li ul li:hover, .megamu-wrapper ul li ul li:hover > a{
         background-color: #fff;
-        color: #00af9a;
+        color: @linkHoverColor;
     }
     .megamu-wrapper ul li:hover > .main-drop-down ul li:first-child{
         background-color: #fff;
         border-left: 5px solid #00af9a;
-        color: #00af9a;
+        color: @linkHoverColor;
     }
     .megamu-wrapper ul li:hover > .main-drop-down ul li:first-child a{
-        color:  #00af9a;
+        color:  @linkHoverColor;
     }
     
     .main-drop-down > ul > li span{
@@ -1535,9 +1544,9 @@ a.br-theme-page:hover {
         margin-bottom: 9px;
         padding-left: 10px;
         >a{
-            color: #0d3762 !important;
+            color: @linkColor !important;
             &:hover,&:focus{
-                color: #00af9a !important;
+                color: @linkHoverColor !important;
             }
         }
     }
@@ -1955,17 +1964,17 @@ a.br-theme-page:hover {
         padding: 85px 0 20px 35px;
         width: 60%;
         h2{
-            font: 32px/1.4 @fontMontserratBold;
+            font: 32px/1.4 @fontGTWalsheimBold;
             color: #194369;
             margin-bottom: 50px;
             text-transform: uppercase;
         }
         p{
-            font: 22px/1.2 @fontMontserratLight;
+            font: 22px/1.2 @fontFamily;
             color: #d70056;
         }
         h3{
-            font: 22px/1.4 @fontMontserratBold;
+            font: 22px/1.4 @fontGTWalsheimBold;
             color: #194369;
             text-transform: uppercase;
         }
@@ -1973,7 +1982,7 @@ a.br-theme-page:hover {
 }
 .party-planner {
     .thank-you{
-        font: 20px @fontArvo !important;
+        font: 20px @fontFamily !important;
         color: #093863;
         padding-left: 20px;
     }
@@ -2057,7 +2066,7 @@ a.br-theme-page:hover {
         margin-left: 10px !important;
     }
     pre{
-        font-family: RobotoRegular !important;
+        font-family: @fontFamily !important;
         font-size: 15px;
         color: #666;
     }
@@ -2113,7 +2122,7 @@ a.br-theme-page:hover {
         }
         label{
             padding-top: 5px;
-            font-family: @fontMontserratRegular;
+            font-family: @fontFamily;
             font-size: 15px;
         }
         .mktoCheckboxList > label{
@@ -2451,7 +2460,7 @@ input::-webkit-inner-spin-button {
         .order-blocks2{
                 width: 270px;
                 text-align: left;
-                font-family: @fontMontserratRegular; 
+                font-family: @fontFamily; 
                 .product-name{
                     margin-top:5px;
                     margin-bottom:5px;
@@ -2460,18 +2469,18 @@ input::-webkit-inner-spin-button {
         .order-blocks3{
             width: 140px;
             font-size: 1.4em;
-            font-family: @fontMontserratRegular;
+            font-family: @fontFamily;
         }
         .order-blocks4{
             width: 140px;
             font-size: 1.4em;
-            font-family: @fontMontserratRegular;
+            font-family: @fontFamily;
         }
         .order-blocks5{
             width: 140px;
             font-size: 1.4em;
             color: #0d3762;
-            font-family: @fontMontserratRegular;
+            font-family: @fontFamily;
         }
     }
         .orders-sec {
@@ -2495,8 +2504,8 @@ input::-webkit-inner-spin-button {
             font-size:18px;
         }
         .account-price-number{
-            color: #0d3762;
-            font-family: ArvoRegular;
+            color: @textColor;
+            font-family: @fontFamily;
             width: 22%;
         }
         .orders .orders-header .order-blocks5 {
@@ -2608,7 +2617,7 @@ span.tt-suggestions {
                 font-size: 29px;
                 text-align: center;
                 margin-bottom: 0px;
-                font-family: ArvoRegular;
+                font-family: @fontFamily;
                 margin-bottom: 20px;
                 margin-top: 65px;
             }
@@ -2686,7 +2695,7 @@ span.tt-suggestions {
     line-height: 0 !important;
     border-left: none !important;
     padding: initial !important;
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
 }
 .ech-shi-top-header{
     display: none;
@@ -2726,7 +2735,7 @@ span.tt-suggestions {
     margin-bottom:0px;
     color:#284E72;
     font-size:16px;
-    font-family: @fontArvo;
+    font-family: @fontFamily;
 }
 .mz-utilitynav-list li a:hover{
     color: @linkHoverColor;
@@ -2848,13 +2857,13 @@ a[href^=tel] { color: inherit; text-decoration: none; }
 .menu>ul>li>ul{ 
     background-color: #fff !important; 
     background:inherit;
-    font-family: @RobotoRegular;  
+    font-family: @fontFamily;  
 }
 .menu>ul>li>ul li, .menu>ul>li>ul li a{
     color: #888;
     list-style-type: none;
      font-size: 14px;
-     font-family: @fontMontserratRegular;
+     font-family: @fontFamily;
 }
 .ech-shi-bottom-footer-two{
     text-align: right;
@@ -2873,10 +2882,10 @@ li.mz-sitenav-item.third-level-cat-up {
     font-size: 14px !important;
     color: #093863;
     padding: 0.1em 0em 0.3em 0em !important;
-    font-family: @fontMontserratBold;
+    font-family: @fontGTWalsheimBold;
 }
 .fourth-level a:hover{
-    color:#0D3762 !important;
+    color: @linkHoverColor !important;
 }
 .nopad ul{
     margin:0px; 
@@ -2935,7 +2944,7 @@ a{
     position: relative;
 }
 .promo-slot-1{
-    font-family: @fontMontserratLight;
+    font-family: @fontFamily;
     text-align: center;
     border-top: 2px solid #E8E8E8;
     margin: 3px 0px;
@@ -2944,19 +2953,19 @@ a{
     font-size: 1.9em;
 }
 .promo-slot-2{
- font-family: @fontMontserratHairline;
+ font-family: @fontFamily;
 }
 .fourth-level a{
     color: #888888 !important;
     list-style-type: none !important;
     font-size: 14px !important;
-    font-family: @fontMontserratRegular !important;
+    font-family: @fontFamily !important;
 }
 #mz-drop-zone-promo-adds .mz-cms-content{
     padding: 0px;
 }
 .promo-slot-4{
-    font-family: ArvoRegular;
+    font-family: @fontFamily;
     font-size: 80%;
     color: #808080;
 }
@@ -2983,13 +2992,13 @@ a{
     }
     .promo-big-banner-style-custom{
         color:#323232;
-        font-family: @fontMontserratBold;
+        font-family: @fontGTWalsheimBold;
         font-size: 1.8rem; 
         margin:0;
     }
     .promo-big-banner-style{
         color:#323232;
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         font-size: 1.2rem;
         margin:0;
     }
@@ -3011,7 +3020,7 @@ a{
         margin-left:0px;
     }
     .echi-shi-offer-promo-title{
-        font-family: @fontMontserratHairline;
+        font-family: @fontFamily;
         font-size: 5rem;
         line-height: 0.8;
         margin:0px;
@@ -3069,7 +3078,7 @@ a{
 h2.promo-slide-title{
     position: relative;
     text-align: center;
-    font:400 31px @fontArvo;
+    font:400 31px @fontFamily;
     padding: 0 10px;
     &:after{
         content: '';
@@ -3105,7 +3114,7 @@ h2.promo-slide-title{
 }
 .winter_sale{
     font-size: 2.4rem;
-    font-family: MontserratSemiBold;
+    font-family: @fontGTWalsheimBold;
     color: #133963;
     margin: 0px;
     line-height: 0.8; 
@@ -3118,7 +3127,7 @@ h2.promo-slide-title{
 }
 .winter_sale_discount{ 
     font-size: 3rem;
-    font-family: MontserratSemiBold;
+    font-family: @fontGTWalsheimBold;
     color: #d70056;
     margin: 0px;
 }
@@ -3502,7 +3511,7 @@ searchNav .option{
 }
 }
     .ech-shi-homeSlider .slider-caption .first-line{
-        font-family: @RobotoRegular;
+        font-family: @fontFamily;
     }
     .ech-shi-homeSlider .imagevideocaraousel .vt-slider .slider-caption{
         width: 27%;
@@ -3522,7 +3531,7 @@ searchNav .option{
         border-radius: 3px;
         margin: 0 auto;
         font-size: 18px;
-        font-family: @fontMontserratRegular; 
+        font-family: @fontFamily; 
         transition: 0.3s ease-in-out;
     }
     .home-category #mz-drop-zone-home-category .brand-lister{
@@ -3534,7 +3543,7 @@ searchNav .option{
     }
     .catg_list_name{
         color: #093863;
-        font-family: @RobotoRegular;
+        font-family: @fontFamily;
         font-size: 16px;
         padding: 10px 0px;
     }
@@ -3562,7 +3571,7 @@ searchNav .option{
         .default_offer_btn_lg{
             margin-top: 4%; 
             padding: 4%;
-            font-family: @fontMontserratBold;
+            font-family: @fontGTWalsheimBold;
         }
    }
    .all-promo-custom-sty1{
@@ -3583,39 +3592,39 @@ searchNav .option{
                 text-align: center;
                 .promo-banner-style{
                     color: #666;
-                    font-family: @fontMontserratRegular;
+                    font-family: @fontFamily;
                     font-size: 1.5rem;
                     line-height: 0;
                 }
                 .promo-banner-style1{
-                     font-family: @fontMontserratBold;
+                     font-family: @fontGTWalsheimBold;
                      color: #133963;
                      font-size: 2.5rem;
                  }
                 .promo-banner-style2{
                     color: #888;
-                    font-family: @RobotoRegular;
+                    font-family: @fontFamily;
                     font-size: 1rem;
                 }
                 .button_promo-sty{
                     max-width: inherit;
                     margin: 0 auto;
                         button{
-                            font-family: @fontMontserratBold;
+                            font-family: @fontGTWalsheimBold;
                         }
                 }
             }
         }
     }
     .promo-big-banner-style{
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         font-size: 1.6rem;
         text-align: left;
         color:#133963; 
    }
     .echi-shi-offer-promo-title{
         color: #fff;
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         font-size: 18px;
         text-align: center;
         letter-spacing: 3.2px;
@@ -3624,7 +3633,7 @@ searchNav .option{
     }
     .echi-shi-offer-promo-title1{
         color: #fff;
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         font-size: 80px;
         text-align: center;
         letter-spacing: 3.2px;
@@ -3638,13 +3647,13 @@ searchNav .option{
         width: 100%; 
     }
      .echi-shi-offer-promo-title2{
-        font-family: @fontRoboto;
+        font-family: @fontFamily;
         font-size: 35px;
         text-align: center;
         color: #EFEFEF;
     }
     .echi-shi-promo-banner-two-heading{
-        font-family:@fontMontserratLight;
+        font-family:@fontFamily;
         font-size: 1.5rem;
         color: #fff;
         line-height: 0.5;
@@ -3655,14 +3664,14 @@ searchNav .option{
         padding:25px;
     }
     .echi-shi-promo-banner-two-heading1{
-        font-family: @fontMontserratBold;
+        font-family: @fontGTWalsheimBold;
         font-size: 2rem;
         color: #fff;
         margin: 0px;
         padding: 0px;
     }
     .echi-shi-promo-banner-two-heading2{
-        font-family: MonstserratLight;
+        font-family: @fontFamily;
         font-size: 2.3rem;
         color: #fff;
         margin: 0px;
@@ -3678,13 +3687,13 @@ searchNav .option{
             margin-top: 32px;
             text-transform: uppercase;
             border-radius: 3px;
-            font-family:@fontMontserratBold;
+            font-family:@fontGTWalsheimBold;
     }
     .button_promo-sty{
         max-width: 200px;
     }
     .party-central-normal{
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         font-size: 1rem;
         padding: 0px;
         margin: 0px;
@@ -3711,7 +3720,7 @@ searchNav .option{
      }
      #mz-drop-zone-home-promo-4 .promo-banner .wdg-container, #mz-drop-zone-home-promo-5 .promo-banner .wdg-container{
         color: #fff;
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         .pTag{
             font-size: 1.2rem; 
             padding: 0px;
@@ -3720,11 +3729,11 @@ searchNav .option{
         }
         .headingTag{
             font-size: 2.5rem; 
-            font-family: @fontMontserratBold;
+            font-family: @fontGTWalsheimBold;
         }  
         .button_promo-sty{
             margin:0 auto;
-            font-family: @fontMontserratBold;
+            font-family: @fontGTWalsheimBold;
         }
      }
      .my-promo-bg-sty{
@@ -3737,14 +3746,14 @@ searchNav .option{
          margin: 0 auto;
     } 
     .my-promo-bg-sty1{
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
         color: #545454;
         font-size: 0.8rem;
         margin: 12px 0px 0px;
     }
 
     .my-promo-bg-sty2{
-        font-family: @fontMontserratBold;
+        font-family: @fontGTWalsheimBold;
         font-size: 1.5rem;
         color:#333;
         margin:0px;
@@ -3762,14 +3771,14 @@ searchNav .option{
             float: left;
             width: 70%;
             .main-heading{
-                font-family: @fontMontserratBold;
+                font-family: @fontGTWalsheimBold;
                 color: #133963;
                 font-size: 30px;
                 margin:0px;
                 margin:0px; 
             } 
             .small-heading{
-                font-family: @fontMontserratRegular;
+                font-family: @fontFamily;
                 font-size: 14px;
                 color: #666;
                 margin:0px; 
@@ -3785,7 +3794,7 @@ searchNav .option{
                 padding: 6px 12px;
                 font-size: 1.2rem;
                 border-radius: 3px;
-                font-family: @fontMontserratRegular; 
+                font-family: @fontFamily; 
                 margin-top: 16px;
                  border:2px solid #0D3762;
                 &:hover{
@@ -3922,7 +3931,7 @@ searchNav .option{
     left: 0px;
     z-index: 99;
     transition: top .5s linear;
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
     display: none;
     .fixed-top{
         background-color:#fff;
@@ -3968,7 +3977,7 @@ searchNav .option{
                         margin: auto;*/
                 }
                  h3{ 
-                    font-family: @fontMontserratBold;
+                    font-family: @fontGTWalsheimBold;
                     font-size: 1.0rem;
                     color: #000;
                     margin: 0px;
@@ -4003,7 +4012,7 @@ searchNav .option{
                 width: 28%;
                 text-align:center;
                 p{
-                    font-family: @fontArvo;
+                    font-family: @fontFamily;
                     font-size: 1.06rem;
                     color: gray;
                     margin-top: 39px;
@@ -4052,7 +4061,7 @@ searchNav .option{
                 .box-custom-pad{
                     padding: 0% 10% 0% 0%;
                     .indivisual-price{
-                        font-family: ArvoRegular;
+                        font-family: @fontFamily;
                         font-size: 14px;
                         color: gray;
                         margin:0px;
@@ -4066,7 +4075,7 @@ searchNav .option{
                     margin: 0px;
                     padding: 8px 0px 0px;
                     span{    
-                        font-family: ArvoRegular;
+                        font-family: @fontFamily;
                         font-size: 18px;
                         color: #093863;
                     }
@@ -4082,7 +4091,7 @@ searchNav .option{
 				  margin-top: 20px;
 				  margin-right: 10px;
                 button{
-                    font-family: @fontMontserratRegular;
+                    font-family: @fontFamily;
                     font-size: 15px;
                     background-color: #0971ce;
                     border-radius: 5px;
@@ -4227,7 +4236,7 @@ searchNav .option{
                 padding: 7% 10% 0% 0%;
                 text-align: right;
                 .indivisual-price{
-                    font-family: ArvoRegular;
+                    font-family: @fontFamily;
                     font-size: 0.95rem;
                     color: gray;
                     margin: 0px;
@@ -4239,7 +4248,7 @@ searchNav .option{
                     margin: 0px;
                 /*    padding: 6px 0px 0px;*/
                     span{
-                        font-family: ArvoRegular;
+                        font-family: @fontFamily;
                         font-size: 1.5rem;
                         color: #069;
                     }  
@@ -4252,7 +4261,7 @@ searchNav .option{
             margin-right:4%;
             margin-left: -10px;
             button{
-                font-family: @fontMontserratRegular;
+                font-family: @fontFamily;
                 font-size: 14px;
                 background-color: #0971ce;
                 border-radius: 5px;
@@ -4328,7 +4337,7 @@ searchNav .option{
     z-index: 1 !important;
 }
 .filter-level-2{
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
 }
 #mz-drop-zone-footer-baloon{
     width: 215px;
@@ -4442,10 +4451,10 @@ searchNav .option{
     max-width: 500px;
     float: right;
     bottom:-22px; 
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
 }
 .mz-pagetitle.mob-tag{
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
     margin-bottom: 10px;
 }
 .mz-product .mz-quick-view-wrapper .container-right .product-description span{
@@ -4824,7 +4833,7 @@ searchNav .option{
     }
     .echi-shi-pro-desc-fix{
     box-shadow: 0px 0px 3px 2px #ccc;
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
     background-color: #fff; 
     z-index:99999;
     height:inherit;
@@ -4880,7 +4889,7 @@ searchNav .option{
                 .prodct-name-color{
                     .color-head11{
                         top:auto;
-                        font-family: ArvoRegular;
+                        font-family: @fontFamily;
                         margin-top: 5px;
                     }
                 }
@@ -5421,7 +5430,7 @@ searchNav .option{
         margin-top: -7%;
         padding: 0px;
         margin-right: 15%;
-        font-family: MontserratSemiBold;
+        font-family: @fontGTWalsheimBold;
         min-width: 115px;
         width: 110px;
         float: right;
@@ -5450,7 +5459,7 @@ searchNav .option{
         margin-right: 10px;
     }
     .mz-facetingform-clearall, .mz-apply-btn{
-        font-family: @fontMontserratRegular !important;
+        font-family: @fontFamily !important;
         border-radius: 0px !important;
         margin-right: 0px;
         width: 48.9% !important; 
@@ -5934,7 +5943,7 @@ searchNav .option{
     }
 }
 .product-mainname{
-    font-family:@fontMontserratRegular;
+    font-family:@fontFamily;
     padding: 0px;
     padding-bottom: 4%;
     margin: 0px;
@@ -6916,7 +6925,7 @@ right: 0;
        display: inline-block !important;
 }
 .super-page-section-list .party_packs_btns .btn-cart, .echi-shi-party-packs button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large, .party_packs_btns span.quick-view a, .echi-shi-bundle-theme-slider, .echi-shi-party-packs {
-    font-family: MontserratRegular, Montserrat;
+    font-family: @fontFamily;
 }
 @media only screen and (max-width: 700px) {
 .echi-shi-party-packs {
