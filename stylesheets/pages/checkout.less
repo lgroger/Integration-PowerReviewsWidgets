@@ -72,6 +72,11 @@ ul.coupon-list-custom{
         width: auto;
         font-family: @fontFamily;
         font-size: 12px;
+        @media (min-width: 1297px) {
+            width: 33%;
+            float: right;
+            margin: 0;
+        }
         & strong {
             color: @secondaryBlue;
             font-weight: normal;
@@ -103,11 +108,17 @@ ul.coupon-list-custom{
     .mz-l-formfieldgroup-cell{
         float: none;
         width: 100%;
+        @media (min-width: 1297px) {
+            width: 60%;
+            float: left;
+        }
         label{
             display: inline-block;
-            margin-right: 30px;
             width: 100%;
             @media (min-width: 768px) {
+                width: 45%;
+            }
+            @media (min-width: 1297px) {
                 width: 50%;
             }
         }
@@ -138,11 +149,11 @@ ul.coupon-list-custom{
 .delivery-title{
     margin: 0 0 10px;
     color: @secondaryBlue;
-    padding-left: 55%;
+    padding-left: 45%;
     font-size: 15px;
     font-family: @fontFamily;
-    @media (min-width: 992px) {
-        padding-left: 56%;
+    @media (min-width: 1297px) {
+        padding-left: 50%;
     }
 }
 
@@ -346,19 +357,23 @@ ul.coupon-list-custom{
     }
     .is-invalid .mz-formstep-header, .is-incomplete .mz-formstep-header{
         background: @primaryBlue;
+        color: #fff !important;
     }
     .is-complete .mz-formstep-header{
         background: @secondaryWhite;
         color: @textHeaderColor;
     }
     .mz-formstep-header{
-        background: #a7a9ab;
+        background: @secondaryWhite;
         padding: 16px 15px;
         margin: 0px 0px 0px;
         font-family: @fontGTWalsheimBold;
         text-transform: uppercase;
         font-size: 18px;
         color: #fff;
+    }
+    .mz-checkoutform-review h3.mz-checkoutform-header {
+        color: @textHeaderColor;
     }
     .mz-ordersummary-checkout .mz-formstep-header{ 
         background: @secondaryWhite;
@@ -461,7 +476,7 @@ ul.coupon-list-custom{
         }
         td.mz-ordersummary-item-availability {
             font-family: @fontFamily;
-            font-size: 10px;
+            font-size: 13px;
             color: #cecaca;
             padding:0px 5px 10px;
             position: relative;
@@ -782,6 +797,9 @@ ul.coupon-list-custom{
 }
 .checkout_cols .checkout_col_left .mz-formstep-body{
     padding:15px 10px 30px;
+    @media (min-width: 1297px) {
+        padding:15px 10px;
+    }
 }
 .checkout_cols .mz-l-formfieldgroup{
     display:inline-block;
