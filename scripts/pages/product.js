@@ -899,9 +899,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 setTimeout(function() {
                     var delivery_html="<span class='delivery-date'> <span>Get it by <strong>";
                     if(scope_obj.model.get("delDate")){
-                        delivery_html=delivery_html+""+scope_obj.model.get("delDate")+"</strong> With Standard Shipping </span> <br> ";
+                        delivery_html=delivery_html+""+scope_obj.model.get("delDate")+"</strong>" +Hypr.getLabel('stdShippingWith')+ "</span> <br> ";
                         if(scope_obj.model.get("groundOnly")===undefined){
-                            delivery_html=delivery_html+"<span>Get it by <strong>"+scope_obj.model.get("expressDate")+"</strong> with Express Shipping  </span> <br> Get it by <strong>"+scope_obj.model.get("overnightDate")+" </strong> with Overnight Shipping <br> ";
+                            delivery_html=delivery_html+"<span>Get it by <strong>"+scope_obj.model.get("expressDate")+"</strong>" +Hypr.getLabel('expShippingWith')+ "</span> <br> Get it by <strong>"+scope_obj.model.get("overnightDate")+" </strong>" +Hypr.getLabel('ovrShippingWith')+ "<br> ";
                         }
                     }
                     $("#product-detail > p ").after(delivery_html);
