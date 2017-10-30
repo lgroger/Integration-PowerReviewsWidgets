@@ -46,7 +46,7 @@ google_tag_params = {
 	{% endif %}
 
 	{% if pType == "cart" %}
-		ecomm_prodid: ['{% if model.variationProductCode %}{{model.variationProductCode}}{% else %}{{model.productCode}}{% endif %}'],
+		ecomm_prodid: ['{% if model.product.variationProductCode %}{{model.product.variationProductCode}}{% else %}{{model.product.productCode}}{% endif %}'],
 		ecomm_pagetype: 'cart',
 		{% if model.product.price.salePrice %}
 			ecomm_totalvalue: {{model.product.price.salePrice}}
