@@ -423,6 +423,14 @@
       "customEditor": "categoryContent@mozu"
     },
     {
+      "entityType": "category",
+      "id": "category-html",
+      "template": "category-html",
+      "title": "Category HTML",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
       "entityType": "product",
       "id": "product",
       "template": "product",
