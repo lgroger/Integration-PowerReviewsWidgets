@@ -180,13 +180,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         window.productView = productView;
 
         productView.render();
-/*
-        var fixedHeaderView = new FixedHeaderView({
-            el: $('#mz-pdp-floating-header'),
-            model: product
-        });
-        fixedHeaderView.render();*/
     };
+	
+	// get product info of all items used as extras - http.commerce.catalog.storefront.products.getProduct.after (application Pricing_Arc_Prod) returns extras as http header "productExtras"
     var getExtrasProductDetails= function(product){
         var api = Api;
         api.on('success', function(res, xhr,request){
@@ -215,6 +211,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 initProductView(product);
         });
     };
+	
+	// get product info of bundle items with stardard productUsage (can get multiple at a time since they are available for sale on their own)
     function getStandardProductDetails(productCodes){
         if(productCodes.length>0){
             var filter = '';
@@ -233,8 +231,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                             uom = '';
                         }
                         //var price = '$'+product.get('price').get('price')+" "+uom;
-                        var price = uom;
-                        $('[productcode="'+product.get('productCode')+'"]').find('.uom').html(price).show();
+                        $('[productcode="'+product.get('productCode')+'"]').find('.uom').html(uom).show();
                         var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                         if(dndCode){
                             window.personalizeBundleProducts.push(product);
@@ -249,6 +246,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             getBundleProductDetails(BundleItems);
         }
     }
+	
+	// get product info of bundle items with component productUsage (can only get 1 at a time in api since we are using storefront)
     function getBundleProductDetails(arr){
         if(BundleItems.length>0){
                 Api.get('product',{"productCode":arr[loopcounter]}).then(function(res){
@@ -263,8 +262,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         uom = '';
                     }
                     //var price = '$'+product.get('price').get('price')+" "+uom;
-                    var price = uom;
-                    $('[productcode="'+arr[loopcounter]+'"]').find('.uom').html(price).show();
+                    $('[productcode="'+arr[loopcounter]+'"]').find('.uom').html(uom).show();
 
                     var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                     if(dndCode){
@@ -311,129 +309,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         $('#mz-quick-view-container').fadeOut(350);
         $('#mz-quick-view-container').empty();
     }
-
-/*    var FixedHeaderView = Backbone.MozuView.extend({
-        templateName: 'modules/product/fixed-product-header',
-        autoUpdate:['quantity'],
-        initialize: function () {
-            // handle preset selects, etc
-            var me = this;
-            this.on('render', this.afterRender);
-        },
-        additionalEvents: {
-            "change [data-mz-product-option]": "onOptionChange",
-            "blur [data-mz-product-option]": "onOptionChange",
-            "click #flt-add-to-cart": "addToCart",
-            "click .personalize":"personalizeProduct",
-            "change [data-mz-value='quantity']": "onQuantityChange",
-            // "keyup input[data-mz-value='quantity']": "onQuantityChange",
-            "click .qtyplus":"increaseQty",
-            "click .qtyminus":"decreaseQty"
-        },
-        increaseQty: function(e){
-
-            $('.mz-productdetail-addtocart').prop('disabled',true);
-            var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
-            newQuantity = parseInt($qField.val(), 10);
-            if(!isNaN(newQuantity)){
-                newQuantity+=1;
-                $qField.val(newQuantity);
-            }else{
-                newQuantity=1;
-                $qField.val(1);
-            }
-            //if qunatity is greater than 9999 reset qunatity value to 9999, maxlength = 4
-            if(newQuantity > 9999){
-                newQuantity=9999;
-                $qField.val(9999);
-            }
-             this.model.set('quantity',newQuantity);
-            if (!isNaN(newQuantity)) {
-                this.model.updateQuantity(newQuantity);
-            }
-            setTimeout(function(){
-                $('.mz-productdetail-addtocart').prop('disabled',false);
-            },1000);
-        },
-        decreaseQty: function(e){
-             $('.mz-productdetail-addtocart').prop('disabled',true);
-            var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
-            newQuantity = parseInt($qField.val(), 10);
-            if(!isNaN(newQuantity) && newQuantity>1){
-                newQuantity-=1;
-                $qField.val(newQuantity);
-            }else{
-                newQuantity=1;
-                $qField.val(1);
-            }
-            this.model.set('quantity',newQuantity);
-            if (!isNaN(newQuantity)) {
-                this.model.updateQuantity(newQuantity);
-            }
-            if(newQuantity >= this.model._minQty){
-                setTimeout(function(){
-                    $('.mz-productdetail-addtocart').prop('disabled',false);
-                },1000);
-            }
-        },
-        onQuantityChange: _.debounce(function (e) {
-            $('.mz-productdetail-addtocart').prop('disabled',true);
-            var $qField = $(e.currentTarget),
-              newQuantity = parseInt($qField.val(), 10);
-              if(newQuantity===0){
-                newQuantity=1;
-                $qField.val(1);
-              }
-
-            this.model.set('quantity',newQuantity);
-            this.model.set('newQuantity',newQuantity);
-            if (!isNaN(newQuantity)){
-                this.model.updateQuantity(newQuantity);
-            }
-             if(newQuantity >= this.model._minQty){
-                setTimeout(function(){
-                    $('.mz-productdetail-addtocart').prop('disabled',false);
-                },1000);
-            }
-
-        },500),
-        addToCart: function () {
-            var self = this;
-            var $qField = $(self.el).find('[data-mz-value="quantity"]'),
-            newQuantity = parseInt($qField.val(), 10),
-            sku = "",
-            variationProductCode = this.model.attributes.variationProductCode;
-            this.model.set('quantity',newQuantity);
-            this.model.addToCart();
-
-            //Bloomreach add to cart event
-            if(variationProductCode !== undefined && variationProductCode !== 'undefined'){
-              sku = variationProductCode;
-            }
-            if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
-            //end
-        },
-        addToWishlist: function (){
-            if(!require.mozuData('user').isAnonymous) {
-                Wishlist.initoWishlist(this.model);
-            }else {
-                triggerLogin();
-            }
-        },
-        personalizeProduct:function(e){
-            window.productView.personalizeProduct(e);
-        },
-        changeQty: function(e){
-            var $qField = $(e.currentTarget);
-            var newQuantity = parseInt($qField.val(), 10);
-            this.model.updateQuantity(newQuantity);
-
-        },
-        afterRender: function() {
-            var me = this;
-        }
-    });*/
-
 
     var ProductView = Backbone.MozuView.extend({
         templateName: 'modules/product/product-detail-custom',
@@ -1206,6 +1081,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
             /** Logics for banner product types **/
             if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
+				//.addtocart is what's used in quickview, .mz-productdetail-addtocart is used on pdp
                     $('.addToCart').attr('data-tooltip',"Please select an option");
                     if(warnmessage && warnmessage!==""){
                         $('.mz-productdetail-addtocart').attr('data-tooltip',warnmessage);
@@ -1252,7 +1128,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
              }
             
-            if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1) {
+			// hides radio button if there is only one extra for specific attributeFQNs (may want to make this theme setting)
+			if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1 && (this.$('[data-mz-product-option]').attr('name') === "tenant~misc.-favor-with-design" || this.$('[data-mz-product-option]').attr('name') === "tenant~table-top-it-runner-size")) {
                 if(this.$('[data-mz-product-option]').find('option').length === 0){
                     this.$('[data-mz-product-option]').parents('form').hide();
                     this.$('[data-mz-product-option]').parents('.mz-productoptions-container').hide();
@@ -1568,8 +1445,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 var optionModels = options.models;
                 var flag=0;
                  for (var i =0; i< optionModels.length; i++) {
-
-                        if(optionModels[i].get('attributeDetail').usageType==='Extra' && optionModels[i].get('attributeFQN')!=='Tenant~dnd-token'){
+                // if there is only one extra, select it
+					   if(optionModels[i].get('attributeDetail').usageType==='Extra' && optionModels[i].get('attributeDetail').dataType==='ProductCode'){
                              if(optionModels[i].get('values').length===1){
                                 optionModels[i].set('value', optionModels[i].get('values')[0].value);
                              }
