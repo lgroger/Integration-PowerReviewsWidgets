@@ -153,7 +153,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
         };
         self.saveCart = function(data){
             var self = this;
-            console.log(data);
+            //console.log(data);
             $(self.form).remove();
             switch(data.method){
                 case 'AddToCart':
@@ -166,7 +166,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                     window.productView.AddToWishlistAfterPersonalize(data);
                     break;  
                 case 'LPerror':
-                    console.log(data);
+                   // console.log(data);
                      if(data.message===self.errorMsg){
                         self.errorMsgCounter++;
                      }else{
@@ -195,7 +195,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                 window.eventBindFlag = true;
                 // Listen to message from child window
                 eventer(messageEvent,function(e) {
-                  console.log('parent received message!:  ',e.data);
+                 // console.log('parent received message!:  ',e.data);
                   self.model = window.prodModel;
                   self.itemCounter = window.dndItemCounter;
                   self.form = window.dndFormObj;

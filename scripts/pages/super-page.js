@@ -145,14 +145,14 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                                        //Pinterest tracking
                                        if(pintrk!==undefined){
                                            pintrk('track','addtocart',{
-                                              value:parseFloat(track_price*ProductMod.get('quantity')).toFixed(2),
-                                              order_quantity:ProductMod.get('quantity'),
+                                              value:parseFloat(track_price*ProductMod.get('quantity')),
+                                              order_quantity:parseInt(ProductMod.get('quantity'),10),
                                               currency:"USD",
                                               line_items:[{
                                                   product_name:ProductMod.toJSON().content.productName,
                                                   product_id:track_product_code[0],
-                                                  product_price:track_price,
-                                                  product_quantity:ProductMod.get('quantity')
+                                                  product_price:parseFloat(track_price).toFixed(2),
+                                                  product_quantity:parseInt(ProductMod.get('quantity'),10)
                                               }]
                                           });
                                        }
@@ -244,14 +244,14 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                           }
                           if(pintrk!==undefined){
                              pintrk('track','addtocart',{
-                                value:parseFloat(track_price*ProductMod1.get('quantity')).toFixed(2),
-                                order_quantity:ProductMod1.get('quantity'),
+                                value:parseFloat(track_price*ProductMod1.get('quantity')),
+                                order_quantity:parseInt(ProductMod1.get('quantity'),10),
                                 currency:"USD",
                                 line_items:[{
                                     product_name:ProductMod1.toJSON().content.productName,
                                     product_id:track_product_code[0],
-                                    product_price:track_price,
-                                    product_quantity:ProductMod1.get('quantity')
+                                    product_price:parseFloat(track_price),
+                                    product_quantity:parseInt(ProductMod1.get('quantity'),10)
                                 }]
                             });
                          }
@@ -351,14 +351,14 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                          }
                          if(pintrk!==undefined){
                              pintrk('track','addtocart',{
-                                value:parseFloat(track_price*window.productView.DNDProductModel.get('quantity')).toFixed(2),
-                                order_quantity:window.productView.DNDProductModel.get('quantity'),
+                                value:parseFloat(track_price*window.productView.DNDProductModel.get('quantity')),
+                                order_quantity:parseInt(window.productView.DNDProductModel.get('quantity'),10),
                                 currency:"USD",
                                 line_items:[{
                                     product_name:window.productView.DNDProductModel.toJSON().content.productName,
                                     product_id:track_product_code[0],
-                                    product_price:track_price,
-                                    product_quantity:window.productView.DNDProductModel.get('quantity')
+                                    product_price:parseFloat(track_price),
+                                    product_quantity:parseInt(window.productView.DNDProductModel.get('quantity'),10)
                                 }]
                             });
                          }
