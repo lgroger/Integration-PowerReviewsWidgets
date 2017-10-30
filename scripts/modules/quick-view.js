@@ -997,14 +997,14 @@ require(
                                  //Pinterest tracking
                                  if(pintrk!==undefined){
                                      pintrk('track','addtocart',{
-                                        value:parseFloat(track_price*product.get('quantity')).toFixed(2),
+                                        value:parseFloat(track_price*product.get('quantity')),
                                         order_quantity:product.get('quantity'),
                                         currency:"USD",
                                         line_items:[{
                                             product_name:product.toJSON().content.productName,
                                             product_id:track_product_code[0],
-                                            product_price:track_price,
-                                            product_quantity:product.get('quantity')
+                                            product_price:parseFloat(track_price),
+                                            product_quantity:parseInt(product.get('quantity'),10)
                                         }]
                                     });
                                  }

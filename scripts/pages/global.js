@@ -103,7 +103,7 @@ if(pageContext.pageType==="confirmation"){
             var orderId = order.Id;
             api.request('GET', '/api/platform/entitylists/abtestlist@shindigz/entities?filter=userSessionId eq '+pageContext.visit.visitId).then(function(res){
                 var items = res.items;
-                console.log(items);
+                //console.log(items);
                 if(items.length>0){
                     var item = {
                         "orderNumber": order.orderNumber,
@@ -114,8 +114,8 @@ if(pageContext.pageType==="confirmation"){
                     };
                     $(".abtestcontent-"+items[0].shipTableReference.toLowerCase()).show();
                     api.request('POST', '/api/platform/entitylists/abtestlistorders@shindigz/entities', item).then(function(res){
-                        console.log("Abtesview updated successfully");
-                        console.log(res);
+                       // console.log("Abtesview updated successfully");
+                       // console.log(res);
                     });
 
                     /*api.request('POST','/api/commerce/orders/'+orderId+'/attributes', [{"fullyQualifiedName": "tenant~STR","values": [items[0].shipTableReference]}]).then(function(res){ 
@@ -701,7 +701,7 @@ if(pageContext.pageType==="confirmation"){
     }
 
     function add_breadcrumb_item (path,lvl,title_tag) {
-        console.log("add new path "+path);
+        //console.log("add new path "+path);
         var previous_url=document.referrer;
         previous_url=previous_url.substr(previous_url.indexOf("/",8));
         var tmp= JSON.parse(sessionStorage.getItem('breadcrumb'));
