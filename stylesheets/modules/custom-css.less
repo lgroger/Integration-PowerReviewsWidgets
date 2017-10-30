@@ -2,7 +2,7 @@
 .quantity-price-break-point {
     margin: 10px 0;
     > p {
-        font-family: MonstserratLight;
+        font-family: @fontGTWalsheimLight;
         font-weight: normal;
         font-size: 14px;
         margin: 0;
@@ -65,7 +65,7 @@
 	> h1 {
 		display: inline-block;
 		color: #0d3762;
-		font-family: ArvoRegular;
+		font-family: @fontFamily;
 		font-weight: normal;
 		padding: 0px 0 8px 0;
 	}
@@ -83,7 +83,7 @@
 	}*/
 }
 .mz-productlisting-title, .mz-productlisting .mz-productlisting-imageplaceholder>.mz-productlisting-imageplaceholdertext {
-    font-family: @fontMontserratRegular;
+    font-family:@fontFamily;
 }
 .cursor-pointer {
     cursor: pointer;
@@ -199,7 +199,7 @@
             display: inline-block;
             height: 50px;
         }    
-        font-family: MontserratRegular;
+        font-family: @fontFamily;
     }
     .mz-productlisting-info,
     .mz-productlisting-rating {
@@ -236,8 +236,8 @@
     .mz-pricestack {
         .mz-price {
             font-size: 18px;
-			font-family: ArvoRegular;
-            color: #131314;
+			font-family: @fontFamily;
+            color: @primaryBlue;
         }
         .mz-price.is-crossedout {
             font-size: 14px;
@@ -310,7 +310,7 @@
             padding: 10px 16px;
             text-decoration: none;
             text-transform: uppercase;
-            font-family: MontserratRegular;
+            font-family: @fontFamily;
             font-size: 14px;
             color: #727373;
             background-image: url('../resources/images/striped.jpg');
@@ -332,13 +332,13 @@
             line-height: normal;
             width: 150px;
             margin: 0 auto; 
-            border: 2px solid #0D3762;
+            border: 2px solid @primaryCTA;
             border-radius: 3px;
             padding: 10px 16px;
             text-decoration: none;
-            font-family: MontserratRegular;
+            font-family: @fontFamily;
             font-size: 14px;
-            color: #0D3762;
+            color: @primaryCTA;
             box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
             background-color: #fff;
             &:before {
@@ -373,7 +373,7 @@
             border-radius: 3px;
             padding: 10px 16px;
             text-decoration: none;
-            font-family: MontserratRegular;
+            font-family: @fontFamily;
             font-size: 14px;
             color: #12b4a0;;
             box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -392,7 +392,7 @@
             padding: 4px 12px;
             cursor: pointer;
             background-color: #d70056;
-            font-family: ArvoRegular;
+            font-family: @fontFamily;
             font-size: 14px;
         > .is-saleprice, span{ 
             color: #fff;
@@ -427,7 +427,7 @@
         padding: 4px 12px;
         cursor: pointer;
         background-color: #94D60A;
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-size: 14px;
         > .new-ribbon {
             color: #fff;
@@ -491,7 +491,7 @@
 		font-size: 25px; 
         h1.mz-pagetitle {
             color: #333;
-            font-family: 'ArvoRegular';
+            font-family: @fontFamily;
             font-size: 24px;
             font-weight: normal;
             margin-bottom:0px;
@@ -505,7 +505,7 @@
         }
         .mz-searchresults-noresultstext {
             display: inline-block;
-			font-family:@fontMontserratLight;
+			font-family: @fontGTWalsheimLight;
             font-size: 1.2rem;
             color: #292929;
         }
@@ -514,7 +514,7 @@
             margin: 0;
             list-style: none;
             display: inline-block;
-			font-family:@fontMontserratRegular; 
+			font-family: @fontFamily; 
             font-size: 0.9rem;
             > li {
                 display: inline-block;
@@ -606,7 +606,7 @@
         padding: 0;
         font-size: 2.1em;
         color: #133963;
-        font-family: @fontArvo;
+        font-family: @fontFamily;
         font-weight: normal;
     }
     p {
@@ -615,7 +615,7 @@
     }
 }
 .menu > ul > li a {
-    font-family: 'Arvo';
+    font-family: @fontFamily;
     color: #F4F4F6;
     font-size: 20px;
     padding: 0.5em 1em;
@@ -637,7 +637,7 @@
         text-align: center;
         padding: 16px;
         margin: 0;
-        font-family: 'ArvoRegular';
+        font-family: @fontFamily;
         font-weight: normal;
 		margin-top: -20px !important;
         font-size: 25px;
@@ -745,7 +745,7 @@
         }
         .mz-pagenumbers .mz-pagenumbers-prev, .mz-pagenumbers .mz-pagenumbers-next{
             font-weight: inherit;
-            font-family: @fontArvo;
+            font-family: @fontFamily;
         }
         .mz-pagenumbers {
             .mz-pagenumbers-prev, .mz-pagenumbers-next {
@@ -887,7 +887,7 @@
             width: 39px;
             height: 39px;
             box-sizing: border-box;
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             cursor: pointer;
         }
         .mz-button.primary{
@@ -928,7 +928,7 @@
         .list-wrapper {
             h2{
                 margin: 0;
-                font-family: ArvoRegular;
+                font-family: @fontFamily;
                 color: #0d3762;
                 font-size: 19px;
                 text-transform: uppercase;
@@ -937,14 +937,14 @@
             label.design-name-lbl{
                 margin: 15px 0px;
                 float: left;
-                font-family: ArvoRegular;
+                font-family: @fontFamily;
                 color: #0d3762;
                 font-size: 16px;
                 font-weight: bold;
             }
             p{
                 margin: 5px 0px 0px;
-                font-family: MonstserratLight;
+                font-family: @fontGTWalsheimLight;
                 color: #848484;
                 font-size: 13px;
                 text-transform: uppercase;
@@ -957,7 +957,7 @@
                 li{
                     padding: 12px 0px;
                     border-bottom: 1px solid #eee;
-                    font-family: MonstserratLight;
+                    font-family: @fontGTWalsheimLight;
                     color: #222;
                     font-weight: 600;
                     font-size: 16px;
@@ -996,7 +996,7 @@
                     cursor: pointer;
                     padding: 15px 0px 5px;
                     margin: 0;
-                    font-family: MonstserratLight;
+                    font-family: @fontGTWalsheimLight;
                     .fa{
                         margin-right:5px;
                     }
@@ -1007,7 +1007,7 @@
                 padding-top:15px;
                 position: relative;
                 label{
-                    font-family: MonstserratLight;
+                    font-family: @fontGTWalsheimLight;
                     color: #666;
                     font-weight: 100;
                     font-size: 17px;
