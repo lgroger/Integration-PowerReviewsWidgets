@@ -35,12 +35,10 @@
              {% if model.delDate %}
              <span class="delivery-date">
                 <span>
-                  Get it by <strong> {{ model.delDate|safe }}</strong> with Standard Shipping
-                </span>
-                 <br>
+                  Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
                  {% if not model.groundOnly %}
-                  <span>Get it by <strong> {{ model.expressDate|safe }}</strong> with Express Shipping </span><br>
-                  Get it by <strong> {{ model.overnightDate|safe }}</strong> with Overnight Shipping <br>
+                  <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
+                  Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}<br>
                   {% endif %}
              </span>
              {% endif %}
@@ -83,9 +81,9 @@
               <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                {% if model.delDate %}
              <span class="delivery-date">
-                Get it by <strong> {{ model.delDate|safe }}</strong> With Standard Shipping <br>
-                Get it by <strong> {{ model.expressDate|safe }}</strong> With Express Shipping <br>
-                Get it by <strong> {{ model.overnightDate|safe }}</strong> with Overnight Shipping <br>
+                Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}<br>
+                Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}<br>
+                Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}<br>
              </span>
              {% endif %}
             {% endwith %}
