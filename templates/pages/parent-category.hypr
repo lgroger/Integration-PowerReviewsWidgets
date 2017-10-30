@@ -16,22 +16,14 @@
     	{% dropzone "category-page-top" scope="page" %}
     	
 	</div>
-	<style>.mz-breadcrumbs:first-child{display:none;}</style>
-	{% block breadcrumbs %}
-	{% if themeSettings.showBreadcrumbs %}
-	<div class="breadcrumbs-conatiner" style="display:none;">
-		{% include "modules/breadcrumbs" %}
-	</div>
-	{% endif %}
-	{% endblock breadcrumbs %}
-    <!-- <h1 class="mz-pagetitle">{{ model.name }}</h1> -->
+
 	{% dropzone "parent-category-page-top" scope="page" %}
 	{# todo list of child cats #}
 	{#  MY CODE #} 
 	<div class="mz-cms-col-12-12 cat-pg-head-container border-bottom-dotted" align="center">
 		<h1 class="cat-page-promotion-header service-title">{{ model.name }}</h1>
 		{% dropzone "parent-category-description" scope="page" %}
-		<!-- <p>Get all the party supplies you need for your big event.</p> -->
+
 	</div>
 		{% if model.childrenCategories.length > 0 %} 
 		<div class="category_list_box list_contaiener">
@@ -53,11 +45,6 @@
 										        	<span class="mz-productlisting-imageplaceholdertext">[no image]</span>
 										        </span>
 										    </div>
-									        <!-- <div class="mz-productlisting-image">
-										        <span class="mz-productlisting-imageplaceholder">
-										        	<span class="mz-productlisting-imageplaceholdertext">[no image]</span>
-										        </span>
-									        </div>  --> 
 										{% endif %}
 										
 									</div>  
