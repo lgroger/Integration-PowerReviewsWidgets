@@ -1,9 +1,9 @@
-﻿@color-gray:#c2c2c2;
-@color-highlight-green:#00b09b;
-@color-blue:#404078;
-@color-dark-blue:#203e64;
-@color-navy-blue:#7995ff;
-@color-highlight-pink:#d70056;
+﻿@color-gray:#bbbbbb;
+@color-highlight-green: #30c3c5;
+@color-blue: #363fc8;
+@color-dark-blue: #211d5e;
+@color-navy-blue: #211d5e;
+@color-highlight-pink: #cc20b8;
 
 body.mz-product {
     .mz-productimages {
@@ -191,14 +191,13 @@ body.mz-product {
         span{
             display: block;
             margin-bottom: 10px;
-            font-family: 'Montserrat', sans-serif;
+            font-family: @fontFamily;
             color: @color-blue;
-            font-weight: 600;
             font-size: 14px;
         }
     }
     .starting-price{
-        font-family: 'Montserrat', sans-serif;
+        font-family: @fontFamily;
         margin-bottom: 20px;
         font-size: 16px;
         span.discount-block{
@@ -218,7 +217,7 @@ body.mz-product {
         }
     }
     #product-detail{
-        font-family: 'Montserrat', sans-serif;
+        font-family: @fontFamily;
         font-size: 14px;
        .mz-productdetail-price{
         padding: 0;
@@ -229,7 +228,6 @@ body.mz-product {
             color: #404078;
             line-height: 1.5;
             margin-right: 15px;
-            font-weight: 600;
             font-size: 16px;
         }
         .mz-pricestack{
@@ -290,7 +288,7 @@ body.mz-product {
         padding: 10px;
         border-radius: 5px;
         cursor: pointer;
-        font-weight: 800;
+        font-weight: normal;
     }
     .mz-qty-label{
         text-transform: uppercase;
@@ -355,7 +353,7 @@ body.mz-product {
         background: @color-dark-blue;
         padding: 3px 10px 6px;
         font-size: 23px;
-        font-weight: 800;
+        font-weight: normal;
         position: absolute;
         right: -10px;
         top: -10px;
@@ -390,9 +388,9 @@ body.mz-product {
     background: @color-dark-blue;
     font-size: 23px;
     color: #fff;
-    font-family: 'Montserrat',sans-serif;
+    font-family: @fontFamily;
     line-height: 1.2;
-    font-weight: 800;
+    font-weight: normal;
     &:hover,&:focus{
          color: #fff;
     }
@@ -401,7 +399,7 @@ body.mz-product {
     cursor: pointer;
     color: @color-dark-blue;
     font-size: 14px;
-    font-weight: 800;
+    font-weight: normal;
     display: inline-block;
     margin: 5px 0 20px 25px;
 }
@@ -412,7 +410,7 @@ body.mz-product {
     padding: 2% 1% 2% 3%;
     background: linear-gradient(#fff,#fff,#fff,#f2f2f2);
     margin: 3% auto;
-    font: 16px MontserratRegular;
+    font: 16px GT-Walsheim-Medium;
     .bundle-inside-container{
         display: flex;
         flex-wrap: wrap;
@@ -425,13 +423,13 @@ body.mz-product {
             }
             .bundle-count{
                 font-size: 28px;
-                font-weight: 400;
+                font-weight: normal;
                 padding: 0 10px;
                 text-align: center;
             }
             h3{
                 font-size: 14px;
-                font-weight: 400;
+                font-weight: normal;
                 margin : 0 0 10px;
                 text-align: center;
             }
@@ -485,13 +483,13 @@ body.mz-product {
         float: left;
         width: 25%;
         line-height: 120px;
-        font-family: @fontArvo;
+        font-family: @fontFamily;
         padding-left: 7%;
     }
 }
 .block1 {
     h3 {
-        font-family: @fontMontserratLight;
+        font-family: @fontGTWalsheimLight;
         text-align: center;
         width: 67%;
         height: 45px; 
@@ -507,7 +505,7 @@ body.mz-product {
     font-size: 1.4em;
     color: @dark-blue;
     margin: 3% 0%;
-    font-family: MontserratRegular;
+    font-family: @fontFamily;
 }
 .bundle-comp-pdp-section{
     .show-cmp-bundle{
