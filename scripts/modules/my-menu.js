@@ -168,19 +168,6 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
         $('#mz-quick-view-container').fadeOut(350);
         $('#mz-quick-view-container').empty();
     };
-
-      
-       	$('.guided-popup').on("click",function(){
-       		$('#guided-overlay').show();
-       	});
-       	$('#guided-close').on("click",function(){
-       		$('#guided-overlay').hide();
-       	});
-       	$('.guided-btn').on("click",function(){
-       		var guidedcat = $(".event-theme").val();
-       		setCookie("guidedcategory",guidedcat,1);
-       		window.location.href="/guided-search";  
-       	}); 
 		     
          $(document).on("click","#det-btn",function(){           	
         	$('#tab1').prop('checked', true); 
@@ -222,8 +209,15 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
  	});
  		
 		$(document).on('click','button.accordion1,button.accordion',function(){
+		 	$(this).next().toggleClass('show');
+			$('.invoice-number').removeClass("diplayprint");
+			if($(this).hasClass("active")){ 
+			    $(this).prev().removeClass("diplayprint");
+			}
+			else{  
+			    $(this).prev().addClass("diplayprint");
+			}
 		 	$(this).toggleClass('active');
-			$(this).next().toggleClass('show');
 			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
 				$(this).next().find("img").each(function() {
 					if($(this).parent().next().data("dndtoken")){

@@ -1824,7 +1824,7 @@
 	 */
 	$.fn.owlCarousel.Constructor = Owl;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * Lazy Plugin
@@ -1958,7 +1958,7 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.Lazy = Lazy;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * AutoHeight Plugin
@@ -2043,7 +2043,7 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.AutoHeight = AutoHeight;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * Video Plugin
@@ -2338,7 +2338,7 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.Video = Video;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * Animate Plugin
@@ -2453,7 +2453,7 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.Animate = Animate;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * Autoplay Plugin
@@ -2585,7 +2585,7 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.autoplay = Autoplay;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * Navigation Plugin
@@ -3040,7 +3040,7 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.Navigation = Navigation;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);
 
 /**
  * Hash Plugin
@@ -3141,4 +3141,4 @@
 
 	$.fn.owlCarousel.Constructor.Plugins.Hash = Hash;
 
-})(window.Zepto || window.jQuery, window, document);
+})(window.Zepto || window.jQuery || require('jquery'), window, document);

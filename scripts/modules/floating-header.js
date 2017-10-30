@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/api' , 'modules/jquery.slicknav','vendor/testimonial/masonry.pkgd.min'], function ($, api) {
+define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
         
 	function equalHeight(group) {
    var tallest = 0;
@@ -85,9 +85,8 @@ define(['modules/jquery-mozu', 'modules/api' , 'modules/jquery.slicknav','vendor
    
 
     });
-	
-	$('#menu').slicknav();	
-	function DropDown(el) {
+
+function DropDown(el) {
     this.dd = el;
     this.placeholder = this.dd.children('span');
     this.opts = this.dd.find('ul.dropdown > li');

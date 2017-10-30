@@ -27,32 +27,32 @@
       "id": "menu-editNew",
       "path": "menu-editNew.js"
     },{
-        "id":"super-page-filter",
-        "path":"super-page-filter.js"
-      },
+      "id": "super-page-filter",
+      "path": "super-page-filter.js"
+    },
     {
-      "id":"shopableimage",
-      "path":"shopableimageEditor.js"
+      "id": "shopableimage",
+      "path": "shopableimageEditor.js"
     },
     {
       "id": "faq",
       "path": "faq-edit.js"
     },{
       "id": "QAEditor",
-      "path":"QASection-edit.js"
+      "path": "QASection-edit.js"
     },{
-       "id":"careers-edit-view",
-      "path":"careers-edit.js"
+      "id": "careers-edit-view",
+      "path": "careers-edit.js"
       },{
-        "id":"press-edit",
-        "path":"press-edit.js"
-      },
+      "id": "press-edit",
+      "path": "press-edit.js"
+    },
     {
       "id": "offer_promo_edit",
       "path": "offer_promo_edit.js"
     },{
-      "id":"our-services-widget",
-      "path":"our-services.js"
+      "id": "our-services-widget",
+      "path": "our-services.js"
 
     },{
       "id": "dynamic-cat-edit",
@@ -68,46 +68,42 @@
       "id": "ship_editor@mozu",
       "path": "ship_editor.js",
       "documentTypes": [
-            "shippingMethod@shindigz"
-        ],
-        "priority": 1
+        "shippingMethod@shindigz"
+      ],
+      "priority": 1
     },{
       "id": "holiday_editor@mozu",
       "path": "holiday_editor.js",
       "documentTypes": [
-            "Shippingholiday@shindigz"
-        ],
-        "priority": 1
+        "Shippingholiday@shindigz"
+      ],
+      "priority": 1
     },
     {
       "id": "shipping_days_list",
       "path": "shipping-days-list.js",
       "documentTypes": [
-            "shippingDate@shindigz"
-        ],
-        "priority": 1
+        "shippingDate@shindigz"
+      ],
+      "priority": 1
     },
     {
       "id": "ship_more_then@mozu",
       "path": "ship_more_then.js",
       "documentTypes": [
-            "shippingMoreThen@shindigz"
-        ],
-        "priority": 1
+        "shippingMoreThen@shindigz"
+      ],
+      "priority": 1
     },{
       "id": "ship_code_config@mozu",
       "path": "ship_cc_edit.js",
       "documentTypes": [
-            "ShippingCodeConfig@shindigz"
-        ],
-        "priority": 1
+        "ShippingCodeConfig@shindigz"
+      ],
+      "priority": 1
     },{
       "id": "homepagecaraousel",
       "path": "homepagecaraousel.js"
-    },
-    {
-      "id": "testimonial_widget",
-      "path": "testimonial_widget.js"
     },
     {
       "id": "layout",
@@ -148,8 +144,8 @@
       "id": "image-new",
       "path": "image-edit-new.js"
     },{
-      "id":"category-html",
-      "path":"category-edit-html.js"
+      "id": "category-html",
+      "path": "category-edit-html.js"
     },
     {
       "id": "horizontalrule",
@@ -183,7 +179,7 @@
       "id": "shipping-reward-list",
       "path": "shippingRewardList.js",
       "documentTypes": [
-          "rewardConfigurationDocumentType@shindigz"
+        "rewardConfigurationDocumentType@shindigz"
       ],
       "priority": 1
     },
@@ -191,7 +187,7 @@
       "id": "shipping-reward-history-hist",
       "path": "shippingRewardHistoryList.js",
       "documentTypes": [
-          "rewardHistoryDocumentType@shindigz"
+        "rewardHistoryDocumentType@shindigz"
       ],
       "priority": 1
     }
@@ -427,6 +423,14 @@
       "customEditor": "categoryContent@mozu"
     },
     {
+      "entityType": "category",
+      "id": "category-html",
+      "template": "category-html",
+      "title": "Category HTML",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
       "entityType": "product",
       "id": "product",
       "template": "product",
@@ -449,13 +453,13 @@
       "userCreatable": false,
       "customEditor": "categoryContent@mozu"
     },
-     {
+    {
       "entityType": "category",
       "id": "categorylanding",
       "template": "categorylanding",
       "title": "Category Landing Page",
       "userCreatable": false,
-       "customEditor": "categoryContent@mozu"
+      "customEditor": "categoryContent@mozu"
     },
     {
       "entityType": "searchresult",
@@ -463,15 +467,6 @@
       "template": "search-results",
       "title": "Search Results",
       "userCreatable": false
-    },
-     {
-      "documentType": "web_page",
-      "editor": "guided-page",
-      "entityType": "webpage",
-      "id": "guided",
-      "template": "guidedsearch",
-      "title": "Guided Search Page",
-      "userCreatable": true
     },
     {
       "entityType": "nosearchresult",
@@ -560,14 +555,6 @@
       "userCreatable": true
     },
     {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "CompareProducts",
-      "template": "compare",
-      "title": "CompareProducts",
-      "userCreatable": true
-    },
-    {
       "documentType":"web_page",
       "entityType":"webpage",
       "id":"ShippingInfo",
@@ -576,18 +563,18 @@
       "userCreatable":true
     },
     {
-      "documentType":"web_page",
-      "entityType":"webpage",
-      "id":"requestQuote",
-      "template":"request-quote",
-      "title":"Shindigz Quote Information",
-      "userCreatable":true
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "requestQuote",
+      "template": "request-quote",
+      "title": "Shindigz Quote Information",
+      "userCreatable": true
     }
   ],
   "settings": {
-    "userListForDndTotenAccess":"",
-    "bannerProductTypes":"Banner,BannerRectangle,BannerVertical,BackgroundVBG",
-    "safetyFlags":[
+    "userListForDndTotenAccess": "",
+    "bannerProductTypes": "Banner,BannerRectangle,BannerVertical,BackgroundVBG",
+    "safetyFlags": [
         {"code":"tenant~safety-1","field":"safety-1"},
         {"code":"tenant~safety-2","field":"safety-2"},
         {"code":"tenant~safety-3","field":"safety-3"},
@@ -608,35 +595,35 @@
         {"code":"tenant~safety-l","field":"safety-l"},
         {"code":"tenant~safety-m","field":"safety-m"}
     ],
-    "safety-1":"",
-    "safety-2":"",
-    "safety-3":"",
-    "safety-4":"",
-    "safety-5":"",
-    "safety-6":"",
-    "safety-a":"",
-    "safety-b":"",
-    "safety-c":"",
-    "safety-d":"",
-    "safety-e":"",
-    "safety-f":"",
-    "safety-g":"",
-    "safety-h":"",
-    "safety-i":"",
-    "safety-j":"",
-    "safety-k":"",
-    "safety-l":"",
-    "safety-m":"",
+    "safety-1": "",
+    "safety-2": "",
+    "safety-3": "",
+    "safety-4": "",
+    "safety-5": "",
+    "safety-6": "",
+    "safety-a": "",
+    "safety-b": "",
+    "safety-c": "",
+    "safety-d": "",
+    "safety-e": "",
+    "safety-f": "",
+    "safety-g": "",
+    "safety-h": "",
+    "safety-i": "",
+    "safety-j": "",
+    "safety-k": "",
+    "safety-l": "",
+    "safety-m": "",
     "relationships": [
       "Father",
       "Mother",
       "Sister"
     ],
-    "googleMapApiKey":"AIzaSyA142qRIX0TvWVQnJs-OOtFRPaXKUNS1_M",
-    "daysForNewRibbon":25,
+    "googleMapApiKey": "AIzaSyA142qRIX0TvWVQnJs-OOtFRPaXKUNS1_M",
+    "daysForNewRibbon": 25,
     "powerReviewsFQNID": "@mzint",
     "dndEngineUrl": "//pers.shindigz.com/dnd/",
-    "iframeloadurlafterlogin":"/about-us",
+    "iframeloadurlafterlogin": "/about-us",
     "backofficeDateTimeFormat": "m/d/Y H:i:s O",
     "extendedPropertiesEnabled": false,
     "extendedPropertyParameters": "",
@@ -664,7 +651,7 @@
       }
     ],
     "defaultPageSize": 60,
-    "defaultSort": "createDate desc", 
+    "defaultSort": "createDate desc",
     "enablePartialCaching": true,
     "loadGoogleFonts": [
       "Source Sans Pro"
@@ -711,37 +698,34 @@
     "textColor": "#444444",
     "changeShipping": false,
     "instaAcountID": "",
-    "compareProductFlag": false,
-    "compareCategoriesList":[],
     "instaImageCount": 10,
     "socialShareAddThis": "",
-    "productAttributes":{
-        "displayCrossSell": "tenant~displaycrosssells",
-      "productCrossSell":"tenant~product-crosssell",
-        "productionTime":"tenant~productiontime",
-      "colorHex":"tenant~colorhex",
-        "dndCode":"tenant~dndcode",
-        "designCode":"tenant~design-code",
-        "dndToken":"tenant~dnd-token",
-      "color":"tenant~color",
-        "video":"tenant~szvideo",
-        "unitOfMeasure":"tenant~uom",
-        "giantGreetingCardSize":"tenant~giant-greeting-card-size",
-      "optionalEnvelope":"tenant~optional-envelope",
-      "newFlag":"tenant~display-new-ribbon",
-        "shipZip":"tenant~shipfromzip",
-        "productMelt":"tenant~melts",
-        "usaOnly":"tenant~safety-j",
-        "usa48":"tenant~safety-k",
-        "outdoorbanner":"tenant~outdoor-banner",
-        "outdoorbannerslits":"tenant~outdoor-banner-with-slits",	
-        "groundOnly":"tenant~safety-d",
-        "surCharge":"tenant~pnhsurcharge",
-        "clearanceFlag":"tenant~clearanceitem",
-        "dndColor": "tenant~dndcolorize", 
-        "guidedSearchNavField":"tenant~product-type",
-        "dontshiptoIllinois":"tenant~safety-m",
-        "dontshiptoCalifornia":"tenant~safety-l"
+    "productAttributes": {
+      "displayCrossSell": "tenant~displaycrosssells",
+      "productCrossSell": "tenant~product-crosssell",
+      "productionTime": "tenant~productiontime",
+      "colorHex": "tenant~colorhex",
+      "dndCode": "tenant~dndcode",
+      "designCode": "tenant~design-code",
+      "dndToken": "tenant~dnd-token",
+      "color": "tenant~color",
+      "video": "tenant~szvideo",
+      "unitOfMeasure": "tenant~uom",
+      "giantGreetingCardSize": "tenant~giant-greeting-card-size",
+      "optionalEnvelope": "tenant~optional-envelope",
+      "newFlag": "tenant~display-new-ribbon",
+      "shipZip": "tenant~shipfromzip",
+      "productMelt": "tenant~melts",
+      "usaOnly": "tenant~safety-j",
+      "usa48": "tenant~safety-k",
+      "outdoorbanner": "tenant~outdoor-banner",
+      "outdoorbannerslits": "tenant~outdoor-banner-with-slits",
+      "groundOnly": "tenant~safety-d",
+      "surCharge": "tenant~pnhsurcharge",
+      "clearanceFlag": "tenant~clearanceitem",
+      "dndColor": "tenant~dndcolorize",
+      "dontshiptoIllinois": "tenant~safety-m",
+      "dontshiptoCalifornia": "tenant~safety-l"
     },
     "usStates": [
       {
@@ -987,33 +971,33 @@
     "visaCheckoutSdkUrl": "https://sandbox-assets.secure.checkout.visa.com/checkout-widget/resources/js/integration/v1/sdk.js",
     "categoryForSearchDropdown": null,
     "shippingTooltipInfo": "",
-    "CVVtooltipText":"The Card Verification Value (CVV*) is an extra code printed on your debit or credit card. CVV for Visa, MasterCard and Discover is the final three digits of the number printed on the signature strip on the back of your card. CVV for American Express appears as a separate 4-digit code printed on the front of your card.",
-    "layoverlinks":"",
-    "wishlisteventtypes":"",
-    "loginSessionMessage":"",
-    "myaccounttabs":"",
+    "CVVtooltipText": "The Card Verification Value (CVV*) is an extra code printed on your debit or credit card. CVV for Visa, MasterCard and Discover is the final three digits of the number printed on the signature strip on the back of your card. CVV for American Express appears as a separate 4-digit code printed on the front of your card.",
+    "layoverlinks": "",
+    "wishlisteventtypes": "",
+    "loginSessionMessage": "",
+    "myaccounttabs": "",
     "myaccounttabsmobile": "",
-    "supportsection":"",
-    "miniCartHeading":"",
-    "relatedProductHeading":"",
-    "similarProductHeading":"Similar Products",
-    "recommendedProductHeading":"Recommended Products",
-    "searchPageHeading":"",
-    "noSearchPageHeading":"",
-    "noSearchSubText":"",
-    "suggestedProductsHeading":"",
-    "ourOtherSite":"",
-    "superpageitems":20,
-    "bundleBroductTypeId":"",
-    "continueShoppingLink":"",
-    "cartpagePromo":"",
-    "rewardAnonymous":"",
-    "rewardLoggedin":"",
-    "rewardLoggedinJoin":"",
-    "emailSubscription":12,
-    "holidayPreferences":14,
-    "ocassions":2,
-    "customerType":18,
+    "supportsection": "",
+    "miniCartHeading": "",
+    "relatedProductHeading": "",
+    "similarProductHeading": "Similar Products",
+    "recommendedProductHeading": "Recommended Products",
+    "searchPageHeading": "",
+    "noSearchPageHeading": "",
+    "noSearchSubText": "",
+    "suggestedProductsHeading": "",
+    "ourOtherSite": "",
+    "superpageitems": 20,
+    "bundleBroductTypeId": "",
+    "continueShoppingLink": "",
+    "cartpagePromo": "",
+    "rewardAnonymous": "",
+    "rewardLoggedin": "",
+    "rewardLoggedinJoin": "",
+    "emailSubscription": 12,
+    "holidayPreferences": 14,
+    "ocassions": 2,
+    "customerType": 18,
     "mktoHolidayEmailPreferences": 1174,
     "mktoEmailSubscription": 1263,
     "mktoPartyPlanner": 1200,
@@ -1031,46 +1015,28 @@
     "rewardProgramEnrolledAttribute": "tenant~rp-enrolled-on",
     "postOrderSignupAttribute": "tenant~post-order-signup",
     "allProductsCategoryCode": 4706,
-    "isEnableGuidedSearch": false,
-    "guidedSearchProperty1Label": "Selected Event Type:",
-    "guidedSearchProperty2Label": "Theme:",
-    "guidedSearchProperty1Labelq": "What kind of Event?",
-    "guidedSearchProperty1Labelopt": "Select Event",
-    "guidedSearchProperty2Labelq": "What's your Event Theme?",
-    "guidedSearchProperty2Labelopt": "Select Event Theme",
-    "guidedSearchProperty3Labelq": "I am interested in (check all that apply)",
-    "guidedSearchProperty1": "tenant~occasion-or-event",
-    "guidedSearchProperty1KeyValues": "[{\"18th Birthday\":\"18th Birthday\"},{\"21st-Birthday\":\"21st-Birthday\"},{\"30th-Birthday\":\"30th-Birthday\"}]",
-    "guidedSearchProperty2": "tenant~theme",
-    "guidedSearchProperty2KeyValues": "[{\"20s\":\"20s\"},{\"1950s\":\"1950-s\"},{\"1960s\":\"1960-s\"}]",
-    "guidedSearchProperty3": "tenant~super-page-product-type",
-    "guidedSearchProperty3KeyValues": "[{\"Activities\":\"Activities\"},{\"Personalized Products\":\"Personalized Products\"},{\"Party Tableware\":\"Party Tableware\"}]",
-    "guidedSearchFloatingButtonText": "Guided Search",
-    "guidedSearchFloatingButtonBg": "rgba(61, 142, 242, 1)",
-    "guidedSearchFloatingButtonHBg": "rgba(128, 189, 242, 1)",
-    "guidedSearchFloatingButtonColor": "rgba(255, 255, 255, 1)",
     "certonaRecomm": true,
-    "certonaRecommSimilarProducts":true,
-    "certonaRecommRelatedProducts":false,
+    "certonaRecommSimilarProducts": true,
+    "certonaRecommRelatedProducts": false,
     "couponCodeMultiple": false,
-    "cartCouponLabel":"Promo Code",
-    "cartCouponPlaceholder":"Enter Promo Code",
+    "cartCouponLabel": "Promo Code",
+    "cartCouponPlaceholder": "Enter Promo Code",
     "singleCouponCodeLabel": "Only one promo code per order",
     "multipleCouponCodeLabel": "More than one Promo code available",
-    "cartZipLabel":"ZIP Code",
-    "cartZipDesc" :"Enter Zip code to Calculate Shipping Charge",
-    "cartZipPlaceholder":"Enter Zip code",
+    "cartZipLabel": "ZIP Code",
+    "cartZipDesc": "Enter Zip code to Calculate Shipping Charge",
+    "cartZipPlaceholder": "Enter Zip code",
     "occasionRel": "Mother;Father;Sister;Brother",
     "occasionType": "Anniversary;Birthday;",
     "storeCreditCodeInfoLabel": "Enter your store credit code, then click \"Apply\"",
-    "storeCreditFAQinfo":  "- Here are the answers to some frequently asked questions about the Spiritline Rewardz program and how to redeem Rewardz dollars online - on every order:",
-    "sheerIDAuthUrl":"https://aws.shindigz.com/SheerID/military_asset.php",
-    "QuoteOrderAttributeId":"40",
-    "containerTagIdAnonymous":"15734",
-    "containerTagIdLoggedIn":"15733",
-    "aidAnonymous":"366140",
-    "aidExist":"302015",
-    "cid":"473140",
+    "storeCreditFAQinfo": "- Here are the answers to some frequently asked questions about the Spiritline Rewardz program and how to redeem Rewardz dollars online - on every order:",
+    "sheerIDAuthUrl": "https://aws.shindigz.com/SheerID/military_asset.php",
+    "QuoteOrderAttributeId": "40",
+    "containerTagIdAnonymous": "15734",
+    "containerTagIdLoggedIn": "15733",
+    "aidAnonymous": "366140",
+    "aidExist": "302015",
+    "cid": "473140",
     "brtrkAccNum": "5354",
     "criteoAccNum": "17770",
     "dclk_src": 2180655,
@@ -1084,14 +1050,14 @@
     "gConvValue": 1.00,
     "gConvCur": "USD",
     "gRemarketing": false,
-    "allThirdPartyScriptTags":"",
-    "ThirdPartyHeadTag":"",
-    "bizAccNumber":71746,
-    "nexttag":4889912,
-    "facebookPixel":1000000,
-    "pinterestTagID":100000,
-    "favicon":"//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico",
-    "productTypeDefaultImg":"",
+    "allThirdPartyScriptTags": "",
+    "ThirdPartyHeadTag": "",
+    "bizAccNumber": 71746,
+    "nexttag": 4889912,
+    "facebookPixel": 1000000,
+    "pinterestTagID": 100000,
+    "favicon": "//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico",
+    "productTypeDefaultImg": "",
     "numberOfDaysMarketo": 13
   },
   "layoutWidgets": [
@@ -1214,11 +1180,11 @@
         "*"
       ]
     },
-     {
+    {
       "displayName": "FAQ",
       "displayTemplate": "misc/faq",
       "customEditor": "faq",
-      "stylesheet":"faq.less",
+      "stylesheet": "faq.less",
       "icon": "/resources/admin/widgets/faq.jpg",
       "id": "faq",
       "validPageTypes": [
@@ -1233,18 +1199,18 @@
         "*"
       ]
     },{
-      "displayName":"Category HTML widget",
+      "displayName": "Category HTML widget",
       "customEditor": "category-html",
       "id": "category-html",
-      "displayTemplate":"misc/category-edit-html",
+      "displayTemplate": "misc/category-edit-html",
       "validPageTypes": [
         "*"
       ]
     },{
-      "displayName":"Add New QA Section",
-      "customEditor":"QAEditor",
+      "displayName": "Add New QA Section",
+      "customEditor": "QAEditor",
       "displayTemplate": "misc/QASection",
-      "id":"QAWidget",
+      "id": "QAWidget",
       "validPageTypes": [
         "*"
       ]
@@ -1265,7 +1231,7 @@
       "validPageTypes": [
         "*"
       ],
-       "editViewFields": [
+      "editViewFields": [
         {
           "fieldLabel": "Instagramme Main Heading ",
           "name": "instagrammemainheading",
@@ -1291,16 +1257,8 @@
           "width": 500
         }
       ]
-    }
-    ,{
-      "displayName": "Mega Menu",
-      "displayTemplate": "misc/megaMenu",
-      "customEditor": "menu-edit",
-      "id": "menu-edit",
-      "validPageTypes": [
-        "*"
-      ]
-    },{
+    },
+    {
       "displayName": "Mega Menu New",
       "displayTemplate": "misc/megaMenuNew",
       "customEditor": "menu-editNew",
@@ -1309,28 +1267,28 @@
         "*"
       ]
     },{
-         "displayName": "Theme Page Buttons",
-        "displayTemplate": "misc/super-page-widget",
-        "customEditor":"super-page-filter",
-        "id":"super-page-filter",
-        "validPageTypes": [
+      "displayName": "Theme Page Buttons",
+      "displayTemplate": "misc/super-page-widget",
+      "customEditor": "super-page-filter",
+      "id": "super-page-filter",
+      "validPageTypes": [
         "*"
       ]
 
       },{
-        "displayName":"Press/News page",
-        "displayTemplate":"misc/press",
-        "customEditor":"press-edit",
-        "id":"press-edit",
-        "stylesheet":"press.less",
+      "displayName": "Press/News page",
+      "displayTemplate": "misc/press",
+      "customEditor": "press-edit",
+      "id": "press-edit",
+      "stylesheet": "press.less",
         "validPageTypes":["*"]
       },{
       "displayName": "Opening Job Position",
       "displayTemplate": "misc/Careers-Opening",
-       "id": "job-opening",
-       "stylesheet":"careers.less",
-      "customEditor":"careers-edit-view"
-   },
+      "id": "job-opening",
+      "stylesheet": "careers.less",
+      "customEditor": "careers-edit-view"
+    },
     {
       "id": "popular_category",
       "icon": "/resources/admin/widgets/category.png",
@@ -1339,9 +1297,9 @@
         "*"
       ],
       "displayTemplate": "catalog/jb-popular-categories",
-      "customEditor":"popular-editor"
+      "customEditor": "popular-editor"
     },
-        {
+    {
       "id": "similar_themes",
       "icon": "/resources/admin/widgets/category.png",
       "displayName": "Similar Themes",
@@ -1362,19 +1320,6 @@
             "type": "Taco.store.Categories"
           }
         }
-      ]
-    },
-    {
-      "defaultConfig": {
-        "title": "Testimonial Widget"
-      },
-      "displayName": "Testimonial Widget",
-      "customEditor": "testimonial_widget",
-      "displayTemplate": "misc/testimonial",
-      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
-      "id": "testimonial_widget",
-      "validPageTypes": [
-        "*"
       ]
     },
     {
@@ -1791,7 +1736,7 @@
       "defaultConfig": {
         "body": "<h2>Insert Markup</h2>"
       },
-      "displayName": "AB HTML", 
+      "displayName": "AB HTML",
       "displayTemplate": "cms/abcontent",
       "editViewFields": [
         {
