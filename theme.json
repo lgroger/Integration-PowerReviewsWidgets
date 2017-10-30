@@ -377,7 +377,7 @@
     }
   ],
   "settings": {
-    "powerReviewsSettingsList": "mozu-powerreviews2-sitesettings@mzint",
+    "powerReviewsSettingsList": "mozu-powerreviews2-sitesettings@mozuadmin",
     "backofficeDateTimeFormat": "m/d/Y H:i:s O",
     "extendedPropertiesEnabled": false,
     "extendedPropertyParameters": "",
