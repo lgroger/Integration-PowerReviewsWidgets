@@ -232,6 +232,9 @@
     }
     .product-mainname{ 
         font-size: 14px;
+        & a {
+            color: @textColor;
+        }
     }
     .mz-pricestack {
         .mz-price {
@@ -540,7 +543,7 @@
     }
 }
 .mz-productlisting-is-personalize {
-    background-color: #DCEAF6;
+    background-color: @secondaryWhite;
     padding: 2px 0;
     text-align: center;
     position: absolute;
@@ -551,6 +554,10 @@
     font-weight: 600;
     a { 
         display: block; 
+        color: @textColor;
+        &:hover {
+            color: @textColor;
+        }
     }
 }
 .color-swatch {

@@ -181,7 +181,7 @@ a.br-theme-page {
 	-moz-border-top-left-radius: 5px;	
 }
 .br-facet-personalized {
-	background-color: #dde9f6;	
+	background-color: @secondaryWhite;	
 }
 #ui-id-2,ulul#ui-id-3 {
 	z-index: 10000000 !important;
@@ -6127,21 +6127,18 @@ searchNav .option{
   font-size: 13px;
   line-height: 20px;
   min-height: 20px;
-  @media (min-width: 768px) {
-  	font-size: 15px;
-  }
 }
 .selectric-items li {
   display: block;
   padding: 8px;
-  border-top: 1px solid #FFF;
-  border-bottom: 1px solid #EEE;
+  border-top: 1px solid @secondaryWhite;
+  border-bottom: 1px solid @secondaryWhite;
   color: #666;
   cursor: pointer;
 }
 .selectric-items li.selected {
-  background: #EFEFEF;
-  color: #444;
+  background: @secondaryWhite;
+  color: @textColor;
 }
 .selectric-items li:hover {
   background: #F0F0F0;
@@ -6731,7 +6728,7 @@ right: 0;
 }
 }
 .mz-category-title>.mz-pagetitle {
-    padding: 0 5px 0 5px;
+    padding: 0 10px;
 }
 #tab-content2 .pr-snapshot-rating .pr-stars, #tab-content2 .pr-review-faceoff-review-wrapper .pr-stars,  #tab-content2 .pr-review-rating .pr-stars {
     float: none;
