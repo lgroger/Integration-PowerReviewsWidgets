@@ -31,6 +31,12 @@
                 },
                 {
                     "xtype":"mz-input-text",
+                    "name":"cdnUrl",
+                    "fieldLabel":"CDN Url ex. {{CDN}}/d0d40678-e391-4eca-9b44-793890e976c1?max=475",
+                    "width":"50%"
+                },
+                {
+                    "xtype":"mz-input-text",
                     "name":"favicon",
                     "fieldLabel":"Favicon Url"
                 },{

@@ -137,14 +137,14 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                  //Pinterest tracking
                  if(pintrk!==undefined){
                      pintrk('track','addtocart',{
-                        value:parseFloat(track_price*prod.get('quantity')).toFixed(2),
-                        order_quantity:prod.get('quantity'),
+                        value:parseFloat(track_price*prod.get('quantity')),
+                        order_quantity:parseInt(prod.get('quantity'),10),
                         currency:"USD",
                         line_items:[{
                             product_name:product.toJSON().content.productName,
                             product_id:track_product_code[0],
-                            product_price:track_price,
-                            product_quantity:prod.get('quantity')
+                            product_price:parseFloat(track_price),
+                            product_quantity:parseInt(prod.get('quantity'),10)
                         }]
                     });
                  }
@@ -774,9 +774,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 setTimeout(function() {
                     var delivery_html="<span class='delivery-date'> <span>Get it by <strong>";
                     if(scope_obj.model.get("delDate")){
-                        delivery_html=delivery_html+""+scope_obj.model.get("delDate")+"</strong> With Standard Shipping </span> <br> ";
+                        delivery_html=delivery_html+""+scope_obj.model.get("delDate")+"</strong>" +Hypr.getLabel('stdShippingWith')+ "</span> <br> ";
                         if(scope_obj.model.get("groundOnly")===undefined){
-                            delivery_html=delivery_html+"<span>Get it by <strong>"+scope_obj.model.get("expressDate")+"</strong> with Express Shipping  </span> <br> Get it by <strong>"+scope_obj.model.get("overnightDate")+" </strong> with Overnight Shipping <br> ";
+                            delivery_html=delivery_html+"<span>Get it by <strong>"+scope_obj.model.get("expressDate")+"</strong>" +Hypr.getLabel('expShippingWith')+ "</span> <br> Get it by <strong>"+scope_obj.model.get("overnightDate")+" </strong>" +Hypr.getLabel('ovrShippingWith')+ "<br> ";
                         }
                     }
                     $("#product-detail > p ").after(delivery_html);
