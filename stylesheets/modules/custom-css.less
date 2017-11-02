@@ -487,16 +487,16 @@
     .no-search {  
         padding: 10px 0;
         text-align: center;
-        background-color: #F1F1F1; 
+        background-color: @secondaryWhite; 
 		font-size: 25px; 
         h1.mz-pagetitle {
-            color: #333;
+            color: @textColor;
             font-family: @fontFamily;
             font-size: 24px;
             font-weight: normal;
             margin-bottom:0px;
             > span {
-                color: #2b5378;
+                color: @secondaryPink;
                 word-break: break-word;
             } 
         } 
@@ -507,7 +507,7 @@
             display: inline-block;
 			font-family: @fontGTWalsheimLight;
             font-size: 1.2rem;
-            color: #292929;
+            color: @textColor;
         }
         .mz-search-suggestion {
             padding: 0;
@@ -518,12 +518,12 @@
             font-size: 0.9rem;
             > li {
                 display: inline-block;
-                color: #838383;
+                color: @textColor;
                 text-align: left;
                 &:before {
                     content: "\25A0";
                     padding: 0px 4px;
-                    color: #838383;
+                    color: @textColor;
                 }
             }
         }
