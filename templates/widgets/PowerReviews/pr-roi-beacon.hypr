@@ -15,4 +15,9 @@
   <input type="hidden" id="sellerRatingPageId" value="{{model.config.sellerRatingsPageId}}">
 {%endif%}
 
+{% if model.config.includeWhyDidYouBuy  %}
+  <script type="text/javascript" src="//ui.powerreviews.com/stable/4.0/ui.js"></script>
+{% endif% }
+
+<script type="text/javascript" src="//static.powerreviews.com/t/v1/tracker.js"></script>
 {% require_script "widgets/powerreviews" %}

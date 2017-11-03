@@ -27,4 +27,5 @@
   <div id="pr-wyb" ></div>
 {% endif %}
 
+<script type="text/javascript" src="//ui.powerreviews.com/stable/4.0/ui.js"></script>
 {% require_script "widgets/powerreviews" %}
