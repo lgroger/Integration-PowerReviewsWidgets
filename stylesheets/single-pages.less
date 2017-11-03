@@ -895,7 +895,6 @@
 }
 .blog-main-page .blog-home-content{
 	font-family: @fontFamily;
-	margin-top: -10px;
 	& .mz-cms-content {
 		padding: 0;
 	}
@@ -1573,9 +1572,12 @@
     width: 100%;
     margin: 0 0 10px 0;
     display: flex;
+    & a {
+    	text-decoration: none !important;
+    }
 }
 #top-cat-section.category_list_box.list_contaiener {
-    background: #F1F1F1;
+    background: #FFF;
 }
 #top-cat-section.category_list_box.list_contaiener .catg_list_name {
     padding: 7px 5px 9px 5px !important;
@@ -1584,7 +1586,7 @@
     position: static;
 }
 .top-cat-container {
-    background-color: #F1F1F1;
+    background-color: #FFF;
     overflow: hidden;
 }
 #top-cat-section .catg_list_img>img {

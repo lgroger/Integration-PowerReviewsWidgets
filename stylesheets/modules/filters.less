@@ -42,7 +42,7 @@
             color: @secondaryBlue;
             padding: 0;
             cursor: pointer;
-            font-family: @fontGTWalsheimBold;
+            font-family: @fontFamily;
             font-size: 11px;
             text-transform: none;
         }
@@ -80,8 +80,6 @@
     width: 100%;
     z-index: 1;
     .mz-filters-bar {
-        background-color: @secondaryWhite;
-        line-height: .8;
         & .mz-sort img {
             display: none;
             margin-top: 14px;
@@ -114,14 +112,15 @@
         width: 16px;
         height: 15px;
         background: none;
-        margin: 1px 9px;
+        margin: -1px 9px;
         vertical-align: bottom;
         border-radius: 4px;
-        border: 1px solid #808080;
+        border: 1px solid @primaryDarkBlue;
 
 }
 .mz-facetingform-value:checked + .mz-facetingform-valuelabel:before  {
-    background: @secondaryBlue;
+    background: @primaryDarkBlue;
+    border: 1px solid @primaryDarkBlue;
 }
 .desktop .mz-facetingform .mz-facetingform-facet li{
     font-family: @fontFamily;
@@ -134,7 +133,7 @@
     .mz-pagingcontrols-pagestate-label {
         margin-top: 12px;
         font-family: @fontFamily;
-        color:#777;
+        color: @primaryDarkBlue;
         font-size: 12px;
         margin-left: 3%;
     }    
@@ -148,7 +147,6 @@
     label {
         font-family: @fontFamily;
         cursor: inherit;
-        text-transform: uppercase;
         display: inline-block;
     }
     select {
@@ -176,7 +174,7 @@
 }
 .selected-filter:hover{
     background-color: #fff;
-    border-color: @secondaryBlue;
+    border-color: @primaryDarkBlue;
 }
 .mz-facetingform-clearall.selected-filter:hover{
     box-shadow: none;
@@ -184,14 +182,14 @@
 .selected-filter {
     display: inline-block;
     padding: 6.25px 25px 6.25px 14px;
-    border: 1px solid #BDBDBD;
+    border: 1px solid @secondaryWhite;
     display: inline-block;
     border-radius: 2px;
     position: relative;
     margin-left: 9px;
     transition: 0.3s ease-in-out;
     a {
-        color: @secondaryBlue;
+        color: @primaryDarkBlue;
         display: block;
         position: absolute;
         padding: 0px 2px;
@@ -202,22 +200,22 @@
     }
 }
 .mz-facetingform-clearall.selected-filter {
-    padding: 7px 14px 7px 14px;
+    padding: 7.5px 14px 7.5px 14px;
     background-color: @secondaryWhite;
 }
 .mz-filters {
     display: inline-block;
     position: relative;
     >.mz-filters-btn {
-        font-size: 17px;
-        padding: 0px 0 0 16px;
+        font-size: 14px;
+        padding: 0px 0 0 30px;
         color: white;
-        background: @secondaryBlue;
-        border: solid @secondaryBlue 1px;
+        background: @primaryDarkBlue;
+        border: solid @primaryDarkBlue 1px;
         text-decoration: none;
         text-align: left;
-        width: 219px;
-        height:46px;
+        width: 100%;
+        height:inherit;
         line-height: .8;
         box-sizing: border-box;
         &:after {
@@ -435,7 +433,6 @@
 }
 
 .mz-breadcrumbs {
-    margin-left: 18px;
     text-transform: uppercase;
     font-family: @fontFamily;   
 }
@@ -448,9 +445,9 @@
         }
     }
     .mz-sort-btn {
-        font-family: @fontRoboto;
-        font-size: 19px;
-        padding: 13px 0;
+        font-family: @fontFamily;
+        font-size: 14px;
+        padding: 3.5px 0;
     }
     .mz-filter-mobile-options {
         display: none;
@@ -460,7 +457,7 @@
         top: 0;
         background-color: #fff;
         header {
-            padding: 7px 0px 0 20px;
+            padding: 5px;
         }
         z-index: 99999;
         .mz-facetingform {
@@ -487,21 +484,21 @@
         bottom: 62px;
         > .mz-apply-btn,
         > .mz-facetingform-clearall {
-            font-family: @fontRoboto;
-            font-size: 20px;
+            font-family: @fontFamily;
+            font-size: 14px;
             padding: 13px 0;
             color: #fff;
-            background: @secondaryBlue;
-            border: solid @secondaryBlue 1px;
+            background: @primaryDarkBlue;
+            border: solid @primaryDarkBlue 1px;
             text-decoration: none;
             text-align: center;
             width: 48%;
             text-transform:uppercase;
         }
         > .mz-facetingform-clearall {
-            background-color: #F2F2F2;
-            color: #ABABAB;
-            border: solid #F2F2F2 1px;
+            background-color: @secondaryWhite;
+            color: @primaryDarkBlue;
+            border: solid @primaryDarkBlue 1px;
         }
     }
     ul.mz-l-sidebaritem-mobile {
@@ -526,6 +523,9 @@
             font-size: 18px;
             color: @primaryDarkBlue;
             text-transform: capitalize;
+            & i.fa {
+                font-size: 14px;
+            }
         }
     }
     select.mz-filters {
@@ -533,25 +533,29 @@
     }
     .mz-filters {
         .mz-filters-btn {
-            padding: 6px 0;
             text-align: center;
         }
     }
     .mz-sort {
-        display: inline-block;
-        width: 49%;
-text-align: center;
+        width: 50%;
+        float: right;
+        text-align: center;
+        box-sizing: border-box;
+        background-color: @secondaryWhite;
+        height: 35px;
+        @media (min-width: 768px) {
+            height: 57px;
+        }
         .mz-sort-btn {
             width: 50%;
             color: @primaryDarkBlue;
-            background: #dceaf6;
-            padding: 10px 0;
-            border: solid #dceaf6 1px;
+            background: @secondaryWhite;
             text-decoration: none;
             text-align: center;
             display: inline-block;
-            height: auto !important;
+            height: inherit;
             margin: 0;
+            padding: 0;
         }
     }
 }
@@ -733,7 +737,7 @@ i.close-option {
 .mz-sort .selectric .label { 
     display: inline-block;
     margin: 0;
-    font-size: 20px !important;
+    font-size: 14px !important;
     overflow: visible !important;
     line-height: 55px !important;
     
@@ -745,8 +749,8 @@ i.close-option {
 
 .mz-mobile-filter .mz-filters .mz-filters-btn {
     width: 100%;
-    height: 57px;
-    line-height: 2;
+    height: inherit;
+    line-height: 2.7;
 }
 
 .mz-l-paginatedlist-header .selectric .button:after {
@@ -821,7 +825,7 @@ i.close-option {
     }
 
 .mz-sort .selectric .label {
-    font-size: 17px !important;
+    font-size: 14px !important;
     overflow: visible !important;
     line-height: 55px !important;
     
@@ -834,7 +838,7 @@ i.close-option {
 
 .mz-mobile-filter .mz-filters .mz-filters-btn {
     width: 100%;
-    height: 57px;
+    height: inherit;
     line-height: 2.5;
 }
 

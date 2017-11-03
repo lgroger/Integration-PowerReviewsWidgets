@@ -4,26 +4,26 @@
     .mz-pagenumbers-number {
         display: inline-block;
         text-decoration: none;
-        padding: 10px;
-        border: 1px solid #A3A7AB;
+        padding: 10px 5px;
+        border: 1px solid #fff;
         border-radius: 4px;
         text-decoration: none;
-        font-family: @fontArvo;
+        font-family: @fontFamily;
         font-size: 12px;
     } 
     a{
-        color: #4f4f4f;
+        color: @primaryDarkBlue;
         font-size: 15px;
         &:hover{
-            border: 1px solid #004d9c;
-            background-color: #eaf2f9;
+            border: 1px solid @primaryDarkBlue;
+            background-color: #fff;
         }
         b{
             font-weight: normal;
         }
     }
     .mz-pagenumbers-number.is-current {
-        border: 1px solid #004D9C;
+        border: 1px solid @primaryDarkBlue;
     }
 }
 .mz-pagenumbers-prev is-disabled b{
