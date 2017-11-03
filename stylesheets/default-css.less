@@ -78,6 +78,9 @@
 	display: inline-block;
 	color: @textColor;
 }
+.mz-pricestack-range, .mz-pricestack-price-lower .is-crossedout, .mz-pricestack-price-lower .is-crossedout:after, .mz-pricestack-price-upper .is-crossedout {
+	font-size: 12px;
+}
 .filter-color-list {
 	padding: 0 4%;
 }
@@ -142,7 +145,6 @@ ul.br-seo-mobile-items {
 /* end missed LG */
 
 .mz-productlisting.mz-productlist-tiled.br-theme-tile, .br-suggest-right.br-suggest-theme {
-	border: 1px solid @primaryCTA;
 	text-align: center;
 }
 a.br-theme-page {
@@ -171,7 +173,7 @@ a.br-theme-page {
 	margin-bottom: 90px !important;	
 }
 .br-facet-form-header {
-	background-color: @primaryBlue;
+	background-color: @primaryDarkBlue;
 	color: #FFF;
 	padding: 5px 5px 5px 15px;	
 	font-family: @fontFamily;
@@ -2787,7 +2789,7 @@ button{
     }
 }
 .mz-productlisting .mz-productlisting-info .mz-productlisting-title {
-    display: inline-block;
+    display: block;
     height: 40px;
     text-transform: lowercase
 }
@@ -3105,7 +3107,7 @@ h2.promo-slide-title{
     }
 }
 .mz-pagenumbers .mz-pagenumbers-number{
-    padding: 12px 9px;
+    padding: 5px 5px;
 }
 .winter_sale{
     font-size: 2.4rem;
@@ -3243,9 +3245,6 @@ h2.promo-slide-title{
 }
 #search_text:-ms-input-placeholder { /* Internet Explorer 10+ */
     color: #363fc8;
-}
-.mz-filters > .mz-filters-btn:hover{
-	opacity: .7;
 }
 #search_button {
 	border: none;
@@ -3870,8 +3869,8 @@ searchNav .option{
     transition: 0.3s ease-in-out; 
 } 
 .mz-facetingform-clearall.selected-filter{
-    border-color: #11d692 !important;
-    color:#444;
+    border-color: @primaryDarkBlue !important;
+    color: @primaryDarkBlue;
 }  
 .other-relation{
    margin-top: 5%;   
@@ -4323,9 +4322,6 @@ searchNav .option{
         margin-top: 1px;
         width: 20px;
     }
-    .selectric-mz-pagingcontrols-pagesize-dropdown .button{
-    	top: -13px;
-    }
 }
 .add_z_index{
     z-index: 1 !important;
@@ -4637,8 +4633,8 @@ searchNav .option{
         }
         .selectric .label{
             margin: 0;
-            font-size: 17px;
-            line-height: 2.1;
+            font-size: 14px;
+            line-height: 2.5;
         }
 }
 @media (min-width: 995px){
@@ -4934,7 +4930,7 @@ searchNav .option{
         }
     }
     .mz-filters .mz-filters-btn i{
-        margin: -2px 16px 0;
+        margin: -2px 5px 0 18px;
         @media (min-width: 768px) {
         	margin: 15px 16px;
         }
@@ -5337,10 +5333,14 @@ searchNav .option{
         float: none;
         clear: both;
     }  
-    .readmore-btn{
+    .readmore-btn, {
         text-decoration: underline;
         cursor: pointer;
         display: inline;
+        color: @linkColor;
+        &:hover {
+        	color: @linkHoverColor;
+        }
     }
 }
 @media only screen and (max-width:1024px) and (min-width:801px){
@@ -5459,7 +5459,7 @@ searchNav .option{
         width: 48.9% !important; 
     }
     .mz-mobile-filter .mobile-filter-footer{
-        background-color: #f2f2f2;
+        background-color: #fff;
     }
 
     .mz-mobile-filter .mz-filter-mobile-options header{
@@ -5607,55 +5607,55 @@ searchNav .option{
     }
 }
 @media (max-width: 768px) {
-        .ech-shi-homeSlider .owl-item{
-            position: relative;
-            overflow: hidden;
-            width: 100%;
-            height: auto;
-            min-height: 200px;
-        }
-        .mob-header-logo img{
-            margin-top: -10px;
-            position: relative;
-            min-height: 68px !important;
-        }
-
-        .ech-shi-footer{
-            margin-bottom:-20px;
-        }
-        #mz-drop-zone-spriteline .mz-cms-content, #mz-drop-zone-stumpsparty .mz-cms-content{
-            margin-top:3px;
-        } 
-        .catg_list_name{
-            font-size:16px !important;
-        }
-        .img.brand_logo{
-            height:100% !important;
-        }
-    
-        .ech-shi-homeSlider .owl-stage-outer{
-            min-height: inherit;
-        } 
-        .mob-header-logo img{
-            margin-top: -10px;
-            position: relative;
-            display: none;
-        }
-        .ech-shi-homeSlider .slider-caption{
-            z-index:99;
-        } 
-        .ech-shi-homeSlider .owl-controls .owl-dots{
-            bottom:5px;
-        }
-        .ech-shi-bottom-footer ul li{
-            border-right:0px !important;
-        }
-        .mz-mobile-filter .mz-filters{
-        vertical-align: top;
-        width: 50%;
-        border: none;
-        height: 35px;
+    .ech-shi-homeSlider .owl-item{
+        position: relative;
+        overflow: hidden;
+        width: 100%;
+        height: auto;
+        min-height: 200px;
     }
+    .mob-header-logo img{
+        margin-top: -10px;
+        position: relative;
+        min-height: 68px !important;
+    }
+
+    .ech-shi-footer{
+        margin-bottom:-20px;
+    }
+    #mz-drop-zone-spriteline .mz-cms-content, #mz-drop-zone-stumpsparty .mz-cms-content{
+        margin-top:3px;
+    } 
+    .catg_list_name{
+        font-size:16px !important;
+    }
+    .img.brand_logo{
+        height:100% !important;
+    }
+
+    .ech-shi-homeSlider .owl-stage-outer{
+        min-height: inherit;
+    } 
+    .mob-header-logo img{
+        margin-top: -10px;
+        position: relative;
+        display: none;
+    }
+    .ech-shi-homeSlider .slider-caption{
+        z-index:99;
+    } 
+    .ech-shi-homeSlider .owl-controls .owl-dots{
+        bottom:5px;
+    }
+    .ech-shi-bottom-footer ul li{
+        border-right:0px !important;
+    }
+    .mz-mobile-filter .mz-filters{
+    	vertical-align: top;
+    	width: 50%;
+    	border: none;
+    	height: inherit;
+	}
 }  
 @media only screen and (max-width:700px){
     .promo-slot-1 { 
@@ -5763,11 +5763,26 @@ searchNav .option{
         .mob-header-logo img{
             max-width:130px;
         }
-        .mz-mobile-filter .mz-sort .mz-sort-btn{
+        .mz-mobile-filter .mz-sort select.mz-sort-btn {
             width:70% !important;
-            background-color:@secondaryWhite;
+            background-color: @secondaryWhite;
+            color: @textColor;
             border: none;
             -webkit-appearance:none;
+            &:enabled option {
+            	width: 100%;
+            	background-color: #fff;
+          		color: #444;
+                &:checked {
+                	color: @primaryDarkBlue;
+                }	
+            }
+        }
+        .mz-mobile-filter .mz-sort select.mz-sort-btn::after {
+        	content: "\f0d7";
+        	display: inline-block;
+    		font: normal normal normal 14px/1 FontAwesome;
+    		font-size: 16px;
         }
         .mz-category-title>.mz-pagetitle{
             padding: 10px 15px 7px 15px;
@@ -5892,7 +5907,6 @@ searchNav .option{
         }
         .mz-facetingform-clearall, .mz-apply-btn {
             width: 47.9% !important;
-            padding-top: 7px !important;
         }
 }
 
@@ -5929,11 +5943,11 @@ searchNav .option{
     position: relative;
     z-index: 1;
     .total-color{
-        color: @dark-grey;
-        vertical-align: top;
-        position: absolute;
-        right: -10px;
+        color: @textColor;
+        position: relative;
         font-size: 10px;
+        display: block;
+        top: -35px;
     }
 }
 .product-mainname{
@@ -5950,14 +5964,14 @@ searchNav .option{
 		float: left;
 		width: 74px;
 		margin-top: 12px;
-		color: #666;
+		color: @textColor;
 		font-size: 12px;
     }
     .selectric-responsive{
         display: inline-block;
         float: left;
         width: 150px;
-        @media (min-width: 1151px) {
+        @media (min-width: 768px) {
         	border: 1px solid @secondaryWhite;
         	border-radius: 5px;
         }
@@ -5980,7 +5994,7 @@ searchNav .option{
     background-color:#fff !important;
 }
 .selectric-items li:hover {
-    background: #f3f3f3 !important;
+    background: @secondaryWhite !important;
     color: #444444;
 }
 .selectric .label {
@@ -5992,18 +6006,16 @@ searchNav .option{
   font-size: 11px;
   color: @primaryDarkBlue;
   height: 35px;
-  @media (min-width: 1151px) {
-  	line-height: 3.2;
-  }
+  line-height: 3.2;
 }
 .selectric .button {
   display: block;
   position: absolute;
-  right: 0;
+  right: -8px;
   top: 0;
   width: 38px;
   height: 38px;
-  color: #BBB;
+  color: @textColor;
   text-align: center;
   font: 0/0 a;
   *font: 20px / 38px Lucida Sans Unicode, Arial Unicode MS, Arial;

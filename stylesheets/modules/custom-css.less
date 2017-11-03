@@ -125,6 +125,7 @@
 }
 .mz-filters-bar {
     background-repeat: repeat-x;
+    height: 35px;
 }
 .mz-productlisting .mz-productlisting-title{
     color: #000;
@@ -330,6 +331,7 @@
         left: 0;
         right: 0;
         margin: auto;
+        z-index: 100;
         a {
             display: inline-block;
             vertical-align: middle;
@@ -343,7 +345,7 @@
             font-family: @fontFamily;
             font-size: 14px;
             color: @primaryCTA;
-            box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.19);
             background-color: #fff;
             &:before {
                 display: inline-block;
@@ -395,7 +397,7 @@
             left: -10px;
             padding: 4px 12px;
             cursor: pointer;
-            background-color: #d70056;
+            background-color: @secondaryPink;
             font-family: @fontFamily;
             font-size: 14px;
         > .is-saleprice, span{ 
@@ -408,7 +410,7 @@
             height: 0;
             border-top: 0px solid transparent;
             border-bottom: 16px solid transparent;
-            border-left: 10px solid #D70056;
+            border-left: 10px solid @secondaryPink;
             top: 0;
             right: -10px;
         } 
@@ -419,7 +421,7 @@
             height: 0;
             border-top: 16px solid transparent;
             border-bottom: 0px solid transparent;
-            border-left: 10px solid #D70056;
+            border-left: 10px solid @secondaryPink;
             top: 11px; 
             right: -10px; 
         }
@@ -430,7 +432,7 @@
         left: -10px;
         padding: 4px 12px;
         cursor: pointer;
-        background-color: #94D60A;
+        background-color: @secondaryBlue;
         font-family: @fontFamily;
         font-size: 14px;
         > .new-ribbon {
@@ -480,6 +482,9 @@
         width: 111px;
         height: 29px;
         display: block;
+        background-size: 60%;
+        background-position: 50%;
+        background-repeat: no-repeat; 
     }
 }
 .mz-productlist-item {
@@ -607,7 +612,7 @@
     }
 }
 .mz-category-description {
-    background-color: #F1F1F2;
+    background-color: @secondaryWhite;
     margin-top: 45px;
     padding: 24px 40px;
     h2,h1{
@@ -618,8 +623,16 @@
         font-weight: normal;
     }
     p {
-        color: #666;
-        font-size: 1rem;
+        color: @textColor;
+        font-size: 14px;
+        & .morelink {
+            color: @linkColor;
+            text-decoration: underline;
+            font-family: @fontGTWalsheimMediumItalic;
+            &:hover {
+                color: @linkHoverColor;
+            }
+        }
     }
 }
 .menu > ul > li a {

@@ -112,10 +112,10 @@
         width: 16px;
         height: 15px;
         background: none;
-        margin: 1px 9px;
+        margin: -1px 9px;
         vertical-align: bottom;
         border-radius: 4px;
-        border: 1px solid #808080;
+        border: 1px solid @primaryDarkBlue;
 
 }
 .mz-facetingform-value:checked + .mz-facetingform-valuelabel:before  {
@@ -174,7 +174,7 @@
 }
 .selected-filter:hover{
     background-color: #fff;
-    border-color: @secondaryBlue;
+    border-color: @primaryDarkBlue;
 }
 .mz-facetingform-clearall.selected-filter:hover{
     box-shadow: none;
@@ -189,7 +189,7 @@
     margin-left: 9px;
     transition: 0.3s ease-in-out;
     a {
-        color: @secondaryBlue;
+        color: @primaryDarkBlue;
         display: block;
         position: absolute;
         padding: 0px 2px;
@@ -200,18 +200,18 @@
     }
 }
 .mz-facetingform-clearall.selected-filter {
-    padding: 7px 14px 7px 14px;
+    padding: 7.5px 14px 7.5px 14px;
     background-color: @secondaryWhite;
 }
 .mz-filters {
     display: inline-block;
     position: relative;
     >.mz-filters-btn {
-        font-size: 17px;
-        padding: 0px 0 0 16px;
+        font-size: 14px;
+        padding: 0px 0 0 30px;
         color: white;
-        background: @secondaryBlue;
-        border: solid @secondaryBlue 1px;
+        background: @primaryDarkBlue;
+        border: solid @primaryDarkBlue 1px;
         text-decoration: none;
         text-align: left;
         width: 100%;
@@ -446,7 +446,7 @@
     }
     .mz-sort-btn {
         font-family: @fontFamily;
-        font-size: 17px;
+        font-size: 14px;
         padding: 3.5px 0;
     }
     .mz-filter-mobile-options {
@@ -484,21 +484,21 @@
         bottom: 62px;
         > .mz-apply-btn,
         > .mz-facetingform-clearall {
-            font-family: @fontRoboto;
-            font-size: 20px;
+            font-family: @fontFamily;
+            font-size: 14px;
             padding: 13px 0;
             color: #fff;
-            background: @secondaryBlue;
-            border: solid @secondaryBlue 1px;
+            background: @primaryDarkBlue;
+            border: solid @primaryDarkBlue 1px;
             text-decoration: none;
             text-align: center;
             width: 48%;
             text-transform:uppercase;
         }
         > .mz-facetingform-clearall {
-            background-color: #F2F2F2;
-            color: #ABABAB;
-            border: solid #F2F2F2 1px;
+            background-color: @secondaryWhite;
+            color: @primaryDarkBlue;
+            border: solid @primaryDarkBlue 1px;
         }
     }
     ul.mz-l-sidebaritem-mobile {
@@ -523,6 +523,9 @@
             font-size: 18px;
             color: @primaryDarkBlue;
             text-transform: capitalize;
+            & i.fa {
+                font-size: 14px;
+            }
         }
     }
     select.mz-filters {
@@ -734,7 +737,7 @@ i.close-option {
 .mz-sort .selectric .label { 
     display: inline-block;
     margin: 0;
-    font-size: 17px !important;
+    font-size: 14px !important;
     overflow: visible !important;
     line-height: 55px !important;
     
@@ -822,7 +825,7 @@ i.close-option {
     }
 
 .mz-sort .selectric .label {
-    font-size: 17px !important;
+    font-size: 14px !important;
     overflow: visible !important;
     line-height: 55px !important;
     
