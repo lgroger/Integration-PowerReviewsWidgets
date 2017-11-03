@@ -94,7 +94,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
               POWERREVIEWS.display.render(prConfig);
          },
          displayRoi: function(config) {
-
+          var self = this;
            var order = require.mozuData('order');
 
             try {
@@ -120,7 +120,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 order.items.forEach(function(lineItem){
                   console.log(lineItem);
                   //var lineItem = order.items.models[i].attributes;
-                  item.pageId = getProductCode(config,lineItem.product.productCode);
+                  item.pageId = self.getProductCode(config,lineItem.product.productCode);
                   item.unitPrice = lineItem.total;
                   item.qty = lineItem.quantity;
                   item.name = lineItem.product.name;
@@ -159,7 +159,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                  locale: config.locale,
                  merchant_group_id: config.merchantGrpId,
                  merchant_id: config.merchantId,
-                 page_id: getProductCode(config,maxPriceItem.product.productCode),
+                 page_id: self.getProductCode(config,maxPriceItem.product.productCode),
                  components: {
                    WhydYouBuy: 'pr-wyb'
                  }});
@@ -190,10 +190,11 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
            }
          },
          displayInlineRatings: function(config) {
+           var self = this;
            var allInlineRatings = $('.pr-inline-rating');
            console.log(allInlineRatings);
            var productReviews = allInlineRatings.map(function() {
-              var productCode = getProductCode(config,$(this).data('mzProductCode'));
+              var productCode = self.getProductCode(config,$(this).data('mzProductCode'));
 
               return {
                 locale: config.locale,
