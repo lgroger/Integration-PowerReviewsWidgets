@@ -1,15 +1,4 @@
  <p>
-  {% with model.purchasableState.messages|findwhere("severity","Info") as validationtype %}
-    {% if validationtype.validationType == "IncompleteProductConfiguration" %}
-        <span class="color-blue">Availability</span> :
-        <span class="highlight-pink">
-            <span class="product-status">
-                <span class="mz-productdetail-notpurchasable">
-                    <span> Product is out of stock</span>
-                </span>
-            </span>
-        </span>
-    {% else %}
         <span class="color-blue">Availability</span> :
         {% if model.inventoryInfo.manageStock == true %}
           {% if model.inventoryInfo.onlineStockAvailable > 0 %}
@@ -89,8 +78,6 @@
             {% endwith %}
           {% endif %}
         {% endif%}
-      {% endif%}
-    {% endwith %}
   </p>
      <div class="product-description">
         <span class="color-blue">Product Details : </span>

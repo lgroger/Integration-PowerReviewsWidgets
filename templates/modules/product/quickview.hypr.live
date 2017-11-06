@@ -120,83 +120,69 @@
                     {% endif %}
                 </div>
                 <p style="font-family:MontserratRegular !important">
-                  {% with model.purchasableState.messages|findwhere("severity","Info") as validationtype %}
-                    {% if validationtype.validationType == "IncompleteProductConfiguration" %} 
-                        <span class="color-blue">Availability</span> :
-                        <span class="highlight-pink">
-                            <span class="product-status">
-                                <span class="mz-productdetail-notpurchasable">
-                                    <span> Product is out of stock</span>
-                                </span>
-                            </span>
-                        </span>
+                  <span style="color:#0d3762;font-weight: 600;">Availability</span> :
+                  {% if model.inventoryInfo.manageStock == true %}
+                    {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                      <span style="color:#00af9a;"> In Stock </span>
+                      {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
+                         - {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                         <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                     {% else %}
-
-                      <span style="color:#0d3762;font-weight: 600;">Availability</span> :
-                      {% if model.inventoryInfo.manageStock == true %}
-                        {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-                          <span style="color:#00af9a;"> In Stock </span>
-                          {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
-                             - {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                             <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
-                        {% else %}
-                          {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
-                           {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
-                              {% with prod_time.values|first|prop("value") as productionTime %}
-                              {% if productionTime !=0 and productionTime != "0" %}
-                             - {{  prod_time.values|first|prop("value") }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                             <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
-                             {% endif %}
-                             {% endwith %}
-                           {% endwith %}
-                          {% endif %}
-                        {% endif %}
-                        {% else %}
-                          <span style="color:#d70056;">
+                      {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+                       {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
+                          {% with prod_time.values|first|prop("value") as productionTime %}
+                          {% if productionTime !=0 and productionTime != "0" %}
+                         - {{  prod_time.values|first|prop("value") }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                         <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                         {% endif %}
+                         {% endwith %}
+                       {% endwith %}
+                      {% endif %}
+                    {% endif %}
+                    {% else %}
+                      <span style="color:#d70056;">
+                      {% if not model.purchasableState.isPurchasable %}
+                        <span class="product-status">
                           {% if not model.purchasableState.isPurchasable %}
-                            <span class="product-status">
-                              {% if not model.purchasableState.isPurchasable %}
-                              <span class="mz-productdetail-notpurchasable">
-                              {% for message in model.purchasableState.messages %}
-                                {% if message.validationType == "IncompleteProductConfiguration" %}
-                                    {% if model.inventoryInfo.manageStock == true %}
-                                      {% if model.productUsage != "Configurable" %}
-                                        {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-                                          <span>Please select an option</span>
-                                        {% else %}
-                                          <span>Product is out of stock</span>
-                                        {% endif %}
-                                      {% else %}
-                                        {% if model.isConfigure %}
-                                            <span> Product is out of stock</span>
-                                        {% else %}
-                                            <span> Please select an option</span>
-                                        {% endif %}
-                                      {% endif %}
+                          <span class="mz-productdetail-notpurchasable">
+                          {% for message in model.purchasableState.messages %}
+                            {% if message.validationType == "IncompleteProductConfiguration" %}
+                                {% if model.inventoryInfo.manageStock == true %}
+                                  {% if model.productUsage != "Configurable" %}
+                                    {% if model.inventoryInfo.onlineStockAvailable > 0 %}
+                                      <span>Please select an option</span>
+                                    {% else %}
+                                      <span>Product is out of stock</span>
                                     {% endif %}
-                                {% else %}
-                                    {{ labels.notPurchasable }}:<span>{{ message.message }}</span>
+                                  {% else %}
+                                    {% if model.isConfigure %}
+                                        <span> Product is out of stock</span>
+                                    {% else %}
+                                        <span> Please select an option</span>
+                                    {% endif %}
+                                  {% endif %}
                                 {% endif %}
-                              {% endfor %}
-                              </span>
-                              {% endif %}
-                            </span>
-                          {% else %}
-                            Out of Stock
-                          {% endif %}
+                            {% else %}
+                                {{ labels.notPurchasable }}:<span>{{ message.message }}</span>
+                            {% endif %}
+                          {% endfor %}
                           </span>
-                        {% endif%}
+                          {% endif %}
+                        </span>
                       {% else %}
-                        <span style="color:#00af9a;">   In Stock </span>
-                        {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
-                          {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
-                            - {{  prod_time.values|first|prop("value") }}  Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                            <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
-                          {% endwith %}
-                        {% endif %}
-                      {% endif%}
+                        Out of Stock
+                      {% endif %}
+                      </span>
                     {% endif%}
-                  {% endwith %}
+                  {% else %}
+                    <span style="color:#00af9a;">   In Stock </span>
+                    {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+                      {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
+                        - {{  prod_time.values|first|prop("value") }}  Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                        <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                      {% endwith %}
+                    {% endif %}
+                  {% endif%}
                 </p>
                 {% if model.properties and model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
                     <div class="product-color-swatch" id="color-swatch-elem">
