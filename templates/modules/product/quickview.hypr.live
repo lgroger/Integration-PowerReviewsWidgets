@@ -356,3 +356,4 @@
         </div>
     </div>
 </div>
+{% include "modules/common/google-dynamic-remarketing-tags" with pType="product" %}
