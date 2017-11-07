@@ -83,10 +83,11 @@
        </div>
 {% dropzone "superpage-slider"  scope="page" %}
 
-</div>
+
 
 <div class="super_seo_content">
    {% dropzone "superpage-seo-content" scope="template" %}
+</div>
 </div>
 
 {% include "modules/bloomreach_seo" %}

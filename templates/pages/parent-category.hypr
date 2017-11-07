@@ -135,9 +135,9 @@
 		 	</p>
 		</div>
     </div>
-</div>
 
 {% dropzone "category-seo-zone" scope="page" %}
+</div>
 
 {% include "modules/bloomreach_seo" %}
 
