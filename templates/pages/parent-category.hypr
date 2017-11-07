@@ -10,7 +10,7 @@
 
 {% require_script "pages/category_listing" %}
 
-<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container sz-parent-category-template">
 	<div class="mz-category-title">
 		{% dropzone "common-category-top" scope="page" %}
     	{% dropzone "category-page-top" scope="page" %}
@@ -137,9 +137,9 @@
     </div>
 </div>
 
-{% include "modules/bloomreach_seo" %}
-
 {% dropzone "category-seo-zone" scope="page" %}
+
+{% include "modules/bloomreach_seo" %}
 
 {% endblock body-content %}
 

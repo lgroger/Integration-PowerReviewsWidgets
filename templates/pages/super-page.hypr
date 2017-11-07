@@ -23,6 +23,7 @@
 </style>
 <![endif]--> 
 
+<div class="sz-super-page-template">
 
 {% dropzone "common-category-top" scope="page" %}
 {% if model.content.categoryImages|length > 1 %} 
@@ -82,6 +83,7 @@
        </div>
 {% dropzone "superpage-slider"  scope="page" %}
 
+</div>
 
 <div class="super_seo_content">
    {% dropzone "superpage-seo-content" scope="template" %}

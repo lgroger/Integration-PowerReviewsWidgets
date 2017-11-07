@@ -8,7 +8,7 @@
 {% require_script "pages/brseotheme" %}  {# this specifies the template which gets set as a header on the ajax call to retrieve the partial page view when interacting with filters #}
 
 
-		<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+		<div data-mz-category="{{model.categoryId}}" class="mz-l-container sz-brseotheme-template">
 		    {% include "pages/brseotheme-interior" %}
 		</div>
 
