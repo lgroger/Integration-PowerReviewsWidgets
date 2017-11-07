@@ -603,6 +603,7 @@ confiramtion-slider{
 	    color: @textHeaderColor; 
 	    font-family: @fontGTWalsheimBold;
         position: relative;
+        margin: 4px 0;
     }
     .print-link{
         cursor: pointer;
@@ -610,16 +611,18 @@ confiramtion-slider{
         text-transform: none;
         font-size: 15px;
         vertical-align: bottom;
-        top: 15px;
+        top: 0;
         right: 0px;
         color: @linkColor;
         font-family: @fontFamily;
         &:hover {
             color: @linkHoverColor;
+        }        
+        @media (min-width: 801px) {
+            top: 10px;
         }
     }
     .confrim-block{
-    	min-height: 220px;
     	background: @secondaryBlue;
 	    margin: 5px 0px;
     	.confirm-text1{
@@ -632,16 +635,13 @@ confiramtion-slider{
     	.tick{
     		text-align: center;
             display: block;
-            margin: 30px;
+            margin: 20px;
             @media (min-width: 768px) {
-                margin: 12px;
-            }
-            @media (min-width: 992px) {
-                margin: 8px;
+                margin: 19px;
             }
     	}
     	.icon-block{
-    		margin: 28px 0;
+    		margin: 10px 0;
             position: initial !important;
             width: 100% !important;
             right: auto;
@@ -649,6 +649,9 @@ confiramtion-slider{
             top: 75px;
             height: 150px;
             background-color: @secondaryBlue;
+            @media (min-width: 768px) {
+                height: 180px;
+            }
     	}
     	.confirm-text2{
 		    color: @primaryBlue;
@@ -687,13 +690,16 @@ confiramtion-slider{
             }
     	}
     	.payment-sec{
-    	    margin: 14% auto 0;
+    	    margin: 50px auto 0;
             width: 70%;
             height: 100%;
     	}
     	.total-sec{
-    		min-height: 220px;
+    		height: 105px;
             background: @primaryBlue;
+            @media (min-width: 768px) {
+                height: 180px;
+            }
     	}
     }
 
@@ -857,7 +863,7 @@ confiramtion-slider{
         }
     }
     .shipping-info{
-    	 padding: 30px 15px 0px;
+    	 padding: 10px 15px 0px;
          min-height: 200px;	 
     	.shipping-head{
     	    color: @textHeaderColor; 
@@ -945,8 +951,8 @@ confiramtion-slider{
         margin: -5px 0px 0px;
     }
     hr{
-        border-top: 1px solid #e7e7e7 !important;
-        margin: 15px -5px 20px;
+        border-top: 1px solid transparent !important;
+        margin: 6px -5px;
     }
     .confirmation_ostable{
         .mz-ordersummary td{
@@ -973,11 +979,11 @@ confiramtion-slider{
         background:transparent;
         width:100%;
         th{    
-            background: #f5f5f5;
+            background: @secondaryWhite;
             padding: 19px 1.5%;
             font-size: 15px;
             text-transform: uppercase;
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             border: 0px;
             text-align: center;
         }
@@ -1090,11 +1096,11 @@ confiramtion-slider{
     }
     .cart_summary_title{
         background: @primaryBlue;
-        padding: 16px 15px;
+        padding: 18px 15px;
         margin: 0px 0px 0px;
         font-family: @fontGTWalsheimBold;
         text-transform: uppercase;
-        font-size: 19px;
+        font-size: 16px;
         color: #fff;
     }
     .confirmation_ostable_total .mz-ordersummary {
@@ -1112,7 +1118,7 @@ confiramtion-slider{
         tr td:first-child{
             text-align:left;
             font-size: 16px;
-            color: #aaa;
+            color: @primaryDarkBlue;
             text-transform: uppercase;
             font-family: @fontFamily;
         }
@@ -1123,7 +1129,10 @@ confiramtion-slider{
             color: @textColor;
         }
         .mz-ordersummary-grandtotal {
-            border-top:1px solid #e2e6e6;
+            border-top:1px solid @primaryBlue;
+            & .mz-ordersummary-totalname {
+                color: @primaryBlue;
+            }
             td:first-child {
                 font-size: 20px;
                 line-height:50px;
@@ -1138,8 +1147,8 @@ confiramtion-slider{
     .help-sec{
         display:inline-block;
         width:100%;
-        background: @secondaryLightPink;
-        border:1px dotted @secondaryPink;
+        background: @secondaryWhite;
+        border:1px dotted @primaryDarkBlue;
         font-size:14px;
         font-family:@fontGTWalsheimBold;
         text-align:center;
@@ -1168,13 +1177,13 @@ confiramtion-slider{
             text-align: left;
             font-family: @fontGTWalsheimBold;
             font-size: 14px;
-            color: @secondaryPink;
+            color: @primaryDarkBlue;
         }
         .support-num{
             text-align: right;
             font-size: 20px;
             font-family: @fontGTWalsheimBold;
-            color: @secondaryPink;
+            color: @primaryDarkBlue;
             min-height: 30px;
             vertical-align: top;
             line-height: 30px;
@@ -1396,7 +1405,7 @@ float: left;
     .order-confirmation{
         .confrim-block{
             .icon-block {
-                margin: 30px 0 !important;
+                margin: 0;
                 width: 66.66%!important;
                 float: left !important;
             }
@@ -1422,9 +1431,6 @@ float: left;
                     font-size: 25px;
                     margin-left: 0px;
                 }
-            }
-            .payment-sec{
-                margin: 20% auto 0px;
             }
         }
     }
@@ -1696,7 +1702,7 @@ float: left;
             }
             .cart_summary_title{
                 margin: 0px -10px 0px;
-                font-size: 14px;
+                font-size: 15px;
                 padding: 12px 15px;
             }
             .confirmation_ostable_total {
@@ -1742,7 +1748,7 @@ float: left;
                 .support-text {
                     width: 45%;
                     font-size: 13px;
-                    color: @secondaryPink;
+                    color: @primaryDarkBlue;
                 }
             }
         }
