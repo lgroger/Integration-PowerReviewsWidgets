@@ -7,7 +7,7 @@
 {% block body-content %}
 {% require_script "pages/category" %}
 
-		<div data-mz-category="{{model.categoryId}}" class="mz-l-container">
+		<div data-mz-category="{{model.categoryId}}" class="mz-l-container sz-category-template">
 		    {% include "pages/category-interior" %}
 		</div>
 
