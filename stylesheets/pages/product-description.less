@@ -144,6 +144,9 @@
     .party_packs_qty{
         p{
             font-size: 14px;
+            @media (min-width: 1025px) and (max-width: 1235px) {
+                text-align: center;
+            }
         }
     }
     .personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
@@ -214,11 +217,12 @@
     }
     .product-section-title{
         font-family: @fontGTWalsheimLight;
-        font-size: 25px;
+        font-size: 23
+        px;
         padding: 0 10px;
         display: none;
         position: relative;
-        background: #9E9E9E;
+        background: @primaryBlue;
         color: #fff;
         text-align: left;
         text-transform: uppercase;
@@ -320,13 +324,13 @@
               white-space: nowrap;
               li{
                   display: inline-table;
-                  margin: 0 10px 0 0;
+                  margin: 0;
                   padding: 0;
                   &:last-child{
                       padding-right: 30px;
                   }
                   a{
-                      padding: 3px 8px !important;
+                      padding: 10px 2px !important;
                       width: auto;
                       height: auto;
                       span.btn-index{
@@ -373,6 +377,7 @@
         margin: 0 auto;
         padding: 0;
         box-sizing: border-box;
+        background: #eee;
         &.owl-loaded{
             justify-content: flex-start;
             li{
@@ -407,11 +412,7 @@
         li{
             float: left;
             text-align: center;
-            margin: 5px 0;
             padding: 10px 0;
-            background-color: #efefef;
-            border-top: 2px solid @secondaryWhite;
-            border-bottom: 2px solid @secondaryWhite;
             &:last-child a span {
                 border: none;
             }
@@ -424,7 +425,6 @@
                 height: 100%;
                 box-sizing: border-box;
                 span{
-                    display: table-cell;
                     vertical-align: middle;
                     padding: 0 10px;
                     border-right: 2px solid #ccc;
@@ -442,6 +442,8 @@
     }
 }
 .super-btn-fixed-wrap{
+    position: relative;
+    top: -5px;
     .btn-next-fixed,.btn-prev-fixed{
         display: none;
     }
@@ -497,14 +499,14 @@
 .header-float .super-page-btn-fixed {
     clear: both;
     width: 100%;
-    background: @secondaryWhite;
+    background: #eee;
     list-style-type: none;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    padding: 10px 0px;
+    padding: 0px;
     -webkit-flex-flow: row wrap;
     justify-content: center;
     margin: 0;
@@ -531,30 +533,33 @@
     }
     li{
         float: left;
-        margin: 0 10px 8px 0;
-        padding: 0;
+        padding: 10px 0;
+        text-align: center
     } 
     a{ 
         display: table;
-        padding: 5px 8px;
-        background: white;
         margin: 0;
         font-size: 13px;
         border-radius: 10px;
         cursor: pointer;
+        text-transform: uppercase;
         span{
             display: table-cell;
             vertical-align: middle;
-            &.btn-index{
-                font-size: 24px;
-                padding-right: 8px;
+            padding: 0 10px;
+            border-right: 2px solid #ccc;
+            box-sizing: border-box;
+            &.btn-index {
+                display: none;
             }
         }
         &.active{
-            background: #093863;
-            color: #fff;
+            color: @textColor;
         }
     }
+.super-page-filter-wrap ul li:last-child a span {
+    border: none;
+}
     /* .owl-controls{
         margin: 0;
     }
@@ -587,13 +592,16 @@
     span.quick-view{
         display: inline-block;
         width: 46%;
+        @media (min-width: 1025px) and (max-width: 1235px) {
+            width: 90%;
+        }
         a{
             padding: 10px 6px;
             text-transform: uppercase;
             font-size: 15px;
             font-family: @fontFamily;
             cursor: pointer;
-            background-color: #0971ce;
+            background-color: @primaryCTA;
             border-radius: 5px;
             color: white;
             display: block;
@@ -609,10 +617,6 @@
 .party_packs_price{
     .mz-pricestack{
         display: block !important;
-        .mz-price{
-            font-size: 19px; 
-            color:#012d5b;
-        }
     }
     .pricetag{
         font-family: @fontFamily !important;
@@ -641,6 +645,10 @@
         .prod-super-img{
             min-height: 200px;
             position: relative;
+            @media (min-width: 1025px) and (max-width: 1235px) {
+                top: 10px;
+                position: relative;
+            }
         }
     }
     .product-img{
@@ -694,13 +702,16 @@
         }
     }
 }
+@media only screen and (max-width:1235px) {
+
+}
 button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
         padding: 12px 13%;
     text-transform: uppercase;
     font-size: 16px;
     font-family: @fontFamily;
     font-size: 1.1rem;
-    /* background-color: #0971ce; */
+    /* background-color: @primaryCTA; */
     border-radius: 5px;
     /* padding: 5% 15%; */   
     border: 0px;    
@@ -862,7 +873,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
         margin-right: 2%;
         margin-bottom: 5px;
         text-decoration: none;
-        background: #0971ce;
+        background: @primaryCTA;
         padding: 0px 60px !important;
         color: #fff;
         box-sizing: border-box;
@@ -1094,7 +1105,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             margin: 0;
         }
         .party_packs_price .mz-pricestack .mz-price {
-            font-size: 15px;
             margin: 0;
         }
         .echi-shi-party-packs .party_packs_price{
@@ -1435,7 +1445,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .addToCart, .personalize{
         text-decoration: none;
-        background: #0971ce;
+        background: @primaryCTA;
         padding: 0px 50px !important;
         color: #fff;
         box-sizing: border-box;
@@ -1506,7 +1516,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .addToCart {
         text-decoration: none;
-        background: #0971ce;
+        background: @primaryCTA;
         padding: 13px 40px;
         color: #fff;
         box-sizing: border-box;
@@ -1695,7 +1705,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         width: 145px;
     }
     .product-review a:hover {
-        color: #0971ce;
+        color: @linkColor;
     }
     .mz-productdetail-qty {
         margin: 0;
@@ -1990,7 +2000,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     font-size: 16px;
     cursor: pointer;
     padding: 1.5%;
-    background-color: #0d3762;
+    background-color: @textColor;
     background-position-x: 100%;
     margin: 8% 10% 0% 0%;
     border-radius: 5px;
@@ -2142,7 +2152,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     width: 97%;
 }
 .span-head {
-    color: #0d3762;
+    color: @textColor;
     font-size: 20px;
     margin-left: 12%;
 }
@@ -2162,7 +2172,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .block-3 {
     h4 {
-        color: #0d3762;
+        color: @textColor;
     }
 }
 .rev-bottom {
@@ -2303,7 +2313,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 }
 .inspiration-heading {
-    color: #0d3762;
+    color: @textColor;
     text-align: center;
     padding: 1% 0%;
 }
@@ -2445,7 +2455,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     box-sizing: border-box;
     h3 {
         text-align: center;
-        color: #0d3762;
+        color: @textColor;
         margin-bottom: 0;
         font-family: @fontGTWalsheimLight;
         font-size: 14px; 
@@ -3052,7 +3062,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .btn-cart {
         font-family: @fontFamily;
         font-size: 1.1rem;
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         border-radius: 5px;
         padding: 5% 15%;
         color: #fff;
@@ -3061,7 +3071,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         float: left;
     }
     .btn-cart:hover {
-        background: #0d3762;
+        background: @primaryCTAhover;
     }
     .owl-next {
         background: url('../resources/images/arrow-next.svg') no-repeat !important;
@@ -3340,7 +3350,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .btn-cart {
         font-family: @fontFamily;
         font-size: 1.1rem;
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         border-radius: 5px;
         padding: 5% 15%;
         color: #fff;
@@ -3477,7 +3487,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         background: #fff;
     }
     .btn-cart:hover {
-        background: #0d3762;
+        background: @primaryCTAhover;
     }
     .products-title{
         height: 60px;  
@@ -3509,7 +3519,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .btn-cart {
         font-family: @fontFamily;
         font-size: 1.1rem;
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         border-radius: 5px;
         padding: 5% 15%;
         color: #fff;
@@ -3563,6 +3573,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         width: 100%;
         padding: 10px 7px 70px;
         box-sizing: border-box;
+        @media (min-width: 1025px) and (max-width: 1235px) {
+                padding: 10px 7px 10px;
+
+        }
         .wishlist-icon{
             position: absolute;
             top: 5px;
@@ -3619,7 +3633,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .more-details>a {
         text-align: left;
-        color: #0971ce;
+        color: @linkColor;
         margin: 0;
         font-size: 12px;
     }
@@ -3658,7 +3672,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .btn-cart {
         font-family: @fontFamily;
         font-size: 1.1rem;
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         border-radius: 5px;
         padding: 4.5% 15%;
         color: #fff;
@@ -3667,7 +3681,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         float: left;
     }
     .btn-cart:hover {
-        background: #0d3762;
+        background: @primaryCTAhover;
     }
     .fixed-wishlist {
         height: 30px;
@@ -3763,7 +3777,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     h2 {
         text-align: center;
-        color: #0d3762;
+        color: @textColor;
         font-family: @fontGTWalsheimBold;
         font-size: 1.8em;
         margin-bottom: 0;
@@ -4119,7 +4133,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         }
         .super-page-btn{
             li a{
-                padding: 10px 2px !important;
                 span{
                     font-size: 15px;
                     &.btn-index{

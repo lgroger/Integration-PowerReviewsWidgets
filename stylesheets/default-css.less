@@ -77,6 +77,7 @@
 .br-aslowas, .br-aslowas-range, .mz-pricestack {
 	display: inline-block;
 	color: @textColor;
+	text-transform: lowercase;
 }
 .mz-pricestack-range, .mz-pricestack-price-lower .is-crossedout, .mz-pricestack-price-lower .is-crossedout:after, .mz-pricestack-price-upper .is-crossedout {
 	font-size: 12px;
@@ -6959,6 +6960,12 @@ right: 0;
     }
     .party_packs_btns span.quick-view {
         margin-top: 7px;
+    }
+}
+@media (min-width: 1025px) and (max-width: 1235px) {
+    .super-page-product-wrap .personalize.mz-productdetail-addtocart.mz-button.mz-button-large {
+    	float: none;
+    	width: 90%;
     }
 }
 @media only screen and (min-width:1200px) {
