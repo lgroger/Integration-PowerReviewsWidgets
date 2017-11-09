@@ -120,6 +120,9 @@
         float: left;
         font-family: @fontFamily;
         font-size: 1.7em; 
+        @media (max-width: 767px) {
+            min-height: 38px;
+        }
     }
 }
 .super-banner-img{
@@ -144,6 +147,9 @@
     .party_packs_qty{
         p{
             font-size: 14px;
+            @media (max-width: 767px) {
+                margin: 5px 0;
+            }
             @media (min-width: 1025px) and (max-width: 1235px) {
                 text-align: center;
             }
@@ -209,8 +215,16 @@
         display: none;
        }
     }
+    .color-swatch {
+        @media (max-width: 767px) {
+            height: 25px;
+            overflow: hidden;
+        }
+    }
     .colorbox{
-        margin: 10px 0;
+        @media (min-width: 768px) {
+            margin: 10px 0;
+        }
     }
     .total-color{
         position: relative !important;
@@ -377,7 +391,7 @@
         margin: 0 auto;
         padding: 0;
         box-sizing: border-box;
-        background: #eee;
+        background: #ddd;
         &.owl-loaded{
             justify-content: flex-start;
             li{
@@ -424,10 +438,16 @@
                 display: table;
                 height: 100%;
                 box-sizing: border-box;
+                &:active {
+                    color: @textColor;
+                }
+                &:visited {
+                    color: @linkColor;
+                }
                 span{
                     vertical-align: middle;
                     padding: 0 10px;
-                    border-right: 2px solid #ccc;
+                    border-right: 2px solid #bbb;
                     box-sizing: border-box;
                     text-transform: uppercase;
                     &.btn-index{
@@ -543,6 +563,15 @@
         border-radius: 10px;
         cursor: pointer;
         text-transform: uppercase;
+        &:active {
+            color: @textColor;
+        }
+        &:focus {
+            color: @textColor;
+        }
+        &:visited {
+            color: @linkColor;
+        }
         span{
             display: table-cell;
             vertical-align: middle;
@@ -676,14 +705,17 @@
 .button-slider-loop{
      display: none;
 }
+.echi-shi-party-packs .superpage .mz-productlist-tiled-super{
+    padding: 10px 7px 120px !important;
+    @media (min-width: 768px) and (max-width: 1024px) {
+        padding: 10px 7px 140px !important;
+    }
+}
 @media only screen and (max-width:1024px) {
     button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
         padding: 12px 5% !important;
         margin: 0 auto !important;
         float: none;
-    }
-    .echi-shi-party-packs .superpage .mz-productlist-tiled-super{
-          padding: 10px 7px 140px !important;
     }
     .super-page-filter-wrap{
         > ul .owl-prev{
@@ -4092,9 +4124,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 
 } 
-
 @media only screen and (max-width:1024px){    
-
     .echi-shi-party-packs .party_packs_qty{
         float: none !important;
         width: auto !important;
