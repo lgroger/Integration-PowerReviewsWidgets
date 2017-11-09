@@ -81,7 +81,7 @@
         }
         span.mz-accountsettings-attribute--value, span.mz-accountsettings-attribute-value {
             font-size: 14px !important;
-            font-family: @fontMontserratRegular !important;
+            font-family: @fontFamily !important;
             color: #333;
         }
         input[data-mz-attribute="tenant~customertype"],textarea[data-mz-attribute="tenant~sp-preferences"],div[data-mz-attribute="tenant~sp-preferences"],textarea[data-mz-attribute="tenant~sl-preferences"],div[data-mz-attribute="tenant~sl-preferences"],textarea[data-mz-attribute="tenant~preferences"],div[data-mz-attribute="tenant~preferences"],div[data-mz-attribute="tenant~customertype"]{
@@ -120,10 +120,10 @@ div.order-status-wrap{
 }
 .my-account-body-content{
     padding:0px 30px 40px;
-    font-family: @fontMontserratRegular;
+    font-family: @fontFamily;
     border-bottom: 1px solid #ccc;
     .my_account_heading{
-        font-family:@fontArvo;
+        font-family:@fontFamily;
         font-weight: normal;
         color: #0d3762;
         font-size: 1.6rem;
@@ -170,13 +170,13 @@ div.order-status-wrap{
         p{
             font-size: 14px;
             color: #080808; 
-            font-family: @fontMontserratLight;
+            font-family: @fontGTWalsheimLight;
         }
         .panel1>p{
             font-size: 15px;
         }
         .account_heading{
-            background-color: #EFF5FB;
+            background-color: @secondaryWhite;
             width: 100%;
             text-transform: uppercase;
             padding: 10px 15px;
@@ -188,10 +188,11 @@ div.order-status-wrap{
     } 
 }
 .account_heading span{ 
-    font-family:@fontArvo; 
+    font-family:@fontFamily; 
     font-size: 16px;
     color: #000; 
 }
+
 .mz-l-pagecontent{
     min-height:inherit;
 }
@@ -200,14 +201,14 @@ div.order-status-wrap{
     padding:0px 15px 35px;
     p{
         font-size:14px !important;
-        font-family:@fontMontserratRegular !important;
+        font-family:@fontFamily !important;
         color: #666 !important;
     }
     .acc-sub-heading span{
         color:#333;
     }
     .acc-sub-main-heading{
-        font-family: ArvoRegular !important;
+        font-family: @fontFamily !important;
         font-size: 17px !important;
         color: #666 !important;
         text-transform:uppercase;
@@ -285,12 +286,12 @@ div.order-status-wrap{
         background-color: inherit;
         border: 0px;
         font-size: 15px;
-        font-family: @fontMontserratRegular;
+        font-family: @fontFamily;
     } 
 }
 .mz-accountsettings-password label{
     font-size: 16px;
-    font-family: @fontMontserratLight;
+    font-family: @fontGTWalsheimLight;
     color: #909090;
     padding-left: 0px;
 } 
@@ -300,7 +301,7 @@ div.order-status-wrap{
         label{  
             color:#666;
             font-size: 14px;
-            font-family: @fontMontserratRegular;
+            font-family: @fontFamily;
         }
         .check-acc-box:checked+.acc-pre-che{
             color:#666;
@@ -337,7 +338,7 @@ div.order-status-wrap{
 }
 .change-password-head{
     font-size: 20px;
-    font-family: @fontMontserratLight;
+    font-family: @fontGTWalsheimLight;
     color: #909090; 
     font-weight:normal;
     margin-top: 5px;
@@ -361,7 +362,7 @@ div.order-status-wrap{
     padding:0px 15px;
 }*/ 
 .acc-sub-main-heading{
-    font-family: ArvoRegular !important;
+    font-family: @fontFamily !important;
     font-size: 16px !important;
     color: #666 !important;
     text-transform:uppercase;
@@ -371,7 +372,7 @@ div.order-status-wrap{
     label{
         color:#888;
         &:hover{
-            color:#000; 
+            color: @textColor; 
         }
     }
     .label-push-down{

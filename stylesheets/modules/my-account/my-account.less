@@ -2219,19 +2219,15 @@ span.field-error{
         background: none !important;
         width: 100% !important;
     }
-    .account_tab-content {
-        display: block;
-        padding: 0 !important;
-    }
     .my_acc_ri {
         padding-left: 0 !important;
         .accordion1 {
             display: block !important;
         }
         button.accordion1 {
-            background-color: #0d3762;
+            background-color: @primaryDarkBlue;
             color: #fff;
-            cursor: poiblacknter;
+            cursor: pointer;
             padding: 15px 5px 15px 15px;
     		box-sizing: border-box;
             width: 100%;
@@ -2254,7 +2250,7 @@ span.field-error{
             }
         }
         button.accordion1.active {
-            background-color: #00b09b;
+            background-color: @secondaryPink;
             color: #fff;
             .fa-caret-down {
                 display: none;
