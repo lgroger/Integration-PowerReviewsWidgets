@@ -1,4 +1,9 @@
 ﻿{% extends "page" %}
+
+{% block top-head-script %}
+  {% include "modules/common/moov-checkout" %}
+{% endblock top-head-script %} 
+
   {% block trackingscript %}
     {% if model.billingInfo.paymentType != "check"%}
     <script>
