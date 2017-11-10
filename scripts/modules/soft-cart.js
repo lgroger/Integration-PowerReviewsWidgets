@@ -75,6 +75,7 @@ function($, Backbone, CartModels,Hypr) {
   // accessors for other modules
   var SoftCartInstance = {
     update: function() {
+		this.isLoaded = true;
         // populate the cart model asynchronously from the api
         return this.model.apiGet();
     },
@@ -99,12 +100,17 @@ function($, Backbone, CartModels,Hypr) {
     },*/
     highlightItem: function(itemid) {
       this.view.$('.soft-cart-item[data-mz-cart-item="' + itemid + '"]').removeClass('highlight').addClass('highlight');
-    }
+    },
+	loadIt: function(){
+		if(!this.isLoaded){
+			this.update();
+		}
+	},
+	isLoaded: false
   };
  
  
 
-  $(document).ready(function() {
     //Global variable for sign-up checkout redirection.
     window.checkoutflag = 0;
     // create a blank cart model
@@ -116,7 +122,15 @@ function($, Backbone, CartModels,Hypr) {
     });
     // bind a method we'll be using for the promise
     SoftCartInstance.show = $.proxy(SoftCartInstance.show, SoftCartInstance);
-    SoftCartInstance.update();
+    //SoftCartInstance.update();
+	  // don't load soft cart until someone tries to interact with it (css hover makes soft cart show on hovering of items)
+	$(".soft-cart-wrap").each(function(){
+		$(this).parent().mouseover(function(){
+			console.log("mouseover \/api\/commerce\/carts");
+			SoftCartInstance.loadIt();
+		});
+	});
+	console.log('event added \/api\/commerce\/carts');
     // bind cart links to open the softcart instead 
 /*    $(document.body).on('mouseover', 'a[href="/cart"],.soft-cart-wrap', function(e) {
         e.preventDefault();
@@ -128,8 +142,7 @@ function($, Backbone, CartModels,Hypr) {
         else{
           SoftCartInstance.show();  
         }
-    }); */
-  });  
+    }); */ 
 
   $(function(){
       // Hiding by default  
@@ -187,7 +200,7 @@ function($, Backbone, CartModels,Hypr) {
             // $(document).scrollTop(0);
             $('#cboxOverlay').show(); 
         });
-        $('.icon-image-sprite.icon-3.sticky-icons,.soft-cart-wrap.is-active::before').on('mouseover',function(e){ 
+        $('.icon-image-sprite.icon-3.sticky-icons,.soft-cart-wrap::before').on('mouseover',function(e){ 
             var top = $(this).position();
             $('.soft-cart-wrap.is-active').css('top',top);
         });
