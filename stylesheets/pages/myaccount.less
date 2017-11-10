@@ -74,7 +74,7 @@
         }
         .mz-accountsettings-label {
             display: block;
-            color: #666;
+            color: @textColor;
             font-size: 14px !important;
             text-transform: capitalize;
             padding-right: 5px;
@@ -82,7 +82,7 @@
         span.mz-accountsettings-attribute--value, span.mz-accountsettings-attribute-value {
             font-size: 14px !important;
             font-family: @fontFamily !important;
-            color: #333;
+            color: @textColor;
         }
         input[data-mz-attribute="tenant~customertype"],textarea[data-mz-attribute="tenant~sp-preferences"],div[data-mz-attribute="tenant~sp-preferences"],textarea[data-mz-attribute="tenant~sl-preferences"],div[data-mz-attribute="tenant~sl-preferences"],textarea[data-mz-attribute="tenant~preferences"],div[data-mz-attribute="tenant~preferences"],div[data-mz-attribute="tenant~customertype"]{
             display: none;
@@ -113,7 +113,8 @@ div.order-status-wrap{
 }
 .error-message{
     display: block;
-    color: red;
+    color: @secondaryRed;
+
 }
 .echi-shi-my-acc .mz-breadcrumbs{
     padding:10px 15px;
@@ -125,7 +126,7 @@ div.order-status-wrap{
     .my_account_heading{
         font-family:@fontFamily;
         font-weight: normal;
-        color: #0d3762;
+        color: @textColor;
         font-size: 1.6rem;
         border-bottom: 1px solid #d4d4d4;
         vertical-align: top;
@@ -145,32 +146,36 @@ div.order-status-wrap{
             ul li{ 
             text-transform: uppercase;
             list-style-type: none;
-            border-radius: 14px;
             padding: 12px 5px 12px 33px;
             font-size: 14px;
+            &:hover {
+                color: @linkHoverColor;
+            }
             a{   
                 cursor: pointer;
-                color: #0d3762;
+                color: @linkColor;
+                &:hover {
+                    color: @linkHoverColor;
+                }
             }
         }
         .active_my_account_menu{
-            background-color: #F5F5F5;
-            font-weight: 600;
+            background-color: @secondaryWhite;
         }
     }
     .my_account_right{    
         float: left;
         width: 75%;
-        border-left: 1px solid #d4d4d4;
+        border-left: 1px solid #ccc;
         padding-top: 34px;
         min-height: 300px;
-        background: -webkit-linear-gradient(left, #f5f5f5, transparent 2%, transparent);
-        background: -o-linear-gradient(left, #f5f5f5, transparent 2%, transparent);
-        background: -moz-linear-gradient(left, #f5f5f5, transparent 2%, transparent);
+        background: -webkit-linear-gradient(left, @secondaryWhite, transparent 2%, transparent);
+        background: -o-linear-gradient(left, @secondaryWhite, transparent 2%, transparent);
+        background: -moz-linear-gradient(left, @secondaryWhite, transparent 2%, transparent);
         p{
             font-size: 14px;
-            color: #080808; 
-            font-family: @fontGTWalsheimLight;
+            color: @textColor; 
+            font-family: @fontFamily;
         }
         .panel1>p{
             font-size: 15px;
@@ -190,7 +195,7 @@ div.order-status-wrap{
 .account_heading span{ 
     font-family:@fontFamily; 
     font-size: 16px;
-    color: #000; 
+    color: @textHeaderColor; 
 }
 
 .mz-l-pagecontent{
@@ -201,22 +206,22 @@ div.order-status-wrap{
     padding:0px 15px 35px;
     p{
         font-size:14px !important;
-        font-family:@fontFamily !important;
-        color: #666 !important;
+        font-family: @fontFamily !important;
+        color: @textColor !important;
     }
     .acc-sub-heading span{
-        color:#333;
+        color: @textColor;
     }
     .acc-sub-main-heading{
         font-family: @fontFamily !important;
         font-size: 17px !important;
-        color: #666 !important;
+        color: @textColor !important;
         text-transform:uppercase;
         margin-top:25px;
     }
     .personal_others{
         .acc-pref-main-sec .check-acc-box:checked+.acc-pre-che{
-            color:#666;
+            color: @textColor;
         }
         label{
             font-size: 15px;
@@ -269,24 +274,30 @@ div.order-status-wrap{
 } 
         .acc-edit{
             text-decoration:underline;
-            color:#00af9a;
+            color: @linkColor;
             cursor:pointer;
+            &:hover {
+                color: @linkHoverColor;
+            }
         }
         .acc-delete{
             text-decoration:underline;
-            color:#333;
+            color: @textColor;
             cursor:pointer;
         }
 .password-main-sec{
     padding:0px 0px;
     .mz-accountsettings-passwordedit{
         text-decoration: underline;
-        color: #00af9a;
+        color: @linkColor;
         cursor: pointer;
         background-color: inherit;
         border: 0px;
         font-size: 15px;
         font-family: @fontFamily;
+        &:hover {
+            color: @linkHoverColor;
+        }
     } 
 }
 .mz-accountsettings-password label{
@@ -299,17 +310,12 @@ div.order-status-wrap{
     .acc-pref-main-sec{
         padding: 0px 15px;
         label{  
-            color:#666;
+            color:@textColor;
             font-size: 14px;
             font-family: @fontFamily;
         }
         .check-acc-box:checked+.acc-pre-che{
-            color:#666;
-        }
-        .label-push-down{
-            .check-acc-box:checked+.acc-pre-che{
-                font-weight: 600;
-            }
+            color:@textColor;
         }
     }
 }
@@ -364,7 +370,7 @@ div.order-status-wrap{
 .acc-sub-main-heading{
     font-family: @fontFamily !important;
     font-size: 16px !important;
-    color: #666 !important;
+    color: @textColor !important;
     text-transform:uppercase;
     margin-top:20px;
 }
