@@ -103,7 +103,7 @@ function($, Backbone, CartModels,Hypr) {
     },
 	loadIt: function(){
 		if(!this.isLoaded){
-			this.update();
+			return(this.update());
 		}
 	},
 	isLoaded: false
@@ -125,10 +125,16 @@ function($, Backbone, CartModels,Hypr) {
     //SoftCartInstance.update();
 	  // don't load soft cart until someone tries to interact with it (css hover makes soft cart show on hovering of items)
 	$(".soft-cart-wrap").each(function(){
+		var thedropdown = this;
 		$(this).parent().mouseover(function(){
 			console.log("mouseover \/api\/commerce\/carts");
 			SoftCartInstance.loadIt();
+		}).hover(function(){
+			$(thedropdown).show();
+		},function(){
+			$(thedropdown).hide();
 		});
+		
 	});
 	console.log('event added \/api\/commerce\/carts');
     // bind cart links to open the softcart instead 
