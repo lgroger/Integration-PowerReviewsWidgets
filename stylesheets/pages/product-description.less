@@ -281,18 +281,19 @@
     }
   &.enable-slider{
       visibility: visible;
-      height: 54px;
-        padding-top: 12px;
+      height: 57px;
+      padding-top: 4px;
       overflow-y: hidden;
       overflow-x: hidden;
+      margin: 0;
       .btn-prev-opt{
-          display: -webkit-flex;
-          display: flex;
+          /*display: -webkit-flex;
+          display: flex;*/
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: -4px;
-          left: 14px;
+          top: 4px;
+          left: 10px;
           width: 30px;
           height: 100%;
           background: @secondaryWhite;
@@ -305,13 +306,13 @@
           }
       }
       .btn-next-opt{
-          display: -webkit-flex;
-          display: flex;
+          /*display: -webkit-flex;
+          display: flex;*/
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: -4px;
-          right: 5px;
+          top: 4px;
+          right: 10px;
           width: 30px;
           height: 100%;
           z-index: 99;
@@ -329,7 +330,7 @@
               -webkit-flex-flow: initial;
               width: auto;
               justify-content: flex-start;
-              height: 107px;
+              height: auto;
               overflow-y: hidden;
               padding: 0px 30px;
               display: -webkit-flex;
@@ -348,10 +349,7 @@
                       width: auto;
                       height: auto;
                       span.btn-index{
-                        margin-right: 24px;
-                        display: inline-block;
-                        padding-right: 5px;
-                        margin: 0;
+                        display: none;
                       }
                       span.btn-caption{
                           max-width: 100% !important;
