@@ -87,8 +87,8 @@
         }
         p{
             font-family: @fontFamily;               
-            font-size: 20px;
-            color: #aaa;
+            font-size: 17px;
+            color: @textColor;
             min-height:56px;
         }
         input{
@@ -102,10 +102,15 @@
             background-color: #f7f7f7;
             margin-bottom: 15px;
             height: 55px;
-            color:#aaa;
+            color: @textColor;
         }
         input:focus{
             background: #fff;
+        }
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #f7f7f7 inset;
+                    box-shadow: 0 0 0px 1000px #f7f7f7 inset;
+            color: @textColor;
         }
         select{
             width: 100%;
@@ -127,7 +132,7 @@
             height: 55px;
             font-size: 16px;
             line-height: normal;
-            color:#aaa;
+            color: @textColor;
         }
         .mz-l-formfieldgroup-cell{
             display: block;
