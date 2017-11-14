@@ -274,15 +274,13 @@
     background: #fff;
     position: relative;
     .btn-prev-opt,.btn-next-opt{
-        display: none;
         i{
             vertical-align: middle;
         }
     }
   &.enable-slider{
       visibility: visible;
-      height: 57px;
-      padding-top: 4px;
+      height: 37px;
       overflow-y: hidden;
       overflow-x: hidden;
       margin: 0;
@@ -292,14 +290,15 @@
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: 4px;
           left: 10px;
           width: 30px;
-          height: 100%;
+          height: 37px;
           background: @secondaryWhite;
           z-index: 99;
           cursor: pointer;
           i{
+            display: block;
+            margin: 4px 0;
             width: 100%;
             height: 30px;
             background: url("../resources/images/greyarrow_prev.svg") @secondaryWhite no-repeat left center;
@@ -311,26 +310,27 @@
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: 4px;
           right: 10px;
           width: 30px;
-          height: 100%;
+          height: 37px;
           z-index: 99;
           text-align: right;
           cursor: pointer;
           background: @secondaryWhite;
           i{
+            display: block;
             width: 100%;
             height: 30px;
+            margin: 4px 0;
             background: url("../resources/images/greyarrow_next.svg") @secondaryWhite no-repeat right center;
           }
       }
       .super-page-btn{
-              overflow-x: auto;
+              overflow-x: hidden;
               -webkit-flex-flow: initial;
               width: auto;
               justify-content: flex-start;
-              height: auto;
+              height: 37px;
               overflow-y: hidden;
               padding: 0px 30px;
               display: -webkit-flex;
@@ -345,7 +345,7 @@
                       padding-right: 30px;
                   }
                   a{
-                      padding: 10px 2px !important;
+                      padding: 9px 0 !important;
                       width: auto;
                       height: auto;
                       span.btn-index{
@@ -466,7 +466,7 @@
         display: none;
     }
     &.slider-parent{
-        height: 64px;
+        height: 37px;
         overflow-y: hidden;
         clear: both;
         position: relative;
@@ -530,14 +530,14 @@
     margin: 0;
     
   &.enable-slider{
-      overflow-x: auto;
+      overflow-x: hidden;
       -webkit-flex-flow: initial;
       -ms-flex-flow: row;
       width: auto;
       justify-content: flex-start;
-      height: 63px;
+      height: 37px;
       overflow-y: hidden;
-      padding: 10px 45px;
+      padding: 0px 45px;
       white-space: nowrap;
       li{
           display: inline-table;
@@ -1510,7 +1510,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         }
     }
     .custom-qty {
-        background-color: #f7f7f7;
+        background-color: @secondaryWhite;
         padding: 9px 7px 7px 1px;
         color: gray;
         border-radius: 20px;
@@ -1803,7 +1803,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     float: none;
     list-style: none;
     padding: 0;
-    font-family: @fontGTWalsheimLight;
+    font-family: @fontFamily;
     margin-bottom: 3%;
     text-align: center;
 }
@@ -1829,6 +1829,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     transition: all 0.5s;
     border:2px solid transparent;
     border-bottom: none;
+    color: @linkColor;
+    &:hover {
+        color: @linkHoverColor;
+    }
 }
 .tabs label span {
     display: none;
@@ -1861,14 +1865,20 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     width: 100%;
     float: left;
     box-sizing: border-box;
-    background-color: #f5f5f5;
-    font-family: @fontGTWalsheimLight;
+    background-color: @secondaryWhite;
+    font-family: @fontFamily;
     padding: 40px 85px;
     text-align: left;
     .tab-content-inner{
         display: block;
         margin: 0 auto;
         max-width:1225px;
+        & p {
+            color: @textColor;
+        }
+        & p span {
+            color: @textColor;
+        }
     }
 }
 #tab-content3{
@@ -1883,15 +1893,16 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         padding: 0px;
     }
     h3{
-        color: #444;
-        font-family: @fontGTWalsheimBold;
-        font-size: 21px;
+        color: @textHeaderColor;
+        font-family: @fontFamily;
+        font-size: 16px;
         margin: 0px 0px 15px;
+        text-transform: uppercase;
     }
 }
 
 .tabs [id^="tab"]:checked + label {
-    background: #f5f5f5;
+    background: @secondaryWhite;
     border-radius: 10px 10px 0px 0px;
     border: 2px solid rgba(128,128,128,0.25);
     border-bottom: 0;
@@ -2489,6 +2500,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         margin-bottom: 0;
         font-family: @fontGTWalsheimLight;
         font-size: 14px; 
+        &:hover {
+            color: @linkHoverColor;
+        }
     }
     .fa {
         font-size: 5em !important;
