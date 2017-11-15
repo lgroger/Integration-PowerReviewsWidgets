@@ -75,7 +75,7 @@
  	} 
  }
  .banner-buttons .button-loop .btn-banner.active_btn{
-    background-color: #0d3762;
+    background-color: @primaryCTAhover;
     color:#fff;   
  }
  .mz-shi-heading-style{
@@ -90,9 +90,9 @@
  .echi-shi-party-packs{
  	padding: 10px 2.5% 40px;
  	button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
- 		background-color: #0971ce;
+ 		background-color: @primaryCTA;
  		&:hover{
- 			background-color:#0d3762;
+ 			background-color: @primaryCTAhover;
  		}
  		&.is-disabled{
  			background-color: #f7f7f7 !important;
@@ -116,7 +116,11 @@
  	.products-title{
 	 	height:auto;
 	 	overflow: hidden;
-	 	font-size: 14px;   
+	 	font-size: 14px; 
+	 	color: @textColor;  
+	 	@media (min-width: 1025px) and (max-width: 1235px) {
+    		height: 50px;
+    	}
  	} 
  	.party_packs_btns{
  		margin-top:5px;
@@ -128,6 +132,9 @@
 		width: 100%;
 		bottom: 0;
 		left: 0;
+		@media (min-width: 1025px) and (max-width: 1235px) {
+            position: relative;
+        }
 	 	.btn-cart{
 			padding: 13px 6%;
 		    text-transform: uppercase;
@@ -167,9 +174,8 @@
 		color:#666;
 		font-size: 12px;
 		span{
-			font-family: @fontGTWalsheimBold;
+			font-family: @fontFamily;
 			display: inline-block;
-			margin-left: 5px;
 		}
 		small{
 			font-size:14px;
@@ -182,6 +188,10 @@
 		float: left;
 		width: 43%;
 		text-align: right;
+		@media (min-width: 1025px) and (max-width: 1235px) {
+            float: none;
+            width: 100%;
+        }
 		span{			
 			margin-left: 5px;
 		}
@@ -198,7 +208,7 @@
 		h2{
 			text-transform: uppercase;
 			text-align: center;
-		    color: #0d3762;
+		    color: @textColor;
 		    font-family: @fontGTWalsheimBold;
 		    font-size: 2em;
 		    margin-bottom: 5px;
@@ -408,7 +418,16 @@
     font-size: 15px;
     border-radius: 6px;
 }
- @media only screen and (max-width:1150px) and (min-width:768px){
+@media (min-width: 1025px) and (max-width: 1235px) {
+    .echi-shi-party-packs .party_packs_btns .btn-cart {
+	    padding: 12px 2%;
+	    width: 90%;
+	    position: relative;
+	    margin: 0;
+	    float: none;
+	}
+}
+ @media only screen and (max-width:1024px) and (min-width:768px){
 	.echi-shi-party-packs .party_packs_btns .btn-cart{
 		padding:13px 7%;
 	}
@@ -477,7 +496,7 @@
 	.mz-pagetitle{
 		font-size: 17px;
 	    font-family: @fontFamily;
-	    color: #222;
+	    color: @textHeaderColor;
 	    margin-top: 0;
 	    line-height: normal;
 	}
@@ -541,7 +560,7 @@
 			display: inline-block;
 		}
 		.personalize{
-		 	background: #0971ce;
+		 	background: @primaryCTA;
 		 	padding: 0px 50px !important;
 		 	color: #ffffff;
 		 }
@@ -562,7 +581,7 @@
 	    	margin-bottom:5px;
 		}
 		.addToCart:hover, .personalize:hover{
-		    background: #0d3762 !important;
+		    background: @primaryCTAhover !important;
 		}
 		 .personalize.mz-button[disabled]{
 			background-color: #f7f7f7 !important;
@@ -691,7 +710,7 @@
 					    margin-right: 0;
 				    }
 				    button:hover{
-				    	background: #0d3762;
+				    	background: @primaryCTAhover;
 				    }
 				}
 				.fixed-mob-bottom-right{
@@ -880,8 +899,8 @@
 	    text-indent: -9999px;
 	    width: 60px !important;
 		float: left;
-		border: 1px solid #c2c2c2 !important;
 		margin-left: 20px !important;
+		
 	}
 	.mz-product .fixed-mob-bottom .fixed-mob-bottom1 .fixed-mob-bottom-left .box-custom-pad .main-price span{
 		font-size: 0.8rem;
@@ -973,20 +992,20 @@
 		    cursor: pointer;
 		}
 		.addToCart:hover {
-		    background: #0d3762;
+		    background: @primaryCTAhover;
 		    color: #fff;
-		    border: 1px solid #0d3762;
+		    border: 1px solid @primaryCTAhover;
 		}
 		#mz-go-to-checkout{
-			background: #0070cd;
+			background: @primaryCTA;
 			color:#fff;
-			border-color: #0070cd;
+			border-color: @primaryCTA;
 			min-width:27%;
 		}
 		#mz-go-to-checkout:hover{
-		    background: #0d3762;
+		    background: @primaryCTAhover;
 		    color: #fff;
-		    border: 1px solid #0d3762;
+		    border: 1px solid @primaryCTAhover;
 		}
 	}
 	.container-left{
@@ -1319,10 +1338,10 @@
 		    padding:0px;
 		}
 		.addToCart:hover{
-    		background: #0d3762 !important;
+    		background: @primaryCTAhover !important;
 		}
 		.addToCart.is-disabled:hover{
-    		background: #0971ce !important;
+    		background: @primaryCTA !important;
     	}	
     	.product-share{
     		font-family: @fontFamily;
@@ -1341,7 +1360,7 @@
 			    box-sizing: border-box;
 			    padding: 0px 50px !important;
 			    &:hover{
-			    	background: #0d3762 !important;
+			    	background: @primaryCTAhover !important;
 			    }
 			    &.is-disabled, &[disabled], &.is-disabled:hover, &[disabled]:hover{
 			    	background-color: #eee !important;
