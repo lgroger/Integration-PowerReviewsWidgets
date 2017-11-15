@@ -22,16 +22,6 @@
 	<style>.mz-breadcrumbs{display:none;}</style> 
 </div>
 
-<div class="cart_bundle_box" style="display:none;">
-	{% for item in model.items %}
-		{% if item.product.productUsage == 'Bundle' %}
-			{% for components in item.product.bundledProducts %}
-				<img class="cart_bundle_img" style="" componentimageid="{{ item.id }}-{{ components.productCode }}" src="{% include_products "modules/product/bundle-component" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}" alt="Bundle Item"/>
-			{% endfor %}
-		{% endif %}
-	{% endfor %}
-</div>
-
 <div class="mz-l-container cart-main-container">
 	<div class="mz-cms-col-12-12">{{model.checkoutlag}}</div>
 	<div class="cart_cols mz-cms-col-12-12">
