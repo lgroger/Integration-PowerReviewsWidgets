@@ -491,7 +491,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
              var est_delivery_dates=_.pluck(scope_obj.model.get("items"),'est_date');
              _.each(est_delivery_dates,function(ele,idx) {
                 for(var key in ele) {
-                    ele[key] = scope_obj.skip_UPSHolidays(ele[key]);
+                    ele[key] = scope_obj.getDeliveryDate(ele[key]);
                 }
              });
              if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
@@ -597,6 +597,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },checkProductionTime:function(scope_obj,isUSA,process_order_date){
 
             var order_date=new Date(process_order_date);
+            window.orderDate = order_date;
             var ext_product_time=[];
             var ext_time_arr=[];
             order_date=process_order_date.getFullYear()+"/"+("0" + (process_order_date.getMonth() + 1)).slice(-2)+"/"+("0" + process_order_date.getDate()).slice(-2);
@@ -1121,6 +1122,20 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             }
             result_date.setDate(result_date.getDate());
             return result_date;
+        },
+        getDeliveryDate: function(shippingDate){
+            var me = this;
+            var from = new Date(window.orderDate);
+            var to = new Date(shippingDate);
+            var check = false;
+            var holidays = _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
+            _.each(holidays, function(val){
+                check = new Date(val);
+                if((check <= to && check >= from)) {
+                    to.setDate(to.getDate() - 1);
+                }
+            });
+            return me.skip_UPSHolidays(to);
         },
         setCA_ship_start:function(shipping_start_date,shipping_holidays_list,scope_obj,idx,isIndiana){
             var ship_start=new Date(shipping_start_date);
