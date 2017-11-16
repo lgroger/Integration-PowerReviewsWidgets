@@ -597,6 +597,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         },checkProductionTime:function(scope_obj,isUSA,process_order_date){
 
             var order_date=new Date(process_order_date);
+            window.orderDate = order_date;
             var ext_product_time=[];
             var ext_time_arr=[];
             order_date=process_order_date.getFullYear()+"/"+("0" + (process_order_date.getMonth() + 1)).slice(-2)+"/"+("0" + process_order_date.getDate()).slice(-2);
@@ -777,6 +778,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             if(isUSA){
                  if(window.indina_idx_arr.length>0){
                     me.skip_holidays(order_date,indiana_max_prod_days,shipping_holidays_list,function(result_date){
+                        result_date = window.orderDate;
                         if(contains_melts && (result_date.getDay()>=4||result_date.getDay()===0)){
                             scope_obj.get_meltPackage_start(result_date,shipping_holidays_list,scope_obj,indiana_prd_idx);
                         }else{
@@ -1114,10 +1116,10 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         skip_UPSHolidays: function(shippingDate){
             var holidays = _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
             var result_date = new Date(shippingDate);
-            var check = (result_date.getDay()>6 || result_date.getDay()===0 || holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2)) > -1);
+            var check = (result_date.getDay() === 6 || result_date.getDay()===0 || holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2)) > -1);
             while (check) {
-                result_date.setDate(result_date.getDate()+1);
-                check = (result_date.getDay()>6 || result_date.getDay()===0 || holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2)) > -1);
+                result_date.setDate(result_date.getDate() + 1);
+                check = (result_date.getDay() === 6 || result_date.getDay() === 0 || holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2)) > -1);
             }
             result_date.setDate(result_date.getDate());
             return result_date;
