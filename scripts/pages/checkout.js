@@ -1128,7 +1128,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var from = new Date(window.orderDate);
             var to = new Date(shippingDate);
             var check = false;
-            var holidays = _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
+            var holidays = _.pluck(_.pluck(require.mozuData("holidaylist"),'properties'),'holiday');
             _.each(holidays, function(val){
                 check = new Date(val);
                 if((check <= to && check >= from)) {
