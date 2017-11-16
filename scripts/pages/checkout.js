@@ -489,11 +489,17 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
              var cus_ele="";
              var selected_shipping=scope_obj.model.get("fulfillmentInfo.shippingMethodCode")+"_shipMethod";
              var est_delivery_dates=_.pluck(scope_obj.model.get("items"),'est_date');
+             _.each(est_delivery_dates,function(ele,idx) {
+                for(var key in ele) {
+                    ele[key] = scope_obj.skip_UPSHolidays(ele[key]);
+                }
+             });
              if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
                  scope_obj.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
                      var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
-                     if(min_day.toString()!=="Invalid Date"){                        
-                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
+                     if(min_day.toString()!=="Invalid Date"){
+                        //min_day = scope_obj.skip_UPSHolidays(min_day);
+                        scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
                         var date_str=window.dateFormatArr[0];
                          if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
                             date_str=window.dateFormatArr[min_day.getDate()%10];
@@ -1104,7 +1110,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             result_date.setDate(result_date.getDate());
             //console.log("idx "+idx+" res "+result_date);
             callback(result_date,idx,holidays,scope_obj);
-        },setCA_ship_start:function(shipping_start_date,shipping_holidays_list,scope_obj,idx,isIndiana){
+        },
+        skip_UPSHolidays: function(shippingDate){
+            var holidays = _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
+            var result_date = new Date(shippingDate);
+            var check = (result_date.getDay()>6 || result_date.getDay()===0 || holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2)) > -1);
+            while (check) {
+                result_date.setDate(result_date.getDate()+1);
+                check = (result_date.getDay()>6 || result_date.getDay()===0 || holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2)) > -1);
+            }
+            result_date.setDate(result_date.getDate());
+            return result_date;
+        },
+        setCA_ship_start:function(shipping_start_date,shipping_holidays_list,scope_obj,idx,isIndiana){
             var ship_start=new Date(shipping_start_date);
             var noDays;
             //Check if result date is with in Monday to Wednesday and not a holiday
