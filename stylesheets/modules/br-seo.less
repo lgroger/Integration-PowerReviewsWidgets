@@ -9,11 +9,11 @@
     text-align: center;
 }
 .br-related-heading, .br-found-heading {
-    border: 1px solid #ddeaf5;
-    background: #ddeaf5; 
-    color: #0d3762;
+    border: 1px solid @primaryBlue;
+    background: @primaryBlue; 
+    color: #fff;
     padding: 5px;
-    font-family: MontserratRegular;
+    font-family: @fontFamily;
     text-transform: uppercase;
     font-size: 17px;
     border-radius: 0;
@@ -21,7 +21,7 @@
     text-align: center;
 }
 .br-related-query {
-    font-family: 'Montserrat-Regular',sans-serif;
+    font-family: @fontFamily;
     min-height: 1px;
     line-height: 1em;
     vertical-align: top;
@@ -30,6 +30,7 @@
     padding: 0 0 10px 1%;
     box-sizing: border-box;
     text-align: center;
+    text-transform: uppercase;
     @media only screen and (min-width: 480px) {
         width: 49%;
         display: inline-block;
@@ -39,8 +40,17 @@
         margin: 0 5%;
     }
     @media only screen and (min-width: 1190px) {
-        width: 16%;
+        width: auto;
         margin: 0;
+        padding: 0 7px;
+        font-size: 12px;
+        border-right: 1px solid #ede8e8;
+        box-sizing: border-box;
+        display: inline;
+        vertical-align: middle;
+        &:last-child {
+            border: none;
+        }
     }
 }
 .br-sf-widget {
@@ -95,9 +105,12 @@
 .br-sf-widget-merchant-title {
     font-size:13px;
     margin-bottom: 10px;
-    font-family: MontserratRegular;
+    font-family: @fontFamily;
     height: 60px;
     overflow: hidden;
+    & a {
+        color: @textColor;
+    }
     @media screen and (min-width: 768px) {
         font-size: 15px;
         margin-bottom: 10px;
@@ -111,9 +124,6 @@
         font-size: 13px;
         height: 55px;
     }
-}
-.br-related-query .br-related-query-link:hover {
-    color: #00b09b;
 }
 .br-sf-widget-merchant-qv {
     display: none;
@@ -129,19 +139,19 @@
             vertical-align: middle;
             line-height: normal;
             margin: 0 auto;
-            border: 2px solid #0d3762;
+            border: 2px solid @primaryCTA;
             border-radius: 3px;
             padding: 10px 16px;
             text-decoration: none;
-            font-family: MontserratRegular;
+            font-family: @fontFamily;
             font-size: 14px;
-            color: #0d3762;
-            box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+            color: @primaryCTA;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 3px 10px 0 rgba(0,0,0,0.19);
             background-color: #fff;
             &:hover {
                 color: #fff;
-                border: 2px solid #0d3762;
-                background-color: #0d3762;
+                border: 2px solid @primaryCTAhover;
+                background-color: @primaryCTAhover;
             }
         }    
     }
@@ -177,7 +187,7 @@
     max-width: 930px;
     margin: 30px auto;
     border-radius: 2px;
-    font-family: 'RobotoRegular';
+    font-family: @fontFamily;
     box-sizing: border-box;
 }
 .br-sf-widget-merchant-popup-img {
@@ -195,7 +205,6 @@
     height: 100%;
     display: flex;
     align-items: center;
-    border: 1px solid rgba(128,128,128,0.16);
     justify-content: center;
     padding: 20px;
 }
@@ -205,7 +214,7 @@
 .br-sf-widget-merchant-popup-title {
     padding: 20px;
     width: 50%;
-    font-family: MontserratSemiBold;
+    font-family: @fontGTWalsheimBold;
     font-size: 17px !important;
     float: right;
     margin-top: 10%;
@@ -213,10 +222,10 @@
     box-sizing: border-box;
 }
 .br-sf-widget-merchant-popup-desc {
-    font-family: 'MontserratRegular',sans-serif;
+    font-family: @fontFamily;
     line-height: 1.3;
     font-size: 11px;
-    color: #303030;
+    color: @textColor;
     width: 50%;
     float: right;
     padding: 20px 40px 20px 20px;
@@ -227,7 +236,7 @@
     }
 }
 .br-sf-widget-merchant-popup-view {
-    font-family: 'MontserratRegular',sans-serif;
+    font-family: @fontFamily;
     line-height: 1.3;
     font-size: 13px;
     width: 50%;
@@ -238,7 +247,10 @@
     box-sizing: border-box;
 }
 .br-sf-widget-merchant-popup-view a {
-    color: #0070cd;
+    color: @linkColor;
+    &:hover {
+        color: @linkHoverColor;
+    }
 }
 .br-sf-widget-merchant-popup-close {
     font: normal normal normal 14px/1 FontAwesome;
@@ -264,7 +276,7 @@
     background-color: #00af9a;
 }
 .br-sf-widget-merchant-popup-close a {
-    font-family: @fontMontserratBold;
+    font-family: @fontGTWalsheimBold;
     font-size: 16px;
     text-rendering: auto;
     color: white;

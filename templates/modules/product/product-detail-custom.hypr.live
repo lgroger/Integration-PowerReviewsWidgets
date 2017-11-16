@@ -1,15 +1,4 @@
  <p>
-  {% with model.purchasableState.messages|findwhere("severity","Info") as validationtype %}
-    {% if validationtype.validationType == "IncompleteProductConfiguration" %}
-        <span class="color-blue">Availability</span> :
-        <span class="highlight-pink">
-            <span class="product-status">
-                <span class="mz-productdetail-notpurchasable">
-                    <span> Product is out of stock</span>
-                </span>
-            </span>
-        </span>
-    {% else %}
         <span class="color-blue">Availability</span> :
         {% if model.inventoryInfo.manageStock == true %}
           {% if model.inventoryInfo.onlineStockAvailable > 0 %}
@@ -35,12 +24,10 @@
              {% if model.delDate %}
              <span class="delivery-date">
                 <span>
-                  Get it by <strong> {{ model.delDate|safe }}</strong> with Standard Shipping
-                </span>
-                 <br>
+                  Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
                  {% if not model.groundOnly %}
-                  <span>Get it by <strong> {{ model.expressDate|safe }}</strong> with Express Shipping </span><br>
-                  Get it by <strong> {{ model.overnightDate|safe }}</strong> with Overnight Shipping <br>
+                  <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
+                  Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}<br>
                   {% endif %}
              </span>
              {% endif %}
@@ -83,16 +70,14 @@
               <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                {% if model.delDate %}
              <span class="delivery-date">
-                Get it by <strong> {{ model.delDate|safe }}</strong> With Standard Shipping <br>
-                Get it by <strong> {{ model.expressDate|safe }}</strong> With Express Shipping <br>
-                Get it by <strong> {{ model.overnightDate|safe }}</strong> with Overnight Shipping <br>
+                Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}<br>
+                Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}<br>
+                Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}<br>
              </span>
              {% endif %}
             {% endwith %}
           {% endif %}
         {% endif%}
-      {% endif%}
-    {% endwith %}
   </p>
      <div class="product-description">
         <span class="color-blue">Product Details : </span>

@@ -1,0 +1,76 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %}  - {% parent %}{% endblock title-tag-content %}
+
+
+{% block body-tag-classes %} mz-category {% endblock body-tag-classes %}
+
+{% block body-content %}
+
+
+{% require_script "pages/category_listing" %}
+
+<div data-mz-category="{{model.categoryId}}" class="mz-l-container sz-category-html-template">
+	<div class="mz-category-title">
+		{% dropzone "common-category-top" scope="page" %}
+    	{% dropzone "category-page-top" scope="page" %}
+    	
+	</div>
+
+	{% dropzone "parent-category-page-top" scope="page" %}
+
+	<div class="mz-cms-col-12-12 cat-pg-head-container border-bottom-dotted" align="center">
+		<h1 class="cat-page-promotion-header service-title">{{ model.name }}</h1>
+		{% dropzone "parent-category-description" scope="page" %}
+	</div>
+
+	<div class="ech-shi-popular-cat-widget" align="center">
+		{% dropzone "popular-cat-widgets-heading" scope="page" %}
+	</div>
+		{% dropzone "popular-cat-widgets" scope="page" %}
+	<div class="echi-shi-bottom-promo">
+		{% dropzone "bottom-promo" scope="template" %}
+	</div> 	
+	<div class="my-new-class">
+		<div class="category_my_widgets">
+			<div class="cat-pg-head-container border-bottom-dotted" align="center" >
+				{% dropzone "promo-heading" scope="page" %}
+			</div>
+			<div class="mz-cms-col-8-12 dropzone-group-category">
+		      {% dropzone "home-promo-1" scope="page" %}
+		     </div>
+		     <div class="mz-cms-col-4-12 dropzone-group-category">
+		      {% dropzone "home-promo-2" scope="page" %}
+		     </div>
+		    <div class="mz-cms-col-12-12"> 
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-3" scope="page" %}
+		     	</div>
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-4" scope="page" %}
+		     	</div>
+		     	<div class="mz-cms-col-4-12 dropzone-group-category">
+		      	{% dropzone "home-promo-5" scope="page" %}
+		     	</div>
+		    </div>
+		    <div class="clear"></div>
+		 </div>
+		 </div>
+    <div class="mz-cms-col-12-12 clearning-margin">
+		<div class="mz-category-description">
+		 	<p>
+			  	{% if model.content.description %}
+			  		{{ model.content.description }}
+			  	{% else %}
+			   		{{ model.content.metaTagDescription }}
+			  	{% endif %}
+		 	</p>
+		</div>
+    </div>
+
+{% dropzone "category-seo-zone" scope="page" %}
+</div>
+
+{% include "modules/bloomreach_seo" %}
+
+{% endblock body-content %}

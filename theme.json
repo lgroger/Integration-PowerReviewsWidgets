@@ -423,6 +423,14 @@
       "customEditor": "categoryContent@mozu"
     },
     {
+      "entityType": "category",
+      "id": "category-html",
+      "template": "category-html",
+      "title": "Category HTML",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
       "entityType": "product",
       "id": "product",
       "template": "product",
@@ -1048,6 +1056,7 @@
     "nexttag": 4889912,
     "facebookPixel": 1000000,
     "pinterestTagID": 100000,
+    "cdnUrl":"https://cdn-tp2.mozu.com/16647-25302/cms/files",
     "favicon": "//cdn-tp2.mozu.com/16647-25302/resources/images/favicon.ico",
     "productTypeDefaultImg": "",
     "numberOfDaysMarketo": 13
@@ -1709,7 +1718,7 @@
       "displayTemplate": "cms/content",
       "editViewFields": [
         {
-          "fieldLabel": "Enter HTML",
+          "fieldLabel": "Enter HTML - Use {{CDN}} for CDN location. ex. src=\"{{CDN}}/d0d40678-e391-4eca-9b44-793890e976c1?max=475\" <br>Set value of {{CDN}} in theme settings",
           "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%",
           "height": 400,
           "name": "body",

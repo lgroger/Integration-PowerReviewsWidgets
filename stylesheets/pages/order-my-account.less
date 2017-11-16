@@ -78,7 +78,7 @@
         padding-bottom: 50px;
         border-bottom: 1px solid #cee3f5;
         .mz-pagetitle{
-            color: @primaryDarkBlue;
+            color: @textHeaderColor;
             font-family: @fontGTWalsheimBold;
             font-size: 21px;
             margin-top:0px;
@@ -87,8 +87,8 @@
         }
         p{
             font-family: @fontFamily;               
-            font-size: 20px;
-            color: #666;
+            font-size: 17px;
+            color: @textColor;
             min-height:56px;
         }
         input{
@@ -98,14 +98,19 @@
             margin-left: 0px;
             font-size: 16px;
             border-radius: 5px;
-            border: 1px solid #e8e8e8;
-            background-color: #f7f7f7;
+            border: 1px solid @secondaryWhite;
+            background-color: #efefef;
             margin-bottom: 15px;
             height: 55px;
-            color:#666;
+            color: @textColor;
         }
         input:focus{
             background: #fff;
+        }
+        input:-webkit-autofill {
+            -webkit-box-shadow: 0 0 0px 1000px #f7f7f7 inset;
+                    box-shadow: 0 0 0px 1000px #f7f7f7 inset;
+            color: @textColor;
         }
         select{
             width: 100%;
@@ -114,8 +119,8 @@
             margin-left: 0px;
             font-size: larger;
             border-radius: 5px;
-            border: 1px solid #e8e8e8;
-            background-color: #f7f7f7;
+            border: 1px solid @secondaryWhite;
+            background-color: #efefef;
             margin-bottom: 15px;
             -moz-appearance: none;
             -webkit-appearance: none;
@@ -127,7 +132,7 @@
             height: 55px;
             font-size: 16px;
             line-height: normal;
-            color:#666;
+            color: @textColor;
         }
         .mz-l-formfieldgroup-cell{
             display: block;
@@ -137,7 +142,7 @@
         }
         .mz-l-formfieldgroup .mz-l-formfieldgroup-cell label{
             text-align: left;
-            color:#666;
+            color: @textColor;
             font-size:17px;
         }
         .block-right{
@@ -471,7 +476,7 @@
     [type="checkbox"]:disabled:not(:checked) + label:before,
     [type="checkbox"]:disabled:checked + label:before {
         box-shadow: none;
-        border-color: #bbb;
+        border-color: #aaa;
         background-color: #ddd;
     }
     [type="checkbox"]:disabled:checked + label:after {
@@ -600,9 +605,10 @@ confiramtion-slider{
 .order-confirmation{
     padding: 0 2%;	
     .mz-pagetitle{
-	    color: #093863; 
+	    color: @textHeaderColor; 
 	    font-family: @fontGTWalsheimBold;
         position: relative;
+        margin: 4px 0;
     }
     .print-link{
         cursor: pointer;
@@ -610,14 +616,19 @@ confiramtion-slider{
         text-transform: none;
         font-size: 15px;
         vertical-align: bottom;
-        top: 15px;
+        top: 0;
         right: 0px;
-        color: black;
+        color: @linkColor;
         font-family: @fontFamily;
+        &:hover {
+            color: @linkHoverColor;
+        }        
+        @media (min-width: 801px) {
+            top: 10px;
+        }
     }
     .confrim-block{
-    	min-height: 220px;
-    	background: #00af9a;
+    	background: @secondaryBlue;
 	    margin: 5px 0px;
     	.confirm-text1{
     		color: #fff;
@@ -629,28 +640,41 @@ confiramtion-slider{
     	.tick{
     		text-align: center;
             display: block;
+            margin: 20px;
+            @media (min-width: 768px) {
+                margin: 19px;
+            }
     	}
     	.icon-block{
-    		margin:25px 0;
-		    position: initial;
+    		margin: 10px 0;
+            position: initial !important;
+            width: 100% !important;
+            right: auto;
+            bottom: auto;
+            top: 75px;
+            height: 150px;
+            background-color: @secondaryBlue;
+            @media (min-width: 768px) {
+                height: 180px;
+            }
     	}
     	.confirm-text2{
-		    color: #9ff5eb;
+		    color: @primaryBlue;
             text-align: center;
             font-size: 18px;
 	        margin: 0;
 	        font-family: @fontFamily;
     	}
     	.icon{
-		    color: #fff;
+		    color: @primaryBlue;
 		    font-size: 34px;
-            border: 1px solid #fff;
+            border: 3px solid @primaryBlue;
             padding: 14px;
             border-radius: 100%;
     	}
     	.order-det1{
 		    font-size: 16px;
-		    color:#9ff5eb; 
+		    color: @secondaryBlue; 
 		    font-family: @fontFamily;
             margin:0px;
             span{
@@ -659,7 +683,7 @@ confiramtion-slider{
             }
     	}
     	.order-det2{
-    		color:#9ff5eb; 
+    		color: @secondaryBlue; 
     		font-family: @fontFamily;
             font-size: 20px;
             margin:30px 0px 0px;
@@ -671,13 +695,16 @@ confiramtion-slider{
             }
     	}
     	.payment-sec{
-    	    margin: 14% auto 0;
+    	    margin: 50px auto 0;
             width: 70%;
             height: 100%;
     	}
     	.total-sec{
-    		min-height: 220px;
-            background: #019a88;
+    		height: 105px;
+            background: @primaryBlue;
+            @media (min-width: 768px) {
+                height: 180px;
+            }
     	}
     }
 
@@ -689,7 +716,7 @@ confiramtion-slider{
         margin: 20px 0px;
         .join_rewards_inner{
             padding: 25px;
-            font-family: MonstserratLight;
+            font-family: @fontFamily;
             .join_rewards_text{
                 .mz-cms-content{
                     padding: 0px !important
@@ -697,7 +724,7 @@ confiramtion-slider{
                 h2{
                     margin: 0;
                     color: #ff8300;
-                    font-family: MonstserratLight;
+                    font-family: @fontFamily;
                     text-transform: uppercase;
                     font-size: 20px;
                     padding-bottom: 12px;
@@ -809,7 +836,7 @@ confiramtion-slider{
                 margin:0px;
             }
             dt{
-                color: #282828;
+                color: @textColor;
                 font-size: 18px;
                 min-width:140px;
                 margin: 0px;
@@ -831,23 +858,20 @@ confiramtion-slider{
             .mz-addresssummary{
                 span{
                     display: block;
-                    font-size: 14px;
-                    color: #666;
+                    font-size: 16px;
+                    color: #aaa;
                 }
                 span.address_name{
-                    font-size: 19px;
-                    color: #282828;
-                    margin-bottom: 5px;
                     text-transform: capitalize;
                 }
             }
         }
     }
     .shipping-info{
-    	 padding: 30px 15px 0px;
+    	 padding: 10px 15px 0px;
          min-height: 200px;	 
     	.shipping-head{
-    	    color: #6d6d6d; 
+    	    color: @textHeaderColor; 
     	    font-family: @fontFamily;
     	    font-size: 1.5em;
             margin: 0px 0px 0px;
@@ -869,16 +893,21 @@ confiramtion-slider{
             display: inline-block;
             min-width:140px;
     		.ship-text1{
-    			color:#282828;
+    			color: @textColor;
                 font-size: 18px;
     		}
     	}
     	.block2{
-            width: auto;
+            width: 50%;
             margin-right: 2%;
             display: inline-block;
+            font-size: 16px;
+            @media (min-width: 992px) {
+                width: 100%;
+            }
     		.ship-text2{
-    			color:#282828;
+    			color: #aaa;
+                font-size: 16px;
     		}
     		.ship-address{
     		font-size:0.8em;	
@@ -888,13 +917,10 @@ confiramtion-slider{
                 min-height: 120px;
                 span{
                     display: block;
-                    font-size:14px;
-                    color:#666;
+                    font-size:16px;
+                    color:#aaa;
                 }
                 span.address_name{
-                    font-size: 19px;
-                    color: #282828;
-                    margin-bottom: 5px;
                     text-transform: capitalize;
                 }
             }
@@ -924,14 +950,14 @@ confiramtion-slider{
         width:100%;
     }
     .orders-heading{
-        color: #6d6d6d;
-        font-family: MonstserratLight;
+        color: @textHeaderColor;
+        font-family: @fontFamily;
         font-size: 1.5em;
         margin: -5px 0px 0px;
     }
     hr{
-        border-top: 1px solid #e7e7e7 !important;
-        margin: 15px -5px 20px;
+        border-top: 1px solid transparent !important;
+        margin: 6px -5px;
     }
     .confirmation_ostable{
         .mz-ordersummary td{
@@ -958,11 +984,11 @@ confiramtion-slider{
         background:transparent;
         width:100%;
         th{    
-            background: #f5f5f5;
+            background: @secondaryWhite;
             padding: 19px 1.5%;
             font-size: 15px;
             text-transform: uppercase;
-            font-family: MonstserratLight;
+            font-family: @fontGTWalsheimLight;
             border: 0px;
             text-align: center;
         }
@@ -983,7 +1009,6 @@ confiramtion-slider{
         td.mz-ordersummary-item-image{ 
             width:105px;
             .cp_image{
-                border: 1px solid #eee;
                 border-radius: 4px;
                 text-align: center;
                 min-height: 90px;
@@ -1003,7 +1028,7 @@ confiramtion-slider{
             color: #222;
             text-decoration: none;
             font-size: 15px;
-            font-family:MonstserratLight;
+            font-family: @fontFamily;
             .mz-propertylist{
                 margin:0;
             }
@@ -1014,7 +1039,7 @@ confiramtion-slider{
             margin-top: 10px;
             p{
                 margin: 5px 0px 0px;
-                color: #666;
+                color: #aaa;
             }
             .sd_label {
                 font-size: 14px;
@@ -1037,7 +1062,7 @@ confiramtion-slider{
         td.mz-ordersummary-item-availability {
             font-family: MonstserratLight;
             font-size: 13px;
-            color: #666;
+            color: #aaa;
             padding:25px 1.5% 0px;
             position: relative;
             text-align:left !important;
@@ -1069,22 +1094,22 @@ confiramtion-slider{
         }
     }
     .confirmation_ostable_total{
-        border:1px solid #ddd;
+        border:1px solid @primaryBlue;
         margin-bottom:20px;
-        background: #f0faf9;
+        background: @secondaryWhite;
         padding: 13px 5px 0px;
     }
     .cart_summary_title{
-        background: #e1edf8;
-        padding: 16px 15px;
+        background: @primaryBlue;
+        padding: 18px 15px;
         margin: 0px 0px 0px;
         font-family: @fontGTWalsheimBold;
         text-transform: uppercase;
-        font-size: 19px;
-        color: #000;
+        font-size: 16px;
+        color: #fff;
     }
     .confirmation_ostable_total .mz-ordersummary {
-        background: #f0faf9;
+        background: transparent;
         tr td{
             padding: 10px 10px;
             vertical-align: middle;
@@ -1098,25 +1123,28 @@ confiramtion-slider{
         tr td:first-child{
             text-align:left;
             font-size: 16px;
-            color: #666;
+            color: @primaryDarkBlue;
             text-transform: uppercase;
             font-family: @fontFamily;
         }
         tr td:last-child{
             font-family: @fontGTWalsheimBold;
             text-align: right;
-            font-size: 20px;
-            color: #000;
+            font-size: 18px;
+            color: @textColor;
         }
         .mz-ordersummary-grandtotal {
-            border-top:1px solid #e2e6e6;
+            border-top:1px solid @primaryBlue;
+            & .mz-ordersummary-totalname {
+                color: @primaryBlue;
+            }
             td:first-child {
                 font-size: 20px;
                 line-height:50px;
             }
             td:last-child .mz-ordersummary-totalvalue{
                 font-size: 25px;
-                color: #093863;
+                color: @textHeaderColor;
                 line-height: 40px;
             }
         }
@@ -1124,8 +1152,8 @@ confiramtion-slider{
     .help-sec{
         display:inline-block;
         width:100%;
-        background:#fff9f2;
-        border:1px dotted #ff8300;
+        background: @secondaryWhite;
+        border:1px dotted @primaryDarkBlue;
         font-size:14px;
         font-family:@fontGTWalsheimBold;
         text-align:center;
@@ -1151,15 +1179,16 @@ confiramtion-slider{
             width: auto;
         }
         .support-text{
-            text-align: right;
+            text-align: left;
             font-family: @fontGTWalsheimBold;
             font-size: 14px;
+            color: @primaryDarkBlue;
         }
         .support-num{
-            text-align: left;
+            text-align: right;
             font-size: 20px;
             font-family: @fontGTWalsheimBold;
-            color: #ff8300;
+            color: @primaryDarkBlue;
             min-height: 30px;
             vertical-align: top;
             line-height: 30px;
@@ -1377,12 +1406,13 @@ float: left;
     .mob_hide{display:inline;}
     .mob_show{display: none;}
 }
-@media only screen and (max-width:991px) and (min-width:768px){
+@media only screen and (min-width:768px){
     .order-confirmation{
         .confrim-block{
             .icon-block {
-                margin: 30px 0 !important;
+                margin: 0;
                 width: 66.66%!important;
+                float: left !important;
             }
             .total-sec{
                 width: 33.33%!important;
@@ -1406,9 +1436,6 @@ float: left;
                     font-size: 25px;
                     margin-left: 0px;
                 }
-            }
-            .payment-sec{
-                margin: 20% auto 0px;
             }
         }
     }
@@ -1468,10 +1495,6 @@ float: left;
                 width:100% !important;
                 display: inline-block;
                 min-height: inherit;
-            }
-            .icon-block{
-                margin:20px 0px !important;
-                padding:0 10px;
             }
             icon{
                 padding: 10px;
@@ -1574,13 +1597,16 @@ float: left;
             .block1{
                 min-width:120px;
                 .ship-text1{
-                    color: #666;
+                    color: @textColor;
                     font-size: 14px;
                 }
             }
             .block2{
-                width:auto !important;
+                width:50% !important;
                 margin-right:0px;
+                @media (min-width: 1025px) {
+                    width: auto !important;
+                }
                 .confirmation_address{
                     min-height:100px;
                     span.address_name {
@@ -1600,7 +1626,7 @@ float: left;
                     display: inline-block;
                 }
                 dt{
-                    color: #666;
+                    color: @textColor;
                     font-size: 14px;
                     min-width:120px;
                 }
@@ -1622,7 +1648,7 @@ float: left;
                 color: #222;
                 font-family: @fontGTWalsheimBold;
                 font-size: 15px;
-                background-color:#e1edf8 !important;
+                background-color:@secondaryWhite !important;
                 padding:13px 10px !important;
             }
             hr{display: none}
@@ -1681,7 +1707,7 @@ float: left;
             }
             .cart_summary_title{
                 margin: 0px -10px 0px;
-                font-size: 14px;
+                font-size: 15px;
                 padding: 12px 15px;
             }
             .confirmation_ostable_total {
@@ -1727,6 +1753,7 @@ float: left;
                 .support-text {
                     width: 45%;
                     font-size: 13px;
+                    color: @primaryDarkBlue;
                 }
             }
         }

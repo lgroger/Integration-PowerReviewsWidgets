@@ -16,6 +16,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var me = this;
 
             //setup coupon code text box enter.
+		/* coupon code and zip code buttons aren't on cart page currently...
             this.listenTo(this.model, 'change:couponCode', this.onEnterCouponCode, this);
             this.listenTo(this.model, 'change:zipCode', this.onEnterZipCode, this);
              //this.listenTo(this.model, 'change:discountedTotal', this.updateShippingAmount, this);
@@ -31,6 +32,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                     return false;
                 }
             });
+		*/
 
             //Get Login user default shipping address and calc shipping amount
             if(!require.mozuData('user').isAnonymous){
@@ -71,7 +73,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
 
             /*Coupon cookie code*/
-           
+/* coupon code isn't on cart page currently...          
             //Coupon code validation starts here
             try{
                  var cartId = this.model.id;
@@ -126,6 +128,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 console.log("Error on Coupon Remove");
                 console.log(err);
             }
+*/
             this.listenTo(this.model.get('items'), 'quantityupdatefailed', this.onQuantityUpdateFailed, this);
 
             AmazonPay.init(CartModels.Cart.fromCurrent().id);
@@ -139,7 +142,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var products_production=_.filter(order_products, function(obj) {
                 return _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').productionTime}).length > 0;
             });
-            console.log(products_production);
+            //console.log(products_production);
              var ext_product_time=[];
             var ext_time_arr=[];
             order_products.forEach(function(obj,idl){
@@ -265,7 +268,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
         },
         render: function() {
-            console.log("Change "+this.model.hasChanged("discountedTotal"));
+          //  console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
             if(me.model.get('items').length>0){
                 me.showPersonalizeImage();
@@ -290,6 +293,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             
 
             var self= this;
+			/* coupon code input not on page currently
 			var arr=[],arr_rem=[],match,uniqueList="";
         	$('#coupon-code-field ul span strong').each(function(k,v){
 		    	arr [k] = $(v).text();
@@ -315,16 +319,18 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 			
 			uniqueList=arr.filter(function(item,i,allItems){
 			    return i==allItems.indexOf(item);
-			});
+			}); */
 			
         },
         removeCoupon : function(e){
+		/* coupon code and zip code buttons aren't on cart page currently...
             var self=this;
             var me= this.$el; 
             var orderId = this.model.id;
             var couponCode = $(e.currentTarget).attr('name'); 
             self.model.apiRemoveCoupon(couponCode).then(function (res) {                
             });
+		*/
         },
         setestimateShipping:function(){
             var self = this;
@@ -339,11 +345,11 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             "change input.mz-carttable-qty-field" : "updateQuantity", 
             "click .mz-carttable-item-remove a.mz-icon-close" : "removeItem",
             "click .mz-carttable-emptylink" : "empty",
-            "click button#cart-coupon-code" : "addCoupon",
-            "click a.remove-coupon-link" : "removeCoupon",
+            //"click button#cart-coupon-code" : "addCoupon",
+            //"click a.remove-coupon-link" : "removeCoupon",
             "click .editpersonalize": "editPersonalize",
             // "keypress .code_input_box" : "enableZipCode",
-            "click .code_input_btn" : "estimateShippingCost",
+           // "click .code_input_btn" : "estimateShippingCost",
             "click a.move-to-wishlist-link" : "moveToWishList",
             'click .toggle_components':"toggleComponets",
             "click .editPersonalizeBundleItem": "editPersonalizeBundleItem",
@@ -465,7 +471,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var self = this;
             //Api.request('GET','/api/platform/entitylists/'+ent+'/entities')
             Api.action('entityList','entityList',{listName:"countryus@shindigz"}).then(function(resp){
-                console.log(resp);
+                //console.log(resp);
                 var data = [];
                 for(var index =0; index<resp.length;index++)
                 {
@@ -503,7 +509,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             //Refer Arc.js shipping application for more info.
             var self=this;
             var orderTotal = this.model.get("discountedSubtotal");
-            console.log("order amount "+orderTotal+" country_code "+country_code);
+            //console.log("order amount "+orderTotal+" country_code "+country_code);
             if(orderTotal===0){
                  self.model.set({shippingCost:0});
                  self.render(); 
@@ -517,10 +523,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                     }
                      if(ship_amount.length>0){
                         var min_ship_amout=Math.min.apply(null, ship_amount);
-                        console.log("Min amount_to_be_added "+min_ship_amout);
+                        //console.log("Min amount_to_be_added "+min_ship_amout);
                         self.model.set({shippingCost:min_ship_amout});
                         self.render();                    
-                        console.log("Final ship min "+min_ship_amout);
+                        //console.log("Final ship min "+min_ship_amout);
                     }else{
                         Api.request("GET","/api/content/documentlists/shippingMoreThenList@shindigz/views/shippingMoreThenView/documents?pageSize=100&filter=properties.country_code eq "+country_code).then(function(resp){
                             for (var i = 0; i < resp.items.length; i++) {
@@ -534,7 +540,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                                 var ex_price=(Math.floor((orderTotal-0.01)/resp.items[idx_shipping].properties.for_each)-Math.floor(parseFloat(resp.items[idx_shipping].properties.more_then)/resp.items[idx_shipping].properties.for_each)+1)*parseFloat(resp.items[idx_shipping].properties.amount_to_be_added);
                                 ex_price=ex_price+parseFloat(resp.items[idx_shipping].properties.base_value);
                                  self.model.set({shippingCost:ex_price});
-                                 console.log("Final ship "+ex_price);
+                                 //console.log("Final ship "+ex_price);
                                 self.render();          
                             }
                         },function(err){
@@ -549,7 +555,9 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
         },
         enableZipCode:function(e){
+		/* zip code not on page currently...
             this.$el.find('.code_input_btn').prop('disabled',false);
+		*/
         },
         getExtraProduct: function(productCode){
             var product = null;
@@ -659,16 +667,6 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                     
             });
 
-            
-            
-            
-            /** DnD Code  Start **/
-            //Api.get('product',productData.get('productCode')).then(function(sdkProduct) {
-                //var product = new ProductModels.Product(sdkProduct.data);
-                
-            //});
-            
-                /** DnD Code  End **/
         },
         editPersonalizeBundleItem: function(e){ 
 
@@ -873,7 +871,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 });
             });
             $(document).on('click','#btn-no-empty',function(e){
-                $('.compare-full-error-container').hide();
+                $('.compare-full-error-container').remove();
                 return false;
             });
         },
@@ -885,6 +883,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             // the rest is done through a regular HTTP POST
         },
         addCoupon: function (e) {
+		/* input box is commented out currently
             var self = this;
             var couponArr = self.model.get('couponCodes');
             var couponCode = $('#coupon-code').val().toLowerCase(),
@@ -964,7 +963,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 			                self.$el.removeClass('is-loading');
 			                self.model.unset('couponCode');
 			                $(self.model.get('orderDiscounts')).each(function(k,v){
-				            	console.log(v);
+				            	//console.log(v);
 				            });
 			                self.render();
 			            });
@@ -983,9 +982,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 $('.coupon-code-stripe').hide().removeAttr('style');
                 self.render();    
             },4000);
-            
+        */
         },
         onEnterZipCode: function (model,code) {
+		/* zip code input not on page currently
             //var code = $(e.currentTarget).val();
             if (code) {
                 this.$el.find('.code_input_btn').prop('disabled', false);
@@ -993,8 +993,10 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             if (!code) {
                 this.$el.find('.code_input_btn').prop('disabled', true);
             }
+		*/
         },
         onEnterCouponCode: function (model,code) {
+		/* no coupon code input on page currently
             //var code = $(e.currentTarget).val();
             if (code && !this.codeEntered) {
                 this.codeEntered = true;
@@ -1004,6 +1006,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 this.codeEntered = false;
                 this.$el.find('#cart-coupon-code').prop('disabled', true);
             }
+		*/
         },
         autoUpdate: [
             'couponCode',
@@ -1055,16 +1058,16 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 $form.submit();
 
             });
-
+/*
             // for debugging purposes only. don't use this in production
             window.V.on("payment.cancel", function(payment) {
                 console.log({ cancel: JSON.stringify(payment) });
-            });
-
+            }); */
+/*
             // for debugging purposes only. don't use this in production
             window.V.on("payment.error", function(payment, error) {
                 console.warn({ error: JSON.stringify(error) });
-            });
+            }); */
         }
 
         // delay V.init() while we wait for MozuView to re-render

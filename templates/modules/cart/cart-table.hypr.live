@@ -108,7 +108,7 @@
                             {% endfor %}
                         </dl>
                     {% endif %}
-
+                    {% comment %}
                   <!--   {% if item.product.productUsage == 'Bundle' %}
                         <dl class="mz-propertylist">
                             {% for bundledProduct in item.product.bundledProducts %}
@@ -117,6 +117,7 @@
                             {% endfor %}
                         </dl>
                     {% endif %} -->
+                    {% endcomment %}
                     {% if item.fulfillmentMethod == 'Pickup' %}
                         <span class="mz-carttable-item-pickuplocation">
                             {{ labels.storePickupAt|string_format(item.fulfillmentLocationName)|safe }}
@@ -142,7 +143,9 @@
                 {% if item.handlingAmount > 0 %}
                    <span class="mz-item-surcharge">{{ item.handlingAmount |divide(item.quantity) |currency }}</span>
                 {% else %}
+                   {% comment %}
                     <!--  <span class="mz-item-surcharge"> <i class="fa fa-minus" aria-hidden="true"></i></span> -->
+                    {% endcomment %}
                 {% endif %}
             </td>
             {% endif %}
@@ -275,7 +278,9 @@
                                 {% if item.handlingAmount  > 0 %}
                                    <span class="mz-item-surcharge">{{ item.handlingAmount |divide(item.quantity)|currency }}</span>
                                 {% else %}
+                                    {% comment %}
                                      <!-- <span class="mz-item-surcharge"> <i class="fa fa-minus" aria-hidden="true"></i></span> -->
+                                    {% endcomment %}
                                 {% endif %}
                             </td>
                         </tr>
@@ -362,6 +367,7 @@
         </tbody>
 
         <tfoot>
+        {% comment %}
         <!-- <tr class="mz-carttable-shipping-row">
         <td colspan="4">
           <em class="mz-auxiliary-text">{{ labels.taxAtCheckout }}</em>
@@ -378,12 +384,15 @@
                 </td>
                 <td></td>
             </tr> -->
+        {% endcomment %}
             <tr class="mz-carttable-checkout-row">
                 <td colspan="7">
+                    {% comment %}
                     <!-- commented coupon code file -->
                     <!-- <div class="mz-carttable-checkout-couponcode" id="coupon-code-field" >
                         {% include "modules/common/coupon-code-field" %}
                     </div> -->
+                    {% endcomment %}
                     <div class="cart_bottom_line mz-cms-col-12-12">
                         <div class="mz-cms-col-10-12">
                             <a class="mz-sz-continue" href="/" style="">
@@ -471,7 +480,6 @@
             {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
                 {% if externalPaymentWorkflowsEnabled %}
                     <div class="pay_options">
-                        <!--<p>{{labels.orWith}}</p>-->
                         {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
                             {% if externalPayment.isEnabled %}
                                 <div class="pay_options_box mz-carttable-thirdpartypayment" >
@@ -481,14 +489,18 @@
                                             </div>
                                             <div id="AmazonPayButton" style="display:none;"></div>
                                         {% endif %}
+                                    {% comment %}
                                 <!--    {% if externalPayment.name == "VisaCheckout" %}
                                         <img alt="Visa Checkout" class="v-button" role="button" src="{{pageContext.visaCheckoutButtonUrl}}"/>
                                     {%endif%} -->
+                                    {% endcomment %}
                                     {% if externalPayment.name == "PayPalExpress2" %}
                                         <div class="pay_option_btn p-button" id="btn_xpressPaypal" role="button" >
                                             <span>Checkout with</span><img src="../resources/images/paypal.jpg" alt="Checkout with Paypal" />
                                         </div>
+                                        {% comment %}
                                         <!--    <img id="btn_xpressPaypal" class="p-button" alt="Check out with PayPal" role="button" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" width="170px" height="32px" /> -->
+                                        {% endcomment %}
                                         {% require_script "modules/xpressPaypal" %}
                                     {% endif %}
                                 </div>
@@ -498,7 +510,7 @@
                 {% endif %}
             {%endwith%}
         {% endif %}
-        <!-- <a class="mz-carttable-emptylink">Remove All</a> -->
+
             <div class="continue_shopping mob_show">
               <a href="/">{{ themeSettings.continueShoppingLink }}</a>
             </div>

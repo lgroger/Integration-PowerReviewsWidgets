@@ -48,15 +48,6 @@
 
     </h1>
 
-<div class="cart_bundle_box" style="display:none;">
-    {% for item in model.items %}
-        {% if item.product.productUsage == 'Bundle' %}
-            {% for components in item.product.bundledProducts %}
-                <img class="cart_bundle_img" style="" value="{{ item.id }}-{{ components.productCode }}" src="{% include_products "modules/product/bundle-component" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}" alt="Bundle Item"/>
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
-</div>
     <form id="checkout-form" class="checkout_cols mz-checkoutform mz-l-2column mz-l-2column-right" method="post" onsubmit="return false;">
 
     {% include "modules/common/message-bar" with model=model.messages %}

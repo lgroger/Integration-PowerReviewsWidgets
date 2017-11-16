@@ -373,8 +373,10 @@ label.menu-toggle {
   }  
 }
 .float-nav label.menu-toggle {
-  height: inherit;    
+  height: inherit;   
+  top: 2px; 
   @media (min-width: 961px) {
+    top: -2px;
   }
 }
 .menu-custom ul li>label:after {
@@ -734,6 +736,9 @@ min-height: 40%;
     width: 20%;
     box-sizing: border-box;
   }
+}
+li.float-wrap-soft-cart {
+    height: 50px;
 }
 .ech-shi-icons ul li:first-child {
   margin-left: -35px;

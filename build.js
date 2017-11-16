@@ -30,7 +30,6 @@
                 'modules/models-faceting',
                 'modules/models-messages',
                 'modules/models-product',
-                'modules/scroll-nav',
                 'modules/views-collections',
                 'modules/views-messages',
                 'modules/views-paging',

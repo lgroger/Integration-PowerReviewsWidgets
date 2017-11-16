@@ -337,7 +337,8 @@ require(
                     }
                 }
 
-                if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1){
+				// hides radio button if there is only one extra for specific attributeFQNs (may want to make this theme setting) - NOTE: this differs slightly than code on product.js b/c on pdp it's showing as radio but dropdown on quickview
+                if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1 && (this.$('[data-mz-product-option]').attr('data-mz-product-option') === "tenant~misc.-favor-with-design" || this.$('[data-mz-product-option]').attr('data-mz-product-option') === "tenant~table-top-it-runner-size")){
                     if(this.$('[data-mz-product-option]').find('option').length==2){
                         this.$('[data-mz-product-option]').parents('.mz-productdetail-options').hide();
                     }
@@ -996,14 +997,14 @@ require(
                                  //Pinterest tracking
                                  if(pintrk!==undefined){
                                      pintrk('track','addtocart',{
-                                        value:parseFloat(track_price*product.get('quantity')).toFixed(2),
+                                        value:parseFloat(track_price*product.get('quantity')),
                                         order_quantity:product.get('quantity'),
                                         currency:"USD",
                                         line_items:[{
                                             product_name:product.toJSON().content.productName,
                                             product_id:track_product_code[0],
-                                            product_price:track_price,
-                                            product_quantity:product.get('quantity')
+                                            product_price:parseFloat(track_price),
+                                            product_quantity:parseInt(product.get('quantity'),10)
                                         }]
                                     });
                                  }

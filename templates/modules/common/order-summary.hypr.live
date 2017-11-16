@@ -52,6 +52,7 @@
 
                 <tr class="mz-ordersummary-item-shipping-info">
                   <td colspan="4" class="mz-ordersummary-item-availability">
+                  {% comment %}
                   {% if item.product.productUsage == 'Bundle' %}
                       <h3><span class="toggle_components" data-container-id="{{ item.id }}">Show Components <i class="fa fa-caret-down"></i></span></h3>
                       <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;">
@@ -67,6 +68,7 @@
                           </div>               
                       </div>
                   {% endif %}
+                  {% endcomment %}
                    <span class="availability_highlight_{{ item.product.productCode }}">
                     {% if item.productionTime %}
                       {% if item.productionTime > 1 %}
