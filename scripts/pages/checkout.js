@@ -364,7 +364,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             console.log("Error on tz "+err);
                              estTime.setDate(tmp.getDate());
                         }
-                    var holiday_prop=_.pluck(require.mozuData("holidaylist"),'properties');
+                    var holiday_prop=_.pluck(require.mozuData("shipUPSDate"),'properties');
                     var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
                     var mozu_order_obj=require.mozuData("checkout").items;
                     var order_products=_.pluck(mozu_order_obj,'product');
@@ -489,11 +489,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
              var cus_ele="";
              var selected_shipping=scope_obj.model.get("fulfillmentInfo.shippingMethodCode")+"_shipMethod";
              var est_delivery_dates=_.pluck(scope_obj.model.get("items"),'est_date');
+             /*
              _.each(est_delivery_dates,function(ele,idx) {
                 for(var key in ele) {
                     ele[key] = scope_obj.getDeliveryDate(ele[key]);
                 }
              });
+             */
              if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
                  scope_obj.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
                      var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
@@ -675,7 +677,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var order_products=_.pluck(mozu_order_obj,'product');
            // var product_ready=_.difference(order_products,products_production);
             //get preload json from custom document for holiday
-            var holiday_prop=_.pluck(require.mozuData("holidaylist"),'properties');
+            var holiday_prop=_.pluck(require.mozuData("shipUPSDate"),'properties');
             var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
             window.product_withExtra=ext_prop;
             this.model.set("fulfillmentInfo.drop_items",[]);
