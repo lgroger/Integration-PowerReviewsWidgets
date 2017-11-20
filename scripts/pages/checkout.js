@@ -364,7 +364,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             console.log("Error on tz "+err);
                              estTime.setDate(tmp.getDate());
                         }
-                    var holiday_prop=_.pluck(require.mozuData("shipUPSDate"),'properties');
+                    var holiday_prop=_.pluck(require.mozuData("holidaylist"),'properties');
                     var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
                     var mozu_order_obj=require.mozuData("checkout").items;
                     var order_products=_.pluck(mozu_order_obj,'product');
@@ -386,7 +386,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         me.skip_holidays(estTime,(production_date+1),shipping_holidays_list,me.setShippingStartDate,idx,me);
                        // me.est_shipping_start_date(order_date,idx,production_date,shipping_holidays_list,scope_obj,true);
                     });
-                      product_ready.forEach(function(el){
+                    product_ready.forEach(function(el){
                         var idx=-1;
                         mozu_order_obj.forEach(function(ob,i){
                             if(_.isEqual(ob.product,el)){
@@ -400,48 +400,48 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         this.model.get("items")[i].est_date="No Data";
                         this.skip_holidays(estTime,1,shipping_holidays_list,this.setShippingStartDate,i,this);
                      }*/
-                     var cus_ele="";
-                      var selected_shipping=this.model.get("fulfillmentInfo.shippingMethodCode")+"_shipMethod";
-             var est_delivery_dates=_.pluck(this.model.get("items"),'est_date');
-             if(this.model.get("fulfillmentInfo.availableShippingMethods")){
-                 this.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
-                     var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
-                     if(min_day.toString()!=="Invalid Date"){
-                         this.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
-                         var date_str=window.dateFormatArr[0];
-                         if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
-                            date_str=window.dateFormatArr[min_day.getDate()%10];
-                         }
-                         this.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
-                     }
-                 });
-             }
-            this.model.set("fulfillmentInfo.drop_items",[]);
-            if(this.model.get("fulfillmentInfo.availableShippingMethods")){
-                 _.each(est_delivery_dates,function(ele,idx) {
-                    var ship_key=me.model.get("fulfillmentInfo.availableShippingMethods")[0].shippingMethodCode+"_shipMethod";
-                    if(me.model.get("items")[idx].est_date[selected_shipping]){
-                         var prodDate=me.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[me.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+me.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>th</sup></strong>";    
-                         if(me.model.get("items")[idx].est_date[selected_shipping].getDate()<=3 || me.model.get("items")[idx].est_date[selected_shipping].getDate()>=21 && window.dateFormatArr[me.model.get("items")[idx].est_date[selected_shipping].getDate()%10]){
-                            prodDate=me.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[me.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+me.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>"+window.dateFormatArr[me.model.get("items")[idx].est_date[selected_shipping].getDate()%10]+"</sup></strong>";
-                         }
-                        if(me.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) && ele[ship_key].toString()!==me.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
-                            me.model.get("fulfillmentInfo.drop_items").push(prodDate);
-                        } 
+                    var cus_ele="";
+                    var selected_shipping=this.model.get("fulfillmentInfo.shippingMethodCode")+"_shipMethod";
+                    var est_delivery_dates=_.pluck(this.model.get("items"),'est_date');
+                    if(this.model.get("fulfillmentInfo.availableShippingMethods")){
+                        this.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
+                            var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
+                            if(min_day.toString()!=="Invalid Date"){
+                                this.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
+                                var date_str=window.dateFormatArr[0];
+                                if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
+                                date_str=window.dateFormatArr[min_day.getDate()%10];
+                                }
+                                this.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
+                            }
+                        });
                     }
-                 });
-            }
-             _.pluck(est_delivery_dates,selected_shipping).forEach(function(el){
+                    this.model.set("fulfillmentInfo.drop_items",[]);
+                    if(this.model.get("fulfillmentInfo.availableShippingMethods")){
+                    _.each(est_delivery_dates,function(ele,idx) {
+                        var ship_key=me.model.get("fulfillmentInfo.availableShippingMethods")[0].shippingMethodCode+"_shipMethod";
+                        if(me.model.get("items")[idx].est_date[selected_shipping]){
+                            var prodDate=me.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[me.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+me.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>th</sup></strong>";    
+                            if(me.model.get("items")[idx].est_date[selected_shipping].getDate()<=3 || me.model.get("items")[idx].est_date[selected_shipping].getDate()>=21 && window.dateFormatArr[me.model.get("items")[idx].est_date[selected_shipping].getDate()%10]){
+                                prodDate=me.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[me.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+me.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>"+window.dateFormatArr[me.model.get("items")[idx].est_date[selected_shipping].getDate()%10]+"</sup></strong>";
+                            }
+                            if(me.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) && ele[ship_key].toString()!==me.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
+                                me.model.get("fulfillmentInfo.drop_items").push(prodDate);
+                            } 
+                        }
+                    });
+                }
+                _.pluck(est_delivery_dates,selected_shipping).forEach(function(el){
                     if(el!==undefined){
                         cus_ele+=("0" + (el.getMonth() + 1)).slice(-2)+"/"+("0" + el.getDate()).slice(-2)+"/"+el.getFullYear()+":::";
                     }else{
                         cus_ele+="No Data:::";   
                     }
                 });
-                    var ship_attr="";
-                    _.pluck(window.order.toJSON().items,'ship_date').forEach(function(el){
-                        ship_attr+=el+":::";
-                    });
+                var ship_attr="";
+                _.pluck(window.order.toJSON().items,'ship_date').forEach(function(el){
+                    ship_attr+=el+":::";
+                });
                     var prod="";
                      _.pluck(window.order.toJSON().items,'productionTime').forEach(function(el){
                         if(el!==undefined){
@@ -679,6 +679,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             //get preload json from custom document for holiday
             var holiday_prop=_.pluck(require.mozuData("shipUPSDate"),'properties');
             var shipping_holidays_list=_.pluck(holiday_prop,'holiday');
+            var shl = _.pluck(_.pluck(require.mozuData("holidaylist"),'properties'),'holiday');
             window.product_withExtra=ext_prop;
             this.model.set("fulfillmentInfo.drop_items",[]);
             var me=this;
@@ -779,8 +780,9 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             var product_ready_dropship=_.difference(dropship_items,production_dropship);
             if(isUSA){
                  if(window.indina_idx_arr.length>0){
-                    me.skip_holidays(order_date,indiana_max_prod_days,shipping_holidays_list,function(result_date){
+                    me.skip_holidays(order_date,indiana_max_prod_days,shl,function(result_date){
                         if(contains_melts && (result_date.getDay()>=4||result_date.getDay()===0)){
+                            scope_obj.USADeliveryDate(result_date,indiana_prd_idx,shipping_holidays_list,scope_obj,false,true);
                             scope_obj.get_meltPackage_start(result_date,shipping_holidays_list,scope_obj,indiana_prd_idx);
                         }else{
                             scope_obj.USADeliveryDate(result_date,indiana_prd_idx,shipping_holidays_list,scope_obj,false,true);
@@ -804,11 +806,11 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     var ship_date=new Date(order_date);
                     if(isMelt!==undefined){
                         if(isMelt.values[0].value && (ship_date.getDay()>=4||ship_date.getDay()===0)){
-                            scope_obj.est_date_usa(ship_date,idx,shipping_holidays_list,scope_obj);
+                            scope_obj.est_date_usa(ship_date,idx,shl,scope_obj);
                         }else if(scope_obj.model.get("items")[idx].product.bundledProducts.length>0){
                             var melt_idx=scope_obj.model.get("items")[idx].product.bundledProducts[0].productCode+"_melt";
                             if(window.meltArr[melt_idx]!==undefined  && (ship_date.getDay()>=3||ship_date.getDay()===0)){
-                                scope_obj.est_date_usa(ship_date,idx,shipping_holidays_list,scope_obj);
+                                scope_obj.est_date_usa(ship_date,idx,shl,scope_obj);
                             }else{
                                 scope_obj.USADeliveryDate(ship_date,idx,shipping_holidays_list,scope_obj,true);                                
                             }
@@ -818,7 +820,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                     }else if(scope_obj.model.get("items")[idx].product.bundledProducts.length>0){
                         var melt_idx1=scope_obj.model.get("items")[idx].product.bundledProducts[0].productCode+"_melt";
                         if(window.meltArr[melt_idx1]!==undefined  && (ship_date.getDay()>=3||ship_date.getDay()===0)){
-                             scope_obj.est_date_usa(ship_date,idx,shipping_holidays_list,scope_obj);
+                             scope_obj.est_date_usa(ship_date,idx,shl,scope_obj);
                     }else{
                              scope_obj.USADeliveryDate(ship_date,idx,shipping_holidays_list,scope_obj,true);
                         }
@@ -846,11 +848,11 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             production_date=0;
                         }
                     }
-                    me.est_shipping_start_date(order_date,idx,production_date,shipping_holidays_list,scope_obj,true);
+                    me.est_shipping_start_date(order_date,idx,production_date,shl,scope_obj,true);
                 });
             }else{
                 if(window.indina_idx_arr.length>0){
-                    me.skip_holidays(order_date,indiana_max_prod_days,shipping_holidays_list,function(result_date){
+                    me.skip_holidays(order_date,indiana_max_prod_days,shl,function(result_date){
                         if(result_date.getDay()<4){
                            scope_obj.setCA_ship_start(result_date,shipping_holidays_list,scope_obj,indiana_prd_idx,true);
                         }else{
@@ -867,7 +869,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             pr_arr_idx.push(idx);
                         }
                     });
-                   me.skip_holidays(order_date,1,shipping_holidays_list,function(result_date){
+                   me.skip_holidays(order_date,1,shl,function(result_date){
                     if(result_date.getDay()<4){
                         scope_obj.setCA_ship_start(result_date,shipping_holidays_list,scope_obj,idx);
                     }else{
@@ -910,7 +912,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         production_date=1;
                     }  
                     //me.est_shipping_start_date(order_date,idx,production_date,shipping_holidays_list,scope_obj,false);
-                    me.skip_holidays(order_date,production_date,shipping_holidays_list,function(result_date){
+                    me.skip_holidays(order_date,production_date,shl,function(result_date){
                     if(result_date.getDay()<4){
                         scope_obj.setCA_ship_start(result_date,shipping_holidays_list,scope_obj,idx);
                     }else{
