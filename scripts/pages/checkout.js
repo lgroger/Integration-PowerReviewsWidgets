@@ -848,7 +848,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             production_date=0;
                         }
                     }
-                    me.est_shipping_start_date(order_date,idx,production_date,shl,scope_obj,true);
+                    me.est_shipping_start_date(order_date,idx,production_date,shipping_holidays_list,scope_obj,true);
                 });
             }else{
                 if(window.indina_idx_arr.length>0){
