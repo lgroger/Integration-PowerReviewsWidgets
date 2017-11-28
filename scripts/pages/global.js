@@ -73,116 +73,7 @@ var pageContext = require.mozuData('pagecontext');
         });
     };
 
-var getDateTime = function() {
-
-    var date = new Date();
-
-    var hour = date.getUTCHours();
-    hour = (hour < 10 ? "0" : "") + hour;
-
-    var min  = date.getUTCMinutes();
-    min = (min < 10 ? "0" : "") + min;
-
-    var sec  = date.getUTCSeconds();
-    sec = (sec < 10 ? "0" : "") + sec;
-
-    var year = date.getUTCFullYear();
-
-    var month = date.getUTCMonth() + 1;
-    month = (month < 10 ? "0" : "") + month;
-
-    var day  = date.getUTCDate();
-    day = (day < 10 ? "0" : "") + day;
-
-    return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
-
-};
-
-if(pageContext.pageType==="confirmation"){
-            var order = require.mozuData('order');
-            var orderId = order.Id;
-            api.request('GET', '/api/platform/entitylists/abtestlist@shindigz/entities?filter=userSessionId eq '+pageContext.visit.visitId).then(function(res){
-                var items = res.items;
-                //console.log(items);
-                if(items.length>0){
-                    var item = {
-                        "orderNumber": order.orderNumber,
-                        "orderStatus": order.status,
-                        "shipTableReference": items[0].shipTableReference,
-                        "userSessionId":items[0].userSessionId,
-                        "createDate": getDateTime()
-                    };
-                    $(".abtestcontent-"+items[0].shipTableReference.toLowerCase()).show();
-                    api.request('POST', '/api/platform/entitylists/abtestlistorders@shindigz/entities', item).then(function(res){
-                       // console.log("Abtesview updated successfully");
-                       // console.log(res);
-                    });
-
-                    /*api.request('POST','/api/commerce/orders/'+orderId+'/attributes', [{"fullyQualifiedName": "tenant~STR","values": [items[0].shipTableReference]}]).then(function(res){ 
-                        console.log(res); 
-                    });*/
-                }
-            });
-
-}
-
-/* Insert entity/Update entity for ABTestView */    
-
-        /** update custom schema entity for ABTestview only in confirmation page **/
-        /*if(pageContext.pageType!=="confirmation"){
-             api.get('entityList', {
-                        listName: 'abtestlist@shindigz',
-                        filter:'userSessionId eq '+pageContext.visit.visitId
-                    }).then(function(res){
-                var items = res.data.items;
-                console.log(items);
-                var item;
-                if(items.length>0){
-                    item = items[0];
-                    $(".abtestcontent-"+items[0].shipTableReference.toLowerCase()).show();
-                        $.cookie('shiptableref',items[0].shipTableReference,{path:'/',expires:7});
-                        item.userId = pageContext.user.userId;
-                        var requestConfigure = {"url":pageContext.secureHost+"/api/platform/entitylists/abtestlist@shindigz/entities/"+item.userSessionId,"iframeTransportUrl":pageContext.secureHost+"/receiver?receiverVersion=2"};
-                        api.request('PUT',requestConfigure, item).then(function(res){
-                            console.log("Abtesview updated successfully");
-                            console.log(res);
-                        });
-                }else{
-                     api.get('entityList', {
-                        listName: 'abtestlist@shindigz',
-                        sortBy:'createDate desc',
-                        pageSize:2
-                    }).then(function(res){
-                        items = res.data.items;
-                        var shipType = "A";
-                        if(items.length>0){
-                            if(items[0].shipTableReference==="A"){
-                                shipType ="B";
-                            }else{
-                                shipType ="A";
-                            }
-                        }
-                        $.cookie('shiptableref',shipType,{path:'/',expires:7});
-                       
-                        $(".abtestcontent-"+shipType.toLowerCase()).show();
-                        item = {
-                                "shipTableReference": shipType,
-                                "userSessionId":pageContext.visit.visitId,
-                                "createDate": getDateTime(),
-                                "accountId":pageContext.user.accountId?pageContext.user.accountId:"",
-                                "userId": pageContext.user.userId
-                            };
-                        var requestConfigure = {"url":pageContext.secureHost+"/api/platform/entitylists/abtestlist@shindigz/entities/","iframeTransportUrl":pageContext.secureHost+"/receiver?receiverVersion=2"};
-                        api.request('POST',requestConfigure, item).then(function(res){
-                            console.log("Abtesview inserted successfully");
-                            console.log(res);
-                        });
-                    });
-                }
-              });
-
-        }*/
-
+    
     //Ready Start
 
 	$(document).ready(function(){
@@ -701,7 +592,7 @@ if(pageContext.pageType==="confirmation"){
     }
 
     function add_breadcrumb_item (path,lvl,title_tag) {
-        //console.log("add new path "+path);
+        console.log("add new path "+path);
         var previous_url=document.referrer;
         previous_url=previous_url.substr(previous_url.indexOf("/",8));
         var tmp= JSON.parse(sessionStorage.getItem('breadcrumb'));
