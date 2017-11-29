@@ -984,8 +984,11 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
         }
     }
 }
+#tab-content1 span.wrapper {
+    display: table;
+}
 .wrapper {
-    color: #555;
+    color: @textHeaderColor;
     cursor: help;
     position: relative;
     text-align: center;
@@ -1000,7 +1003,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
           border-top: solid grey 10px !important;
 }
 .wrapper .tooltip {
-    background: @secondaryPink;
+    background: grey;
     width: 200px !important;
     bottom: 100%;
     color: #fff;
@@ -1026,6 +1029,30 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     -ms-box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
     -o-box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
     box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
+}
+i.fa.fa-exclamation-triangle {
+    display: table-cell;
+    color: @secondaryRed;
+}
+#tab-content1 .wrapper .tooltip.warning {
+    opacity: 100;
+    background: transparent !important;
+    box-shadow: none;
+    color: @textHeaderColor;
+    margin: 0;
+    padding: 0 0 0 50px;
+    position: relative;
+    width: auto !important;
+    display: table-cell;
+    left: initial !important;
+    bottom: initial;
+    pointer-events: initial;
+    transform: initial;
+    padding-left: 37px;
+    text-align: left;
+    &::after {
+        display: none;
+    }
 }
 .wrapper .tooltip:before {
     bottom: -20px;
@@ -1108,7 +1135,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     background: @primaryCTAhover;
 }
 .mz-quick-view-wrapper .container-right .product-cart-wishlist #add-to-wishlist:hover {
-    background-image: url('../resources/images/wishlist-pdp-red.svg');
+    background-image: url('../resources/images/wishListIconHover.svg');
 }
 .mz-quick-view-wrapper.pdp-wrapper .container-left .product-image-slider .owl-prev {
     left: -10% !important;
@@ -1401,12 +1428,22 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 @media screen and (min-width:641px) {
     .pdp-detail {
         #add-to-wishlist {
-            background-position-x: 15px !important;
-            background-size: 35px 35px !important;
-            padding-left: 60px !important;
-            padding-right: 30px !important;
-            width: auto !important;
-            color: @dark-grey !important;
+            background-size: 50px 50px !important;
+            width: 60px !important;
+            color: transparent !important;
+            background-position: center !important;
+            padding: 0 !important;
+            display: inline-block !important;
+            position: relative !important;
+            top: -55px;
+            left: 235px;
+        }
+    }
+}
+@media screen and (min-width:1140px) {
+    .pdp-detail {
+        #add-to-wishlist {
+            left: 250px;
         }
     }
 }
@@ -1422,7 +1459,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     font-family: @fontFamily !important;
     line-height: 1.3;
     font-size: 13px;
-    color: @dark-grey;
+    color: @textColor;
     a.more-details {
         margin-top: 6px;
         font-size: 13px;
@@ -1433,7 +1470,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 }
 .product-description span {
-    font-family: @fontFamily !important;
+    font-family: @fontGTWalsheimBold !important;
 }
 .product-review a {
     font-family: @fontFamily !important;
@@ -1489,8 +1526,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     select {
         border-radius: 6px;
-        background: rgba(235, 235, 228, 0.32);
-        color: #000;
+        background: @secondaryWhite;
         border: 1px solid rgba(235, 235, 228, 0.32);
     }
     /*.is-required {
@@ -1524,6 +1560,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             background-color: initial;
             outline: none;
             font-size: 1.5rem;
+            color: @textColor;
         }
         input[type="text"] {
             width: 29px;
@@ -1635,7 +1672,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     /* display: inherit; */
 }
 .morelink-pdp {
-    color: #000;
     font-family: @fontGTWalsheimBold !important; 
     text-decoration: underline;
     cursor: pointer;
@@ -1915,7 +1951,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .tab-content p {
     font-size: 13px;
-    color:@dark-grey;
+    color:@textColor;
 }
 .qa-button {
     float: right;
@@ -2113,7 +2149,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         font-size: 12px;
     }
     .rev-det-p2 {
-        color: black;
+        color: @textColor;
     }
 }
 @media (min-width:320px) {
@@ -2228,7 +2264,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .mob-tabs {
     .collapsed .header {
         background-color: rgba(128,128,128,0.13) !important;
-        color: black !important;
+        color: @textColor !important;
         background-size: 3% 70%;
     }
     .mob-head-tab {
