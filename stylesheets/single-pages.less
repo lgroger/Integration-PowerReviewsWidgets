@@ -2476,7 +2476,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 	z-index: 111;
 	position: absolute;
 	width: 100%;
-	font-family: @fontFamily;
+	font-family: @fontGTWalsheimBold;
 }
 .cycle-slideshow #no-template-pager span {
 	display: inline;
@@ -2489,17 +2489,27 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 	color: @textColor;
 	cursor: pointer;
 	overflow: hidden;
-	font-size: 9px;
+	font-size: 10px;
 }
 .cycle-slideshow span.cycle-pager-active {
-		background-color: #FFF !important;
+		background-color: @secondaryBlue !important;
 }
 .cycle-slideshow, .cycle-slideshow * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box;  }
-.cycle-slideshow { width: 100%; min-width: 200px; margin: auto; padding: 0; }
+.cycle-slideshow { 
+	width: 100%; 
+	min-width: 200px; 
+	margin: auto; 
+	padding: 0; 
+}
 /* anchors */
 .cycle-slideshow > a { 
-    position: absolute; top: 0; left: 0;
-    width: 100%; padding: 0; background-color: #222; display: block;
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    padding: 0; 
+    background-color: #222; 
+    display: block;
 }
 /* images */
 .cycle-slideshow > a > img { 
@@ -2511,18 +2521,21 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 }
 /* divs */
 .cycle-slideshow > div { 
-    position: absolute; top: 0; left: 0;
-    width: 100%; padding: 0;	
+    position: absolute; 
+    top: 0; 
+    left: 0;
+    width: 100%; 
+    padding: 0;	
 	font-family: @fontFamily;
 	text-align: center;
 }
 .cycle-slideshow > div h2 {
 	font-family: @fontFamily;
-	color: @textHeaderColor;	
+	color: @textColor;	
 	font-weight: normal;
 }
 .cycle-slideshow > div a {
-	color: @textHeaderColor;	
+	color: @textColor;	
 	text-decoration: none;
 	font-size: 10px;
 }
@@ -2539,10 +2552,15 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 .cycle-slideshow.composite-example > div { background: white }
 .cycle-slideshow.composite-example > div > img { display: block; }
 .cycle-slideshow.composite-example > div .cycle-overlay { 
-    color: #0D3762; background: rgba(255, 255, 255, .8); filter:alpha(opacity=100);
+    color: @textColor; 
+    background: rgba(255, 255, 255, .8); 
+    filter:alpha(opacity=100);
     position: absolute;
 }
-.cycle-slideshow .cycle-slide p { margin: 0; padding: 10px }
+.cycle-slideshow .cycle-slide p { 
+	margin: 0; 
+	padding: 10px 
+}
 .cycle-slideshow a.slider-shop-now {
 	margin: 10px 25% 4% 25%;
 	width: 50%;
@@ -2574,16 +2592,26 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 	}
 }
 @media screen and (min-width: 768px) { 
- .homepage-slider-container {
-        min-height: 34.24%;  
+    .ech-shi-homeSlider {
+        max-height: 17.12%;
+        overflow: hidden;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+	.homepage-slider-container {
+        /*min-height: 34.24%; */ 
+        min-height: 17.12%;
         padding-top: 34.24%;
         position: relative;
     }
-    .cycle-slideshow {
-        min-height: 100%;
+	.cycle-slideshow {
+        /*min-height: 100%;*/
+        height: 34.24%;
         margin-top:-34.24%;
+        max-height: 17.12%;
+        /*overflow: hidden;*/
     }
-    .cycle-slideshow #no-template-pager {
+	.cycle-slideshow #no-template-pager {
 		display: block;
 		clear:both;
 		bottom:0;
@@ -2594,12 +2622,12 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 		right: 2%;
 		width: 25%;
 		padding: 5px;
-		display: table;
+		display: none;
 	}
 	.cycle-slideshow > div img {
-		width: 100%;
+		width: 100%;	
 		height: auto;
-		min-height: 100%;
+		/*min-height: 100%;*/
 	}	
 	.cycle-slideshow > div, .cycle-slideshow #no-template-pager  {
 		font-size: 80%;	
@@ -2610,11 +2638,14 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 	}
 	.homepage-slider-desktop-img {
 		display: block !important;
+		width: auto;
+		height: auto;
 	}
 	.homepage-slider-mobile-img {
 		display: none !important;
 		width: 0;
-		height: 0;
+		height:0;
+		min-height:0;
 	}
 }
 @media screen and (min-width: 900px) { 
@@ -2633,7 +2664,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 		font-size: 20px;
 	}
 	.cycle-slideshow #no-template-pager span {
-		font-size: 11px;
+		font-size: 12px;
 		height: 40px;
 		line-height: 40px;	
 	}
@@ -2686,7 +2717,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 		line-height: 13px;	
 	}
 	.cycle-slideshow #no-template-pager span {
-		font-size: 13px;
+		font-size: 14px;
 		height: 45px;
 		line-height: 45px;	
 	}
@@ -2724,7 +2755,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 		top: 50%;	
 	}
 	.cycle-slideshow #no-template-pager span {
-		font-size: 16px;	
+		font-size: 17px;	
 		height: 50px;
 		line-height: 50px;	
 	}
@@ -2749,6 +2780,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 		font-size: 17px;
 	}
 }
+
 @media screen and (min-width: 1600px) { 
 	.cycle-slideshow.composite-example > div .cycle-overlay {
 		bottom: 25%;
@@ -2759,7 +2791,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 		padding: 15px;
 	}
 	.cycle-slideshow #no-template-pager span {
-		font-size: 18px;	
+		font-size: 19px;	
 		height: 60px;
 		line-height: 60px;	
 	}
@@ -2769,7 +2801,7 @@ box-shadow: inset 0 1px 1px rgba(0,0,0,0.05); border-radius: 4px; -webkit-border
 	.cycle-slideshow > div h2 {
 		font-size: 24px;
 		line-height: 24px;	
-	}
+	}	
 }
 /* end blog cycler w media queries too */
 /* END BLOG STYLES */
