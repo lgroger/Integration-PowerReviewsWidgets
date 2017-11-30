@@ -54,7 +54,7 @@
 }
 #mktoStyleLoaded {
   /* css load detection, do not remove */
-  color:#123456; 
+  color: @textColor; 
 }
 .mktoForm{
 	width: 100% !important;
@@ -89,7 +89,7 @@
 			    font-size: small;
 			    color: @textColor;
 			    font-weight: normal;
-			    color: brown;
+			    color: @secondaryRed;
 			}
 
 			.mktoAsterix1 { 
@@ -138,7 +138,7 @@
 	select.mktoField:focus,
 	textarea.mktoField:focus{
 	  	outline:none;
-	  	border:1px solid #888;
+	  	border:1px solid #ccc;
 	  	color: @textColor;
 	}
 	input[type=checkbox] + label:before,  
@@ -150,16 +150,16 @@
 	  	margin-left:-1.5em;
 	  	line-height:1.7em !important;
 	  	background-color:#fff;
-	 	box-shadow:inset 1px 1px 4px 1px #ddd;
-	  	font-family:Arial, sans-serif;
+	 	box-shadow:inset 1px 1px 4px 1px #ccc;
+	  	font-family: @fontFamily;
 	  	font-size:13px;
-	  	border:1px solid #093863 !important;
+	  	border:1px solid @textColor !important;
 	  	text-align: center;
 	}
 	input[type=checkbox]:checked + label:before{
 	  	font-family: FontAwesome !important;
     	content: '\f00c' !important;
-    	color: #093863 !important;
+    	color: @textColor !important;
 	}
 	button.mktoButton{
 		padding: 15px !important;
@@ -274,8 +274,8 @@
 	.mktoFormCol{
 		margin-right: 50px;
 		p{
-			color: #222;
-		    font-family: RobotoRegular;
+			color: @textColor;
+		    font-family: @fontFamily;
 		    font-size: 14px;
 		}
 	}
