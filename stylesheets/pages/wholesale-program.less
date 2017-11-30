@@ -8,9 +8,9 @@
 	    	padding: 15px 60px 15px 11px;
 	    	letter-spacing: 1px;
 			text-transform: capitalize;
-	    	color: #194367;
-	    	font-family: MontserratRegular;
-	    	border-bottom: 1px solid lightgrey;
+	    	color: @textColor;
+	    	font-family: @fontFamily;
+	    	border-bottom: 1px solid @secondaryWhite;
 	    	min-height: 100% !important;
 	    	margin: 0px;
 	    	padding-left: 0px;
@@ -30,8 +30,8 @@
 	header{
 	    font-size: x-large;
 	    text-transform: uppercase;
-	    border-bottom: 3px dotted lightgrey;
-	    color: #10b29e;
+	    border-bottom: 3px dotted @secondaryWhite;
+	    color: @secondaryBlue;
 	    width: 50%;
 	    text-align: center;
 	    margin: 0 auto;
@@ -43,7 +43,7 @@
 	header{
 		font-size: x-large;
 	    text-transform: uppercase;
-	    color: #10b29e;
+	    color: @secondaryBlue;
 	}
 	#mz-drop-zone-sub-text-header{
 		
@@ -58,17 +58,16 @@
 }
 .mktoForm{
 	width: 100% !important;
-	font-family: MonstserratLight !important;
+	font-family: @fontFamily !important;
 	label{
 		width: auto !important;
-		color: @dark-grey !important;
-		font-weight: bold !important; 
+		color: @textColor !important;
 	}
 	.mktoGutter.mktoHasWidth{
 		display: none !important;	 
 	}
 	.mktoAsterix{
-		color: #3b5b7d !important;
+		color: @textColor !important;
 		float: left !important;
 	}
 	fieldset{
@@ -84,22 +83,18 @@
 
 		legend{
 			padding:0 1em;
-			font-family: MonstserratLight !important; 
+			font-family: @fontFamily !important; 
 			font-size: large;
-	    	font-weight: bold;
-
 	    	span.checkbox-mandatory-message {
 			    font-size: small;
-			    color: grey;
+			    color: @textColor;
 			    font-weight: normal;
 			    color: brown;
-			    font-weight: bold;
 			}
 
 			.mktoAsterix1 { 
 			    display: inline;
-			    color: #3b5b7d;
-			    font-weight: bold;
+			    color: @textColor;
 			    float: left;
 			}
 
@@ -121,9 +116,9 @@
 	textarea.mktoField{
 		width: 100% !important;
 	 	-webkit-appearance: none;
-	  	background-color:#f7f7f7 !important;
+	  	background-color: @secondaryWhite !important;
 	  	line-height:1.5em;
-	  	color:#000;
+	  	color: @textColor;
 	  	border:none !important;
 	 	-webkit-border-radius:7px;
 	 	-moz-border-radius:7px;
@@ -144,7 +139,7 @@
 	textarea.mktoField:focus{
 	  	outline:none;
 	  	border:1px solid #888;
-	  	color:#000;
+	  	color: @textColor;
 	}
 	input[type=checkbox] + label:before,  
 	input[type=radio] + label:before{
@@ -174,7 +169,6 @@
 	    color: #fff !important;
 	    font-size: large !important;
 	    text-transform: uppercase !important;
-	    font-weight: bold !important;
 	    background-image: none !important;
 	}
 	button.mktoButton:hover{
@@ -186,24 +180,24 @@
 	.mktoHtmlText{
 		p{
 			span{ 
-				color: #3b5b7d !important;
+				color: @textColor !important;
 			}
 		}
 		strong{
-			color: #3b5b7d !important;
+			color: @textColor	 !important;
 		}
 	}
 } 
 
 #mktoForm_1169{
 	padding: 25px !important;
-	border-bottom: 1px solid #dcdcdc;
+	border-bottom: 1px solid @secondaryWhite;
     width: 94% !important;
     margin: 0 auto;
 	label{
-		font: 16px @fontMontserratLight !important;
+		font: 16px @fontGTWalsheimLight !important;
 		margin: 8px 0;
-		color:#666 !important;
+		color: @textColor !important;
 	}
 	>div:nth-child(12){
 		.mktoFormCol{
@@ -243,7 +237,7 @@
 			padding-left: 50px;
 			position: relative;
 			label{
-				font: 16px @fontMontserratRegular !important;		
+				font: 16px @fontFamily !important;		
 			}
 			 &:nth-child(5){
 				display: inline-block;
@@ -288,8 +282,8 @@
 	fieldset legend,label[for="businessAmount"]{
 		padding: 15px 10px;
 		margin: 0;
-		font: 22px @fontArvo !important;
-		color: #000000 !important;
+		font: 22px @fontFamily !important;
+		color: @textColor !important;
 	}
 	input[type=text],
 	input[type=password],
@@ -304,7 +298,7 @@
 		font-size: 15px;
 		min-height: 55px !important;
 		box-sizing: border-box;
-		color: #666;
+		color: @textColor;
 	}
 	button{
 		margin: 10px 0 20px;
