@@ -73,7 +73,7 @@
     top: -15px;
     right: -18px;
     border-radius: 4px;
-    background: #093863;
+    background: @primaryDarkBlue;
     color: white !important;
 }
 
@@ -83,7 +83,7 @@
     width: 930px;
     margin: 30px auto;
     border-radius: 2px;
-    font-family: 'RobotoRegular';
+    font-family: @fontFamily;
     .container-left,
     .container-right {
         box-sizing: border-box;
@@ -113,7 +113,7 @@
             }
             .mz-productlisting-imageplaceholder {
                 display: block;
-                background-color: gainsboro;
+                background-color: @secondaryWhite;
                 width: 200px;
                 padding: 80px 0;
                 margin: 100px auto;
@@ -207,13 +207,13 @@
         .product-title {
             h2 {
                 font-size: 26px;
-                color: #131314;
+                color: @textColor;
             }
         }
         .product-description {
             p {
                 font-size: 16px;
-                color: #666;
+                color: @textColor;
             }
         }
         .product-rating-review {
@@ -329,7 +329,7 @@
                 border-radius: 4px;
                 &[disabled]{
                     background-color: #f7f7f7 !important;
-                    color: #707070 !important;
+                    color: @textColor !important;
                     border-color: #989898 !important;
                     cursor: not-allowed;
                 }
@@ -391,7 +391,7 @@
     }
 }
 .product-color-swatch, .mz-productdetail-conversion-controls{
-    font-family: MontserratRegular !important;
+    font-family: @fontFamily !important;
 }
 @media only screen and (max-width:480px) {
     .mz-quick-view-wrapper .container-right{

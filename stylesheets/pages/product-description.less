@@ -181,7 +181,7 @@
                     label{
                         padding: 20px 25px;
                         background: white;
-                        color: #5f5f5f;
+                        color: @textColor;
                         text-decoration: none;
                         font-size: 16px;
                         text-transform: uppercase;
@@ -546,7 +546,7 @@
      &.scrolling{
         a.active{
             background: #fff;
-            color: #5f5f5f;
+            color: @textColor;
         }
     }
     li{
@@ -793,7 +793,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     height: 200%;
     top: 0;
     right: 0px;
-    background-color: rgba(0,0,0,0.64);
+    background-color: rgba(33,29,94,0.64);
     z-index: 999;
 
 }
@@ -830,7 +830,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     color: #fff;
 }
 .fixed-bottom ul li:hover {
-    color: #00b09b !important;
+    color: @secondaryBlue !important;
 }
 .pr-stars {
     background-image: url(../resources/images/rating_stars.svg) !important;
@@ -1335,7 +1335,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .more-details {
     display: block;
-    color: #0070cd !important;
+    color: @linkColor !important;
 }
 .fixed-mob-bottom {
     display: none !important;
@@ -1470,7 +1470,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 }
 .product-description span {
-    font-family: @fontGTWalsheimBold !important;
+    font-family: @fontFamily !important;
 }
 .product-review a {
     font-family: @fontFamily !important;
@@ -1668,11 +1668,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .ech-shi-footer-abt-cont {
     line-height: 1;
 }
-.morecontent {
-    /* display: inherit; */
-}
 .morelink-pdp {
-    font-family: @fontGTWalsheimBold !important; 
+    font-family: @fontFamily !important; 
     text-decoration: underline;
     cursor: pointer;
 }
