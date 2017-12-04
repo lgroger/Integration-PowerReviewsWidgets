@@ -153,9 +153,7 @@
 
 
           {%header_content%}
-
-
-
+        {% require_script "pages/gtms" %}  
       </head>
       {% endblock head-tag %}
       {% block body-tag %}
@@ -163,7 +161,7 @@
       {% block open-body-tag %}
       <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
       {% endblock open-body-tag %}
-
+        
           <div id="page-wrapper" class="mz-l-pagewrapper">
 
               {% block page-header %}
@@ -291,7 +289,7 @@
       </script> 
       {% if themeSettings.certonaRecomm %}
           <script type="text/javascript">
-          var certona = {
+          var certona = {   
               "pagetype" : page_type, //type of page
               "devicetype" : "{% if not pageContext.isDesktop %}Mobile{% else %}Desktop{% endif %}", //type of device isMobile or isDesktop
               {% if pageContext.pageType ==  'category' %}
@@ -427,7 +425,7 @@
           brtrk.async = true;
           brtrk.src = 'https:' == document.location.protocol ? "https://cdns.brsrvr.com/v1/br-trk-{{ themeSettings.brtrkAccNum }}.js" : "http://cdn.brcdn.com/v1/br-trk-{{ themeSettings.brtrkAccNum }}.js";
           var s = document.getElementsByTagName('script')[0];
-          s.parentNode.insertBefore(brtrk, s);
+          
           })();
       </script>
 
