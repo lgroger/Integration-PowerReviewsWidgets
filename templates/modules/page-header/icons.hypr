@@ -342,7 +342,7 @@
 					<span class="badge mz-cartmonitor" data-mz-role="cartmonitor">0</span>
 					{% require_script "modules/cart-monitor" %}
 			        {% require_script "modules/soft-cart" %}
-			        <div class="soft-cart-wrap" data-mz-role="soft-cart"></div>
+			        <div class="soft-cart-wrap" data-mz-role="soft-cart"><div class="soft-cart-is-loading">Loading...</div></div>{# cart contents will load inside here on hover of element above it (scrips/modules/soft-cart.js) #}
 				</li>
 			</ul>
 
