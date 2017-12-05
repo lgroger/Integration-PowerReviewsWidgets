@@ -484,12 +484,12 @@
                 {% if externalPayment.isEnabled %}
                     {% if externalPayment.name == "PayWithAmazon" %}
                         <button {% if model.isEmpty %}disabled="disabled"{% endif %} {% if user.isAnonymous %}data-toggle="popover"{% else %}data-mz-action="proceedToCheckout"{% endif %} id="cart-pwa-img">
-                            <img src="../resources/images/amazon.jpg" alt="Checkout with Amazon" />
+                            <img src="../resources/images/amazon.svg" alt="Checkout with Amazon" />
                         </button>
                     {% endif %}
                     {% if externalPayment.name == "PayPalExpress2" %}
                         <button {% if model.isEmpty %}disabled="disabled"{% endif %} {% if user.isAnonymous %}data-toggle="popover"{% else %}data-mz-action="proceedToCheckout"{% endif %} id="cart-pp-img">
-                            <img src="../resources/images/paypal.jpg" alt="Checkout with Paypal" />
+                            <img src="../resources/images/paypal.svg" alt="Checkout with Paypal" />
                         </button>
                     {% endif %}
                 {% endif %}
