@@ -69,7 +69,7 @@
                             {% if rating.values|first|prop("value") != "" %}
                             {% with rating.values|first|prop("value")|floatformat as totalRating %}
                             <div class="product-rating">
-                                <div class="pr-snippet-stars" style="display:inline-block;vertical-align:sub;">
+                                <div class="pr-snippet-stars">
                                    {% if totalRating >= 4.8 %}
                                  <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
                               {% endif %}
@@ -110,7 +110,7 @@
                         {% endwith %}
                     {% else %}
                     <div class="product-rating">
-                        <div class="pr-snippet-stars" style="display:inline-block;vertical-align:sub;">
+                        <div class="pr-snippet-stars">
                             <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
                         </div>
                         <div class="product-review">
@@ -119,11 +119,11 @@
                     </div>
                     {% endif %}
                 </div>
-                <p style="font-family:MontserratRegular !important">
-                  <span style="color:#0d3762;font-weight: 600;">Availability</span> :
+                <p>
+                  <span class="qv-available">Availability</span> :
                   {% if model.inventoryInfo.manageStock == true %}
                     {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-                      <span style="color:#00af9a;"> In Stock </span>
+                      <span class="qv-stock-message"> In Stock </span>
                       {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
                          - {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                          <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
@@ -140,7 +140,7 @@
                       {% endif %}
                     {% endif %}
                     {% else %}
-                      <span style="color:#d70056;">
+                      <span class="mz-productdetail-notpurchasable">
                       {% if not model.purchasableState.isPurchasable %}
                         <span class="product-status">
                           {% if not model.purchasableState.isPurchasable %}
@@ -175,7 +175,7 @@
                       </span>
                     {% endif%}
                   {% else %}
-                    <span style="color:#00af9a;">   In Stock </span>
+                    <span class="qv-stock-message">   In Stock </span>
                     {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
                       {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
                         - {{  prod_time.values|first|prop("value") }}  Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
@@ -222,7 +222,7 @@
 				      	{% with subAmt|divide(model.price.price) as divAmt %}
 				      		{% with divAmt|multiply(100) as perAmt %}
 				      			<br>
-				      			<span style="color:#d70056">You Save {{ perAmt|floatformat(2) }}%</span>
+				      			<span class="qv-savings">You Save {{ perAmt|floatformat(2) }}%</span>
 				      		{% endwith %}
 				      	{% endwith %}
 				      {% endwith %}
@@ -312,7 +312,7 @@
                 {% endcomment %}
                <div class="product-share">
                <span>Share: </span>
-                <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_default_style quickview-addthis  addthis_button_compact">
+                <div class="addthis_inline_share_toolbox addthis_default_style quickview-addthis  addthis_button_compact">
                      <a class="addthis_button_facebook">
                       <i class="fa fa-facebook-square"></i>
                     </a>

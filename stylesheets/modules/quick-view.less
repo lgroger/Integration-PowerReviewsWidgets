@@ -86,7 +86,7 @@
     width: 930px;
     margin: 30px auto;
     border-radius: 2px;
-    font-family: 'RobotoRegular';
+    font-family: @fontFamily;
     .container-left,
     .container-right {
         box-sizing: border-box;
@@ -116,7 +116,7 @@
             }
             .mz-productlisting-imageplaceholder {
                 display: block;
-                background-color: gainsboro;
+                background-color: @secondaryWhite;
                 width: 200px;
                 padding: 80px 0;
                 margin: 100px auto;
@@ -216,7 +216,7 @@
         .product-description {
             p {
                 font-size: 16px;
-                color: #666;
+                color: @textColor;
             }
         }
         .product-rating-review {
@@ -227,6 +227,8 @@
                     float: none;
                     border: none;
                     margin-right: 10px;
+                    display: inline-block;
+                    vertical-align: sub;
                     > span {
                         display: none;
                     }
@@ -317,6 +319,15 @@
                 }
             }
         }
+        .qv-available {
+            color: @textColor;
+            & .qv-stock-message {
+                color: @secondaryBlue;
+            }
+            & .mz-productdetail-notpurchasable {
+                color: @secondaryRed;
+            }
+        }
         .product-price {
             .mz-pricestack {
                 display: inline-block;
@@ -339,12 +350,12 @@
             }
             #add-to-wishlist {
                 background: #fff;
-                background-image: url(../resources/images/wishlist-grey.svg);
+                background-image: url(../resources/images/wishListIcon.svg);
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: 40%;
                 color: #fff;
-                border: 1px solid #DEDEDE;
+                border: none;
                 font-size: 14px;
                 padding: 10px 0;
                 width: 60px;
@@ -352,6 +363,10 @@
             }
         }
         .product-share {
+            .addthis_inline_share_toolbox {
+                display: inline-block;
+                vertical-align: middle;
+            }
             .addthis_sharing_toolbox.addthis_32x32_style {
                 a {
                     span {
@@ -393,8 +408,11 @@
         } 
     }
 }
+.qv-savings {
+    color: @secondaryRed;
+}
 .product-color-swatch, .mz-productdetail-conversion-controls{
-    font-family: MontserratRegular !important;
+    font-family: @fontFamily !important;
 }
 @media only screen and (max-width:480px) {
     .mz-quick-view-wrapper .container-right{
