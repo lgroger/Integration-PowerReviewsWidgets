@@ -1308,7 +1308,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .more-details {
     display: block;
-    color: #0070cd !important;
+    &:hover {
+        color: @linkHoverColor;
+        text-decoration: underline;
+    }
 }
 .fixed-mob-bottom {
     display: none !important;
@@ -1635,8 +1638,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     /* display: inherit; */
 }
 .morelink-pdp {
-    color: #000;
-    font-family: @fontGTWalsheimBold !important; 
+    font-family: @fontFamily !important; 
     text-decoration: underline;
     cursor: pointer;
 }
