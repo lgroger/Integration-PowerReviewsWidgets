@@ -181,7 +181,7 @@
                     label{
                         padding: 20px 25px;
                         background: white;
-                        color: #5f5f5f;
+                        color: @textColor;
                         text-decoration: none;
                         font-size: 16px;
                         text-transform: uppercase;
@@ -546,7 +546,7 @@
      &.scrolling{
         a.active{
             background: #fff;
-            color: #5f5f5f;
+            color: @textColor;
         }
     }
     li{
@@ -793,7 +793,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     height: 200%;
     top: 0;
     right: 0px;
-    background-color: rgba(0,0,0,0.64);
+    background-color: rgba(33,29,94,0.64);
     z-index: 999;
 
 }
@@ -830,7 +830,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     color: #fff;
 }
 .fixed-bottom ul li:hover {
-    color: #00b09b !important;
+    color: @secondaryBlue !important;
 }
 .pr-stars {
     background-image: url(../resources/images/rating_stars.svg) !important;
@@ -984,8 +984,11 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
         }
     }
 }
+#tab-content1 span.wrapper {
+    display: table;
+}
 .wrapper {
-    color: #555;
+    color: @textHeaderColor;
     cursor: help;
     position: relative;
     text-align: center;
@@ -1000,7 +1003,7 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
           border-top: solid grey 10px !important;
 }
 .wrapper .tooltip {
-    background: @secondaryPink;
+    background: grey;
     width: 200px !important;
     bottom: 100%;
     color: #fff;
@@ -1026,6 +1029,30 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     -ms-box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
     -o-box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
     box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
+}
+i.fa.fa-exclamation-triangle {
+    display: table-cell;
+    color: @secondaryRed;
+}
+#tab-content1 .wrapper .tooltip.warning {
+    opacity: 100;
+    background: transparent !important;
+    box-shadow: none;
+    color: @textHeaderColor;
+    margin: 0;
+    padding: 0 0 0 50px;
+    position: relative;
+    width: auto !important;
+    display: table-cell;
+    left: initial !important;
+    bottom: initial;
+    pointer-events: initial;
+    transform: initial;
+    padding-left: 37px;
+    text-align: left;
+    &::after {
+        display: none;
+    }
 }
 .wrapper .tooltip:before {
     bottom: -20px;
@@ -1108,7 +1135,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     background: @primaryCTAhover;
 }
 .mz-quick-view-wrapper .container-right .product-cart-wishlist #add-to-wishlist:hover {
-    background-image: url('../resources/images/wishlist-pdp-red.svg');
+    background-image: url('../resources/images/wishListIconHover.svg');
 }
 .mz-quick-view-wrapper.pdp-wrapper .container-left .product-image-slider .owl-prev {
     left: -10% !important;
@@ -1308,6 +1335,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .more-details {
     display: block;
+    color: @linkColor;
     &:hover {
         color: @linkHoverColor;
         text-decoration: underline;
@@ -1404,12 +1432,22 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 @media screen and (min-width:641px) {
     .pdp-detail {
         #add-to-wishlist {
-            background-position-x: 15px !important;
-            background-size: 35px 35px !important;
-            padding-left: 60px !important;
-            padding-right: 30px !important;
-            width: auto !important;
-            color: @dark-grey !important;
+            background-size: 50px 50px !important;
+            width: 60px !important;
+            color: transparent !important;
+            background-position: center !important;
+            padding: 0 !important;
+            display: inline-block !important;
+            position: relative !important;
+            top: -55px;
+            left: 235px;
+        }
+    }
+}
+@media screen and (min-width:1140px) {
+    .pdp-detail {
+        #add-to-wishlist {
+            left: 250px;
         }
     }
 }
@@ -1494,8 +1532,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     select {
         border-radius: 6px;
-        background: rgba(235, 235, 228, 0.32);
         color: @textColor;
+        background: @secondaryWhite;
         border: 1px solid rgba(235, 235, 228, 0.32);
     }
     /*.is-required {
@@ -1529,6 +1567,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             background-color: initial;
             outline: none;
             font-size: 1.5rem;
+            color: @textColor;
         }
         input[type="text"] {
             width: 29px;
@@ -1635,9 +1674,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .ech-shi-footer-abt-cont {
     line-height: 1;
-}
-.morecontent {
-    /* display: inherit; */
 }
 .morelink-pdp {
     font-family: @fontFamily !important; 
@@ -1919,7 +1955,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .tab-content p {
     font-size: 13px;
-    color: @textColor;
+    color:@textColor;
 }
 .qa-button {
     float: right;
@@ -2232,7 +2268,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .mob-tabs {
     .collapsed .header {
         background-color: rgba(128,128,128,0.13) !important;
-        color: black !important;
+        color: @textColor !important;
         background-size: 3% 70%;
     }
     .mob-head-tab {

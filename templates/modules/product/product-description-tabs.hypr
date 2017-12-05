@@ -16,7 +16,7 @@
             <h3>{{ model.content.productName }}</h3>
             
             <p>
-               <span style="color:#0d3762;font-weight: 600;">
+               <span>
                {{ labels.productCode }}</span> : {{ model.variationProductCode|default(model.productCode) }}
                </span>
             </p>
