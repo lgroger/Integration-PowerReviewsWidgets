@@ -708,11 +708,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
                  //console.log(obj.productCode+" - "+prod_time);
                 if(ship_zip!==undefined){
-                    if(ship_zip.values[0].stringValue==="46787"){
+                    var zipCode = ship_zip.values[0];
+                    if(zipCode.stringValue.trim() ==="46787"){
                         indiana_package.push(obj);
                         window.indina_idx_arr.push(i);
-                        if(prod_time>=indiana_max_prod_days){
-                            indiana_max_prod_days=prod_time;
+                        if(prod_time === 0 || prod_time>=indiana_max_prod_days){
+                            indiana_max_prod_days = (prod_time > 0) ? prod_time:indiana_max_prod_days;
                             indiana_prd_idx=i;
                         }
                     }
@@ -1210,6 +1211,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                scope_obj.skip_holidays(ship_start,1,shipping_holidays_list,scope_obj.setShippingStartDate,idx,scope_obj);
             }
         },USADeliveryDate:function(ship_date,idx,holidays,scope_obj,add_day,isIndiana){
+            //Switched Shipping Holidays to UPS Holidays
             holidays =  _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
             try{
                 if(add_day){
