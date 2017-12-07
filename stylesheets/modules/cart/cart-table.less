@@ -1190,6 +1190,9 @@ tr.mz-carttable-item-shipping-info{
             padding: 16px 0px;
             width: 100%;
             font-size: 14px;
+            max-width: 300px;
+            margin: 0 auto;
+            display: block;
         }
     }    
 }
@@ -1404,6 +1407,9 @@ tr.mz-carttable-item-shipping-info{
                 padding: 16px 0px;
                 width: 100%;
                 font-size: 14px;
+                display: block;
+                max-width: 300px;
+                margin: 0 auto;
             }
             .pay_options{
                 padding-top: 12px;
@@ -1704,10 +1710,11 @@ tr.mz-carttable-item-shipping-info{
         border: 2px solid @primaryCTA;
         color: @primaryCTA;
         text-decoration: none;
-        margin: 10px 0;
+        margin: 10px auto;
+        text-transform: uppercase;
+        max-width: 300px;
         @media (min-width: 992px) {
             color: @linkColor;
-            text-transform: uppercase;
             text-decoration: underline;
             border: none;
         }
