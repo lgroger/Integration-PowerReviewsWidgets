@@ -6,20 +6,9 @@
 
 {% block body-content %}
 {% require_script "pages/category" %}
-<style>
-.mz-breadcrumbs{
-  display:none;
-}
-.breadcrumbs-cat .mz-breadcrumbs{
-  display: block !important;
-}
-.category-landing{
-  .mz-category-title,.mz-breadcrumbs{
-    display: none;
-  } 
-}
-</style>
   
+<div class="sz-categorylanding-template">
+
 {% dropzone "common-category-top" scope="page" %}
 <div class="mz-category-title">   
     <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
@@ -29,9 +18,9 @@
 </div>
  {% include "modules/product/category-landing-slider" %} 
  <div class="breadcrumbs-cat">
-	{% block breadcrumbs %}
+	
 		{% include "modules/breadcrumbs" %}
-	{% endblock breadcrumbs %}
+	{% block breadcrumbs %}{% endblock breadcrumbs %} {# hide breadcrumbs in default site template #}
  </div>
 
 <div class="categorylanding-promo"> 
@@ -42,6 +31,8 @@
 
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container category-landing">
     {% include "pages/categorylanding-interior" %}
+</div>
+
 </div>
 
 {% include "modules/bloomreach_seo" %}

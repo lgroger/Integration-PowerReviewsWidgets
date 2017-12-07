@@ -166,7 +166,8 @@
     }
     .cont-to-signup:hover{
         border:1px solid @primaryCTAhover;
-        color: @primaryCTAhover;
+        color: #fff;
+        background-color: @primaryCTAhover;
     }
 
 }
@@ -180,11 +181,11 @@
         margin-bottom: 10px;
         a{
             font-size: 15px;
-            color: #093863;
+            color: @linkColor;
             font-family: @fontFamily;
             &:hover{
                 text-decoration:none;
-                color: #d60057;
+                color: @linkHoverColor;
             }
         }
 }
@@ -200,16 +201,17 @@
         margin-left: 5px !important;
         font-size: 15px;
         border: none;
-        border: 1px solid #e2e2e2;
-        background-color: #f7f7f7;
+        border: 1px solid @secondaryWhite;
+        background-color: #efefef;
         border-radius: 4px;
         margin-bottom: 10px;
+        color: @textColor;
     }
     .mz-popover-action {
         .mz-button {
             margin-left: 10px;
             color: #fff;
-            background-color:#0971CE;
+            background-color: @primaryCTA;
             width: 86%;
             padding: 16px;
             font-size: initial;
@@ -224,10 +226,10 @@
         }
         a{
             font-size: 15px;
-            color: #093863;
+            color: @linkColor;
             text-decoration: none;
             &:hover{
-                color:#d60057;
+                color: @linkHoverColor;
             }
         }
     }

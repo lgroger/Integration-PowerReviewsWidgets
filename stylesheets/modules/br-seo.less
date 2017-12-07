@@ -9,8 +9,8 @@
     text-align: center;
 }
 .br-related-heading, .br-found-heading {
-    border: 1px solid @primaryDarkBlue;
-    background: @primaryDarkBlue; 
+    border: 1px solid @primaryBlue;
+    background: @primaryBlue; 
     color: #fff;
     padding: 5px;
     font-family: @fontFamily;
@@ -30,6 +30,7 @@
     padding: 0 0 10px 1%;
     box-sizing: border-box;
     text-align: center;
+    text-transform: uppercase;
     @media only screen and (min-width: 480px) {
         width: 49%;
         display: inline-block;
@@ -39,9 +40,17 @@
         margin: 0 5%;
     }
     @media only screen and (min-width: 1190px) {
-        width: 30%;
+        width: auto;
         margin: 0;
-        padding: 0 1% 20px;
+        padding: 0 7px;
+        font-size: 12px;
+        border-right: 1px solid #ede8e8;
+        box-sizing: border-box;
+        display: inline;
+        vertical-align: middle;
+        &:last-child {
+            border: none;
+        }
     }
 }
 .br-sf-widget {
@@ -115,9 +124,6 @@
         font-size: 13px;
         height: 55px;
     }
-}
-.br-related-query .br-related-query-link:hover {
-    color: #00b09b;
 }
 .br-sf-widget-merchant-qv {
     display: none;
