@@ -1,0 +1,64 @@
+﻿{% comment %}
+{% dump model %}
+{% dump pageContext %} 
+{% dump navigation %} 
+{% dump siteContext %}
+{% dump pageModel %}  
+{% endcomment %}
+{% dump user %}  
+{% dump routeData %}
+
+{% comment %}
+custom route settings
+		{
+			"template": "personalize/{id}/{usertoken}",
+			"defaults": {
+				"documentListName": "pages@mozu",
+				"documentName": "personalize"
+			},
+			"internalRoute": "CmsPage",
+			"mappings": {},
+			"canonical": true,
+			"validators": {}
+		}
+{% endcomment %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+    <meta content="utf-8" http-equiv="encoding">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale = 1.0, user-scalable=no" />
+    <style>
+        .mediaclip-designer-wrapper {
+            top: 50px; /* Your header height */
+        }
+    </style>
+</head>
+<body>
+    {# Mediaclip Designer placeholder #}
+    <div id="designer" class="mediaclip-designer-wrapper">
+        <div style="text-align: center;">Loading...</div>
+    </div>
+
+    {# Mediaclip Hub API script (jQuery is required) #}
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://api.mediacliphub.com/scripts/hub.min.js" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        window.mediaclip.hub.launch({
+            projectId: {{routeData.id}},
+            storeUserToken: {{routeData.usertoken}},
+            container: document.getElementById('designer'),
+            keepAliveUrl: 'renew-personalization',
+            onError: onErrorHandler
+        });
+
+        function onErrorHandler(error, details) {
+            // your custom function to handle errors
+            console.log("An error occurred.", error, details);
+        }
+    </script>
+</body>
+</html>

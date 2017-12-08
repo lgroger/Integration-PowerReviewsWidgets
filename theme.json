@@ -402,6 +402,13 @@
     },{
       "documentType": "web_page",
       "entityType": "webpage",
+      "id": "mediaclip",
+      "template": "mediaclip",
+      "title": "MediaClip",
+      "userCreatable": true
+    },{
+      "documentType": "web_page",
+      "entityType": "webpage",
       "id": "blog-post",
       "template": "blog-post",
       "title": "Blog Post",
@@ -706,6 +713,7 @@
       "productionTime": "tenant~productiontime",
       "colorHex": "tenant~colorhex",
       "dndCode": "tenant~dndcode",
+      "mcCode": "tenant~mediaclip",
       "designCode": "tenant~design-code",
       "dndToken": "tenant~dnd-token",
       "color": "tenant~color",
