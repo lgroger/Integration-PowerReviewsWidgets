@@ -4,12 +4,12 @@
 		margin: 0;
 		padding: 15px 40px;
 		cursor: pointer;
-		font: 17px/1.2 @fontMontserratRegular;
-		color: #333;
+		font: 17px/1.2 @fontFamily;
+		color: #fff;
 		border-radius: 10px;
 		font-weight: 400;
-		border: 1px dashed #d7d7d7;
 		margin-top: 10px;
+		background-color: @primaryBlue;
 		transition:background 0.4s ease-in-out;
 		&:after{
 			content: "";
@@ -24,18 +24,18 @@
 		&+.job-content{
 			display: none;
 			padding: 20px 40px;
-			border: 1px solid #f9f9f9;
+			border: 1px solid @secondaryWhite;
 			border-bottom-right-radius: 10px;
 			border-bottom-left-radius: 10px;
-			font: 18px/1.2 @fontMontserratRegular;
-			color: #333;
-			background: #f9f9f9;
+			font: 18px/1.2 @fontFamily;
+			color: @textColor;
+			background: @secondaryWhite;
 		}
 		&.show-careers{
 			border-bottom-right-radius: 0;
 			border-bottom-left-radius: 0;
 			color: #fff;
-			background: #848484;
+			background: @primaryBlue;
 			&:after{
 				width: 25px;
 				height: 25px;
@@ -54,25 +54,24 @@
 			display: inline-block;
 			width: 30%;
 			padding: 10px;
-			color: #131314;
-			font: 18px @fontMontserratRegular;
-			color: #131314;
+			color: @textColor;
+			font: 18px @fontFamily;
 		}
 		.jobfieldval{
 			display: inline-block;
 			width: 65%;
 			vertical-align: top;
-			font: 16px @RobotoRegular;  
+			font: 16px @fontFamily !important;  
 			padding: 10px;
-			color: #646464;
+			color: @textColor;
 		}
 	} 
 	.job-apply-btn{
 		display: inline-block;
 		width: 130px;
 		padding: 10px 10px;
-		background: #00b09b;
-		font: 18px @fontMontserratRegular;
+		background: @primaryCTA;
+		font: 18px @fontFamily;
 		color: #fff;
 		margin: 40px 0 20px;
 		border-radius: 3px;
@@ -81,7 +80,7 @@
 		text-decoration: none;
 		transition:background 0.4s ease-in-out;
 		&:hover,&:focus{
-			 background: #0e3a60 6px;
+			 background: @primaryCTAhover 6px;
 		}
 	}
 }
