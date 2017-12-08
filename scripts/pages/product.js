@@ -12,7 +12,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     var productAttributes = Hypr.getThemeSetting('productAttributes');
     window.personalizeBundleProducts=[]; // used by dndEngine.js
     window.extrasProducts=[];
-	window.monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+	window.monthArr=["January", "February", "March", "April", "May", "June","Jmuly", "August", "September", "October", "November", "December"];
 	window.weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 	window.dateFormatArr=["th","st","nd","rd"];
     var BundleItems=[];
@@ -174,13 +174,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             messagesEl: $('[data-mz-message-bar]')
         });
 		
-		/* custom items we want to set on model
-		 - isPersonalized
-		 - isPurchasable
-		 - needsExtras
-		 - extrasInfo
-		*/
-
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),
             model: product
@@ -242,11 +235,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         }
                         //var price = '$'+product.get('price').get('price')+" "+uom;
                         $('[productcode="'+product.get('productCode')+'"]').find('.uom').html(uom).show();
+						/*
 						var mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode); // mediaclip code
                         var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                         if(dndCode || mcCode){
                             window.personalizeBundleProducts.push(product);
-                        }
+                        } */
                     }
                 }
                 getBundleProductDetails(BundleItems);
@@ -273,12 +267,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }
                     //var price = '$'+product.get('price').get('price')+" "+uom;
                     $('[productcode="'+arr[loopcounter]+'"]').find('.uom').html(uom).show();
-
+/*
                     var mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode); // mediaclip code
 					var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                     if(dndCode || mcCode){
                         window.personalizeBundleProducts.push(product);
-                    }
+                    }*/
                     loopcounter++;
                     if(loopcounter < arr.length){
                         getBundleProductDetails(arr);
@@ -437,20 +431,15 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
            
            var $qField = $(e.currentTarget).parent().parent().find('[data-mz-value="quantity"]'),
            newQuantity = parseInt($qField.val(), 10);
-            if(newQuantity <= 0){
-           		$('[data-mz-validationmessage-for="quantity"]').html("Please enter a product quantity above 0");
-                return false;
-            }
             if(newQuantity < this.model._minQty){
-                $('[data-mz-validationmessage-for="quantity"]').html("Quantity should be more than minimum quantity");
+                $('[data-mz-validationmessage-for="quantity"]').html("Quantity should be more than minimum quantity: "+this.model._minQty);
                 return false;
             }
            	/** DnD Code  Start **/
             var me= this;
             var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
             var dndEngineObj = new DNDEngine.DNDEngine(me.model,dndUrl);
-            dndEngineObj.initialize();
-            dndEngineObj.send();
+            dndEngineObj.initializeAndSend();
             /** DnD Code  End **/
 
         },
@@ -521,7 +510,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     for(var i=0;i < window.extrasProducts.length;i++){
                         if(window.extrasProducts[i].get('productCode')===productCode){
                             product = window.extrasProducts[i];
-							console.log('found it!');
+							//console.log('found it!');
                             break;
                         }
                     }
@@ -534,7 +523,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				Api.get('product',{productCode:productCode}).then(function(res){
 					var product = new ProductModels.Product(res.data);
 					window.extrasProducts.push(product);
-					console.log();
 					me.render();
 				});
 				return false;
@@ -583,22 +571,26 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				var option = options.models[i];
                 var attributeCode = option.get('attributeFQN').split('~');
                 if(extrastohideArr.indexOf(attributeCode[1]) > -1){
+					option.set('isOptionForDND',true);
                 	option.set('isVisibleOption',false); // hide extras in extrastohide list
                 }
 				else if(option.get('attributeFQN')===productAttributes.dndToken){
+					option.set('isOptionForDND',true);
 					option.set('isVisibleOption',false); // hide dndtoken
 				}
 				else if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && (option.get('attributeFQN') === "tenant~misc.-favor-with-design" || option.get('attributeFQN') === "tenant~table-top-it-runner-size")) {
+					option.set('isOptionForDND',false);
 					option.set('isVisibleOption',false); // hide extras used for inventory only of design items
 				}
 				else{
+					option.set('isOptionForDND',false);
 					option.set('isVisibleOption',true);
 				}
             }
         },
         renderConfigure: function(){
 			console.log("renderConfigure");
-                var  me = this, id, newValue,option,dndCode,mfgPartNumber,mcCode;
+                var  me = this, id, newValue,option;//,dndCode,mfgPartNumber,mcCode;
                 var objj=me.model.getConfiguredOptions();
                 me.setOptionTitle();
                 me.model.set('minQty', me.model._minQty);
@@ -609,7 +601,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 						newValue = objj[i].value;
 						id = objj[i].attributeFQN;
 						option = me.model.get('options').get(id);
-						console.log(option);
+
 						if(me.model.get('productUsage')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
 							console.log(newValue);
 							var product = me.getExtraProduct(newValue);
@@ -653,6 +645,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                         me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
                                     }
                                 }
+								/* removing this - will pull this in real time when it's time to personalize...
 								mcCode = getPropteryValueByAttributeFQN(me.model, productAttributes.mcCode); // mediaclip code
                                 dndCode = getPropteryValueByAttributeFQN(me.model, productAttributes.dndCode);
                                 if((mcCode && mcCode!=="") || (dndCode && dndCode!=="")){
@@ -678,7 +671,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                             me.model.set('dndCode',dndCode);
                                             me.model.set('designCode',designCode);
                                         }
-                                }
+                                } */
                             	Backbone.MozuView.prototype.render.apply(me);
 							}
 							else{
@@ -806,7 +799,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 			console.log("configure");
 
             var me= this;
-            me.model.set('mfgPartNumber',"");
+            //me.model.set('mfgPartNumber',"");
             var newValue = $optionEl.val(),
                 oldValue,
                 id = $optionEl.data('mz-product-option'),
@@ -847,7 +840,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 id = $(e.currentTarget).is(':checked')?productAttributes.outdoorbanner:productAttributes.outdoorbannerslits,
                 self=this,
                 option = this.model.get('options').get(id);
-                me.model.set('mfgPartNumber',"");
+                //me.model.set('mfgPartNumber',"");
                 var objj=self.model.getConfiguredOptions();
                 var newobj=[];
                 oldValue = option.get('value');
@@ -1007,7 +1000,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
             this.model.set('options', options);
         },
-        addToCartAfterPersonalize:function(data){
+        addToCartAfterPersonalize:function(data){ // used by dndengine.js
 			console.log("addToCartAfterPersonalize");
             var self= this;
             self.setOptionValues(data);
@@ -1033,7 +1026,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             //end
 
         },
-        AddToWishlistAfterPersonalize: function(data){ // i can't find where this is used...
+        AddToWishlistAfterPersonalize: function(data){ // used by dndengine.js
 			console.log("AddToWishlistAfterPersonalize");
             var self= this;
                 self.setOptionValues(data);
@@ -1160,14 +1153,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 }
             }
 			
-			this.model.set('isPersonalized',false);//temporary to test
-			
 		},
 		setAllowATC: function(){
 			console.log("setAllowATC");
-			// sets model.allowATC
+			// sets model.isConfigured, model.isInStock - if model.isConfigure==true  && model.isInstock==true, then allow add-to-cart action
 			
-			this.hideOptions(); // sets isVisibleOption per option which is used below
+			this.hideOptions(); // sets isVisibleOption & isOptionForDND per option which is used below
 			
 			var options = this.model.get('options');
 			var inc,l,option,isSelected,isInStock,values,inventoryInfo;
@@ -1205,20 +1196,20 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				}
 				
 				if(!hasSelectableExtras){ // if no extras to select, mark entire product as out of stock
-					this.model.set('allowATC',false);
-					this.model.set('atcHint',"Product is out of stock.");
+					this.model.set('isConfigured',true);
+					this.model.set('isInStock',false);
 				}
 				else if(isSelected && isInStock){
-					this.model.set('allowATC',true);
-					this.model.set('atcHint',"");
+					this.model.set('isConfigured',true);
+					this.model.set('isInStock',true);
 				}
 				else if(!isSelected){
-					this.model.set('allowATC',false);
-					this.model.set('atcHint',"Select a size and material.");
+					this.model.set('isConfigured',false);
+					this.model.set('isInStock',true);
 				}
 				else if(isSelected && !isInStock){
-					this.model.set('allowATC',false);
-					this.model.set('atcHint',"Selected option is out of stock.");
+					this.model.set('isConfigured',true);
+					this.model.set('isInStock',false);
 				}
 					
             }
@@ -1228,14 +1219,19 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				var requiredExtrasConfigured = true; // if all required extras have a selection
 				var extrasInStock = true; // if all selected extras are in stock
 				var productInventoryInfo = this.model.get('inventoryInfo'); // inventory info of parent - if this is configurable item, this will be info for variant selected
-				var flagAsOutOfStock = false; // track whether entire product is out of stock - ex. if we have required extra with 0 options, set parent product as out of stock
+				var hasOptionsForDND = false;
+				var purchasableState = this.model.get('purchasableState');
+				
 				if(options.length>0){
 				   for(inc=0; inc<options.models.length; inc++){ // options includes both extras and configurable options
 						option = options.models[inc];
-					   console.log(option);
 						if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
 							var isRequired = option.get('isRequired');
 							var isVisibleOption = option.get('isVisibleOption'); // set in this.hideOptions()
+							var isOptionForDND = option.get('isOptionForDND'); // set in this.hideOptions()
+							if(isOptionForDND){
+								hasOptionsForDND = true;
+							}	
 							isSelected = false; // whether this choice has a selection
 							isInStock = false; // whether selected choice has stock, fail to start and set to pass if we find valid values
 							values = option.get('values');
@@ -1254,20 +1250,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 							}
 							if(isSelected && !isInStock){
 								extrasInStock = false;
-								this.model.set('atcHint',"Selected option is out of stock.");
 							}
-							if(isRequired && isVisibleOption){ // if required and not a hidden option (tenant~extrastohide)
+							if(isRequired && !isOptionForDND){ // if required and not a hidden option (tenant~extrastohide)
 								if(!isSelected){
-									if(values.length > 0){
-										extrasInStock = false;
-										requiredExtrasConfigured = false;
-									}
+									extrasInStock = false;
+									requiredExtrasConfigured = false;
 								}
-							}
-							
-							if(isRequired && values.length === 0){
-								extrasInStock = false;
-								flagAsOutOfStock = true;
 							}
 						}
 					   else if(option.get('attributeDetail').usageType==='Option'){
@@ -1286,32 +1274,34 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 					}
 				}
 				
-				this.model.set('allowATC',false);
-				this.model.set('atcHint',"");
-				if(flagAsOutOfStock){
-					this.model.set('atcHint',"Product is out of stock.");
-				}
-				else if(configurableOptionsConfigured){
+				if(configurableOptionsConfigured && requiredExtrasConfigured){
+					this.model.set('isConfigured',true);
 					// if product itself is in stock and any required extras are selected, set allowATC to true
-					if((productInventoryInfo && productInventoryInfo.manageStock && productInventoryInfo.onlineStockAvailable >= minqty) || (productInventoryInfo && !productInventoryInfo.manageStock)){
-						if(requiredExtrasConfigured){
+					if(purchasableState.isPurchasable){
+						this.model.set('isInStock',true);
+					}
+					else if(hasOptionsForDND){
+						// if hasOptionsForDND is true, purchasableState.isPurchasable will be false since those prompts are required and don't have a selection yet.  need to inspect inventory, potential flaw if all of the options for an extra that is in dnd is out of stock but not sure how to detect that... it will error after personalization
+						if((productInventoryInfo && productInventoryInfo.manageStock && productInventoryInfo.onlineStockAvailable >= minqty) || (productInventoryInfo && !productInventoryInfo.manageStock)){
 							if(extrasInStock){
-								this.model.set('allowATC',true);
+								this.model.set('isInStock',true);
 							}
 							else{
-								this.model.set('atcHint',"Selected option is out of stock.");
+								this.model.set('isInStock',false);
 							}
 						}
 						else{
-							this.model.set('atcHint',"Select an option first");
+							this.model.set('atcHint',"Product is out of stock.");
 						}
 					}
 					else{
-						this.model.set('atcHint',"Product is out of stock.");
+						// this will catch scenarios where an extra is required but all options are out of stock - (you won't even see the option on the product but purchasableState.isPurchasable will be false since it doesn't pass validation)
+						this.model.set('isInStock',false);
 					}
 				}
 				else{
-					this.model.set('atcHint',"Select an option first");
+					this.model.set('isConfigured',false);
+					this.model.set('isInStock',false);
 				}
 			}
 		},
@@ -1502,16 +1492,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         }
     });
 
-
-    $(document).ready(function () {
-      
-        try{
-            $('.enable-slideshow').cycle();
-            //console.log("cycle  started");
-        }catch(err){
-            console.log(err);
-        }
-
 		
         var product = ProductModels.Product.fromCurrent();
         
@@ -1551,8 +1531,19 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         //if(extrasProductCodes.length>0){
             //getExtrasProductDetails(product);
         //}
+	
+	$(document).ready(function () {
+      
+        try{
+            $('.enable-slideshow').cycle();
+            //console.log("cycle  started");
+        }catch(err){
+            console.log(err);
+        }
         var shipping = $('#tab-content4 .mz-cms-content').html();
         $('.shipping-content').html(shipping);
+		
+		// show bundle components on "see what's included" button click
         $('.bundle-comp-pdp-section .show-cmp-bundle').click(function(e){
             $(this).toggleClass("active");
             if($(this).hasClass("active")){
@@ -1560,7 +1551,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }else{
                 $(this).find("span").text("Show Components");
             }
-            $('.bundle-comp-pdp-section .bundle-block').slideToggle();
+            $('.bundle-comp-pdp-section .bundle-block').slideToggle(); // modules/product/pdp-bundle-products
             return false;
         });
         

@@ -34,7 +34,6 @@
 {% else %}
     {% if model.productType == "CandyBar" and model.options|findwhere("attributeFQN","tenant~cdyper-choice") %}
         {% for option in model.options %}
-         isVisibleOption: {{option.isVisibleOption}}<br>
             {% if option.isVisibleOption %}
                 <div class="mz-productoptions-container">
                         {% if option.attributeFQN|lower == "tenant~cdyper-choice" %}
@@ -62,7 +61,6 @@
         {% endfor %}
     {% else %}
         {% for option in model.options %}
-       isVisibleOption: {{option.isVisibleOption}}<br>
             {% if option.isVisibleOption %}
                 <div class="mz-productoptions-container">
                     <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}{% if option.isRequired %}<strong class="is-required">*</strong>{% endif %}</label>

@@ -1,5 +1,106 @@
-define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {    
+define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"], function ($, Hypr,Api,ProductModels) {    
+	var getPropteryValueByAttributeFQN = function(product, attributeFQN){
+            var result = null;
+            var properties = product.get('properties')?product.get('properties'):product.properties;
+            for(var i=0;i<properties.length;i++){
+                if(properties[i].attributeFQN.toLowerCase()===attributeFQN.toLowerCase()){
+                    for(var j=0;j<properties[i].values.length; j++){
+                        result= properties[i].values[j].value;
+                    }
+                    break;
+                }
+            }
+            return result;
+     };
 
+	//https://gist.github.com/SparK-Cruz/1570177
+	var dndItem = (function(){
+		var C = function(){ return constructor.apply(this,arguments); };
+		var p = C.prototype;
+		
+		//construct
+		function constructor(productID, itemDescription, ecometrySku, mcCode, dndCode, designCode, quantity, price, volumePricing, minQty, maxQty, unitOfMeasure, lineitemID, parentProductID, extras){
+			this.productID = productID;
+			this.itemDescription = itemDescription;
+			this.ecometrySku = ecometrySku;
+			this.mcCode = mcCode;
+			this.dndCode = dndCode;
+			this.designCode = designCode;
+			this.quantity = quantity;
+			this.price = price;
+			this.volumePricing = volumePricing;
+			this.minQty = minQty;
+			this.maxQty = maxQty;
+			this.unitOfMeasure = unitOfMeasure;
+			this.lineitemID = lineitemID;
+			this.parentProductID = parentProductID;
+			this.extras = extras;
+		}
+
+		//define methods
+		p.launch = function(){
+			// open populate iframe with appropriate technology
+			
+		};
+		p.setFromModel = function(me){
+			this.quantity = me.model.get('quantity')?me.model.get('quantity'):1;
+			this.minQty = (me.model._minQty)?me.model._minQty:this.quantity;
+			var inventoryInfo = me.model.get('inventoryInfo');
+			if(inventoryInfo){
+				if(inventoryInfo.manageStock){
+					this.maxQty = inventoryInfo.onlineStockAvailable;
+				}
+			}
+			if(me.pageType.toLowerCase() === 'cart'){
+				if(parseInt(me.model.get('price').salePrice,10) > 0){
+					this.price = me.model.get('price').salePrice;
+				}
+				else{
+					this.price = me.model.get('price').price;
+				}
+			}else{
+				if(parseInt(me.model.get('price').get('salePrice'),10) > 0){
+					this.price = me.model.get('price').get('salePrice');
+				}
+				else{
+					this.price = me.model.get('price').get('price');
+				}
+			}
+
+			if(me.lineitemID){
+				this.lineitemID = me.lineitemID;
+			}
+			
+			var volumePriceBands = me.model.get('volumePriceBands');
+            if(volumePriceBands && volumePriceBands.length>0){
+                var volPrice = [];
+                for(var i=0; i<volumePriceBands.length;i++){
+                    var volobj ={};
+                    volobj.minQty = volumePriceBands[i].minQty;
+                    volobj.maxQty = volumePriceBands[i].maxQty;
+                    if(volumePriceBands[i].price){
+						// TO DO - check for sale price?
+                        volobj.price = volumePriceBands[i].price.price;
+                    }else{
+                       if(volumePriceBands[i].priceRange){
+                            if(volumePriceBands[i].priceRange.upper.salePrice){
+                                volobj.price = volumePriceBands[i].priceRange.upper.salePrice;
+                            }else{
+                                volobj.price = volumePriceBands[i].priceRange.upper.price;
+                            }
+                       }
+                    }
+                    volPrice.push(volobj);
+                }
+                this.volumePricing = JSON.stringify(volPrice);
+			}
+			
+		};
+
+		//unleash your class
+		return C;
+	})();
+	
     var DNDEngine = function(model,url,dndToken)
     {
         var self = this;
@@ -36,25 +137,148 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
         self.time = new Date().getTime();
         self.form = $('<form action="'+url+'" target="iframe'+self.time+'" method="post" id="form'+self.time+'" name="form'+self.time+'"></form>');
         window.dndFormObj=self.form;
-        self.getPropteryValueByAttributeFQN = function(attributeFQN){
-            var result = null;
-            var properties = this.model.get('properties');
-            for(var i=0;i<properties.length;i++){
-                if(properties[i].attributeFQN.toLowerCase()===attributeFQN.toLowerCase()){
-                    for(var j=0;j<properties[i].values.length; j++){
-                        result= properties[i].values[j].value;
+		
+		self.getExtraProduct = function(productCode){ // very similar to getExtraProduct in product.js but action is different inside api promise
+			var me = this;
+			console.log("dndengine getExtraProduct");
+            var product = null;
+            if(window.extrasProducts.length>0){ // window.extrasProducts is shared by dndegine.js and product.js
+                    for(var i=0;i < window.extrasProducts.length;i++){
+                        if(window.extrasProducts[i].get('productCode')===productCode){
+                            product = window.extrasProducts[i];
+							console.log('found it!');
+                            break;
+                        }
                     }
-                    break;
-                }
             }
-            return result;
+			if(product){
+				return product;
+			}
+			else{
+				// make api call to get product info and then call initializeAndSend on response
+				Api.get('product',{productCode:productCode}).then(function(res){
+					var product = new ProductModels.Product(res.data);
+					window.extrasProducts.push(product);
+					me.initializeAndSend();
+				});
+				return false;
+			}
         };
-        self.setParameters=function(){
-            
-            self.addParameter('productID',this.model.get('productCode'));
-            self.addParameter('ecometrySku',this.model.get('mfgPartNumber'));
-            var dndCode = self.getPropteryValueByAttributeFQN(self.productAttributes.dndCode);
-            var designCode = self.getPropteryValueByAttributeFQN(self.productAttributes.designCode);
+		
+        self.getParameters=function(){
+            var me = this;
+			var dndArr = []; // array of info
+			
+			/* build array of info */
+			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMC,childMC;
+			if(self.model.get('productUsage') === "Bundle"){
+				// loop over components
+				var bp = self.model.get('bundledProducts');
+				for (i =0; i< bp.length; i++) {
+					var component = bp[i];
+				   	console.log(component);
+					
+					//var product = self.getExtraProduct(productCode);
+					
+					//mfgpartnumber = product.get('mfgPartNumber');
+					//childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
+					//childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+				}
+				
+				// loop over extras
+				options=me.model.getConfiguredOptions();
+				for(i=0;i < options.length;i++){
+                    productCode = options[i].value;
+					attributeFQN = options[i].attributeFQN;
+					option = me.model.get('options').get(attributeFQN);
+                    if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+						product = self.getExtraProduct(productCode);
+						if(product){
+							mfgpartnumber = product.get('mfgPartNumber');
+							childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
+							childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+							childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
+						}
+						else{
+							return(false);// exit, means we are waiting on api call inside getExtraProduct
+						}
+                    }
+                }
+
+			}
+			else{
+				// look at parent
+				mfgpartnumber = this.model.get('mfgPartNumber');
+				parentDND = getPropteryValueByAttributeFQN(this.model, self.productAttributes.dndCode);
+				parentDesign = getPropteryValueByAttributeFQN(this.model, self.productAttributes.designCode);
+				parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode);
+				parentUOM = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
+				
+				if(mfgpartnumber && mfgpartnumber.length > 0){
+					// look at extras as stand-alone components
+					options=me.model.getConfiguredOptions();
+					for(i=0;i < options.length;i++){
+						productCode = options[i].value;
+						attributeFQN = options[i].attributeFQN;
+						option = me.model.get('options').get(attributeFQN);
+						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+							product = self.getExtraProduct(productCode);
+							if(product){
+								mfgpartnumber = product.get('mfgPartNumber');
+								childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
+								childDesign = getPropteryValueByAttributeFQN(product ,self.productAttributes.designCode);
+								childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
+							}
+							else{
+								return(false);// exit, means we are waiting on api call inside getExtraProduct
+							}
+						}
+					}
+					
+				}
+				else{
+					// look at extras for mfgpartnumber
+					options=me.model.getConfiguredOptions();
+					for(i=0;i < options.length;i++){
+						productCode = options[i].value;
+						attributeFQN = options[i].attributeFQN;
+						option = me.model.get('options').get(attributeFQN);
+						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+							product = self.getExtraProduct(productCode);
+							//console.log(product);
+							if(product){
+								childMC = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
+								childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
+								childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+								childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
+								
+								var newItem = dndItem();
+								newItem.ecometrySku = product.get('mfgPartNumber');
+								newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;
+								newItem.designCode = (childDesign && childDesign.length)?childDesign:parentDesign;
+								newItem.mcCode = (childMC && childMC.length)?childMC:parentMC;
+								newItem.unitOfMeasure = (childUOM && childUOM.length)?childUOM:parentUOM;
+
+								newItem.productID = me.model.get('productCode');
+								newItem.itemDescription = me.model.get('content.productName');
+								newItem.parentProductID = null;
+								newItem.setFromModel(me);
+								
+								// TO DO: this.extras = extras; - what populates this.model.get('extrasProductInfo');
+								
+							}
+							else{
+								return(false);// exit, means we are waiting on api call inside getExtraProduct
+							}
+						}
+					}
+				}
+			}
+			
+			self.addParameter('productID',this.model.get('productCode'));
+            self.addParameter('ecometrySku',this.model.get('mfgPartNumber')); // **
+            var dndCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.dndCode); // **
+            var designCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.designCode);// **
             if(this.model.get('designCode')){
                 self.addParameter('designCode',this.model.get('designCode'));
             }else{
@@ -97,7 +321,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
             if(self.model.get('uom')){
                 uom = self.model.get('uom');
             }
-            var unitOfMeasure = self.getPropteryValueByAttributeFQN(self.productAttributes.unitOfMeasure);
+            var unitOfMeasure = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
             if(unitOfMeasure){
                 uom = unitOfMeasure;
 
@@ -106,7 +330,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
             var volumePriceBands = self.model.get('volumePriceBands');
             if(volumePriceBands && volumePriceBands.length>0){
                 var volPrice = [];
-                for(var i=0; i<volumePriceBands.length;i++){
+                for(i=0; i<volumePriceBands.length;i++){
                     var volobj ={};
                     volobj.minQty = volumePriceBands[i].minQty;
                     volobj.maxQty = volumePriceBands[i].maxQty;
@@ -126,13 +350,14 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                 }
                 self.addParameter('volumePricing', JSON.stringify(volPrice));
             }
+			return(dndArr);
         };
          self.updateParameters = function(){
             var self= this;
             $(self.form).find('input[name="productID"]').val(this.model.get('productCode'));
             $(self.form).find('input[name="ecometrySku"]').val(this.model.get('mfgPartNumber'));
-             var dndCode = self.getPropteryValueByAttributeFQN(self.productAttributes.dndCode);
-             var designCode = self.getPropteryValueByAttributeFQN(self.productAttributes.designCode);
+             var dndCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.dndCode);
+             var designCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.designCode);
              $(self.form).find('input[name="dndCode"]').val(dndCode);
             $(self.form).find('input[name="designCode"]').val(designCode);
             $(self.form).find('input[name="itemDescription"]').val(this.model.get('content.productName'));
@@ -166,7 +391,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                     window.productView.AddToWishlistAfterPersonalize(data);
                     break;  
                 case 'LPerror':
-                   // console.log(data);
+					/* not used anymore
                      if(data.message===self.errorMsg){
                         self.errorMsgCounter++;
                      }else{
@@ -174,13 +399,15 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                      }
                      self.errorMsg = data.message;
                     lpAddVars('page','DND',data.message);
-                    lpAddVars('page','ErrorCounter',self.errorMsgCounter); 
+                    lpAddVars('page','ErrorCounter',self.errorMsgCounter); */
                     break;      
             }
         };
-        self.initialize=function(){
+        self.initializeAndSend=function(){
             var self = this;
-            self.setParameters();
+			var dndArr = self.getParameters();
+            if(!dndArr)
+				return;
 
             // GA for personalized code
                  
@@ -293,7 +520,7 @@ define(['modules/jquery-mozu','hyprlive'], function ($, Hypr) {
                  
                 return false;
             });
-
+			this.send();
         };
         self.dndRequest = function(){
             $('#cboxOverlay').show();

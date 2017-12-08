@@ -1,46 +1,53 @@
 {% comment %}
   these will be populated by product.js
   -model.isPersonalized
-  -model.allowATC 
-  -model.atcHint
-  -model.isConfigure
+  -model.isInStock
+  -model.isConfigured
   -model.productionTime
   -model.minQty
   -model.uom
   -model.groundOnly
   -model.enableSlitoption
-  -model.mfgPartNumber
+  -model.delDate
   -model.options[].isVisibleOption (true/false)
-
-how can we tell when we are .hypr vs .live? set_var is only valid in .hypr
-
-{# if item has dnd-token extra, it is personalized #}
-{% dump pageContext %}
-{% set_var itemIsPersonalized=model.isPersonalized %}
-{% set_var hasRequiredExtras=0 %}
-
-{% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
-  {% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}
-    {% for option in model.options %}
-        {% if option.attributeFQN|lower == "tenant~dnd-token" %}
-          {% set_var itemIsPersonalized=true %}
-        {% else %}
-          {% if option.isRequired or isProductTypeFlag %}
-            {% set_var hasRequiredExtras=1 %}
-            {% for value in option.values %}
-              {% if value.isSelected%}
-
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-        {% endif %}
-    {% endfor %}
-  {% endwith %}
-{% endwith %}
-
+  -model.options[].isOptionForDND (true/false)
 {% endcomment %}
+
+<div style="border:solid 1px black;font-size:8px;margin:5px;padding:5px;">
+        isInStock: {{model.isInStock}}<br>
+        isPersonalized: {{model.isPersonalized}}<br>
+        isConfigured: {{model.isConfigured}}<br>
+  {% if not model.purchasableState.isPurchasable %}
+    {% dump model.purchasableState %}
+  {% endif %}
+</div>
+
  <p>
+
         <span class="color-blue">Availability</span> :
+        {% if model.isConfigured %}
+          {% if model.isInStock %}
+            <span class="highlight-green">In Stock</span>
+          {% else %}
+            <span class="product-pdp-oos">Out of Stock</span>
+          {% endif %}
+        {% else %}
+          <span class="product-pdp-incomplete"> Please select an option</span>
+        {% endif %}
+
+        {% if model.delDate %}
+          <span class="delivery-date">
+            <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
+            {% if not model.groundOnly %}
+                <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
+                Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}</span><br>
+            {% endif %}
+          </span>
+        {% endif %}
+
+
+{% comment %}
+
         {% if model.inventoryInfo.manageStock == true %}
           {% if model.inventoryInfo.onlineStockAvailable > 0 %}
              <span class="highlight-green"> In Stock </span> <br>
@@ -73,7 +80,6 @@ how can we tell when we are .hypr vs .live? set_var is only valid in .hypr
              </span>
              {% endif %}
           {% else %}
-          {% dump model.purchasableState %}
           <span class="highlight-pink"> {% if not model.purchasableState.isPurchasable %}
             <span class="product-status">
                 <span class="mz-productdetail-notpurchasable">
@@ -87,7 +93,7 @@ how can we tell when we are .hypr vs .live? set_var is only valid in .hypr
                           <span>Product is out of stock</span>
                         {% endif %}
                       {% else %}
-                        {% if model.isConfigure %}
+                        {% if model.isConfigured %}
                             <span> Product is out of stock</span>
                         {% else %}
                             <span> Please select an option</span>
@@ -118,6 +124,7 @@ how can we tell when we are .hypr vs .live? set_var is only valid in .hypr
             {% endwith %}
           {% endif %}
         {% endif%}
+{% endcomment %}
   </p>
      <div class="product-description">
         <span class="color-blue">Product Details : </span>
@@ -190,20 +197,16 @@ how can we tell when we are .hypr vs .live? set_var is only valid in .hypr
           <div class="mz-productdetail-conversion-controls">
               <span class="mz-qty-label">{{ labels.qty }} </span>
               <span class="custom-qty">
-                  <input type="button" value="-" class="qtyminus" field="quantity" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>
-                  <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
-                  <input type="button" value="+" class="qtyplus" field="quantity" {% if not model.allowATC %} disabled="disabled" {% endif %}>
+                  <input type="button" value="-" class="qtyminus" field="quantity" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %}>
+                  <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                  <input type="button" value="+" class="qtyplus" field="quantity" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %}>
               </span>
               <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
           </div>
       </div>
       <div class="product-cart-wishlist">
-        allowATC: {{model.allowATC}}<br>
-        isPersonalized: {{model.isPersonalized}}<br>
-        atcHint: {{model.atcHint}}<br>
-        isConfigure: {{model.isConfigure}}<br>
           {% if model.isPersonalized %}
-                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if not model.allowATC %} is-disabled{% endif %}" {% if not model.allowATC %}disabled="disabled" title="{{model.atcHint}}"{% endif %}>PERSONALIZE</button>
+                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} disabled="disabled"{% endif %}>PERSONALIZE</button>
           {% else %}
                   {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
                         {% if user.isAuthenticated ==false and user.isAnonymous ==false %}
@@ -212,7 +215,7 @@ how can we tell when we are .hypr vs .live? set_var is only valid in .hypr
                            <p>This product is available only for login users. Please register or login to your account. </p><br>
                           {% endif %}
                   {% else %}
-                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.allowATC %}is-disabled{% endif %}" {% if not model.allowATC %} disabled="disabled" title="{{model.atcHint}}" {% endif %} >{{ labels.addToCart }}</button>
+                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %}is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} {% endif %} >{{ labels.addToCart }}</button>
                   {% endif %}
           {% endif %}
           {% if siteContext.generalSettings.isWishlistCreationEnabled %}
