@@ -11,9 +11,6 @@
                 {% endif %} 
             {% endfor %}
         </select><br/> 
-        {% comment %}
-            dummy selectbox for UX
-        {% endcomment %}
         <div class="selction-size-caption">
              <span class="sl-no">2</span> 
              <select class="mz-productlable-options" disabled>
@@ -37,9 +34,9 @@
 {% else %}
     {% if model.productType == "CandyBar" and model.options|findwhere("attributeFQN","tenant~cdyper-choice") %}
         {% for option in model.options %}
-            {% if option.isHideExtra == "show" %}
+         isVisibleOption: {{option.isVisibleOption}}<br>
+            {% if option.isVisibleOption %}
                 <div class="mz-productoptions-container">
-                    {% if option.attributeDetail.name != "dnd-token" %}
                         {% if option.attributeFQN|lower == "tenant~cdyper-choice" %}
                          <form>
                             {% for value in option.values %}
@@ -60,15 +57,14 @@
                                 </select>                
                             </form>
                         {% endif %}
-                    {% endif %}
                 </div>
             {% endif %}
         {% endfor %}
     {% else %}
         {% for option in model.options %}
-            {% if option.isHideExtra == "show" %}
+       isVisibleOption: {{option.isVisibleOption}}<br>
+            {% if option.isVisibleOption %}
                 <div class="mz-productoptions-container">
-                    {% if option.attributeDetail.name != "dnd-token" %}
                     <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}{% if option.isRequired %}<strong class="is-required">*</strong>{% endif %}</label>
                     <div class="mz-productoptions-valuecontainer">
                         {% if option.attributeDetail.inputType == "List" %}
@@ -118,8 +114,7 @@
                               {% endfor %}
                             {% endif %}
                         {% endif %}
-                        </div>
-                    {% endif %}    
+                        </div>  
                 </div>
             {% endif %}
         {% endfor %}

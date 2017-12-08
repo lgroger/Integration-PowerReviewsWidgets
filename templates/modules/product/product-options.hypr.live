@@ -1,4 +1,6 @@
-﻿<div class="mz-productoptions">
+﻿{# I'm only aware of product-instock using this (which is currently disabled) #}
+
+<div class="mz-productoptions">
 {% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
 {% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}
 {% if isProductTypeFlag %}

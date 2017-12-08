@@ -10,12 +10,13 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
     var loopcounter=0, loopcount=0;
     var productAttributes = Hypr.getThemeSetting('productAttributes');
-    window.personalizeBundleProducts=[];
+    window.personalizeBundleProducts=[]; // used by dndEngine.js
     window.extrasProducts=[];
+	window.monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+	window.weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+	window.dateFormatArr=["th","st","nd","rd"];
     var BundleItems=[];
     var standardProducts=[];
-    var isPurchasableState;
-    var isPersonalize = 0;
     var getPropteryValueByAttributeFQN = function(product, attributeFQN){
             var result = null;
             var properties = product.get('properties')?product.get('properties'):product.properties;
@@ -165,24 +166,33 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             $('#cboxOverlay').hide();
             window.location.href=location.href;
         });
-
+		
+		 
         var productView = new ProductView({
             el: $('#product-detail'),
             model: product,
             messagesEl: $('[data-mz-message-bar]')
         });
+		
+		/* custom items we want to set on model
+		 - isPersonalized
+		 - isPurchasable
+		 - needsExtras
+		 - extrasInfo
+		*/
 
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),
             model: product
         });
-
-        window.productView = productView;
+ 
+        window.productView = productView; // used by dndengine
 
         productView.render();
     };
 	
 	// get product info of all items used as extras - http.commerce.catalog.storefront.products.getProduct.after (application Pricing_Arc_Prod) returns extras as http header "productExtras"
+	/*
     var getExtrasProductDetails= function(product){
         var api = Api;
         api.on('success', function(res, xhr,request){
@@ -207,10 +217,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
         }); 
         api.request('get','/api/commerce/catalog/storefront/products/'+product.get('productCode')+'?my=1').then(function(res){
-                var product=new ProductModels.Product(res);
+			var product=new ProductModels.Product(res);
                 initProductView(product);
-        });
-    };
+        }); 
+    }; */
 	
 	// get product info of bundle items with stardard productUsage (can get multiple at a time since they are available for sale on their own)
     function getStandardProductDetails(productCodes){
@@ -232,10 +242,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         }
                         //var price = '$'+product.get('price').get('price')+" "+uom;
                         $('[productcode="'+product.get('productCode')+'"]').find('.uom').html(uom).show();
+						var mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode); // mediaclip code
                         var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
-                        if(dndCode){
+                        if(dndCode || mcCode){
                             window.personalizeBundleProducts.push(product);
-                            isPersonalize=1;
                         }
                     }
                 }
@@ -264,40 +274,29 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     //var price = '$'+product.get('price').get('price')+" "+uom;
                     $('[productcode="'+arr[loopcounter]+'"]').find('.uom').html(uom).show();
 
-                    var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
-                    if(dndCode){
+                    var mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode); // mediaclip code
+					var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
+                    if(dndCode || mcCode){
                         window.personalizeBundleProducts.push(product);
-                       isPersonalize =1;
                     }
                     loopcounter++;
                     if(loopcounter < arr.length){
                         getBundleProductDetails(arr);
                     }else{
+						/*
                         if(isPersonalize){
                             $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
-                            if(isPurchasableState){
-                                $('.addToCart').attr('disabled',false).removeClass('is-disabled');
-                            }
                         }else{
                             $('.addToCart').attr('disabled',true).removeClass('is-disabled');
-                            if(isPurchasableState){
-                                $('.addToCart').attr('disabled',false).removeClass('is-disabled');
-                            }
-                        }
+                        } */
                         window.removePageLoader();
                     }
                 });
         }else{
+			/*
              if(isPersonalize){
                     $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
-                    if(isPurchasableState){
-                        $('.addToCart').attr('disabled',false).removeClass('is-disabled');
-                    }
-            }else{
-                    if(isPurchasableState){
-                        $('.addToCart').attr('disabled',false).removeClass('is-disabled');
-                    }
-            }
+            }*/
             window.removePageLoader();
 
         }
@@ -327,15 +326,17 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             "click .bundle-btn":"showBundle",
             "click .qtyminus":"decreaseQty"
         },moreDetail:function (e) {
+			console.log("moreDetail");
             $('#tab1').prop('checked', true); 
             $('html, body').animate({
                     scrollTop: $("#description").offset().top-80
                 }, 1000);  
         },showBundle:function () {
+			console.log("showBundle");
             $("body").css("overflow-y","hidden");
             $(".bundle-items-wrap-pdp").fadeIn();
         },increaseQty: function(e){
-
+			console.log("increaseQty");
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10);
@@ -360,6 +361,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             },1000);
         },
         decreaseQty: function(e){
+			console.log("decreaseQty");
             var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10);
             if(!isNaN(newQuantity) && newQuantity>1){
@@ -386,6 +388,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
         },
         onQuantityChange: _.debounce(function (e) {
+			console.log("onQuantityChange");
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var $qField = $(e.currentTarget),
               newQuantity = parseInt($qField.val(), 10);
@@ -407,6 +410,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
         },500),
         showOptionsList: function(e){
+			console.log("showOptionsList");
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var cobj = $(e.currentTarget),
             id=cobj.val(),me=this;
@@ -428,6 +432,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             $('[data-lbl-option="'+id+'"]').addClass("show-no");
         },
         personalizeProduct:function(e){
+			console.log("personalizeProduct");
         	//check for 0 quantity, display error message
            
            var $qField = $(e.currentTarget).parent().parent().find('[data-mz-value="quantity"]'),
@@ -450,6 +455,11 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
         },
         render: function () {
+			console.log("render");
+			
+			this.setIsPersonalized();
+			this.setAllowATC();
+			
             var me = this,requiredOptions;
             var objj=me.model.getConfiguredOptions();
             if($(".delivery-date").length>1){
@@ -487,31 +497,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                       me.model._hasPriceRange=true;
                 }
            }
-           //Enable Personalize
-           if(window.personalizeBundleProducts.length>0){
-                me.model.set('enablePersonalise', true);
-           }
-            me.model.set('isConfigure', false);
-            if(me.model.get('productUsage')==="Configurable"){
-                if(objj.length > 0){
 
-                    //Check all required options value are filled(model value prop shoud not be empty and it should be required).
-                    var filled_required_fileds=0;
-                    me.model.get('options').toJSON().forEach(function(ele,i){
-                        if(ele.hasOwnProperty('value') && ele.isRequired){
-                            filled_required_fileds+=1;
-                        }
-                    });
-                    requiredOptions = _.where(me.model.get('options').toJSON(),{"isRequired":true});
-                    if(filled_required_fileds===requiredOptions.length){
-                        me.model.set('isConfigure', true);
-                    }
-                }
-            }
-
-            this.hideExtras();
-            var extrasProductInfo = me.getSelectedExtrasInfo(objj);
-            if(extrasProductInfo){me.model.set('extrasProductInfo',extrasProductInfo);}
             if(me.model.apiModel.data.price){
                 me.model.attributes.price.attributes=me.model.apiModel.data.price;
             }
@@ -528,63 +514,34 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             });
         },
         getExtraProduct: function(productCode){
+			var me = this;
+			console.log("getExtraProduct");
             var product = null;
             if(window.extrasProducts.length>0){
                     for(var i=0;i < window.extrasProducts.length;i++){
-                        if(window.extrasProducts[i].productCode===productCode){
+                        if(window.extrasProducts[i].get('productCode')===productCode){
                             product = window.extrasProducts[i];
+							console.log('found it!');
                             break;
                         }
                     }
             }
-            return product;
-        },
-        getSelectedExtrasInfo:function(selectedOptions){
-            var extrasInfo = [];
-            var self =this;
-            //if(selectedOptions.length>0){
-               // for(var ind=0; ind<selectedOptions.length; ind++){
-                    var options = self.model.get('options');
-                    if(options.length>0){
-                       for(var inc=0; inc<options.models.length; inc++){
-
-                            var option = options.models[inc];
-                            if(option.get('attributeDetail').usageType==='Extra' &&
-                               option.get('attributeDetail').dataType==='ProductCode' &&
-                               option.get('isHideExtra')==="hide"){
-                                var extra ={};
-                                extra.name = option.get('attributeDetail').name;
-                                extra.isRequired = option.get('isRequired');
-                                extra.attributeCode = option.get('attributeFQN').split('~')[1];
-                                extra.values=[];
-                                var values = option.get('values');
-                                for(var l=0;l<values.length;l++){
-                                    var extraValues={};
-                                    var eprod = self.getExtraProduct(values[l].value);
-                                    extraValues.price = values[l].deltaPrice;
-                                    extraValues.name = values[l].stringValue;
-                                    extraValues.value = values[l].value;
-
-
-                                    if(eprod)extraValues.mfgPartNumber = eprod.mfgPartNumber;
-                                    var inventoryInfo = values[l].bundledProduct.inventoryInfo;
-                                    if(inventoryInfo && inventoryInfo.manageStock){
-                                        extraValues.maxQty = inventoryInfo.onlineStockAvailable;
-                                    }
-                                    extraValues.quantity = values[l].bundledProduct.quantity;
-                                    extra.values.push(extraValues);
-                                }
-                                extrasInfo.push(extra);
-                            }
-                        }
-                    }
-
-
-                //}
-            //}
-            return extrasInfo;
+			if(product){
+				return product;
+			}
+			else{
+				// get product
+				Api.get('product',{productCode:productCode}).then(function(res){
+					var product = new ProductModels.Product(res.data);
+					window.extrasProducts.push(product);
+					console.log();
+					me.render();
+				});
+				return false;
+			}
         },
         getExtraTitle: function(productCode){
+			console.log("getExtraTitle");
             var extraTitle=null;
             if(window.extrasProducts.length>0){
                 for(var i=0;i<window.extrasProducts.length;i++){
@@ -597,6 +554,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             return extraTitle;
         },
         setOptionTitle: function(){
+			console.log("setOptionTitle");
             var self= this;
             var options = self.model.get('options');
             if( options && options.length>0){
@@ -613,50 +571,72 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 }
             }
         },
-        hideExtras: function(){
-            var me = this;
-            var options = me.model.get('options');
-            var extrasToHide = getPropteryValueByAttributeFQN(me.model, 'tenant~extrastohide');
+        hideOptions: function(){
+			console.log("hideOptions");
+            var options = this.model.get('options'); // includes extras and configurable options
+            var extrasToHide = getPropteryValueByAttributeFQN(this.model, 'tenant~extrastohide');
             var extrastohideArr = [];
             if(extrasToHide && extrasToHide!==""){
                 extrastohideArr = extrasToHide.toLowerCase().split(',');
             }
             for(var i=0; i< options.length;i++){
-                options.models[i].set('isHideExtra',"show");
-                var attributeCode = options.models[i].get('attributeFQN').split('~');
+				var option = options.models[i];
+                var attributeCode = option.get('attributeFQN').split('~');
                 if(extrastohideArr.indexOf(attributeCode[1]) > -1){
-                    options.models[i].set('isHideExtra',"hide");
-                    me.model.set('purchasableState.isPurchasable', true);
+                	option.set('isVisibleOption',false); // hide extras in extrastohide list
                 }
+				else if(option.get('attributeFQN')===productAttributes.dndToken){
+					option.set('isVisibleOption',false); // hide dndtoken
+				}
+				else if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && (option.get('attributeFQN') === "tenant~misc.-favor-with-design" || option.get('attributeFQN') === "tenant~table-top-it-runner-size")) {
+					option.set('isVisibleOption',false); // hide extras used for inventory only of design items
+				}
+				else{
+					option.set('isVisibleOption',true);
+				}
             }
         },
         renderConfigure: function(){
-                var  me = this, id, newValue,option,dndCode,mfgPartNumber;
+			console.log("renderConfigure");
+                var  me = this, id, newValue,option,dndCode,mfgPartNumber,mcCode;
                 var objj=me.model.getConfiguredOptions();
                 me.setOptionTitle();
                 me.model.set('minQty', me.model._minQty);
                 var estTime= window.timeNow || new Date();
+				var productionTime,holidays;
                 if(objj.length > 0){
-                    id = objj[0].attributeFQN;
-                    newValue = objj[0].value;
-                    option = me.model.get('options').get(id);
-                
-                        if(me.model.get('productType')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-                            window.isStd=false;
-                            Api.get('product',{productCode:newValue}).then(function(res){
-                                var product = new ProductModels.Product(res.data);
-                                var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
-                                if(uom){
-                                    me.model.set('uom',uom);
-                                }
+					for(var i=0;i < objj.length;i++){
+						newValue = objj[i].value;
+						id = objj[i].attributeFQN;
+						option = me.model.get('options').get(id);
+						console.log(option);
+						if(me.model.get('productUsage')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+							console.log(newValue);
+							var product = me.getExtraProduct(newValue);
+							if(product){
+								if(me.model.get('productUsage')!=='Bundle'){
+									// don't look at uom of extras if parent is bundle (ex. punch game is each but tissue paper prompt options are pkg/8 - we want to keep each as uom)
+									var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
+									if(uom){
+										me.model.set('uom',uom);
+									}
+								}
+								/*
                                 var inventoryInfo = product.get('inventoryInfo');
                                 if(inventoryInfo.manageStock) {
                                     me.model.set('inventoryInfo',inventoryInfo);
+                                }*/
+							// use the greater of the 2 production times (parent vs extra)
+								var parentProductionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
+								if(parentProductionTime ===null || parentProductionTime===0){
+                                    parentProductionTime=1;
                                 }
-                                var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
+                                productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
                                 if(productionTime ===null || productionTime===0){
                                     productionTime=1;
                                 }
+								productionTime = Math.max(parentProductionTime,productionTime);
+								
                                 var melt=true;
                                 var melt_obj=getPropteryValueByAttributeFQN(me.model, productAttributes.productMelt);
                                 if(melt_obj===null){
@@ -666,71 +646,78 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                                 }
                                 if(productionTime){
                                     me.model.set('productionTime',productionTime);
-                                    me.model.set('data',productionTime);
-                                    var holidays=window.holidayList || [];
+                                    holidays=window.holidayList || [];
                                     if(melt){
                                         me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
                                     }else{
                                         me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
                                     }
                                 }
+								mcCode = getPropteryValueByAttributeFQN(me.model, productAttributes.mcCode); // mediaclip code
                                 dndCode = getPropteryValueByAttributeFQN(me.model, productAttributes.dndCode);
-                                if(dndCode && dndCode!==""){
+                                if((mcCode && mcCode!=="") || (dndCode && dndCode!=="")){
                                     mfgPartNumber = me.model.get('mfgPartNumber');
                                     if(mfgPartNumber===null || mfgPartNumber===undefined || mfgPartNumber===""){
                                          if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                             me.model.set('mfgPartNumber',res.data.mfgPartNumber);
+                                             me.model.set('mfgPartNumber',product.mfgPartNumber);
                                         }
 
                                     }
                                 }else{
                                         if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                            me.model.set('mfgPartNumber',res.data.mfgPartNumber);
+                                            me.model.set('mfgPartNumber',product.mfgPartNumber);
                                         }
+										mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode);  // mediaclip code
                                         dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                                         var designCode = getPropteryValueByAttributeFQN(product, productAttributes.designCode);
-                                        if(dndCode){
-                                            me.model.set('enablePersonalise',true);
+                                    	if(mcCode){
+                                            me.model.set('mcCode',mcCode);
+                                            me.model.set('designCode',designCode);
+                                        }    
+										else if(dndCode){
                                             me.model.set('dndCode',dndCode);
                                             me.model.set('designCode',designCode);
                                         }
                                 }
-                            Backbone.MozuView.prototype.render.apply(me);
-                        });
-                    }else{
-                        if(objj.length > 0){
+                            	Backbone.MozuView.prototype.render.apply(me);
+							}
+							else{
+								return; // exit
+							}
+						}else{
                             window.isStd=false;
-                                var selected_id = objj[0].attributeFQN;
-                                var selected_newValue = objj[0].value;
-                                var selected_option = me.model.get('options').get(id);
-                                if(me.model.get('productType')==='CandyBar' && selected_option.get('attributeDetail').usageType ==="Option"){
-                                    var productionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
-                                    var holidays=window.holidayList || [];
-                                    if(productionTime===null || productionTime===0){
-                                        productionTime=1;
-                                    }
-                                    if(selected_newValue==="cdyperw-option"){
-                                        me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
-                                    }else{
-                                        me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
-                                    }
-                                }else if(me.model.get('productType')!=='CandyBar'){
-                                     var productionTime1 = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
-                                    var holidays1=window.holidayList || [];
-                                    if(productionTime1===undefined || productionTime1===null || productionTime1===0){
-                                        productionTime1=1;
-                                    }
-                                    me.skip_holidays(estTime,productionTime1,window.holidayList,me,false);
-                                }
-                        }
-                        Backbone.MozuView.prototype.render.apply(me);
-                    }
+							var selected_id = objj[0].attributeFQN;
+							var selected_newValue = objj[0].value;
+							var selected_option = me.model.get('options').get(id);
+							if(me.model.get('productType')==='CandyBar' && selected_option.get('attributeDetail').usageType ==="Option"){
+								productionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
+								holidays=window.holidayList || [];
+								if(productionTime===null || productionTime===0){
+									productionTime=1;
+								}
+								if(selected_newValue==="cdyperw-option"){
+									me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
+								}else{
+									me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
+								}
+							}else if(me.model.get('productType')!=='CandyBar'){
+								var productionTime1 = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
+								var holidays1=window.holidayList || [];
+								if(productionTime1===undefined || productionTime1===null || productionTime1===0){
+									productionTime1=1;
+								}
+								me.skip_holidays(estTime,productionTime1,window.holidayList,me,false);
+							}
+                       		Backbone.MozuView.prototype.render.apply(me);
+                    	}
+					} // end loop
                 }
                 else{
                     Backbone.MozuView.prototype.render.apply(this);
                 }
 
         },skip_holidays:function(date,noBusDays,holidays,scope_obj,isMelt){
+			console.log("skip_holidays");
             /*Function to skip saturday,sunday and holiday list and call the callback function
               With result date.
             */
@@ -770,6 +757,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }
                 }
             }
+			/* not sure what this is for...
              if(window.initload && $(".delivery-date").length===0 && window.isStd){
                 setTimeout(function() {
                     var delivery_html="<span class='delivery-date'> <span>Get it by <strong>";
@@ -784,14 +772,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         $(".delivery-date").eq(0).remove();
                     }
                 },500);
-             }
-            /*result_date.setDate(result_date.getDate());
-            //console.log("idx "+idx+" res "+result_date);
-            var delDate=new Date(result_date);
-            callback(delDate,noBusDays,holidays,scope_obj);*/
+             }*/
         }, onOptionChange: function (e) {
-            return this.configure($(e.currentTarget));
+			console.log("onOptionChange");
+            return this.configure($(e.currentTarget)); //fires this.render
         },calc_only_productionTime:function(date,noBusDays,holidays,scope_obj,callback){
+			console.log("calc_only_productionTime");
             /*Function to skip saturday,sunday and holiday list and call the callback function
             With result date.
             */
@@ -809,6 +795,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             var delDate=new Date(result_date);
             callback(delDate,noBusDays,holidays,scope_obj);
         },calcMeltProduct:function (ddate,prod_time,holidayList,scope_obj,noOfDays){
+			console.log("calcMeltProduct");
             if(ddate.getDay()>=4){
                 scope_obj.calc_only_productionTime(ddate,1,holidayList,scope_obj,scope_obj.calcMeltProduct);
             }else{
@@ -816,7 +803,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                  //scope_obj.skip_holidays(ddate,2,holidayList,scope_obj,true,scope_obj.setExpressDeliveryDate,0);
             }
         },configure: function ($optionEl) {
-            $('.mz-productdetail-addtocart').prop('disabled',true);
+			console.log("configure");
+
             var me= this;
             me.model.set('mfgPartNumber',"");
             var newValue = $optionEl.val(),
@@ -825,36 +813,34 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 optionEl = $optionEl[0],
                 isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
                 option = this.model.get('options').get(id);
-                var objj=me.model.getConfiguredOptions();
-                /*Unset value if Banner Type prodduct */
-                if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
-                    _.each(objj, function(objoptions) {
-                         me.model.get('options').get(objoptions.attributeFQN).unset("value");
-                      });
-                }
-                if(id ==="tenant~cdyper-choice"){
-                    if(newValue.toLowerCase()==="cdyperw-option"){
-                        _.each(objj, function(objoptions) {
-                             me.model.get('options').get(objoptions.attributeFQN).unset("value");
-                          });
-                    }
-                }
+			var objj=me.model.getConfiguredOptions();
+			/*Unset value if Banner Type prodduct */
+			if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
+				_.each(objj, function(objoptions) {
+					 me.model.get('options').get(objoptions.attributeFQN).unset("value");
+				  });
+			}
+			if(id ==="tenant~cdyper-choice"){
+				if(newValue.toLowerCase()==="cdyperw-option"){
+					_.each(objj, function(objoptions) {
+						 me.model.get('options').get(objoptions.attributeFQN).unset("value");
+					  });
+				}
+			}
 
-            if (option) {
+            if(option) {
                 if (option.get('attributeDetail').inputType === "YesNo") {
-                    option.set("value", isPicked);
+                    option.set("value", isPicked); // fires this.render() (?);
                 } else if (isPicked) {
                     oldValue = option.get('value');
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
-                        option.set('value', newValue);
-                    }else{
-                        $('.mz-productdetail-addtocart').prop('disabled',false);
+                        option.set('value', newValue); // fires this.render();
                     }
                 }
             }
-
         },
         configureSlitOption: function (e) {
+			console.log("configureSlitOption");
             var newValue = '',
                 me=this,
                 oldValue,
@@ -881,7 +867,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 option = this.model.get('options').get(productAttributes.outdoorbanner);
                 if (option) {
                     newValue = oldValue.split('S')[0];
-                    //console.log(newValue);
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue);
                     }
@@ -889,6 +874,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
         },
         addToCart: function () {
+			console.log("addToCart");
             var self= this;
             var $qField = $(self.el).find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10),
@@ -898,21 +884,21 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             if(this.model.attributes.variationProductCode !== undefined && this.model.attributes.variationProductCode !== 'undefined'){
               sku = this.model.attributes.variationProductCode;
             }
-            if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
+            if(typeof BrTrk !== 'undefined'){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
             //end
 
             this.model.set('quantity',newQuantity);
             this.model.addToCart();
         },
         addToWishlist: function () {
-            var me= this;
+			console.log("addToWishlist");
             if(!require.mozuData('user').isAnonymous) {
                         this.model.set('moveToWishList', 1);
                         Wishlist.initoWishlist(this.model);
                 }else {
                     var produtDetailToStoreInCookie ={};
                     produtDetailToStoreInCookie.productCode=this.model.get('productCode');
-                     var objj=me.model.getConfiguredOptions();
+                     var objj=this.model.getConfiguredOptions();
                     produtDetailToStoreInCookie.options=objj;
                     $.cookie('wishlistprouct','direct',{path:'/'});
                     var ifrm = $("#homepageapicontext");
@@ -925,6 +911,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
         },
         addToWishlistWithDesgin: function(){
+			console.log("addToWishlistWithDesgin");
             var me = this;
                 this.model.on('addedtowishlist', function (cartitem) {
                     $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
@@ -952,14 +939,17 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 }
         },
         addToWishlistAfterLogin: function(){
+			console.log("addToWishlistAfterLogin");
              Wishlist.initoWishlist(this.model);
             $.cookie('wishlistprouct', "",{path:'/'});
         },
         addToWishlistAfterLoginPersonalize: function(){
+			console.log("addToWishlistAfterLoginPersonalize");
             Wishlist.initoWishlistPersonalize(this.model);
             $.cookie('wishlistprouct', "",{path:'/'});
         },
         setSelectedOptions: function(){
+			console.log("setSelectedOptions");
             var me = this;
             var wishlistprouct = $.cookie('wishlistprouct');
             if(wishlistprouct && wishlistprouct!==""){
@@ -978,6 +968,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
         },
         checkLocalStores: function (e) {
+			console.log("checkLocalStores");
             var me = this;
             e.preventDefault();
             this.model.whenReady(function () {
@@ -991,10 +982,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
         },
         setOptionValues: function(data){
-            var self= this;
+			console.log("setOptionValues");
             var options = this.model.get('options');
-            /*var option = this.model.get('options').get(productAttributes.dndToken);
-            option.set('value',data.projectToken);*/
             var extraAttribute =  null;
             var extraJSON ={};
             if(data.extras){
@@ -1016,9 +1005,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     options.models[i].set('shopperEnteredValue',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
                 }
             }
-            self.model.set('options', options);
+            this.model.set('options', options);
         },
         addToCartAfterPersonalize:function(data){
+			console.log("addToCartAfterPersonalize");
             var self= this;
             self.setOptionValues(data);
             if(data.quantity){
@@ -1043,7 +1033,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             //end
 
         },
-        AddToWishlistAfterPersonalize: function(data){
+        AddToWishlistAfterPersonalize: function(data){ // i can't find where this is used...
+			console.log("AddToWishlistAfterPersonalize");
             var self= this;
                 self.setOptionValues(data);
                 if(data.quantity){
@@ -1052,6 +1043,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 self.addToWishlistWithDesgin();
         },
         afterRender: function() {
+			console.log("afterRender");
             var me = this;
             /** Code to get mfgPartNumber for extras product **/
             /*if(me.model.get('productUsage')==="Bundle" && me.model.get('bundledProducts').length>0){
@@ -1074,18 +1066,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }
                 });
             }
-            var warnmessage = $('.mz-productdetail-notpurchasable').text().trim();
-            if(warnmessage && warnmessage!==""){
-                $('.mz-productdetail-addtocart').attr('data-tooltip',warnmessage);
-            }
 
             /** Logics for banner product types **/
             if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
 				//.addtocart is what's used in quickview, .mz-productdetail-addtocart is used on pdp
-                    $('.addToCart').attr('data-tooltip',"Please select an option");
-                    if(warnmessage && warnmessage!==""){
-                        $('.mz-productdetail-addtocart').attr('data-tooltip',warnmessage);
-                    }
                     if(me.model.get('OptionSelectedID') && me.model.get('OptionSelectedID')!==""){
                         $("select[mz-banner-type]").val(me.model.get('OptionSelectedID'));
                         $('select.mz-productoptions-option').hide();
@@ -1114,17 +1098,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                             }
                         }
                       });
-                    /** If Product Type banner check options are selected or not **/
-                    if($('.mz-productoptions-option:visible').val()!==undefined &&
-                        $('.mz-productoptions-option:visible').val()!==""){
-                        $('.personalize').prop('disabled', false);
-                        $('.custom-qty input').prop('disabled', false);
-                        $('.personalize').attr("title", "");
-                    }else{
-                        $('.personalize').prop('disabled', true);
-                        $('.custom-qty input').prop('disabled', true);
-                        $('.personalize').attr("title", "Please select a material and size above.");
-                    }
 
              }
             
@@ -1136,32 +1109,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 }
             }
 
-            /*if(this.model.get('productUsage')==='Bundle'){
-                $('.addToCart').attr('disabled',true).addClass('is-disabled');
-                if($('.bundleItemDndCode').length > 0 ){
-                    $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id').removeAttr('disabled').removeClass('is-disabled');
-                }
-            }*/
-
             if(me.model.get('productType')==='CandyBar'){
                 var selectOptonVal = $('[data-mz-product-option="tenant~cdyper-choice"]:checked').val();
                 if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()=="cdyperw-option"){
                     $('[data-mz-product-option="tenant~pcdypcb"]').addClass("hide");
                 }else if(selectOptonVal!==undefined){
                     $('[data-mz-product-option="tenant~pcdypcb"]').removeClass("hide");
-                }
-            /** Product Typ candbar check options are selected or not **/
-            
-                if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){ 
-                    if(me.model.get('purchasableState').isPurchasable && (($("[data-mz-product-option='tenant~pcdypcb']").length > 0 && typeof $("[data-mz-product-option='tenant~pcdypcb']").val()!== "undefined" && $("[data-mz-product-option='tenant~pcdypcb']").val()!=="") || $("[data-mz-product-option='tenant~pcdypcb']").length === 0)) {
-                        $('.personalize').prop('disabled', false);
-                        $('.custom-qty input').prop('disabled', false);
-                        $('.personalize').attr('title', "");
-                    }else{ 
-                        $('.personalize').prop('disabled', true);
-                        $('.custom-qty input').prop('disabled', true);
-                        $('.personalize').attr('title', "Please select an option above.");
-                    }
                 }
             }
 
@@ -1195,13 +1148,273 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
             $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
         },
+		setIsPersonalized: function(){
+		// asssumption - if a product has dnd-token extra, then it's personalized (personalization can be on parent or components or extras) - we only look at parent for dnd-token
+			console.log("setIsPersonalized");
+			this.model.set('isPersonalized',false);
+			var options = this.model.get('options');
+		 	for(var i=0; i < options.length; i++){
+                if(options.models[i].get('attributeFQN')===productAttributes.dndToken){
+                    this.model.set('isPersonalized',true);
+					break;
+                }
+            }
+			
+			this.model.set('isPersonalized',false);//temporary to test
+			
+		},
+		setAllowATC: function(){
+			console.log("setAllowATC");
+			// sets model.allowATC
+			
+			this.hideOptions(); // sets isVisibleOption per option which is used below
+			
+			var options = this.model.get('options');
+			var inc,l,option,isSelected,isInStock,values,inventoryInfo;
+			var minqty = this.model._minQty;
+			if(bannerProductsArr.indexOf(this.model.get('productType')) > -1){
+				 // if it's a banner product type, make sure an extra is selected and it's in stock
+				
+				isSelected = false; // whether we have at least one extra selected
+				isInStock = false;
+				var hasSelectableExtras = false; // track whether there are actually extras to select (when an extra)
+				if(options.length>0){
+				   for(inc=0; inc<options.models.length; inc++){
+						option = options.models[inc];
+						if(option.get('attributeDetail').usageType==='Extra' &&
+						   option.get('attributeDetail').dataType==='ProductCode'){
+
+							values = option.get('values');
+							for(l=0;l<values.length;l++){
+								hasSelectableExtras = true;// has at least one selectable extra
+								if(values[l].isSelected){
+									isSelected = true;
+									isInStock = false;
+									inventoryInfo = values[l].bundledProduct.inventoryInfo;
+									if(inventoryInfo && inventoryInfo.manageStock && inventoryInfo.onlineStockAvailable >= minqty){
+										isInStock= true;
+									}
+									else if(inventoryInfo && ! inventoryInfo.manageStock){
+										isInStock= true;
+									}
+									break; // exit values loop
+								}
+							}
+						}
+					}
+				}
+				
+				if(!hasSelectableExtras){ // if no extras to select, mark entire product as out of stock
+					this.model.set('allowATC',false);
+					this.model.set('atcHint',"Product is out of stock.");
+				}
+				else if(isSelected && isInStock){
+					this.model.set('allowATC',true);
+					this.model.set('atcHint',"");
+				}
+				else if(!isSelected){
+					this.model.set('allowATC',false);
+					this.model.set('atcHint',"Select a size and material.");
+				}
+				else if(isSelected && !isInStock){
+					this.model.set('allowATC',false);
+					this.model.set('atcHint',"Selected option is out of stock.");
+				}
+					
+            }
+			else{
+				// not a banner type - see if we have required extras and configured options selected
+				var configurableOptionsConfigured = true; // if all configurable options have a selection
+				var requiredExtrasConfigured = true; // if all required extras have a selection
+				var extrasInStock = true; // if all selected extras are in stock
+				var productInventoryInfo = this.model.get('inventoryInfo'); // inventory info of parent - if this is configurable item, this will be info for variant selected
+				var flagAsOutOfStock = false; // track whether entire product is out of stock - ex. if we have required extra with 0 options, set parent product as out of stock
+				if(options.length>0){
+				   for(inc=0; inc<options.models.length; inc++){ // options includes both extras and configurable options
+						option = options.models[inc];
+					   console.log(option);
+						if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+							var isRequired = option.get('isRequired');
+							var isVisibleOption = option.get('isVisibleOption'); // set in this.hideOptions()
+							isSelected = false; // whether this choice has a selection
+							isInStock = false; // whether selected choice has stock, fail to start and set to pass if we find valid values
+							values = option.get('values');
+							for(l=0;l<values.length;l++){ // loop over values to see if we have any selected values and if they are in stock
+								if(values[l].isSelected){
+									isSelected = true;
+									inventoryInfo = values[l].bundledProduct.inventoryInfo;
+									if(inventoryInfo && inventoryInfo.manageStock && inventoryInfo.onlineStockAvailable >= minqty){
+										isInStock= true;
+									}
+									else if(inventoryInfo && !inventoryInfo.manageStock){
+										isInStock= true;
+									}
+									break; // exit values loop
+								}
+							}
+							if(isSelected && !isInStock){
+								extrasInStock = false;
+								this.model.set('atcHint',"Selected option is out of stock.");
+							}
+							if(isRequired && isVisibleOption){ // if required and not a hidden option (tenant~extrastohide)
+								if(!isSelected){
+									if(values.length > 0){
+										extrasInStock = false;
+										requiredExtrasConfigured = false;
+									}
+								}
+							}
+							
+							if(isRequired && values.length === 0){
+								extrasInStock = false;
+								flagAsOutOfStock = true;
+							}
+						}
+					   else if(option.get('attributeDetail').usageType==='Option'){
+							isSelected = false; // set to true if we find one
+							values = option.get('values');
+							for(l=0;l<values.length;l++){
+								if(values[l].isSelected){
+									isSelected = true;
+									break; // exit values loop
+								}
+							}
+						   if(!isSelected){
+							   configurableOptionsConfigured = false;
+						   }
+					   }
+					}
+				}
+				
+				this.model.set('allowATC',false);
+				this.model.set('atcHint',"");
+				if(flagAsOutOfStock){
+					this.model.set('atcHint',"Product is out of stock.");
+				}
+				else if(configurableOptionsConfigured){
+					// if product itself is in stock and any required extras are selected, set allowATC to true
+					if((productInventoryInfo && productInventoryInfo.manageStock && productInventoryInfo.onlineStockAvailable >= minqty) || (productInventoryInfo && !productInventoryInfo.manageStock)){
+						if(requiredExtrasConfigured){
+							if(extrasInStock){
+								this.model.set('allowATC',true);
+							}
+							else{
+								this.model.set('atcHint',"Selected option is out of stock.");
+							}
+						}
+						else{
+							this.model.set('atcHint',"Select an option first");
+						}
+					}
+					else{
+						this.model.set('atcHint',"Product is out of stock.");
+					}
+				}
+				else{
+					this.model.set('atcHint',"Select an option first");
+				}
+			}
+		},
+		calcTimes: function(current_time){
+			console.log("calcTimes");
+			var me = this;
+			var prodTime=1;
+            var prod_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productionTime});
+            var melt=false;
+            var melt_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productMelt});
+            if(melt_obj){
+                melt=melt_obj.values[0].value;
+            }
+			
+			if(prod_obj){
+				prodTime=prod_obj.values[0].value;
+				if(prodTime>0){
+					me.model.set('productionTime',prodTime);
+				}
+				if((me.model.get("productUsage")==="Standard" && me.model.get("options").length===0)){
+					if(melt){ 
+						me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+					}else{
+						me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+					}
+				}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
+					if(melt){ 
+						me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+					}else{
+					   me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+					}
+				}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
+					var idx1=-1;
+					me.model.get("options").toJSON().forEach(function(option,i) {
+					   if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
+						idx1=i;
+					   } 
+					});
+					if(idx1>-1){
+						var opt1=me.model.get("options").toJSON();
+						delete opt1[idx1];
+						opt1.splice(idx1,1);
+						if(opt1[0].values.length===1){
+							if(melt){ 
+								me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+							}else{
+								me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+							}
+						}
+					}
+				}else if(me.model.get("productUsage")==="Bundle"){
+					if(melt){ 
+							me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+						}else{
+							me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+						}
+				}
+			}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===0){
+				if(melt){
+					me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+				}else{
+					me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+				}
+			}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
+				if(melt){ 
+					me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+				}else{
+					me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+				}
+			}else if(me.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
+				var idx=-1;
+				me.model.get("options").toJSON().forEach(function(option,i) {
+				   if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
+					idx=i;
+				   } 
+				});
+				if(idx>-1){
+					var opt=me.model.get("options").toJSON();
+					delete opt[idx];
+					opt.splice(idx,1);
+					if(opt[0].values.length===1){
+						if(melt){ 
+							me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+						}else{
+							me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+						}
+					}
+				}
+			}else if(me.model.get("productUsage")==="Bundle"){
+				if(melt){ 
+					me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
+				}else{
+					me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
+				}
+			}
+		},
         initialize: function () {
+			console.log("intialize");
+			
             // handle preset selects, etc
             var me = this;
             this.on('render', this.afterRender);
-            var options = this.model.get('options');
             this.model.set("minQty",this.model._minQty);
-            //me.setSelectedOptions();
 
             var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/ShippingholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
             var localStorageSupport=false;
@@ -1219,18 +1432,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             var estTime= window.timeNow || new Date();
             var unix_timestamp = Math.round(+tmp/1000);
 
-            var prodTime=1;
-            var prod_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productionTime});
-            var melt=false;
-            var melt_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productMelt});
-            if(melt_obj){
-                melt=melt_obj.values[0].value;
-            }
-            var extraHide=getPropteryValueByAttributeFQN(this.model, 'tenant~extrastohide');
-            var optionsInDND=false;
-            if(extraHide!==null && prod_obj!==undefined){
-               optionsInDND=true;
-            }
             //Check if product only need to ship via ground if yes then hide express and overnight dates
             var is_safety_d=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.groundOnly});
             var is_safety_k=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.usa48});
@@ -1244,82 +1445,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 //Check if holiday list is already available in Local Storage(LS) and expire stamp is less then current time then read holiday list form LS and process else make api call.
               if(localStorageSupport && localStorage.getItem("hdList") && JSON.parse(localStorage.getItem("hdList")).expire > unix_timestamp){
                  window.holidayList=JSON.parse(localStorage.getItem("hdList")).value;
-                  if(prod_obj){
-                    prodTime=prod_obj.values[0].value;
-                    if(prodTime>0){
-                        me.model.set('productionTime',prodTime);
-                        me.model.set('data',prodTime);
-                    }
-                        if((this.model.get("productUsage")==="Standard" && this.model.get("options").length===0) || optionsInDND){
-                            if(melt){
-                                me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                            }else{
-                                me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                            }
-                        }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
-                            if(melt){ 
-                                me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                            }else{
-                                me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                            }
-                        }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
-                            var idx1=-1;
-                            me.model.get("options").toJSON().forEach(function(option,i) {
-                               if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
-                                idx1=i;
-                               } 
-                            });
-                            if(idx1>-1){
-                                var opt1=me.model.get("options").toJSON();
-                                delete opt1[idx1];
-                                opt1.splice(idx1,1);
-                                if(opt1[0].values.length===1){
-                                    if(melt){ 
-                                        me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                    }else{
-                                        me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                                    }
-                                }
-                            }
-                        }else if(this.model.get("productUsage")==="Bundle"){
-                            if(melt){ 
-                                me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                            }else{
-                                me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                            }
-                        }
-                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===0){
-                        if(melt){ 
-                            me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                        }else{
-                            me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                        }
-                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
-                        if(melt){ 
-                            me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                        }else{
-                            me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                        }
-                    }else if(this.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
-                        var idx=-1;
-                        me.model.get("options").toJSON().forEach(function(option,i) {
-                           if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
-                            idx=i;
-                           } 
-                        });
-                        if(idx>-1){
-                            var opt=me.model.get("options").toJSON();
-                            delete opt[idx];
-                            opt.splice(idx,1);
-                            if(opt[0].values.length===1){
-                                if(melt){ 
-                                    me.calc_only_productionTime(estTime,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                }else{
-                                    me.skip_holidays(estTime,prodTime,window.holidayList,me,false);
-                                }
-                            }
-                        }
-                    }
+                 this.calcTimes(estTime);
               }else{
                     //Get holiday list from custom document and store in local storeage with expire time.
                      Api.request('GET',requestConfigure).then(function(res){
@@ -1328,92 +1454,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                           if(localStorageSupport){
                             tmp.setDate(tmp.getDate()+1);
                             var cacheData={value: window.holidayList,"expire":Math.round(+tmp/1000)};
-                                localStorage.setItem("hdList",JSON.stringify(cacheData));
-                            }
-                            window.initload=true;
-                            window.isStd=true;
-                            if(prod_obj){
-                            prodTime=prod_obj.values[0].value;
-                                if(prodTime>0){
-                                    me.model.set('productionTime',prodTime);
-                                    me.model.set('data',prodTime);
-                                }
-                                if((me.model.get("productUsage")==="Standard" && me.model.get("options").length===0)||optionsInDND){
-                                    if(melt){ 
-                                        me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                    }else{
-                                        me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                    }
-                                }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
-                                    if(melt){ 
-                                        me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                    }else{
-                                       me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                    }
-                                }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
-                                    var idx1=-1;
-                                    me.model.get("options").toJSON().forEach(function(option,i) {
-                                       if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
-                                        idx1=i;
-                                       } 
-                                    });
-                                    if(idx1>-1){
-                                        var opt1=me.model.get("options").toJSON();
-                                        delete opt1[idx1];
-                                        opt1.splice(idx1,1);
-                                        if(opt1[0].values.length===1){
-                                            if(melt){ 
-                                                me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                            }else{
-                                                me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                            }
-                                        }
-                                    }
-                                }else if(me.model.get("productUsage")==="Bundle"){
-                                    if(melt){ 
-                                            me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                        }else{
-                                            me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                        }
-                                }
-                            }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===0){
-                                if(melt){
-                                    me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                }else{
-                                    me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                }
-                            }else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
-                                if(melt){ 
-                                    me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                }else{
-                                    me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                }
-                            }else if(me.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
-                                var idx=-1;
-                                me.model.get("options").toJSON().forEach(function(option,i) {
-                                   if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
-                                    idx=i;
-                                   } 
-                                });
-                                if(idx>-1){
-                                    var opt=me.model.get("options").toJSON();
-                                    delete opt[idx];
-                                    opt.splice(idx,1);
-                                    if(opt[0].values.length===1){
-                                        if(melt){ 
-                                            me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                        }else{
-                                            me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                        }
-                                    }
-                                }
-                            }else if(me.model.get("productUsage")==="Bundle"){
-                                if(melt){ 
-                                    me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-                                }else{
-                                    me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-                                }
-                            }
+                               localStorage.setItem("hdList",JSON.stringify(cacheData));
+                          }
+                          window.initload=true; // no idea what this stands for....
+                          window.isStd=true; // no idea what this stands for....
+						 this.calcTimes(current_time);
+						 
                     },function(err) {
                         console.log("Error in reading holidays",err);
                     });
@@ -1422,7 +1468,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 console.log(err);    
             }
            
-
+            var options = this.model.get('options');
             if(options.length > 2){
                 this.$('[data-mz-product-option]').each(function () {
                     var $this = $(this), isChecked, wasChecked;
@@ -1466,11 +1512,15 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             console.log(err);
         }
 
-        var warnmessage = $('.mz-productdetail-notpurchasable').text().trim();
-        $('.mz-productdetail-addtocart').attr('data-tooltip',warnmessage);
+		
         var product = ProductModels.Product.fromCurrent();
-        isPurchasableState = product.get('purchasableState').isPurchasable;
         
+		var bp = product.get('bundledProducts');
+		for (var i =0; i< bp.length; i++) {
+		   console.log(bp[i]);
+		}
+		
+		/*  need to refigure...
         var BundleSections = $('.bundle-block').find('[productcode]');
 
         BundleSections.each(function(){
@@ -1480,11 +1530,15 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 standardProducts.push($(this).attr('productCode'));
             }
         });
-        //console.log(BundleItems);
+		
         if(standardProducts.length > 0 || BundleItems.length>0){
             window.showPageLoader();
             getStandardProductDetails(standardProducts);
-        }
+        } */
+		
+		//window.showPageLoader();
+		initProductView(product);
+		
         /*var options = product.get('options').toJSON();
         var extrasProductCodes = [];
         for(var ind =0 ; ind < options.length; ind++){
@@ -1495,7 +1549,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
         }*/
         //if(extrasProductCodes.length>0){
-            getExtrasProductDetails(product);
+            //getExtrasProductDetails(product);
         //}
         var shipping = $('#tab-content4 .mz-cms-content').html();
         $('.shipping-content').html(shipping);
@@ -1573,9 +1627,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
 
         });
-        window.monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
-        window.weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-        window.dateFormatArr=["th","st","nd","rd"];
     });
 
 });
