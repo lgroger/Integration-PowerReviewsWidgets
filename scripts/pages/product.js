@@ -12,7 +12,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     var productAttributes = Hypr.getThemeSetting('productAttributes');
     window.personalizeBundleProducts=[]; // used by dndEngine.js
     window.extrasProducts=[];
-	window.monthArr=["January", "February", "March", "April", "May", "June","Jmuly", "August", "September", "October", "November", "December"];
+	window.monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
 	window.weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 	window.dateFormatArr=["th","st","nd","rd"];
     var BundleItems=[];
