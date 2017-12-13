@@ -3,7 +3,21 @@
 	<h3>WHAT'S INSIDE</h3>
 	<div class="bundle-inside-container">
 	{% for components in model.bundledProducts %}
+	<div class="bundle-inside-item" productcode="{{components.productCode}}">
+			<div class="item-highlight">
+				<div class="block-img-sec">
+				<a href='{{product.url}}'><img class="bundle-img" style="" src="{{components.mainImage.src}}?max=100" alt="{{components.content.productName}}" /></a>
+				</div>
+				<div class="bundle-count">
+					x {{components.quantity}}
+				</div>
+			</div>
+			<h3>{{components.content.productName}}</h3>
+		</div>
+
+		{% comment %}
 		{% include_products "modules/product/bundle-item" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+		{% endcomment %}
 	{% endfor %}		
 	</div>	
 </div>

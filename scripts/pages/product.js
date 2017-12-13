@@ -1,5 +1,5 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/soft-cart", 'modules/added-to-cart', "modules/powerreviews", "vendor/wishlist", "hyprlivecontext","pages/dndengine"],
-function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageViews, SoftCart,  addedToCart, PowerReviews, Wishlist, HyprLiveContext, DNDEngine) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/soft-cart", 'modules/added-to-cart', "modules/powerreviews", "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info"],
+function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageViews, SoftCart,  addedToCart, PowerReviews, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
@@ -8,15 +8,14 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     var bannerProductTypes = Hypr.getThemeSetting('bannerProductTypes');
     var bannerProductsArr = bannerProductTypes.split(',');
 
-    var loopcounter=0, loopcount=0;
     var productAttributes = Hypr.getThemeSetting('productAttributes');
-    window.personalizeBundleProducts=[]; // used by dndEngine.js
-    window.extrasProducts=[];
-	window.monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
-	window.weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-	window.dateFormatArr=["th","st","nd","rd"];
-    var BundleItems=[];
-    var standardProducts=[];
+	var monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+	var weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+	var dateFormatArr=["th","st","nd","rd"];
+
+	//var loopcounter=0;
+   // var BundleItems=[];
+    //var standardProducts=[];
     var getPropteryValueByAttributeFQN = function(product, attributeFQN){
             var result = null;
             var properties = product.get('properties')?product.get('properties'):product.properties;
@@ -45,6 +44,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             return result;
      };
      var initProductView = function(product){
+		console.log("initProductView");
         product.on('error', function(){
             $('.dnd-popup').remove();
             $('body').css({overflow: 'auto'});
@@ -136,7 +136,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
 
                  //Pinterest tracking
-                 if(pintrk!==undefined){
+                 if(typeof pintrk !== "undefined"){
                      pintrk('track','addtocart',{
                         value:parseFloat(track_price*prod.get('quantity')),
                         order_quantity:parseInt(prod.get('quantity'),10),
@@ -148,8 +148,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                             product_quantity:parseInt(prod.get('quantity'),10)
                         }]
                     });
-                 }
-                   if(addthis!==undefined){
+                }
+                if(typeof addthis !== "undefined"){
                     //Rerender addthis buttons
                     addthis.toolbox('.cart-over-addthis');
                 }
@@ -167,19 +167,17 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             window.location.href=location.href;
         });
 		
-		 
+		console.log('create productview');
         var productView = new ProductView({
             el: $('#product-detail'),
             model: product,
             messagesEl: $('[data-mz-message-bar]')
-        });
+        }); // this calls productView.initialize;
 		
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),
             model: product
         });
- 
-        window.productView = productView; // used by dndengine
 
         productView.render();
     };
@@ -216,7 +214,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     }; */
 	
 	// get product info of bundle items with stardard productUsage (can get multiple at a time since they are available for sale on their own)
-    function getStandardProductDetails(productCodes){
+/*    function getStandardProductDetails(productCodes){
         if(productCodes.length>0){
             var filter = '';
             for(var i= 0; i<productCodes.length;i++){
@@ -235,12 +233,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                         }
                         //var price = '$'+product.get('price').get('price')+" "+uom;
                         $('[productcode="'+product.get('productCode')+'"]').find('.uom').html(uom).show();
-						/*
+						
 						var mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode); // mediaclip code
                         var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                         if(dndCode || mcCode){
                             window.personalizeBundleProducts.push(product);
-                        } */
+                        }
                     }
                 }
                 getBundleProductDetails(BundleItems);
@@ -249,8 +247,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         }else{
             getBundleProductDetails(BundleItems);
         }
-    }
-	
+    } */
+	/*
 	// get product info of bundle items with component productUsage (can only get 1 at a time in api since we are using storefront)
     function getBundleProductDetails(arr){
         if(BundleItems.length>0){
@@ -267,43 +265,44 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }
                     //var price = '$'+product.get('price').get('price')+" "+uom;
                     $('[productcode="'+arr[loopcounter]+'"]').find('.uom').html(uom).show();
-/*
+
                     var mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode); // mediaclip code
 					var dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
                     if(dndCode || mcCode){
                         window.personalizeBundleProducts.push(product);
-                    }*/
+                    }
                     loopcounter++;
                     if(loopcounter < arr.length){
                         getBundleProductDetails(arr);
                     }else{
-						/*
-                        if(isPersonalize){
-                            $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
-                        }else{
-                            $('.addToCart').attr('disabled',true).removeClass('is-disabled');
-                        } */
+						
+                     //   if(isPersonalize){
+                      //      $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
+                      //  }else{
+                     //       $('.addToCart').attr('disabled',true).removeClass('is-disabled');
+                    //   } 
                         window.removePageLoader();
                     }
                 });
         }else{
-			/*
-             if(isPersonalize){
-                    $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
-            }*/
+			
+            // if(isPersonalize){
+             //       $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
+           // }
             window.removePageLoader();
 
         }
     }
-
-    function triggerLogin(){
+*/
+    var triggerLogin = function(){
         $('.trigger-login').trigger('click');
         $('#cboxOverlay').show();
         $('#mz-quick-view-container').fadeOut(350);
         $('#mz-quick-view-container').empty();
-    }
+    };
 
     var ProductView = Backbone.MozuView.extend({
+		holidayList: null, // set in this.getHolidays()
         templateName: 'modules/product/product-detail-custom',
         autoUpdate: ['quantity'],
         additionalEvents: {
@@ -438,13 +437,18 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
            	/** DnD Code  Start **/
             var me= this;
             var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-            var dndEngineObj = new DNDEngine.DNDEngine(me.model,dndUrl);
+            var dndEngineObj = new DNDEngine.DNDEngine(me.model,dndUrl,me);
             dndEngineObj.initializeAndSend();
             /** DnD Code  End **/
 
         },
         render: function () {
 			console.log("render");
+			
+			this.getHolidays(this.render.bind(this));
+			if(!this.holidayList){
+				return; // this.render() will be called again once api call to get holiday list completes
+			}
 			
 			this.setIsPersonalized();
 			this.setAllowATC();
@@ -502,39 +506,14 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
             });
         },
-        getExtraProduct: function(productCode){
-			var me = this;
-			console.log("getExtraProduct");
-            var product = null;
-            if(window.extrasProducts.length>0){
-                    for(var i=0;i < window.extrasProducts.length;i++){
-                        if(window.extrasProducts[i].get('productCode')===productCode){
-                            product = window.extrasProducts[i];
-							//console.log('found it!');
-                            break;
-                        }
-                    }
-            }
-			if(product){
-				return product;
-			}
-			else{
-				// get product
-				Api.get('product',{productCode:productCode}).then(function(res){
-					var product = new ProductModels.Product(res.data);
-					window.extrasProducts.push(product);
-					me.render();
-				});
-				return false;
-			}
-        },
-        getExtraTitle: function(productCode){
+/*        getExtraTitle: function(productCode){
 			console.log("getExtraTitle");
             var extraTitle=null;
-            if(window.extrasProducts.length>0){
-                for(var i=0;i<window.extrasProducts.length;i++){
-                    if(window.extrasProducts[i].productCode===productCode){
-                        extraTitle = window.extrasProducts[i].optionTitle;
+            if(SharedProductInfo.products.length>0){
+                for(var i=0;i<SharedProductInfo.products.length;i++){
+                    if(SharedProductInfo.products[i].productCode===productCode){
+                        extraTitle = SharedProductInfo.products[i].optionTitle;
+						console.log(extraTitle);
                         break;
                     }
                 }
@@ -558,7 +537,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     }
                 }
             }
-        },
+        }, */
         hideOptions: function(){
 			console.log("hideOptions");
             var options = this.model.get('options'); // includes extras and configurable options
@@ -592,10 +571,28 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 			console.log("renderConfigure");
                 var  me = this, id, newValue,option;//,dndCode,mfgPartNumber,mcCode;
                 var objj=me.model.getConfiguredOptions();
-                me.setOptionTitle();
+                //me.setOptionTitle();
                 me.model.set('minQty', me.model._minQty);
                 var estTime= window.timeNow || new Date();
-				var productionTime,holidays;
+				var childProductionTime;
+			
+				var productionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
+				if(productionTime ===null || productionTime===0){
+					productionTime=1;
+				}
+			
+				var melt=true;
+				var melt_obj=getPropteryValueByAttributeFQN(me.model, productAttributes.productMelt);
+				if(melt_obj===null){
+					melt=false;
+				}else if(melt_obj===false){
+					melt=false;
+				}
+				var mfgpartnumber = me.model.get('mfgPartNumber');
+				var uom = getPropteryValueByAttributeFQN(me.model, productAttributes.unitOfMeasure);
+			
+				// we are making the assumption that if a bundle has components with production time that the parent already reflects the production time of the component with the longest time
+			
                 if(objj.length > 0){
 					for(var i=0;i < objj.length;i++){
 						newValue = objj[i].value;
@@ -604,110 +601,60 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 
 						if(me.model.get('productUsage')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
 							console.log(newValue);
-							var product = me.getExtraProduct(newValue);
+							var product = SharedProductInfo.getExtraProduct(newValue,me.render.bind(me)); // me.render() will be called again if product needs to be retrieved still via api
 							if(product){
-								if(me.model.get('productUsage')!=='Bundle'){
-									// don't look at uom of extras if parent is bundle (ex. punch game is each but tissue paper prompt options are pkg/8 - we want to keep each as uom)
-									var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
-									if(uom){
-										me.model.set('uom',uom);
+								if(me.model.get('productUsage')!=='Bundle' & !(mfgpartnumber && mfgpartnumber.length > 0)){
+									// don't look at uom of extras if parent is bundle (ex. punch game is each but tissue paper prompt options are pkg/8 - we want to keep each as uom) or if parent has mfgpartnumber (ex. CASCPC)
+									var childuom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
+									if(childuom && !(uom && uom.length > 0)){
+										uom = childuom;
 									}
 								}
-								/*
-                                var inventoryInfo = product.get('inventoryInfo');
-                                if(inventoryInfo.manageStock) {
-                                    me.model.set('inventoryInfo',inventoryInfo);
-                                }*/
 							// use the greater of the 2 production times (parent vs extra)
-								var parentProductionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
-								if(parentProductionTime ===null || parentProductionTime===0){
-                                    parentProductionTime=1;
+                                childProductionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
+                                if(childProductionTime ===null || childProductionTime===0){
+                                    childProductionTime=1;
                                 }
-                                productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                if(productionTime ===null || productionTime===0){
-                                    productionTime=1;
-                                }
-								productionTime = Math.max(parentProductionTime,productionTime);
-								
-                                var melt=true;
-                                var melt_obj=getPropteryValueByAttributeFQN(me.model, productAttributes.productMelt);
-                                if(melt_obj===null){
-                                    melt=false;
-                                }else if(melt_obj===false){
-                                    melt=false;
-                                }
-                                if(productionTime){
-                                    me.model.set('productionTime',productionTime);
-                                    holidays=window.holidayList || [];
-                                    if(melt){
-                                        me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
-                                    }else{
-                                        me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
-                                    }
-                                }
-								/* removing this - will pull this in real time when it's time to personalize...
-								mcCode = getPropteryValueByAttributeFQN(me.model, productAttributes.mcCode); // mediaclip code
-                                dndCode = getPropteryValueByAttributeFQN(me.model, productAttributes.dndCode);
-                                if((mcCode && mcCode!=="") || (dndCode && dndCode!=="")){
-                                    mfgPartNumber = me.model.get('mfgPartNumber');
-                                    if(mfgPartNumber===null || mfgPartNumber===undefined || mfgPartNumber===""){
-                                         if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                             me.model.set('mfgPartNumber',product.mfgPartNumber);
-                                        }
-
-                                    }
-                                }else{
-                                        if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                            me.model.set('mfgPartNumber',product.mfgPartNumber);
-                                        }
-										mcCode = getPropteryValueByAttributeFQN(product, productAttributes.mcCode);  // mediaclip code
-                                        dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
-                                        var designCode = getPropteryValueByAttributeFQN(product, productAttributes.designCode);
-                                    	if(mcCode){
-                                            me.model.set('mcCode',mcCode);
-                                            me.model.set('designCode',designCode);
-                                        }    
-										else if(dndCode){
-                                            me.model.set('dndCode',dndCode);
-                                            me.model.set('designCode',designCode);
-                                        }
-                                } */
-                            	Backbone.MozuView.prototype.render.apply(me);
+								productionTime = Math.max(productionTime,childProductionTime);
 							}
 							else{
-								return; // exit
+								return; // exit b/c getExtraProduct is making api call to get product info now
 							}
-						}else{
-                            window.isStd=false;
-							var selected_id = objj[0].attributeFQN;
-							var selected_newValue = objj[0].value;
-							var selected_option = me.model.get('options').get(id);
-							if(me.model.get('productType')==='CandyBar' && selected_option.get('attributeDetail').usageType ==="Option"){
-								productionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
-								holidays=window.holidayList || [];
-								if(productionTime===null || productionTime===0){
-									productionTime=1;
-								}
-								if(selected_newValue==="cdyperw-option"){
-									me.skip_holidays(estTime,productionTime,window.holidayList,me,false);
+						}else if(option.get('attributeDetail').usageType === "Option"){
+                            //window.isStd=false; // not sure what this is for
+							if(me.model.get('productType')==='CandyBar'){
+								if(newValue==="cdyperw-option"){
+									melt = false;
 								}else{
-									me.calc_only_productionTime(estTime,productionTime,window.holidayList,me,me.calcMeltProduct);
+									melt = true;
 								}
-							}else if(me.model.get('productType')!=='CandyBar'){
-								var productionTime1 = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
-								var holidays1=window.holidayList || [];
-								if(productionTime1===undefined || productionTime1===null || productionTime1===0){
-									productionTime1=1;
-								}
-								me.skip_holidays(estTime,productionTime1,window.holidayList,me,false);
 							}
-                       		Backbone.MozuView.prototype.render.apply(me);
                     	}
 					} // end loop
                 }
-                else{
-                    Backbone.MozuView.prototype.render.apply(this);
-                }
+			
+				// make sure dnd-token have value if set to required
+				option = me.model.get('options').get(productAttributes.dndToken);
+				if(option && option.get('isRequired') && !option.get('value')){
+					 // dnd-token shouldn't be required but in case it is, give it a dummy value so that it passes validation
+					 option.set('value','PLACEHOLDER'); // fires this.render
+					 return; // exit so we don't call render multiple times
+				}
+			
+				if(productionTime){
+					me.model.set('productionTime',productionTime);
+					if(melt){
+						me.calc_only_productionTime(estTime,productionTime,me.holidayList,me,me.calcMeltProduct);
+					}else{
+						me.skip_holidays(estTime,productionTime,me.holidayList,me,false);
+					}
+				}
+			
+				if(uom)
+					me.model.set('uom',uom);
+			
+				// if we made it here, call render
+				Backbone.MozuView.prototype.render.apply(me);
 
         },skip_holidays:function(date,noBusDays,holidays,scope_obj,isMelt){
 			console.log("skip_holidays");
@@ -728,24 +675,24 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     ++addedDays;
                     if(addedDays===produtionTime+1){
                         var dateEndFormat="<sup>th</sup>";
-                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && window.dateFormatArr[result_date.getDate()%10]){
-                         dateEndFormat="<sup>"+window.dateFormatArr[result_date.getDate()%10]+"</sup>";
+                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && dateFormatArr[result_date.getDate()%10]){
+                         dateEndFormat="<sup>"+dateFormatArr[result_date.getDate()%10]+"</sup>";
                         }
-                        var overDate=window.weekdayArr[result_date.getDay()]+", "+window.monthArr[result_date.getMonth()]+" "+result_date.getDate()+dateEndFormat;
+                        var overDate=weekdayArr[result_date.getDay()]+", "+monthArr[result_date.getMonth()]+" "+result_date.getDate()+dateEndFormat;
                         scope_obj.model.set("overnightDate",overDate);
                     }else if(addedDays===produtionTime+2){
                         var expressEndFormat="<sup>th</sup>";
-                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && window.dateFormatArr[result_date.getDate()%10]){
-                         expressEndFormat="<sup>"+window.dateFormatArr[result_date.getDate()%10]+"</sup>";
+                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && dateFormatArr[result_date.getDate()%10]){
+                         expressEndFormat="<sup>"+dateFormatArr[result_date.getDate()%10]+"</sup>";
                         }
-                        var expressDate=window.weekdayArr[result_date.getDay()]+", "+window.monthArr[result_date.getMonth()]+" "+result_date.getDate()+expressEndFormat;
+                        var expressDate=weekdayArr[result_date.getDay()]+", "+monthArr[result_date.getMonth()]+" "+result_date.getDate()+expressEndFormat;
                         scope_obj.model.set("expressDate",expressDate);
                     }else if(addedDays===produtionTime+5){
                         var stdEndFormat="<sup>th</sup>";
-                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && window.dateFormatArr[result_date.getDate()%10]){
-                         stdEndFormat="<sup>"+window.dateFormatArr[result_date.getDate()%10]+"</sup>";
+                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && dateFormatArr[result_date.getDate()%10]){
+                         stdEndFormat="<sup>"+dateFormatArr[result_date.getDate()%10]+"</sup>";
                         }
-                        var stdDate=window.weekdayArr[result_date.getDay()]+", "+window.monthArr[result_date.getMonth()]+" "+result_date.getDate()+stdEndFormat;
+                        var stdDate=weekdayArr[result_date.getDay()]+", "+monthArr[result_date.getMonth()]+" "+result_date.getDate()+stdEndFormat;
                         scope_obj.model.set("delDate",stdDate);
                     }
                 }
@@ -960,21 +907,8 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 },500);
             }
         },
-        checkLocalStores: function (e) {
-			console.log("checkLocalStores");
-            var me = this;
-            e.preventDefault();
-            this.model.whenReady(function () {
-                var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
-                    $input = $localStoresForm.find('[data-mz-localstoresform-input]');
-                if ($input.length > 0) {
-                    $input.val(JSON.stringify(me.model.toJSON()));
-                    $localStoresForm[0].submit();
-                }
-            });
-
-        },
         setOptionValues: function(data){
+		// applies extras that were chosen through dnd personalization
 			console.log("setOptionValues");
             var options = this.model.get('options');
             var extraAttribute =  null;
@@ -985,6 +919,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     extraJSON['tenant~'+extraAttribute[l].attributeCode] = extraAttribute[l].value;
                 }
             }
+			//console.log(extraJSON);
             var payload={};
             payload.options=[];
             for(var i=0; i < options.length; i++){
@@ -992,6 +927,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 if(options.models[i].get('attributeFQN')===productAttributes.dndToken){
                     options.models[i].set('value',data.projectToken);
                     options.models[i].set('shopperEnteredValue',data.projectToken);
+					console.log('dndtoken');
                 }
                 if(Object.keys(extraJSON).length>0 && extraJSON[options.models[i].get('attributeFQN').toLowerCase()]){
                     options.models[i].set('value',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
@@ -1001,7 +937,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             this.model.set('options', options);
         },
         addToCartAfterPersonalize:function(data){ // used by dndengine.js
-			console.log("addToCartAfterPersonalize");
             var self= this;
             self.setOptionValues(data);
             if(data.quantity){
@@ -1009,10 +944,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             }
             self.model.addToCart();
 
-            //google analytics event tracking for personalised products
-            // if(typeof _gaq !== "undefined"){
-            //   _gaq.push(['_trackEvent', 'shindigz', 'buy', 'addtocart']);
-            // }
             //Bloomreach add to cart event
             var productUsage = this.model.attributes.productUsage,
                 variationProductCode = this.model.attributes.variationProductCode,
@@ -1022,7 +953,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
               sku = variationProductCode;
             }
 
-            if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
+            if(typeof BrTrk !== 'undefined'){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
             //end
 
         },
@@ -1038,10 +969,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         afterRender: function() {
 			console.log("afterRender");
             var me = this;
-            /** Code to get mfgPartNumber for extras product **/
-            /*if(me.model.get('productUsage')==="Bundle" && me.model.get('bundledProducts').length>0){
-                $('.addToCart').addClass('is-disabled').attr('disabled',true);
-            }*/
+			
             //greeting Card
             var selectgreetingCardVal =$('[data-mz-product-option="'+productAttributes.giantGreetingCardSize+'"]:checked').val();
             if(selectgreetingCardVal){
@@ -1110,8 +1038,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                     $('[data-mz-product-option="tenant~pcdypcb"]').removeClass("hide");
                 }
             }
-
-
 
             $('.slider-wrap').on('click','img',function(){
                     var url = $(this).attr('data-image-url');
@@ -1305,122 +1231,58 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				}
 			}
 		},
-		calcTimes: function(current_time){
-			console.log("calcTimes");
-			var me = this;
-			var prodTime=1;
-            var prod_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productionTime});
-            var melt=false;
-            var melt_obj=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.productMelt});
-            if(melt_obj){
-                melt=melt_obj.values[0].value;
-            }
+		getHolidays: function(callback){
+			console.log("getHolidays");
 			
-			if(prod_obj){
-				prodTime=prod_obj.values[0].value;
-				if(prodTime>0){
-					me.model.set('productionTime',prodTime);
-				}
-				if((me.model.get("productUsage")==="Standard" && me.model.get("options").length===0)){
-					if(melt){ 
-						me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-					}else{
-						me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-					}
-				}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
-					if(melt){ 
-						me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-					}else{
-					   me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-					}
-				}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
-					var idx1=-1;
-					me.model.get("options").toJSON().forEach(function(option,i) {
-					   if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
-						idx1=i;
-					   } 
-					});
-					if(idx1>-1){
-						var opt1=me.model.get("options").toJSON();
-						delete opt1[idx1];
-						opt1.splice(idx1,1);
-						if(opt1[0].values.length===1){
-							if(melt){ 
-								me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-							}else{
-								me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-							}
-						}
-					}
-				}else if(me.model.get("productUsage")==="Bundle"){
-					if(melt){ 
-							me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-						}else{
-							me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-						}
-				}
-			}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===0){
-				if(melt){
-					me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-				}else{
-					me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-				}
-			}else if(me.model.get("productUsage")==="Standard" && me.model.get("options").length===1 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined ){
-				if(melt){ 
-					me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-				}else{
-					me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-				}
-			}else if(me.model.get("productUsage")==="Standard" && this.model.get("options").length===2 && _.findWhere(require.mozuData("product").options,{'attributeFQN':productAttributes.dndToken}) !==undefined){
-				var idx=-1;
-				me.model.get("options").toJSON().forEach(function(option,i) {
-				   if(option.attributeFQN.toLowerCase()==="tenant~dnd-token"){
-					idx=i;
-				   } 
-				});
-				if(idx>-1){
-					var opt=me.model.get("options").toJSON();
-					delete opt[idx];
-					opt.splice(idx,1);
-					if(opt[0].values.length===1){
-						if(melt){ 
-							me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-						}else{
-							me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-						}
-					}
-				}
-			}else if(me.model.get("productUsage")==="Bundle"){
-				if(melt){ 
-					me.calc_only_productionTime(current_time,prodTime,window.holidayList,me,me.calcMeltProduct);
-				}else{
-					me.skip_holidays(current_time,prodTime,window.holidayList,me,false);
-				}
-			}
-		},
-        initialize: function () {
-			console.log("intialize");
-			
-            // handle preset selects, etc
-            var me = this;
-            this.on('render', this.afterRender);
-            this.model.set("minQty",this.model._minQty);
-
-            var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/ShippingholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
+		    var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/ShippingholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
             var localStorageSupport=false;
-            window.holidayList=[];
-             try {
-                localStorageSupport= 'localStorage' in window && window.localStorage !== null;
-              } catch (e) {
-                localStorageSupport= false;
-              }
-              
-            //Read UTC time from server and reset 4 hours to convert as EST.
+			try {
+				localStorageSupport= 'localStorage' in window && window.localStorage !== null;
+			} catch (e) {
+				localStorageSupport= false;
+			}
+			
+			//Read UTC time from server and reset 4 hours to convert as EST.
             var tmp= new Date($('#time-custom-now').text().replace(/"/g, ''));
             tmp.setHours(tmp.getHours()-4);
             window.timeNow=new Date(tmp);
             var estTime= window.timeNow || new Date();
             var unix_timestamp = Math.round(+tmp/1000);
+			
+			try{
+                //Check if holiday list is already available in Local Storage(LS) and expire stamp is less then current time then read holiday list form LS and process else make api call.
+              if(localStorageSupport && localStorage.getItem("hdList") && JSON.parse(localStorage.getItem("hdList")).expire > unix_timestamp){
+                 this.holidayList=JSON.parse(localStorage.getItem("hdList")).value;
+                 //this.calcTimes(estTime);
+              }else{
+                    //Get holiday list from custom document and store in local storeage with expire time.
+                     Api.request('GET',requestConfigure).then(function(res){
+                         this.holidayList=_.pluck(_.pluck(res.items,"properties"),"holiday");
+                         var current_time=window.timeNow || new Date();
+                          if(localStorageSupport){
+                            tmp.setDate(tmp.getDate()+1);
+                            var cacheData={value: this.holidayList,"expire":Math.round(+tmp/1000)};
+                               localStorage.setItem("hdList",JSON.stringify(cacheData));
+                          }
+						 callback();
+						 //this.calcTimes(current_time);
+						 
+                    },function(err) {
+                        console.log("Error in reading holidays",err);
+                    });
+                }
+            }catch(err){
+                console.log(err);
+				this.holidayList = [];
+            }
+		},
+        initialize: function () {
+			console.log("initialize");
+			
+            // handle preset selects, etc
+            var me = this;
+            this.on('render', this.afterRender);
+            this.model.set("minQty",this.model._minQty);
 
             //Check if product only need to ship via ground if yes then hide express and overnight dates
             var is_safety_d=_.findWhere(require.mozuData("product").properties,{'attributeFQN':productAttributes.groundOnly});
@@ -1431,33 +1293,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 me.model.set("groundOnly",true);
             }
 
-            try{
-                //Check if holiday list is already available in Local Storage(LS) and expire stamp is less then current time then read holiday list form LS and process else make api call.
-              if(localStorageSupport && localStorage.getItem("hdList") && JSON.parse(localStorage.getItem("hdList")).expire > unix_timestamp){
-                 window.holidayList=JSON.parse(localStorage.getItem("hdList")).value;
-                 this.calcTimes(estTime);
-              }else{
-                    //Get holiday list from custom document and store in local storeage with expire time.
-                     Api.request('GET',requestConfigure).then(function(res){
-                         window.holidayList=_.pluck(_.pluck(res.items,"properties"),"holiday");
-                         var current_time=window.timeNow || new Date();
-                          if(localStorageSupport){
-                            tmp.setDate(tmp.getDate()+1);
-                            var cacheData={value: window.holidayList,"expire":Math.round(+tmp/1000)};
-                               localStorage.setItem("hdList",JSON.stringify(cacheData));
-                          }
-                          window.initload=true; // no idea what this stands for....
-                          window.isStd=true; // no idea what this stands for....
-						 this.calcTimes(current_time);
-						 
-                    },function(err) {
-                        console.log("Error in reading holidays",err);
-                    });
-                }
-            }catch(err){
-                console.log(err);    
-            }
-           
             var options = this.model.get('options');
             if(options.length > 2){
                 this.$('[data-mz-product-option]').each(function () {
@@ -1497,7 +1332,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         
 		var bp = product.get('bundledProducts');
 		for (var i =0; i< bp.length; i++) {
-		   console.log(bp[i]);
+		   //console.log(bp[i]);
 		}
 		
 		/*  need to refigure...

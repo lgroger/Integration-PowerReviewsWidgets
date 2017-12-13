@@ -35,6 +35,8 @@
           <span class="product-pdp-incomplete"> Please select an option</span>
         {% endif %}
 
+        {% if model.isConfigured and not model.isInStock %}
+        {% else %}
         {% if model.delDate %}
           <span class="delivery-date">
             <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
@@ -43,6 +45,7 @@
                 Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}</span><br>
             {% endif %}
           </span>
+        {% endif %}
         {% endif %}
 
 

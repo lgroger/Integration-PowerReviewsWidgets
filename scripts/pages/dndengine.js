@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"], function ($, Hypr,Api,ProductModels) {    
+define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product","modules/shared-product-info"], function ($, Hypr,Api,ProductModels, SharedProductInfo) {    
 	var getPropteryValueByAttributeFQN = function(product, attributeFQN){
             var result = null;
             var properties = product.get('properties')?product.get('properties'):product.properties;
@@ -12,14 +12,20 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
             }
             return result;
      };
-
+	var addParameter = function(form,parameter,value){
+            $("<input type='hidden' />")
+             .attr("name", parameter)
+             .attr("value", value)
+             .appendTo(form);
+        };
+	
 	//https://gist.github.com/SparK-Cruz/1570177
 	var dndItem = (function(){
 		var C = function(){ return constructor.apply(this,arguments); };
 		var p = C.prototype;
 		
 		//construct
-		function constructor(productID, itemDescription, ecometrySku, mcCode, dndCode, designCode, quantity, price, volumePricing, minQty, maxQty, unitOfMeasure, lineitemID, parentProductID, extras){
+		function constructor(productID, itemDescription, ecometrySku, mcCode, dndCode, designCode, quantity, price, volumePricing, minQty, maxQty, unitOfMeasure, lineitemID, parentProductID, isBundle){
 			this.productID = productID;
 			this.itemDescription = itemDescription;
 			this.ecometrySku = ecometrySku;
@@ -34,14 +40,10 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
 			this.unitOfMeasure = unitOfMeasure;
 			this.lineitemID = lineitemID;
 			this.parentProductID = parentProductID;
-			this.extras = extras;
+			this.isBundle = isBundle;
 		}
 
 		//define methods
-		p.launch = function(){
-			// open populate iframe with appropriate technology
-			
-		};
 		p.setFromModel = function(me){
 			this.quantity = me.model.get('quantity')?me.model.get('quantity'):1;
 			this.minQty = (me.model._minQty)?me.model._minQty:this.quantity;
@@ -94,95 +96,125 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
                 }
                 this.volumePricing = JSON.stringify(volPrice);
 			}
-			
 		};
 
 		//unleash your class
 		return C;
 	})();
 	
-    var DNDEngine = function(model,url,dndToken)
+    var DNDEngine = function(model,url,view)
     {
-        var self = this;
-        self.projectToken = {};
-        var pageContext = require.mozuData('pagecontext');
+		var pageContext = require.mozuData('pagecontext');
+		
+        var self = {};
+		self.index = 0; // current index of dndArr
+		self.dndArr = null; // loaded by getParameters
+		self.dndExtras = null; // loaded by getDNDExtras
+        self.projectToken = {}; // what will go in tenant~dnd-token
         self.pageType = pageContext.pageType;
+		self.iframe = null; // defined in this.initialize()
         if(self.pageType.toLowerCase()==='cart'){
             if(model.get('id')){
                 self.lineitemID = model.get('id');
                 self.model=model.get('product');
-                window.prodModel = model.get('product');
             }else{
-                 self.lineitemID = model.get('cartlineid');
+                self.lineitemID = model.get('cartlineid');
                 self.model=model;
-                window.prodModel = model;
             }
         }else{
+			// pdp or quickview
             self.model=model;
-            window.prodModel = model; 
         }
-        self.productUsage = self.model.get('productUsage');
-        self.parentProductID=null;
-        if(self.productUsage==="Bundle"){
-            self.parentProductID=self.model.get('productCode');
-        }
-        self.bundleProducts = window.personalizeBundleProducts?window.personalizeBundleProducts:[];
-        self.personalizeItemsLength = self.bundleProducts.length;
-        self.itemCounter = 0;
-        window.dndItemCounter = self.itemCounter;
-        self.errorMsgCounter = 0;
-        self.errorMsg="";
+		self.view = view; // productView or cartView
         self.productAttributes = Hypr.getThemeSetting('productAttributes');
         self.dndEngineUrl= Hypr.getThemeSetting('dndEngineUrl');
-        self.time = new Date().getTime();
-        self.form = $('<form action="'+url+'" target="iframe'+self.time+'" method="post" id="form'+self.time+'" name="form'+self.time+'"></form>');
-        window.dndFormObj=self.form;
+        self.time = new Date().getTime(); // id for iframe
 		
-		self.getExtraProduct = function(productCode){ // very similar to getExtraProduct in product.js but action is different inside api promise
-			var me = this;
-			console.log("dndengine getExtraProduct");
-            var product = null;
-            if(window.extrasProducts.length>0){ // window.extrasProducts is shared by dndegine.js and product.js
-                    for(var i=0;i < window.extrasProducts.length;i++){
-                        if(window.extrasProducts[i].get('productCode')===productCode){
-                            product = window.extrasProducts[i];
-							console.log('found it!');
-                            break;
-                        }
-                    }
+		self.getDNDExtras = function(callback){
+			var extrasInfo = [];
+			var self =this;
+			var options = self.model.get('options');
+			var extrasToHide = getPropteryValueByAttributeFQN(this.model, 'tenant~extrastohide');
+            var extrastohideArr = [];
+            if(extrasToHide && extrasToHide!==""){
+                extrastohideArr = extrasToHide.toLowerCase().split(',');
             }
-			if(product){
-				return product;
-			}
-			else{
-				// make api call to get product info and then call initializeAndSend on response
-				Api.get('product',{productCode:productCode}).then(function(res){
-					var product = new ProductModels.Product(res.data);
-					window.extrasProducts.push(product);
-					me.initializeAndSend();
-				});
-				return false;
-			}
-        };
-		
-        self.getParameters=function(){
-            var me = this;
-			var dndArr = []; // array of info
 			
-			/* build array of info */
-			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMC,childMC;
+			if(options.length>0){
+			   for(var inc=0; inc<options.models.length; inc++){
+					var option = options.models[inc];
+				   	var attributeCode = option.get('attributeFQN').split('~')[1];
+					if(option.get('attributeDetail').usageType==='Extra' &&
+						option.get('attributeDetail').dataType==='ProductCode' &&
+						extrastohideArr.indexOf(attributeCode) > -1){
+						var extra ={};
+						extra.name = option.get('attributeDetail').name;
+						extra.isRequired = option.get('isRequired');
+						extra.attributeCode = attributeCode;
+						extra.values=[];
+						var values = option.get('values');
+						for(var l=0;l<values.length;l++){
+							var eprod = SharedProductInfo.getExtraProduct(values[l].value,callback);
+							if(eprod){
+								var extraValues={};
+								extraValues.price = values[l].deltaPrice;
+								extraValues.name = values[l].stringValue;
+								extraValues.value = values[l].value;
+								extraValues.mfgPartNumber = eprod.get('mfgPartNumber');
+								var inventoryInfo = values[l].bundledProduct.inventoryInfo;
+								if(inventoryInfo && inventoryInfo.manageStock){
+									extraValues.maxQty = inventoryInfo.onlineStockAvailable;
+								}
+								extraValues.quantity = values[l].bundledProduct.quantity;
+								extra.values.push(extraValues);
+							}
+							else{
+								return;
+							}
+						}
+						extrasInfo.push(extra);
+					}
+				}
+			}
+			return extrasInfo;
+		};
+        self.getParameters=function(callback){
+            var me = this;
+			var dndArr = []; // array of personalized item info
+			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMC,childMC,newItem;
+
+			// parent info
+			mfgpartnumber = this.model.get('mfgPartNumber');
+			parentDND = getPropteryValueByAttributeFQN(this.model, self.productAttributes.dndCode);
+			parentDesign = getPropteryValueByAttributeFQN(this.model, self.productAttributes.designCode);
+			parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode);
+			parentUOM = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
+			
 			if(self.model.get('productUsage') === "Bundle"){
 				// loop over components
 				var bp = self.model.get('bundledProducts');
 				for (i =0; i< bp.length; i++) {
 					var component = bp[i];
-				   	console.log(component);
-					
-					//var product = self.getExtraProduct(productCode);
-					
-					//mfgpartnumber = product.get('mfgPartNumber');
-					//childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
-					//childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+					product = SharedProductInfo.getExtraProduct(component.productCode,callback);
+					if(product){
+						newItem = new dndItem();
+						newItem.dndCode = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
+						newItem.mcCode = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
+						if(newItem.dndCode || newItem.mcCode){
+							newItem.isBundle = true;
+							newItem.ecometrySku = product.get('mfgPartNumber');
+							newItem.designCode = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+							newItem.unitOfMeasure = parentUOM;
+							newItem.productID = product.get('productCode');
+							newItem.itemDescription = product.get('content.productName');
+							newItem.parentProductID = me.model.get('productCode');
+							newItem.setFromModel(me);
+							dndArr.push(newItem);
+						}
+					}
+					else{
+						return(false);// exit, means we are waiting on api call inside getExtraProduct
+					}
 				}
 				
 				// loop over extras
@@ -192,49 +224,48 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
 					attributeFQN = options[i].attributeFQN;
 					option = me.model.get('options').get(attributeFQN);
                     if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-						product = self.getExtraProduct(productCode);
+						product = SharedProductInfo.getExtraProduct(productCode,callback);
 						if(product){
-							mfgpartnumber = product.get('mfgPartNumber');
-							childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
-							childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
-							childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
+							newItem = new dndItem();
+							newItem.dndCode = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);		
+							newItem.mcCode = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
+							if(newItem.dndCode || newItem.mcCode){
+								newItem.isBundle = true;
+								newItem.ecometrySku = product.get('mfgPartNumber');
+								newItem.designCode = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+								newItem.unitOfMeasure = parentUOM;
+								newItem.productID = product.get('productCode');
+								newItem.itemDescription = product.get('content.productName');
+								newItem.parentProductID = me.model.get('productCode');
+								newItem.setFromModel(me);
+								dndArr.push(newItem);
+							}
 						}
 						else{
 							return(false);// exit, means we are waiting on api call inside getExtraProduct
 						}
                     }
                 }
-
 			}
-			else{
-				// look at parent
-				mfgpartnumber = this.model.get('mfgPartNumber');
-				parentDND = getPropteryValueByAttributeFQN(this.model, self.productAttributes.dndCode);
-				parentDesign = getPropteryValueByAttributeFQN(this.model, self.productAttributes.designCode);
-				parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode);
-				parentUOM = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
-				
+			else{	
 				if(mfgpartnumber && mfgpartnumber.length > 0){
-					// look at extras as stand-alone components
-					options=me.model.getConfiguredOptions();
-					for(i=0;i < options.length;i++){
-						productCode = options[i].value;
-						attributeFQN = options[i].attributeFQN;
-						option = me.model.get('options').get(attributeFQN);
-						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-							product = self.getExtraProduct(productCode);
-							if(product){
-								mfgpartnumber = product.get('mfgPartNumber');
-								childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
-								childDesign = getPropteryValueByAttributeFQN(product ,self.productAttributes.designCode);
-								childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
-							}
-							else{
-								return(false);// exit, means we are waiting on api call inside getExtraProduct
-							}
-						}
+					// add parent info
+					newItem = new dndItem();
+					newItem.dndCode = parentDND;
+					newItem.mcCode = parentMC;
+					if(newItem.dndCode || newItem.mcCode){
+						newItem.isBundle = false;
+						newItem.ecometrySku = mfgpartnumber;
+						newItem.designCode = parentDesign;
+						newItem.unitOfMeasure = parentUOM;
+						newItem.productID = me.model.get('productCode');
+						newItem.itemDescription = me.model.get('content.productName');
+						newItem.parentProductID = null;
+						newItem.setFromModel(me);
+						dndArr.push(newItem);
 					}
 					
+					// if non-bundle and have manufacturere part number on parent, ignore extras
 				}
 				else{
 					// look at extras for mfgpartnumber
@@ -244,28 +275,29 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
 						attributeFQN = options[i].attributeFQN;
 						option = me.model.get('options').get(attributeFQN);
 						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-							product = self.getExtraProduct(productCode);
-							//console.log(product);
+							product = SharedProductInfo.getExtraProduct(productCode,callback);
 							if(product){
+								// look for dnd/mediaclip code on extra first. if none, fall back to parent's
 								childMC = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
 								childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
 								childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
 								childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
 								
-								var newItem = dndItem();
-								newItem.ecometrySku = product.get('mfgPartNumber');
-								newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;
-								newItem.designCode = (childDesign && childDesign.length)?childDesign:parentDesign;
+								newItem = new dndItem();
+								newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;								
 								newItem.mcCode = (childMC && childMC.length)?childMC:parentMC;
-								newItem.unitOfMeasure = (childUOM && childUOM.length)?childUOM:parentUOM;
-
-								newItem.productID = me.model.get('productCode');
-								newItem.itemDescription = me.model.get('content.productName');
-								newItem.parentProductID = null;
-								newItem.setFromModel(me);
 								
-								// TO DO: this.extras = extras; - what populates this.model.get('extrasProductInfo');
-								
+								if(newItem.dndCode || newItem.mcCode){
+									newItem.isBundle = false;
+									newItem.ecometrySku = product.get('mfgPartNumber');
+									newItem.designCode = (childDesign && childDesign.length)?childDesign:parentDesign;
+									newItem.unitOfMeasure = (childUOM && childUOM.length)?childUOM:parentUOM;
+									newItem.productID = me.model.get('productCode');
+									newItem.itemDescription = me.model.get('content.productName');
+									newItem.parentProductID = null;
+									newItem.setFromModel(me);
+									dndArr.push(newItem);
+								}
 							}
 							else{
 								return(false);// exit, means we are waiting on api call inside getExtraProduct
@@ -274,279 +306,16 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
 					}
 				}
 			}
-			
-			self.addParameter('productID',this.model.get('productCode'));
-            self.addParameter('ecometrySku',this.model.get('mfgPartNumber')); // **
-            var dndCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.dndCode); // **
-            var designCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.designCode);// **
-            if(this.model.get('designCode')){
-                self.addParameter('designCode',this.model.get('designCode'));
-            }else{
-                self.addParameter('designCode',designCode);
-            }
-            if(this.model.get('dndCode')){
-                self.addParameter('dndCode',this.model.get('dndCode'));
-            }else{
-                self.addParameter('dndCode',dndCode);
-            }
-            var inventoryInfo = this.model.get('inventoryInfo');
-            if(inventoryInfo){
-                if(inventoryInfo.manageStock)
-                self.addParameter('maxQty',inventoryInfo.onlineStockAvailable);
-            }
-            var extrasInfo = this.model.get('extrasProductInfo');
-            if(extrasInfo){
-                self.addParameter('extras',JSON.stringify(extrasInfo));
-            }
-            var qty = this.model.get('quantity')?this.model.get('quantity'):1;
-            self.addParameter('quantity',qty);
-            self.addParameter('itemDescription',this.model.get('content.productName'));
-            if(this.pageType.toLowerCase() === 'cart'){
-				if(parseInt(this.model.get('price').salePrice,10) > 0)
-                    self.addParameter('price',this.model.get('price').salePrice);
-                else
-                    self.addParameter('price',this.model.get('price').price);
-            }else{
-                if(parseInt(this.model.get('price').get('salePrice'),10) > 0)
-                    self.addParameter('price',this.model.get('price').get('salePrice'));
-                else
-                	self.addParameter('price',this.model.get('price').get('price'));
-            }
-            if(self.lineitemID){
-                self.addParameter('lineitemID',this.lineitemID);
-            }
-            var minQty = (this.model._minQty)?this.model._minQty:qty;
-            self.addParameter('minQty',minQty);
-            var uom = '';
-            if(self.model.get('uom')){
-                uom = self.model.get('uom');
-            }
-            var unitOfMeasure = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
-            if(unitOfMeasure){
-                uom = unitOfMeasure;
 
-            }
-            self.addParameter('unitOfMeasure',uom);
-            var volumePriceBands = self.model.get('volumePriceBands');
-            if(volumePriceBands && volumePriceBands.length>0){
-                var volPrice = [];
-                for(i=0; i<volumePriceBands.length;i++){
-                    var volobj ={};
-                    volobj.minQty = volumePriceBands[i].minQty;
-                    volobj.maxQty = volumePriceBands[i].maxQty;
-                    if(volumePriceBands[i].price){
-						// TO DO - check for sale price?
-                        volobj.price = volumePriceBands[i].price.price;
-                    }else{
-                       if(volumePriceBands[i].priceRange){
-                            if(volumePriceBands[i].priceRange.upper.salePrice){
-                                volobj.price = volumePriceBands[i].priceRange.upper.salePrice;
-                            }else{
-                                volobj.price = volumePriceBands[i].priceRange.upper.price;
-                            }
-                       }
-                    }
-                    volPrice.push(volobj);
-                }
-                self.addParameter('volumePricing', JSON.stringify(volPrice));
-            }
 			return(dndArr);
         };
-         self.updateParameters = function(){
-            var self= this;
-            $(self.form).find('input[name="productID"]').val(this.model.get('productCode'));
-            $(self.form).find('input[name="ecometrySku"]').val(this.model.get('mfgPartNumber'));
-             var dndCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.dndCode);
-             var designCode = getPropteryValueByAttributeFQN(self.model, self.productAttributes.designCode);
-             $(self.form).find('input[name="dndCode"]').val(dndCode);
-            $(self.form).find('input[name="designCode"]').val(designCode);
-            $(self.form).find('input[name="itemDescription"]').val(this.model.get('content.productName'));
-            var remainPersItems = (self.itemCounter!==(self.personalizeItemsLength-1))?true:false;
-             if($(self.form).find('input[name="isBundle"]').length>0){
-                    $(self.form).find('input[name="isBundle"]').val(true);
-                    $(self.form).find('input[name="remainingPersItems"]').val(remainPersItems); 
-                }else{
-                    self.addParameter('isBundle', true);
-                    self.addParameter('remainingPersItems', remainPersItems);
-                }
-            if(self.parentProductID){
-                if($(self.form).find('input[name="parentProductID"]').length===0){
-                    self.addParameter('parentProductID', self.parentProductID);
-                }
-            }    
-
-        };
-        self.saveCart = function(data){
-            var self = this;
-            //console.log(data);
-            $(self.form).remove();
-            switch(data.method){
-                case 'AddToCart':
-                    window.productView.addToCartAfterPersonalize(data);
-                    break;
-                case 'UpdateCart': 
-                    window.cartView.cartView.updateCartItemPersonalize(data);
-                    break;
-                case 'AddToWishlist':
-                    window.productView.AddToWishlistAfterPersonalize(data);
-                    break;  
-                case 'LPerror':
-					/* not used anymore
-                     if(data.message===self.errorMsg){
-                        self.errorMsgCounter++;
-                     }else{
-                        self.errorMsgCounter=1;
-                     }
-                     self.errorMsg = data.message;
-                    lpAddVars('page','DND',data.message);
-                    lpAddVars('page','ErrorCounter',self.errorMsgCounter); */
-                    break;      
-            }
-        };
-        self.initializeAndSend=function(){
-            var self = this;
-			var dndArr = self.getParameters();
-            if(!dndArr)
-				return;
-
-            // GA for personalized code
-                 
-            /*
-            Code Added by Asaithambi
-            Create IE + others compatible event handler
-            */
-            if(window.eventBindFlag===undefined){
-                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-                var eventer = window[eventMethod];
-                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-                window.eventBindFlag = true;
-                // Listen to message from child window
-                eventer(messageEvent,function(e) {
-                 // console.log('parent received message!:  ',e.data);
-                  self.model = window.prodModel;
-                  self.itemCounter = window.dndItemCounter;
-                  self.form = window.dndFormObj;
-                  var responseData = e.data;
-                  //$('.personalize-close').trigger('click');
-                  if(responseData!=="process-tick" && responseData.projectToken){
-                      var extraData = '';
-                        if(responseData.ecometrySku){ 
-                            var eskuSplit = null, eskuValue;
-                            eskuValue = responseData.ecometrySku;
-                            if(responseData.ecometrySku.indexOf('@')!==-1){
-                                eskuSplit = responseData.ecometrySku.split('@');
-                                eskuValue = eskuSplit[eskuSplit.length-1];
-                            }
-                            self.projectToken[self.model.get('productCode')+"@"+eskuValue] = responseData.projectToken;
-                        }
-                        else{
-                            self.projectToken[self.model.get('productCode')+"@"+self.model.get('mfgPartNumber')]=responseData.projectToken;
-                        }
-                        extraData = JSON.stringify(self.projectToken);
-                        responseData.projectToken = extraData;
-                      if(self.productUsage==='Bundle'){
-                        if(self.itemCounter < self.personalizeItemsLength){
-                            self.dndRequest();
-                        }else{ 
-                            self.projectToken={};
-                            self.saveCart(responseData);
-                        }
-                      }else{
-                        self.projectToken={};
-                        self.saveCart(responseData);
-                      }
-                    }  
-
-                },false);
-            }
-            try{
-                var galabel;
-
-                if(this.model.toJSON().content && this.model.toJSON().content.productName){
-                   galabel = this.model.toJSON().content.productName;
-                } 
-                else if(this.model.toJSON().name){
-                   galabel = this.model.toJSON().name;
-                }
-                
-               
-                    
-                    if(ga!==undefined){
-                        ga('send', {
-                        hitType: 'event',
-                        eventCategory: 'Personalize Product click',
-                        eventAction: 'Personalize',
-                        eventLabel: galabel
-                        });
-                    }
-            }
-
-            catch(err){
-                console.log(err);
-            }
-             
-            
-            $(document).on('click', '.personalize-close', function(){
-                $('.dnd-popup').remove();
-
-                $(self.form).remove(); // LG change - added
-                $('#cboxOverlay').hide();
-                $('body').css({overflow: 'auto'});
-                $('html').removeClass('dnd-active-noscroll');
-                
-                //google analytics code for personlaize close
-                
-                var gapersonalizeclose;
-                try{
-                     
-                    if(self.model.toJSON().content && self.model.toJSON().content.productName){
-                       gapersonalizeclose = self.model.toJSON().content.productName;
-                    }
-                    else if(self.model.toJSON().name){
-                       gapersonalizeclose = self.model.toJSON().name;
-                    }
-                        if(ga!==undefined){
-                        ga('send', {
-                        hitType: 'event',
-                        eventCategory: 'Personalize Product click',
-                        eventAction: 'close',
-                        eventLabel: gapersonalizeclose
-                        }); 
-                        }
-                }
-                catch(err){
-                   console.log(err);
-                }
-                 
-                return false;
-            });
+		self.initializeAndSend = function(){
+			console.log("initializeAndSend");
+			this.initialize();
 			this.send();
-        };
-        self.dndRequest = function(){
-            $('#cboxOverlay').show();
-            $('.dnd-popup').show();
-            $('body').css({overflow: 'hidden'});
-            if(self.productUsage==='Bundle'){
-                if(self.itemCounter < self.personalizeItemsLength){
-                    self.model = self.bundleProducts[self.itemCounter];
-                    window.prodModel = self.bundleProducts[self.itemCounter]; 
-                    self.updateParameters();
-                }
-            }
-            self.itemCounter++;
-            window.dndItemCounter = self.itemCounter;
-            self.form.submit(); 
-            
-        };
-        self.addParameter = function(parameter,value)
-        {
-            $("<input type='hidden' />")
-             .attr("name", parameter)
-             .attr("value", value)
-             .appendTo(self.form);
-        };
-        self.send = function()
-        {
+		};
+        self.initialize = function(){
+			console.log("initialize");
             // LG change - updated dummyurl to remove doubleslash within url
             var dummyurl = self.dndEngineUrl+"ajax/nosession/loading.html"; // url of static html page that demonstrates that that loading is in progress
             var dndpopup = $('<div>').addClass('dnd-popup');
@@ -554,8 +323,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
             var iframe = $('<iframe data-time="'+self.time+'" src="'+dummyurl+'" id="iframe'+self.time+'" name="iframe'+self.time+'" width="750" height="689"></iframe>');
             dndpopup.append(a);
             dndpopup.append(iframe);
-            $( "body").append(self.form);
-            $( "body").append(dndpopup);
+            $("body").append(dndpopup);
 
             var pagecontext = require.mozuData('pagecontext');
 
@@ -589,15 +357,205 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product"]
               // LG change - removed addClass()
             // Resize to fix all iframes on page load.
             }).resize();
+			
+			$('#cboxOverlay').show();
+            $(dndpopup).show();
+            $('body').css({overflow: 'hidden'});
+			
+			// attach actions to closing of iframe
+            $(document).on('click', '.personalize-close', function(){
+                $('.dnd-popup').remove();
+                $('#cboxOverlay').hide();
+                $('body').css({overflow: 'auto'});
+                $('html').removeClass('dnd-active-noscroll');
+				if(self.form){
+					$(self.form).remove();
+				}
 
-            //iframe.attr('src', url);  // LG change - commented out
-            self.dndRequest();
+                //google analytics code for personlaize close
+                var gapersonalizeclose;
+                try{
+                    if(self.model.toJSON().content && self.model.toJSON().content.productName){
+                       gapersonalizeclose = self.model.toJSON().content.productName;
+                    }
+                    else if(self.model.toJSON().name){
+                       gapersonalizeclose = self.model.toJSON().name;
+                    }
+					
+					if(typeof ga !== "undefined"){
+						ga('send', {
+							hitType: 'event',
+							eventCategory: 'Personalize Product click',
+							eventAction: 'close',
+							eventLabel: gapersonalizeclose
+							}); 
+					}
+                }
+                catch(err){
+                   console.log(err);
+                }
+                 
+                return false;
+            });
+			
+			this.iframe = iframe; // so it can accessed in this.send
+		};
+		self.send = function(){
+			console.log("send");
+			this.dndArr = this.getParameters(this.send.bind(this));
+            if(!this.dndArr){
+				return;
+			}
+			
+			this.dndExtras = this.getDNDExtras(this.send.bind(this));
+            if(!this.dndExtras){
+				return;
+			}
+			
+			var self = this;
+     
+            /* 
+            Code Added by Asaithambi
+            Create IE + others compatible event handler
+            */
+			
+			// create eventer listener for iframe
+            if(typeof window.eventBindFlag === "undefined"){
+                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+                var eventer = window[eventMethod];
+                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+                window.eventBindFlag = true;
+				
+                // Listen to message from child window
+                eventer(messageEvent,function(e) {
+                  console.log('parent received message!:  ',e.data);
+					
+					// receive data 
+					var responseData = e.data;
+					if(responseData!=="process-tick" && responseData.projectToken){
+						var extraData = '';
+						if(responseData.ecometrySku){ 
+							var eskuSplit = null, eskuValue;
+							eskuValue = responseData.ecometrySku;
+							if(responseData.ecometrySku.indexOf('@')!==-1){
+								eskuSplit = responseData.ecometrySku.split('@');
+								eskuValue = eskuSplit[eskuSplit.length-1];
+							}
+							self.projectToken[self.model.get('productCode')+"@"+eskuValue] = responseData.projectToken;
+						}
+						else{
+							self.projectToken[self.model.get('productCode')+"@"+self.model.get('mfgPartNumber')]=responseData.projectToken;
+						}
+						extraData = JSON.stringify(self.projectToken);
+						responseData.projectToken = extraData;
+
+						// increment counter
+						self.index++;
+
+						// see if we have more items to process
+						if(self.index < self.dndArr.length){
+							//relaunch personalization on next item
+							self.doPers();
+						}
+						else{
+							// remove form
+							if(this.form){
+								$(this.form).remove();
+							}
+							
+							// save personalization to cart
+							switch(responseData.method){
+								case 'AddToCart':
+									self.view.addToCartAfterPersonalize(responseData); //productview
+									break;
+								case 'UpdateCart': 
+									self.view.cartView.updateCartItemPersonalize(responseData); //cartview
+									break;
+								case 'AddToWishlist':
+									self.view.AddToWishlistAfterPersonalize(responseData); //productview
+									break;    
+							}
+							
+						}
+					}
+                },false);
+            }
+			
+			// GA for personalized code
+            try{
+                var galabel;
+
+                if(this.model.toJSON().content && this.model.toJSON().content.productName){
+                   galabel = this.model.toJSON().content.productName;
+                } 
+                else if(this.model.toJSON().name){
+                   galabel = this.model.toJSON().name;
+                }
+
+				if(typeof ga !== "undefined"){
+					ga('send', {
+						hitType: 'event',
+						eventCategory: 'Personalize Product click',
+						eventAction: 'Personalize',
+						eventLabel: galabel
+						});
+				}
+            }
+            catch(err){
+                console.log(err);
+            }
+
+			this.doPers();  // begin personalization on first item
             
-            // LG change - added below
-            iframe.load(function(){
-             $(window).resize();
+			// resize window once everything in iframe completes loading
+            this.iframe.load(function(){
+            	$(window).resize();
             });
         };
+		self.doPers = function(){
+			console.log("doPers");
+			var dndItem = this.dndArr[this.index];
+			var remainPersItems = (this.index!==(this.dndArr-1))?true:false;
+			console.log(dndItem);
+			if(dndItem.mcCode){
+				// launch media clip window
+				
+			}
+			else{
+				if(this.form){
+					// clean up any existing forms
+					$(this.form).remove();
+				}
+				
+				// create new form
+				var form = $('<form action="'+this.dndEngineUrl+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
+				addParameter(form,"productID",dndItem.productID);
+				addParameter(form,"itemDescription",dndItem.itemDescription);
+				addParameter(form,"ecometrySku",dndItem.ecometrySku);
+				addParameter(form,"dndCode",dndItem.dndCode);
+				addParameter(form,"designCode",dndItem.designCode);
+				addParameter(form,"quantity",dndItem.quantity);
+				addParameter(form,"price",dndItem.price);
+				addParameter(form,"volumePricing",dndItem.volumePricing);
+				addParameter(form,"minQty",dndItem.minQty);
+				addParameter(form,"maxQty",dndItem.maxQty);
+				addParameter(form,"unitOfMeasure",dndItem.unitOfMeasure);
+				addParameter(form,"lineitemID",dndItem.lineitemID);
+				addParameter(form,"parentProductID",dndItem.parentProductID);
+				addParameter(form,"isBundle",dndItem.isBundle);
+				addParameter(form,"remainingPersItems",remainPersItems);
+				
+				addParameter(form,"extras",JSON.stringify(this.dndExtras));
+
+				// save to object so we can clean it up if needed
+				this.form = form;
+				
+				// insert and post form
+				$("body").append(this.form);
+				this.form.submit();
+			}
+		};
+		return(self);
     };
     return {
                 DNDEngine:DNDEngine

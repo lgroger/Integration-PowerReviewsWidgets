@@ -661,7 +661,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 window.removePageLoader();
                  var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
                 dndUrl+=dndToken+'/edit';
-                var dndEngineObj = new DNDEngine.DNDEngine(cartItemModel,dndUrl);
+                var dndEngineObj = new DNDEngine.DNDEngine(cartItemModel,dndUrl,me);
                 dndEngineObj.initialize();
                 dndEngineObj.send();
                     
@@ -669,6 +669,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 
         },
         editPersonalizeBundleItem: function(e){ 
+            var me = this;
 
             var dndToken = $(e.currentTarget).attr('data-mz-token');
            
@@ -685,7 +686,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 product.set('cartlineid',itemId);
                 var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
                 dndUrl+=dndToken+'/edit';
-                var dndEngineObj = new DNDEngine.DNDEngine(product,dndUrl);
+                var dndEngineObj = new DNDEngine.DNDEngine(product,dndUrl,me);
                 dndEngineObj.initialize();
                 dndEngineObj.send();
             });
