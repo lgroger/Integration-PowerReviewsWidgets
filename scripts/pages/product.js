@@ -1,5 +1,5 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", "modules/views-productimages", "modules/soft-cart", 'modules/added-to-cart', "modules/powerreviews", "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info"],
-function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageViews, SoftCart,  addedToCart, PowerReviews, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/cart-monitor", "modules/models-product", /* "modules/views-productimages",*/ "modules/soft-cart", 'modules/added-to-cart', "modules/powerreviews", "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info"],
+function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, /*ProductImageViews, */ SoftCart,  addedToCart, PowerReviews, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
@@ -9,9 +9,6 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     var bannerProductsArr = bannerProductTypes.split(',');
 
     var productAttributes = Hypr.getThemeSetting('productAttributes');
-	var monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
-	var weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-	var dateFormatArr=["th","st","nd","rd"];
 
 	//var loopcounter=0;
    // var BundleItems=[];
@@ -167,18 +164,17 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
             window.location.href=location.href;
         });
 		
-		console.log('create productview');
         var productView = new ProductView({
             el: $('#product-detail'),
             model: product,
             messagesEl: $('[data-mz-message-bar]')
         }); // this calls productView.initialize;
-		
+	/*	
         var productImagesView = new ProductImageViews.ProductPageImagesView({
             el: $('[data-mz-productimages]'),
             model: product
         });
-
+*/
         productView.render();
     };
 	
@@ -302,7 +298,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
     };
 
     var ProductView = Backbone.MozuView.extend({
-		holidayList: null, // set in this.getHolidays()
+		holidayList: null, // set in this.getHolidays() ShippingholidayList@shindigz
+		UPSholidayList: null, //UPSholidayList@shindigz
+		noCalcDelDate: false,  //if true, holidayList & UPSholidayList won't be loaded and delivery/ship dates won't be calculated (will be used for quickview)
         templateName: 'modules/product/product-detail-custom',
         autoUpdate: ['quantity'],
         additionalEvents: {
@@ -444,10 +442,16 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         },
         render: function () {
 			console.log("render");
-			
-			this.getHolidays(this.render.bind(this));
-			if(!this.holidayList){
-				return; // this.render() will be called again once api call to get holiday list completes
+			if(!this.noCalcDelDate){ // we don't need to load holiday lists for shipdate calculations for quickview
+				this.getHolidays(this.render.bind(this));
+				if(!this.holidayList){
+					return; // this.render() will be called again once api call to get holiday list completes
+				}
+
+				this.getUPSHolidays(this.render.bind(this));
+				if(!this.UPSholidayList){
+					return; // this.render() will be called again once api call to get UPSholiday list completes
+				}
 			}
 			
 			this.setIsPersonalized();
@@ -573,13 +577,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
                 var objj=me.model.getConfiguredOptions();
                 //me.setOptionTitle();
                 me.model.set('minQty', me.model._minQty);
-                var estTime= window.timeNow || new Date();
-				var childProductionTime;
 			
+				var childProductionTime;
 				var productionTime = getPropteryValueByAttributeFQN(me.model, productAttributes.productionTime);
-				if(productionTime ===null || productionTime===0){
-					productionTime=1;
-				}
 			
 				var melt=true;
 				var melt_obj=getPropteryValueByAttributeFQN(me.model, productAttributes.productMelt);
@@ -612,10 +612,12 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 								}
 							// use the greater of the 2 production times (parent vs extra)
                                 childProductionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                if(childProductionTime ===null || childProductionTime===0){
-                                    childProductionTime=1;
-                                }
-								productionTime = Math.max(productionTime,childProductionTime);
+                                if(productionTime && childProductionTime){
+									productionTime = Math.max(productionTime,childProductionTime);
+								}
+								else if(childProductionTime){
+									productionTime = childProductionTime;
+								}
 							}
 							else{
 								return; // exit b/c getExtraProduct is making api call to get product info now
@@ -641,14 +643,27 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 					 return; // exit so we don't call render multiple times
 				}
 			
-				if(productionTime){
-					me.model.set('productionTime',productionTime);
-					if(melt){
-						me.calc_only_productionTime(estTime,productionTime,me.holidayList,me,me.calcMeltProduct);
-					}else{
-						me.skip_holidays(estTime,productionTime,me.holidayList,me,false);
+				if(me.model.get('baseIsConfigured')){ // don't show delivery dates if baseIsConfigured is false b/c we could show inaccurate information based on where productionTime is stored on a product (ex. banner doesn't have productionTime on parent, just on the extras and if no extras are selected yet, we could show a date too early)
+					if(productionTime){
+						me.model.set('productionTime',productionTime);
+						if(!this.noCalcDelDate){ // we don't need to calculate these on quickview
+							if(melt){
+								me.calc_only_productionTime(this.timeNow,productionTime);
+							}else{
+								me.skip_holidays(this.timeNow,productionTime,false);
+							}
+						}
 					}
-				}
+					else{
+						if(!this.noCalcDelDate){ // we don't need to calculate these on quickview
+							if(melt){
+								me.calc_only_productionTime(this.timeNow,0);
+							}else{
+								me.skip_holidays(this.timeNow,0,false);
+							}
+						}
+					}
+				} // on
 			
 				if(uom)
 					me.model.set('uom',uom);
@@ -656,46 +671,69 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				// if we made it here, call render
 				Backbone.MozuView.prototype.render.apply(me);
 
-        },skip_holidays:function(date,noBusDays,holidays,scope_obj,isMelt){
+        },formatDateString:function(result_date){
+			var shipDateEndFormat="<sup>th</sup>";
+			var monthArr=["January", "February", "March", "April", "May", "June","July", "August", "September", "October", "November", "December"];
+			var weekdayArr=[  'Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+			var dateFormatArr=["th","st","nd","rd"];
+			if(result_date.getUTCDate()<=3 || result_date.getUTCDate()>=21 && dateFormatArr[result_date.getUTCDate()%10]){
+			 shipDateEndFormat="<sup>"+dateFormatArr[result_date.getUTCDate()%10]+"</sup>";
+			}
+			var shipDateStr=weekdayArr[result_date.getUTCDay()]+", "+monthArr[result_date.getUTCMonth()]+" "+result_date.getUTCDate()+shipDateEndFormat;
+			return(shipDateStr);
+			
+		},skip_holidays:function(date,noBusDays,isMelt){ //Function to skip saturday,sunday and holidays
 			console.log("skip_holidays");
-            /*Function to skip saturday,sunday and holiday list and call the callback function
-              With result date.
-            */
-            var produtionTime=noBusDays;
-            if (noBusDays < 1 && !isMelt) {
-                noBusDays=1;
-                produtionTime=1;
+			//console.log(isMelt+" "+noBusDays);
+			//console.log(date);
+			var holidays = this.holidayList;
+			var UPSholidays = this.UPSholidayList;
+			var me = this;
+           
+            if (productionTime < 1 && !isMelt) { // production time was already factored in for items that melt before calling this function
+                productionTime=1;
             }
+			var productionTime=noBusDays;
             var result_date=new Date(date);
             var addedDays = 0;
-            noBusDays+=5;
+            noBusDays+=5; // add 5 since that's how many days we are using to calculate delDate (standard shipping is slowest)
+			
+			// this is for when isMelt = 1 and productionTime = 0 basically - notice we are comparing to holidays
+			if (result_date.getUTCDay()<6 && result_date.getUTCDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getUTCMonth() + 1)).slice(-2)+"-"+("0" + result_date.getUTCDate()).slice(-2))==-1 && productionTime===0){
+				me.model.set("shipDate",me.formatDateString(result_date));
+			}
+			
             while (addedDays < noBusDays) {
-                result_date.setDate(result_date.getDate()+1);
-                if (result_date.getDay()<6 && result_date.getDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2))==-1) {
-                    ++addedDays;
-                    if(addedDays===produtionTime+1){
-                        var dateEndFormat="<sup>th</sup>";
-                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && dateFormatArr[result_date.getDate()%10]){
-                         dateEndFormat="<sup>"+dateFormatArr[result_date.getDate()%10]+"</sup>";
-                        }
-                        var overDate=weekdayArr[result_date.getDay()]+", "+monthArr[result_date.getMonth()]+" "+result_date.getDate()+dateEndFormat;
-                        scope_obj.model.set("overnightDate",overDate);
-                    }else if(addedDays===produtionTime+2){
-                        var expressEndFormat="<sup>th</sup>";
-                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && dateFormatArr[result_date.getDate()%10]){
-                         expressEndFormat="<sup>"+dateFormatArr[result_date.getDate()%10]+"</sup>";
-                        }
-                        var expressDate=weekdayArr[result_date.getDay()]+", "+monthArr[result_date.getMonth()]+" "+result_date.getDate()+expressEndFormat;
-                        scope_obj.model.set("expressDate",expressDate);
-                    }else if(addedDays===produtionTime+5){
-                        var stdEndFormat="<sup>th</sup>";
-                        if(result_date.getDate()<=3 || result_date.getDate()>=21 && dateFormatArr[result_date.getDate()%10]){
-                         stdEndFormat="<sup>"+dateFormatArr[result_date.getDate()%10]+"</sup>";
-                        }
-                        var stdDate=weekdayArr[result_date.getDay()]+", "+monthArr[result_date.getMonth()]+" "+result_date.getDate()+stdEndFormat;
-                        scope_obj.model.set("delDate",stdDate);
-                    }
-                }
+                result_date = new Date(result_date.getTime()+24*60*60*1000); // add a day
+				//console.log(result_date);
+				//console.log(addedDays + " "+productionTime);
+				if(addedDays < productionTime){
+					// compare to holidays list & get shipdate
+					if (result_date.getUTCDay()<6 && result_date.getUTCDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getUTCMonth() + 1)).slice(-2)+"-"+("0" + result_date.getUTCDate()).slice(-2))==-1) {
+						++addedDays;
+						if(addedDays===productionTime){
+							me.model.set("shipDate",me.formatDateString(result_date));
+						}
+					}
+				}
+				else{
+					// compare to UPSholidays list & get delivery dates
+					if (result_date.getUTCDay()<6 && result_date.getUTCDay()!==0 && UPSholidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getUTCMonth() + 1)).slice(-2)+"-"+("0" + result_date.getUTCDate()).slice(-2))==-1) { 
+						++addedDays;
+						if(addedDays===productionTime+1){
+							// 1 day for overnight
+							me.model.set("overnightDate",me.formatDateString(result_date));
+						}else if(addedDays===productionTime+2){
+							// 3 days for express
+							me.model.set("expressDate",me.formatDateString(result_date));
+						}
+						if((!isMelt && addedDays===productionTime+5) ||(isMelt && addedDays===productionTime+2)){ // if it melts, we'll ship it 2 day even if they select Ground since we only ship M-W
+							// 5 days for standard
+							me.model.set("delDate",me.formatDateString(result_date));
+						}
+						
+					}
+				}
             }
 			/* not sure what this is for...
              if(window.initload && $(".delivery-date").length===0 && window.isStd){
@@ -716,31 +754,38 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
         }, onOptionChange: function (e) {
 			console.log("onOptionChange");
             return this.configure($(e.currentTarget)); //fires this.render
-        },calc_only_productionTime:function(date,noBusDays,holidays,scope_obj,callback){
+        },calc_only_productionTime:function(date,noBusDays){
 			console.log("calc_only_productionTime");
             /*Function to skip saturday,sunday and holiday list and call the callback function
             With result date.
             */
+			var holidays = this.holidayList;
             if (noBusDays < 1){
-                noBusDays=1;
+                noBusDays=1; // no same-day shipping
             }
+			console.log(noBusDays);
             var result_date=new Date(date);
             var addedDays = 0;
             while (addedDays < noBusDays) {
-                result_date.setDate(result_date.getDate()+1);
-                if (result_date.getDay()<6 && result_date.getDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2))==-1) {
+				result_date = new Date(result_date.getTime()+24*60*60*1000); 
+                if (result_date.getUTCDay()<6 && result_date.getUTCDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getUTCMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2))==-1) {
                     ++addedDays;
+					console.log(result_date);
                 }
+				else{
+					console.log(result_date);
+					console.log("add another day...");
+				}
             }
             var delDate=new Date(result_date);
-            callback(delDate,noBusDays,holidays,scope_obj);
-        },calcMeltProduct:function (ddate,prod_time,holidayList,scope_obj,noOfDays){
+            this.calcMeltProduct(delDate,noBusDays,holidays);
+        },calcMeltProduct:function (ddate,prod_time,noOfDays){
 			console.log("calcMeltProduct");
-            if(ddate.getDay()>=4){
-                scope_obj.calc_only_productionTime(ddate,1,holidayList,scope_obj,scope_obj.calcMeltProduct);
+			console.log(ddate);
+            if(ddate.getUTCDay()>=4){
+                this.calc_only_productionTime(ddate,1);
             }else{
-                 scope_obj.skip_holidays(ddate,0,holidayList,scope_obj,true);
-                 //scope_obj.skip_holidays(ddate,2,holidayList,scope_obj,true,scope_obj.setExpressDeliveryDate,0);
+                this.skip_holidays(ddate,0,true);
             }
         },configure: function ($optionEl) {
 			console.log("configure");
@@ -1082,7 +1127,9 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 		},
 		setAllowATC: function(){
 			console.log("setAllowATC");
-			// sets model.isConfigured, model.isInStock - if model.isConfigure==true  && model.isInstock==true, then allow add-to-cart action
+			// sets model.isConfigured, model.isInStock, model.baseIsConfigured - if model.isConfigure==true  && model.isInstock==true, then allow add-to-cart action
+			// isConfigured means it's fully configured and ready to add to cart or begin personalization
+			// baseIsConfigured means a base product is selected but not necessarily all extras (if true, show delDate)
 			
 			this.hideOptions(); // sets isVisibleOption & isOptionForDND per option which is used below
 			
@@ -1123,18 +1170,22 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				
 				if(!hasSelectableExtras){ // if no extras to select, mark entire product as out of stock
 					this.model.set('isConfigured',true);
+					this.model.set('baseIsConfigured',true);
 					this.model.set('isInStock',false);
 				}
 				else if(isSelected && isInStock){
 					this.model.set('isConfigured',true);
+					this.model.set('baseIsConfigured',true);
 					this.model.set('isInStock',true);
 				}
 				else if(!isSelected){
 					this.model.set('isConfigured',false);
+					this.model.set('baseIsConfigured',false);
 					this.model.set('isInStock',true);
 				}
 				else if(isSelected && !isInStock){
 					this.model.set('isConfigured',true);
+					this.model.set('baseIsConfigured',true);
 					this.model.set('isInStock',false);
 				}
 					
@@ -1202,6 +1253,7 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				
 				if(configurableOptionsConfigured && requiredExtrasConfigured){
 					this.model.set('isConfigured',true);
+					this.model.set('baseIsConfigured',true);
 					// if product itself is in stock and any required extras are selected, set allowATC to true
 					if(purchasableState.isPurchasable){
 						this.model.set('isInStock',true);
@@ -1226,6 +1278,13 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 					}
 				}
 				else{
+					var mfgpartnumber = this.model.get('mfgPartNumber');
+					if(configurableOptionsConfigured && (this.model.get('productUsage')==='Bundle' ||  (mfgpartnumber && mfgpartnumber.length > 0))){
+						this.model.set('baseIsConfigured',true);
+					}
+					else{
+						this.model.set('baseIsConfigured',false);
+					}
 					this.model.set('isConfigured',false);
 					this.model.set('isInStock',false);
 				}
@@ -1233,6 +1292,10 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 		},
 		getHolidays: function(callback){
 			console.log("getHolidays");
+			
+			if(this.holidayList){
+				return; // exit if it's already set
+			}
 			
 		    var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/ShippingholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
             var localStorageSupport=false;
@@ -1242,30 +1305,23 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				localStorageSupport= false;
 			}
 			
-			//Read UTC time from server and reset 4 hours to convert as EST.
-            var tmp= new Date($('#time-custom-now').text().replace(/"/g, ''));
-            tmp.setHours(tmp.getHours()-4);
-            window.timeNow=new Date(tmp);
-            var estTime= window.timeNow || new Date();
-            var unix_timestamp = Math.round(+tmp/1000);
+			var unix_timestamp = Math.round(this.timeNow/1000); // what we'll compare to expire value in localStorage
+			var expire = new Date(this.timeNow.getTime()+24*60*60*1000); // add a day
+			expire = Math.round(expire/1000); //what we'll store in localStorage to compare to next time
 			
 			try{
                 //Check if holiday list is already available in Local Storage(LS) and expire stamp is less then current time then read holiday list form LS and process else make api call.
               if(localStorageSupport && localStorage.getItem("hdList") && JSON.parse(localStorage.getItem("hdList")).expire > unix_timestamp){
                  this.holidayList=JSON.parse(localStorage.getItem("hdList")).value;
-                 //this.calcTimes(estTime);
               }else{
                     //Get holiday list from custom document and store in local storeage with expire time.
                      Api.request('GET',requestConfigure).then(function(res){
                          this.holidayList=_.pluck(_.pluck(res.items,"properties"),"holiday");
-                         var current_time=window.timeNow || new Date();
                           if(localStorageSupport){
-                            tmp.setDate(tmp.getDate()+1);
-                            var cacheData={value: this.holidayList,"expire":Math.round(+tmp/1000)};
+                            var cacheData={value: this.holidayList,"expire":expire};
                                localStorage.setItem("hdList",JSON.stringify(cacheData));
                           }
 						 callback();
-						 //this.calcTimes(current_time);
 						 
                     },function(err) {
                         console.log("Error in reading holidays",err);
@@ -1276,8 +1332,52 @@ function ($, _, Hypr, Api, Backbone, CartMonitor, ProductModels, ProductImageVie
 				this.holidayList = [];
             }
 		},
+		getUPSHolidays: function(callback){
+			console.log("getUPSHolidays");
+			if(this.UPSholidayList){
+				return; // exit if it's already set
+			}
+		    var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/UPSholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
+            var localStorageSupport=false;
+			try {
+				localStorageSupport= 'localStorage' in window && window.localStorage !== null;
+			} catch (e) {
+				localStorageSupport= false;
+			}
+			
+			var unix_timestamp = Math.round(this.timeNow/1000); // what we'll compare to expire value in localStorage
+			var expire = new Date(this.timeNow.getTime()+24*60*60*1000); // add a day
+			expire = Math.round(expire/1000); //what we'll store in localStorage to compare to next time
+			
+			try{
+                //Check if holiday list is already available in Local Storage(LS) and expire stamp is less then current time then read holiday list form LS and process else make api call.
+              if(localStorageSupport && localStorage.getItem("UPShdList") && JSON.parse(localStorage.getItem("UPShdList")).expire > unix_timestamp  && JSON.parse(localStorage.getItem("UPShdList")).value){
+                 this.UPSholidayList=JSON.parse(localStorage.getItem("UPShdList")).value;
+              }else{
+                    //Get holiday list from custom document and store in local storeage with expire time.
+                     Api.request('GET',requestConfigure).then(function(res){
+                         this.UPSholidayList=_.pluck(_.pluck(res.items,"properties"),"holiday");
+                         if(localStorageSupport){
+                            var cacheData={value: this.UPSholidayList,"expire":expire};
+                            localStorage.setItem("UPShdList",JSON.stringify(cacheData));
+                         }
+						 callback();
+						 
+                    },function(err) {
+                        console.log("Error in reading holidays",err);
+                    });
+                }
+            }catch(err){
+                console.log(err);
+				this.UPSholidayList = [];
+            }
+		},
         initialize: function () {
 			console.log("initialize");
+
+			var estTime = new Date(); // time in UTC format
+			estTime.setTime(estTime.getTime()-5*60*60*1000); //subtract difference from GMT to Eastern so that when you use getUTCDay, getUTCHours, (etc) it will reflect value in Eastern timezone
+			this.timeNow=estTime;
 			
             // handle preset selects, etc
             var me = this;

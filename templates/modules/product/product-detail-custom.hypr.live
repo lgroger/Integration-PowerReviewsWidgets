@@ -1,22 +1,27 @@
 {% comment %}
   these will be populated by product.js
-  -model.isPersonalized
-  -model.isInStock
-  -model.isConfigured
-  -model.productionTime
-  -model.minQty
-  -model.uom
-  -model.groundOnly
-  -model.enableSlitoption
-  -model.delDate
-  -model.options[].isVisibleOption (true/false)
-  -model.options[].isOptionForDND (true/false)
+  -model.isPersonalized;    // (true/false) whether to show personalize button instead of add to cart
+  -model.isInStock;         // display in stock if (if isConfigured == true)
+  -model.isConfigured;      // all necessary options are selected by customer, if isConfigured == true && isInStokc == true, you can enable add to cart or personalization
+  -model.baseIsConfigured;  // 
+  -model.productionTime;    // production time to display (selected extras are factored in)
+  -model.minQty;            // minimum qty
+  -model.uom;               // unit of measure to display
+  -model.groundOnly;        // (true/false)
+  -model.enableSlitoption;  // (true/false)
+  -model.delDate;           // standard shipping delivery date
+  -model.expressDate;       // express shipping delivery date
+  -model.overnightDate;     // premium shipping delivery date
+  -model.shipDate;          // shipping date
+  -model.options[].isVisibleOption;   // (true/false)
+  -model.options[].isOptionForDND;    // (true/false)
 {% endcomment %}
 
-<div style="border:solid 1px black;font-size:8px;margin:5px;padding:5px;">
+<div style="border:solid 1px black;font-size:10px;margin:5px;padding:5px;position:fixed;top:0;left:0;background-color:white;z-index:2000;">
         isInStock: {{model.isInStock}}<br>
         isPersonalized: {{model.isPersonalized}}<br>
         isConfigured: {{model.isConfigured}}<br>
+        baseIsConfigured: {{model.baseIsConfigured}}<br>
   {% if not model.purchasableState.isPurchasable %}
     {% dump model.purchasableState %}
   {% endif %}
@@ -37,8 +42,31 @@
 
         {% if model.isConfigured and not model.isInStock %}
         {% else %}
+
+            {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
+                <div class="prod-time">
+                   {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                   <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                </div>
+            {% else %}
+              {% comment %}
+              {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+               {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
+                  {% with prod_time.values|first|prop("value") as productionTime %}
+                  {% if productionTime !=0 and productionTime != "0" %}
+                     {{  prod_time.values|first|prop("value") }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                     <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                 {% endif %}
+                 {% endwith %}
+               {% endwith %}
+              {% endif %}
+              {% endcomment %}
+            {% endif %}
+
+
         {% if model.delDate %}
           <span class="delivery-date">
+            <span>Ships on <strong> {{ model.shipDate|safe }}</strong></span><br>
             <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
             {% if not model.groundOnly %}
                 <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
