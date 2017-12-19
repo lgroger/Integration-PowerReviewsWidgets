@@ -1,4 +1,9 @@
-﻿{# I'm only aware of product-instock using this (which is currently disabled) #}
+﻿{# quickview uses this -  product-instock uses also but is currently disabled #}
+{% comment %}
+  these will be populated by modules/productview.js
+  -model.options[].isVisibleOption;   // (true/false)
+  -model.options[].isOptionForDND;    // (true/false)
+{% endcomment %}
 
 <div class="mz-productoptions">
 {% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
@@ -31,7 +36,7 @@
 {% else %}
     {% for option in model.options %}
     
-    {% if option.isHideExtra == "show" %}
+    {% if option.isVisibleOption %}
     <div class="mz-productoptions-optioncontainer">
         {% if option.attributeDetail.name != "dnd-token" %}
         <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}{% if option.isRequired %}<strong class="is-required">*</strong>{% endif %}</label>

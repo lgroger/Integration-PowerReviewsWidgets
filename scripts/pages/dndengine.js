@@ -371,6 +371,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				if(self.form){
 					$(self.form).remove();
 				}
+				self.unsend();
 
                 //google analytics code for personlaize close
                 var gapersonalizeclose;
@@ -400,6 +401,71 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			
 			this.iframe = iframe; // so it can accessed in this.send
 		};
+		self.onDNDSubmit = function(e){
+			var self = this;
+			// function that will listen for post back from iframe
+			console.log('onDNDSubmit',e.data);
+					
+			// receive data 
+			var responseData = e.data;
+			if(responseData!=="process-tick" && responseData.projectToken){
+				var extraData = '';
+				if(responseData.ecometrySku){ 
+					var eskuSplit = null, eskuValue;
+					eskuValue = responseData.ecometrySku;
+					if(responseData.ecometrySku.indexOf('@')!==-1){
+						eskuSplit = responseData.ecometrySku.split('@');
+						eskuValue = eskuSplit[eskuSplit.length-1];
+					}
+					self.projectToken[self.model.get('productCode')+"@"+eskuValue] = responseData.projectToken;
+				}
+				else{
+					self.projectToken[self.model.get('productCode')+"@"+self.model.get('mfgPartNumber')]=responseData.projectToken;
+				}
+				extraData = JSON.stringify(self.projectToken);
+				responseData.projectToken = extraData;
+
+				// increment counter
+				self.index++;
+
+				// see if we have more items to process
+				if(self.index < self.dndArr.length){
+					//relaunch personalization on next item
+					self.doPers();
+				}
+				else{
+					// remove form
+					if(this.form){
+						$(this.form).remove();
+					}
+					
+					self.unsend(); // unbind window event listeners
+
+					// save personalization to cart
+					switch(responseData.method){
+						case 'AddToCart':
+							self.view.addToCartAfterPersonalize(responseData); //productview
+							break;
+						case 'UpdateCart': 
+							self.view.cartView.updateCartItemPersonalize(responseData); //cartview
+							break;
+						case 'AddToWishlist':
+							self.view.AddToWishlistAfterPersonalize(responseData); //productview
+							break;    
+					}
+
+				}
+			}
+		};
+		self.unsend = function(){
+			// undoes event attachment
+			console.log("unsend");
+			var deleteMethod = window.removeEventListener ? "removeEventListener" : "detachEvent";
+			console.log(deleteMethod);
+			var deleter = window[deleteMethod];
+			var messageEvent = deleteMethod == "detachEvent" ? "onmessage" : "message";
+			deleter(messageEvent,this.onDNDSubmit.bind(this),false);
+		};
 		self.send = function(){
 			console.log("send");
 			this.dndArr = this.getParameters(this.send.bind(this));
@@ -420,66 +486,13 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             */
 			
 			// create eventer listener for iframe
-            if(typeof window.eventBindFlag === "undefined"){
+           // if(typeof window.eventBindFlag === "undefined"){
                 var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
                 var eventer = window[eventMethod];
                 var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-                window.eventBindFlag = true;
-				
-                // Listen to message from child window
-                eventer(messageEvent,function(e) {
-                  console.log('parent received message!:  ',e.data);
-					
-					// receive data 
-					var responseData = e.data;
-					if(responseData!=="process-tick" && responseData.projectToken){
-						var extraData = '';
-						if(responseData.ecometrySku){ 
-							var eskuSplit = null, eskuValue;
-							eskuValue = responseData.ecometrySku;
-							if(responseData.ecometrySku.indexOf('@')!==-1){
-								eskuSplit = responseData.ecometrySku.split('@');
-								eskuValue = eskuSplit[eskuSplit.length-1];
-							}
-							self.projectToken[self.model.get('productCode')+"@"+eskuValue] = responseData.projectToken;
-						}
-						else{
-							self.projectToken[self.model.get('productCode')+"@"+self.model.get('mfgPartNumber')]=responseData.projectToken;
-						}
-						extraData = JSON.stringify(self.projectToken);
-						responseData.projectToken = extraData;
-
-						// increment counter
-						self.index++;
-
-						// see if we have more items to process
-						if(self.index < self.dndArr.length){
-							//relaunch personalization on next item
-							self.doPers();
-						}
-						else{
-							// remove form
-							if(this.form){
-								$(this.form).remove();
-							}
-							
-							// save personalization to cart
-							switch(responseData.method){
-								case 'AddToCart':
-									self.view.addToCartAfterPersonalize(responseData); //productview
-									break;
-								case 'UpdateCart': 
-									self.view.cartView.updateCartItemPersonalize(responseData); //cartview
-									break;
-								case 'AddToWishlist':
-									self.view.AddToWishlistAfterPersonalize(responseData); //productview
-									break;    
-							}
-							
-						}
-					}
-                },false);
-            }
+                //window.eventBindFlag = true;
+                eventer(messageEvent,this.onDNDSubmit.bind(this),false);
+           // }
 			
 			// GA for personalized code
             try{

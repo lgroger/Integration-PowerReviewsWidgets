@@ -1,5 +1,5 @@
 {% comment %}
-  these will be populated by product.js
+  these will be populated by modules/productview.js
   -model.isPersonalized;    // (true/false) whether to show personalize button instead of add to cart
   -model.isInStock;         // display in stock if (if isConfigured == true)
   -model.isConfigured;      // all necessary options are selected by customer, if isConfigured == true && isInStokc == true, you can enable add to cart or personalization
@@ -237,7 +237,7 @@
       </div>
       <div class="product-cart-wishlist">
           {% if model.isPersonalized %}
-                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} disabled="disabled"{% endif %}>PERSONALIZE</button>
+                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} disabled="disabled"{% endif %}>{% if not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}PERSONALIZE{% endif %}</button>
           {% else %}
                   {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
                         {% if user.isAuthenticated ==false and user.isAnonymous ==false %}
@@ -246,7 +246,7 @@
                            <p>This product is available only for login users. Please register or login to your account. </p><br>
                           {% endif %}
                   {% else %}
-                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %}is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} {% endif %} >{{ labels.addToCart }}</button>
+                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %}is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} {% endif %} >{% if  not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}{{ labels.addToCart }}{% endif %}</button>
                   {% endif %}
           {% endif %}
           {% if siteContext.generalSettings.isWishlistCreationEnabled %}

@@ -1,3 +1,8 @@
+{% comment %}
+  these will be populated by modules/productview.js
+  -model.options[].isVisibleOption;   // (true/false)
+  -model.options[].isOptionForDND;    // (true/false)
+{% endcomment %}
 <div class="mz-productoptions">
 {% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
 {% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}

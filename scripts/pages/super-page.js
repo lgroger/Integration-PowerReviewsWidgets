@@ -1,4 +1,108 @@
-define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','pages/colorswatch-super','vendor/wishlist',"modules/quick-view","pages/dndengine","hyprlive"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,quickView,DNDEngine,Hypr) {
+define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','pages/colorswatch-super','vendor/wishlist',"modules/productview","hyprlive"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,ProductView,Hypr) {
+	
+	 var initProductInQuickview= function(productCode,personalizebutton){
+		console.log("initProductInQuickview");
+		api.request('get','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
+			var product=new ProductModels.Product(res);
+			var productView = new ProductView(product);
+			product.on('addedtocart', function(cartitem) {
+                if (cartitem && cartitem.prop('id')) {
+                    var cartitemModel = new ProductModels.Product(cartitem.data);
+                  
+                    $('.dnd-popup').hide();
+                     $('body').css({overflow: 'scroll'});
+                $('html').removeClass('dnd-active-noscroll');
+                $('#cboxOverlay').hide();
+                    CartMonitor.addToCount(product.get('quantity'));
+                    SoftCart.update();
+                   window.removePageLoader();
+                    addedToCart.proFunction(cartitemModel);
+                    
+                    //google analytics code for add to cart event
+            	var gaitem = cartitemModel.apiModel.data;
+                  var proID = gaitem.product.productCode;
+                   
+                   var gaoptionval; 
+                    if(gaitem.product.productUsage == "Configurable" ){
+                      proID = gaitem.product.variationProductCode; 
+                    }
+                    
+                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+                    _.each(gaitem.product.options,function(opt,i){
+                    if(opt.name=="dnd-token"){
+
+                    }
+                    else if(opt.name == 'Color'){
+                    gaoptionval = opt.value;
+                    }
+                    else{
+                    gaoptionval =  opt.value;
+                    }
+                    });  
+                    } 
+
+                    if(typeof ga!=="undefined"){
+                        ga('ec:addProduct', {
+                        'id': proID,
+                        'name': gaitem.product.name,
+                        'category': gaitem.product.categories[0].id,
+                        'brand': 'shindigz',
+                        'variant': gaoptionval,
+                        'price': gaitem.unitPrice.extendedAmount,
+                        'quantity': gaitem.quantity
+                        });
+                        ga('ec:setAction', 'Buysuperpagepersonal');
+                        ga('send', 'event', 'buy', 'buysuperpagepersonalize', gaitem.product.name);  
+ 
+                    } 
+                                        
+
+                    //Facebook pixcel tracking
+                    var track_price= product.get("price").toJSON().price;
+                         if( product.get("price").toJSON().salePrice){
+                            track_price= product.get("price").toJSON().salePrice;
+                         }
+                        var track_product_code=[];
+                         track_product_code.push(product.toJSON().productCode);
+                         if(typeof fbq!=="undefined"){
+                             fbq('track', 'AddToCart', {
+                                content_ids:track_product_code,
+                                content_type:'product',
+                                value: parseFloat(track_price*product.get('quantity')).toFixed(2),
+                                currency: 'USD'
+                            });
+                         }
+                         if(typeof pintrk!=="undefined"){
+                             pintrk('track','addtocart',{
+                                value:parseFloat(track_price*product.get('quantity')),
+                                order_quantity:parseInt(product.get('quantity'),10),
+                                currency:"USD",
+                                line_items:[{
+                                    product_name:product.toJSON().content.productName,
+                                    product_id:track_product_code[0],
+                                    product_price:parseFloat(track_price),
+                                    product_quantity:parseInt(product.get('quantity'),10)
+                                }]
+                            });
+                         }
+                      if(typeof window.addthis!=="undefined"){
+                          ///Update addthis to currect product model and rerender.
+                          try{
+                              addthis.update('share', 'url',product.toJSON().url );
+                              addthis.update('share', 'title',product.toJSON().content.productName); 
+                             addthis.toolbox(".addthis_inline_share_toolbox");
+                          }catch(err){
+                              console.log("Error on addthis "+err);
+                          }
+                      }
+                }
+
+            });
+			
+			productView.personalizeProduct(personalizebutton);
+		});
+	 };
+	
     $(document).ready(function() {
         api.on("error",function (err) {
             console.log("Error");
@@ -110,7 +214,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                     });  
                     }
 
-                    if(ga!==undefined){
+                    if(typeof ga!== "undefined"){
                         ga('ec:addProduct', {
                         'id': proID,
                         'name': gaitem.product.name,
@@ -211,7 +315,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                     });  
                     }
 
-                    if(ga!==undefined){
+                    if(typeof ga!=="undefined"){
                         ga('ec:addProduct', {
                         'id': proID,
                         'name': gaitem.product.name,
@@ -242,7 +346,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                                   currency: 'USD'
                               });
                           }
-                          if(pintrk!==undefined){
+                          if(typeof pintrk!== "undefined"){
                              pintrk('track','addtocart',{
                                 value:parseFloat(track_price*ProductMod1.get('quantity')),
                                 order_quantity:parseInt(ProductMod1.get('quantity'),10),
@@ -279,126 +383,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
         $(".personalize").click(function(e){
               var productCode = $(e.currentTarget).data('product_id');
               window.showPageLoader();
-             api.request('GET','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
-                var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-                window.productView.DNDProductModel= new ProductModels.Product(res);
-                window.productView.DNDProductModel.on('addedtocart', function(cartitem) {
-                if (cartitem && cartitem.prop('id')) {
-                    var cartitemModel = new ProductModels.Product(cartitem.data);
-                  
-                    $('.dnd-popup').hide();
-                     $('body').css({overflow: 'scroll'});
-                $('html').removeClass('dnd-active-noscroll');
-                $('#cboxOverlay').hide();
-                    CartMonitor.addToCount(window.productView.DNDProductModel.get('quantity'));
-                    SoftCart.update();
-                   window.removePageLoader();
-                    addedToCart.proFunction(cartitemModel);
-                    
-                    //google analytics code for add to cart event
-            var gaitem = cartitemModel.apiModel.data;
-                  var proID = gaitem.product.productCode;
-                   
-                   var gaoptionval; 
-                    if(gaitem.product.productUsage == "Configurable" ){
-                      proID = gaitem.product.variationProductCode; 
-                    }
-                    
-                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-                    _.each(gaitem.product.options,function(opt,i){
-                    if(opt.name=="dnd-token"){
-
-                    }
-                    else if(opt.name == 'Color'){
-                    gaoptionval = opt.value;
-                    }
-                    else{
-                    gaoptionval =  opt.value;
-                    }
-                    });  
-                    } 
-
-                    if(ga!==undefined){
-                        ga('ec:addProduct', {
-                        'id': proID,
-                        'name': gaitem.product.name,
-                        'category': gaitem.product.categories[0].id,
-                        'brand': 'shindigz',
-                        'variant': gaoptionval,
-                        'price': gaitem.unitPrice.extendedAmount,
-                        'quantity': gaitem.quantity
-                        });
-                        ga('ec:setAction', 'Buysuperpagepersonal');
-                        ga('send', 'event', 'buy', 'buysuperpagepersonalize', gaitem.product.name);  
- 
-                    } 
-                                        
-
-                    //Facebook pixcel tracking
-                    var track_price= window.productView.DNDProductModel.get("price").toJSON().price;
-                         if( window.productView.DNDProductModel.get("price").toJSON().salePrice){
-                            track_price= window.productView.DNDProductModel.get("price").toJSON().salePrice;
-                         }
-                        var track_product_code=[];
-                         track_product_code.push(window.productView.DNDProductModel.toJSON().productCode);
-                         if(fbq!==undefined){
-                             fbq('track', 'AddToCart', {
-                                content_ids:track_product_code,
-                                content_type:'product',
-                                value: parseFloat(track_price*window.productView.DNDProductModel.get('quantity')).toFixed(2),
-                                currency: 'USD'
-                            });
-                         }
-                         if(pintrk!==undefined){
-                             pintrk('track','addtocart',{
-                                value:parseFloat(track_price*window.productView.DNDProductModel.get('quantity')),
-                                order_quantity:parseInt(window.productView.DNDProductModel.get('quantity'),10),
-                                currency:"USD",
-                                line_items:[{
-                                    product_name:window.productView.DNDProductModel.toJSON().content.productName,
-                                    product_id:track_product_code[0],
-                                    product_price:parseFloat(track_price),
-                                    product_quantity:parseInt(window.productView.DNDProductModel.get('quantity'),10)
-                                }]
-                            });
-                         }
-                      if(typeof window.addthis!=="undefined"){
-                          ///Update addthis to currect product model and rerender.
-                          try{
-                              addthis.update('share', 'url',window.location.origin+window.productView.DNDProductModel.toJSON().url );
-                              addthis.update('share', 'title',window.productView.DNDProductModel.toJSON().content.productName); 
-                             addthis.toolbox(".addthis_inline_share_toolbox");
-                          }catch(err){
-                              console.log("Error on addthis "+err);
-                          }
-                      }
-                }
-
-            });
-                if(window.productView.DNDProductModel.toJSON().volumePriceBands!==undefined){
-                    var minqt=_.min(_.pluck(window.productView.DNDProductModel.toJSON().volumePriceBands,"minQty"));
-                    if(minqt<=$("#qty-" + productCode).val()){
-                          window.productView.DNDProductModel.set("quantity",$("#qty-" + productCode).val());
-                    var dndEngineObj = new DNDEngine.DNDEngine(window.productView.DNDProductModel,dndUrl);
-                    dndEngineObj.initialize();
-                    dndEngineObj.send();
-                     window.removePageLoader();
-                 }else{
-                    window.removePageLoader();
-                    $(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p>"+"Sorry! Min Qty for this product is "+minqt+"</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>"); //session-btn-rd
-                    //alert();
-                 }
-                }else{
-                    window.productView.DNDProductModel.set("quantity",$("#qty-" + productCode).val());
-                    var dndEngineObjnew = new DNDEngine.DNDEngine(window.productView.DNDProductModel,dndUrl);
-                    dndEngineObjnew.initialize();
-                    dndEngineObjnew.send();
-                     window.removePageLoader();
-                }
-             },function(err){
-                console.log(err);
-                 window.removePageLoader();
-             });
+			initProductInQuickview(productCode,this);
         });
         $(".addToWishlist").click(function(e){
             if (!require.mozuData('user').isAnonymous) {
@@ -572,78 +557,6 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                 
         });
         });
-        window.productView = {};
-         window.productView.setOptionValues=function (data,pmodel) {
-             var self= this;
-            var options = pmodel.get('options');
-            /*var option = this.model.get('options').get(productAttributes.dndToken);
-            option.set('value',data.projectToken);*/
-            var extraAttribute =  null;
-            var extraJSON ={};
-            if(data.extras){
-                extraAttribute = JSON.parse(data.extras);
-                for(var l = 0; l < extraAttribute.length; l++){
-                    extraJSON['tenant~'+extraAttribute[l].attributeCode] = extraAttribute[l].value;
-                }
-            }
-            var payload={};
-            payload.options=[];
-            for(var i=0; i < options.length; i++){
-
-                if(options.models[i].get('attributeFQN')===productAttributes.dndToken){
-                    options.models[i].set('value',data.projectToken);
-                    options.models[i].set('shopperEnteredValue',data.projectToken);
-                }
-                if(Object.keys(extraJSON).length>0 && extraJSON[options.models[i].get('attributeFQN').toLowerCase()]){
-                    options.models[i].set('value',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
-                    options.models[i].set('shopperEnteredValue',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
-                }
-            }
-            pmodel.set('options', options);
-         };
-           window.productView.AddToWishlistAfterPersonalize=function(data){
-                window.productView.setOptionValues(data,window.productView.DNDProductModel);
-                if(data.quantity){
-                     window.productView.DNDProductModel.set('quantity', data.quantity);
-                }
-                addToWishlistWithDesgin(window.productView.DNDProductModel);
-        };
-        function addToWishlistWithDesgin(model){
-              model.on('addedtowishlist', function (cartitem) {
-                    $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                    $('.dnd-popup').remove();
-                    $('body').css({overflow: 'auto'});
-                    $('html').removeClass('dnd-active-noscroll');
-                    $('#cboxOverlay').hide();
-                    window.location.href=location.href;
-                });
-                if(!require.mozuData('user').isAnonymous) {
-                        Wishlist.initoWishlistPersonalize(model);
-                }else {
-                    var produtDetailToStoreInCookie ={};
-                    produtDetailToStoreInCookie.productCode=model.get('productCode');
-                     var objj=model.getConfiguredOptions();
-                    produtDetailToStoreInCookie.options=objj;
-                    $.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
-                    var ifrm = $("#homepageapicontext");
-                    if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                        Wishlist.initoWishlistPersonalize(model);
-                    }else{
-                        triggerLogin();
-                        $('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
-                    }
-                }
-        }
-         var productAttributes = Hypr.getThemeSetting('productAttributes');
-        window.productView.addToCartAfterPersonalize=function (data) {
-                //var self= this;
-            window.productView.setOptionValues(data,window.productView.DNDProductModel);
-            if(data.quantity){
-                window.productView.DNDProductModel.set('quantity', data.quantity);
-            }
-           window.productView.DNDProductModel.addToCart();
-           $("#cboxOverlay").css("display","none");
-        };
       
          var triggerLogin = function() {
             $('.trigger-login').trigger('click');
