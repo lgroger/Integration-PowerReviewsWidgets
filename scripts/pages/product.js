@@ -1,5 +1,5 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/added-to-cart", "modules/productview"],
-function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, ProductView) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/added-to-cart", "modules/productview", "modules/powerreviews"],
+function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, ProductView,PowerReviews) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
@@ -139,6 +139,40 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
             model: product
         });
 */
+		 // extend afterRender() to handle alternate images and power reviews display custom to PDP (not used by quick view)
+		 productView.customAfterRender = function(){
+			console.log('customAfterRender');
+			$('.slider-wrap').on('click','img',function(){
+                    var url = $(this).attr('data-image-url');
+                    $(this).parent().find("img").removeClass("active");
+                    url = (url.indexOf('?')!==-1)?url+'&max=450&quality=75':'?max=450&quality=75';
+                    $(".product-image > img").attr('src', url);
+                    $(".product-image > img").show();
+                    $("#video-frame").hide();
+                    $(this).addClass("active");
+                    $(".product-image > iframe").attr('src', "");
+                });
+            $(".video-slider img").click(function(){
+                if($(this).data("video")){    
+                    $(".product-image > img").hide();
+                    $(".product-image > iframe").attr('src', '//www.youtube.com/embed/' + $(this).data("video")+"?autoplay=1").show();
+                }
+            });
+            $("#video-frame").hide();
+
+            $(".custom-qty").children(".qtyminus,.qtyplus").css({"background-color":"transparent","fonts-size":"1rem"});
+
+            $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
+
+			 
+		 	try{
+            	PowerReviews.writeProductListBoxes();
+			}
+			catch(e){
+				console.log(e);
+			}
+		 };
+		 
         productView.render();
     };
 	

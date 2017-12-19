@@ -23,7 +23,7 @@
         <div class="container-left">
             <div class="product-image">
                 {% if model.mainImage.imageUrl %}
-                    <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=themeSettings.productImagesContainerWidth as_parameters %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} />
+                    <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=themeSettings.productImagesContainerWidth as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{model.content.productName}}"{% endif %} />
                 {% else %}
                     <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
                 {% endif %}
@@ -169,7 +169,8 @@
                         {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
                             <span></span>
                             <ul color-swatch-data="{{ prdValue }}">
-                            </ul>
+                              {# include current product as first swatch #}
+                              <li class="swatch-image"><a href="{% make_url "product" model %}" title="{{ model.content.productName }}"><img src="{% make_url "image" model.mainImage with max=50 as_parameter %}" /></a></li></ul>
                         {% endwith %}
                     </div>
                 {% endif %}
@@ -196,13 +197,13 @@
                    {% if model.discount.discount.name %}
                       <span class="mz-price-discountname">{{model.discount.discount.name}}</span>
                   {% endif %}
-                  <!-- Display Save Percentage for sale products -->
+                 {# Display Save Percentage for sale products #}
               {% if model.price.onSale and not model.price.discount %}
 				      {% with model.price.price|subtract(model.price.salePrice) as subAmt %}
 				      	{% with subAmt|divide(model.price.price) as divAmt %}
 				      		{% with divAmt|multiply(100) as perAmt %}
 				      			<br>
-				      			<span class="qv-savings">You Save {{ perAmt|floatformat(2) }}%</span>
+				      			<span class="qv-savings">You Save {{ perAmt|floatformat(0) }}%</span>
 				      		{% endwith %}
 				      	{% endwith %}
 				      {% endwith %}
@@ -214,10 +215,6 @@
                   </div>
                 {% endif %}
                 <div class="product-cart-wishlist">
-                    {% if model.productUsage=="Bundle" %}
-                        <a href="{{model.url}}"><button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large">View Details</button>
-                        </a>
-                    {% else %}
                       {% if model.isPersonalized %}
                         <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} disabled="disabled"{% endif %}>{% if not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}PERSONALIZE{% endif %}</button>
                       {% else %}
@@ -225,7 +222,7 @@
                                 {% if user.isAuthenticated ==false and user.isAnonymous ==false %}
                                     <p class="custom-party-plus">Session expired please click <a href="/user/login">here</a> to login</p>
                                 {% else %}
-                                     <p class="custom-party-plus">This product is available only for login users. Please register or login to your account. </p>
+                                     <p class="custom-party-plus">This product is available only for logged-in users. Please register or login to your account. </p>
                                 {% endif %}
                             {% else %}
                               <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %}is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} {% endif %} >{% if not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}{{ labels.addToCart }}{% endif %}</button>
@@ -271,13 +268,13 @@
 
                    
                  </div>
-               <!-- Go to www.addthis.com/dashboard to customize your tools -->
+               {# Go to www.addthis.com/dashboard to customize your tools #}
               
             </div>
             </div>
         </div>
         <div class="clear"></div>
-        <div class="mz-quick-veiw-close-btn">
+        <div class="mz-quick-view-close-btn">
             <a id="mz-quick-view-container-close" class="popup-close fa fa-remove cursor-pointer"></a>
         </div>
     </div>

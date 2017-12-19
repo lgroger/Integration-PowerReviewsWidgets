@@ -4,7 +4,7 @@ define(
     "modules/models-product"
 ], function (Api,ProductModels) {
 	var SharedProductInfo = {
-		products:	[], // will hold all items used as extras or bundle components - shared by product.js, dndengine.js
+		products:	[], // will hold all items used as extras or bundle components - shared by productview.js, dndengine.js
 		getExtraProduct:	function(productCode,callback){
 			var me = this;
 			console.log("getExtraProduct");

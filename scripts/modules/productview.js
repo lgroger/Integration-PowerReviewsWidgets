@@ -1,5 +1,5 @@
-define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "modules/powerreviews", "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info"],
-function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo) {
+define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info"],
+function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo) {
 
 	// Global variables for Banner Types
 	var bannerProductTypes = Hypr.getThemeSetting('bannerProductTypes');
@@ -49,6 +49,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, 
 		constructor: function (conf) {
 			var context = Backbone.MozuView.prototype.constructor.apply(this, arguments);
 			this.noCalcDelDate = conf.noCalcDelDate || this.noCalcDelDate;
+			this.customAfterRender = conf.customAfterRender || this.customAfterRender;
             return context;
 		},
         additionalEvents: {
@@ -74,6 +75,43 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, 
 			console.log("showBundle");
             $("body").css("overflow-y","hidden");
             $(".bundle-items-wrap-pdp").fadeIn();
+		},loadComponents: function(i){
+			console.log("loadComponents");
+			if(this.compLoadComplete){
+				return; // exit, already done
+			}
+			
+			if(typeof i ==="undefined"){
+				i = 0;
+			}
+
+			// loop over components and fill in the info that's only accessible via api calls (image, uom)
+				var bp = this.model.get('bundledProducts');
+				while(i<bp.length) {
+					var component = bp[i];
+					var product = SharedProductInfo.getExtraProduct(component.productCode,this.loadComponents.bind(this,i)); // if product not found, api call will be made and this.loadComponents() called again
+					if(product){
+						var holder = $(".bundle-inside-item[productcode='"+component.productCode+"']");
+						var productImages = product.get('content.productImages');
+						if(productImages.length>0){
+							$(holder).find(".bundle-img").attr("src",productImages[0].imageUrl+"?max=100");
+						}
+						else{
+							$(holder).find(".bundle-img").attr("src","/resources/images/no-image.png");
+						}
+						
+						var uom = getPropteryValueByAttributeFQN(this.model, productAttributes.unitOfMeasure);
+						if(uom){
+							$(holder).find("h3.uom").text(uom);
+						}
+						
+					}
+					else{
+						return(false);// exit, means we are waiting on api call inside getExtraProduct
+					}
+					i++;
+				}
+			this.compLoadComplete = true;
         },increaseQty: function(e){
 			console.log("increaseQty");
             $('.mz-productdetail-addtocart').prop('disabled',true);
@@ -173,13 +211,14 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, 
         personalizeProduct:function(e){
 			console.log("personalizeProduct");
         	//check for 0 quantity, display error message
-           
+           if(e){
            var $qField = $(e.currentTarget).parent().parent().find('[data-mz-value="quantity"]'),
            newQuantity = parseInt($qField.val(), 10);
             if(newQuantity < this.model._minQty){
                 $('[data-mz-validationmessage-for="quantity"]').html("Quantity should be more than minimum quantity: "+this.model._minQty);
                 return false;
             }
+		   }
            	// DnD Code  Start
             var me= this;
             var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
@@ -257,6 +296,8 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, 
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
             });
+			
+			this.loadComponents(); // start loading bundle component info in background (will allow better display of "what's inside" as well as less load time if customer tries to personalize)
         },
         hideOptions: function(){
 			console.log("hideOptions");
@@ -781,35 +822,11 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, 
                     $('[data-mz-product-option="tenant~pcdypcb"]').removeClass("hide");
                 }
             }
-
-            $('.slider-wrap').on('click','img',function(){
-                    var url = $(this).attr('data-image-url');
-                    $(this).parent().find("img").removeClass("active");
-                    url = (url.indexOf('?')!==-1)?url+'&max=450&quality=75':'?max=450&quality=75';
-                    $(".product-image > img").attr('src', url);
-                    $(".product-image > img").show();
-                    $("#video-frame").hide();
-                    $(this).addClass("active");
-                    $(".product-image > iframe").attr('src', "");
-                });
-            $(".video-slider img").click(function(){
-                if($(this).data("video")){    
-                    $(".product-image > img").hide();
-                    $(".product-image > iframe").attr('src', '//www.youtube.com/embed/' + $(this).data("video")+"?autoplay=1").show();
-                }
-            });
-            $("#video-frame").hide();
-			try{
-            	PowerReviews.writeProductListBoxes();
-			}
-			catch(e){
-				console.log(e);
-			}
-
-            $(".custom-qty").children(".qtyminus,.qtyplus").css({"background-color":"transparent","fonts-size":"1rem"});
-
-            $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
-        },
+			me.customAfterRender();
+		},
+		customAfterRender: function(){
+			// empty method called at end of afterRender - can be overridden to include display logic only applicable to that template
+		},
 		setIsPersonalized: function(){
 		// asssumption - if a product has dnd-token extra, then it's personalized (personalization can be on parent or components or extras) - we only look at parent for dnd-token
 			console.log("setIsPersonalized");
@@ -1071,9 +1088,20 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, PowerReviews, 
 				this.UPSholidayList = [];
             }
 		},
+		setQtyModel:function (qty) { // used by quickview
+			 var newQuantity = parseInt(qty, 10);
+			  if(newQuantity < this.model._minQty){
+				$('[data-mz-validationmessage-for="quantity"]').html("Quantity should be more than minimum quantity");
+				return false;
+			}else{
+				 this.model.set('quantity',newQuantity);
+			}
+		},
         initialize: function () {
 			console.log("initialize");
 			console.log(this.noCalcDelDate);
+			
+			this.compLoadComplete = false;
 
 			var estTime = new Date(); // time in UTC format
 			estTime.setTime(estTime.getTime()-5*60*60*1000); //subtract difference from GMT to Eastern so that when you use getUTCDay, getUTCHours, (etc) it will reflect value in Eastern timezone

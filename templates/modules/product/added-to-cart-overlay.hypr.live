@@ -85,7 +85,7 @@
       
    </div>
    </div>
-   <div class="mz-quick-veiw-close-btn">
+   <div class="mz-quick-view-close-btn">
       <a id="mz-added-to-cart-close" class="popup-close fa fa-remove cursor-pointer">&times;</a>
    </div>
 </div>

@@ -1,10 +1,15 @@
 define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','pages/colorswatch-super','vendor/wishlist',"modules/productview","hyprlive"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,ProductView,Hypr) {
 	
+	//	modules/quick-view.js handles the action when clicking on "Options" for products that don't have "add to cart" or "personalize" buttons
+	
 	 var initProductInQuickview= function(productCode,personalizebutton){
 		console.log("initProductInQuickview");
 		api.request('get','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
 			var product=new ProductModels.Product(res);
-			var productView = new ProductView(product);
+			var productView = new ProductView({
+				model: product
+			});
+			
 			product.on('addedtocart', function(cartitem) {
                 if (cartitem && cartitem.prop('id')) {
                     var cartitemModel = new ProductModels.Product(cartitem.data);
@@ -99,7 +104,9 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 
             });
 			
+			console.log("before personalizeProduct");
 			productView.personalizeProduct(personalizebutton);
+			window.removePageLoader();
 		});
 	 };
 	
@@ -247,7 +254,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                                           });
                                        }
                                        //Pinterest tracking
-                                       if(pintrk!==undefined){
+                                       if(typeof pintrk !== "undefined"){
                                            pintrk('track','addtocart',{
                                               value:parseFloat(track_price*ProductMod.get('quantity')),
                                               order_quantity:parseInt(ProductMod.get('quantity'),10),
@@ -382,6 +389,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
         });
         $(".personalize").click(function(e){
               var productCode = $(e.currentTarget).data('product_id');
+			console.log(productCode);
               window.showPageLoader();
 			initProductInQuickview(productCode,this);
         });

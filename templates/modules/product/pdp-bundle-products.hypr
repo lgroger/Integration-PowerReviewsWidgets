@@ -6,13 +6,14 @@
 	<div class="bundle-inside-item" productcode="{{components.productCode}}">
 			<div class="item-highlight">
 				<div class="block-img-sec">
-				<a href='{{product.url}}'><img class="bundle-img" style="" src="{{components.mainImage.src}}?max=100" alt="{{components.content.productName}}" /></a>
+				<img class="bundle-img" src="/resources/images/loading-gallery.gif" width="100" alt="{{components.content.productName}}" />
 				</div>
 				<div class="bundle-count">
 					x {{components.quantity}}
 				</div>
 			</div>
 			<h3>{{components.content.productName}}</h3>
+			<h3 class="uom">{# to be filled in with javascript after api call made #}</h3>
 		</div>
 
 		{% comment %}

@@ -363,7 +363,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             $('body').css({overflow: 'hidden'});
 			
 			// attach actions to closing of iframe
-            $(document).on('click', '.personalize-close', function(){
+            $(a).click(function(){
                 $('.dnd-popup').remove();
                 $('#cboxOverlay').hide();
                 $('body').css({overflow: 'auto'});
@@ -528,7 +528,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		self.doPers = function(){
 			console.log("doPers");
 			var dndItem = this.dndArr[this.index];
-			var remainPersItems = (this.index!==(this.dndArr-1))?true:false;
+			var remainPersItems = (this.index!==(this.dndArr.length-1))?true:false;
 			console.log(dndItem);
 			if(dndItem.mcCode){
 				// launch media clip window
