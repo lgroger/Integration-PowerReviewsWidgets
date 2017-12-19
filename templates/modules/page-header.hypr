@@ -3,11 +3,11 @@
 {% if pageContext.pageType != "checkout" %} 
 
 	<div class="header-block-container">
-		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} " style="">
+		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} ">
 		
 			<div style="display:block;">
 				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
-				<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
+				<div class="mz-cms-col-3-12 mob-logo-sec">
 					<div class="mob-header-logo">
 							{% if pageContext.cmsContext.template.path == "main-page" %}
 								<h1>
@@ -389,7 +389,7 @@
 
 						</a>
 						<span class="badge mz-cartmonitor floating-cart-badge">0</span> 
-						<div class="soft-cart-wrap" data-mz-role="soft-cart"></div>
+						<div class="soft-cart-wrap" data-mz-role="soft-cart"><div class="soft-cart-is-loading">Loading...</div></div> {# cart contents will load inside here on hover of element above it (scrips/modules/soft-cart.js) #}
 					</li>
 				</ul>
 			</div>

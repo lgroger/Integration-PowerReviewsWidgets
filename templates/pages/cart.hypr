@@ -19,7 +19,7 @@
 {% preload_json model "cart" %}
 <div class="cart_page_head mz-cms-col-12-12">
 	{% dropzone "cart-head" scope="template" %}
-	<style>.mz-breadcrumbs{display:none;}</style> 
+	{% block breadcrumbs %}{% endblock breadcrumbs %} {# hide breadcrumbs #}
 </div>
 
 <div class="mz-l-container cart-main-container">

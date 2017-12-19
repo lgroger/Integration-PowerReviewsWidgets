@@ -491,16 +491,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
              var est_delivery_dates=_.pluck(scope_obj.model.get("items"),'est_date');
              if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
                  scope_obj.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
-                     var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
-                     if(min_day.toString()!=="Invalid Date"){                        
-                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
-                        var date_str=window.dateFormatArr[0];
-                         if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
-                            date_str=window.dateFormatArr[min_day.getDate()%10];
-                         }
-                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
-                     }
-
+                    var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
+                    var prevDate = scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate;
+                        
+                        if(min_day.toString()!=="Invalid Date" ){
+                            if(prevDate && min_day > prevDate || prevDate === undefined){
+                                scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
+                                var date_str=window.dateFormatArr[0];
+                                if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
+                                   date_str=window.dateFormatArr[min_day.getDate()%10];
+                                }
+                                scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
+                            }
+                        }
                  });
              }
             scope_obj.model.set("fulfillmentInfo.drop_items",[]);
@@ -513,9 +516,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             prodDate=scope_obj.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>"+window.dateFormatArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()%10]+"</sup></strong>";
                          }
                         
-                        if(scope_obj.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) && ele[ship_key].toString()!==scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
-                            scope_obj.model.get("fulfillmentInfo.drop_items").push(prodDate);
-                        } 
+                        var ship_zip=_.findWhere(scope_obj.model.get("items")[idx].product.properties, {'attributeFQN':  Hypr.getThemeSetting('productAttributes').shipZip});
+                        
+                        if(scope_obj.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) ){//&& ele[ship_key].toString()!==scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
+                            if(ship_zip.values.length && ship_zip.values[0].value.toString() != '46787'){
+                               scope_obj.model.get("fulfillmentInfo.drop_items").push(prodDate);
+                            }
+                        }  
                     }
                  });
             }
@@ -708,11 +715,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
                  //console.log(obj.productCode+" - "+prod_time);
                 if(ship_zip!==undefined){
-                    if(ship_zip.values[0].stringValue==="46787"){
+                    var zipCode = ship_zip.values[0];
+                    if(zipCode.stringValue.trim() ==="46787"){
                         indiana_package.push(obj);
                         window.indina_idx_arr.push(i);
-                        if(prod_time>=indiana_max_prod_days){
-                            indiana_max_prod_days=prod_time;
+                        if(prod_time === 0 || prod_time>=indiana_max_prod_days){
+                            indiana_max_prod_days = (prod_time > 0) ? prod_time:indiana_max_prod_days;
                             indiana_prd_idx=i;
                         }
                     }
@@ -1210,6 +1218,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                scope_obj.skip_holidays(ship_start,1,shipping_holidays_list,scope_obj.setShippingStartDate,idx,scope_obj);
             }
         },USADeliveryDate:function(ship_date,idx,holidays,scope_obj,add_day,isIndiana){
+            //Switched Shipping Holidays to UPS Holidays
+            holidays =  _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
             try{
                 if(add_day){
                     scope_obj.skip_holidays(ship_date,1,holidays,function(est_ups) {
@@ -1260,7 +1270,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             scope_obj.model.get("items")[idx].est_date=("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2)+"/"+ship_date.getFullYear();
              //scope_obj.model.get("items")[idx].est_date=ship_date.toISOString().slice(0,10).replace(/\-/g,"/");
              scope_obj.renderCustomAfterShip(scope_obj);
-        },
+        }, 
         // override loading button changing at inappropriate times
         handleLoadingChange: function () { }
     });

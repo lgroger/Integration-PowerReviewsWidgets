@@ -93,37 +93,35 @@
           <link rel="alternate" type="application/rss+xml" title="{{ PageContext.Title }}" href="{{ PageContext.FeedUrl }}" />
           {% endif %}
 
-          {% with pageContext.cmsContext.template.path as templateType %}
               {% with siteContext.domains.primary.domainName as domainName %}
                   {% if PageContext.url  %}
                       {% if pageContext.cmsContext.template.path =="main-page" %}
+                        {# home page #}
                           <link rel="canonical" href="{% if pageContext.isSecure %}https{% else %}http{% endif %}://{{ siteContext.domains.current.domainName }}">
                       {% else %}
-                          {% if model.name and templateType != "categorylanding" and templateType!="category" and templateType != "product" and templateType!="super-page" and templateType !="parent-category" %}
-                            {% if pageContext.isSecure %} 
-                              {{ '<link  rel="canonical" href="https://{0}/{1}">'|string_format(domainName, model.name) }}
-                            {% else %}
-                              {{ '<link  rel="canonical" href="http://{0}/{1}">'|string_format(domainName, model.name) }}
+                          {% if model.url and (PageContext.PageType == "category" or PageContext.PageType == "product") %}
+                            {# product and category pages - no canonical if facets filled out #}
+                            {% if not pageContext.search.facets %}
+                              {% if pageContext.isSecure %}
+                                {{ '<link rel="canonical" href="https://{0}{1}">'|string_format(domainName, model.url) }}
+                              {% else %}
+                                {{ '<link rel="canonical" href="http://{0}{1}">'|string_format(domainName, model.url) }}
+                              {% endif %}
                             {% endif %}
                           {% else %}
-                            {% if model.url %}
-                              {% if pageContext.search and not pageContext.search.facets %}
-                                {% if pageContext.isSecure %}
-                                  {{ '<link rel="canonical" href="https://{0}{1}">'|string_format(domainName, model.url) }}
-                                {% else %}
-                                  {{ '<link rel="canonical" href="http://{0}{1}">'|string_format(domainName, model.url) }}
-                                {% endif %}
+                            {# static pages #}
+                            {% if model.name %}
+                              {% if pageContext.isSecure %}
+                                {{ '<link  rel="canonical" href="https://{0}/{1}">'|string_format(domainName, model.name) }}
+                              {% else %}
+                                {{ '<link  rel="canonical" href="http://{0}/{1}">'|string_format(domainName, model.name) }}
                               {% endif %}
-                          {% else %}
-
-                          {% if templateType == "search-results" or templateType == "404" or templateType == "cart" or templateType == "checkout" or templateType == "my-account" %}
-                          {% endif %}
-                          {% endif %}
+                            {% endif %}
                           {% endif %}
                       {% endif %}
                   {% endif %}
               {% endwith %}
-          {% endwith %}
+
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
           {% if PageContext.CrawlerInfo.PreviousUrl  %}
           <link rel="prev" href="{{PageContext.CrawlerInfo.PreviousUrl}}">

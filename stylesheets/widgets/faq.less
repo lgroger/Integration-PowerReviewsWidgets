@@ -10,7 +10,7 @@
 		color: @textColor;
 		border-radius: 10px;
 		font-weight: 400;
-		border: 1px dashed #d7d7d7;
+		border: 1px dashed @secondaryWhite;
 		transition:background 0.4s ease-in-out;
 		&:after{
 			content: "";
@@ -25,18 +25,14 @@
 		&+div{
 			display: none;
 			padding: 20px 40px;
-			border: 1px solid #f9f9f9;
+			border: 1px solid @secondaryWhite;
 			border-bottom-right-radius: 10px;
 			border-bottom-left-radius: 10px;
 			font: 16px/1.4 @fontFamily;
 			color: @textColor;
-			background: #f9f9f9;
+			background: @secondaryWhite;
 			a{
-				color: @linkColor;
 				text-decoration: none;
-				&:hover,&:focus{
-					color: @linkHoverColor;
-				}
 			}
 			iframe,img{
 				margin: 15px;
@@ -46,7 +42,7 @@
 			border-bottom-right-radius: 0;
 			border-bottom-left-radius: 0;
 			color: #fff;
-			background: #848484;
+			background: @primaryBlue;
 			&:after{
 				width: 25px;
 				height: 25px;
@@ -63,13 +59,9 @@
 .default-faq-contact{
 	margin-top: 30px;
 	font:italic 16px/1.3 @fontGTWalsheimLight;
-	color: #000;
+	color: @textColor;
 	a{
-		color: @linkColor;
 		text-decoration: underline;
-		&:hover,&:focus{
-			 color: @linkHoverColor;
-		}
 	}
 }
 .btn-fn{

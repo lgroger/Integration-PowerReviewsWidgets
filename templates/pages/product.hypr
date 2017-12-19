@@ -18,6 +18,9 @@
    }
 </style>
 <[endif]-->
+{% include_documents "widgets/cms/ups_ship" with view="holidayView" and listFQN="UPSholidayList@shindigz" and pageSize=40 as_parameter %}
+{% include_documents "widgets/cms/holiday_preload" with view="holidayView" and listFQN="ShippingholidayList@shindigz" and pageSize=100 as_parameter %} 
+
 <div class="mz-breadcrumbs">   
    <a href="../../" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
    <span class="mz-breadcrumb-separator"> / </span> 

@@ -560,3 +560,36 @@ font-size: 16px;
         margin-top: 4px;
     }
 }
+
+/* deals bar not marked as keep in widget  GW 11/29/17*/
+.homepage-offer-desktop-img {
+    width: 100%;
+    @media (max-width: 367px) {
+        display: none;
+    }
+    @media (max-width: 436px) {
+        display:none;
+    }
+    @media screen and (max-width:700px){
+        display:none;
+    }
+}
+.homepage-offer-mobile-img {
+    width: 100%;
+    @media (max-width: 367px) {
+        display: block;
+    }
+    @media (max-width: 436px) {
+        display: block;
+    }
+    @media screen and (min-width:700px) {
+        display:none;
+    }
+}
+.sz-offer-container {
+    @media screen and (min-width:700px) {
+        text-align: center;
+        margin: 0 auto 15px auto;
+    }
+}
+ 

@@ -474,7 +474,35 @@
                 <button id="cart-checkout" class="checkout_btn mz-button mz-button-large mz-carttable-button-active"  {% if model.isEmpty %} disabled="disabled" {% endif %} data-mz-action="proceedToCheckout">Secure Checkout</button>
             {% endif %}
 
+{% if not model.isEmpty %}
+    {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
+        {% if externalPaymentWorkflowsEnabled %}
+            <div class="cart-pwa-pp-info">
+                <div>We accept Credit Cards or pay with:</div>
+                <div>
+                {% for externalPayment in siteContext.checkoutSettings.externalPaymentWorkflowSettings %}
+                {% if externalPayment.isEnabled %}
+                    {% if externalPayment.name == "PayWithAmazon" %}
+                        <button {% if model.isEmpty %}disabled="disabled"{% endif %} {% if user.isAnonymous %}data-toggle="popover"{% else %}data-mz-action="proceedToCheckout"{% endif %} id="cart-pwa-img">
+                            <img src="../resources/images/amazon.svg" alt="Checkout with Amazon" />
+                        </button>
+                    {% endif %}
+                    {% if externalPayment.name == "PayPalExpress2" %}
+                        <button {% if model.isEmpty %}disabled="disabled"{% endif %} {% if user.isAnonymous %}data-toggle="popover"{% else %}data-mz-action="proceedToCheckout"{% endif %} id="cart-pp-img">
+                            <img src="../resources/images/paypal.svg" alt="Checkout with Paypal" />
+                        </button>
+                    {% endif %}
+                {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+        {% endif %}
+    {%endwith%}
+{% endif %}
 
+{% dropzone "cart-summary-bottom" scope="template" %}
+
+{% comment %}
         <!-- Added from third-party files. -->
         {% if not model.isEmpty %}
             {% with siteContext.checkoutSettings.externalPaymentWorkflowSettings|findwhere("isEnabled", true) as externalPaymentWorkflowsEnabled %}
@@ -489,18 +517,10 @@
                                             </div>
                                             <div id="AmazonPayButton" style="display:none;"></div>
                                         {% endif %}
-                                    {% comment %}
-                                <!--    {% if externalPayment.name == "VisaCheckout" %}
-                                        <img alt="Visa Checkout" class="v-button" role="button" src="{{pageContext.visaCheckoutButtonUrl}}"/>
-                                    {%endif%} -->
-                                    {% endcomment %}
                                     {% if externalPayment.name == "PayPalExpress2" %}
                                         <div class="pay_option_btn p-button" id="btn_xpressPaypal" role="button" >
                                             <span>Checkout with</span><img src="../resources/images/paypal.jpg" alt="Checkout with Paypal" />
                                         </div>
-                                        {% comment %}
-                                        <!--    <img id="btn_xpressPaypal" class="p-button" alt="Check out with PayPal" role="button" src="https://www.paypalobjects.com/webstatic/en_US/i/buttons/checkout-logo-medium.png" width="170px" height="32px" /> -->
-                                        {% endcomment %}
                                         {% require_script "modules/xpressPaypal" %}
                                     {% endif %}
                                 </div>
@@ -510,7 +530,7 @@
                 {% endif %}
             {%endwith%}
         {% endif %}
-
+{% endcomment %}
             <div class="continue_shopping mob_show">
               <a href="/">{{ themeSettings.continueShoppingLink }}</a>
             </div>
