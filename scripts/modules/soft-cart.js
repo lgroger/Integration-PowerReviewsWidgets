@@ -8,7 +8,7 @@ function($, Backbone, CartModels,Hypr) {
   // declare a MozuView that can rewrite its contents with a Hypr template
   // var cartUpdate = this.model.apiGet();
   function setLoginForCheckout(){
-          console.log("setLoginForCheckout function called..");
+          //console.log("setLoginForCheckout function called..");
           $('a#login').trigger('click'); 
           $('#cboxOverlay').show().css('height',$(document).height());
           $('.mz-cms-col-12-12.login-popover-title').hide();
@@ -127,7 +127,7 @@ function($, Backbone, CartModels,Hypr) {
 	$(".soft-cart-wrap").each(function(){
 		var thedropdown = this;
 		$(this).parent().mouseover(function(){
-			console.log("mouseover \/api\/commerce\/carts");
+			//console.log("mouseover \/api\/commerce\/carts");
 			SoftCartInstance.loadIt();
 		}).hover(function(){
 			$(thedropdown).show();
@@ -136,7 +136,7 @@ function($, Backbone, CartModels,Hypr) {
 		});
 		
 	});
-	console.log('event added \/api\/commerce\/carts');
+	//console.log('event added \/api\/commerce\/carts');
     // bind cart links to open the softcart instead 
 /*    $(document.body).on('mouseover', 'a[href="/cart"],.soft-cart-wrap', function(e) {
         e.preventDefault();
