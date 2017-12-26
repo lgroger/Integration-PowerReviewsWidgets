@@ -519,7 +519,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                         var ship_zip=_.findWhere(scope_obj.model.get("items")[idx].product.properties, {'attributeFQN':  Hypr.getThemeSetting('productAttributes').shipZip});
                         
                         if(scope_obj.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) ){//&& ele[ship_key].toString()!==scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
-                            if(ship_zip.values.length && ship_zip.values[0].value.toString() != '46787'){
+                            if(ship_zip && ship_zip.values.length && ship_zip.values[0].value.toString() != '46787'){
                                scope_obj.model.get("fulfillmentInfo.drop_items").push(prodDate);
                             }
                         }  
