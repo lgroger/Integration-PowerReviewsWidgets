@@ -2,12 +2,11 @@
 define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu','modules/api', 
     'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'modules/soft-cart', 
     'hyprlive', 'modules/preserve-element-through-render', 'modules/amazonPay', 
-    'vendor/wishlist', 'pages/dndengine','modules/models-product'], 
-function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels) {
+    'vendor/wishlist', 'pages/dndengine', 'modules/models-product',"modules/shared-product-info"], 
+function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo) {
  var productAttributes = Hypr.getThemeSetting('productAttributes');  
        var idx;var ship_default;
        var ship_flag=false;
-       window.extrasProducts=[];
    
     var CartView = Backbone.MozuView.extend({
         templateName: "modules/cart/cart-table",
@@ -268,10 +267,11 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
         },
         render: function() {
+			console.log("carview render");
           //  console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
             if(me.model.get('items').length>0){
-                me.showPersonalizeImage();
+                me.getPersonalizationInfo();
                 me.getProductionTime(this);
                 me.calculateShippingSurcharge();
             }
@@ -282,6 +282,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             // this.calculateEstimate();
         },
         afterRender: function(){
+			console.log('afterRender');
             if($.cookie('szcontinueurl')){
             var sxurl = $.cookie('szcontinueurl');
             //console.log(sxurl);
@@ -356,63 +357,38 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             "click #triggerAmazon":"triggerAmazonPay"
         },triggerAmazonPay:function(){
              $('#OffAmazonPaymentsWidgets1').trigger('click'); 
-        },showPersonalizeImage: function(){
-            var me = this, imgsrc,dndToken;
-            var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
-            var items = me.model.get('items');
-            var personslizeIds = null, personslizeJson=null;
+        },getPersonalizationInfo: function(){
+			console.log("getPersonalizationInfo");
+            var items = this.model.get('items');
+			var info;
             for(var i=0; i < items.length; i++){
-                personslizeIds = null;
-                personslizeJson = null;
-                for(var j =0 ; j < items.models[i].get('product').get('options').length; j++){
-                        if(items.models[i].get('product').get('options')[j].attributeFQN.toLowerCase() ==='tenant~dnd-token'){
-                            if(items.models[i].get('product').get('options')[j].shopperEnteredValue && items.models[i].get('product').get('options')[j].shopperEnteredValue!==""){
-                                personslizeIds = JSON.parse(items.models[i].get('product').get('options')[j].shopperEnteredValue);
-                            }
-                        }
-                }
-                if(personslizeIds!==null && personslizeIds!==undefined){
-                    personslizeJson={};
-                    for(var eku in personslizeIds){
-                        if(eku.indexOf('@')!==-1){
-                            var prdCode = eku.split('@')[0];
-                            personslizeJson[prdCode]=personslizeIds[eku];
-                        }else{
-                            personslizeJson[eku]=personslizeIds[eku];
-                        }
-                    }
-                    items.models[i].set('personslizeIds',personslizeJson);
-                }
-                if(items.models[i].get('product').get('productUsage') === 'Bundle'){
-                    for(var k=0;k<items.models[i].get('product').get('bundledProducts').length;k++){
-                        if(items.models[i].get('personslizeIds')){
-                            dndToken = items.models[i].get('personslizeIds')[items.models[i].get('product').get('bundledProducts')[k].productCode];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                items.models[i].get('product').get('bundledProducts')[k].dndToken = dndToken;
-                            }else
-                            {
-                                imgsrc = $('[componentimageid="'+items.models[i].get('id')+'-'+items.models[i].get('product').get('bundledProducts')[k].productCode+'"]').attr('src');
-                            }
-                            items.models[i].get('product').get('bundledProducts')[k].imageUrl = imgsrc;
-                        }
-                    }
-                }else{
-                    var dndTokenList = items.models[i].get('personslizeIds');
-                    for (var prop in dndTokenList) {
-                        if (dndTokenList.hasOwnProperty(prop)) {
-                            //alert(dndToken[prop]);
-                            dndToken = dndTokenList[prop];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                items.models[i].get('product').set('imageUrl',imgsrc);
-                            }  
-                        } 
-                    }
-
-                     
-                }
-
+				var product = items.models[i].get('product');
+				var options = product.get('options');
+				var dndStr;
+				for(var o=0;o< options.length;o++){ 
+					if(options[o].attributeFQN === productAttributes.dndToken){
+						if(options[o].shopperEnteredValue !== ""){
+							dndStr = options[o].shopperEnteredValue;
+						}
+						break;
+					}
+				}
+				if(dndStr){
+					var dndtoken = JSON.parse(dndStr);
+					if(items.models[i].get('product').get('productUsage') === 'Bundle'){
+						// look for token info per component
+						for(var k=0;k<items.models[i].get('product').get('bundledProducts').length;k++){
+							info = DNDEngine.getTokenData(dndtoken, items.models[i].get('product').get('bundledProducts')[k].productCode);
+							items.models[i].get('product').get('bundledProducts')[k].dndToken = info.token;
+							items.models[i].get('product').get('bundledProducts')[k].imageUrl = info.src;
+						}
+					}else{
+						// look for parent token info
+						info = DNDEngine.getTokenData(dndtoken);
+						items.models[i].get('product').set('imageUrl',info.src);
+						items.models[i].get('product').set('dndToken',info.token);
+                	}
+				}
             }
         },
         toggleComponets: function(e){
@@ -591,7 +567,8 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                                 var values = option.get('values');
                                 for(var l=0;l<values.length;l++){
                                     var extraValues={};
-                                    var eprod = self.getExtraProduct(values[l].value);
+                                    //var eprod = SharedProductInfo.getExtraProduct(values[l].value);
+									var eprod = self.getExtraProduct(values[l].value);
                                     extraValues.price = values[l].deltaPrice;
                                     extraValues.name = values[l].stringValue;
                                     extraValues.value = values[l].value;
@@ -617,81 +594,32 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
         },
         editPersonalize: function(e){
             var me=this;
-            var dndTokenList = JSON.parse($(e.currentTarget).attr('data-mz-token'));
-            var dndToken = null, eskuSplit, eskuValue;
-           
+            var dndToken = $(e.currentTarget).attr('data-mz-token');
             var itemId = $(e.currentTarget).attr('itemId');
-
             var cartItemList = this.model.get('items').where({id:itemId});
             var cartItemModel = cartItemList[0];
-            window.showPageLoader();
-             Api.on('success', function(res, xhr,request){
-                try{
-                    var productExtrasResponse = xhr.getResponseHeader("productExtras");
-                    if(productExtrasResponse && productExtrasResponse!==""){
-                        var productExtras = JSON.parse(productExtrasResponse);
-                        if(productExtras.length>0){
-                            for(var i=0;i<productExtras.length;i++){
-                               window.extrasProducts.push(productExtras[i]);
-                            }
-
-                        }
-
-                    }
-                }catch(e){
-                    console.log(e);
-                }
-            });
-             Api.request('get','/api/commerce/catalog/storefront/products/'+cartItemModel.get('product').get('productCode')+'?my=1').then(function(res){
-                var product=new ProductModels.Product(res);
-                for (var prop in dndTokenList) {
-                    if (dndTokenList.hasOwnProperty(prop)) {
-                        //alert(dndToken[prop]);
-                        dndToken = dndTokenList[prop];
-                        eskuValue = prop;
-                        if(prop.indexOf('@')!==-1){
-                            eskuSplit = prop.split('@');
-                            eskuValue = eskuSplit[eskuSplit.length-1];
-                        }
-                        cartItemModel.get('product').set('mfgPartNumber',eskuValue);
-                        var extrasProductInfo = me.getSelectedExtrasInfo(product);
-                        if(extrasProductInfo){cartItemModel.get('product').set('extrasProductInfo',extrasProductInfo);}
-                    } 
-                }
-                window.removePageLoader();
-                 var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-                dndUrl+=dndToken+'/edit';
-                var dndEngineObj = new DNDEngine.DNDEngine(cartItemModel,dndUrl,me);
-                dndEngineObj.initialize();
-                dndEngineObj.send();
-                    
-            });
-
+            var dndEngineObj = new DNDEngine.DNDEngine(cartItemModel,me); // need to pass in existing token somehow
+			dndEngineObj.initializeAndSend();
         },
-        editPersonalizeBundleItem: function(e){ 
+        editPersonalizeBundleItem: function(e){
+			window.showPageLoader();
             var me = this;
-
             var dndToken = $(e.currentTarget).attr('data-mz-token');
-           
             var itemId = $(e.currentTarget).attr('itemId');
             var productCode = $(e.currentTarget).attr('productCode');
 
-            /*var cartItemList = this.model.get('items').where({id:itemId});
-            var cartItemModel = cartItemList[0];*/
-
-             
-            /** DnD Code  Start **/
+            // DnD Code  Start
             Api.get('product',productCode).then(function(sdkProduct) {
                 var product = new ProductModels.Product(sdkProduct.data);
                 product.set('cartlineid',itemId);
-                var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-                dndUrl+=dndToken+'/edit';
-                var dndEngineObj = new DNDEngine.DNDEngine(product,dndUrl,me);
-                dndEngineObj.initialize();
-                dndEngineObj.send();
-            });
+                var dndEngineObj = new DNDEngine.DNDEngine(product,me); // need to pass in existing token somehow
+				dndEngineObj.initializeAndSend();
+            },function(e){
+				console.log(e);
+				window.removePageLoader();
+			});
             
-                /** DnD Code  End **/
+            //DnD Code  End
         },
         updateQuantity: _.debounce(function (e) {
             var $qField = $(e.currentTarget),
@@ -1115,10 +1043,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             CartMonitor.setCount(cartModel.count());
         });
 
-        window.cartView = cartViews;
         cartViews.cartView.render();
-
-        cartViews.cartView.afterRender();
 
         CartMonitor.setCount(cartModel.count());
         

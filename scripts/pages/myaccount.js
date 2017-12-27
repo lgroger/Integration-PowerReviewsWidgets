@@ -1,7 +1,7 @@
 define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view',
-    'vendor/wishlist', 'modules/models-product', 'modules/added-to-cart', 'pages/dndengine',"modules/soft-cart","modules/cart-monitor","modules/models-orders"],
+    'vendor/wishlist', 'modules/models-product', 'modules/added-to-cart', 'pages/dndengine',"modules/soft-cart","modules/cart-monitor","modules/models-orders", "modules/productview"],
     function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews,
-        EditableView, Wishlist, ProductModels, addedToCart, DNDEngine, SoftCart, CartMonitor, OrderModel){
+        EditableView, Wishlist, ProductModels, addedToCart, DNDEngine, SoftCart, CartMonitor, OrderModel, ProductView){
     
     Hypr.engine.setFilter("contains",function(obj,k){ 
             return obj.indexOf(k) > -1;
@@ -86,7 +86,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     callback(product);
             });
         };
-
+/*
     var ProductView = Backbone.MozuView.extend({
             templateName: 'modules/product/quickview',
             autoUpdate: ['quantity'],
@@ -106,7 +106,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 this.model.addToCart();
             },
             personalizeProduct:function(e){
-                /** DnD Code  Start **/
+                // DnD Code  Start
 
                 var $qField = $(e.currentTarget).parent().parent().find('[data-mz-value="quantity"]'),
                 newQuantity = parseInt($qField.val(), 10);
@@ -131,7 +131,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 var dndEngineObj = new DNDEngine.DNDEngine(this.model,dndUrl);
                 dndEngineObj.initialize();
                 dndEngineObj.send();
-                /** DnD Code  End **/
+                // DnD Code  End
             },
             showOptionsList: function(e){
                 $('.mz-productdetail-addtocart').prop('disabled',true);
@@ -163,7 +163,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         }
                     }
                 });
-                /** Banner Product Slit enable/disable **/
+                // Banner Product Slit enable/disable
                  if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
                     var option = me.model.get('options').get(productAttributes.outdoorbanner);
                     var slitoption = me.model.get('options').get(productAttributes.outdoorbannerslits);
@@ -172,7 +172,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }else{
                         me.model.set('enableSlitoption', false);
                     }
-                     /** Enable Price Range Flag if Price Range Is Not Null **/
+                    // Enable Price Range Flag if Price Range Is Not Null
                     var jsonModel = me.model.toJSON();
                     if(objj.length===0 && !!jsonModel.priceRange){
                           me.model.apiModel.data = jsonModel;
@@ -263,19 +263,14 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         this.$('[data-mz-product-option]').parents('.mz-productdetail-options').hide();
                     }
                 }
-                /*if(this.model.get('productUsage')==='Bundle'){
-                    $('.addToCart').attr('disabled',true).addClass('is-disabled');
-                    if($('.bundleItemDndCode').length > 0 ){
-                        $('.addToCart').html('Personalize').addClass('personalize').removeAttr('id');
-                    }
-                }*/
+
 
                 if(me.model.get('productType')==='CandyBar'){
                     var selectOptonVal = $('[data-mz-product-option="tenant~cdyper-choice"]').val();
                     if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()=="cdyperw-option"){
                         $('[data-mz-product-option="tenant~pcdypcb"]').closest('.mz-productoptions-optioncontainer').hide();
                     }
-                /** Product Typ candbary check options are selected or not **/
+                // Product Typ candbary check options are selected or not
                 
                     if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){
                         if(me.model.get('purchasableState').isPurchasable && (($("[data-mz-product-option='tenant~pcdypcb']").length > 0 && typeof $("[data-mz-product-option='tenant~pcdypcb']").val()!== "undefined" && $("[data-mz-product-option='tenant~pcdypcb']").val()!=="") || $("[data-mz-product-option='tenant~pcdypcb']").length === 0)){
@@ -740,8 +735,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             setOptionValues: function(data){
                 var self= this;
                 var options = this.model.get('options');
-                /*var option = this.model.get('options').get(productAttributes.dndToken);
-                option.set('value',data.projectToken);*/
+
                 var extraAttribute =  null;
                 var extraJSON ={};
                 if(data.extras){
@@ -829,7 +823,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         }
                 }
             }
-        });
+        }); */ 
 
 	var loadMDY = function(day,month,year,future,past){
         	var month_list = ['January','Febraury','March','April','May','June','July','August','September','October','November','December'],
@@ -1790,27 +1784,30 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             var itemid = target.attr('id');
             var wishlistCollection = this.model.get('items').where({'id':wishlistid});
             var wishlist = wishlistCollection[0];
-            var wihslistitems = wishlist.get('items');
+            var wishlistitems = wishlist.get('items');
             var currentItem = null;
-            for(var i=0;i<wihslistitems.length;i++){
-                if(wihslistitems[i].id==itemid){
-                    currentItem = wihslistitems[i];
+            for(var i=0;i<wishlistitems.length;i++){
+                if(wishlistitems[i].id==itemid){
+                    currentItem = wishlistitems[i];
                     break;
                 }
             }
             //console.log(currentItem);
-            currentItem.product.wishlistId = wishlistid;
-            currentItem.product.wishlistlineitemId=itemid;
-            var qty = parseInt(target.closest('.orders-body').find('[data-mz-value=quantity]').val(),10);
-            if(qty>0){
-                currentItem.product.quantity = qty;
-            }else{
-                currentItem.product.quantity = currentItem.quantity;
-            }
-            var productModel = new ProductModels.Product(currentItem.product);
-            //productModel.set({'wishlistlineitemId':itemid});
-            window.myAccProductView.initialize(productModel);
-            window.myAccProductView.personalizeProduct();
+			if(currentItem){
+            	currentItem.product.wishlistId = wishlistid;
+            	currentItem.product.wishlistlineitemId=itemid;
+            	var qty = parseInt(target.closest('.orders-body').find('[data-mz-value=quantity]').val(),10);
+				if(qty>0){
+                	currentItem.product.quantity = qty;
+				}else{
+					currentItem.product.quantity = currentItem.quantity;
+				}
+				var productModel = new ProductModels.Product(currentItem.product);
+
+				//productModel.set({'wishlistlineitemId':itemid});
+				window.myAccProductView.initialize(productModel);
+				window.myAccProductView.personalizeProduct();
+			}
         },
         addToCart: function(e) {
             window.showPageLoader();
@@ -1819,11 +1816,11 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             var itemid = target.attr('id');
             var wishlistCollection = this.model.get('items').where({'id':wishlistid});
             var wishlist = wishlistCollection[0];
-            var wihslistitems = wishlist.get('items');
+            var wishlistitems = wishlist.get('items');
             var currentItem = null;
-            for(var i=0;i<wihslistitems.length;i++){
-                if(wihslistitems[i].id==itemid){
-                    currentItem = wihslistitems[i];
+            for(var i=0;i<wishlistitems.length;i++){
+                if(wishlistitems[i].id==itemid){
+                    currentItem = wishlistitems[i];
                     break;
                 }
             }
@@ -1837,20 +1834,21 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 Api.get('product',currentItem.product.productCode).then(function(res) {
                     var productModel1 = new ProductModels.Product(res.data);
                     $('body').append('<div id="mz-quick-view-container"></div>');
-                        window.productView = new ProductView({
-                            el: $('#mz-quick-view-container'),
-                            messagesEl: $('[data-mz-message-bar]'),
-                            model:productModel1,
-                            productCode: productModel1.id
-                        });
-                        window.productView.render();
-                        window.removePageLoader();
-                        $('#mz-quick-view-container').fadeIn(350);
-                        $(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
-                            if(e.target !== e.currentTarget) return;
-                            $('#mz-quick-view-container').fadeOut(350);
-                            $('#mz-quick-view-container').remove();
-                        });                
+					var productView = new ProductView({
+						el: $('#mz-quick-view-container'),
+						templateName: 'modules/product/quickview',
+						messagesEl: $('[data-mz-message-bar]'),
+						model:productModel1,
+						productCode: productModel1.id
+					});
+					productView.render();
+					window.removePageLoader();
+					$('#mz-quick-view-container').fadeIn(350);
+					$(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
+						if(e.target !== e.currentTarget) return;
+						$('#mz-quick-view-container').fadeOut(350);
+						$('#mz-quick-view-container').remove();
+					});                
                 },function(err) {
                     console.log(err);
                     window.removePageLoader();
@@ -1875,7 +1873,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     sku = variationProductCode;
                   }
                 }
-                if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': productModel.attributes.productCode , 'sku' : sku });}
+                if(typeof BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': productModel.attributes.productCode , 'sku' : sku });}
                 //end
                 productModel.on('error', function(a){
                     console.log(a);

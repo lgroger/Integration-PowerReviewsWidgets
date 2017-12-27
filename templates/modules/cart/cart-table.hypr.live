@@ -1,3 +1,10 @@
+{% comment %}
+cart.js sets these values
+item.product.imageUrl
+item.product.dndToken
+item.product.bundledProducts[x].imageUrl
+item.product.bundledProducts[x].dndToken
+{% endcomment %}
 <div class="mz-cms-col-4-12 cart-items-summary shopcart_top">
     <div class="cart-estimate-total">
         <span class="label">ESTIMATED TOTAL: &nbsp;</span>
@@ -69,14 +76,13 @@
             <td class="mz-carttable-item-description">
                 <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
                     <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
+                        {% if item.product.dndToken %}
+                            <dd class="mz-carttable-item-code">
+                                <a href="javascript:void(0)" class="editpersonalize" data-mz-token="{{item.product.dndToken}}" itemId="{{item.id}}">Edit Personalization</a>
+                            </dd>
+                        {% endif %}
+
                     {% if item.product.options and themeSettings.showCartItemOptions %}
-                            {% for option in item.product.options %}
-                                {% if option.name=="dnd-token" and item.product.productUsage!="Bundle" %}
-                                    <dd class="mz-carttable-item-code">
-                                        <a href="javascript:void(0)" class="editpersonalize" data-mz-token="{{option.shopperEnteredValue}}" itemId="{{item.id}}" productUsage="{{item.product.productUsage}}">Edit Personalization</a>
-                                    </dd>
-                                {% endif %}
-                            {% endfor %}
                         <dl class="mz-propertylist">
                             {% for option in item.product.options %}
                                 {% if option.name=="dnd-token" %}
@@ -171,7 +177,7 @@
                                         <h3 class="bundle_quantity"><span>X</span>{{ bundledProduct.quantity }}</h3>
                                         {% if bundledProduct.dndToken %}
                                         <span class="edit_component">
-                                            <a class="editPersonalizeBundleItem" productCode="{{ bundledProduct.productCode }}" data-mz-token="{{bundledProduct.dndToken}}" itemId="{{item.id}}">Edit Personalization</a>
+                                            <a href="javascript:void(0)" class="editPersonalizeBundleItem" productCode="{{ bundledProduct.productCode }}" data-mz-token="{{bundledProduct.dndToken}}" itemId="{{item.id}}">Edit Personalization</a>
                                         </span>
                                         {% endif %}
                                     </div>
@@ -332,14 +338,8 @@
                 </div>
                 <div class="edit_wishlist_cart">
                     <span class="f_left">
-                        {% if item.product.options and themeSettings.showCartItemOptions %}
-                            {% for option in item.product.options %}
-                                {% if option.name=="dnd-token" and item.product.productUsage!="Bundle" %}
-                                    <dd class="mz-carttable-item-code">
-                                        <a href="javascript:void(0)" class="editpersonalize" data-mz-token="{{option.shopperEnteredValue}}" itemId="{{item.id}}">Edit Personalization</a>
-                                    </dd>
-                                {% endif %}
-                            {% endfor %}
+                        {% if item.product.dndToken %}
+                            <a href="javascript:void(0)" class="editpersonalize" data-mz-token="{{item.product.dndToken}}" itemId="{{item.id}}">Edit Personalization</a>
                         {% endif %}
                     </span>
                     <span class="f_right"><a id="{{item.id}}" href="javascript:void(0);" class="move-to-wishlist-link"> Move to Wishlist</a></span>

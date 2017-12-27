@@ -1,11 +1,21 @@
 define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product","modules/shared-product-info"], function ($, Hypr,Api,ProductModels, SharedProductInfo) {    
-	var getPropteryValueByAttributeFQN = function(product, attributeFQN){
+	var getPropteryValueByAttributeFQN = function(product, attributeFQN, useStringValue){ // I've found that a product attribute over 50 characters is trunctated to 50 characters for "value" but "stringValue" isn't
             var result = null;
             var properties = product.get('properties')?product.get('properties'):product.properties;
             for(var i=0;i<properties.length;i++){
                 if(properties[i].attributeFQN.toLowerCase()===attributeFQN.toLowerCase()){
                     for(var j=0;j<properties[i].values.length; j++){
-                        result= properties[i].values[j].value;
+                        result= properties[i].values[j].stringValue;
+						if(useStringValue){
+							result= properties[i].values[j].stringValue;
+						}
+						else{
+							result= properties[i].values[j].value;
+						}
+						if(properties[i].values[j].value !== properties[i].values[j].stringValue){
+							console.log(properties[i].values[j].value);
+							console.log(properties[i].values[j].stringValue);
+						}
                     }
                     break;
                 }
@@ -102,7 +112,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		return C;
 	})();
 	
-    var DNDEngine = function(model,url,view)
+    var DNDEngine = function(model,view)
     {
 		var pageContext = require.mozuData('pagecontext');
 		
@@ -187,7 +197,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			mfgpartnumber = this.model.get('mfgPartNumber');
 			parentDND = getPropteryValueByAttributeFQN(this.model, self.productAttributes.dndCode);
 			parentDesign = getPropteryValueByAttributeFQN(this.model, self.productAttributes.designCode);
-			parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode);
+			parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode, true);
 			parentUOM = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
 			
 			if(self.model.get('productUsage') === "Bundle"){
@@ -199,7 +209,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					if(product){
 						newItem = new dndItem();
 						newItem.dndCode = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
-						newItem.mcCode = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
+						newItem.mcCode = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode, true);
 						if(newItem.dndCode || newItem.mcCode){
 							newItem.isBundle = true;
 							newItem.ecometrySku = product.get('mfgPartNumber');
@@ -278,7 +288,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							product = SharedProductInfo.getExtraProduct(productCode,callback);
 							if(product){
 								// look for dnd/mediaclip code on extra first. if none, fall back to parent's
-								childMC = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
+								childMC = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode, true);
 								childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
 								childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
 								childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
@@ -410,6 +420,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			var responseData = e.data;
 			if(responseData!=="process-tick" && responseData.projectToken){
 				var extraData = '';
+				var curObj = self.dndArr[self.index];
+				console.log(curObj);
 				if(responseData.ecometrySku){ 
 					var eskuSplit = null, eskuValue;
 					eskuValue = responseData.ecometrySku;
@@ -417,10 +429,10 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						eskuSplit = responseData.ecometrySku.split('@');
 						eskuValue = eskuSplit[eskuSplit.length-1];
 					}
-					self.projectToken[self.model.get('productCode')+"@"+eskuValue] = responseData.projectToken;
+					self.projectToken[curObj.productID+"@"+eskuValue] = responseData.projectToken;
 				}
 				else{
-					self.projectToken[self.model.get('productCode')+"@"+self.model.get('mfgPartNumber')]=responseData.projectToken;
+					self.projectToken[curObj.productID+"@"+curObj.ecometrySku]=responseData.projectToken;
 				}
 				extraData = JSON.stringify(self.projectToken);
 				responseData.projectToken = extraData;
@@ -470,12 +482,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			console.log("send");
 			this.dndArr = this.getParameters(this.send.bind(this));
             if(!this.dndArr){
-				return;
+				return; // if not returned, exit b/c we are waiting on api call and this will automatically be called again....
 			}
 			
 			this.dndExtras = this.getDNDExtras(this.send.bind(this));
             if(!this.dndExtras){
-				return;
+				return; // if not returned, exit b/c we are waiting on api call and this will automatically be called again....
 			}
 			
 			var self = this;
@@ -529,10 +541,36 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			console.log("doPers");
 			var dndItem = this.dndArr[this.index];
 			var remainPersItems = (this.index!==(this.dndArr.length-1))?true:false;
-			console.log(dndItem);
+			var me = this;
+
 			if(dndItem.mcCode){
 				// launch media clip window
-				
+				//console.log(dndItem.mcCode);
+				$.ajax({
+					url: "/get-personalization",
+					method:"POST",
+					data: { productId: dndItem.mcCode},
+					dataType:"json",
+					success:function(data){
+						console.log(data);
+						var url = "/personalize/"+data.id;
+						console.log(url);
+						if(me.form){
+							// clean up any existing forms
+							$(me.form).remove();
+						}
+
+						// create new form that posts to mediaclip url (must be get, no post)
+						var form = $('<form action="'+url+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
+						addParameter(form,"token",data.userToken);
+						// save to object so we can clean it up if needed
+						me.form = form;
+
+						// insert and post form
+						$("body").append(me.form);
+						me.form.submit();
+					}
+				});
 			}
 			else{
 				if(this.form){
@@ -570,7 +608,40 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		};
 		return(self);
     };
+	var getTokenData = function(dndTokenJson,productCode){ // pass in productCode if for a bundle component
+        var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
+		var tokenObj = {};
+		var dndToken;
+		
+		for(var sku in dndTokenJson){
+			// if "@" present, that means it's in this format "KIBO-PROUDCT-CODE@MFGPARTNUM"
+			if(sku.indexOf('@')!==-1){
+				var prdCode = sku.split('@')[0];
+				tokenObj[prdCode]=dndTokenJson[sku];
+			}else{
+				tokenObj[sku]=dndTokenJson[sku];
+			}
+		}
+
+		if(productCode){
+			dndToken = tokenObj[productCode];
+			if(dndToken){
+				return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken});
+			}
+		}else{
+			for (var prop in tokenObj) {
+				if (tokenObj.hasOwnProperty(prop)) {
+					dndToken = tokenObj[prop];
+					if(dndToken){
+						return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken});
+					}  
+				} 
+			}
+		}
+		return({"src":null,"token":null});
+	};
     return {
-                DNDEngine:DNDEngine
-        };
+		DNDEngine:DNDEngine,
+		getTokenData:getTokenData
+    };
 });

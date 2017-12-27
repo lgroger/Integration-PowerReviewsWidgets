@@ -221,8 +221,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 		   }
            	// DnD Code  Start
             var me= this;
-            var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-            var dndEngineObj = new DNDEngine.DNDEngine(me.model,dndUrl,me);
+            var dndEngineObj = new DNDEngine.DNDEngine(me.model,me);
             dndEngineObj.initializeAndSend();
             // DnD Code  End 
 
@@ -722,6 +721,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
         },
         addToCartAfterPersonalize:function(data){ // used by dndengine.js
             var self= this;
+			console.log(data);
             self.setOptionValues(data);
             if(data.quantity){
                 self.model.set('quantity', data.quantity);

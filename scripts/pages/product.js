@@ -85,7 +85,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
                 /* if(product.toJSON().variationProductCode){
                     fb_product_code[0]=product.toJSON().variationProductCode;
                  }*/
-                 if(fbq!==undefined){
+                 if(typeof fbq!=="undefined"){
                      fbq('track', 'AddToCart', {
                         content_ids:track_product_code,
                         content_type:'product',

@@ -1,17 +1,17 @@
 ﻿{% comment %}
 {% dump model %}
+{% dump routeData %}
 {% dump pageContext %} 
 {% dump navigation %} 
 {% dump siteContext %}
-{% dump pageModel %}  
+{% dump pageModel %}
+{% dump user %}
 {% endcomment %}
-{% dump user %}  
-{% dump routeData %}
 
 {% comment %}
 custom route settings
 		{
-			"template": "personalize/{id}/{usertoken}",
+			"template": "personalize/{id}",
 			"defaults": {
 				"documentListName": "pages@mozu",
 				"documentName": "personalize"
@@ -22,6 +22,18 @@ custom route settings
 			"validators": {}
 		}
 {% endcomment %}
+{% set_var usertoken="" %}
+{% with pageContext.url|split("?") as qstring %}
+	{% with qstring.1|split("&") as params %}
+		{% for param in params %}
+			{% with param|split("=") as splitparams %}
+				{% if splitparams.0|lower == "token" %}
+					{% set_var usertoken=splitparams.1 %}
+				{% endif %}
+			{% endwith %}
+		{% endfor %}
+	{% endwith %}
+{% endwith %}
 
 <!DOCTYPE html>
 <html>
@@ -47,18 +59,19 @@ custom route settings
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://api.mediacliphub.com/scripts/hub.min.js" crossorigin="anonymous"></script>
     <script type="text/javascript">
+	    function onErrorHandler(error, details) {
+            // your custom function to handle errors
+            console.log("An error occurred.", error, details);
+        }
         window.mediaclip.hub.launch({
-            projectId: {{routeData.id}},
-            storeUserToken: {{routeData.usertoken}},
+            projectId: "{{routeData.id}}",
+            storeUserToken: "{{usertoken}}",
             container: document.getElementById('designer'),
             keepAliveUrl: 'renew-personalization',
             onError: onErrorHandler
         });
 
-        function onErrorHandler(error, details) {
-            // your custom function to handle errors
-            console.log("An error occurred.", error, details);
-        }
+        
     </script>
 </body>
 </html>
