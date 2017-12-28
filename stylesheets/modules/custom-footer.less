@@ -87,9 +87,9 @@
     pointer-events:inherit !important;
 }
 button#add-to-cart.is-disabled {
-    background-color: #f7f7f7 !important;
-    color: #989898 !important;
-    border-color: #989898 !important;
+    background-color: #ccc !important;
+    color: #fff !important;
+    border-color: #ccc !important;
     cursor: not-allowed;
 }
 .ech-shi-bottom-footer .ech-shi-developed{
@@ -110,6 +110,9 @@ button#add-to-cart.is-disabled {
 	font-family: @fontFamily;
 	color: @textColor;
 	& .mz-cms-col-4-12 {
+		margin: 10px 0;
+	}
+	& .mz-cms-col-5-12 {
 		margin: 10px 0;
 	}
 	& .mz-cms-content {
@@ -225,7 +228,7 @@ button#add-to-cart.is-disabled {
 		& #subscribe_email {
 		    height: 35px;
 		    width: 100%;
-		    max-width: 70px;
+		    max-width: 85px;
 		    border: none;
 		    background-color: @primaryCTA;
 		    color: white;
@@ -233,6 +236,7 @@ button#add-to-cart.is-disabled {
 		    margin: 0;
 		    position: relative;
 		    left: -8px;
+		    vertical-align: top;
 			&:hover {
 				background-color: @primaryCTAhover;
 			}
