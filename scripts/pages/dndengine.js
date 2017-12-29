@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product","modules/shared-product-info"], function ($, Hypr,Api,ProductModels, SharedProductInfo) {    
+define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product","modules/shared-product-info","modules/mc-cookie","modules/dnd-token"], function ($, Hypr,Api,ProductModels, SharedProductInfo,McCookie,DNDToken) {    
 	var getPropteryValueByAttributeFQN = function(product, attributeFQN, useStringValue){ // I've found that a product attribute over 50 characters is trunctated to 50 characters for "value" but "stringValue" isn't
             var result = null;
             var properties = product.get('properties')?product.get('properties'):product.properties;
@@ -112,10 +112,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		return C;
 	})();
 	
-    var DNDEngine = function(model,view)
+    var DNDEngine = function(model,view,lineitemid,dndToken,mcToken,isComponent)
     {
 		var pageContext = require.mozuData('pagecontext');
-		
         var self = {};
 		self.index = 0; // current index of dndArr
 		self.dndArr = null; // loaded by getParameters
@@ -123,19 +122,16 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
         self.projectToken = {}; // what will go in tenant~dnd-token
         self.pageType = pageContext.pageType;
 		self.iframe = null; // defined in this.initialize()
-        if(self.pageType.toLowerCase()==='cart'){
-            if(model.get('id')){
-                self.lineitemID = model.get('id');
-                self.model=model.get('product');
-            }else{
-                self.lineitemID = model.get('cartlineid');
-                self.model=model;
-            }
-        }else{
-			// pdp or quickview
-            self.model=model;
-        }
+		
+		self.model = model; // product model
 		self.view = view; // productView or cartView
+		
+		// for cart use
+		self.lineitemID = lineitemid; // lineitem to update if used in cart
+		self.dndToken = dndToken; // existing dnd token
+		self.mcToken = mcToken; // existing mediaclip token
+		self.isComponent = isComponent; // for use in cart - if lineitem being personalized is a bundledItem
+		
         self.productAttributes = Hypr.getThemeSetting('productAttributes');
         self.dndEngineUrl= Hypr.getThemeSetting('dndEngineUrl');
         self.time = new Date().getTime(); // id for iframe
@@ -149,8 +145,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             if(extrasToHide && extrasToHide!==""){
                 extrastohideArr = extrasToHide.toLowerCase().split(',');
             }
-			
-			if(options.length>0){
+			if(options.length>0 && extrastohideArr.length>0){
+				// TO DO - this throws error for lineitems in cart b/c options.models is undefined.  options only contains selected options, not all available
 			   for(var inc=0; inc<options.models.length; inc++){
 					var option = options.models[inc];
 				   	var attributeCode = option.get('attributeFQN').split('~')[1];
@@ -200,7 +196,29 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode, true);
 			parentUOM = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
 			
-			if(self.model.get('productUsage') === "Bundle"){
+			if(this.lineitemID){
+				// from cart
+				newItem = new dndItem();
+				newItem.isBundle = false;
+				newItem.productID = this.model.get('productCode');
+				newItem.itemDescription = this.model.get('content.productName');
+				
+				newItem.setFromModel(me);
+				console.log(self.isComponent);
+				if(self.isComponent){
+					// bundle component
+					newItem.dndCode = parentDND;
+					newItem.mcCode = parentMC;
+					newItem.ecometrySku = mfgpartnumber;
+					newItem.unitOfMeasure = parentUOM;
+				}
+				else{
+					// could be parent or on extra
+					
+				}
+				dndArr.push(newItem);
+			}
+			else if(self.model.get('productUsage') === "Bundle"){
 				// loop over components
 				var bp = self.model.get('bundledProducts');
 				for (i =0; i< bp.length; i++) {
@@ -542,26 +560,105 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			var dndItem = this.dndArr[this.index];
 			var remainPersItems = (this.index!==(this.dndArr.length-1))?true:false;
 			var me = this;
+			var form;
+			
+			if(this.form){
+				// clean up any existing forms
+				$(this.form).remove();
+			}
 
-			if(dndItem.mcCode){
+			if(this.lineitemID){
+				if(this.mcToken){
+					// re-edit with mediaclip
+					var userToken = McCookie.getToken(pageContext.user,this.doPers.bind(this));
+					if(userToken){
+						var reeditURL = "/personalize/"+this.mcToken;
+						
+						// create new form that posts to mediaclip url (must be get, no post)
+						form = $('<form action="'+reeditURL+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
+						addParameter(form,"token",userToken);
+						// save to object so we can clean it up if needed
+						me.form = form;
+
+						// insert and post form
+						$("body").append(me.form);
+						me.form.submit();
+						
+					}
+					return;  // exit doPers will be called again once we get a userToken
+				}
+				else{
+					// re-edit with dnd
+					var url = this.dndEngineUrl+"edit/"+this.dndToken;
+					console.log(url);
+
+					// create new form
+					form = $('<form action="'+url+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
+					addParameter(form,"productID",dndItem.productID);
+					addParameter(form,"itemDescription",dndItem.itemDescription);
+					addParameter(form,"ecometrySku",dndItem.ecometrySku);
+					addParameter(form,"dndCode",dndItem.dndCode);
+					addParameter(form,"designCode",dndItem.designCode);
+					addParameter(form,"quantity",dndItem.quantity);
+					addParameter(form,"price",dndItem.price);
+					addParameter(form,"volumePricing",dndItem.volumePricing);
+					addParameter(form,"minQty",dndItem.minQty);
+					addParameter(form,"maxQty",dndItem.maxQty);
+					addParameter(form,"unitOfMeasure",dndItem.unitOfMeasure);
+					addParameter(form,"lineitemID",dndItem.lineitemID);
+					addParameter(form,"parentProductID",dndItem.parentProductID);
+					addParameter(form,"isBundle",dndItem.isBundle);
+					addParameter(form,"remainingPersItems",remainPersItems);
+
+					addParameter(form,"extras",JSON.stringify(this.dndExtras));
+
+					// save to object so we can clean it up if needed
+					this.form = form;
+
+					// insert and post form
+					$("body").append(this.form);
+					this.form.submit();
+				}
+			}
+			else if(dndItem.mcCode){
 				// launch media clip window
 				//console.log(dndItem.mcCode);
+				
+				console.log(me.model.getConfiguredOptions());
+				
+				/* mediaclip will add to cart by making a server-side api call - we'll need to provide it with the same info that mozu-storefront-sdk product addtocart does
+				    product: {
+						productCode: this.data.productCode,
+						variationProductCode: this.data.variationProductCode,
+						options: payload.options || this.data.options
+					},
+					quantity: payload.quantity || 1,
+					fulfillmentLocationCode: payload.fulfillmentLocationCode,
+					fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
+				*/
+				
 				$.ajax({
 					url: "/get-personalization",
 					method:"POST",
-					data: { productId: dndItem.mcCode},
+					data: {
+						mcCode: dndItem.mcCode,
+						productCode:  me.model.get('productCode'),
+						variationProductCode: me.model.get('variationProductCode'),
+						options: me.model.getConfiguredOptions(),
+						quantity: me.model.get("quantity"),
+						tokenPrefix:	dndItem.productID+"@"+dndItem.ecometrySku
+					},
 					dataType:"json",
 					success:function(data){
 						console.log(data);
 						var url = "/personalize/"+data.id;
 						console.log(url);
-						if(me.form){
-							// clean up any existing forms
-							$(me.form).remove();
-						}
-
+						
 						// create new form that posts to mediaclip url (must be get, no post)
 						var form = $('<form action="'+url+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
+						
+						McCookie.setCookie(pageContext.user,data.userToken);
+						
 						addParameter(form,"token",data.userToken);
 						// save to object so we can clean it up if needed
 						me.form = form;
@@ -573,13 +670,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				});
 			}
 			else{
-				if(this.form){
-					// clean up any existing forms
-					$(this.form).remove();
-				}
-				
 				// create new form
-				var form = $('<form action="'+this.dndEngineUrl+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
+				form = $('<form action="'+this.dndEngineUrl+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
 				addParameter(form,"productID",dndItem.productID);
 				addParameter(form,"itemDescription",dndItem.itemDescription);
 				addParameter(form,"ecometrySku",dndItem.ecometrySku);
@@ -608,40 +700,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		};
 		return(self);
     };
-	var getTokenData = function(dndTokenJson,productCode){ // pass in productCode if for a bundle component
-        var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
-		var tokenObj = {};
-		var dndToken;
-		
-		for(var sku in dndTokenJson){
-			// if "@" present, that means it's in this format "KIBO-PROUDCT-CODE@MFGPARTNUM"
-			if(sku.indexOf('@')!==-1){
-				var prdCode = sku.split('@')[0];
-				tokenObj[prdCode]=dndTokenJson[sku];
-			}else{
-				tokenObj[sku]=dndTokenJson[sku];
-			}
-		}
-
-		if(productCode){
-			dndToken = tokenObj[productCode];
-			if(dndToken){
-				return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken});
-			}
-		}else{
-			for (var prop in tokenObj) {
-				if (tokenObj.hasOwnProperty(prop)) {
-					dndToken = tokenObj[prop];
-					if(dndToken){
-						return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken});
-					}  
-				} 
-			}
-		}
-		return({"src":null,"token":null});
-	};
     return {
 		DNDEngine:DNDEngine,
-		getTokenData:getTokenData
+		getTokenData:DNDToken.getTokenData
     };
 });

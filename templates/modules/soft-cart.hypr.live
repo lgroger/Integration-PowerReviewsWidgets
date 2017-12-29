@@ -23,10 +23,8 @@
                 <img class="soft-cart-item-image" src="{{ item.product.imageUrl }}?max=80" alt="{{ item.product.name }}" />
                  {% if item.product.options && item.product.productType != "Bundle" %}
                             {% for opt in item.product.options %}
-                              {% if opt.name == "dnd-token" %}
-                                {%  with opt.shopperEnteredValue |split(":") as token %}
-                                  <span data-dndtoken={{ token|last|replace("}","") }} {% if item.product.productType == "Bundle"%}data-prdType="bundle"{% endif %}></span>
-                                 {% endwith %}
+                              {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript#}
+                                  <span data-fulldndtoken='{{opt.shopperEnteredValue|replace('"','!')|escape}}' {% if item.product.productType == "Bundle"%}data-prdType="bundle"{% endif %}></span>
                               {% endif %}
                             {% endfor %}
                           {% endif %}

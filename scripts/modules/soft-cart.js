@@ -2,9 +2,10 @@ define([
     'modules/jquery-mozu',
     'modules/backbone-mozu',
     'modules/models-cart',
-    'hyprlive'
+    'hyprlive',
+	'modules/dnd-token'
   ],
-function($, Backbone, CartModels,Hypr) {
+function($, Backbone, CartModels,Hypr,DNDToken) {
   // declare a MozuView that can rewrite its contents with a Hypr template
   // var cartUpdate = this.model.apiGet();
   function setLoginForCheckout(){
@@ -48,8 +49,18 @@ function($, Backbone, CartModels,Hypr) {
     render:function() {
       Backbone.MozuView.prototype.render.call(this);
       $(".soft-cart-items .soft-cart-item img").each(function() {
-          if($(this).next().data("dndtoken")){
-            $(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+          if($(this).next().data("fulldndtoken")){
+			  try{
+				var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
+				console.log(fulldndtoken);
+				var info = DNDToken.getTokenData(fulldndtoken);
+				if(info.src){
+					$(this).attr("src",info.src);
+				}
+			  }
+			  catch(err) {
+				  console.error(err);
+			  }
           }
       });
     },

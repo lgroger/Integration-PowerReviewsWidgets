@@ -2,8 +2,22 @@
 define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu','modules/api', 
     'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'modules/soft-cart', 
     'hyprlive', 'modules/preserve-element-through-render', 'modules/amazonPay', 
-    'vendor/wishlist', 'pages/dndengine', 'modules/models-product',"modules/shared-product-info"], 
-function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo) {
+    'vendor/wishlist', 'pages/dndengine', 'modules/models-product', "modules/shared-product-info", "shim!vendor/mediaclip","modules/mc-cookie"], 
+function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo, mcHub,McCookie) {
+	
+	var mcplaceholder = "/resources/images/mcplaceholder.png";
+	var storedMCimages = [];
+	var findMcSrc = function(token){
+		for(var i=0;i<storedMCimages.length;i++){
+			if(storedMCimages[i].token === token){
+				//console.log('found mcsrc' + storedMCimages[i].src);
+				return storedMCimages[i].src;
+			}
+		}
+		//console.log('no find');
+		return null;
+	};
+	
  var productAttributes = Hypr.getThemeSetting('productAttributes');  
        var idx;var ship_default;
        var ship_flag=false;
@@ -133,7 +147,8 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             AmazonPay.init(CartModels.Cart.fromCurrent().id);
 
             AmazonPay.init(true);
-                       
+            
+			this.on('render', this.afterRender);
         },
         getProductionTime:function(scope_obj) {
             var mozu_order_obj=scope_obj.model.toJSON().items;
@@ -267,7 +282,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
         },
         render: function() {
-			console.log("carview render");
+			console.log("cartview render");
           //  console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
             if(me.model.get('items').length>0){
@@ -278,19 +293,20 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             preserveElement(this, ['.v-button','.p-button', '#AmazonPayButton'], function() {
                 Backbone.MozuView.prototype.render.call(this);
             });
-            this.afterRender();
+            
             // this.calculateEstimate();
         },
         afterRender: function(){
 			console.log('afterRender');
+			var me = this;
+
             if($.cookie('szcontinueurl')){
-            var sxurl = $.cookie('szcontinueurl');
-            //console.log(sxurl);
-            $('.mz-sz-continue').attr("href",sxurl);
-        }
-     else{
-        $('.mz-sz-continue').attr("href","/");
-     }
+            	var sxurl = $.cookie('szcontinueurl');
+            	$('.mz-sz-continue').attr("href",sxurl);
+			}
+			else{
+				$('.mz-sz-continue').attr("href","/");
+			}
             
 
             var self= this;
@@ -321,6 +337,41 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 			uniqueList=arr.filter(function(item,i,allItems){
 			    return i==allItems.indexOf(item);
 			}); */
+			var userToken;
+			// do this outside of jquery each so that it only fires once if it needs to fire at all
+			if($("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").length > 0 && !window.mediaclip.hub.initSettings){
+				var userdata = require.mozuData('pagecontext').user;
+				userToken = McCookie.getToken(userdata,me.afterRender.bind(me));
+				if(userToken){
+					// pass in storeUserToken
+					window.mediaclip.hub.init({storeUserToken:userToken, keepAliveUrl: "/renew-personalization"});
+				}
+				else{
+					return; // McCookie.getToken will afterRender again...
+				}
+			}
+			
+			$("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").each(function(){ // find images that contain the mcplaceholder so we can get actual image
+				var previewimg = this;
+				var projectId = $(this).attr("data-mz-token");
+				var mcsrc = findMcSrc(projectId);
+				if(mcsrc){
+					$(previewimg).attr("src",mcsrc);
+				}
+				else{
+					window.mediaclip.hub.getProjectThumbnailSrc(projectId).done(function(newsrc){
+						// add new image
+						$(previewimg).attr("src",newsrc);
+
+						// store for later
+						var newEntry = {"token":projectId,"src":newsrc};
+						storedMCimages.push(newEntry);
+
+					}).fail(function(jqXhr, textStatus, errorThrown){
+						console.error('Failed loading project thumbnail for ' + projectId, textStatus, errorThrown);
+					});
+				}
+			});
 			
         },
         removeCoupon : function(e){
@@ -379,14 +430,26 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 						// look for token info per component
 						for(var k=0;k<items.models[i].get('product').get('bundledProducts').length;k++){
 							info = DNDEngine.getTokenData(dndtoken, items.models[i].get('product').get('bundledProducts')[k].productCode);
-							items.models[i].get('product').get('bundledProducts')[k].dndToken = info.token;
-							items.models[i].get('product').get('bundledProducts')[k].imageUrl = info.src;
+							items.models[i].get('product').get('bundledProducts')[k].token = info.token;
+							if(info.type ==="mc"){
+								items.models[i].get('product').get('bundledProducts')[k].imageUrl = mcplaceholder;
+							}
+							else{
+								items.models[i].get('product').get('bundledProducts')[k].imageUrl = info.src;
+							}
+							items.models[i].get('product').get('bundledProducts')[k].persType = info.type;
 						}
 					}else{
 						// look for parent token info
 						info = DNDEngine.getTokenData(dndtoken);
-						items.models[i].get('product').set('imageUrl',info.src);
-						items.models[i].get('product').set('dndToken',info.token);
+						if(info.type ==="mc"){
+							items.models[i].get('product').set('imageUrl',mcplaceholder); // if mediaclip personalization, use placeholder image for now b/c we need to make calls to mc to get actual preview image
+						}
+						else{
+							items.models[i].get('product').set('imageUrl',info.src);
+						}
+						items.models[i].get('product').set('token',info.token);
+						items.models[i].get('product').set('persType',info.type);
                 	}
 				}
             }
@@ -593,30 +656,46 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             return extrasInfo;
         },
         editPersonalize: function(e){
+			console.log("editPersonalize");
             var me=this;
-            var dndToken = $(e.currentTarget).attr('data-mz-token');
+            var token = $(e.currentTarget).attr('data-mz-token');
+			var persType = $(e.currentTarget).attr('data-mz-token-type');
             var itemId = $(e.currentTarget).attr('itemId');
             var cartItemList = this.model.get('items').where({id:itemId});
             var cartItemModel = cartItemList[0];
-            var dndEngineObj = new DNDEngine.DNDEngine(cartItemModel,me); // need to pass in existing token somehow
+			var dndEngineObj;
+			if(persType === "mc"){
+				dndEngineObj = new DNDEngine.DNDEngine(cartItemModel.get('product'), this, cartItemModel.get('id') ,null, token, false);
+			}
+			else{
+				dndEngineObj = new DNDEngine.DNDEngine(cartItemModel.get('product'), this, cartItemModel.get('id') ,token, null, false);
+			}
 			dndEngineObj.initializeAndSend();
         },
         editPersonalizeBundleItem: function(e){
+			console.log("editPersonalizeBundleItem");
 			window.showPageLoader();
             var me = this;
-            var dndToken = $(e.currentTarget).attr('data-mz-token');
+            var token = $(e.currentTarget).attr('data-mz-token');
+			var persType = $(e.currentTarget).attr('data-mz-token-type');
             var itemId = $(e.currentTarget).attr('itemId');
             var productCode = $(e.currentTarget).attr('productCode');
 
             // DnD Code  Start
             Api.get('product',productCode).then(function(sdkProduct) {
                 var product = new ProductModels.Product(sdkProduct.data);
-                product.set('cartlineid',itemId);
-                var dndEngineObj = new DNDEngine.DNDEngine(product,me); // need to pass in existing token somehow
+				var dndEngineObj;
+				if(persType === "mc"){
+					dndEngineObj = new DNDEngine.DNDEngine(product, me, itemId, null, token, true);
+				}
+                else{
+					dndEngineObj = new DNDEngine.DNDEngine(product, me, itemId, token, null, true);
+				}
 				dndEngineObj.initializeAndSend();
+				window.removePageLoader();
             },function(e){
 				console.log(e);
-				window.removePageLoader();
+				
 			});
             
             //DnD Code  End

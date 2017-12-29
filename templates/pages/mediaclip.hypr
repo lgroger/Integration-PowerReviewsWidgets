@@ -67,7 +67,7 @@ custom route settings
             projectId: "{{routeData.id}}",
             storeUserToken: "{{usertoken}}",
             container: document.getElementById('designer'),
-            keepAliveUrl: 'renew-personalization',
+            keepAliveUrl: '/renew-personalization',
             onError: onErrorHandler
         });
 
