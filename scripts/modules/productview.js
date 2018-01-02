@@ -42,7 +42,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
      };
 	var ProductView = Backbone.MozuView.extend({
 		holidayList: null, // set in this.getHolidays() ShippingholidayList@shindigz
-		UPSholidayList: null, //UPSholidayList@shindigz
+		UPSholidayList: null, // set in getUPSHolidays() UPSholidayList@shindigz
 		noCalcDelDate: false,  //if true, holidayList & UPSholidayList won't be loaded and delivery/ship dates won't be calculated (will be used for quickview)
         templateName: 'modules/product/product-detail-custom',
         autoUpdate: ['quantity'],
@@ -1012,6 +1012,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				return; // exit if it's already set
 			}
 			
+			this.holidayList = _.pluck(_.pluck(require.mozuData("holidaylist"),'properties'),'holiday');// product.hypr includes documents from ShippingholidayList@shindigz
+/*
+			
 		    var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/ShippingholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
             var localStorageSupport=false;
 			try {
@@ -1046,13 +1049,16 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }catch(err){
                 console.log(err);
 				this.holidayList = [];
-            }
+            } */
 		},
 		getUPSHolidays: function(callback){
 			console.log("getUPSHolidays");
 			if(this.UPSholidayList){
 				return; // exit if it's already set
 			}
+			
+			this.UPSholidayList = _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday'); // product.hypr includes documents from UPSholidayList@shindigz
+/*
 		    var requestConfigure = {"url":require.mozuData("pagecontext").secureHost+"/api/content/documentlists/UPSholidayList@shindigz/views/holidayView/documents/?responseFields=items(properties(holiday))","iframeTransportUrl":require.mozuData("pagecontext").secureHost+"/receiver?receiverVersion=2"};
             var localStorageSupport=false;
 			try {
@@ -1086,7 +1092,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }catch(err){
                 console.log(err);
 				this.UPSholidayList = [];
-            }
+            } */
 		},
 		setQtyModel:function (qty) { // used by quickview
 			 var newQuantity = parseInt(qty, 10);
