@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/api','hyprlive', 'vendor/jQuery.selectric'], function ($,api,Hypr) {
+define(['modules/jquery-mozu', 'modules/api','hyprlive', 'modules/dnd-token', 'vendor/jQuery.selectric'], function ($,api,Hypr,DNDToken) {
 	
 	 function setCookie(cname, cvalue, exdays) {
 	    var d = new Date();
@@ -218,10 +218,20 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
 			    $(this).prev().addClass("diplayprint");
 			}
 		 	$(this).toggleClass('active');
+			
 			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
 				$(this).next().find("img").each(function() {
-					if($(this).parent().next().data("dndtoken")){
-						$(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"/preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
+					if($(this).parent().next().data("fulldndtoken")){//order-listing.hypr.live
+						try{
+							var fulldndtoken = JSON.parse($(this).parent().next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
+							var info = DNDToken.getTokenData(fulldndtoken);
+							if(info.src){
+								$(this).attr("src",info.src);
+							}
+						  }
+						catch(e){
+							console.error(e);
+						}
 					}
 				});
 			}
@@ -313,7 +323,7 @@ $( ".menu-sec-2 div:first-child" ).addClass("current");
 		$('.link-active a').removeAttr('id');	
 	});
 
-$(".menu-sec-1 li a").on('mouseover', function() {
+	 $(".menu-sec-1 li a").on('mouseover', function() {
  		var link = $(this).attr('class');  
  		//alert(link);   
  	//	alert($(".loop-"+link).get());

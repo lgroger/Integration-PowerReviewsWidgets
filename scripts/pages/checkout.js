@@ -1,5 +1,5 @@
 /* globals V: true */
-require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api) {
+require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api",'modules/dnd-token'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api,DNDToken) {
     var CheckoutStepView = EditableView.extend({
         getExtraVar: function () {
             return this.model.get('address.countryCode');
@@ -258,56 +258,26 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         onOrderCreditChanged: function (order, scope) {
             this.render();
         },showPersonalizeImage:function () {
-            var me=this,imgsrc,dndToken;
-            var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
-            var personslizeIds = null, personslizeJson=null;
+			//console.log("showPersonalizeImage");
+            var me=this;
             var items=_.pluck(this.model.get("items"),'product');
             _.each(items,function (item,i) {
-
                 if(item.productType !== "Bundle"){
-                personslizeIds = null;
-                personslizeJson = null;
-                var dndCode=_.findWhere(item.options,{'attributeFQN': Hypr.getThemeSetting('productAttributes').dndToken});
-                if(dndCode!==undefined){
-                    personslizeIds=JSON.parse(dndCode.shopperEnteredValue);
-                }
-                if(personslizeIds!==null && personslizeIds!==undefined){
-                personslizeJson={};
-                for(var eku in personslizeIds){
-                    if(eku.indexOf('@')!==-1){
-                        var prdCode = eku.split('@')[0];
-                        personslizeJson[prdCode]=personslizeIds[eku];
-                    }else{
-                        personslizeJson[eku]=personslizeIds[eku];
-                    }
-                }
-                    me.model.get("items")[i].personslizeIds=personslizeJson;
-                }
-                    /*for(var k=0;k<me.model.get("items")[i].product.bundledProducts.length;k++){
-                        if(me.model.get("items")[i].personslizeIds){
-                            dndToken = me.model.get("items")[i].personslizeIds[me.model.get("items")[i].product.bundledProducts[k].productCode];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                me.model.get("items")[i].product.bundledProducts[k].dndToken= dndToken;
-                                me.model.get("items")[i].product.bundledProducts[k].imageUrl = imgsrc;
-                            }else
-                            {
-                                //imgsrc = $('[componentimageid="'+items.models[i].get('id')+'-'+items.models[i].get('product').get('bundledProducts')[k].productCode+'"]').attr('src');
-                            }
-                        }
-                    }*/
-                    var dndTokenList = me.model.get("items")[i].personslizeIds;
-                    for (var prop in dndTokenList) {
-                        if (dndTokenList.hasOwnProperty(prop)) {
-                            //alert(dndToken[prop]);
-                            dndToken = dndTokenList[prop];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                me.model.get("items")[i].product.imageUrl=imgsrc;
-                            }  
-                        } 
-                    }
-                }
+                	var dndTokenObj=_.findWhere(item.options,{'attributeFQN': Hypr.getThemeSetting('productAttributes').dndToken});
+					if(typeof dndTokenObj!=="undefined"){
+						try{
+							var dndTokenJSON=JSON.parse(dndTokenObj.shopperEnteredValue);
+							var info = DNDToken.getTokenData(dndTokenJSON);
+							if(info.src){
+								me.model.get("items")[i].product.imageUrl=info.src;
+							}
+						}
+						catch(err){
+							console.error(err);
+
+						}
+					}
+				}
             }); 
         },render:function(){
            // console.log("render on change");
@@ -2624,15 +2594,22 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         $('.summary_edit').slideToggle();
         $('.summarybox_toggle .fa').toggleClass('fa-minus');
     });
-     try{
          $(".checkout_ostable .cp_image img").each(function(){
-            if($(this).next().data("dndtoken") && $(this).next().data("prdtype")===undefined){
-                $(this).attr("src",Hypr.getThemeSetting('dndEngineUrl')+"preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+			 if($(this).next().data("fulldndtoken") && $(this).next().data("prdtype")===undefined){ // prdtype will be "bundle" for bundle product usages (modules/common/order-summary.hypr.live)
+				 try{
+					// so this seems to do exactly the same thing as OrderSummaryView.showPersonalizeImage() but I'll update it anyway, just in case...
+					var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
+					var info = DNDToken.getTokenData(fulldndtoken);
+					if(info.src){
+						$(this).attr("src",info.src);
+					}
+				  }
+				catch(e){
+					console.error(e);
+				}
             }
          });
-     }catch(err){
-        console.log(err);
-     }
+
     $(document).on('click','#paypalexpress2',function(){ $('#btn_xpressPaypal').trigger('click'); });
     $(document).on('click','#paywithamazon',function(){ $('#OffAmazonPaymentsWidgets0').trigger('click'); });
 
