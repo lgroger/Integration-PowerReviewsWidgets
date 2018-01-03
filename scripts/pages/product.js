@@ -418,7 +418,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
 
         });
 		
-		productView.loadComponents(); // start loading bundle component info in background (will allow better display of "what's inside" as well as less load time if customer tries to personalize)
+		productView.loadComponents(productView.loadComponentImages.bind(productView)); // start loading bundle component info in background (will allow better display of "what's inside" as well as less load time if customer tries to personalize)
 			
 		productView.loadExtras(); // start loading extras info in background (will be less load time if customer tries to personalize)
     });

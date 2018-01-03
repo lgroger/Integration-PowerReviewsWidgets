@@ -166,12 +166,7 @@ function($, Backbone, CartModels,Hypr,DNDToken) {
         $('.chkout-login-action').hide();
         $('.default-hide').hide(); 
       
-        /*
-        cart-form submit functionality.
-        */
-        if($(this).parent().next().data("dndtoken")){
-            $(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
-          }
+        //cart-form submit functionality.
         $(document).on('click', '.soft-cart-btn.chkout-minicart-btn', function() {
           $('#cartform').submit(); 
         });

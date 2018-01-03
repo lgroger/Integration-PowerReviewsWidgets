@@ -93,7 +93,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			if(productStr.length > 0){
 				SharedProductInfo.getExtras(productStr);
 			}
-		},loadComponents: function(){
+		},loadComponents: function(callback){
 			console.log("loadComponents");
 			var i = 0;
 			var bp = this.model.get('bundledProducts');
@@ -104,7 +104,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				i++;
 			}
 			if(productStr.length > 0){
-				SharedProductInfo.getExtras(productStr,this.loadComponentImages.bind(this));
+				SharedProductInfo.getExtras(productStr,callback);
 			}
 		},
 		loadComponentImages: function(i){
@@ -349,8 +349,15 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					option.set('isVisibleOption',false); // hide dndtoken
 				}
 				else if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && (option.get('attributeFQN') === "tenant~misc.-favor-with-design" || option.get('attributeFQN') === "tenant~table-top-it-runner-size")) {
-					option.set('isOptionForDND',false);
-					option.set('isVisibleOption',false); // hide extras used for inventory only of design items
+					var values = option.get('values');
+					if(values.length > 1){
+						option.set('isOptionForDND',false);
+						option.set('isVisibleOption',true); // need to show if there are mulitple options (ex. product type TOPITRUN)
+					}
+					else{
+						option.set('isOptionForDND',false);
+						option.set('isVisibleOption',false); // hide extras used for inventory only of design items
+					}
 				}
 				else{
 					option.set('isOptionForDND',false);

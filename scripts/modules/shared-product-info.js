@@ -28,7 +28,9 @@ define(
 					var product = new ProductModels.Product(res.data);
 					me.products.push(product);
 					console.log(typeof callback);
-					callback();
+					if(typeof callback === "function"){
+						callback();
+					}
 				});
 				return false;
 			}

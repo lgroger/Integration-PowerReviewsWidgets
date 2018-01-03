@@ -204,10 +204,25 @@ require(
 						// should already include 1 swatch for current product, add up to 7 more
 						var productCodefilter = procodeArray.slice(0,7).join(' or ProductCode eq ');
 						if (typeof proCodes !== "undefined" && procodeArray.length>0) {
-							var apiURL = '/api/commerce/catalog/storefront/products/?filter=ProductCode eq ' + productCodefilter + '&responseObject=items(content, properties)';
+							var mode = "asImages";
+							var properties = me.model.get('properties');
+							for(var i = 0; i < properties.length; i++) {
+								if(properties[i].attributeFQN === productAttributes.displayCrossSell) {
+									mode = properties[i].values[0].value;
+									break;
+								}
+							}
+							
+							var responseFields = "items(productCode,content(productName,seoFriendlyUrl,productImages))";
+							if(mode === "asColors"){
+								responseFields= "items(productCode,content(productName,seoFriendlyUrl,productImages), properties)"; // needs properties for color hex
+							}
+								
+							var apiURL = '/api/commerce/catalog/storefront/products/?filter=ProductCode eq ' + productCodefilter + '&responseFields='+responseFields;
 							//var apiURL = '/api/commerce/catalog/storefront/products/?filter=' + proCodes;
+								
 							Api.request('GET', apiURL, {}).then(function(responseObject) {
-								getColorSwatchByResponceObject(me.model, responseObject,totalColorSwatchCount);
+								getColorSwatchByResponceObject(me.model, responseObject,totalColorSwatchCount,mode);
 							});
 						}
 					}
@@ -237,14 +252,12 @@ require(
 				productView.render();
 				window.removePageLoader();
 				$('#mz-quick-view-container').fadeIn(350); 
-
-				var sku;
+				
 				//bloomreach quickview integration start
-				if(product.attributes.productUsage === "Configurable" || product.attributes.productUsage === "Bundle"){
-				  if(product.attributes.variations.length){
-					sku = product.attributes.productCode;
-				  }
-				} 
+				var sku = "";
+				if(typeof product.attributes.variationProductCode !== "undefined"){
+				sku = product.attributes.variationProductCode;
+				}
 				if(typeof BrTrk !== "undefined" && BrTrk !== 'undefined'){
 					BrTrk.getTracker().logEvent(
 							  'product', // event group
@@ -255,7 +268,13 @@ require(
 					  'sku': sku
 							});
 				}
-	                //bloomreach quickview integration end
+				//bloomreach quickview integration end
+				
+				// begin pre-loading extras or components if personalized
+				if(productView.model.get('isPersonalized')){
+					productView.loadComponents();
+					productView.loadExtras();
+				}
             },function(e){
 				console.log("error");
 				console.error(e);
@@ -266,21 +285,34 @@ require(
 			});
         };
 
-        function getColorSwatchByResponceObject(product, swatchProduct, totalColorSwatchCount) {
+        function getColorSwatchByResponceObject(product, swatchProduct, totalColorSwatchCount, mode) {
             product = product.toJSON();
             var i = 0, j = 0;
-            var mode = "asImages";
-            for(i = 0; i < product.properties.length; i++) {
-                if(product.properties[i].attributeFQN === productAttributes.displayCrossSell) {
-                    mode = product.properties[i].values[0].value;
-                    break;
-                }
-            }
+            
             var colorName = null, href = null, objA = null, objLI = null, temp = null, src = null;
             var limit  = (swatchProduct.items.length > 8) ? 8: swatchProduct.items.length;
+
+			if(limit > 0 && mode==="asColors"){
+				var colorText = "Colors: ";
+				if($('#color-swatch-elem > span').text() === colorText){ // to prevent duplicate if view is rendered multiple times and a previous api call is slow
+					return;
+				}
+				else{
+					$('#color-swatch-elem > span').text(colorText);
+				}
+			}
+			else if(limit > 0){
+				var styleText = "Styles: ";
+				if($('#color-swatch-elem > span').text() === styleText){
+					return; // exit to prevent duplicate if view is rendered multiple times and a previous api call is slow
+				}
+				else{
+					$('#color-swatch-elem > span').text(styleText);
+				}
+			}
+			
             for(i = 0; i < limit; i++) {
                 if(mode === "asColors") {
-                    $('#color-swatch-elem > span').text("Colors: ");
                     for(j = 0; j < swatchProduct.items[i].properties.length; j++) {
                         if(swatchProduct.items[i].properties[j].attributeFQN === productAttributes.colorHex && swatchProduct.items[i].properties[j].values[0].value !== "") {
                             colorName = swatchProduct.items[i].properties[j].values[0].value;
@@ -289,30 +321,29 @@ require(
                     }
                     if(colorName !== "") {
                         objA = document.createElement("a");
-                        $(objA).attr("href", "/p/" + swatchProduct.items[i].productCode).addClass('swatch-color').css("background-color", colorName);
+                        $(objA).attr("href", "/"+swatchProduct.items[i].content.seoFriendlyUrl+"/p/" + swatchProduct.items[i].productCode).addClass('swatch-color').css("background-color", colorName);
                         objLI = document.createElement("li");
                         $(objLI).append(objA);
                         $('ul[color-swatch-data]').append(objLI);
                     }
                 }else {
-                    $('#color-swatch-elem > span').text("Styles: ");
-                    if(swatchProduct.items[i].content.productImages.length > 0 && swatchProduct.items[i].content.productImages[0].imageUrl !== "") {
-                        src = swatchProduct.items[i].content.productImages[0].imageUrl + "?max=50";
-                        objA = document.createElement("a");
-                        $(objA).attr("href", "/p/" + swatchProduct.items[i].productCode).attr("title",swatchProduct.items[i].content.productName);
-                        $("<img/>").attr('src', src).appendTo(objA);
-                        objLI = document.createElement("li");
-                        $(objLI).addClass("swatch-image").css('border-radius', '50%').append(objA);
-                        $('ul[color-swatch-data]').append(objLI);
-                    }
+					if(swatchProduct.items[i].content.productImages.length > 0 && swatchProduct.items[i].content.productImages[0].imageUrl !== "") {
+						src = swatchProduct.items[i].content.productImages[0].imageUrl + "?max=50";
+						objA = document.createElement("a");
+						$(objA).attr("href", "/"+swatchProduct.items[i].content.seoFriendlyUrl+"/p/" + swatchProduct.items[i].productCode).attr("title",swatchProduct.items[i].content.productName);
+						$("<img/>").attr('src', src).appendTo(objA);
+						objLI = document.createElement("li");
+						$(objLI).addClass("swatch-image").css('border-radius', '50%').append(objA);
+						$('ul[color-swatch-data]').append(objLI);
+					}
                 }
             }
             if(totalColorSwatchCount > 6) {
                 objA = document.createElement("a");
                 if(mode == "asColors") {
-                    $(objA).attr("href", window.location.origin + "/p/" + product.productCode).attr("class", "more-link").html("See All Colors");
+                    $(objA).attr("href", product.url).attr("class", "more-link").html("See All Colors");
                 }else{
-                    $(objA).attr("href", window.location.origin + "/p/" + product.productCode).attr("class", "more-link").html("See All Styles");
+                    $(objA).attr("href", product.url).attr("class", "more-link").html("See All Styles");
                 }
                 objLI = document.createElement("li");
                 $(objLI).addClass("more-link").append(objA);

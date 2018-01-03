@@ -68,10 +68,6 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					else{
 						result= properties[i].values[j].value;
 					}
-					if(properties[i].values[j].value !== properties[i].values[j].stringValue){
-						console.log(properties[i].values[j].value);
-						console.log(properties[i].values[j].stringValue);
-					}
 				}
 				break;
 			}

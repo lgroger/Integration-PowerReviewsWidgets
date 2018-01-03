@@ -415,7 +415,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             for(var i=0; i < items.length; i++){
 				var product = items.models[i].get('product');
 				var options = product.get('options');
-				var dndStr;
+				var dndStr = null;
 				for(var o=0;o< options.length;o++){ 
 					if(options[o].attributeFQN === productAttributes.dndToken){
 						if(options[o].shopperEnteredValue !== ""){
