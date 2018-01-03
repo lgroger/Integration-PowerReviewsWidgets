@@ -815,7 +815,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var dndToken,shopperEnteredValue;
             var dndTokenList = JSON.parse(data.projectToken);
             for(var i=0; i < options.length; i++){
-               if(options[i].attributeFQN.toLowerCase() === "tenant~dnd-token"){
+               if(options[i].attributeFQN === productAttributes.dndToken){
                     if(current_item.get('product').get('productUsage')==='Bundle'){
                          for (var prop in dndTokenList) {
                             if (dndTokenList.hasOwnProperty(prop)) {

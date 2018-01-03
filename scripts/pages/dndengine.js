@@ -1,33 +1,165 @@
 define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product","modules/shared-product-info","modules/mc-cookie","modules/dnd-token"], function ($, Hypr,Api,ProductModels, SharedProductInfo,McCookie,DNDToken) {    
+	
+	// this is similar to "modules/shared-product-info" but is meant to hold product models when a cart lineitem needs access to full product model prior to adding to cart (ex. to get extras for dnd)
+	var FullProductModels = {
+		models:	[],
+		getProductModel: 	function(productCode,callback){
+			console.log("FullProductModels.getProductModel");
+			var me = this;
+			if(this.models.length>0){
+				for(var i=0;i < this.models.length;i++){
+					if(this.models[i].get('productCode')===productCode){
+						var product = this.models[i];
+						return product;
+					}
+				}
+			}
+			else{
+				/*
+				var requesturl = '/api/commerce/catalog/storefront/products/'+productCode+'?my=1';
+				
+				var onSuccessFunction =  function(res, xhr,request){
+					console.log('FullProductModels api on success');
+					if(request === requesturl){
+						try{
+							var productExtrasResponse = xhr.getResponseHeader("productExtras");
+							if(productExtrasResponse && productExtrasResponse!==""){
+								var productExtras = JSON.parse(productExtrasResponse);
+								if(productExtras.length>0){
+									for(var i=0;i<productExtras.length;i++){
+										console.log(productExtras[i]);
+										SharedProductInfo.addExtraProduct(productExtras[i]);
+									}
+								}
+							}
+						}catch(e){
+							console.log(e);
+						}
+						Api.off('success',onSuccessFunction); // remove api on success action
+					}
+					console.log(xhr);
+					console.log(request);
+				};
+				Api.on('success',onSuccessFunction); // add on success so we can get response headers 
+				
+				Api.request('GET',requesturl).then(function(res){*/
+				// get product
+				Api.request('GET','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
+					console.log('FullProductModels api request');
+					var product=new ProductModels.Product(res);
+					me.models.push(product);
+					callback();
+				});
+				return false;
+			}
+		}
+	};
+	
 	var getPropteryValueByAttributeFQN = function(product, attributeFQN, useStringValue){ // I've found that a product attribute over 50 characters is trunctated to 50 characters for "value" but "stringValue" isn't
-            var result = null;
-            var properties = product.get('properties')?product.get('properties'):product.properties;
-            for(var i=0;i<properties.length;i++){
-                if(properties[i].attributeFQN.toLowerCase()===attributeFQN.toLowerCase()){
-                    for(var j=0;j<properties[i].values.length; j++){
-                        result= properties[i].values[j].stringValue;
-						if(useStringValue){
-							result= properties[i].values[j].stringValue;
-						}
-						else{
-							result= properties[i].values[j].value;
-						}
-						if(properties[i].values[j].value !== properties[i].values[j].stringValue){
-							console.log(properties[i].values[j].value);
-							console.log(properties[i].values[j].stringValue);
-						}
-                    }
-                    break;
-                }
-            }
-            return result;
-     };
+		var result = null;
+		var properties = product.get('properties')?product.get('properties'):product.properties;
+		for(var i=0;i<properties.length;i++){
+			if(properties[i].attributeFQN.toLowerCase()===attributeFQN.toLowerCase()){
+				for(var j=0;j<properties[i].values.length; j++){
+					result= properties[i].values[j].stringValue;
+					if(useStringValue){
+						result= properties[i].values[j].stringValue;
+					}
+					else{
+						result= properties[i].values[j].value;
+					}
+					if(properties[i].values[j].value !== properties[i].values[j].stringValue){
+						console.log(properties[i].values[j].value);
+						console.log(properties[i].values[j].stringValue);
+					}
+				}
+				break;
+			}
+		}
+		return result;
+    };
 	var addParameter = function(form,parameter,value){
-            $("<input type='hidden' />")
-             .attr("name", parameter)
-             .attr("value", value)
-             .appendTo(form);
-        };
+		$("<input type='hidden' />")
+		 .attr("name", parameter)
+		 .attr("value", value)
+		 .appendTo(form);
+	};
+	var trackBulkExtraRequests = [];
+	var getDNDExtrasFromOptions = function(options,extrasToHideArr,callback){
+		console.log("getDNDExtrasFromOptions");
+		var productStr = "";
+		var option,attributeCode,values;
+		// make list of all product codes we need to get info for...
+		for(var i=0; i<options.models.length; i++){
+			option = options.models[i];
+			attributeCode = option.get('attributeFQN').split('~')[1];
+			if(option.get('attributeDetail').usageType==='Extra' &&
+				option.get('attributeDetail').dataType==='ProductCode' &&
+				extrasToHideArr.indexOf(attributeCode) > -1){
+				values = option.get('values');
+				for(var v=0;v<values.length;v++){
+					productStr+=values[v].value+",";
+				}
+			}
+		}
+		
+		//console.log(productStr);
+		if(productStr.length > 0){
+			// sort and store so we can track if we've already requested this info
+			var productStrArr = productStr.split(",");  // to array
+			productStrArr.sort(); // sort so it's in a consistent order to compare against
+			productStr = productStrArr.join(","); // back to a list
+			if(trackBulkExtraRequests.indexOf(productStr) > -1){
+				// request already made, below we'll loop over records below to get actual info
+				//console.log('request already made');
+			}
+			else{
+				//console.log('make request');
+				// new request, make request and exit
+				trackBulkExtraRequests.push(productStr);
+				SharedProductInfo.getExtras(productStr,callback);
+				return;
+			}
+		}
+		
+		var extrasInfo = [];
+
+		for(var inc=0; inc<options.models.length; inc++){
+			option = options.models[inc];
+			attributeCode = option.get('attributeFQN').split('~')[1];
+			if(option.get('attributeDetail').usageType==='Extra' &&
+				option.get('attributeDetail').dataType==='ProductCode' &&
+				extrasToHideArr.indexOf(attributeCode) > -1){
+				var extra ={};
+				extra.name = option.get('attributeDetail').name;
+				extra.isRequired = option.get('isRequired');
+				extra.attributeCode = attributeCode;
+				extra.values=[];
+				values = option.get('values');
+				for(var l=0;l<values.length;l++){
+					var eprod = SharedProductInfo.getExtraProduct(values[l].value,callback);
+					if(eprod){
+						var extraValues={};
+						extraValues.price = values[l].deltaPrice;
+						extraValues.name = values[l].stringValue;
+						extraValues.value = values[l].value;
+						extraValues.mfgPartNumber = eprod.get('mfgPartNumber');
+						var inventoryInfo = values[l].bundledProduct.inventoryInfo;
+						if(inventoryInfo && inventoryInfo.manageStock){
+							extraValues.maxQty = inventoryInfo.onlineStockAvailable;
+						}
+						extraValues.quantity = values[l].bundledProduct.quantity;
+						extra.values.push(extraValues);
+					}
+					else{
+						return false;
+					}
+				}
+				extrasInfo.push(extra);
+			}
+		}
+		return extrasInfo;
+	};
 	
 	//https://gist.github.com/SparK-Cruz/1570177
 	var dndItem = (function(){
@@ -141,44 +273,36 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			var self =this;
 			var options = self.model.get('options');
 			var extrasToHide = getPropteryValueByAttributeFQN(this.model, 'tenant~extrastohide');
-            var extrastohideArr = [];
+            var extrasToHideArr = [];
             if(extrasToHide && extrasToHide!==""){
-                extrastohideArr = extrasToHide.toLowerCase().split(',');
+                extrasToHideArr = extrasToHide.toLowerCase().split(',');
             }
-			if(options.length>0 && extrastohideArr.length>0){
-				// TO DO - this throws error for lineitems in cart b/c options.models is undefined.  options only contains selected options, not all available
-			   for(var inc=0; inc<options.models.length; inc++){
-					var option = options.models[inc];
-				   	var attributeCode = option.get('attributeFQN').split('~')[1];
-					if(option.get('attributeDetail').usageType==='Extra' &&
-						option.get('attributeDetail').dataType==='ProductCode' &&
-						extrastohideArr.indexOf(attributeCode) > -1){
-						var extra ={};
-						extra.name = option.get('attributeDetail').name;
-						extra.isRequired = option.get('isRequired');
-						extra.attributeCode = attributeCode;
-						extra.values=[];
-						var values = option.get('values');
-						for(var l=0;l<values.length;l++){
-							var eprod = SharedProductInfo.getExtraProduct(values[l].value,callback);
-							if(eprod){
-								var extraValues={};
-								extraValues.price = values[l].deltaPrice;
-								extraValues.name = values[l].stringValue;
-								extraValues.value = values[l].value;
-								extraValues.mfgPartNumber = eprod.get('mfgPartNumber');
-								var inventoryInfo = values[l].bundledProduct.inventoryInfo;
-								if(inventoryInfo && inventoryInfo.manageStock){
-									extraValues.maxQty = inventoryInfo.onlineStockAvailable;
-								}
-								extraValues.quantity = values[l].bundledProduct.quantity;
-								extra.values.push(extraValues);
-							}
-							else{
-								return;
-							}
+			if(extrasToHideArr.length>0){
+				// if this is in cart, we need to make api call to get full product object model to be able to send product extras into dnd b/c that info is no longer part of product model in cart
+				if(this.lineitemID){
+					var productmodel = FullProductModels.getProductModel(self.model.get('productCode'),callback);
+					if(productmodel){
+						options = productmodel.get('options');
+						extrasInfo = getDNDExtrasFromOptions(options, extrasToHideArr, callback);
+						//console.log(extrasInfo);
+						if(extrasInfo){
+							return extrasInfo;
 						}
-						extrasInfo.push(extra);
+						else{
+							return false; // exit b/c callback was called in getDNDExtrasFromOptions();
+						}
+					}
+					else{
+						return false; // exit b/c callback was called in FullProductModels.getProductModel()
+					}
+				}
+				else{
+					extrasInfo = getDNDExtrasFromOptions(options, extrasToHideArr, callback);
+					if(extrasInfo){
+						return extrasInfo;
+					}
+					else{
+						return false; // exit b/c callback was called in getDNDExtrasFromOptions();
 					}
 				}
 			}
@@ -191,47 +315,98 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 
 			// parent info
 			mfgpartnumber = this.model.get('mfgPartNumber');
-			parentDND = getPropteryValueByAttributeFQN(this.model, self.productAttributes.dndCode);
-			parentDesign = getPropteryValueByAttributeFQN(this.model, self.productAttributes.designCode);
-			parentMC = getPropteryValueByAttributeFQN(this.model, self.productAttributes.mcCode, true);
-			parentUOM = getPropteryValueByAttributeFQN(self.model, self.productAttributes.unitOfMeasure);
+			parentDND = getPropteryValueByAttributeFQN(this.model, this.productAttributes.dndCode);
+			parentDesign = getPropteryValueByAttributeFQN(this.model, this.productAttributes.designCode);
+			parentMC = getPropteryValueByAttributeFQN(this.model, this.productAttributes.mcCode, true);
+			parentUOM = getPropteryValueByAttributeFQN(this.model, this.productAttributes.unitOfMeasure);
 			
 			if(this.lineitemID){
 				// from cart
 				newItem = new dndItem();
-				newItem.isBundle = false;
 				newItem.productID = this.model.get('productCode');
-				newItem.itemDescription = this.model.get('content.productName');
-				
-				newItem.setFromModel(me);
-				console.log(self.isComponent);
-				if(self.isComponent){
+
+				console.log(this.isComponent);
+				if(this.isComponent){
 					// bundle component
+					newItem.itemDescription = this.model.get('content.productName');
+					newItem.isBundle = true;
 					newItem.dndCode = parentDND;
 					newItem.mcCode = parentMC;
 					newItem.ecometrySku = mfgpartnumber;
 					newItem.unitOfMeasure = parentUOM;
 				}
 				else{
-					// could be parent or on extra
-					
+					newItem.isBundle = false;
+					newItem.itemDescription = this.model.get('name');
+					// could be parent or on extra (but won't be bundle)
+					if(mfgpartnumber && mfgpartnumber.length > 0){
+						// add parent info
+						newItem.dndCode = parentDND;
+						newItem.mcCode = parentMC;
+						if(newItem.dndCode || newItem.mcCode){
+							newItem.ecometrySku = mfgpartnumber;
+							newItem.designCode = parentDesign;
+							newItem.unitOfMeasure = parentUOM;
+						}
+					}
+					else{
+						// look at extras
+						options=me.model.get('options');
+						for(i=0;i < options.length;i++){
+							productCode = options[i].value;
+							option = options[i];
+							//console.log(option);
+							if(option.attributeFQN !== me.productAttributes.dndToken && option.value){ 
+								// if not dnd-token & a value is present, loop over bundled products to find the corresponding extra
+								var bundledProducts = me.model.get('bundledProducts');
+								for (var j=0; j< bundledProducts.length; j++) {
+									if(bundledProducts[j].productCode === option.value){
+										product = SharedProductInfo.getExtraProduct(bundledProducts[j].productCode,callback);
+										if(product){
+											childMC = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode, true);
+											childDND = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
+											childDesign = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
+											childUOM = getPropteryValueByAttributeFQN(product ,me.productAttributes.unitOfMeasure);
+											
+											newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;	
+											newItem.mcCode = (childMC && childMC.length)?childMC:parentMC;
+											
+											if(newItem.dndCode || newItem.mcCode){
+												newItem.ecometrySku = product.get('mfgPartNumber');
+												newItem.designCode = (childDesign && childDesign.length)?childDesign:parentDesign;
+												newItem.unitOfMeasure = (childUOM && childUOM.length)?childUOM:parentUOM;
+											}
+										}
+										else{
+											return false;// exit, means we are waiting on api call inside getExtraProduct
+										}
+										break; // exit loop over bundled products
+									}
+								}
+								if(newItem.ecometrySku){
+									break; // exit options loops
+								}
+							}
+						}
+					}
 				}
+				newItem.setFromModel(me);
 				dndArr.push(newItem);
 			}
-			else if(self.model.get('productUsage') === "Bundle"){
+			else if(me.model.get('productUsage') === "Bundle"){
 				// loop over components
-				var bp = self.model.get('bundledProducts');
+				var bp = me.model.get('bundledProducts');
 				for (i =0; i< bp.length; i++) {
 					var component = bp[i];
 					product = SharedProductInfo.getExtraProduct(component.productCode,callback);
 					if(product){
 						newItem = new dndItem();
-						newItem.dndCode = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
-						newItem.mcCode = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode, true);
+						newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
+						newItem.mcCode = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode, true);
 						if(newItem.dndCode || newItem.mcCode){
 							newItem.isBundle = true;
 							newItem.ecometrySku = product.get('mfgPartNumber');
-							newItem.designCode = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+							newItem.designCode = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
 							newItem.unitOfMeasure = parentUOM;
 							newItem.productID = product.get('productCode');
 							newItem.itemDescription = product.get('content.productName');
@@ -255,12 +430,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						product = SharedProductInfo.getExtraProduct(productCode,callback);
 						if(product){
 							newItem = new dndItem();
-							newItem.dndCode = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);		
-							newItem.mcCode = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode);
+							newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);		
+							newItem.mcCode = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode);
 							if(newItem.dndCode || newItem.mcCode){
 								newItem.isBundle = true;
 								newItem.ecometrySku = product.get('mfgPartNumber');
-								newItem.designCode = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
+								newItem.designCode = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
 								newItem.unitOfMeasure = parentUOM;
 								newItem.productID = product.get('productCode');
 								newItem.itemDescription = product.get('content.productName');
@@ -306,10 +481,10 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							product = SharedProductInfo.getExtraProduct(productCode,callback);
 							if(product){
 								// look for dnd/mediaclip code on extra first. if none, fall back to parent's
-								childMC = getPropteryValueByAttributeFQN(product, self.productAttributes.mcCode, true);
-								childDND = getPropteryValueByAttributeFQN(product, self.productAttributes.dndCode);
-								childDesign = getPropteryValueByAttributeFQN(product, self.productAttributes.designCode);
-								childUOM = getPropteryValueByAttributeFQN(product ,self.productAttributes.unitOfMeasure);
+								childMC = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode, true);
+								childDND = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
+								childDesign = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
+								childUOM = getPropteryValueByAttributeFQN(product ,me.productAttributes.unitOfMeasure);
 								
 								newItem = new dndItem();
 								newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;								
@@ -343,12 +518,13 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			this.send();
 		};
         self.initialize = function(){
+			var me = this;
 			console.log("initialize");
             // LG change - updated dummyurl to remove doubleslash within url
-            var dummyurl = self.dndEngineUrl+"ajax/nosession/loading.html"; // url of static html page that demonstrates that that loading is in progress
+            var dummyurl = me.dndEngineUrl+"ajax/nosession/loading.html"; // url of static html page that demonstrates that that loading is in progress
             var dndpopup = $('<div>').addClass('dnd-popup');
             var a = $('<a>').attr('href','#').addClass('personalize-close').html('&times;');
-            var iframe = $('<iframe data-time="'+self.time+'" src="'+dummyurl+'" id="iframe'+self.time+'" name="iframe'+self.time+'" width="750" height="689"></iframe>');
+            var iframe = $('<iframe data-time="'+me.time+'" src="'+dummyurl+'" id="iframe'+me.time+'" name="iframe'+me.time+'" width="750" height="689"></iframe>');
             dndpopup.append(a);
             dndpopup.append(iframe);
             $("body").append(dndpopup);
@@ -396,19 +572,19 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
                 $('#cboxOverlay').hide();
                 $('body').css({overflow: 'auto'});
                 $('html').removeClass('dnd-active-noscroll');
-				if(self.form){
-					$(self.form).remove();
+				if(me.form){
+					$(me.form).remove();
 				}
-				self.unsend();
+				me.unsend();
 
                 //google analytics code for personlaize close
                 var gapersonalizeclose;
                 try{
-                    if(self.model.toJSON().content && self.model.toJSON().content.productName){
-                       gapersonalizeclose = self.model.toJSON().content.productName;
+                    if(me.model.toJSON().content && me.model.toJSON().content.productName){
+                       gapersonalizeclose = me.model.toJSON().content.productName;
                     }
-                    else if(self.model.toJSON().name){
-                       gapersonalizeclose = self.model.toJSON().name;
+                    else if(me.model.toJSON().name){
+                       gapersonalizeclose = me.model.toJSON().name;
                     }
 					
 					if(typeof ga !== "undefined"){
@@ -430,7 +606,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			this.iframe = iframe; // so it can accessed in this.send
 		};
 		self.onDNDSubmit = function(e){
-			var self = this;
+			var me = this;
 			// function that will listen for post back from iframe
 			console.log('onDNDSubmit',e.data);
 					
@@ -438,7 +614,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			var responseData = e.data;
 			if(responseData!=="process-tick" && responseData.projectToken){
 				var extraData = '';
-				var curObj = self.dndArr[self.index];
+				var curObj = me.dndArr[me.index];
 				console.log(curObj);
 				if(responseData.ecometrySku){ 
 					var eskuSplit = null, eskuValue;
@@ -447,21 +623,21 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						eskuSplit = responseData.ecometrySku.split('@');
 						eskuValue = eskuSplit[eskuSplit.length-1];
 					}
-					self.projectToken[curObj.productID+"@"+eskuValue] = responseData.projectToken;
+					me.projectToken[curObj.productID+"@"+eskuValue] = responseData.projectToken;
 				}
 				else{
-					self.projectToken[curObj.productID+"@"+curObj.ecometrySku]=responseData.projectToken;
+					me.projectToken[curObj.productID+"@"+curObj.ecometrySku]=responseData.projectToken;
 				}
-				extraData = JSON.stringify(self.projectToken);
+				extraData = JSON.stringify(me.projectToken);
 				responseData.projectToken = extraData;
 
 				// increment counter
-				self.index++;
+				me.index++;
 
 				// see if we have more items to process
-				if(self.index < self.dndArr.length){
+				if(me.index < me.dndArr.length){
 					//relaunch personalization on next item
-					self.doPers();
+					me.doPers();
 				}
 				else{
 					// remove form
@@ -469,18 +645,18 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						$(this.form).remove();
 					}
 					
-					self.unsend(); // unbind window event listeners
+					me.unsend(); // unbind window event listeners
 
 					// save personalization to cart
 					switch(responseData.method){
 						case 'AddToCart':
-							self.view.addToCartAfterPersonalize(responseData); //productview
+							me.view.addToCartAfterPersonalize(responseData); //productview
 							break;
 						case 'UpdateCart': 
-							self.view.cartView.updateCartItemPersonalize(responseData); //cartview
+							me.view.updateCartItemPersonalize(responseData); //cartview
 							break;
 						case 'AddToWishlist':
-							self.view.AddToWishlistAfterPersonalize(responseData); //productview
+							me.view.AddToWishlistAfterPersonalize(responseData); //productview
 							break;    
 					}
 
@@ -488,13 +664,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			}
 		};
 		self.unsend = function(){
-			// undoes event attachment
+			// undoes event attachment done in send()
 			console.log("unsend");
 			var deleteMethod = window.removeEventListener ? "removeEventListener" : "detachEvent";
-			console.log(deleteMethod);
 			var deleter = window[deleteMethod];
 			var messageEvent = deleteMethod == "detachEvent" ? "onmessage" : "message";
-			deleter(messageEvent,this.onDNDSubmit.bind(this),false);
+			deleter(messageEvent,this.eventBound,false);
 		};
 		self.send = function(){
 			console.log("send");
@@ -507,23 +682,14 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             if(!this.dndExtras){
 				return; // if not returned, exit b/c we are waiting on api call and this will automatically be called again....
 			}
+
+			this.eventBound = this.onDNDSubmit.bind(this); // have to set it to a variable so that we can remove event - doesn't work with "this.onDNDSubmit.bind(this)" as event (not sure why exactly https://stackoverflow.com/questions/11565471/removing-event-listener-which-was-added-with-bind)
 			
-			var self = this;
-     
-            /* 
-            Code Added by Asaithambi
-            Create IE + others compatible event handler
-            */
-			
-			// create eventer listener for iframe
-           // if(typeof window.eventBindFlag === "undefined"){
-                var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
-                var eventer = window[eventMethod];
-                var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
-                //window.eventBindFlag = true;
-                eventer(messageEvent,this.onDNDSubmit.bind(this),false);
-           // }
-			
+			var eventMethod = window.addEventListener ? "addEventListener" : "attachEvent";
+			var eventer = window[eventMethod];
+			var messageEvent = eventMethod == "attachEvent" ? "onmessage" : "message";
+			eventer(messageEvent,this.eventBound,false);
+
 			// GA for personalized code
             try{
                 var galabel;
@@ -589,8 +755,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				}
 				else{
 					// re-edit with dnd
-					var url = this.dndEngineUrl+"edit/"+this.dndToken;
-					console.log(url);
+					var url = this.dndEngineUrl+this.dndToken+"/edit";
+					//console.log(url);
+					//console.log(dndItem);
 
 					// create new form
 					form = $('<form action="'+url+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');

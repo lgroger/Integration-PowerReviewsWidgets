@@ -75,8 +75,40 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			console.log("showBundle");
             $("body").css("overflow-y","hidden");
             $(".bundle-items-wrap-pdp").fadeIn();
-		},loadComponents: function(i){
+			this.loadComponentImages(); // make sure extra component info (image/uom) is loaded if not done already
+		},loadExtras: function(){
+			console.log("loadExtras");
+			var options = this.model.get('options');
+			var productStr = "";
+
+			for(var i=0; i< options.length;i++){
+				var option = options.models[i];
+				if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode') {
+					var values = option.get('values');
+					for(var val in values){
+						productStr+=values[val].value+",";
+					}
+				}
+			}
+			if(productStr.length > 0){
+				SharedProductInfo.getExtras(productStr);
+			}
+		},loadComponents: function(){
 			console.log("loadComponents");
+			var i = 0;
+			var bp = this.model.get('bundledProducts');
+			var productStr = "";
+			while(i<bp.length) {
+				var component = bp[i];
+				productStr+=component.productCode+",";
+				i++;
+			}
+			if(productStr.length > 0){
+				SharedProductInfo.getExtras(productStr,this.loadComponentImages.bind(this));
+			}
+		},
+		loadComponentImages: function(i){
+			console.log("loadComponentImages");
 			if(this.compLoadComplete){
 				return; // exit, already done
 			}
@@ -86,31 +118,32 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			}
 
 			// loop over components and fill in the info that's only accessible via api calls (image, uom)
-				var bp = this.model.get('bundledProducts');
-				while(i<bp.length) {
-					var component = bp[i];
-					var product = SharedProductInfo.getExtraProduct(component.productCode,this.loadComponents.bind(this,i)); // if product not found, api call will be made and this.loadComponents() called again
-					if(product){
-						var holder = $(".bundle-inside-item[productcode='"+component.productCode+"']");
-						var productImages = product.get('content.productImages');
-						if(productImages.length>0){
-							$(holder).find(".bundle-img").attr("src",productImages[0].imageUrl+"?max=100");
-						}
-						else{
-							$(holder).find(".bundle-img").attr("src","/resources/images/no-image.png");
-						}
-						
-						var uom = getPropteryValueByAttributeFQN(this.model, productAttributes.unitOfMeasure);
-						if(uom){
-							$(holder).find("h3.uom").text(uom);
-						}
-						
+			var bp = this.model.get('bundledProducts');
+			while(i<bp.length) {
+				var component = bp[i];
+				var product = SharedProductInfo.getExtraProduct(component.productCode,this.loadComponents.bind(this,i)); // if product not found, api call will be made and this.loadComponents() called again
+				if(product){
+					var holder = $(".bundle-inside-item[productcode='"+component.productCode+"']");
+					var productImages = product.get('content.productImages');
+					//console.log(productImages[0]);
+					if(productImages.length>0 && productImages[0].imageUrl){
+						$(holder).find(".bundle-img").attr("src",productImages[0].imageUrl+"?max=100");
 					}
 					else{
-						return(false);// exit, means we are waiting on api call inside getExtraProduct
+						$(holder).find(".bundle-img").attr("src","/resources/images/no-image.png");
 					}
-					i++;
+
+					var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
+					if(uom){
+						$(holder).find("h3.uom").text(uom);
+					}
+						
 				}
+				else{
+					return(false);// exit, means we are waiting on api call inside getExtraProduct
+				}
+				i++;
+			}
 			this.compLoadComplete = true;
         },increaseQty: function(e){
 			console.log("increaseQty");
@@ -295,8 +328,6 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
                 $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
             });
-			
-			this.loadComponents(); // start loading bundle component info in background (will allow better display of "what's inside" as well as less load time if customer tries to personalize)
         },
         hideOptions: function(){
 			console.log("hideOptions");
@@ -421,8 +452,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					}
 				} // on
 			
-				if(uom)
+				if(uom){
 					me.model.set('uom',uom);
+				}
 			
 				// if we made it here, call render
 				Backbone.MozuView.prototype.render.apply(me);

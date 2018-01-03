@@ -174,6 +174,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
 		 };
 		 
         productView.render();
+		return productView;
     };
 	
 	// get product info of all items used as extras - http.commerce.catalog.storefront.products.getProduct.after (application Pricing_Arc_Prod) returns extras as http header "productExtras"
@@ -318,7 +319,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
 		
 		//window.showPageLoader();
 	
-		initProductView(product);
+		var productView = initProductView(product);
 		
         /*var options = product.get('options').toJSON();
         var extrasProductCodes = [];
@@ -416,6 +417,10 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
             }
 
         });
+		
+		productView.loadComponents(); // start loading bundle component info in background (will allow better display of "what's inside" as well as less load time if customer tries to personalize)
+			
+		productView.loadExtras(); // start loading extras info in background (will be less load time if customer tries to personalize)
     });
 
 });
