@@ -321,9 +321,6 @@ $(".menu-sec-1 li a").on('mouseover', function() {
            	$(".loop-"+link).addClass("current");
         //   alert(".menu-sec-2.adSlideBox.loop [class="+link+"]");
 		});
-$(".menu-sec-1 li a").on('mouseout', function() {
-		
-		});
 
 
      $('.header').click(function(){
@@ -335,28 +332,6 @@ $(".menu-sec-1 li a").on('mouseout', function() {
 	    $(this).closest('.container-des-rev').toggleClass('collapsed');
 	  		});
 
-     $(document).on("click",".bundle-page-qty .qtyplus",function(e){
-                e.preventDefault();
-                var plusVal = parseInt($(this).parent().find('input[data-mz-value="quantity"]').val(),10);
-                if(plusVal >= 1){
-                	$(this).parent().find('input[data-mz-value="quantity"]').val(plusVal+1);
-                }else if(plusVal<=0){
-                	$(this).parent().find('input[data-mz-value="quantity"]').val(1);
-                }
-                $('.bundle-page-qty input[data-mz-value="quantity"]').trigger('change');
-            }); 
-            $(document).on("click",".bundle-page-qty .qtyminus",function(e){ 	 
-                e.preventDefault();
-                var qntyVal = $('.mz-productdetail-conversion-controls input[data-mz-value="quantity"]').val();
-                var currentVal = parseInt($(this).parent().find('input[data-mz-value="quantity"]').val(),10);
-                if (!isNaN(currentVal) && currentVal > 1) {
-                    $(this).parent().find('input[data-mz-value="quantity"]').val(currentVal - 1);
-                } else if(currentVal<=0){
-                    $(this).parent().find('input[data-mz-value="quantity"]').val(1);
-                }
-                $('.bundle-page-qty input[data-mz-value="quantity"]').trigger('change');
-            });
-     
 	});
 	
 });
