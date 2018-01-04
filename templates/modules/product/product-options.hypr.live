@@ -24,7 +24,7 @@
                <select class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" {% if option.value %}style="display:block"{% else %} style="display:none"{% endif %}>
                     <option value="">Size*</option>
                 {% for value in option.values %}
-                    <option value="{{value.value}}" {% if value.isSelected %}selected="true"{% endif %}>{{ value.stringValue }}</option>
+                    <option value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}" {% if value.isSelected %}selected="true"{% endif %}>{{ value.stringValue }}</option>
                 {% endfor %}
                 </select>
             {% endif %}
@@ -45,7 +45,7 @@
                 <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" usageType={{option.attributeDetail.usageType}}>
                     {% if not option.isMultiValue %}<option value="">Select {{ option.attributeDetail.name }}</option>{% endif %}
                     {% for value in option.values %}
-                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
+                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}">{{value.stringValue|default(value.value)}}</option>
                     {% endfor %}
                 </select>                
             {% else %}

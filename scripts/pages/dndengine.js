@@ -352,7 +352,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							productCode = options[i].value;
 							option = options[i];
 							//console.log(option);
-							if(option.attributeFQN !== me.productAttributes.dndToken && option.value){ 
+							if(option.attributeFQN !== me.productAttributes.dndToken && option.value && option.attributeFQN !== me.productAttributes.optionalEnvelope){ 
 								// if not dnd-token & a value is present, loop over bundled products to find the corresponding extra
 								var bundledProducts = me.model.get('bundledProducts');
 								for (var j=0; j< bundledProducts.length; j++) {
@@ -473,7 +473,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						productCode = options[i].value;
 						attributeFQN = options[i].attributeFQN;
 						option = me.model.get('options').get(attributeFQN);
-						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && attributeFQN !== me.productAttributes.optionalEnvelope){ // exclude greeting card envelope b/c pers belongs on greeting card size only
 							product = SharedProductInfo.getExtraProduct(productCode,callback);
 							if(product){
 								// look for dnd/mediaclip code on extra first. if none, fall back to parent's
@@ -611,7 +611,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			if(responseData!=="process-tick" && responseData.projectToken){
 				var extraData = '';
 				var curObj = me.dndArr[me.index];
-				console.log(curObj);
+				//console.log(curObj);
 				if(responseData.ecometrySku){ 
 					var eskuSplit = null, eskuValue;
 					eskuValue = responseData.ecometrySku;

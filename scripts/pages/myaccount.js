@@ -2135,7 +2135,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                             }
                         }
                     }
-                    console.log(total);
+                    //console.log(total);
                     items.models[i].set('total',total.toFixed(2));
                 }
 
@@ -2288,7 +2288,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }
                 }
             }
-            console.log(this.model);
+            //console.log(this.model);
         },
         render: function(){
             this.updateShippingDateForLineItems();
@@ -2412,8 +2412,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             * in packages array. if there add new property for the line item to hold fullfilment date info
         **/
         updateShippingDateForLineItems:function(){
-            console.log("Order updating");
-            console.log(this.model);
+           // console.log("updateShippingDateForLineItems");
+           // console.log(this.model);
             for(var i=0; i<this.model.get('items').models.length; i++){
                 for(var j=0; j<this.model.get('items').models[i].get('items').models.length; j++){
                     var item = this.model.get('items').models[i].get('items').models[j];
@@ -2432,7 +2432,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     }
                 }
             }
-            console.log(this.model);
+            //console.log(this.model);
         },
         render: function(){
             this.updateShippingDateForLineItems();

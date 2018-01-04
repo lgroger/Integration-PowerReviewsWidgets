@@ -26,6 +26,15 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }
             return result;
      };
+	var getConfiguredOptionsByAttributeFQN = function(model, attributeFQN){
+		var configuredOptions = model.getConfiguredOptions();
+		for(var o=0;o<configuredOptions.length;o++){
+			if(configuredOptions[o].attributeFQN === attributeFQN){
+				return configuredOptions[o];
+			}
+		}
+		return null;
+	};
 
      var getPropteryByAttributeFQN = function(product, attributeFQN){
             var result = null;
@@ -98,10 +107,12 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			var i = 0;
 			var bp = this.model.get('bundledProducts');
 			var productStr = "";
+			if(bp){
 			while(i<bp.length) {
 				var component = bp[i];
 				productStr+=component.productCode+",";
 				i++;
+			}
 			}
 			if(productStr.length > 0){
 				SharedProductInfo.getExtras(productStr,callback);
@@ -338,6 +349,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 extrastohideArr = extrasToHide.toLowerCase().split(',');
             }
             for(var i=0; i< options.length;i++){
+				var cOption = null;
 				var option = options.models[i];
                 var attributeCode = option.get('attributeFQN').split('~');
                 if(extrastohideArr.indexOf(attributeCode[1]) > -1){
@@ -358,6 +370,30 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 						option.set('isOptionForDND',false);
 						option.set('isVisibleOption',false); // hide extras used for inventory only of design items
 					}
+				}
+				else if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && option.get('attributeFQN') === productAttributes.optionalEnvelope && this.model.get('productType')==='GiantCard'){
+					// special greeting card logic to show envelope only after card size has been selected
+					cOption = getConfiguredOptionsByAttributeFQN(this.model,productAttributes.giantGreetingCardSize);
+					if(cOption){
+						option.set('isVisibleOption',true); // show envelope
+					}
+					else{
+						option.set('isVisibleOption',false); // hide envelope
+					}
+					option.set('isOptionForDND',false);
+					
+				}
+				else if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && option.get('attributeFQN') === "tenant~pcdypcb" && this.model.get('productType')==='CandyBar'){
+					// special candy bar logic - hide chocolate choice unless cdyper-option is selected
+					cOption = getConfiguredOptionsByAttributeFQN(this.model,"tenant~cdyper-choice");
+					if(cOption && cOption.value === "cdyper-option"){
+						option.set('isVisibleOption',true); // show chocolate choice
+					}
+					else{
+						option.set('isVisibleOption',false); // hide chocolate choice
+					}
+					option.set('isOptionForDND',false);
+					
 				}
 				else{
 					option.set('isOptionForDND',false);
@@ -582,6 +618,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					 me.model.get('options').get(objoptions.attributeFQN).unset("value");
 				  });
 			}
+			// candyBar - I think this unsets the chocolate choice when wrapper only is selected?
 			if(id ==="tenant~cdyper-choice"){
 				if(newValue.toLowerCase()==="cdyperw-option"){
 					_.each(objj, function(objoptions) {
@@ -796,18 +833,30 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             //greeting Card
             var selectgreetingCardVal =$('[data-mz-product-option="'+productAttributes.giantGreetingCardSize+'"]:checked').val();
             if(selectgreetingCardVal){
-                $('[data-mz-product-option="'+productAttributes.optionalEnvelope+'"]').each(function(idx,ele){
+				var cOption = getConfiguredOptionsByAttributeFQN(me.model,productAttributes.optionalEnvelope);
+                $('[data-mz-product-option="'+productAttributes.optionalEnvelope+'"]').each(function(){
+					if($(this).attr('value')){
                     var splitvalue = $(this).attr('value').split('_');
+						console.log(splitvalue[0]);
+						console.log(selectgreetingCardVal);
+					// this removes options in optionalEnvelope that don't match up to giantGreetingCardSize selected - envelopes are named cardSize+'_'+envelopeSkU, ex. KSCRD18_ZENVSMA
                     if(splitvalue.length>1){
                         if(splitvalue[0]!==selectgreetingCardVal && splitvalue[0].toLowerCase()!=='no'){
-                            //me.model.get('options').get(productAttributes.optionalEnvelope).unset("value");
-                            if(me.model.get("options").get("tenant~optional-envelope") && $(ele).is(":checked")){
-                                me.model.get("options").get("tenant~optional-envelope").unset("value");
+                            if(me.model.get("options").get(productAttributes.optionalEnvelope) && $(this).is(":checked")){
+                                me.model.get("options").get(productAttributes.optionalEnvelope).unset("value");
                             }
-                            $(ele).parent().next("br").remove();
-                            $(ele).parent().remove();
+							if($(this).is("option")){
+								// select dropdown (quickview)
+								$(this).remove();
+							}
+							else{
+								// assuming it's checkbox/radio (pdp)
+								$(this).parent().next("br").remove();
+								$(this).parent().remove();
+							}
                         }
                     }
+					}
                 });
             }
 
@@ -852,7 +901,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     this.$('[data-mz-product-option]').parents('.mz-productoptions-container').hide();
                 }
             }
-
+/* moved this to hideOptions()
             if(me.model.get('productType')==='CandyBar'){
                 var selectOptonVal = $('[data-mz-product-option="tenant~cdyper-choice"]:checked').val();
                 if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()=="cdyperw-option"){
@@ -860,7 +909,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 }else if(selectOptonVal!==undefined){
                     $('[data-mz-product-option="tenant~pcdypcb"]').removeClass("hide");
                 }
-            }
+            } */
 			me.customAfterRender();
 		},
 		customAfterRender: function(){
@@ -957,6 +1006,18 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				   for(inc=0; inc<options.models.length; inc++){ // options includes both extras and configurable options
 						option = options.models[inc];
 						if(option.get('attributeDetail').usageType==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
+							
+							if(option.get('attributeFQN') === "tenant~pcdypcb" && this.model.get('productType')==='CandyBar'){
+								// special candy bar logic - hide chocolate choice unless cdyper-option is selected
+								var cOption = getConfiguredOptionsByAttributeFQN(this.model,"tenant~cdyper-choice");
+								if(cOption && cOption.value === "cdyper-option"){
+									option.set('isRequired',true); // show chocolate choice & make required
+								}
+								else{
+									option.set('isRequired',false); // show chocolate choice & make optional
+								}
+							}
+
 							var isRequired = option.get('isRequired');
 							var isVisibleOption = option.get('isVisibleOption'); // set in this.hideOptions()
 							var isOptionForDND = option.get('isOptionForDND'); // set in this.hideOptions()
