@@ -572,7 +572,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 							// 3 days for express
 							me.model.set("expressDate",me.formatDateString(result_date));
 						}
-						if((!isMelt && addedDays===productionTime+5) ||(isMelt && addedDays===productionTime+2)){ // if it melts, we'll ship it 2 day even if they select Ground since we only ship M-W
+						if(!isMelt && addedDays===productionTime+5){
 							// 5 days for standard
 							me.model.set("delDate",me.formatDateString(result_date));
 						}
