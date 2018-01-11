@@ -1,60 +1,5 @@
 define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product","modules/shared-product-info","modules/mc-cookie","modules/dnd-token"], function ($, Hypr,Api,ProductModels, SharedProductInfo,McCookie,DNDToken) {    
 	
-	// this is similar to "modules/shared-product-info" but is meant to hold product models when a cart lineitem needs access to full product model prior to adding to cart (ex. to get extras for dnd)
-	var FullProductModels = {
-		models:	[],
-		getProductModel: 	function(productCode,callback){
-			console.log("FullProductModels.getProductModel");
-			var me = this;
-			if(this.models.length>0){
-				for(var i=0;i < this.models.length;i++){
-					if(this.models[i].get('productCode')===productCode){
-						var product = this.models[i];
-						return product;
-					}
-				}
-			}
-			else{
-				/*
-				var requesturl = '/api/commerce/catalog/storefront/products/'+productCode+'?my=1';
-				
-				var onSuccessFunction =  function(res, xhr,request){
-					console.log('FullProductModels api on success');
-					if(request === requesturl){
-						try{
-							var productExtrasResponse = xhr.getResponseHeader("productExtras");
-							if(productExtrasResponse && productExtrasResponse!==""){
-								var productExtras = JSON.parse(productExtrasResponse);
-								if(productExtras.length>0){
-									for(var i=0;i<productExtras.length;i++){
-										console.log(productExtras[i]);
-										SharedProductInfo.addExtraProduct(productExtras[i]);
-									}
-								}
-							}
-						}catch(e){
-							console.log(e);
-						}
-						Api.off('success',onSuccessFunction); // remove api on success action
-					}
-					console.log(xhr);
-					console.log(request);
-				};
-				Api.on('success',onSuccessFunction); // add on success so we can get response headers 
-				
-				Api.request('GET',requesturl).then(function(res){*/
-				// get product
-				Api.request('GET','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
-					console.log('FullProductModels api request');
-					var product=new ProductModels.Product(res);
-					me.models.push(product);
-					callback();
-				});
-				return false;
-			}
-		}
-	};
-	
 	var getPropteryValueByAttributeFQN = function(product, attributeFQN, useStringValue){ // I've found that a product attribute over 50 characters is trunctated to 50 characters for "value" but "stringValue" isn't
 		var result = null;
 		var properties = product.get('properties')?product.get('properties'):product.properties;
@@ -240,7 +185,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		return C;
 	})();
 	
-    var DNDEngine = function(model,view,lineitemid,dndToken,mcToken,isComponent)
+    var DNDEngine = function(model,view,lineitemid,dndToken,mcToken,isComponent,wishlistid)
     {
 		var pageContext = require.mozuData('pagecontext');
         var self = {};
@@ -256,6 +201,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		
 		// for cart use
 		self.lineitemID = lineitemid; // lineitem to update if used in cart
+		self.wishlistID = wishlistid; // wishlist itemid
 		self.dndToken = dndToken; // existing dnd token
 		self.mcToken = mcToken; // existing mediaclip token
 		self.isComponent = isComponent; // for use in cart - if lineitem being personalized is a bundledItem
@@ -276,7 +222,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			if(extrasToHideArr.length>0){
 				// if this is in cart, we need to make api call to get full product object model to be able to send product extras into dnd b/c that info is no longer part of product model in cart
 				if(this.lineitemID){
-					var productmodel = FullProductModels.getProductModel(self.model.get('productCode'),callback);
+					var productmodel = SharedProductInfo.getProductModel(self.model.get('productCode'),callback);
 					if(productmodel){
 						options = productmodel.get('options');
 						extrasInfo = getDNDExtrasFromOptions(options, extrasToHideArr, callback);
@@ -289,7 +235,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						}
 					}
 					else{
-						return false; // exit b/c callback was called in FullProductModels.getProductModel()
+						return false; // exit b/c callback was called in SharedProductInfo.getProductModel()
 					}
 				}
 				else{
@@ -388,7 +334,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				}
 				newItem.setFromModel(me);
 				dndArr.push(newItem);
-			}
+			} // wishlistid product model will match pdp
 			else if(me.model.get('productUsage') === "Bundle"){
 				// loop over components
 				var bp = me.model.get('bundledProducts');
@@ -473,7 +419,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						productCode = options[i].value;
 						attributeFQN = options[i].attributeFQN;
 						option = me.model.get('options').get(attributeFQN);
-						if(option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && attributeFQN !== me.productAttributes.optionalEnvelope){ // exclude greeting card envelope b/c pers belongs on greeting card size only
+						if(option.get('attributeDetail') && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode' && attributeFQN !== me.productAttributes.optionalEnvelope){ // exclude greeting card envelope b/c pers belongs on greeting card size only
 							product = SharedProductInfo.getExtraProduct(productCode,callback);
 							if(product){
 								// look for dnd/mediaclip code on extra first. if none, fall back to parent's
@@ -722,7 +668,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			var dndItem = this.dndArr[this.index];
 			var remainPersItems = (this.index!==(this.dndArr.length-1))?true:false;
 			var me = this;
-			var form;
+			var form,url;
 			
 			if(this.form){
 				// clean up any existing forms
@@ -751,7 +697,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				}
 				else{
 					// re-edit with dnd
-					var url = this.dndEngineUrl+this.dndToken+"/edit";
+					url = this.dndEngineUrl+this.dndToken+"/edit";
 					//console.log(url);
 					//console.log(dndItem);
 
@@ -782,6 +728,36 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					$("body").append(this.form);
 					this.form.submit();
 				}
+			}
+			else if(this.wishlistID){
+				
+				url = this.dndEngineUrl+this.dndToken+"/wishlist?wishlistID="+this.wishlistID;
+				// create new form
+					form = $('<form action="'+url+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
+					addParameter(form,"productID",dndItem.productID);
+					addParameter(form,"itemDescription",dndItem.itemDescription);
+					addParameter(form,"ecometrySku",dndItem.ecometrySku);
+					addParameter(form,"dndCode",dndItem.dndCode);
+					addParameter(form,"designCode",dndItem.designCode);
+					addParameter(form,"quantity",dndItem.quantity);
+					addParameter(form,"price",dndItem.price);
+					addParameter(form,"volumePricing",dndItem.volumePricing);
+					addParameter(form,"minQty",dndItem.minQty);
+					addParameter(form,"maxQty",dndItem.maxQty);
+					addParameter(form,"unitOfMeasure",dndItem.unitOfMeasure);
+					addParameter(form,"lineitemID",dndItem.lineitemID);
+					addParameter(form,"parentProductID",dndItem.parentProductID);
+					addParameter(form,"isBundle",dndItem.isBundle);
+					addParameter(form,"remainingPersItems",remainPersItems);
+
+					addParameter(form,"extras",JSON.stringify(this.dndExtras));
+
+					// save to object so we can clean it up if needed
+					this.form = form;
+
+					// insert and post form
+					$("body").append(this.form);
+					this.form.submit();
 			}
 			else if(dndItem.mcCode){
 				// launch media clip window

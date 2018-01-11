@@ -5,7 +5,7 @@ define(['hyprlive'], function (Hypr) {
 		var tokenObj = {}; // object holding dnd codes
 		var mcObj = {}; // object holding mediaclip codes
 		var dndToken,mcToken; // variable to return
-		var prdCode;
+		var prdCode,designName;
 		
 		for(var sku in dndTokenJson){
 			if(sku === "mc"){
@@ -19,6 +19,9 @@ define(['hyprlive'], function (Hypr) {
 						mcObj[mcsku]=mcTokenJson[mcsku];
 					}
 				}
+			}
+			else if(sku === "designName"){ // used to store project name when saving to wishlist
+				designName = dndTokenJson[sku];
 			}
 			else if(sku.indexOf('@')!==-1){
 				// if "@" present, that means it's in this format "KIBO-PROUDCT-CODE@MFGPARTNUM"
@@ -36,14 +39,14 @@ define(['hyprlive'], function (Hypr) {
 			}
 			dndToken = tokenObj[productCode];
 			if(dndToken){
-				return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken});
+				return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken,"designName":designName});
 			}
 		}else{
 			for(var mc in mcObj) {
 				if (mcObj.hasOwnProperty(mc)) {
 					mcToken = mcObj[mc];
 					if(mcToken){
-						return({"src":null,"token":mcToken,"type":"mc"});
+						return({"src":null,"token":mcToken,"type":"mc","designName":designName});
 					}  
 				} 
 			}
@@ -51,12 +54,12 @@ define(['hyprlive'], function (Hypr) {
 				if (tokenObj.hasOwnProperty(prop)) {
 					dndToken = tokenObj[prop];
 					if(dndToken){
-						return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken,"type":"dnd"});
+						return({"src":dndEngineUrl+'preview/'+dndToken,"token":dndToken,"type":"dnd","designName":designName});
 					}  
 				} 
 			}
 		}
-		return({"src":null,"token":null,"type":null});
+		return({"src":null,"token":null,"type":null,"designName":null});
 	};
     return {
 		getTokenData:getTokenData

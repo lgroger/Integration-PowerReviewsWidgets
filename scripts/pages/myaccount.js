@@ -1,7 +1,7 @@
 define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view',
-    'vendor/wishlist', 'modules/models-product', 'modules/added-to-cart', 'pages/dndengine',"modules/soft-cart","modules/cart-monitor","modules/models-orders", "modules/productview"],
+    'vendor/wishlist', 'modules/models-product', 'modules/added-to-cart', 'pages/dndengine',"modules/soft-cart","modules/cart-monitor","modules/models-orders", "modules/productview","modules/shared-product-info","modules/quickview-productview"],
     function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews,
-        EditableView, Wishlist, ProductModels, addedToCart, DNDEngine, SoftCart, CartMonitor, OrderModel, ProductView){
+        EditableView, Wishlist, ProductModels, addedToCart, DNDEngine, SoftCart, CartMonitor, OrderModel, ProductView,SharedProductInfo,QuickViewProductView){
     
     Hypr.engine.setFilter("contains",function(obj,k){ 
             return obj.indexOf(k) > -1;
@@ -86,744 +86,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     callback(product);
             });
         };
-/*
-    var ProductView = Backbone.MozuView.extend({
-            templateName: 'modules/product/quickview',
-            autoUpdate: ['quantity'],
-            additionalEvents: {
-                "change [data-mz-product-option]": "onOptionChange",
-                //"blur [data-mz-product-option]": "onOptionChange",
-                "click #add-to-cart": "addToCart",
-                "change [data-mz-value='quantity']": "onQuantityChange",
-                "change .mz-productlable-options": "showOptionsList",
-                "change .needslits":"configureSlitOption",
-                "click .personalize":"personalizeProduct",
-                "click .qtyplus":"increaseQty",
-                "click .qtyminus":"decreaseQty"
-            },
-            addToCart: function () {
-                this.model.set('newQuantity',this.$el.find('.mz-productdetail-qty').val());
-                this.model.addToCart();
-            },
-            personalizeProduct:function(e){
-                // DnD Code  Start
-
-                var $qField = $(e.currentTarget).parent().parent().find('[data-mz-value="quantity"]'),
-                newQuantity = parseInt($qField.val(), 10);
-                if(newQuantity <= 0){
-                    $('[data-mz-validationmessage-for="quantity"]').html("Please enter a product quantity above 0");
-                    return false;
-                }
-                if(newQuantity < this.model._minQty){
-                    $('[data-mz-validationmessage-for="quantity"]').html("Quantity should be more than minimum quantity");
-                    return false;
-                }
-
-                var me=this;
-                var objj=me.model.getConfiguredOptions();
-                var extrasProductInfo = me.getSelectedExtrasInfo(objj);
-                if(extrasProductInfo){me.model.set('extrasProductInfo',extrasProductInfo);}
-                var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-                var lineItemId = this.model.get('wishlistlineitemId');
-                if(lineItemId && lineItemId!==""){
-                    dndUrl=dndUrl+'?wishlistID='+lineItemId;
-                }
-                var dndEngineObj = new DNDEngine.DNDEngine(this.model,dndUrl);
-                dndEngineObj.initialize();
-                dndEngineObj.send();
-                // DnD Code  End
-            },
-            showOptionsList: function(e){
-                $('.mz-productdetail-addtocart').prop('disabled',true);
-                var cobj = $(e.currentTarget),
-                id=cobj.val(),me=this;
-                var objj=me.model.getConfiguredOptions();
-                me.model.set('OptionSelectedID', id);
-                if(objj.length>0){
-                    _.each(objj, function(objoptions) {
-                        me.model.get('options').get(objoptions.attributeFQN).unset("value");
-                    });
-                }
-                $('select.mz-productoptions-option').hide();
-                $('[data-mz-product-option="'+id+'"]').show();
-
-            },
-            render: function () {
-                var me = this,requiredOptions;
-                var objj=me.model.getConfiguredOptions();
-                var optionlist = $('[option-alternate-name]');
-                $.each(optionlist, function(ind, ele){
-                    var id = $(ele).attr('option-alternate-name');
-                    var option = me.model.get('options').get(id);
-                    var values = option.get('values');
-                    for(var val in values){
-                        var newValue = $.trim($(ele).find('[productCode="'+values[val].value+'"]').text());
-                        if(newValue!==""){
-                            values[val].stringValue = newValue;
-                        }
-                    }
-                });
-                // Banner Product Slit enable/disable
-                 if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
-                    var option = me.model.get('options').get(productAttributes.outdoorbanner);
-                    var slitoption = me.model.get('options').get(productAttributes.outdoorbannerslits);
-                    if((option && option.get('value')) || (slitoption && slitoption.get('value'))){
-                        me.model.set('enableSlitoption', true);
-                    }else{
-                        me.model.set('enableSlitoption', false);
-                    }
-                    // Enable Price Range Flag if Price Range Is Not Null
-                    var jsonModel = me.model.toJSON();
-                    if(objj.length===0 && !!jsonModel.priceRange){
-                          me.model.apiModel.data = jsonModel;
-                          me.model.apiModel.data.hasPriceRange=true;
-                          me.model.set('hasPriceRange', true);
-                          me.model._hasPriceRange=true;
-                    }
-                }
-                me.model.set('isConfigure', false);
-                if(me.model.get('productUsage')==="Configurable"){
-                    if(objj.length > 0){
-                            //Check all required options value are filled(model value prop shoud not be empty and it should be required).
-                            var filled_required_fileds=0;
-                            me.model.get('options').toJSON().forEach(function(ele,i){
-                                if(ele.hasOwnProperty('value') && ele.isRequired){
-                                    filled_required_fileds+=1;
-                                }
-                            });
-                        requiredOptions = _.where(me.model.get('options').toJSON(),{"isRequired":true});
-                        if(filled_required_fileds===requiredOptions.length){
-                            me.model.set('isConfigure', true);
-                        }
-                    }
-                }
-                this.hideExtras();
-                this.renderConfigure();
-                this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
-                    $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
-                });
-            },
-            afterRender: function(){
-                var me = this;
-                var selectgreetingCardVal = $('[data-mz-product-option="'+productAttributes.giantGreetingCardSize+'"]').val();
-                if(selectgreetingCardVal!==""){
-                    $('[data-mz-product-option="'+productAttributes.optionalEnvelope+'"]').find('option').each(function(){
-                        var splitvalue = $(this).attr('value').split('_');
-                        if(splitvalue.length>1){
-                            if(splitvalue[0]!==selectgreetingCardVal && splitvalue[0].toLowerCase()!=='no'){
-                                $(this).remove();
-                            }
-                        }
-                    });
-                }
-                if(bannerProductsArr.indexOf(me.model.get('productType')) > -1){
-                    $('.addToCart').attr('data-tooltip',"Please select an option");
-                    var warnmessage = $('.mz-productdetail-notpurchasable').text().trim();
-                    if(warnmessage && warnmessage!==""){
-                        $('.mz-productdetail-addtocart').attr('data-tooltip',warnmessage);
-                    }
-
-                    if(me.model.get('OptionSelectedID') && me.model.get('OptionSelectedID')!==""){
-                        $("select[mz-banner-type]").val(me.model.get('OptionSelectedID'));
-                        $('select.mz-productoptions-option').hide();
-                        $('[data-mz-product-option="'+me.model.get('OptionSelectedID')+'"]').show();
-                    }
-                    var objj=me.model.getConfiguredOptions();
-                    var selectedValue=null;
-                   _.each(objj, function(objoptions){
-                         selectedValue = me.model.get('options').get(objoptions.attributeFQN).get("value");
-                         if(selectedValue &&(objoptions.attributeFQN.toLowerCase()==='tenant~outdoor-banner'|| objoptions.attributeFQN.toLowerCase()==='tenant~outdoor-banner-with-slits')){
-                            $('[mz-banner-type]').val(productAttributes.outdoorbanner);
-                            $('[data-mz-product-option="'+productAttributes.outdoorbanner+'"]').show();
-                            if(selectedValue.indexOf('S')!==-1){
-                                var selVal = selectedValue.split('S');
-                                $('[data-mz-product-option="'+productAttributes.outdoorbanner+'"]').val(selVal[0]);
-                                $('.needslits').prop('checked',true);
-                            }else{
-                                $('[data-mz-product-option="'+productAttributes.outdoorbanner+'"]').val(selectedValue);
-                            }
-                        }
-                    });
-
-                    if($('.mz-productoptions-option:visible').val()!==undefined &&
-                        $('.mz-productoptions-option:visible').val()!==""){
-                        $('.personalize').prop('disabled', false);
-                        $('.custom-qty input').prop('disabled', false);
-                        $('.personalize').attr("title", "");
-                    }else{
-                        $('.personalize').prop('disabled', true);
-                        $('.custom-qty input').prop('disabled', true);
-                        $('.personalize').attr("title", "Please select a material and size above.");
-                    }
-                }
-
-				// hides radio button if there is only one extra for specific attributeFQNs (may want to make this theme setting) - NOTE: this differs slightly than code on product.js b/c on pdp it's showing as radio but dropdown on quickview
-                if(this.$('[data-mz-product-option]').attr('usageType')==='Extra' && this.$('[data-mz-product-option]').length === 1 && (this.$('[data-mz-product-option]').attr('data-mz-product-option') === "tenant~misc.-favor-with-design" || this.$('[data-mz-product-option]').attr('data-mz-product-option') === "tenant~table-top-it-runner-size")){
-                    if(this.$('[data-mz-product-option]').find('option').length==2){
-                        this.$('[data-mz-product-option]').parents('.mz-productdetail-options').hide();
-                    }
-                }
-
-
-                if(me.model.get('productType')==='CandyBar'){
-                    var selectOptonVal = $('[data-mz-product-option="tenant~cdyper-choice"]').val();
-                    if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()=="cdyperw-option"){
-                        $('[data-mz-product-option="tenant~pcdypcb"]').closest('.mz-productoptions-optioncontainer').hide();
-                    }
-                // Product Typ candbary check options are selected or not
-                
-                    if(selectOptonVal!==undefined && selectOptonVal.toLowerCase()!=="cdyperw-option"){
-                        if(me.model.get('purchasableState').isPurchasable && (($("[data-mz-product-option='tenant~pcdypcb']").length > 0 && typeof $("[data-mz-product-option='tenant~pcdypcb']").val()!== "undefined" && $("[data-mz-product-option='tenant~pcdypcb']").val()!=="") || $("[data-mz-product-option='tenant~pcdypcb']").length === 0)){
-                            $('.personalize').prop('disabled', false);
-                            $('.custom-qty input').prop('disabled', false);
-                            $('.personalize').attr('title', "");
-                        }else{ 
-                            $('.personalize').prop('disabled', true);
-                            $('.custom-qty input').prop('disabled', true);
-                            $('.personalize').attr('title', "Please select an option above.");
-                        }
-                    }
-                }
-
-                if($('.product-image-slider .owl-carousel').length > 0){
-                    setTimeout(function(){
-                        $('.product-image-slider .owl-next, .product-image-slider .owl-prev').html('');
-                        $('.product-image-slider .owl-carousel')
-                        .owlCarousel({dots: true,loop: true,nav: true,items: 4})
-                        .owlCarousel('refresh');
-
-                        if($('.product-image-slider .owl-carousel .owl-item').length < 4) {
-                            $('.product-image-slider .owl-prev').hide();
-                            $('.product-image-slider .owl-next').hide();
-                        }
-                        $('.product-video .owl-next, .product-video .owl-prev').html('');
-                        $('.product-video .owl-carousel')
-                        .owlCarousel({dots: false,loop: false,nav: true,items: 1})
-                        .owlCarousel('refresh');
-                        if($('.product-video .owl-carousel .owl-item').length < 2) {
-                            $('.product-video .owl-next').hide();
-                            $('.product-video .owl-prev').hide();
-                        }
-                    }, 50);
-                    $('.item > img').click(function(){
-                        $(".product-image > img").show();
-                        $(".product-image > img").attr('src', $(this).attr('src'));
-                        $("#video-frame").hide();
-                        $(".product-image > iframe").attr('src', "");
-                    });
-                }
-                $("div[video-data] > img").click(function(){
-                    $(".product-image > img").hide();
-                    $(".product-image > iframe").attr('src', '//www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
-                });
-                $("#video-frame").hide();
-                
-
-                $("#mz-quick-view-container").children(".qtyminus,.qtyplus").css({"background-color":"transparent","fonts-size":"1rem"});
-                $(".addToWishlist-btn-extra").click(function(){
-                    me.addToWishlist();
-                });
-              if(typeof window.addthis!=="undefined"){
-                    //Update addthis to currect product model and rerender.
-                    try{
-                        addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
-                        addthis.update('share', 'title',me.model.toJSON().content.productName); 
-                       addthis.toolbox(".addthis_inline_share_toolbox");
-                    }catch(err){
-                        console.log("Error on addthis "+err);
-                    }
-                }
-            },
-            getExtraProduct: function(productCode){
-                var product = null;
-                if(window.extrasProducts.length>0){
-                        for(var i=0;i < window.extrasProducts.length;i++){
-                            if(window.extrasProducts[i].productCode===productCode){
-                                product = window.extrasProducts[i];
-                                break;
-                            }
-                        }
-                }
-                return product;
-            },
-            getSelectedExtrasInfo:function(selectedOptions){
-                var extrasInfo = [];
-                var self =this;
-                //if(selectedOptions.length>0){
-                   // for(var ind=0; ind<selectedOptions.length; ind++){
-                        var options = self.model.get('options');
-                        if(options.length>0){
-                           for(var inc=0; inc<options.models.length; inc++){
-
-                                var option = options.models[inc];
-                                if(option.get('attributeDetail').usageType==='Extra' &&
-                                   option.get('attributeDetail').dataType==='ProductCode' &&
-                                   option.get('isHideExtra')==="hide"){
-                                    var extra ={};
-                                    extra.name = option.get('attributeDetail').name;
-                                    extra.isRequired = option.get('isRequired');
-                                    extra.attributeCode = option.get('attributeFQN').split('~')[1];
-                                    extra.values=[];
-                                    var values = option.get('values');
-                                    for(var l=0;l<values.length;l++){
-                                        var extraValues={};
-                                        var eprod = self.getExtraProduct(values[l].value);
-                                        extraValues.price = values[l].deltaPrice;
-                                        extraValues.name = values[l].stringValue;
-                                        extraValues.value = values[l].value;
-
-
-                                        if(eprod)extraValues.mfgPartNumber = eprod.mfgPartNumber;
-                                        var inventoryInfo = values[l].bundledProduct.inventoryInfo;
-                                        if(inventoryInfo && inventoryInfo.manageStock){
-                                            extraValues.maxQty = inventoryInfo.onlineStockAvailable;
-                                        }
-                                        extraValues.quantity = values[l].bundledProduct.quantity;
-                                        extra.values.push(extraValues);
-                                    }
-                                    extrasInfo.push(extra);
-                                }
-                            }
-                        }
-
-
-                    //}
-                //}
-                return extrasInfo;
-            },
-            getExtraTitle: function(productCode){
-                var extraTitle=null;
-                if(window.extrasProducts.length>0){
-                    for(var i=0;i<window.extrasProducts.length;i++){
-                        if(window.extrasProducts[i].productCode===productCode){
-                            extraTitle = window.extrasProducts[i].optionTitle;
-                            break;
-                        }
-                    }
-                }
-                return extraTitle;
-            },
-            setOptionTitle: function(){
-                var self= this;
-                var options = self.model.get('options');
-                if( options && options.length>0){
-                    for(var i =0; i < options.models.length; i++){
-                        var option = options.models[i];
-                        if(option.get('attributeDetail').usageType==='Extra' &&
-                           option.get('attributeDetail').dataType==='ProductCode'){
-                            for(var j=0;j<option.get('values').length;j++){
-                               if(self.getExtraTitle(option.get('values')[j].value)){
-                                    option.get('values')[j].stringValue = self.getExtraTitle(option.get('values')[j].value);
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            hideExtras: function(){
-                var me = this;
-                var options = me.model.get('options');
-                var extrasToHide = getPropteryValueByAttributeFQN(me.model, 'tenant~extrastohide');
-                var extrastohideArr = [];
-                if(extrasToHide && extrasToHide!==""){
-                    extrastohideArr = extrasToHide.toLowerCase().split(',');
-                }
-                for(var i=0; i< options.length;i++){
-                    options.models[i].set('isHideExtra',"show");
-                    var attributeCode = options.models[i].get('attributeFQN').split('~');
-                    if(extrastohideArr.indexOf(attributeCode[1]) > -1){
-                        options.models[i].set('isHideExtra',"hide");
-                        me.model.set('purchasableState.isPurchasable', true);
-                    }
-                }
-            },
-            renderConfigure: function(){
-                var  me = this, id, newValue,option,dndCode,mfgPartNumber;
-                var objj=me.model.getConfiguredOptions();
-                me.setOptionTitle();
-                me.model.set('minQty', me.model._minQty);
-                if(objj.length > 0){
-                    id = objj[0].attributeFQN;
-                    newValue = objj[0].value;
-                    option = me.model.get('options').get(id);
-                        if(me.model.get('productType')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-                            Api.get('product',{productCode:newValue}).then(function(res){
-                                var product = new ProductModels.Product(res.data);
-                                var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
-                                if(uom){
-                                    me.model.set('uom',uom);
-                                }
-                                var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                if(productionTime){
-                                    me.model.set('productionTime',productionTime);
-                                }
-                                var inventoryInfo = product.get('inventoryInfo');
-                                if(inventoryInfo.manageStock){
-                                    me.model.set('inventoryInfo',inventoryInfo);
-                                }
-                                dndCode = getPropteryValueByAttributeFQN(me.model, productAttributes.dndCode);
-                                if(dndCode && dndCode!==""){
-                                    mfgPartNumber = me.model.get('mfgPartNumber');
-                                    if(mfgPartNumber===null || mfgPartNumber===undefined || mfgPartNumber===""){
-                                         if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                                me.model.set('mfgPartNumber',res.data.mfgPartNumber);
-                                        }
-
-                                    }
-                                }else{
-                                        if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                            me.model.set('mfgPartNumber',res.data.mfgPartNumber);
-                                        }
-                                        dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
-                                        var designCode = getPropteryValueByAttributeFQN(product, productAttributes.designCode);
-                                        if(dndCode){
-                                            me.model.set('enablePersonalise',true);
-                                            me.model.set('dndCode',dndCode);
-                                            me.model.set('designCode',designCode);
-                                        }
-                                }
-                            Backbone.MozuView.prototype.render.apply(me);
-                        });
-                    }else{
-                        Backbone.MozuView.prototype.render.apply(me);
-                    }
-                }
-                else{
-                    Backbone.MozuView.prototype.render.apply(this);
-                }
-
-            },
-            onOptionChange: function (e) {
-                return this.configure($(e.currentTarget));
-            },
-            increaseQty: function(e){
-
-                $('.mz-productdetail-addtocart').prop('disabled',true);
-                var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
-                newQuantity = parseInt($qField.val(), 10);
-                if(!isNaN(newQuantity)){
-                    newQuantity+=1;
-                    $qField.val(newQuantity);
-                }else{
-                    newQuantity=1;
-                    $qField.val(1);
-                }
-
-                //if qunatity is greater than 9999 reset qunatity value to 9999, maxlength = 4
-                if(newQuantity > 9999){
-                    newQuantity=9999;
-                    $qField.val(9999);
-                }
-                 this.model.set('quantity',newQuantity);
-                if (!isNaN(newQuantity)) {
-                    this.model.updateQuantity(newQuantity);
-                }
-                setTimeout(function(){
-                    $('.mz-productdetail-addtocart').prop('disabled',false);
-                },1000);
-            },
-            decreaseQty: function(e){
-                 $('.mz-productdetail-addtocart').prop('disabled',true);
-                var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
-                newQuantity = parseInt($qField.val(), 10);
-                if(!isNaN(newQuantity) && newQuantity>1){
-                    newQuantity-=1;
-                    if(newQuantity < this.model._minQty){
-                        return false;
-                    }
-                    $qField.val(newQuantity);
-                }else{
-                    newQuantity=1;
-                    $qField.val(1);
-                }
-                this.model.set('quantity',newQuantity);
-                if (!isNaN(newQuantity)) {
-                    this.model.updateQuantity(newQuantity);
-                }
-                if(newQuantity >= this.model._minQty){
-                    setTimeout(function(){
-                        $('.mz-productdetail-addtocart').prop('disabled',false);
-                    },1000);
-                }
-            },
-             onQuantityChange: _.debounce(function (e) {
-                $('.mz-productdetail-addtocart').prop('disabled',true);
-                 var $qField = $(e.currentTarget),
-                  newQuantity = parseInt($qField.val(), 10);
-                  if(newQuantity===0 || newQuantity < this.model._minQty){
-                    newQuantity=this.model._minQty;
-                    $qField.val(newQuantity);
-                  }
-
-                this.model.set('quantity',newQuantity);
-                this.model.set('newQuantity',newQuantity);
-                if (!isNaN(newQuantity)){
-                    this.model.updateQuantity(newQuantity);
-                }
-                 if(newQuantity >= this.model._minQty){
-                    setTimeout(function(){
-                        $('.mz-productdetail-addtocart').prop('disabled',false);
-                    },1000);
-                }
-            },500),
-            configure: function ($optionEl) {
-                $('.mz-productdetail-addtocart').prop('disabled',true);
-                var me = this;
-                me.model.set('mfgPartNumber',"");
-                var newValue = $optionEl.val(),
-                    oldValue,
-                    id = $optionEl.data('mz-product-option'),
-                    optionEl = $optionEl[0],
-                    isPicked = (optionEl.type !== "checkbox" && optionEl.type !== "radio") || optionEl.checked,
-                    option = this.model.get('options').get(id);
-                    var objj=me.model.getConfiguredOptions();
-                    if(me.model.get('productType')==='Banner' ||
-                        me.model.get('productType')==='BannerRectangle' ||
-                        me.model.get('productType')==='BannerVertical' ||
-                        me.model.get('productType')==='BackgroundVBG'){
-                        _.each(objj, function(objoptions) {
-                             me.model.get('options').get(objoptions.attributeFQN).unset("value");
-                          });
-                    }
-                    if(id ==="tenant~cdyper-choice"){
-                        if(newValue.toLowerCase()==="cdyperw-option"){
-                            _.each(objj, function(objoptions) {
-                                 me.model.get('options').get(objoptions.attributeFQN).unset("value");
-                              });
-                        }
-                    }
-
-                if (option) {
-                    if (option.get('attributeDetail').inputType === "YesNo") {
-                        option.set("value", isPicked);
-                    } else if (isPicked) {
-                        oldValue = option.get('value');
-                        if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
-                            option.set('value', newValue);
-                        }
-                    }
-                }
-
-            },
-            configureSlitOption: function (e) {
-                var newValue = '',
-                    me=this,
-                    oldValue,
-                    id = $(e.currentTarget).is(':checked')?productAttributes.outdoorbanner:productAttributes.outdoorbannerslits,
-                    self=this,
-                    option = this.model.get('options').get(id);
-                    me.model.set('mfgPartNumber',"");
-                    var objj=self.model.getConfiguredOptions();
-                    var newobj=[];
-                    oldValue = option.get('value');
-                    _.each(objj, function(objoptions) {
-                         self.model.get('options').get(objoptions.attributeFQN).unset("value");
-                      });
-                if($(e.currentTarget).is(":checked")){
-                    option = this.model.get('options').get(productAttributes.outdoorbannerslits);
-                    if (option) {
-                        newValue = oldValue+'S';
-                        console.log(newValue);
-                        if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
-                            option.set('value', newValue);
-                        }
-                    }
-                }else{
-                    option = this.model.get('options').get(productAttributes.outdoorbanner);
-                    if (option) {
-                        newValue = oldValue.split('S')[0];
-                        console.log(newValue);
-                        if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
-                            option.set('value', newValue);
-                        }
-                    }
-                }
-            },
-            addToWishlist: function () {
-                var me= this;
-                if(!require.mozuData('user').isAnonymous) {
-                            Wishlist.initoWishlist(this.model);
-                    }else {
-                        var produtDetailToStoreInCookie ={};
-                        produtDetailToStoreInCookie.productCode=this.model.get('productCode');
-                         var objj=me.model.getConfiguredOptions();
-                        produtDetailToStoreInCookie.options=objj;
-                        $.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
-                        var ifrm = $("#homepageapicontext");
-                        if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                            Wishlist.initoWishlist(this.model);
-                        }else{
-                            triggerLogin();
-                        }
-                }
-            },
-            addToWishlistWithDesgin: function(){
-                var me = this;
-                    this.model.on('addedtowishlist', function (cartitem) {
-                        $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                        $('.dnd-popup').remove();
-                        $('body').css({overflow: 'auto'});
-                        $('html').removeClass('dnd-active-noscroll');
-                        $('#cboxOverlay').hide();
-                        //window.location.href=location.href;
-                    });
-                    this.model.on('referWishlistView', function(){
-                        Wishlist.getAllWishlistData().then(function(res){
-                            var newModel = window.accountModel.get('wishlist');
-                            newModel.clear().set(newModel.defaults);
-                            newModel.set(res);
-                            window.wishListObj.model = newModel;
-                            window.wishListObj.render();
-                        });
-                    });
-                    if(!require.mozuData('user').isAnonymous) {
-                            Wishlist.initoWishlistPersonalize(this.model);
-                    }else {
-                        var produtDetailToStoreInCookie ={};
-                        produtDetailToStoreInCookie.productCode=this.model.get('productCode');
-                         var objj=me.model.getConfiguredOptions();
-                        produtDetailToStoreInCookie.options=objj;
-                        $.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
-                        var ifrm = $("#homepageapicontext");
-                        if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                            Wishlist.initoWishlistPersonalize(this.model);
-                        }else{
-                            triggerLogin();
-                            $('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
-                        }
-                    }
-            },
-            addToWishlistAfterLogin: function(){
-                Wishlist.initoWishlistPersonalize(this.model);
-                $.cookie('wishlistprouct', "",{path:'/'});
-            },
-            setSelectedOptions: function(){
-                var me = this;
-                var wishlistprouct = $.cookie('wishlistprouct');
-                if(wishlistprouct && wishlistprouct!==""){
-                    var wishlistobj = JSON.parse(wishlistprouct);
-                    var objj = wishlistobj.options;
-                    if(objj){
-                        _.each(objj, function(objoptions) {
-                            var val = objoptions.value?objoptions.value:objoptions.shopperEnteredValue;
-                            me.model.get('options').get(objoptions.attributeFQN).set("value",val);
-                        });
-                    }
-                    setTimeout(function(){
-                        $.cookie('wishlistprouct', "",{path:'/'});
-                        me.addToWishlist();
-                    },500);
-                }
-            },
-            checkLocalStores: function (e) {
-                var me = this;
-                e.preventDefault();
-                this.model.whenReady(function () {
-                    var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
-                        $input = $localStoresForm.find('[data-mz-localstoresform-input]');
-                    if ($input.length > 0) {
-                        $input.val(JSON.stringify(me.model.toJSON()));
-                        $localStoresForm[0].submit();
-                    }
-                });
-
-            },
-            update: function(m){
-                this.model = m;
-                this.render();
-            },
-            setOptionValues: function(data){
-                var self= this;
-                var options = this.model.get('options');
-
-                var extraAttribute =  null;
-                var extraJSON ={};
-                if(data.extras){
-                    extraAttribute = JSON.parse(data.extras);
-                    for(var l = 0; l < extraAttribute.length; l++){
-                        extraJSON['tenant~'+extraAttribute[l].attributeCode] = extraAttribute[l].value;
-                    }
-                }
-                var payload={};
-                payload.options=[];
-                for(var i=0; i < options.length; i++){
-
-                    if(options.models[i].get('attributeFQN')===productAttributes.dndToken){
-                        options.models[i].set('value',data.projectToken);
-                        options.models[i].set('shopperEnteredValue',data.projectToken);
-                    }
-                    if(Object.keys(extraJSON).length>0 && extraJSON[options.models[i].get('attributeFQN').toLowerCase()]){
-                        options.models[i].set('value',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
-                        options.models[i].set('shopperEnteredValue',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
-                    }
-                }
-                self.model.set('options', options);
-            },
-            addToCartAfterPersonalize:function(data){
-                var self= this;
-                self.setOptionValues(data);
-                if(data.quantity){
-                    self.model.set('quantity', data.quantity);
-                }
-                self.addToCart();
-            },
-            AddToWishlistAfterPersonalize: function(data){
-                var self= this;
-                var option = this.model.get('options').get(productAttributes.dndToken);
-                 var oldValue = option.get('value');
-                var designName = null;
-                var projectToken = JSON.parse(data.projectToken);
-                if(oldValue && oldValue!==""){
-                    var oldValueObj = JSON.parse(oldValue);
-                    designName = oldValueObj.designName;
-                }
-                if(designName)projectToken.designName = designName;
-                option.set('shopperEnteredValue',JSON.stringify(projectToken));
-                option.set('value',JSON.stringify(projectToken));
-                if(data.quantity){
-                    self.model.set('quantity', data.quantity);
-                }
-                self.addToWishlistWithDesgin();
-            },
-            initialize: function () {
-                // handle preset selects, etc
-                var me = this;
-                this.on('render', this.afterRender);
-                var options = this.model.get('options');
-                //me.setSelectedOptions();
-
-                if(options.length > 2){
-                    this.$('[data-mz-product-option]').each(function () {
-                        var $this = $(this), isChecked, wasChecked;
-                        if ($this.val()) {
-                            switch ($this.attr('type')) {
-                                case "checkbox":
-                                case "radio":
-                                    isChecked = $this.prop('checked');
-                                    wasChecked = !!$this.attr('checked');
-                                    if ((isChecked && !wasChecked) || (wasChecked && !isChecked)) {
-                                        me.configure($this);
-                                    }
-                                    break;
-                                default:
-                                    me.configure($this);
-                            }
-                        }
-                    });
-                }else{
-                    var optionModels = options.models;
-                    var flag=0;
-                     for (var i =0; i< optionModels.length; i++) {
-
-                            if(optionModels[i].get('attributeDetail').usageType==='Extra' && optionModels[i].get('attributeFQN')!=='Tenant~dnd-token'){
-                                 if(optionModels[i].get('values').length===1){
-                                    optionModels[i].set('value', optionModels[i].get('values')[0].value);
-                                 }
-                            }
-                        }
-                }
-            }
-        }); */ 
 
 	var loadMDY = function(day,month,year,future,past){
         	var month_list = ['January','Febraury','March','April','May','June','July','August','September','October','November','December'],
@@ -892,31 +154,115 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 	    	}
 	    }
 	};
-   window.myAccProductView={
-        initialize: function(model){
-            this.model=model;
-        },
-        personalizeProduct:function(){
+	var WishListProductView = (function(){
+		var C = function(){// constructor
+			return constructor.apply(this,arguments);
+		};
+		var p = C.prototype;
+		// example new function p.test = function(a){};
+
+		
+		var constructor = function(){
+			// create object containing values that are defined in ProductView that we want to override
+			var opts = {  // extend productView so we can share addToCartAfterPersonalize, addToCart 
+				templateName: "modules/my-account/my-account-wishlist-item-listing", // render() isn't actually called currently but just in case...
+				noCalcDelDate: true,
+				addToWishlist: function () { // this differs from ProductView.addToWishlist - not sure which is correct so I guess I'll keep this one - productview calls initToWishlist, this calls initoWishlistPersonalize
+					console.log("WishListProductView addToWishlist");
+					var me= this;
+					var callback = function(){ // close dnd window after
+						console.log("WishListProductView addToWishlist CALLBACK");
+						$('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
+						$('.dnd-popup').remove();
+						$('body').css({overflow: 'auto'});
+						$('#cboxOverlay').hide();
+						$('html').removeClass('dnd-active-noscroll');
+						if(me.dndEngineObj){
+							me.dndEngineObj.unsend();
+						}
+						Wishlist.getAllWishlistData().then(function(res){
+                            var newModel = window.accountModel.get('wishlist');
+                            newModel.clear().set(newModel.defaults);
+                            newModel.set(res);
+                            wishListObj.model = newModel;
+                            wishListObj.render();
+                        });
+					};
+
+					if(!require.mozuData('user').isAnonymous) {
+						Wishlist.initoWishlistPersonalize(this.model,callback);
+					}else {
+						var produtDetailToStoreInCookie ={};
+						produtDetailToStoreInCookie.productCode=this.model.get('productCode');
+						 var objj=me.model.getConfiguredOptions();
+						produtDetailToStoreInCookie.options=objj;
+						$.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
+						var ifrm = $("#homepageapicontext");
+						if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
+							Wishlist.initoWishlistPersonalize(this.model,callback);
+						}else{
+							triggerLogin();
+							$('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
+						}
+					}
+				},
+				AddToWishlistAfterPersonalize: function(data){ // this version differs from version in ProductView
+					console.log("WishListProductView AddToWishlistAfterPersonalize");
+					var self= this;
+					var option = this.model.get('options').get(productAttributes.dndToken);
+					 var oldValue = option.get('value');
+					var designName = null;
+					var projectToken = JSON.parse(data.projectToken);
+					if(oldValue && oldValue!==""){
+						var oldValueObj = JSON.parse(oldValue);
+						designName = oldValueObj.designName;
+					}
+					if(designName)projectToken.designName = designName;
+					option.set('shopperEnteredValue',JSON.stringify(projectToken));
+					option.set('value',JSON.stringify(projectToken));
+					self.model.set('quantity',data.quantity);
+					setTimeout(function(){
+						self.addToWishlist();
+					},200);
+				},
+				initialize: function(){//skip overhead of everything going on in ProductView.initialize()
+					this.setOnAddToCartActions();
+				},
+				personalizeProduct: function(){
+			console.log("WishListProductView personalizeProduct");
             var self= this;
-             /** DnD Code  Start **/
+            // DnD Code  Start
             var option = this.model.get('options').get(productAttributes.dndToken);
             var dndToken = null;
-            var dndkenval;
-            var mfgPartNumber;
-            if(option){
-                var dndtokenvalue = option.get('shopperEnteredValue');
-                if(dndtokenvalue===undefined || dndtokenvalue===""){
-                    dndtokenvalue = option.get('value');
-                }
-                if(dndtokenvalue && dndtokenvalue!==""){
-                    dndkenval=JSON.parse(dndtokenvalue);
-                    mfgPartNumber=Object.keys(dndkenval)[0];
-                    dndToken = dndkenval[mfgPartNumber];
-                }
-            }
-            self.dndToken = dndToken;
+			console.log(self.dndToken);
+			if(!self.dndToken){
+				if(option){
+					var dndtokenvalue = option.get('shopperEnteredValue');
+					if(dndtokenvalue===undefined || dndtokenvalue===""){
+						dndtokenvalue = option.get('value');
+					}
+					if(dndtokenvalue && dndtokenvalue!==""){
+						try{
+							var dndJSON=JSON.parse(dndtokenvalue);
+							var info = DNDEngine.getTokenData(dndJSON);
+							dndToken = info.token;
+						}
+						catch(e){
+							console.error(e);
+							return;
+						}
+					}
+				}
+				self.dndToken = dndToken;
+			}
+			console.log(self.dndToken);
             var productCode = this.model.get('productCode');
-            getExtrasProductDetails(productCode ,function(product){
+			
+			var product = SharedProductInfo.getProductModel(productCode,this.personalizeProduct.bind(this));
+			if(!product){
+				return;
+			}
+
                 product.set('wishlistlineitemId',self.model.get('wishlistlineitemId'));
                 product.set('wishlistId',self.model.get('wishlistId'));
                 var qty = self.model.get('quantity');
@@ -931,327 +277,66 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         product.get('options').get(options.models[i].get('attributeFQN')).set('value',value);
                     }
                 }
-                product.on('addedtocart', function (cartitem, prdmodel) {
-                    var cartitemModel = new ProductModels.Product(cartitem.data);
-                    var wishlistlinitemid = prdmodel.get('wishlistlineitemId');
-                    if(wishlistlinitemid){
-                        $('[removeWishlistItem="'+wishlistlinitemid+'"]').trigger('click');
-                    }
-                    if (cartitem && cartitem.prop('id')) {
-                        $('.dnd-popup').remove();
-                        $('body').css({overflow: 'auto'});
-                        $('html').removeClass('dnd-active-noscroll');
-                        $('#cboxOverlay').hide();
-                        CartMonitor.addToCount(cartitemModel.get('quantity'));
-                        SoftCart.update();
-                        cartitemModel.isLoading(false);
-                        cartitemModel.set('quantity',prdmodel.get('quantity'));
-                        addedToCart.proFunction(cartitemModel);
 
-                        //google analytics ATC event
-                        //if(typeof _gaq !== 'undefined'){ _gaq.push(['_trackEvent', 'Stumpsparty', 'buy', 'addtocart']); }
-                        if(ga!== undefined){
-                            ga('send', {
-                        hitType: 'event',
-                        eventCategory: 'Shindigz',
-                        eventAction: 'buypersonalisewishlist',
-                        eventLabel: 'addtocart'
-                        }); 
-
-                        }
-                        //Bloomreach add to cart event start
-                        var productUsage = cartitemModel.attributes.product.productUsage,
-                            variationProductCode = cartitemModel.attributes.product.variationProductCode,
-                            sku = '';
-                        if(productUsage === 'Bundle' || productUsage === 'Configurable'){
-                          sku = "";
-                          if(variationProductCode !== undefined && variationProductCode !== 'undefined'){
-                            sku = variationProductCode;
-                          }
-                        }
-                        if(BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': cartitemModel.attributes.product.productCode , 'sku' : sku });}
-                        //end
-                        
-                        $('#mz-quick-view-container').fadeOut(100, function() {
-                            $('#mz-quick-view-container').remove();
-                        });
-                        if(typeof window.addthis!=="undefined"){
-                            //Update addthis to currect product model and rerender.
-                            try{
-                                addthis.update('share', 'url',window.location.origin+prdmodel.toJSON().url );
-                                addthis.update('share', 'title',prdmodel.toJSON().content.productName); 
-                               addthis.toolbox(".addthis_inline_share_toolbox");
-                            }catch(err){
-                                console.log("Error on addthis "+err);
-                            }
-                        }
-                    } else {
-                        cartitemModel.trigger("error", { message: Hypr.getLabel('unexpectedError') });
-                    }
-
-                });
                 if(self.dndToken!==null){
                     self.model=product;
-                    self.model.set('mfgPartNumber',mfgPartNumber);
-                    window.productView = self;
-                    self.model.on('addedtowishlist', function (cartitem) {
-                        $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                        $('.dnd-popup').remove();
-                        $('body').css({overflow: 'auto'});
-                        $('#cboxOverlay').hide();
-                         Wishlist.getAllWishlistData().then(function(res){
-                            var newModel = window.accountModel.get('wishlist');
-                            newModel.clear().set(newModel.defaults);
-                            newModel.set(res);
-                            window.wishListObj.model = newModel;
-                            window.wishListObj.render();
-                        });
-                        //window.location.href=location.href;
-                    });
-                    self.model.on('referWishlistView', function(){
-                        Wishlist.getAllWishlistData().then(function(res){
-                            var newModel = window.accountModel.get('wishlist');
-                            newModel.clear().set(newModel.defaults);
-                            newModel.set(res);
-                            window.wishListObj.model = newModel;
-                            window.wishListObj.render();
-                        });
-                    });
-                    self.renderConfigure();
+					self.initialize(); // need to re-initialize when assigning new model;
+                   
+					window.removePageLoader();
+					var lineItemId = this.model.get('wishlistlineitemId');
+					this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,self.dndToken,null,false,lineItemId);
+					this.dndEngineObj.initializeAndSend();
                 }
                 else{
-
+					// open quickview overlay
                     product.on('addedtowishlist', function (cartitem) {
                         $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
                     });
-                    $('body').append('<div id="mz-quick-view-container"></div>');
-                    window.productView = new ProductView({
-                        el: $('#mz-quick-view-container'),
-                        messagesEl: $('[data-mz-message-bar]'),
-                        model:product,
-                        productCode: productCode
-                    });
-                    window.productView.render();
+					$('body').css({overflow : 'hidden'});
+					$('body').append('<div id="mz-quick-view-container"></div>');
+					var productView = new QuickViewProductView({
+						model: product,
+						gaAction: 'Buywishlistproduct',
+						gaEvent: 'buywishlist'
+					});
+					productView.render();
                     window.removePageLoader();
-                    $('#mz-quick-view-container').fadeIn(350);
-                    $(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
-                        if(e.target !== e.currentTarget) return;
-                        $('#mz-quick-view-container').fadeOut(350);
-                        $('#mz-quick-view-container').remove();
-                    });
+					$('#mz-quick-view-container').fadeIn(350);
                 }
 
-            });
+            // DnD Code  End
+        
+				}
 
-            /** DnD Code  End **/
-        },
-        loadDND: function(){
-                window.removePageLoader();
-                var self = this;
-                var dndUrl = Hypr.getThemeSetting('dndEngineUrl');
-                var lineItemId = this.model.get('wishlistlineitemId');
-                if(lineItemId && lineItemId!==""){
-                    dndUrl=dndUrl+self.dndToken+'/wishlist?wishlistID='+lineItemId;
-                }
-                var dndEngineObj = new DNDEngine.DNDEngine(self.model,dndUrl);
-                dndEngineObj.initialize();
-                dndEngineObj.send();
-        },
-        renderConfigure: function(){
-                    var  me = this, id, newValue,option,dndCode,mfgPartNumber;
-                    var objj=me.model.getConfiguredOptions();
-                    if(objj.length > 0){
-                        id = objj[0].attributeFQN;
-                        newValue = objj[0].value;
-                        option = me.model.get('options').get(id);
-                        if(me.model.get('productType')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-                            dndCode = getPropteryValueByAttributeFQN(me.model, productAttributes.dndCode);
-                            if(dndCode && dndCode!==""){
-                                mfgPartNumber = me.model.get('mfgPartNumber');
-                                if(mfgPartNumber && mfgPartNumber!==""){
-                                      // Assign header mfgpartnumber
-                                    Api.get('product',{productCode:newValue}).then(function(res){
-                                        var product = new ProductModels.Product(res.data);
-                                        var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
-                                        if(uom){
-                                            me.model.set('uom',uom);
-                                        }
-                                        var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                        if(productionTime){
-                                            me.model.set('productionTime',productionTime);
-                                        }
-                                        var inventoryInfo = product.get('inventoryInfo');
-                                        if(inventoryInfo.manageStock){
-                                            me.model.set('inventoryInfo',inventoryInfo);
-                                        }
-                                        me.loadDND();
-                                    });
-                                }else{
-                                    Api.get('product',{productCode:newValue}).then(function(res){
-                                        var product = new ProductModels.Product(res.data);
-                                        if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                            me.model.set('mfgPartNumber',res.data.mfgPartNumber);
-                                        }
-                                        var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
-                                        if(uom){
-                                            me.model.set('uom',uom);
-                                        }
-                                        var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                        if(productionTime){
-                                            me.model.set('productionTime',productionTime);
-                                        }
-                                        var inventoryInfo = product.get('inventoryInfo');
-                                        if(inventoryInfo.manageStock){
-                                            me.model.set('inventoryInfo',inventoryInfo);
-                                        }
-                                        me.loadDND();
-                                    });
-                                }
-                            }else{
-                                    Api.get('product',{productCode:newValue}).then(function(res){
-                                        var product = new ProductModels.Product(res.data);
-                                        if(product.get('mfgPartNumber') && product.get('mfgPartNumber')!==""){
-                                            me.model.set('mfgPartNumber',res.data.mfgPartNumber);
-                                        }
-                                        dndCode = getPropteryValueByAttributeFQN(product, productAttributes.dndCode);
-                                        var designCode = getPropteryValueByAttributeFQN(product, productAttributes.designCode);
-                                        if(dndCode){
-                                            me.model.set('enablePersonalise',true);
-                                            me.model.set('dndCode',dndCode);
-                                            me.model.set('designCode',designCode);
-                                        }
-                                        var uom = getPropteryValueByAttributeFQN(product, productAttributes.unitOfMeasure);
-                                        if(uom){
-                                            me.model.set('uom',uom);
-                                        }
-                                        var productionTime = getPropteryValueByAttributeFQN(product, productAttributes.productionTime);
-                                        if(productionTime){
-                                            me.model.set('productionTime',productionTime);
-                                        }
-                                        var inventoryInfo = product.get('inventoryInfo');
-                                        if(inventoryInfo.manageStock){
-                                            me.model.set('inventoryInfo',inventoryInfo);
-                                        }
-                                        me.loadDND();
-                                    });
-                            }
-                        }else{
-                            me.loadDND();
-                        }
-                    }
-                    else{
-                        me.loadDND();
-                    }
+			};
+			
+			
+						// overwrite with any arguments passed in;
+			for (var i=0; i<=arguments.length;i++) {
+				for(var attrname in arguments[i]){
+					opts[attrname] = arguments[i][attrname]; 
+				}
+			}
+			var obj = new ProductView(opts);
+			obj.model.on('addedtocart', function (cartitem, prod) {
+				console.log("quickview on addedtocart");
+				// only custom code needed for not already in productView.initialize
+				$('#mz-quick-view-container').fadeOut(100, function() {
+					 $('#mz-quick-view-container').remove();
+				 });
+			});
+			
+			obj.wishlistId = opts.wishlistId || null;
+			obj.wishlistlineitemId = opts.wishlistlineitemId || null;
+			obj.dndToken = opts.dndToken || null;
+			
+			console.log(obj.dndToken);
+			return obj;
+		};
 
-        },
-        addToCart: function(){
-            var self= this;
-            /*if($('.needslits').is(":checked")){
-                //console.log("Testest");
-                self.myconfigure();
-                $('#add-to-cart').html('loading...');
-                setTimeout(function(){
-                    self.model.addToCart();
-                },2000);
-
-            }else{
-                this.model.addToCart();
-            }*/
-             this.model.addToCart();
-        },
-        addToWishlist: function () {
-            var me= this;
-            this.model.on('addedtowishlist', function (cartitem) {
-                $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                $('.dnd-popup').remove();
-                $('body').css({overflow: 'auto'});
-                $('#cboxOverlay').hide();
-                window.location.href=location.href;
-            });
-            if(!require.mozuData('user').isAnonymous) {
-                Wishlist.initoWishlistPersonalize(this.model);
-            }else {
-                var produtDetailToStoreInCookie ={};
-                produtDetailToStoreInCookie.productCode=this.model.get('productCode');
-                 var objj=me.model.getConfiguredOptions();
-                produtDetailToStoreInCookie.options=objj;
-                $.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
-                var ifrm = $("#homepageapicontext");
-                if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                    Wishlist.initoWishlistPersonalize(this.model);
-                }else{
-                    triggerLogin();
-                    $('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
-                }
-            }
-        },
-        addToWishlistAfterLogin: function(){
-            Wishlist.initoWishlistPersonalize(this.model);
-            $.cookie('wishlistprouct', "",{path:'/'});
-        },
-        setSelectedOptions: function(){
-            var me = this;
-            var wishlistprouct = $.cookie('wishlistprouct');
-            if(wishlistprouct && wishlistprouct!==""){
-                var wishlistobj = JSON.parse(wishlistprouct);
-                var objj = wishlistobj.options;
-                if(objj){
-                    _.each(objj, function(objoptions) {
-                        var val = objoptions.value?objoptions.value:objoptions.shopperEnteredValue;
-                        me.model.get('options').get(objoptions.attributeFQN).set("value",val);
-                    });
-                }
-                setTimeout(function(){
-                    $.cookie('wishlistprouct', "",{path:'/'});
-                    me.addToWishlist();
-                },500);
-            }
-        },
-        checkLocalStores: function (e) {
-            var me = this;
-            e.preventDefault();
-            this.model.whenReady(function () {
-                var $localStoresForm = $(e.currentTarget).parents('[data-mz-localstoresform]'),
-                    $input = $localStoresForm.find('[data-mz-localstoresform-input]');
-                if ($input.length > 0) {
-                    $input.val(JSON.stringify(me.model.toJSON()));
-                    $localStoresForm[0].submit();
-                }
-            });
-
-        },
-        addToCartAfterPersonalize:function(data){
-            var self= this;
-            var option = this.model.get('options').get(productAttributes.dndToken);
-            option.set('value',data.projectToken);
-            option.set('shopperEnteredValue',data.projectToken);
-            self.model.set('quantity', data.quantity);
-            setTimeout(function(){
-                self.addToCart();
-            },200);
-
-        },
-        AddToWishlistAfterPersonalize: function(data){
-            var self= this;
-            var option = this.model.get('options').get(productAttributes.dndToken);
-             var oldValue = option.get('value');
-            var designName = null;
-            var projectToken = JSON.parse(data.projectToken);
-            if(oldValue && oldValue!==""){
-                var oldValueObj = JSON.parse(oldValue);
-                designName = oldValueObj.designName;
-            }
-            if(designName)projectToken.designName = designName;
-            option.set('shopperEnteredValue',JSON.stringify(projectToken));
-            option.set('value',JSON.stringify(projectToken));
-            self.model.set('quantity',data.quantity);
-            setTimeout(function(){
-                self.addToWishlist();
-            },200);
-        }
-
-   };
-
+		//unleash your class
+		return C;
+	})();
 
     var AccountSettingsView = EditableView.extend({
         templateName: 'modules/my-account/my-account-settings',
@@ -1754,9 +839,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
     }
     });
 
-    var WishListModel = new  Backbone.MozuModel.extend({
-
-    });
 
     var WishListView = Backbone.MozuView.extend({
         templateName: 'modules/my-account/my-account-wishlist',
@@ -1778,6 +860,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
               }
         },
         editPersonalize: function(e){
+			console.log("editPersonalize");
             window.showPageLoader();
             var target =  $(e.currentTarget);
             var wishlistid = target.closest('.mz-itemlisting-details').find('[wishlist-id]').attr('wishlist-id');
@@ -1803,13 +886,21 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					currentItem.product.quantity = currentItem.quantity;
 				}
 				var productModel = new ProductModels.Product(currentItem.product);
+				var el = $(target).parents(".mz-itemlisting wishlist-item");
+				console.log(el);
 
 				//productModel.set({'wishlistlineitemId':itemid});
-				window.myAccProductView.initialize(productModel);
-				window.myAccProductView.personalizeProduct();
+				var myProductView = new WishListProductView({
+					model: productModel,
+					el: el,
+					wishlistid: wishlistid,
+					wishlistlineitemId: itemid
+				});
+				myProductView.personalizeProduct();
 			}
         },
         addToCart: function(e) {
+			console.log("addToCart");
             window.showPageLoader();
             var target =  $(e.currentTarget);
             var wishlistid = target.closest('.mz-itemlisting-details').find('[wishlist-id]').attr('wishlist-id');
@@ -1830,36 +921,30 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             }
             if(currentItem.product.productUsage ==="Bundle"){
                 window.location.href="/p/"+currentItem.product.productCode;
-            }else if(target.attr("location")==="quickview"){
-                Api.get('product',currentItem.product.productCode).then(function(res) {
-                    var productModel1 = new ProductModels.Product(res.data);
+            }else if(target.attr("location")==="quickview"){ // I'm not sure what ever creates this case?
+				var productModel1 = SharedProductInfo.getProductModel(currentItem.product.productCode,this.addToCart(this,e),
+										function(err) {
+											console.log(err);
+											window.removePageLoader();
+										});
+				if(productModel1){
                     $('body').append('<div id="mz-quick-view-container"></div>');
-					var productView = new ProductView({
-						el: $('#mz-quick-view-container'),
-						templateName: 'modules/product/quickview',
-						messagesEl: $('[data-mz-message-bar]'),
+					var productView1 = new QuickViewProductView({
 						model:productModel1,
-						productCode: productModel1.id
+						gaAction: 'Buywishlistproduct',
+						gaEvent: 'buywishlist'
 					});
-					productView.render();
+					productView1.render();
 					window.removePageLoader();
-					$('#mz-quick-view-container').fadeIn(350);
-					$(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
-						if(e.target !== e.currentTarget) return;
-						$('#mz-quick-view-container').fadeOut(350);
-						$('#mz-quick-view-container').remove();
-					});                
-                },function(err) {
-                    console.log(err);
-                    window.removePageLoader();
-                });
-            }else if(currentItem.product.productType==="ExtrasLikeVariants" && currentItem.product.bundledProducts.length>0){
-                console.log("Do Nothing");
+					$('#mz-quick-view-container').fadeIn(350);              
+                }
+            }else if(currentItem.product.productType==="ExtrasLikeVariants" && currentItem.product.bundledProducts.length>0){ // extras like variants with extra selected already
+                console.log("ExtrasLikeVariants");
                 var prodArr=_.pluck(currentItem.product.bundledProducts,"productCode");
                 if(isDND){
                     this.editPersonalize(e);
                 }else{
-                    this.checkOptionsDNDEnabled(prodArr,0,this,currentItem.product.productCode,currentItem.product.options);
+					this.showQuickViewExtra(currentItem.product.productCode,currentItem.product.options);
                 }   
             }else{
                 currentItem.product.wishlistlineitemId=itemid;
@@ -1868,12 +953,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 var productUsage = productModel.attributes.productUsage,
                     variationProductCode = productModel.attributes.variationProductCode,
                     sku = "";
-                if(productUsage === 'Bundle' || productUsage === 'Configurable'){
-                  if(variationProductCode !== undefined && variationProductCode !== 'undefined'){
-                    sku = variationProductCode;
-                  }
-                }
-                if(typeof BrTrk !== 'undefined' && BrTrk !== undefined){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': productModel.attributes.productCode , 'sku' : sku });}
+
                 //end
                 productModel.on('error', function(a){
                     console.log(a);
@@ -1881,72 +961,15 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     $('.addtocart-error').remove();
                     $(e.target).parents('.orders-body').prepend('<p class="addtocart-error" style="color:red;">'+a.message+'</p>');
                 });
-                productModel.on('addedtocart', function (cartitem, prod) {
-                    var cartitemModel = new ProductModels.Product(cartitem.data);
-                    cartitemModel.set('quantity', prod.get('quantity'));
-                    addedToCart.proFunction(cartitemModel);
-                     //google analytics code for add to cart event
-                     var gaitem = cartitemModel.apiModel.data;
-                  var proID = gaitem.product.productCode;
-                   
-                   var gaoptionval; 
-                    if(gaitem.product.productUsage == "Configurable" ){
-                      proID = gaitem.product.variationProductCode; 
-                    }
-                    
-                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-                    _.each(gaitem.product.options,function(opt,i){
-                    if(opt.name=="dnd-token"){
-
-                    }
-                    else if(opt.name == 'Color'){
-                    gaoptionval = opt.value;
-                    }
-                    else{
-                    gaoptionval =  opt.value;
-                    }
-                    });  
-                    }
-
-                    if(ga!==undefined){
-                        ga('ec:addProduct', {
-                        'id': proID,
-                        'name': gaitem.product.name,
-                        'category': gaitem.product.categories[0].id,
-                        'brand': 'shindigz',
-                        'variant': gaoptionval,
-                        'price': gaitem.unitPrice.extendedAmount,
-                        'quantity': gaitem.quantity
-                        });
-                        ga('ec:setAction', 'Buywishlistproduct');
-                        ga('send', 'event', 'buy', 'buywishlist', gaitem.product.name);  
- 
-                    }
-                    
-
-                    /*if(ga!==undefined){
-                        ga('send', {
-                        hitType: 'event',
-                        eventCategory: 'Shindigz',
-                        eventAction: 'buywishlist',
-                        eventLabel: 'addtocart'
-                        }); 
-                    }*/  
-                    
-                    window.removePageLoader();
-                    if(typeof window.addthis!=="undefined"){
-                       //Update addthis to currect product model and rerender.
-                        try{
-                            addthis.update('share', 'url',window.location.origin+prod.toJSON().url );
-                            addthis.update('share', 'title',prod.toJSON().name); 
-                           addthis.toolbox(".addthis_inline_share_toolbox");
-                        }catch(err){
-                            console.log("Error on addthis "+err);
-                        }
-                    }
-                });
-                productModel.set('quantity', $(e.target).parents(".orders-body").find('[data-mz-value=quantity]').val());
-                productModel.addToCart();
+                
+				var productView = new QuickViewProductView({
+					model: productModel,
+					gaAction: 'Buywishlistproduct',
+					gaEvent: 'buywishlist',
+					el: $(e.target).parents(".orders-body")
+				}); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
+				
+                productView.addToCart();
             }
         },
         deleteWishlist: function(e) {
@@ -1955,31 +978,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             Wishlist.deleteWishlist($(me).attr('id')).then(function(res){
                 $(me).parents(".wishlist-item").remove();
             });
-        },checkOptionsDNDEnabled:function(productArr,idx,scope_obj,prod_code,options) {
-                if(productArr.length===0){
-                    scope_obj.showQuickViewExtra(prod_code,options);
-                }else{
-                Api.request('GET','/api/commerce/catalog/storefront/products/'+productArr[idx]+'?responseFields=properties,productCode').then(function(res){
-                    var isDNDCode=_.findWhere(res.properties, {'attributeFQN': productAttributes.designCode});
-                    idx++;
-                    if(isDNDCode===undefined && idx<productArr.length){
-                        scope_obj.checkOptionsDNDEnabled(productArr,idx,scope_obj,prod_code,options);
-                   }else{
-                        scope_obj.showQuickViewExtra(prod_code,options);
-                    }
-
-                },function(err) {
-                    console.log(err);
-                    idx++;
-                if(idx<productArr.length){
-                    scope_obj.checkOptionsDNDEnabled(productArr,idx,scope_obj,prod_code.options);
-                   }else{
-                        scope_obj.showQuickViewExtra(prod_code,options);
-                   }
-                });
-            }
         },showQuickViewExtra:function(prod_code,options) {
-            console.log("here");
+            console.log("showQuickViewExtra");
               Api.get('product',prod_code).then(function(res) {
                     var productModel1 = new ProductModels.Product(res.data);
                     var objj =options;
@@ -1990,20 +990,14 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         });
                     }
                     $('body').append('<div id="mz-quick-view-container"></div>');
-                        window.productView = new ProductView({
-                            el: $('#mz-quick-view-container'),
-                            messagesEl: $('[data-mz-message-bar]'),
-                            model:productModel1,
-                            productCode: productModel1.id
-                        });
-                        window.productView.render();
-                        window.removePageLoader();
-                        $('#mz-quick-view-container').fadeIn(350);
-                        $(document).on('click', '#mz-quick-view-container-close, #mz-quick-view-container, .popup.quickview-popup', function(e){
-                            if(e.target !== e.currentTarget) return;
-                            $('#mz-quick-view-container').fadeOut(350);
-                            $('#mz-quick-view-container').remove();
-                        });                
+					var productView = new QuickViewProductView({
+						model:productModel1,
+						gaAction: 'Buywishlistproduct',
+						gaEvent: 'buywishlist'
+					});
+					productView.render();
+					window.removePageLoader();
+					$('#mz-quick-view-container').fadeIn(350);              
                 },function(err) {
                     console.log(err);
                     window.removePageLoader();
@@ -2113,21 +1107,16 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         for(var ind=0; ind < items.models[i].get('items')[j].product.options.length; ind++){
                             if(items.models[i].get('items')[j].product.options[ind].attributeFQN.toLowerCase()==='tenant~dnd-token'){
                                   var dndToken = JSON.parse(items.models[i].get('items')[j].product.options[ind].shopperEnteredValue);
-                                  if(dndToken.designName){
-                                      items.models[i].get('items')[j].designName = dndToken.designName;
+									var info = DNDEngine.getTokenData(dndToken);
+                                  if(info.designName){
+                                      items.models[i].get('items')[j].designName = info.designName;
                                   }
-                                  for (var prop in dndToken) {
-                                        if (dndToken.hasOwnProperty(prop)) {
-                                            dndTokenStr = dndToken[prop];
-                                            if(dndTokenStr){
-                                                imgsrc=dndEngineUrl+'preview/'+dndTokenStr;
-                                                items.models[i].get('items')[j].product.imageUrl= imgsrc;
-                                            }
-                                        }
-                                        break;
-                                    }
+								if(info.src){
+									items.models[i].get('items')[j].product.imageUrl= info.src;
+								}
                             }
                         }
+						// this needs to change... it should be determined based on if we have dnd-token extra exists in product model
                         for(k = 0; k < items.models[i].get('items')[j].product.properties.length; k++) {
                             if(items.models[i].get('items')[j].product.properties[k].attributeFQN.toLowerCase() === "tenant~dndcode") {
                                 items.models[i].get('items')[j].isPersonalize = true;
@@ -2988,6 +1977,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
     });
 
 
+	var wishListObj;
+	
     $(document).ready(function () {
 
         var accountModel = window.accountModel = CustomerModels.EditableCustomer.fromCurrent();
@@ -3087,12 +2078,12 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled){
                 //console.log(res);
                 accountModel.get('wishlist').set(res);
-                var wishListObj = new WishListView({
+                wishListObj = new WishListView({
                     el: $wishListEl,
                     model: accountModel.get('wishlist'),
                     messagesEl: $messagesEl
                  });
-                window.wishListObj = wishListObj;
+                wishListObj = wishListObj;
                 wishListObj.render();
                 if(window.location.hash === "#wishlist") {
                     $("a#tab_5 .mz-cms-content").trigger('click');

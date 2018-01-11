@@ -1,14 +1,9 @@
 define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-product', 'vendor/bootstrap-datetimepicker'], function($, Api, Hypr, ProductModels, SimpleDateTimePicker){
 	var productAttributes = Hypr.getThemeSetting('productAttributes');
 	var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
-	function logResults(json){
-		console.log(json);
-		if(window.wishlistModel){
-			window.wishlistModel.trigger('addedtowishlist');
-		}
-	}
 	var wishlist = {
 		getTemplate: function(){
+			console.log("Wishlist getTemplate");
 			var template = '<div id="wishlist-overlay">';
 			template += '<div class="wishlist-wrapper">';
 			template += '<a id="wishlist-close" class="popup-close">&times;</a>';
@@ -30,7 +25,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			template += '<select id="new-events-name"><option value="select-events">Event Type</option>'
 			var respon = Hypr.getThemeSetting('wishlisteventtypes').split(',');
             _.each(respon,function(val,key){
-			console.log(val);
+			//console.log(val);
 			template +=	'<option value="'+val+'">'+val+'</option>';
 			});
            template += '</select><button id="select-wishlist" type="button" class="btn-wishlit">Save</button>';
@@ -45,6 +40,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 
 		},
 		getSaveDesignTemplate: function(name, model, callBackFunction) {
+			console.log("Wishlist getSaveDesignTemplate");
 			var me = this;
 			var template = '<div class="list-wrapper">';
 			template += '<div class="save-design">';
@@ -97,20 +93,24 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			});
 		},
 		saveWishlistItem: function(model,callBackFunction){
+			console.log("Wishlist saveWishlistItem");
 			var me = this;
 			var Successcallback = function(res,prod){
 					var dndTokenVal = prod.get('dndTokenValue');
-						window.wishlistModel = prod;
+				console.log(dndTokenVal);
 						try{
 							$.ajax({
 								url: dndEngineUrl+dndTokenVal+'/confirmWishlist?wishlistID='+res.id,
 								type:'GET',
 								dataType:'jsonp',
 								success:function(json){
-									me.getLastTemplate(prod, res, callBackFunction);
-									prod.trigger('referWishlistView');
-								},
-								jsonpCallback: "logResults"
+									console.log(json);
+									if(typeof callBackFunction === "function"){
+										me.showAddedPopup('Item Successfully Saved To Wishlist.');
+										callBackFunction(); // should close dnd overlay
+										$("#wishlist-close").trigger('click'); // closes current wishlist overlay
+									}
+								}
 							});
 					   }catch(e){
 					   		console.log(e);
@@ -122,28 +122,8 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 					me.addItemToWishlist(model, Successcallback);
 				}
 		},
-		getLastTemplate: function(model, res, callBackFunction){
-			var me = this;
-			var template = '<div class="list-wrapper">';
-			template += '<div class="save-design-confirm">';
-			template += '<button class="mz-button mz-button-large primary" id="save-design-btn-close">Continue Shopping</button>';
-			template += '<button class="mz-button mz-button-large secondary" id="continue-personalizing">CONTINUE PERSONALIZING</button>';
-			template += '</div>';
-			template += '</div>';
-			$('.list-wrapper').hide().last().after(template);
-			$('#save-design-btn-close').click(function() {
-				 $("#wishlist-close").trigger('click');
-				 model.trigger('addedtowishlist');
-			});
-
-			$('#continue-personalizing').click(function() {
-				var dndTokenVal = model.get('dndTokenValue');
-				var redirectUrl = dndEngineUrl+dndTokenVal+'/wishlist?wishlistID='+res.id;
-				$('.dnd-popup iframe').attr('src',redirectUrl);
-				$("#wishlist-close").trigger('click');
-			});
-		},
 		showAddedPopup: function(msg) {
+			console.log("Wishlist showAddedPopup");
 	        var template = '<div style="background-color: #fff;position: fixed;top: 0;left: 0;right: 0;bottom: 0;margin: auto;border: 1px solid #cccccc;padding: 40px 30px;border-radius: 4px;width: 320px;height: 40px;text-align: center;z-index: 9999;box-shadow: 0 0 40px #666666;"><p style="font-size: 18px;color: #00b09b;">' + msg + '</p></div>';
 
 	        $(template).appendTo(document.body).fadeOut(4000, function(){
@@ -163,6 +143,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('GET', '/api/commerce/wishlists/customers/' + custId + '/' + name, {});
 		},
 		createNewWishlist: function(name, eventType, eventDate){
+			console.log("Wishlist createNewWishlist");
 			eventType = typeof eventType !== 'undefined' ? eventType : 'No Type';
 			eventDate = typeof eventDate !== 'undefined' ? eventDate : 'No Date';
 			return Api.request("post", "/api/commerce/wishlists/", {
@@ -184,6 +165,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('DELETE', '/api/commerce/wishlists/' + id, {});
 		},
 		addItem: function(id, model){
+			console.log("Wishlist addItem");
 			var data = {};
 			if(model.toJSON !== undefined) {
 				data.product = model.toJSON();
@@ -198,6 +180,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('post', '/api/commerce/wishlists/' + id + '/items', data);
 		},
 		updateItem: function(id,itemid,model){
+			console.log("Wishlist updateItem");
 			var data = {};
 			if(model.toJSON !== undefined) {
 				data.product = model.toJSON();
@@ -224,6 +207,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('GET', '/api/commerce/wishlists/' + wishlistId + '/items/' + wishlistItemId, {});
 		},
 		moveToWishlist: function(exWishlistId, newWishlistId, productId, callBackFunction, originalProductId) {
+			console.log("Wishlist moveToWishlist");
 			var me = this;
 	        if(originalProductId !== false && newWishlistId !== "") {
 	        	me.createNewWishlist(newWishlistId,$('#new-events-name option:selected').val(), $("#new-event-date").val()).then(function(res) {
@@ -256,6 +240,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	        }
 		},
 		updateItemToWishlist: function(model, callBackFunction){
+			console.log("Wishlist updateItemToWishlist");
 			callBackFunction = (undefined !== callBackFunction) ? callBackFunction:function(){};
 			var me= this;
 			if(model.get('updateItem')===1){
@@ -272,6 +257,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			}
 		},
 		addItemToWishlist: function(model, callBackFunction) {
+			console.log("Wishlist addItemToWishlist");
 			callBackFunction = (undefined !== callBackFunction) ? callBackFunction:function(){};
 			var me =  this;
 	        var id = $("[name=wishlist-radio]:checked").val();
@@ -290,7 +276,6 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	                        	$("#wishlist-close").trigger('click');
 	                    	}
 	                        callBackFunction(res,model);
-	                        //model.trigger('addedtowishlist');
 	                    });
 	                });
 	            }
@@ -307,10 +292,16 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	                    }
 	                }
 	                callBackFunction(res,model);
-	                //model.trigger('addedtowishlist');
 	            });
 	        }
-	    var gawishlist = model.toJSON().content.productName;
+
+			var gawishlist;
+			if(model.toJSON().content){ // product/quickview pages
+				gawishlist = model.toJSON().content.productName;
+			}
+			else{ // cart page
+				gawishlist = model.toJSON().name
+			}
 			if(ga!==undefined){
 				ga('send', {
 				hitType: 'event',
@@ -322,6 +313,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 
 	    },
 	    initoWishlist: function(model, callBackFunction){
+			console.log("Wishlist initoWishlist");
 	    	var ifrm = $("#homepageapicontext");
 	    	if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
 		    	var apicontext = JSON.parse(ifrm.contents().find('#data-mz-preload-apicontext').html());
@@ -386,7 +378,8 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
                 forceParse: 0
             });
 	    },
-	    initoWishlistPersonalize: function(model, callBackFunction){
+	    initoWishlistPersonalize: function(model, callBackFunction){ // as far as I can tell, this is the function called if the item was already in the wishlist
+			console.log("Wishlist.initoWishlistPersonalize");
 	    	var ifrm = $("#homepageapicontext");
 	    	if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
 		    	var apicontext = JSON.parse(ifrm.contents().find('#data-mz-preload-apicontext').html());

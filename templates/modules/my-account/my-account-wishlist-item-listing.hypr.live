@@ -49,7 +49,7 @@
                 </div>
                 <div class="order-blocks5">&nbsp;</div>
               {% else %}
-                <p>No items where added to this wishlist.</p>
+                <p>No items were added to this wishlist.</p>
               {% endif %}
             </div>
             <div class="delete-wishlist">
@@ -66,12 +66,40 @@
                 <div class="order-blocks2">
                     <a href="/p/{{ products.product.productCode }}"><p class="product-name">{% if products.designName %}{{products.designName}}{% else %}{{products.product.name}}{% endif %}</p></a>
 
-                  {% for color in opt %}
-                   <span class="order_color"> Color:</span>
-                   <span class="rounded-cart-color">
-                    <span style="background-color:{{ color }};"></span>
+{% if products.product.options and themeSettings.showCartItemOptions %}
+                        <dl class="mz-propertylist">
+                            {% for option in products.product.options %}
+                                {% if option.name=="dnd-token" %}
+                                    {% if themeSettings.userListForDndTotenAccess %}
+                                    {% with themeSettings.userListForDndTotenAccess|split(',') as userList %}
+                                        {% for userId in userList %}
+                                            {% if userId == user.accountId %}
+                                                <dt class="sd_label" style="color:#b3282d;">{{ option.name }}</dt>
+                                                <dd class="sd_text" style="color: #b3282d;font-size:11px;font-weight:normal;">{{ option.shopperEnteredValue }}</dd>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endwith %}
+                                    {% endif %}
+                                {% else %}
+                                 {% if option.name %}
+                                    <dt class="sd_label">{{ option.name }}</dt>
+                                    <dd class="sd_text">
+                                        {% if option.name == 'Color' %}
+                                            <span class="color-val">{{option.stringValue}}
                    </span>
+                                        {% else %}
+                                            {% if option.stringValue %}
+                                                {{ option.stringValue }}
+                                            {% else %}
+                                                {{ option.shopperEnteredValue }}
+                                            {% endif %}
+                                        {% endif %}
+                                    </dd>
+                                    {% endif %}
+                                {% endif %}
                   {% endfor %}
+                        </dl>
+                    {% endif %}
                 </div>
 
                 <div class="order-blocks3">
@@ -81,18 +109,20 @@
                       <input type="button" value="+" class="qtyplus" field="quantity">
                     </span>
                     <p class="mob_show">
+                      {% comment %} opt isn't defined?
                     {% for color in opt %}
                       <span class="order_color"> Color:</span>
                       <span class="rounded-cart-color">
                           <span style="background-color:{{ color }};"></span>
                       </span>
                     {% endfor %}
+                    {% endcomment %}
                     </p>
                 </div>
                 <div class="order-blocks4">
 
 
-    <span class="mz-item-rowtotal ">${{products.product.price.price}}</span>
+    <span class="mz-item-rowtotal ">{{products.product.price.price|currency}}</span>
 
 
                 </div>
@@ -163,6 +193,6 @@ ga('send', {
 {% endif %}
 {% endif %}
 {% endcomment %}
-{% endblock item-listing-extras %}
+{% endblock item-details %}
 
 

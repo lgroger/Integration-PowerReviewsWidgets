@@ -1,114 +1,57 @@
-define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','pages/colorswatch-super','vendor/wishlist',"modules/productview","hyprlive"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,ProductView,Hypr) {
+define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','pages/colorswatch-super','vendor/wishlist',"modules/quickview-productview","hyprlive", "modules/shared-product-info"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,QuickViewProductView,Hypr,SharedProductInfo) {
 	
-	//	modules/quick-view.js handles the action when clicking on "Options" for products that don't have "add to cart" or "personalize" buttons
+	//	NOTE: modules/quick-view.js handles the action when clicking on "Options" for products that don't have "add to cart" or "personalize" buttons
 	
-	 var initProductInQuickview= function(productCode,personalizebutton){
-		console.log("initProductInQuickview");
-		api.request('get','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
-			var product=new ProductModels.Product(res);
-			var productView = new ProductView({
-				model: product
-			});
-			
-			product.on('addedtocart', function(cartitem) {
-                if (cartitem && cartitem.prop('id')) {
-                    var cartitemModel = new ProductModels.Product(cartitem.data);
-                  
-                    $('.dnd-popup').hide();
-                     $('body').css({overflow: 'scroll'});
-                $('html').removeClass('dnd-active-noscroll');
-                $('#cboxOverlay').hide();
-                    CartMonitor.addToCount(product.get('quantity'));
-                    SoftCart.update();
-                   window.removePageLoader();
-                    addedToCart.proFunction(cartitemModel);
-                    
-                    //google analytics code for add to cart event
-            	var gaitem = cartitemModel.apiModel.data;
-                  var proID = gaitem.product.productCode;
-                   
-                   var gaoptionval; 
-                    if(gaitem.product.productUsage == "Configurable" ){
-                      proID = gaitem.product.variationProductCode; 
-                    }
-                    
-                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-                    _.each(gaitem.product.options,function(opt,i){
-                    if(opt.name=="dnd-token"){
+	var initProductForWishlist= function(productCode){
+		var product = SharedProductInfo.getProductModel(productCode,initProductForWishlist.bind(null,productCode));
+		if(!product){
+			 return;
+		}
+		Wishlist.initoWishlist(product);
+	};
+	var initProductToPersonalize= function(productCode,personalizebutton){
+		console.log("initProductToPersonalize");
+		var product = SharedProductInfo.getProductModel(productCode,initProductToPersonalize.bind(null,productCode,personalizebutton));
+		if(!product){
+			 return;
+		}
 
-                    }
-                    else if(opt.name == 'Color'){
-                    gaoptionval = opt.value;
-                    }
-                    else{
-                    gaoptionval =  opt.value;
-                    }
-                    });  
-                    } 
-
-                    if(typeof ga!=="undefined"){
-                        ga('ec:addProduct', {
-                        'id': proID,
-                        'name': gaitem.product.name,
-                        'category': gaitem.product.categories[0].id,
-                        'brand': 'shindigz',
-                        'variant': gaoptionval,
-                        'price': gaitem.unitPrice.extendedAmount,
-                        'quantity': gaitem.quantity
-                        });
-                        ga('ec:setAction', 'Buysuperpagepersonal');
-                        ga('send', 'event', 'buy', 'buysuperpagepersonalize', gaitem.product.name);  
- 
-                    } 
-                                        
-
-                    //Facebook pixcel tracking
-                    var track_price= product.get("price").toJSON().price;
-                         if( product.get("price").toJSON().salePrice){
-                            track_price= product.get("price").toJSON().salePrice;
-                         }
-                        var track_product_code=[];
-                         track_product_code.push(product.toJSON().productCode);
-                         if(typeof fbq!=="undefined"){
-                             fbq('track', 'AddToCart', {
-                                content_ids:track_product_code,
-                                content_type:'product',
-                                value: parseFloat(track_price*product.get('quantity')).toFixed(2),
-                                currency: 'USD'
-                            });
-                         }
-                         if(typeof pintrk!=="undefined"){
-                             pintrk('track','addtocart',{
-                                value:parseFloat(track_price*product.get('quantity')),
-                                order_quantity:parseInt(product.get('quantity'),10),
-                                currency:"USD",
-                                line_items:[{
-                                    product_name:product.toJSON().content.productName,
-                                    product_id:track_product_code[0],
-                                    product_price:parseFloat(track_price),
-                                    product_quantity:parseInt(product.get('quantity'),10)
-                                }]
-                            });
-                         }
-                      if(typeof window.addthis!=="undefined"){
-                          ///Update addthis to currect product model and rerender.
-                          try{
-                              addthis.update('share', 'url',product.toJSON().url );
-                              addthis.update('share', 'title',product.toJSON().content.productName); 
-                             addthis.toolbox(".addthis_inline_share_toolbox");
-                          }catch(err){
-                              console.log("Error on addthis "+err);
-                          }
-                      }
-                }
-
-            });
-			
-			console.log("before personalizeProduct");
-			productView.personalizeProduct(personalizebutton);
-			window.removePageLoader();
+		var productView = new QuickViewProductView({
+			model: product,
+			gaAction: 'Buysuperpagepersonal',
+			gaEvent: 'buysuperpagepersonalize'			
 		});
-	 };
+
+		productView.personalizeProduct(personalizebutton);
+		window.removePageLoader();
+	};
+	var initProductToAddToCart = function(productCode){
+		var product = SharedProductInfo.getProductModel(productCode,initProductToAddToCart.bind(null,productCode));
+		if(!product){
+			return;
+		}
+		
+		if(product.get('volumePriceBands')){
+			var minqt=_.min(_.pluck(product.get('volumePriceBands'),"minQty"));
+			if(minqt>$("#qty-" + productCode).val()){
+				window.removePageLoader();
+				$(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p>"+"Sorry! Min Qty for this product is "+minqt+"</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>");
+				return;
+			 }
+	  	}
+		
+		var productView = new QuickViewProductView({
+			model: product,
+			gaAction: 'Buysuperpages',
+			gaEvent: 'buysuperpage'
+		}); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
+		
+		product.set({
+			'quantity': $("#qty-" + productCode).val()
+		});
+		product.addToCart();
+		
+	};
 	
     $(document).ready(function() {
         api.on("error",function (err) {
@@ -179,227 +122,20 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
             }
         });
         $('.addToCart').click(function(e){
-              window.showPageLoader();
-            var productCode = $(e.currentTarget).data('product_id'), product, itemQty;
-            api.request('GET','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
-                    if(res.volumePriceBands!==undefined){
-                        var minqt=_.min(_.pluck(res.volumePriceBands,"minQty"));
-                        if(minqt<=$("#qty-" + productCode).val()){
-                                var ProductMod= new ProductModels.Product(res);
-                                var itemQty=1;
-                                ProductMod.on('addedtocart', function(cartitem) {
-                                    if (cartitem && cartitem.prop('id')) {
-                                        var cartitemModel = new ProductModels.Product(cartitem.data);
-                                      
-                                        $('.dnd-popup').hide();
-                                        CartMonitor.addToCount(ProductMod.get('quantity'));
-                                        SoftCart.update();
-                                       window.removePageLoader();
-                                        addedToCart.proFunction(cartitemModel);
-                                        
-                                        
-                  //google analytics code for add to cart event
-                  var gaitem = cartitemModel.apiModel.data;
-                  var proID = gaitem.product.productCode;
-                   
-                   var gaoptionval; 
-                    if(gaitem.product.productUsage == "Configurable" ){
-                      proID = gaitem.product.variationProductCode; 
-                    }
-                    
-                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-                    _.each(gaitem.product.options,function(opt,i){
-                    if(opt.name=="dnd-token"){
-
-                    }
-                    else if(opt.name == 'Color'){
-                    gaoptionval = opt.value;
-                    }
-                    else{
-                    gaoptionval =  opt.value;
-                    }
-                    });  
-                    }
-
-                    if(typeof ga!== "undefined"){
-                        ga('ec:addProduct', {
-                        'id': proID,
-                        'name': gaitem.product.name,
-                        'category': gaitem.product.categories[0].id,
-                        'brand': 'shindigz',
-                        'variant': gaoptionval,
-                        'price': gaitem.unitPrice.extendedAmount,
-                        'quantity': gaitem.quantity
-                        });
-                        ga('ec:setAction', 'Buysuperpage');
-                        ga('send', 'event', 'buy', 'buysuperpagednd', gaitem.product.name);  
- 
-                    } 
-
-                                          
-
-                                        //Facebook pixel add to cart event
-                                       var track_price=ProductMod.get("price").toJSON().price;
-                                       if(ProductMod.get("price").toJSON().salePrice){
-                                          track_price=ProductMod.get("price").toJSON().salePrice;
-                                       }
-                                        var track_product_code=[];
-                                        track_product_code.push(ProductMod.toJSON().productCode); 
-                                        if(fbq!==undefined){
-                                           fbq('track', 'AddToCart', {
-                                              content_ids:track_product_code,
-                                              content_type:'product',
-                                              value: parseFloat(track_price*ProductMod.get('quantity')).toFixed(2),
-                                              currency: 'USD'
-                                          });
-                                       }
-                                       //Pinterest tracking
-                                       if(typeof pintrk !== "undefined"){
-                                           pintrk('track','addtocart',{
-                                              value:parseFloat(track_price*ProductMod.get('quantity')),
-                                              order_quantity:parseInt(ProductMod.get('quantity'),10),
-                                              currency:"USD",
-                                              line_items:[{
-                                                  product_name:ProductMod.toJSON().content.productName,
-                                                  product_id:track_product_code[0],
-                                                  product_price:parseFloat(track_price).toFixed(2),
-                                                  product_quantity:parseInt(ProductMod.get('quantity'),10)
-                                              }]
-                                          });
-                                       }
-                                       if(typeof window.addthis!== "undefined"){
-                                    ///Update addthis to currect product model and rerender.
-                                    try{
-                                        addthis.update('share', 'url',window.location.origin+ProductMod.toJSON().url );
-                                        addthis.update('share', 'title',ProductMod.toJSON().content.productName); 
-                                       addthis.toolbox(".addthis_inline_share_toolbox");
-                                    }catch(err){
-                                        console.log("Error on addthis "+err);
-                                    }
-                                }
-                                    }
-                                });
-                                ProductMod.set({
-                                    'quantity': $("#qty-" + productCode).val()
-                                });
-                                  ProductMod.addToCart();
-                        }else{
-                            window.removePageLoader();
-                            $(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p>"+"Sorry! Min Qty for this product is "+minqt+"</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>"); 
-                         }
-                    }else{
-                        var ProductMod1= new ProductModels.Product(res);
-                        ProductMod1.on('addedtocart', function(cartitem) {
-                        if (cartitem && cartitem.prop('id')) {
-                        var cartitemModel = new ProductModels.Product(cartitem.data);
-
-                        $('.dnd-popup').hide();
-                        CartMonitor.addToCount(ProductMod1.get('quantity'));
-                        SoftCart.update();
-                        window.removePageLoader();
-                        addedToCart.proFunction(cartitemModel);
-
-                        //google analytics code for add to cart event
-                          var gaitem = cartitemModel.apiModel.data;
-                  var proID = gaitem.product.productCode;
-                   
-                   var gaoptionval; 
-                    if(gaitem.product.productUsage == "Configurable" ){
-                      proID = gaitem.product.variationProductCode; 
-                    }
-                    
-                    if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-                    _.each(gaitem.product.options,function(opt,i){
-                    if(opt.name=="dnd-token"){
-
-                    }
-                    else if(opt.name == 'Color'){
-                    gaoptionval = opt.value;
-                    }
-                    else{
-                    gaoptionval =  opt.value;
-                    }
-                    });  
-                    }
-
-                    if(typeof ga!=="undefined"){
-                        ga('ec:addProduct', {
-                        'id': proID,
-                        'name': gaitem.product.name,
-                        'category': gaitem.product.categories[0].id,
-                        'brand': 'shindigz',
-                        'variant': gaoptionval,
-                        'price': gaitem.unitPrice.extendedAmount,
-                        'quantity': gaitem.quantity
-                        });
-                        ga('ec:setAction', 'Buysuperpages');
-                        ga('send', 'event', 'buy', 'buysuperpage', gaitem.product.name);  
- 
-                    } 
-                                        
-
-                         //Facebook pixel add to cart event
-                         var track_price=ProductMod1.get("price").toJSON().price;
-                         if(ProductMod1.get("price").toJSON().salePrice){
-                            track_price=ProductMod1.get("price").toJSON().salePrice;
-                         } 
-                          var track_product_code=[];
-                           track_product_code.push(ProductMod1.toJSON().productCode);
-                           if(fbq!==undefined){
-                               fbq('track', 'AddToCart', {
-                                  content_ids:track_product_code,
-                                  content_type:'product',
-                                  value: parseFloat(track_price*ProductMod1.get('quantity')).toFixed(2),
-                                  currency: 'USD'
-                              });
-                          }
-                          if(typeof pintrk!== "undefined"){
-                             pintrk('track','addtocart',{
-                                value:parseFloat(track_price*ProductMod1.get('quantity')),
-                                order_quantity:parseInt(ProductMod1.get('quantity'),10),
-                                currency:"USD",
-                                line_items:[{
-                                    product_name:ProductMod1.toJSON().content.productName,
-                                    product_id:track_product_code[0],
-                                    product_price:parseFloat(track_price),
-                                    product_quantity:parseInt(ProductMod1.get('quantity'),10)
-                                }]
-                            });
-                         }
-                          if(typeof window.addthis!== "undefined"){
-                              ///Update addthis to currect product model and rerender.
-                              try{
-                                  addthis.update('share', 'url',window.location.origin+ProductMod1.toJSON().url );
-                                  addthis.update('share', 'title',ProductMod1.toJSON().content.productName); 
-                                 addthis.toolbox(".addthis_inline_share_toolbox");
-                              }catch(err){
-                                  console.log("Error on addthis "+err);
-                              }
-                          }
-                        }
-
-                        });
-                        ProductMod1.set({
-                        'quantity': $("#qty-" + productCode).val()
-                        });
-                        ProductMod1.addToCart();
-                    }
-               
-            });
+            window.showPageLoader();
+            var productCode = $(e.currentTarget).data('product_id');
+			initProductToAddToCart(productCode);
         });
         $(".personalize").click(function(e){
-              var productCode = $(e.currentTarget).data('product_id');
-			console.log(productCode);
-              window.showPageLoader();
-			initProductInQuickview(productCode,this);
+            var productCode = $(e.currentTarget).data('product_id');
+			//console.log(productCode);
+            window.showPageLoader();
+			initProductToPersonalize(productCode,this);
         });
         $(".addToWishlist").click(function(e){
             if (!require.mozuData('user').isAnonymous) {
                 var productCode = $(e.currentTarget).data('product_id');
-                api.request('GET','/api/commerce/catalog/storefront/products/'+productCode).then(function(res){
-                var ProductMod= new ProductModels.Product(res);
-                Wishlist.initoWishlist(ProductMod);
-            });
+				initProductForWishlist(productCode);
             } else {
                 triggerLogin();
             }

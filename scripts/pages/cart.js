@@ -852,18 +852,18 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
             var $removeButton = $(e.currentTarget),
             id = $removeButton.data('mz-cart-item');
-            $(".compare-full-error-container").show();
-            $('#btn-yes-removeitem').data('item-id',id);
-            $(document).on('click','#btn-yes-removeitem',function(e){
+            
+            $('#btn-yes-removeitem').data('item-id',id).unbind("click").click(function(e){
                 self.model.removeItem($(this).data('item-id'));
                 $(".compare-full-error-container").hide();
                 self.setestimateShipping();
                 return false;
             }); 
-            $('#btn-no-removeitem').on('click',function(e){
+            $('#btn-no-removeitem').unbind("click").click(function(e){
                 $('.compare-full-error-container').hide();
                 return false;
             });
+			$(".compare-full-error-container").show();
             return false;
         },
         removeCartItem: function(id){
@@ -1112,7 +1112,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                 })
 
             };
-
+		window.cartView = cartViews; //wishlist uses this still
         cartModel.on('ordercreated', function (order) {
             cartModel.isLoading(true);
             window.location = "/checkout/" + order.prop('id');

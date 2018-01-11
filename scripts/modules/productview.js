@@ -1,5 +1,5 @@
-define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info"],
-function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo) {
+define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/cart-monitor", "modules/soft-cart"],
+function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, CartMonitor, SoftCart) {
 
 	// Global variables for Banner Types
 	var bannerProductTypes = Hypr.getThemeSetting('bannerProductTypes');
@@ -50,15 +50,32 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             return result;
      };
 	var ProductView = Backbone.MozuView.extend({
+		gaAction: 'BuyPdp',
+		gaEvent: 'buypdp',
 		holidayList: null, // set in this.getHolidays() ShippingholidayList@shindigz
 		UPSholidayList: null, // set in getUPSHolidays() UPSholidayList@shindigz
 		noCalcDelDate: false,  //if true, holidayList & UPSholidayList won't be loaded and delivery/ship dates won't be calculated (will be used for quickview)
         templateName: 'modules/product/product-detail-custom',
         autoUpdate: ['quantity'],
+        compLoadComplete: false,
+		dndEngineObj: null,  // hold reference to dndEngine that we can create so we can call methods on it later (like unsend())
 		constructor: function (conf) {
-			var context = Backbone.MozuView.prototype.constructor.apply(this, arguments);
-			this.noCalcDelDate = conf.noCalcDelDate || this.noCalcDelDate;
-			this.customAfterRender = conf.customAfterRender || this.customAfterRender;
+			console.log("productview constructor");
+			if(conf){
+				// custom properties that we want to be able to set by using new ProductView({});
+				this.noCalcDelDate = conf.noCalcDelDate || this.noCalcDelDate;
+				this.customAfterRender = conf.customAfterRender || this.customAfterRender;
+				this.gaAction = conf.gaAction || this.gaAction;
+				this.gaEvent = conf.gaEvent || this.gaEvent;
+				this.dndEngineObj = conf.dndEngineObj || this.dndEngineObj;
+				this.AddToWishlistAfterPersonalize = conf.AddToWishlistAfterPersonalize || this.AddToWishlistAfterPersonalize;
+				this.addToWishlist = conf.addToWishlist || this.addToWishlist;
+				this.initialize = conf.initialize || this.initialize;
+				this.personalizeProduct = conf.personalizeProduct || this.personalizeProduct;
+			}
+			console.log("productview override");
+			var context = Backbone.MozuView.prototype.constructor.apply(this, arguments); // as soon as this is run, initialize will also be run, so be sure to override that above this
+			
             return context;
 		},
         additionalEvents: {
@@ -265,8 +282,8 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 		   }
            	// DnD Code  Start
             var me= this;
-            var dndEngineObj = new DNDEngine.DNDEngine(me.model,me);
-            dndEngineObj.initializeAndSend();
+            this.dndEngineObj = new DNDEngine.DNDEngine(me.model,me);
+            this.dndEngineObj.initializeAndSend();
             // DnD Code  End 
 
         },
@@ -336,9 +353,6 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 this.model.set("option6plus", true);
             }
             this.renderConfigure();
-            this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
-                $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
-            });
         },
         hideOptions: function(){
 			console.log("hideOptions");
@@ -678,18 +692,28 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             var $qField = $(self.el).find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10),
             sku = "";
+			
+			console.log(newQuantity);
 
             //Bloomreach add to cart event
             if(this.model.attributes.variationProductCode !== undefined && this.model.attributes.variationProductCode !== 'undefined'){
               sku = this.model.attributes.variationProductCode;
             }
-            if(typeof BrTrk !== 'undefined'){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
+            console.log('BrTrk');
+            console.log(this.model.attributes.productCode);
+            console.log(sku);
+            if(typeof BrTrk !== 'undefined'){
+				BrTrk.getTracker().logEvent('cart', 'click-add',{
+					'prod_id': this.model.attributes.productCode ,
+					'sku' : sku
+				});
+			}
             //end
 
             this.model.set('quantity',newQuantity);
             this.model.addToCart();
         },
-        addToWishlist: function () {
+        addToWishlist: function () { // I think this is adding a non-personalized item to wishlist
 			console.log("addToWishlist");
             if(!require.mozuData('user').isAnonymous) {
                         this.model.set('moveToWishList', 1);
@@ -709,19 +733,22 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     }
             }
         },
-        addToWishlistWithDesign: function(){
+        addToWishlistWithDesign: function(){// I think this is adding a personalized item to wishlist
 			console.log("addToWishlistWithDesign");
             var me = this;
-                this.model.on('addedtowishlist', function (cartitem) {
+                var callback = function () {
                     $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
                     $('.dnd-popup').remove();
                     $('body').css({overflow: 'auto'});
                     $('html').removeClass('dnd-active-noscroll');
                     $('#cboxOverlay').hide();
-                    window.location.href=location.href;
-                });
+					if(me.dndEngineObj){
+						me.dndEngineObj.unsend();
+					}
+					window.location.href=location.href;
+                };
                 if(!require.mozuData('user').isAnonymous) {
-                        Wishlist.initoWishlistPersonalize(this.model);
+                        Wishlist.initoWishlistPersonalize(this.model,callback);
                 }else {
                     var produtDetailToStoreInCookie ={};
                     produtDetailToStoreInCookie.productCode=this.model.get('productCode');
@@ -730,7 +757,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     $.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
                     var ifrm = $("#homepageapicontext");
                     if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                        Wishlist.initoWishlistPersonalize(this.model);
+                        Wishlist.initoWishlistPersonalize(this.model,callback);
                     }else{
                         triggerLogin();
                         $('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
@@ -739,7 +766,20 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
         },
         addToWishlistAfterLogin: function(){
 			console.log("addToWishlistAfterLogin");
-             Wishlist.initoWishlist(this.model);
+			var me = this;
+			var callback = function () {
+				console.log('productview addToWishlistAfterLogin CALLBACK');
+                    $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
+                    $('.dnd-popup').remove();
+                    $('body').css({overflow: 'auto'});
+                    $('html').removeClass('dnd-active-noscroll');
+                    $('#cboxOverlay').hide();
+					if(me.dndEngineObj){
+						me.dndEngineObj.unsend();
+					}
+					window.location.href=location.href;
+                };
+             Wishlist.initoWishlist(this.model,callback);
             $.cookie('wishlistprouct', "",{path:'/'});
         },
         addToWishlistAfterLoginPersonalize: function(){
@@ -778,9 +818,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     extraJSON['tenant~'+extraAttribute[l].attributeCode] = extraAttribute[l].value;
                 }
             }
-			//console.log(extraJSON);
-            var payload={};
-            payload.options=[];
+
             for(var i=0; i < options.length; i++){
 
                 if(options.models[i].get('attributeFQN')===productAttributes.dndToken){
@@ -796,6 +834,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             this.model.set('options', options);
         },
         addToCartAfterPersonalize:function(data){ // used by dndengine.js
+			console.log("addToCartAfterPersonalize");
             var self= this;
 			console.log(data);
             self.setOptionValues(data);
@@ -1205,9 +1244,6 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 		},
         initialize: function () {
 			console.log("initialize");
-			console.log(this.noCalcDelDate);
-			
-			this.compLoadComplete = false;
 
 			var estTime = new Date(); // time in UTC format
 			estTime.setTime(estTime.getTime()-5*60*60*1000); //subtract difference from GMT to Eastern so that when you use getUTCDay, getUTCHours, (etc) it will reflect value in Eastern timezone
@@ -1258,7 +1294,130 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                         }
                     }
             }
-        }
+			
+			this.$('[data-mz-is-datepicker]').each(function (ix, dp) {
+                $(dp).dateinput().css('color', Hypr.getThemeSetting('textColor')).on('change  blur', _.bind(me.onOptionChange, me));
+            });
+			
+			this.setOnAddToCartActions();
+        },
+		setOnAddToCartActions: function(){
+			var me = this;
+			
+		// NOTE: model.on('addedtowishlist') also exists but all of our wishlist code makes custom api calls so model-product.js never triggers 'addedtowishlist'
+			
+			// assign shared on(addedtocart') actions....
+			this.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
+				console.log("ProductView on addedtocart");
+				if (cartitem && cartitem.prop('id')) {
+					var cartitemModel = new ProductModels.Product(cartitem.data);
+					me.model.isLoading(true);
+					$('.dnd-popup').remove();
+					$('body').css({overflow: 'auto'});
+					$('html').removeClass('dnd-active-noscroll');
+					$('#cboxOverlay').hide();
+					CartMonitor.addToCount(me.model.get('quantity'));
+					SoftCart.update();
+					window.removePageLoader();
+					//SoftCart.update().then(SoftCart.show).then(function() {
+						//SoftCart.show();
+						//SoftCart.highlightItem(cartitem.prop('id'));
+					//});
+					me.model.isLoading(false);
+					cartitemModel.set('quantity',me.model.get('quantity'));
+					addedToCart.proFunction(cartitemModel);
+
+					//google analytics code for add to cart event
+					var gaitem = cartitemModel.apiModel.data;
+					var proID = gaitem.product.productCode;
+
+					var gaoptionval; 
+						if(gaitem.product.productUsage == "Configurable" ){
+						  proID = gaitem.product.variationProductCode; 
+						}
+
+					if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+						_.each(gaitem.product.options,function(opt,i){
+							if(opt.name=="dnd-token"){
+
+							}
+							else if(opt.name == 'Color'){
+								gaoptionval = opt.value;
+							}
+							else{
+								gaoptionval =  opt.value;
+							}
+						});  
+					}
+
+					if(typeof ga!=="undefined"){
+						ga('ec:addProduct', {
+							'id': proID,
+							'name': gaitem.product.name,
+							'category': gaitem.product.categories[0].id,
+							'brand': 'shindigz',
+							'variant': gaoptionval,
+							'price': gaitem.unitPrice.extendedAmount,
+							'quantity': gaitem.quantity
+						});
+						ga('ec:setAction', me.gaAction);
+						ga('send', 'event', 'buy', me.gaEvent, gaitem.product.name);
+					} 
+
+					 //Facebook pixel add to cart event
+					 var track_price=me.model.get("price").toJSON().price;
+					 if(me.model.get("price").toJSON().salePrice){
+						track_price=me.model.get("price").toJSON().salePrice;
+					 }
+
+					 var track_product_code=[];
+					 track_product_code.push(me.model.toJSON().productCode);
+					 if(typeof fbq!=="undefined"){
+						 fbq('track', 'AddToCart', {
+							content_ids:track_product_code,
+							content_type:'product',
+							value: parseFloat(track_price*me.model.get('quantity')).toFixed(2),
+							currency: 'USD'
+						});
+					 }
+
+					 //Pinterest tracking
+					 if(typeof pintrk !== "undefined"){
+						 pintrk('track','addtocart',{
+							value:parseFloat(track_price*me.model.get('quantity')),
+							order_quantity:parseInt(me.model.get('quantity'),10),
+							currency:"USD",
+							line_items:[{
+								product_name:me.model.toJSON().content.productName,
+								product_id:track_product_code[0],
+								product_price:parseFloat(track_price),
+								product_quantity:parseInt(me.model.get('quantity'),10)
+							}]
+						});
+					}
+
+					if(typeof addthis !== "undefined"){
+						//Rerender addthis buttons
+						addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
+						addthis.update('share', 'title',me.model.toJSON().content.productName); 
+						addthis.toolbox(".addthis_inline_share_toolbox"); // quickview had this
+						addthis.toolbox('.cart-over-addthis'); // product page had this
+					}
+
+					console.log(me.gaAction);
+					console.log(me.gaEvent);
+					console.log(track_price*me.model.get('quantity'));
+					console.log(me.model.toJSON().content.productName);
+					console.log(track_product_code);
+					console.log(track_price);
+					console.log(me.model.get('quantity'));
+					console.log(window.location.origin+me.model.toJSON().url);
+					console.log(me.model.toJSON().content.productName);
+				} else {
+					me.model.trigger("error", { message: Hypr.getLabel('unexpectedError') });
+				}
+			});
+		}
     });
 	return ProductView;
 	
