@@ -23,6 +23,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
        var ship_flag=false;
    
     var CartView = Backbone.MozuView.extend({
+		dndEngineObj: null,
         templateName: "modules/cart/cart-table",
         couponsData:{},
         initialize: function () {
@@ -150,103 +151,107 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             
 			this.on('render', this.afterRender);
         },
-        getProductionTime:function(scope_obj) {
-            var mozu_order_obj=scope_obj.model.toJSON().items;
+        getProductionTime:function() {
+            var mozu_order_obj=this.model.toJSON().items;
             var order_products=_.pluck(mozu_order_obj,'product');
+			
+			// this gets all lineitems with production time on header
             var products_production=_.filter(order_products, function(obj) {
-                return _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').productionTime}).length > 0;
+                return _.where(obj.properties, {'attributeFQN': productAttributes.productionTime}).length > 0;
             });
-            //console.log(products_production);
-             var ext_product_time=[];
-            var ext_time_arr=[];
+            
+            var ext_prop=[];
+            var ext_time_arr=[]; // list of bundled products to get info for
+			// this makes list of bundledproducts that we need to make api calls for
             order_products.forEach(function(obj,idl){
-                if(obj.productUsage==="Standard" && obj.options.length >1 || obj.productUsage =="Standard" && obj.options.length===1 && _.findWhere(obj.options,{'attributeFQN':"tenant~dnd-token"}) ===undefined){
+                if(obj.productUsage==="Standard" && obj.options.length >1 || obj.productUsage =="Standard" && obj.options.length===1 && _.findWhere(obj.options,{'attributeFQN':productAttributes.dndToken}) ===undefined){
                     products_production.push(obj);
                     if(obj.bundledProducts.length>0){
-                        if(ext_product_time[obj.bundledProducts[0].productCode]===undefined && window.product_withExtra === undefined ){
+                        if(!ext_prop[obj.bundledProducts[0].productCode]){
                             var pcode=obj.bundledProducts[0].productCode;
-                            ext_product_time[pcode]=0;
+                            ext_prop[pcode]=0;
                             ext_time_arr.push(pcode);
                         }
                     }
                 }
             });
-            scope_obj.getExtraProductType(ext_product_time,products_production,0,ext_time_arr,scope_obj);
-        },getExtraProductType:function(ext_prop,products_production,idx,ext_arr,scope_obj){
+			SharedProductInfo.getExtras(ext_time_arr.join(),this.getExtraProductType.bind(this,ext_prop,products_production,0,ext_time_arr));
+//            this.getExtraProductType(ext_prop,products_production,0,ext_time_arr);
+        },getExtraProductType:function(ext_prop,products_production,idx,ext_arr){
+			var me = this;
             //Get Production time & zip for extra products usign api call append result zip,production time in property ext_prop
             if(ext_arr.length===0){
                 if(window.product_withExtra!==undefined){
-                    scope_obj.setProductionTime(products_production,scope_obj,window.product_withExtra);
+                    this.setProductionTime(products_production,window.product_withExtra);
                 }else{
-                    scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                    this.setProductionTime(products_production,ext_prop);
                 }
             }else{
                 try{
-                     Api.request('GET','/api/commerce/catalog/storefront/products/'+ext_arr[idx]+'?responseFields=properties,productCode').then(function(res){
-                       var pc=res.productCode;
-                       var product_zip=res.productCode+"_zipcd";
-                       var melt_code=pc+"_melt";
-                       var pdt= _.where(res.properties, {'attributeFQN':Hypr.getThemeSetting('productAttributes').productionTime});
-                       var zipcode= _.where(res.properties, {'attributeFQN':Hypr.getThemeSetting('productAttributes').shipZip});
-                       var isMelt=_.findWhere(res.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').productMelt});
+					var product = SharedProductInfo.getExtraProduct(ext_arr[idx],this.getExtraProductType.bind(this,ext_prop,products_production,idx,ext_arr),
+									function(){ // error function
+						idx++;
+                        if(idx<ext_arr.length){
+                        me.getExtraProductType(ext_prop,products_production,idx,ext_arr);
+                       }else{
+                            me.setProductionTime(products_production,ext_prop);
+                       }
+					});
+					
+					if(product){
+						var res = product.toJSON();
+						var pc = res.productCode;
+                       var pdt= _.where(res.properties, {'attributeFQN':productAttributes.productionTime});
+                       //var zipcode= _.where(res.properties, {'attributeFQN':productAttributes.shipZip});
+                      // var isMelt=_.findWhere(res.properties, {'attributeFQN': productAttributes.productMelt});
                        if(pdt.length >0){
-                         //ext_product_time.push({pc:pdt[0].values[0].value});
                          ext_prop[pc]=pdt[0].values[0].value;
                        }
                        idx++;
+						
                        if(idx<ext_arr.length){
-                        scope_obj.getExtraProductType(ext_prop,products_production,idx,ext_arr,scope_obj);
+                       		me.getExtraProductType(ext_prop,products_production,idx,ext_arr);
                        }else{
-                            scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                            me.setProductionTime(products_production,ext_prop);
                        }
-                    },function(err){
-                        idx++;
-                        if(idx<ext_arr.length){
-                        scope_obj.getExtraProductType(ext_prop,products_production,idx,ext_arr,scope_obj);
-                       }else{
-                            scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
-                       }
-                    });
+					}
                 }catch(ex){
                     console.log("Error on getExtraProductType "+ex);
-                    scope_obj.setProductionTime(products_production,scope_obj,ext_prop);
+                    this.setProductionTime(products_production,ext_prop);
                 }
             }
-        },setProductionTime:function(products_production,scope_obj,ext_prop) {
-            var order_items=scope_obj.model.toJSON().items;
+        },setProductionTime:function(products_production,ext_prop) {
+            var order_items=this.model.toJSON().items;
             var order_products=_.pluck(order_items,'product');
-            window.product_withExtra=ext_prop;
-            var items = scope_obj.model.get('items');
+
+			//console.log(ext_prop);
+            var items = this.model.get('items');
             order_products.forEach(function(obj,i){
-                var prod_time=_.findWhere(obj.properties, {'attributeFQN':  Hypr.getThemeSetting('productAttributes').productionTime});
+                var prod_time=_.findWhere(obj.properties, {'attributeFQN':  productAttributes.productionTime});
                 if(prod_time===undefined){
                     if(obj.bundledProducts.length>0){
-                        if(ext_prop[obj.bundledProducts[0].productCode]!==undefined){
+                        if(ext_prop[obj.bundledProducts[0].productCode]!==undefined){ // why are we only looking at the first?
                             prod_time=ext_prop[obj.bundledProducts[0].productCode];
                         }else{
-                            prod_time=1;
+                            prod_time=0;
                         }
                     }else{
-                        prod_time=1;
+                        prod_time=0;
                     }
                 }else if(prod_time.values.length>0){
                     prod_time=prod_time.values[0].value;
                 }else{
-                    prod_time=1;
-                }
-                if(prod_time<1){
-                    prod_time=1;
+                    prod_time=0;
                 }
                 items.models[i].get('product').set('prodTime',prod_time);
             });
-            Backbone.MozuView.prototype.render.call(scope_obj);
+            Backbone.MozuView.prototype.render.call(this);
         },
         calculateShippingSurcharge: function(){
             try{
                 var self = this;
                 var totalSurAmount=0;
                 Api.request("GET","/api/commerce/carts/current",{}).then(function(res) {
-                    //console.log("Done ",res);
                     if(res.handlingTotal && res.handlingTotal!==null  &&(self.model.get("enableSurChargeCustom")===undefined || !self.model.get("enableSurChargeCustom"))){
                         self.model.set("enableSurCharge",true);
                         Backbone.MozuView.prototype.render.call(self);
@@ -256,7 +261,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                         var item_model=self.model.get("items").models;
                         var isMozuHandlingNotEnabled=false;
                         _.each(pr,function(prod,i){
-                        var sur=_.findWhere(prod.properties,{'attributeFQN': Hypr.getThemeSetting('productAttributes').surCharge});
+                        var sur=_.findWhere(prod.properties,{'attributeFQN': productAttributes.surCharge});
                             if(sur && sur.values[0].value !=="0" && (prod_items[i].handlingAmount===undefined || prod_items[i].handlingAmount===null)){
                                 totalSurAmount=parseFloat(totalSurAmount+(sur.values[0].value*prod_items[i].quantity));
                                 item_model[i].set("handlingAmount",parseFloat(sur.values[0].value*prod_items[i].quantity));
@@ -264,7 +269,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                             }
                         });
                         if(isMozuHandlingNotEnabled){
-                            console.log("Setting not enabled");
+                            //console.log("Setting not enabled");
                             self.model.set("enableSurCharge",true);
                             self.model.set("enableSurChargeCustom",true);
                             self.model.set("handlingTotal",totalSurAmount);
@@ -287,7 +292,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             var me= this;
             if(me.model.get('items').length>0){
                 me.getPersonalizationInfo();
-                me.getProductionTime(this);
+                me.getProductionTime();
                 me.calculateShippingSurcharge();
             }
             preserveElement(this, ['.v-button','.p-button', '#AmazonPayButton'], function() {
@@ -564,63 +569,6 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             this.$el.find('.code_input_btn').prop('disabled',false);
 		*/
         },
-        getExtraProduct: function(productCode){
-            var product = null;
-            if(window.extrasProducts.length>0){
-                    for(var i=0;i < window.extrasProducts.length;i++){
-                        if(window.extrasProducts[i].productCode===productCode){
-                            product = window.extrasProducts[i];
-                            break;
-                        }
-                    }
-            }
-            return product;
-        },
-        getSelectedExtrasInfo:function(product){
-            var extrasInfo = [];
-            var self =this;
-            //if(selectedOptions.length>0){
-               // for(var ind=0; ind<selectedOptions.length; ind++){
-                    var options = product.get('options');
-                    if(options.length>0){
-                       for(var inc=0; inc<options.models.length; inc++){
-
-                            var option = options.models[inc];
-                            if(option.get('attributeDetail').usageType==='Extra' &&
-                               option.get('attributeDetail').dataType==='ProductCode'){
-                                var extra ={};
-                                extra.name = option.get('attributeDetail').name;
-                                extra.isRequired = option.get('isRequired');
-                                extra.attributeCode = option.get('attributeFQN').split('~')[1];
-                                extra.values=[];
-                                var values = option.get('values');
-                                for(var l=0;l<values.length;l++){
-                                    var extraValues={};
-                                    //var eprod = SharedProductInfo.getExtraProduct(values[l].value);
-									var eprod = self.getExtraProduct(values[l].value);
-                                    extraValues.price = values[l].deltaPrice;
-                                    extraValues.name = values[l].stringValue;
-                                    extraValues.value = values[l].value;
-
-
-                                    if(eprod)extraValues.mfgPartNumber = eprod.mfgPartNumber;
-                                    var inventoryInfo = values[l].bundledProduct.inventoryInfo;
-                                    if(inventoryInfo && inventoryInfo.manageStock){
-                                        extraValues.maxQty = inventoryInfo.onlineStockAvailable;
-                                    }
-                                    extraValues.quantity = values[l].bundledProduct.quantity;
-                                    extra.values.push(extraValues);
-                                }
-                                extrasInfo.push(extra);
-                            }
-                        }
-                    }
-
-
-                //}
-            //}
-            return extrasInfo;
-        },
         editPersonalize: function(e){
 			console.log("editPersonalize");
             var me=this;
@@ -637,6 +585,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 				dndEngineObj = new DNDEngine.DNDEngine(cartItemModel.get('product'), this, cartItemModel.get('id') ,token, null, false);
 			}
 			dndEngineObj.initializeAndSend();
+			this.dndEngineObj = dndEngineObj;
         },
         editPersonalizeBundleItem: function(e){
 			console.log("editPersonalizeBundleItem");

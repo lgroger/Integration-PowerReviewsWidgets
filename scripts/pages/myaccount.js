@@ -226,6 +226,13 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					},200);
 				},
 				initialize: function(){//skip overhead of everything going on in ProductView.initialize()
+					this.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
+						var wishlistlineitemId = this.wishlistlineitemId;
+						if(wishlistlineitemId){
+							$('[removeWishlistItem="'+wishlistlineitemId+'"]').trigger('click'); // remove from wishlist
+						}
+					});
+					
 					this.setOnAddToCartActions();
 				},
 				personalizeProduct: function(){
@@ -263,8 +270,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 				return;
 			}
 
-                product.set('wishlistlineitemId',self.model.get('wishlistlineitemId'));
-                product.set('wishlistId',self.model.get('wishlistId'));
                 var qty = self.model.get('quantity');
                 if(qty>=product._minQty){
                     product.set('quantity',self.model.get('quantity'));
@@ -283,8 +288,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					self.initialize(); // need to re-initialize when assigning new model;
                    
 					window.removePageLoader();
-					var lineItemId = this.model.get('wishlistlineitemId');
-					this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,self.dndToken,null,false,lineItemId);
+					this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,self.dndToken,null,false,this.wishlistlinitemid);
 					this.dndEngineObj.initializeAndSend();
                 }
                 else{
@@ -877,8 +881,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             }
             //console.log(currentItem);
 			if(currentItem){
-            	currentItem.product.wishlistId = wishlistid;
-            	currentItem.product.wishlistlineitemId=itemid;
             	var qty = parseInt(target.closest('.orders-body').find('[data-mz-value=quantity]').val(),10);
 				if(qty>0){
                 	currentItem.product.quantity = qty;

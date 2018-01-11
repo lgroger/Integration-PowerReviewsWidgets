@@ -12,7 +12,7 @@ define(
 			var me = this;
 			console.log("SharedProductInfo.getExtraProduct");
 			var product = null;
-			console.log(this.products.length);
+			//console.log(this.products.length);
 			if(this.products.length>0){
 					for(var i=0;i < this.products.length;i++){
 						if(this.products[i].get('productCode')===productCode){
@@ -40,10 +40,11 @@ define(
 		getExtras: function(str,callback,onerror){ // this gets limited information about all product codes in list
 			console.log("SharedProductInfo.getExtras");
 			var me = this;
+			if(str.length  > 0){
 			$.ajax({
 					url: "/getExtras",
 					method:"POST",
-					data: {"extras":str},
+					data: {"extras":str,responseFields:responseFields},
 					dataType:"json",
 					success:function(arr){
 						for(var i=0;i<=arr.length;i++){
@@ -60,6 +61,13 @@ define(
 						}
 					}
 				});
+			}
+			else{
+				// nothing to retrieve, just do callback
+				if(typeof callback === "function"){
+					callback();
+				}
+			}
 		},
 		getProductModel: 	function(productCode,callback,onerror){ // populates this.models - full product model whereas extras are limited pieces of info
 			console.log("SharedProductInfo.getProductModel");

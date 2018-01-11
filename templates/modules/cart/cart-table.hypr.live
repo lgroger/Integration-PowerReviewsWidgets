@@ -6,7 +6,7 @@ item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
 item.product.bundledProducts[x].imageUrl
 item.product.bundledProducts[x].token // dnd token string or mc token string for component
 item.product.bundledProducts[x].persType // will be "mc" or "dnd" for dragndrop
-item.product.prodTime
+item.product.prodTime // if over 0, then we have production time
 {% endcomment %}
 <div class="mz-cms-col-4-12 cart-items-summary shopcart_top">
     <div class="cart-estimate-total">
@@ -190,7 +190,7 @@ item.product.prodTime
                     </div>
                 {% endif %}
                <div class="item-availability">
-                    {% if item.product.prodTime and item.product.prodTime > 1 %}
+                    {% if item.product.prodTime and item.product.prodTime > 0 %}
                         <span class="avail-shipping-time">
                             {{ item.product.prodTime }} business day(s) Production time + Shipping
                             <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
@@ -198,7 +198,7 @@ item.product.prodTime
                             </span>
                         </span>
                     {% else %}
-                        {% if item.product.prodTime and item.product.prodTime ==1 %}
+                        {% if item.product.prodTime == 0 %}
                             Availability:
                             <span class='avail-value'>In Stock</span>
                         {% endif %}
@@ -327,7 +327,7 @@ item.product.prodTime
                     </div>
                 {% endif %}
                 <div class="item-availability">
-                    {% if item.product.prodTime and item.product.prodTime > 1 %}
+                    {% if item.product.prodTime and item.product.prodTime > 0 %}
                         <span class="avail-shipping-time">
                             {{ item.product.prodTime }} business day(s) production time + shipping
                             <span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
@@ -335,8 +335,10 @@ item.product.prodTime
                             </span>
                         </span>
                     {% else %}
+                     {% if item.product.prodTime == 0 %}
                         Availability:
                         <span class='avail-value'>In Stock</span>
+                    {% endif %}
                     {% endif %}
                 </div>
                 <div class="edit_wishlist_cart">
