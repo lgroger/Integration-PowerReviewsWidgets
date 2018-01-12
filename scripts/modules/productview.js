@@ -572,7 +572,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 							// 3 days for express
 							me.model.set("expressDate",me.formatDateString(result_date));
 						}
-						if(!isMelt && addedDays===productionTime+5){
+						if(addedDays===productionTime+5){
 							// 5 days for standard
 							me.model.set("delDate",me.formatDateString(result_date));
 						}
@@ -1388,7 +1388,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 							order_quantity:parseInt(me.model.get('quantity'),10),
 							currency:"USD",
 							line_items:[{
-								product_name:me.model.toJSON().content.productName,
+								product_name:gaitem.product.name,
 								product_id:track_product_code[0],
 								product_price:parseFloat(track_price),
 								product_quantity:parseInt(me.model.get('quantity'),10)
@@ -1399,7 +1399,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					if(typeof addthis !== "undefined"){
 						//Rerender addthis buttons
 						addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
-						addthis.update('share', 'title',me.model.toJSON().content.productName); 
+						addthis.update('share', 'title',gaitem.product.name); 
 						addthis.toolbox(".addthis_inline_share_toolbox"); // quickview had this
 						addthis.toolbox('.cart-over-addthis'); // product page had this
 					}
@@ -1407,12 +1407,15 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					console.log(me.gaAction);
 					console.log(me.gaEvent);
 					console.log(track_price*me.model.get('quantity'));
-					console.log(me.model.toJSON().content.productName);
+					console.log(gaitem.product.name);
 					console.log(track_product_code);
 					console.log(track_price);
 					console.log(me.model.get('quantity'));
 					console.log(window.location.origin+me.model.toJSON().url);
-					console.log(me.model.toJSON().content.productName);
+					console.log(gaitem.unitPrice.extendedAmount);
+					console.log(gaitem.quantity);
+					console.log(gaoptionval);
+					console.log(gaitem.product.categories[0].id);
 				} else {
 					me.model.trigger("error", { message: Hypr.getLabel('unexpectedError') });
 				}

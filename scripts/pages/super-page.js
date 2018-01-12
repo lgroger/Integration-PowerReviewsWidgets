@@ -18,8 +18,8 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 
 		var productView = new QuickViewProductView({
 			model: product,
-			gaAction: 'Buysuperpagepersonal',
-			gaEvent: 'buysuperpagepersonalize'			
+			gaAction: 'Buysuperpages',
+			gaEvent: 'buysuperpage'		
 		});
 
 		productView.personalizeProduct(personalizebutton);

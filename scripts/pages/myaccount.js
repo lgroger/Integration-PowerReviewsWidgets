@@ -226,8 +226,13 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					},200);
 				},
 				initialize: function(){//skip overhead of everything going on in ProductView.initialize()
+					var me = this;
+					console.log(this.model);
+					console.log("WishListProductView initialize");
 					this.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-						var wishlistlineitemId = this.wishlistlineitemId;
+						console.log("wishliWishListProductViewst.addedtocart callback (from initialize)");
+						var wishlistlineitemId = me.wishlistLineitemId;
+						console.log(wishlistlineitemId);
 						if(wishlistlineitemId){
 							$('[removeWishlistItem="'+wishlistlineitemId+'"]').trigger('click'); // remove from wishlist
 						}
@@ -240,9 +245,9 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             var self= this;
             // DnD Code  Start
             var option = this.model.get('options').get(productAttributes.dndToken);
-            var dndToken = null;
-			console.log(self.dndToken);
+			console.log(option);
 			if(!self.dndToken){
+				var dndToken = null;
 				if(option){
 					var dndtokenvalue = option.get('shopperEnteredValue');
 					if(dndtokenvalue===undefined || dndtokenvalue===""){
@@ -288,14 +293,12 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					self.initialize(); // need to re-initialize when assigning new model;
                    
 					window.removePageLoader();
-					this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,self.dndToken,null,false,this.wishlistlinitemid);
+					console.log(this.wishlistLineitemId);
+					this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,self.dndToken,null,false,this.wishlistLineitemId);
 					this.dndEngineObj.initializeAndSend();
                 }
                 else{
 					// open quickview overlay
-                    product.on('addedtowishlist', function (cartitem) {
-                        $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                    });
 					$('body').css({overflow : 'hidden'});
 					$('body').append('<div id="mz-quick-view-container"></div>');
 					var productView = new QuickViewProductView({
@@ -303,6 +306,17 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 						gaAction: 'Buywishlistproduct',
 						gaEvent: 'buywishlist'
 					});
+					
+					// since we are using different model than this.model, redo what this.initialize() does...
+					productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
+						console.log("productView WishListProductViews.addedtocart callback");
+						var wishlistlineitemId = self.wishlistLineitemId;
+						console.log(wishlistlineitemId);
+						if(wishlistlineitemId){
+							$('[removeWishlistItem="'+wishlistlineitemId+'"]').trigger('click'); // remove from wishlist
+						}
+					});
+					
 					productView.render();
                     window.removePageLoader();
 					$('#mz-quick-view-container').fadeIn(350);
@@ -331,10 +345,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 			});
 			
 			obj.wishlistId = opts.wishlistId || null;
-			obj.wishlistlineitemId = opts.wishlistlineitemId || null;
+			obj.wishlistLineitemId = opts.wishlistLineitemId || null;
 			obj.dndToken = opts.dndToken || null;
-			
-			console.log(obj.dndToken);
 			return obj;
 		};
 
@@ -843,7 +855,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
     }
     });
 
-
+//TO DO: this should be changed to modules/my-account/my-account-wishlist-item-listing b/c modules/my-account/my-account-wishlist contains multiple wishlists and all shouldn't have to be redrawn when changes are made on one
     var WishListView = Backbone.MozuView.extend({
         templateName: 'modules/my-account/my-account-wishlist',
         initialize: function(){
@@ -867,7 +879,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 			console.log("editPersonalize");
             window.showPageLoader();
             var target =  $(e.currentTarget);
-            var wishlistid = target.closest('.mz-itemlisting-details').find('[wishlist-id]').attr('wishlist-id');
+			var wishlistid = target.parents('[wishlist-id]').attr('wishlist-id');
             var itemid = target.attr('id');
             var wishlistCollection = this.model.get('items').where({'id':wishlistid});
             var wishlist = wishlistCollection[0];
@@ -888,15 +900,14 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					currentItem.product.quantity = currentItem.quantity;
 				}
 				var productModel = new ProductModels.Product(currentItem.product);
-				var el = $(target).parents(".mz-itemlisting wishlist-item");
+				var el = $(target).parents(".wishlist-item-listing");
 				console.log(el);
 
-				//productModel.set({'wishlistlineitemId':itemid});
 				var myProductView = new WishListProductView({
 					model: productModel,
 					el: el,
-					wishlistid: wishlistid,
-					wishlistlineitemId: itemid
+					wishlistId: wishlistid,
+					wishlistLineitemId: itemid
 				});
 				myProductView.personalizeProduct();
 			}
@@ -905,8 +916,11 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 			console.log("addToCart");
             window.showPageLoader();
             var target =  $(e.currentTarget);
-            var wishlistid = target.closest('.mz-itemlisting-details').find('[wishlist-id]').attr('wishlist-id');
+            var wishlistid = target.parents('[wishlist-id]').attr('wishlist-id');
             var itemid = target.attr('id');
+			console.log(target);
+			console.log(itemid);
+			console.log(wishlistid);
             var wishlistCollection = this.model.get('items').where({'id':wishlistid});
             var wishlist = wishlistCollection[0];
             var wishlistitems = wishlist.get('items');
@@ -923,40 +937,16 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             }
             if(currentItem.product.productUsage ==="Bundle"){
                 window.location.href="/p/"+currentItem.product.productCode;
-            }else if(target.attr("location")==="quickview"){ // I'm not sure what ever creates this case?
-				var productModel1 = SharedProductInfo.getProductModel(currentItem.product.productCode,this.addToCart(this,e),
-										function(err) {
-											console.log(err);
-											window.removePageLoader();
-										});
-				if(productModel1){
-                    $('body').append('<div id="mz-quick-view-container"></div>');
-					var productView1 = new QuickViewProductView({
-						model:productModel1,
-						gaAction: 'Buywishlistproduct',
-						gaEvent: 'buywishlist'
-					});
-					productView1.render();
-					window.removePageLoader();
-					$('#mz-quick-view-container').fadeIn(350);              
-                }
+            }else if(target.attr("location")==="quickview"){ // to find use-case, look for this in hypr: <button ... location="quickview">
+				this.showQuickViewExtra(currentItem.product.productCode,currentItem.product.options,itemid);
             }else if(currentItem.product.productType==="ExtrasLikeVariants" && currentItem.product.bundledProducts.length>0){ // extras like variants with extra selected already
-                console.log("ExtrasLikeVariants");
-                var prodArr=_.pluck(currentItem.product.bundledProducts,"productCode");
                 if(isDND){
                     this.editPersonalize(e);
                 }else{
-					this.showQuickViewExtra(currentItem.product.productCode,currentItem.product.options);
+					this.showQuickViewExtra(currentItem.product.productCode,currentItem.product.options,itemid);
                 }   
             }else{
-                currentItem.product.wishlistlineitemId=itemid;
                 var productModel = new ProductModels.Product(currentItem.product);
-                //Bloomreach add to cart event start
-                var productUsage = productModel.attributes.productUsage,
-                    variationProductCode = productModel.attributes.variationProductCode,
-                    sku = "";
-
-                //end
                 productModel.on('error', function(a){
                     console.log(a);
                     $('.se-pre-con').hide(); 
@@ -968,8 +958,15 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					model: productModel,
 					gaAction: 'Buywishlistproduct',
 					gaEvent: 'buywishlist',
-					el: $(e.target).parents(".orders-body")
+					el: $(e.target).parents(".wishlist-item-listing"),
+					templateName: "modules/my-account/my-account-wishlist-item-listing"
 				}); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
+
+				// delete from wishlist when adding to cart
+				productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
+					console.log(itemid);
+					$('[removeWishlistItem="'+itemid+'"]').trigger('click'); // remove from wishlist
+				});
 				
                 productView.addToCart();
             }
@@ -980,11 +977,16 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             Wishlist.deleteWishlist($(me).attr('id')).then(function(res){
                 $(me).parents(".wishlist-item").remove();
             });
-        },showQuickViewExtra:function(prod_code,options) {
+        },showQuickViewExtra:function(prod_code,options,wishlistitemid) {
             console.log("showQuickViewExtra");
-              Api.get('product',prod_code).then(function(res) {
-                    var productModel1 = new ProductModels.Product(res.data);
-                    var objj =options;
+			
+				var productModel1 = SharedProductInfo.getProductModel(prod_code,this.showQuickViewExtra.bind(this,prod_code,options,wishlistitemid),
+										function(err) {
+											console.log(err);
+											window.removePageLoader();
+										});
+				if(productModel1){
+					var objj =options;
                     if(objj){
                         _.each(objj, function(objoptions) {
                             var val = objoptions.value?objoptions.value:objoptions.shopperEnteredValue;
@@ -999,16 +1001,20 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					});
 					productView.render();
 					window.removePageLoader();
-					$('#mz-quick-view-container').fadeIn(350);              
-                },function(err) {
-                    console.log(err);
-                    window.removePageLoader();
-                });
+					$('#mz-quick-view-container').fadeIn(350);
+					
+					// delete from wishlist when adding to cart
+					productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
+						console.log(wishlistitemid);
+						$('[removeWishlistItem="'+wishlistitemid+'"]').trigger('click'); // remove from wishlist
+					});
+					
+                }
         },
         deleteItemFromWishlist: function(e) {
             var viewM = this;
             var me = e.target;
-            var wishlistId = $(me).parents(".wishlist-item").find('.deleteWishlist').attr('id');
+			var wishlistId = $(me).parents('[wishlist-id]').attr('wishlist-id');
             Wishlist.removeWishlistItem(wishlistId, $(me).attr('id')).then(function(){
                 $(me).parents(".orders-body.mz-cms-col-12-12").remove();
                 Wishlist.getAllWishlistData().then(function(res){
@@ -1023,7 +1029,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         moveToWishlist: function(e) {
             var viewM = this;
             var me = e.target;
-            var wishlistId = $(me).parents(".wishlist-item").find('.deleteWishlist').attr('id');
+			var wishlistId = $(me).parents('[wishlist-id]').attr('wishlist-id');
             Wishlist.moveToWishlistInit(wishlistId, $(me).attr('id'), $(me).attr('original-id'), function(){
                 Wishlist.getAllWishlistData().then(function(res){
                     var newModel = window.accountModel.get('wishlist');
