@@ -37,7 +37,7 @@ define(
 			});
 			return false;
 		},
-		getExtras: function(str,callback,onerror){ // this gets limited information about all product codes in list
+		getExtras: function(str,callback,onerror){ // this gets limited information about all product codes in list - arcjs & custom routes must be setup in tenant for shindigz.MediaClip.1.0.0.Release storefront/getExtras.js
 			console.log("SharedProductInfo.getExtras");
 			var me = this;
 			if(str.length  > 0){

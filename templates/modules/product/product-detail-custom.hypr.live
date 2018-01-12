@@ -192,7 +192,7 @@
                     <span class="is-crossedout">
                        {{model.price.price|currency}}
                     </span>
-                    <span class="highlight-pink">You Save {{ perAmt|floatformat(2) }}%</span>
+                    <span class="highlight-pink">You Save {{ perAmt|floatformat(0) }}%</span>
                   </div>
               {% endwith %}
             {% endwith %}
