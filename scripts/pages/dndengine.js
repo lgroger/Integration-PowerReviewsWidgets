@@ -26,6 +26,14 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		 .appendTo(form);
 	};
 	var trackBulkExtraRequests = [];
+	var findOptionValue = function(values,productCode){
+		for(var l=0;l<values.length;l++){
+			if(values[l].value === productCode){
+				return values[l].bundledProduct.inventoryInfo;
+			}
+		}
+		return false;
+	};
 	var getDNDExtrasFromOptions = function(options,extrasToHideArr,callback){
 		console.log("getDNDExtrasFromOptions");
 		var productStr = "";
@@ -253,7 +261,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
         self.getParameters=function(callback){
             var me = this;
 			var dndArr = []; // array of personalized item info
-			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMC,childMC,newItem;
+			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMC,childMC,newItem,inventoryInfo;
 
 			// parent info
 			mfgpartnumber = this.model.get('mfgPartNumber');
@@ -309,6 +317,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 											childDND = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
 											childDesign = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
 											childUOM = getPropteryValueByAttributeFQN(product ,me.productAttributes.unitOfMeasure);
+											
+											// note: we don't allow customer to change quantity when editting personalization which is good b/c the inventory info isn't available here...
 											
 											newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;	
 											newItem.mcCode = (childMC && childMC.length)?childMC:parentMC;
@@ -374,6 +384,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							newItem = new dndItem();
 							newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);		
 							newItem.mcCode = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode);
+
+							inventoryInfo = findOptionValue(option.get('values'),productCode);
+							if(inventoryInfo && inventoryInfo.manageStock){
+								newItem.maxQty = inventoryInfo.onlineStockAvailable;
+							}
+							
 							if(newItem.dndCode || newItem.mcCode){
 								newItem.isBundle = true;
 								newItem.ecometrySku = product.get('mfgPartNumber');
@@ -440,6 +456,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 									newItem.productID = me.model.get('productCode');
 									newItem.itemDescription = me.model.get('content.productName');
 									newItem.parentProductID = null;
+									
+									inventoryInfo = findOptionValue(option.get('values'),productCode);
+									if(inventoryInfo && inventoryInfo.manageStock){
+										newItem.maxQty = inventoryInfo.onlineStockAvailable;
+									}
+									
 									newItem.setFromModel(me);
 									dndArr.push(newItem);
 								}
