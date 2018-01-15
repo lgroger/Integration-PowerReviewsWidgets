@@ -135,7 +135,7 @@
             <div class="party_packs_btns">
             <div class="party_packs_qty">
               <p>
- {#                Qty : #}
+            {# there is a potential issue here for items with volume pricing that have min qty. I couldn't figure out how to get that data returned... #}
                 <span class="super-page-qty">
                   <input type="button" value="-" class="qtyminus" field="quantity">
                   <input type="text" id="qty-{{product.productCode}}" autocomplete="off" min="1" max="9999" maxlength="4" name="quantity" oninput="maxLengthCheck(this)" onkeypress="return event.charCode >= 48 &amp;&amp; event.charCode <= 57" value="1" class="qty" data-mz-value="quantity">

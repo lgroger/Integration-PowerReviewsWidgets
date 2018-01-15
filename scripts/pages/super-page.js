@@ -16,17 +16,23 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 			 return;
 		}
 
+		product.set({
+			'quantity': $("#qty-" + productCode).val()
+		});
+		
 		var productView = new QuickViewProductView({
 			model: product,
 			gaAction: 'Buysuperpages',
-			gaEvent: 'buysuperpage'		
+			gaEvent: 'buysuperpage',
+			el: $(personalizebutton).parents("[id='product-"+productCode+"']"),
+			additionalEvents:{}
 		});
 
 		productView.personalizeProduct(personalizebutton);
 		window.removePageLoader();
 	};
-	var initProductToAddToCart = function(productCode){
-		var product = SharedProductInfo.getProductModel(productCode,initProductToAddToCart.bind(null,productCode));
+	var initProductToAddToCart = function(productCode,button){
+		var product = SharedProductInfo.getProductModel(productCode,initProductToAddToCart.bind(null,productCode,button));
 		if(!product){
 			return;
 		}
@@ -43,13 +49,15 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 		var productView = new QuickViewProductView({
 			model: product,
 			gaAction: 'Buysuperpages',
-			gaEvent: 'buysuperpage'
+			gaEvent: 'buysuperpage',
+			el: $(button).parents("[id='product-"+productCode+"']"),
+			additionalEvents:{}
 		}); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
 		
 		product.set({
 			'quantity': $("#qty-" + productCode).val()
 		});
-		product.addToCart();
+		productView.addToCart();
 		
 	};
 	
@@ -124,7 +132,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
         $('.addToCart').click(function(e){
             window.showPageLoader();
             var productCode = $(e.currentTarget).data('product_id');
-			initProductToAddToCart(productCode);
+			initProductToAddToCart(productCode,$(e.currentTarget));
         });
         $(".personalize").click(function(e){
             var productCode = $(e.currentTarget).data('product_id');

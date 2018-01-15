@@ -63,6 +63,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			console.log("productview constructor");
 			if(conf){
 				// custom properties that we want to be able to set by using new ProductView({});
+				this.additionalEvents = conf.additionalEvents || this.additionalEvents;
 				this.noCalcDelDate = conf.noCalcDelDate || this.noCalcDelDate;
 				this.customAfterRender = conf.customAfterRender || this.customAfterRender;
 				this.gaAction = conf.gaAction || this.gaAction;
