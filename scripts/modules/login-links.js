@@ -1,7 +1,7 @@
 /**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _) {
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'modules/marketo-subscribe', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _, Marketo) {
 
     var usePopovers = function() {
         // return !Modernizr.mq('(max-width: 480px)');
@@ -159,6 +159,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (this.$el.hasClass('mz-forgot')){
                 this.slideRight();
             }
+			Marketo.loadSubscribe(); // begin preloading marketo javascript
         },
         handleEnterKey: function (e) {
             if (e.which === 13) {
@@ -373,7 +374,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         lastName: lastName,
                         acceptsMarketing:optMarketing,
                         attributes: [{
-                             attributeDefinitionId: Hypr.getThemeSetting('emailSubscription'),
                              fullyQualifiedName: "tenant~email-subscription",
                              values: [optMarketing]
                         }],
@@ -388,6 +388,16 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             if (this.validateSignUp(payload)) {   
                 //var user = api.createSync('user', payload);
                 // this.setLoading(true);
+				
+				if(optMarketing){
+					// TO DO: even moving this before api call, it doesn't seem to fire quickly enough to return before user is redirected
+					var callback = function(){
+						console.log('marketo done');
+						//$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);'>OK</button></div></div>");  
+					};
+					Marketo.subscribe(email,callback);
+				}
+				
                 return api.action('customer', 'createStorefront', payload).then(function () {
                     if (self.redirectTemplate) {
                         window.location.pathname = self.redirectTemplate;
@@ -399,18 +409,6 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                         else{
                             //window.location.reload();
                             window.location.href = "/myaccount";
-                        }
-                    }
-                    if(optMarketing){
-                        window.email_signup.vals({"Email":email,"subscribeShindigz":"yes","unsubscribeShindigz":"no"});
-                    
-                        if (window.email_signup.submittable()) {                       
-                           
-                            window.email_signup.submit();
-                            window.email_signup.onSuccess(function(values, followUpUrl) {                            
-                                //$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);'>OK</button></div></div>");                            
-                                return false;
-                            });
                         }
                     }
                 }, self.displayApiMessage);

@@ -432,7 +432,7 @@
       {% endif %}
 
       <!-- Bloom reach integration end -->
-
+{% comment %} <!-- LG 01/12/18 moved this to modules/marketo-subscribe.js -->
       <!-- Start Email Subscription Integration Marekto Form Please Do Not Change -->
       <script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
       <form id="mktoForm_{{ themeSettings.mktoEmailSubscription }}" style="display:none"></form>
@@ -440,6 +440,7 @@
           window.email_signup = form;
       });</script>
       <!-- End Email Subscription Integration Marekto Form Please Do Not Change -->
+{% endcomment %}
 
       <script>
   	//maxlength validator
