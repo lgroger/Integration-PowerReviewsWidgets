@@ -25,7 +25,8 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 			gaAction: 'Buysuperpages',
 			gaEvent: 'buysuperpage',
 			el: $(personalizebutton).parents("[id='product-"+productCode+"']"),
-			additionalEvents:{}
+			additionalEvents:{},
+			templateName: 'modules/product/super-page-product'
 		});
 
 		productView.personalizeProduct(personalizebutton);
@@ -51,7 +52,8 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 			gaAction: 'Buysuperpages',
 			gaEvent: 'buysuperpage',
 			el: $(button).parents("[id='product-"+productCode+"']"),
-			additionalEvents:{}
+			additionalEvents:{},
+			templateName: 'modules/product/super-page-product'
 		}); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
 		
 		product.set({
