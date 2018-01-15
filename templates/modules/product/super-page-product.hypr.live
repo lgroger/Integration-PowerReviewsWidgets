@@ -135,6 +135,7 @@
               </p>
             </div>
           {# <button ></button> #}
+          {# TO DO: this can be simplified... #}
               {% if model.inventoryInfo.manageStock == true %}
                 {% if model.inventoryInfo.onlineStockAvailable > 0 %}
                     {% if model.productUsage == "Bundle" %}
