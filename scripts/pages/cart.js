@@ -2,9 +2,9 @@
 define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu','modules/api', 
     'modules/models-cart', 'modules/cart-monitor', 'hyprlivecontext', 'modules/soft-cart', 
     'hyprlive', 'modules/preserve-element-through-render', 'modules/amazonPay', 
-    'vendor/wishlist', 'pages/dndengine', 'modules/models-product', "modules/shared-product-info"], 
-function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo) {
-	
+    'vendor/wishlist', 'pages/dndengine', 'modules/models-product', "modules/shared-product-info", "shim!vendor/mediaclip[modules/jquery-mozu=jQuery]>jQuery","modules/mc-cookie"], 
+function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo, mcHub,McCookie) {
+	//'shim!//api.mediacliphub.com/scripts/hub.min[modules/jquery-mozu=jQuery]>jQuery'
 	var mcplaceholder = "/resources/images/mcplaceholder.png";
 	var storedMCimages = [];
 	var findMcSrc = function(token){
@@ -342,7 +342,41 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 			uniqueList=arr.filter(function(item,i,allItems){
 			    return i==allItems.indexOf(item);
 			}); */
+			var userToken;
+			// do this outside of jquery each so that it only fires once if it needs to fire at all
+			if($("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").length > 0 && !window.mediaclip.hub.initSettings){
+				var userdata = require.mozuData('pagecontext').user;
+				userToken = McCookie.getToken(userdata,me.afterRender.bind(me));
+				if(userToken){
+					// pass in storeUserToken
+					window.mediaclip.hub.init({storeUserToken:userToken, keepAliveUrl: "/renew-personalization"});
+				}
+				else{
+					return; // McCookie.getToken will afterRender again...
+				}
+			}
 
+			$("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").each(function(){ // find images that contain the mcplaceholder so we can get actual image
+				var previewimg = this;
+				var projectId = $(this).attr("data-mz-token");
+				var mcsrc = findMcSrc(projectId);
+				if(mcsrc){
+					$(previewimg).attr("src",mcsrc);
+				}
+				else{
+					window.mediaclip.hub.getProjectThumbnailSrc(projectId).done(function(newsrc){
+						// add new image
+						$(previewimg).attr("src",newsrc);
+
+						// store for later
+						var newEntry = {"token":projectId,"src":newsrc};
+						storedMCimages.push(newEntry);
+
+					}).fail(function(jqXhr, textStatus, errorThrown){
+						console.error('Failed loading project thumbnail for ' + projectId, textStatus, errorThrown);
+					});
+				}
+			});
 			
         },
         removeCoupon : function(e){
