@@ -34,7 +34,6 @@
                 'modules/views-messages',
                 'modules/views-paging',
                 'modules/views-productlists',
-                'modules/views-productimages',
 				'modules/dnd-token',
 				'modules/shared-product-info',
                 'modules/soft-cart',
