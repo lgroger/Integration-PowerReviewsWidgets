@@ -1,5 +1,7 @@
 /* globals V: true */
-require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api",'modules/dnd-token'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api,DNDToken) {
+require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api",'modules/dnd-token',"modules/mc-cookie"],
+function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api,DNDToken,McCookie) {
+	var mcplaceholder= "/resources/images/mcplaceholder.png";
     var CheckoutStepView = EditableView.extend({
         getExtraVar: function () {
             return this.model.get('address.countryCode');
@@ -268,8 +270,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 						try{
 							var dndTokenJSON=JSON.parse(dndTokenObj.shopperEnteredValue);
 							var info = DNDToken.getTokenData(dndTokenJSON);
-							if(info.src){
-								me.model.get("items")[i].product.imageUrl=info.src;
+							if(info.type ==="mc"){
+								me.model.get("items")[i].product.imageUrl = mcplaceholder;
+							}
+							else{
+								if(info.src){
+									me.model.get("items")[i].product.imageUrl=info.src;
+								}
 							}
 						}
 						catch(err){
@@ -1241,6 +1248,25 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
              //scope_obj.model.get("items")[idx].est_date=ship_date.toISOString().slice(0,10).replace(/\-/g,"/");
              scope_obj.renderCustomAfterShip(scope_obj);
         }, 
+		getMcImages: function(){
+			if($("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").length > 0){
+				var mcCallback = function(){
+					console.log("cart mcCallback");
+					$("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").each(function(){ // find images that contain the mcplaceholder so we can get actual image
+						console.log("cart img each callback");
+						var previewimg = this;
+						var projectId = $(this).attr("data-mz-token");
+						
+						var imgCallback = function(newsrc){
+							$(previewimg).attr("src",newsrc);
+						};
+						
+						McCookie.getProjectThumbnailSrc(projectId,imgCallback);
+					});
+				};
+				McCookie.initializeHub(mcCallback);
+			}
+		},
         // override loading button changing at inappropriate times
         handleLoadingChange: function () { }
     });
@@ -2600,8 +2626,14 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 					// so this seems to do exactly the same thing as OrderSummaryView.showPersonalizeImage() but I'll update it anyway, just in case...
 					var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
 					var info = DNDToken.getTokenData(fulldndtoken);
-					if(info.src){
-						$(this).attr("src",info.src);
+					 
+					if(info.type ==="mc"){
+						$(this).attr("src",mcplaceholder);
+					}
+					else{
+						if(info.src){
+							$(this).attr("src",info.src);
+						}
 					}
 				  }
 				catch(e){
