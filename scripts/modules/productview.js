@@ -489,7 +489,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				}
 			
 				if(me.model.get('baseIsConfigured')){ // don't show delivery dates if baseIsConfigured is false b/c we could show inaccurate information based on where productionTime is stored on a product (ex. banner doesn't have productionTime on parent, just on the extras and if no extras are selected yet, we could show a date too early)
-					if(productionTime){
+					if(productionTime && parseInt(productionTime,10) > 0){
 						me.model.set('productionTime',productionTime);
 						if(!this.noCalcDelDate){ // we don't need to calculate these on quickview
 							if(melt){
@@ -502,9 +502,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					else{
 						if(!this.noCalcDelDate){ // we don't need to calculate these on quickview
 							if(melt){
-								me.calc_only_productionTime(this.timeNow,0);
+								me.calc_only_productionTime(this.timeNow,1);
 							}else{
-								me.skip_holidays(this.timeNow,0,false);
+								me.skip_holidays(this.timeNow,1,false); // if no production time, add 1 day
 							}
 						}
 					}
@@ -650,7 +650,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue); // fires this.render();
                     }
-                }
+                }else{
+					option.unset('value'); // fires this.render();
+				}
             }
         },
         configureSlitOption: function (e) {
@@ -1136,11 +1138,42 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					var mfgpartnumber = this.model.get('mfgPartNumber');
 					if(configurableOptionsConfigured && (this.model.get('productUsage')==='Bundle' ||  (mfgpartnumber && mfgpartnumber.length > 0))){
 						this.model.set('baseIsConfigured',true);
+						if(productInventoryInfo && productInventoryInfo.manageStock && productInventoryInfo.onlineStockAvailable < minqty){
+							this.model.set('isConfigured',true); // in this case, there is an option unselected yet but the base is out of stock so mark as if all is configured so that it shows out of stock up front
+						}
+						else{
+							this.model.set('isConfigured',false);
+						}
 					}
 					else{
-						this.model.set('baseIsConfigured',false);
+						var variations = this.model.get('variations');
+						if(variations && variations.length > 0){
+							var allConfigurableOOS = true; // start at out of stock and set to false if we find any options in stock
+							for(inc=0; inc<variations.length; inc++){ // options includes both extras and configurable options
+								var variation = variations[inc];
+								var variationInventoryInfo = variation.inventoryInfo;
+								if(variationInventoryInfo && variationInventoryInfo.manageStock && variationInventoryInfo.onlineStockAvailable < minqty){
+									// this option is out of stock
+								}
+								else{
+									allConfigurableOOS = false;
+								}
+							}
+							if(allConfigurableOOS){
+								// mark as if they have made selections for everything so that it shows out of stock since there are no configured options in stock
+								this.model.set('baseIsConfigured',true);
+								this.model.set('isConfigured',true);
+							}
+							else{
+								this.model.set('baseIsConfigured',false);
+								this.model.set('isConfigured',false);	
+							}
+						}
+						else{
+							this.model.set('baseIsConfigured',false);
+							this.model.set('isConfigured',false);
+						}
 					}
-					this.model.set('isConfigured',false);
 					this.model.set('isInStock',false);
 				}
 			}
