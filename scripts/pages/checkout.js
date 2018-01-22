@@ -226,7 +226,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             /* window.usa_48=_.filter(order_item_list, function(obj) {
                 return  _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').usa48})[0].values[0].value===true;
             });
-            console.log("US ship : "+window.usa_48.length);*/
+           // console.log("US ship : "+window.usa_48.length);*/
             window.order_obj_win=require.mozuData("checkout").items;
             var tmp_address=this.model.get("fulfillmentInfo.fulfillmentContact.address").toJSON();
             window.address_obj={
@@ -318,7 +318,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                                     var dl=((res.dstOffset/60)/60);
                                     estTime.setDate(tmp.getDate());
                                     estTime.setHours(utcTime-(timeOffset-dl));
-                                    console.log(estTime);
+                                    //console.log(estTime);
                                     if(estTime.getHours()>=15){
                                         if( estTime.getHours()==15 && estTime.getMinutes()<30){
                                             //scope_obj.checkProductionTime(scope_obj,isUSA,estTime);
@@ -2216,7 +2216,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
                                 api.request('PUT','/api/commerce/customer/accounts/'+pageContext.user.accountId+'',obj).then(
                                 function(res){
-                                    console.log(res);
+                                   // console.log(res);
                                 });
 
           							        self_me.model.addCoupon();

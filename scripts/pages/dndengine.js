@@ -35,7 +35,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		return false;
 	};
 	var getDNDExtrasFromOptions = function(options,extrasToHideArr,callback){
-		console.log("getDNDExtrasFromOptions");
+		//console.log("getDNDExtrasFromOptions");
 		var productStr = "";
 		var option,attributeCode,values;
 		// make list of all product codes we need to get info for...
@@ -275,7 +275,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				newItem = new dndItem();
 				newItem.productID = this.model.get('productCode');
 
-				console.log(this.isComponent);
+				//console.log(this.isComponent);
 				if(this.isComponent){
 					// bundle component
 					newItem.itemDescription = this.model.get('content.productName');
@@ -477,13 +477,13 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			return(dndArr);
         };
 		self.initializeAndSend = function(){
-			console.log("initializeAndSend");
+			//console.log("initializeAndSend");
 			this.initialize();
 			this.send();
 		};
         self.initialize = function(){
 			var me = this;
-			console.log("initialize");
+			//console.log("initialize");
             // LG change - updated dummyurl to remove doubleslash within url
             var dummyurl = me.dndEngineUrl+"ajax/nosession/loading.html"; // url of static html page that demonstrates that that loading is in progress
             var dndpopup = $('<div>').addClass('dnd-popup');
@@ -572,7 +572,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		self.onDNDSubmit = function(e){
 			var me = this;
 			// function that will listen for post back from iframe
-			console.log('onDNDSubmit',e.data);
+			//console.log('onDNDSubmit',e.data);
 					
 			// receive data 
 			var responseData = e.data;
@@ -629,14 +629,14 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		};
 		self.unsend = function(){
 			// undoes event attachment done in send()
-			console.log("unsend");
+			//console.log("unsend");
 			var deleteMethod = window.removeEventListener ? "removeEventListener" : "detachEvent";
 			var deleter = window[deleteMethod];
 			var messageEvent = deleteMethod == "detachEvent" ? "onmessage" : "message";
 			deleter(messageEvent,this.eventBound,false);
 		};
 		self.send = function(){
-			console.log("send");
+			//console.log("send");
 			this.dndArr = this.getParameters(this.send.bind(this));
             if(!this.dndArr){
 				return; // if not returned, exit b/c we are waiting on api call and this will automatically be called again....
@@ -686,7 +686,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             });
         };
 		self.doPers = function(){
-			console.log("doPers");
+			//console.log("doPers");
 			var dndItem = this.dndArr[this.index];
 			var remainPersItems = (this.index!==(this.dndArr.length-1))?true:false;
 			var me = this;
@@ -785,7 +785,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				// launch media clip window
 				//console.log(dndItem.mcCode);
 				
-				console.log(me.model.getConfiguredOptions());
+			//	console.log(me.model.getConfiguredOptions());
 				
 				/* mediaclip will add to cart by making a server-side api call - we'll need to provide it with the same info that mozu-storefront-sdk product addtocart does
 				    product: {
@@ -811,9 +811,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					},
 					dataType:"json",
 					success:function(data){
-						console.log(data);
+					//	console.log(data);
 						var url = "/personalize/"+data.id;
-						console.log(url);
+					//	console.log(url);
 						
 						// create new form that posts to mediaclip url (must be get, no post)
 						var form = $('<form action="'+url+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');

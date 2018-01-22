@@ -97,7 +97,7 @@ function ($,Hypr,Api,ProductView) {
 				templateName: 'modules/product/quickview',
 				noCalcDelDate: true, // remove overhead of loading holidays to calculate ship/delivery date
 				customAfterRender: function(){
-					console.log('customAfterRender');
+					//console.log('customAfterRender');
 					
 					var me = this;
 
@@ -197,7 +197,7 @@ function ($,Hypr,Api,ProductView) {
 			}
 			var obj = new ProductView(opts);
 			obj.model.on('addedtocart', function (cartitem, prod) {
-				console.log("quickview on addedtocart");
+				//console.log("quickview on addedtocart");
 				// only custom code needed for not already in productView.initialize
 				$('#mz-quick-view-container').fadeOut(100, function() {
 					 $('#mz-quick-view-container').remove();

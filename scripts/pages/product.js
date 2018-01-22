@@ -5,7 +5,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
     });
 	
      var initProductView = function(product){
-		console.log("initProductView");
+		//console.log("initProductView");
         product.on('error', function(){
             $('.dnd-popup').remove();
             $('body').css({overflow: 'auto'});
@@ -27,7 +27,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
 */
 		 // extend afterRender() to handle alternate images and power reviews display custom to PDP (not used by quick view)
 		 productView.customAfterRender = function(){
-			console.log('customAfterRender');
+			//console.log('customAfterRender');
 			$('.slider-wrap').on('click','img',function(){
                     var url = $(this).attr('data-image-url');
                     $(this).parent().find("img").removeClass("active");

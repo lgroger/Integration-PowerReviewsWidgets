@@ -216,7 +216,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
                        }
 					}
                 }catch(ex){
-                    console.log("Error on getExtraProductType "+ex);
+                    //console.log("Error on getExtraProductType "+ex);
                     this.setProductionTime(products_production,ext_prop);
                 }
             }
@@ -287,7 +287,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             }
         },
         render: function() {
-			console.log("cartview render");
+			//console.log("cartview render");
           //  console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
             if(me.model.get('items').length>0){
@@ -302,7 +302,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
             // this.calculateEstimate();
         },
         afterRender: function(){
-			console.log('afterRender');
+			//console.log('afterRender');
 			var me = this;
 
             if($.cookie('szcontinueurl')){
@@ -380,7 +380,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
         },triggerAmazonPay:function(){
              $('#OffAmazonPaymentsWidgets1').trigger('click'); 
         },getPersonalizationInfo: function(){
-			console.log("getPersonalizationInfo");
+			//console.log("getPersonalizationInfo");
             var items = this.model.get('items');
 			var info;
             for(var i=0; i < items.length; i++){
@@ -570,7 +570,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 		*/
         },
         editPersonalize: function(e){
-			console.log("editPersonalize");
+			//console.log("editPersonalize");
             var me=this;
             var token = $(e.currentTarget).attr('data-mz-token');
 			var persType = $(e.currentTarget).attr('data-mz-token-type');
@@ -588,7 +588,7 @@ function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCar
 			this.dndEngineObj = dndEngineObj;
         },
         editPersonalizeBundleItem: function(e){
-			console.log("editPersonalizeBundleItem");
+			//console.log("editPersonalizeBundleItem");
 			window.showPageLoader();
             var me = this;
             var token = $(e.currentTarget).attr('data-mz-token');

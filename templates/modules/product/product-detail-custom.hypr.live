@@ -15,8 +15,8 @@
   -model.shipDate;          // shipping date
   -model.options[].isVisibleOption;   // (true/false)
   -model.options[].isOptionForDND;    // (true/false)
-{% endcomment %}
 
+// for easier troubleshooting...
 <div style="border:solid 1px black;font-size:10px;margin:5px;padding:5px;position:fixed;top:0;left:0;background-color:white;z-index:2000;">
         isInStock: {{model.isInStock}}<br>
         isPersonalized: {{model.isPersonalized}}<br>
@@ -26,7 +26,7 @@
     {% dump model.purchasableState %}
   {% endif %}
 </div>
-
+{% endcomment %}
  <p>
 
         <span class="color-blue">Availability</span> :
@@ -66,7 +66,7 @@
 
         {% if model.delDate %}
           <span class="delivery-date">
-            <span>Ships on <strong> {{ model.shipDate|safe }}</strong></span><br>
+{# for troubleshooting            <span>Ships on <strong> {{ model.shipDate|safe }}</strong></span><br> #}
             <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
             {% if not model.groundOnly %}
                 <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>

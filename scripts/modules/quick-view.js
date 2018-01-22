@@ -25,7 +25,7 @@ require(
         });
 
         var initProductInQuickview= function(productCode){
-			console.log("initProductInQuickview");
+			//console.log("initProductInQuickview");
 			
 			var product = SharedProductInfo.getProductModel(productCode,initProductInQuickview.bind(null,productCode),
 						function(){
