@@ -39,6 +39,7 @@
                 'modules/soft-cart',
                 'modules/my-menu',
                 'modules/megamenuNew',
+				'modules/quickview-productview',
                 'modules/quick-view',
                 'modules/added-to-cart',
 				'pages/global',

@@ -106,7 +106,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         },
         displayApiMessage: function (xhr) {
-            console.log(xhr);          
+            //console.log(xhr);          
             this.displayMessage(xhr.message ||
                 (xhr && xhr.responseJSON && xhr.responseJSON.message) ||
                 Hypr.getLabel('unexpectedError'));
@@ -392,7 +392,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 				if(optMarketing){
 					// TO DO: even moving this before api call, it doesn't seem to fire quickly enough to return before user is redirected
 					var callback = function(){
-						console.log('marketo done');
+						//console.log('marketo done');
 						//$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);'>OK</button></div></div>");  
 					};
 					Marketo.subscribe(email,callback);

@@ -168,10 +168,10 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 				templateName: "modules/my-account/my-account-wishlist-item-listing", // render() isn't actually called currently but just in case...
 				noCalcDelDate: true,
 				addToWishlist: function () { // this differs from ProductView.addToWishlist - not sure which is correct so I guess I'll keep this one - productview calls initToWishlist, this calls initoWishlistPersonalize
-					console.log("WishListProductView addToWishlist");
+					//console.log("WishListProductView addToWishlist");
 					var me= this;
 					var callback = function(){ // close dnd window after
-						console.log("WishListProductView addToWishlist CALLBACK");
+						//console.log("WishListProductView addToWishlist CALLBACK");
 						$('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
 						$('.dnd-popup').remove();
 						$('body').css({overflow: 'auto'});
@@ -207,7 +207,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					}
 				},
 				AddToWishlistAfterPersonalize: function(data){ // this version differs from version in ProductView
-					console.log("WishListProductView AddToWishlistAfterPersonalize");
+					//console.log("WishListProductView AddToWishlistAfterPersonalize");
 					var self= this;
 					var option = this.model.get('options').get(productAttributes.dndToken);
 					 var oldValue = option.get('value');
@@ -227,12 +227,12 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 				},
 				initialize: function(){//skip overhead of everything going on in ProductView.initialize()
 					var me = this;
-					console.log(this.model);
-					console.log("WishListProductView initialize");
+					//console.log(this.model);
+					//console.log("WishListProductView initialize");
 					this.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-						console.log("wishliWishListProductViewst.addedtocart callback (from initialize)");
+						//console.log("wishliWishListProductViewst.addedtocart callback (from initialize)");
 						var wishlistlineitemId = me.wishlistLineitemId;
-						console.log(wishlistlineitemId);
+						//console.log(wishlistlineitemId);
 						if(wishlistlineitemId){
 							$('[removeWishlistItem="'+wishlistlineitemId+'"]').trigger('click'); // remove from wishlist
 						}
@@ -241,11 +241,11 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					this.setOnAddToCartActions();
 				},
 				personalizeProduct: function(){
-			console.log("WishListProductView personalizeProduct");
+			//console.log("WishListProductView personalizeProduct");
             var self= this;
             // DnD Code  Start
             var option = this.model.get('options').get(productAttributes.dndToken);
-			console.log(option);
+			//console.log(option);
 			if(!self.dndToken){
 				var dndToken = null;
 				if(option){
@@ -267,7 +267,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 				}
 				self.dndToken = dndToken;
 			}
-			console.log(self.dndToken);
+			//console.log(self.dndToken);
             var productCode = this.model.get('productCode');
 			
 			var product = SharedProductInfo.getProductModel(productCode,this.personalizeProduct.bind(this));
@@ -293,7 +293,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					self.initialize(); // need to re-initialize when assigning new model;
                    
 					window.removePageLoader();
-					console.log(this.wishlistLineitemId);
+					//console.log(this.wishlistLineitemId);
 					this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,self.dndToken,null,false,this.wishlistLineitemId);
 					this.dndEngineObj.initializeAndSend();
                 }
@@ -309,9 +309,9 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					
 					// since we are using different model than this.model, redo what this.initialize() does...
 					productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-						console.log("productView WishListProductViews.addedtocart callback");
+						//console.log("productView WishListProductViews.addedtocart callback");
 						var wishlistlineitemId = self.wishlistLineitemId;
-						console.log(wishlistlineitemId);
+						//console.log(wishlistlineitemId);
 						if(wishlistlineitemId){
 							$('[removeWishlistItem="'+wishlistlineitemId+'"]').trigger('click'); // remove from wishlist
 						}
@@ -337,7 +337,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 			}
 			var obj = new ProductView(opts);
 			obj.model.on('addedtocart', function (cartitem, prod) {
-				console.log("quickview on addedtocart");
+				//console.log("quickview on addedtocart");
 				// only custom code needed for not already in productView.initialize
 				$('#mz-quick-view-container').fadeOut(100, function() {
 					 $('#mz-quick-view-container').remove();
@@ -876,7 +876,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
               }
         },
         editPersonalize: function(e){
-			console.log("editPersonalize");
+			//console.log("editPersonalize");
             window.showPageLoader();
             var target =  $(e.currentTarget);
 			var wishlistid = target.parents('[wishlist-id]').attr('wishlist-id');
@@ -901,7 +901,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 				}
 				var productModel = new ProductModels.Product(currentItem.product);
 				var el = $(target).parents(".wishlist-item-listing");
-				console.log(el);
+				//console.log(el);
 
 				var myProductView = new WishListProductView({
 					model: productModel,
@@ -913,14 +913,14 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 			}
         },
         addToCart: function(e) {
-			console.log("addToCart");
+			//console.log("addToCart");
             window.showPageLoader();
             var target =  $(e.currentTarget);
             var wishlistid = target.parents('[wishlist-id]').attr('wishlist-id');
             var itemid = target.attr('id');
-			console.log(target);
-			console.log(itemid);
-			console.log(wishlistid);
+			//console.log(target);
+			//console.log(itemid);
+			//console.log(wishlistid);
             var wishlistCollection = this.model.get('items').where({'id':wishlistid});
             var wishlist = wishlistCollection[0];
             var wishlistitems = wishlist.get('items');
@@ -948,7 +948,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             }else{
                 var productModel = new ProductModels.Product(currentItem.product);
                 productModel.on('error', function(a){
-                    console.log(a);
+                    //console.log(a);
                     $('.se-pre-con').hide(); 
                     $('.addtocart-error').remove();
                     $(e.target).parents('.orders-body').prepend('<p class="addtocart-error" style="color:red;">'+a.message+'</p>');
@@ -964,7 +964,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 
 				// delete from wishlist when adding to cart
 				productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-					console.log(itemid);
+					//console.log(itemid);
 					$('[removeWishlistItem="'+itemid+'"]').trigger('click'); // remove from wishlist
 				});
 				
@@ -978,7 +978,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 $(me).parents(".wishlist-item").remove();
             });
         },showQuickViewExtra:function(prod_code,options,wishlistitemid) {
-            console.log("showQuickViewExtra");
+           //console.log("showQuickViewExtra");
 			
 				var productModel1 = SharedProductInfo.getProductModel(prod_code,this.showQuickViewExtra.bind(this,prod_code,options,wishlistitemid),
 										function(err) {
@@ -1005,7 +1005,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					
 					// delete from wishlist when adding to cart
 					productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-						console.log(wishlistitemid);
+						//console.log(wishlistitemid);
 						$('[removeWishlistItem="'+wishlistitemid+'"]').trigger('click'); // remove from wishlist
 					});
 					
@@ -1047,7 +1047,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                     var productCode = $(e.target).attr('id');
                     Api.get('product', productCode).then(function(model){
                         var productModel = new ProductModels.Product(model.data);
-                        console.log(model);
+                       // console.log(model);
                         productModel.on('error', function(a){
                             console.log(a);
                             $('.addtocart-error').remove();
@@ -1759,7 +1759,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             this.$el.find('button.add-new-address').hide();
         },
         beginEditContact: function (e) {
-            console.log('bverb');
+            //console.log('bverb');
             var id = this.editing.contact = e.currentTarget.getAttribute('data-mz-contact');
             this.model.beginEditContact(id);
             this.render();
@@ -1898,7 +1898,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 "lastName": pageContext.user.lastName,
                 "firstName": pageContext.user.firstName
             }).then(function(res){
-                console.log(res);
+               // console.log(res);
                 meThis.model.set(res);
                 meThis.render();
             });
@@ -1971,7 +1971,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 
 
       $(document).on("click",".occassionbtn",function(){
-            console.log("hi");
+         //   console.log("hi");
             $( ".relation" ).show();
             $( "#other-relation" ).prop( "checked", true );
             $('.personal_others').show();

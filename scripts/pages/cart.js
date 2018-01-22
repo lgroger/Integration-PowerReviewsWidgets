@@ -204,7 +204,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
                        }
 					}
                 }catch(ex){
-                    console.log("Error on getExtraProductType "+ex);
+                    //console.log("Error on getExtraProductType "+ex);
                     this.setProductionTime(products_production,ext_prop);
                 }
             }
@@ -275,7 +275,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
             }
         },
         render: function() {
-			console.log("cartview render");
+			//console.log("cartview render");
           //  console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
             if(me.model.get('items').length>0){
@@ -290,9 +290,8 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
             // this.calculateEstimate();
         },
         afterRender: function(){
-			console.log('afterRender');
-			console.trace();
-
+			//console.log('afterRender');
+			
             if($.cookie('szcontinueurl')){
             	var sxurl = $.cookie('szcontinueurl');
             	$('.mz-sz-continue').attr("href",sxurl);
@@ -383,7 +382,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
         },triggerAmazonPay:function(){
              $('#OffAmazonPaymentsWidgets1').trigger('click'); 
         },getPersonalizationInfo: function(){
-			console.log("getPersonalizationInfo");
+			//console.log("getPersonalizationInfo");
             var items = this.model.get('items');
 			var info;
             for(var i=0; i < items.length; i++){
@@ -573,7 +572,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
 		*/
         },
         editPersonalize: function(e){
-			console.log("editPersonalize");
+			//console.log("editPersonalize");
             var me=this;
             var token = $(e.currentTarget).attr('data-mz-token');
 			var persType = $(e.currentTarget).attr('data-mz-token-type');
@@ -591,7 +590,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
 			this.dndEngineObj = dndEngineObj;
         },
         editPersonalizeBundleItem: function(e){
-			console.log("editPersonalizeBundleItem");
+			//console.log("editPersonalizeBundleItem");
 			window.showPageLoader();
             var me = this;
             var token = $(e.currentTarget).attr('data-mz-token');

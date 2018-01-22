@@ -33,7 +33,7 @@ define(["modules/jquery-mozu","hyprlive"], function ($,Hypr) {
 			//console.log("loadSubscribe start");
 			var me = this;
 			var newCallback = function(){
-				console.log("loadSubscribe newCallback");
+				//console.log("loadSubscribe newCallback");
 				if($("form[id='mktoForm_"+me.mktoEmailSubscription+"']").length === 0){
 					$("body").append($("<form></form>").attr("id","mktoForm_"+me.mktoEmailSubscription).css("display","none"));
 				}

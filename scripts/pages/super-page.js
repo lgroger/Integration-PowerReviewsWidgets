@@ -10,7 +10,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 		Wishlist.initoWishlist(product);
 	};
 	var initProductToPersonalize= function(productCode,personalizebutton){
-		console.log("initProductToPersonalize");
+		//console.log("initProductToPersonalize");
 		var product = SharedProductInfo.getProductModel(productCode,initProductToPersonalize.bind(null,productCode,personalizebutton));
 		if(!product){
 			 return;
@@ -276,7 +276,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
     	}
         function scrollListerFirefox(){
              var currentScroll = $(window).scrollTop();
-             console.log(currentScroll);
+             //console.log(currentScroll);
             if(currentScroll>super_filter_pos){
                 if($(".super-btn-fixed-wrap").hasClass("visHidden")){
                     $(".super-page-filter-wrap").css("visibility","hidden");

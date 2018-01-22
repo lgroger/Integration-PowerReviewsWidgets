@@ -60,7 +60,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
         compLoadComplete: false,
 		dndEngineObj: null,  // hold reference to dndEngine that we can create so we can call methods on it later (like unsend())
 		constructor: function (conf) {
-			console.log("productview constructor");
+			//console.log("productview constructor");
 			if(conf){
 				// custom properties that we want to be able to set by using new ProductView({});
 				this.additionalEvents = conf.additionalEvents || this.additionalEvents;
@@ -74,7 +74,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				this.initialize = conf.initialize || this.initialize;
 				this.personalizeProduct = conf.personalizeProduct || this.personalizeProduct;
 			}
-			console.log("productview override");
+			//console.log("productview override");
 			var context = Backbone.MozuView.prototype.constructor.apply(this, arguments); // as soon as this is run, initialize will also be run, so be sure to override that above this
 			
             return context;
@@ -93,18 +93,18 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             "click .bundle-btn":"showBundle",
             "click .qtyminus":"decreaseQty"
         },moreDetail:function (e) {
-			console.log("moreDetail");
+			//console.log("moreDetail");
             $('#tab1').prop('checked', true); 
             $('html, body').animate({
                     scrollTop: $("#description").offset().top-80
                 }, 1000);  
         },showBundle:function () {
-			console.log("showBundle");
+			//console.log("showBundle");
             $("body").css("overflow-y","hidden");
             $(".bundle-items-wrap-pdp").fadeIn();
 			this.loadComponentImages(); // make sure extra component info (image/uom) is loaded if not done already
 		},loadExtras: function(){
-			console.log("loadExtras");
+			//console.log("loadExtras");
 			var options = this.model.get('options');
 			var productStr = "";
 
@@ -121,7 +121,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				SharedProductInfo.getExtras(productStr);
 			}
 		},loadComponents: function(callback){
-			console.log("loadComponents");
+			//console.log("loadComponents");
 			var i = 0;
 			var bp = this.model.get('bundledProducts');
 			var productStr = "";
@@ -137,7 +137,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			}
 		},
 		loadComponentImages: function(i){
-			console.log("loadComponentImages");
+			//console.log("loadComponentImages");
 			if(this.compLoadComplete){
 				return; // exit, already done
 			}
@@ -175,7 +175,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			}
 			this.compLoadComplete = true;
         },increaseQty: function(e){
-			console.log("increaseQty");
+			//console.log("increaseQty");
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10);
@@ -200,7 +200,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             },1000);
         },
         decreaseQty: function(e){
-			console.log("decreaseQty");
+			//console.log("decreaseQty");
             var $qField = $(e.currentTarget).parent().find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10);
             if(!isNaN(newQuantity) && newQuantity>1){
@@ -227,7 +227,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }
         },
         onQuantityChange: _.debounce(function (e) {
-			console.log("onQuantityChange");
+			//console.log("onQuantityChange");
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var $qField = $(e.currentTarget),
               newQuantity = parseInt($qField.val(), 10);
@@ -249,7 +249,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 
         },500),
         showOptionsList: function(e){
-			console.log("showOptionsList");
+			//console.log("showOptionsList");
             $('.mz-productdetail-addtocart').prop('disabled',true);
             var cobj = $(e.currentTarget),
             id=cobj.val(),me=this;
@@ -271,7 +271,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             $('[data-lbl-option="'+id+'"]').addClass("show-no");
         },
         personalizeProduct:function(e){
-			console.log("personalizeProduct");
+			//console.log("personalizeProduct");
         	//check for 0 quantity, display error message
            if(e){
            var $qField = $(e.currentTarget).parent().parent().find('[data-mz-value="quantity"]'),
@@ -289,7 +289,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 
         },
         render: function () {
-			console.log("render");
+			//console.log("render");
 			if(!this.noCalcDelDate){ // we don't need to load holiday lists for shipdate calculations for quickview
 				this.getHolidays(this.render.bind(this));
 				if(!this.holidayList){
@@ -356,7 +356,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             this.renderConfigure();
         },
         hideOptions: function(){
-			console.log("hideOptions");
+			//console.log("hideOptions");
             var options = this.model.get('options'); // includes extras and configurable options
             var extrasToHide = getPropteryValueByAttributeFQN(this.model, 'tenant~extrastohide');
             var extrastohideArr = [];
@@ -417,7 +417,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }
         },
         renderConfigure: function(){
-			console.log("renderConfigure");
+			//console.log("renderConfigure");
                 var  me = this, id, newValue,option;//,dndCode,mfgPartNumber,mcCode;
                 var objj=me.model.getConfiguredOptions();
                 //me.setOptionTitle();
@@ -445,7 +445,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 						option = me.model.get('options').get(id);
 
 						if(me.model.get('productUsage')!=='Configurable' && option.get('attributeDetail').usageType ==='Extra' && option.get('attributeDetail').dataType==='ProductCode'){
-							console.log(newValue);
+							//console.log(newValue);
 							var product = SharedProductInfo.getExtraProduct(newValue,me.render.bind(me)); // me.render() will be called again if product needs to be retrieved still via api
 							if(product){
 								if(me.model.get('productUsage')!=='Bundle' & !(mfgpartnumber && mfgpartnumber.length > 0)){
@@ -489,7 +489,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				}
 			
 				if(me.model.get('baseIsConfigured')){ // don't show delivery dates if baseIsConfigured is false b/c we could show inaccurate information based on where productionTime is stored on a product (ex. banner doesn't have productionTime on parent, just on the extras and if no extras are selected yet, we could show a date too early)
-					if(productionTime){
+					if(productionTime && parseInt(productionTime,10) > 0){
 						me.model.set('productionTime',productionTime);
 						if(!this.noCalcDelDate){ // we don't need to calculate these on quickview
 							if(melt){
@@ -502,9 +502,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					else{
 						if(!this.noCalcDelDate){ // we don't need to calculate these on quickview
 							if(melt){
-								me.calc_only_productionTime(this.timeNow,0);
+								me.calc_only_productionTime(this.timeNow,1);
 							}else{
-								me.skip_holidays(this.timeNow,0,false);
+								me.skip_holidays(this.timeNow,1,false); // if no production time, add 1 day
 							}
 						}
 					}
@@ -529,7 +529,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			return(shipDateStr);
 			
 		},skip_holidays:function(date,noBusDays,isMelt){ //Function to skip saturday,sunday and holidays
-			console.log("skip_holidays");
+		//	console.log("skip_holidays");
 			//console.log(isMelt+" "+noBusDays);
 			//console.log(date);
 			var holidays = this.holidayList;
@@ -582,41 +582,41 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				}
             }
         }, onOptionChange: function (e) {
-			console.log("onOptionChange");
+			//console.log("onOptionChange");
             return this.configure($(e.currentTarget)); //fires this.render
         },calc_only_productionTime:function(date,noBusDays){
-			console.log("calc_only_productionTime");
+			//console.log("calc_only_productionTime");
             //Function to skip saturday,sunday and holiday list and call the callback function.  With result date.
 			var holidays = this.holidayList;
             if (noBusDays < 1){
                 noBusDays=1; // no same-day shipping
             }
-			console.log(noBusDays);
+			//console.log(noBusDays);
             var result_date=new Date(date);
             var addedDays = 0;
             while (addedDays < noBusDays) {
 				result_date = new Date(result_date.getTime()+24*60*60*1000); 
                 if (result_date.getUTCDay()<6 && result_date.getUTCDay()!==0 && holidays.indexOf(result_date.getFullYear()+"-"+("0" + (result_date.getUTCMonth() + 1)).slice(-2)+"-"+("0" + result_date.getDate()).slice(-2))==-1) {
                     ++addedDays;
-					console.log(result_date);
+					//console.log(result_date);
                 }
 				else{
-					console.log(result_date);
-					console.log("add another day...");
+					//console.log(result_date);
+					//console.log("add another day...");
 				}
             }
             var delDate=new Date(result_date);
             this.calcMeltProduct(delDate,noBusDays,holidays);
         },calcMeltProduct:function (ddate,prod_time,noOfDays){
-			console.log("calcMeltProduct");
-			console.log(ddate);
+			//console.log("calcMeltProduct");
+			//console.log(ddate);
             if(ddate.getUTCDay()>=4){
                 this.calc_only_productionTime(ddate,1);
             }else{
                 this.skip_holidays(ddate,0,true);
             }
         },configure: function ($optionEl) {
-			console.log("configure");
+			//console.log("configure");
 
             var me= this;
             //me.model.set('mfgPartNumber',"");
@@ -650,11 +650,13 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     if (oldValue !== newValue && !(oldValue === undefined && newValue === '')) {
                         option.set('value', newValue); // fires this.render();
                     }
-                }
+                }else{
+					option.unset('value'); // fires this.render();
+				}
             }
         },
         configureSlitOption: function (e) {
-			console.log("configureSlitOption");
+			//console.log("configureSlitOption");
             var newValue = '',
                 me=this,
                 oldValue,
@@ -688,21 +690,21 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }
         },
         addToCart: function () {
-			console.log("addToCart");
+			//console.log("addToCart");
             var self= this;
             var $qField = $(self.el).find('[data-mz-value="quantity"]'),
             newQuantity = parseInt($qField.val(), 10),
             sku = "";
 			
-			console.log(newQuantity);
+			//console.log(newQuantity);
 
             //Bloomreach add to cart event
             if(this.model.attributes.variationProductCode !== undefined && this.model.attributes.variationProductCode !== 'undefined'){
               sku = this.model.attributes.variationProductCode;
             }
-            console.log('BrTrk');
-            console.log(this.model.attributes.productCode);
-            console.log(sku);
+           // console.log('BrTrk');
+           // console.log(this.model.attributes.productCode);
+         //   console.log(sku);
             if(typeof BrTrk !== 'undefined'){
 				BrTrk.getTracker().logEvent('cart', 'click-add',{
 					'prod_id': this.model.attributes.productCode ,
@@ -715,7 +717,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             this.model.addToCart();
         },
         addToWishlist: function () { // I think this is adding a non-personalized item to wishlist
-			console.log("addToWishlist");
+			//console.log("addToWishlist");
             if(!require.mozuData('user').isAnonymous) {
                         this.model.set('moveToWishList', 1);
                         Wishlist.initoWishlist(this.model);
@@ -735,7 +737,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }
         },
         addToWishlistWithDesign: function(){// I think this is adding a personalized item to wishlist
-			console.log("addToWishlistWithDesign");
+			//console.log("addToWishlistWithDesign");
             var me = this;
                 var callback = function () {
                     $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
@@ -766,10 +768,10 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 }
         },
         addToWishlistAfterLogin: function(){
-			console.log("addToWishlistAfterLogin");
+			//console.log("addToWishlistAfterLogin");
 			var me = this;
 			var callback = function () {
-				console.log('productview addToWishlistAfterLogin CALLBACK');
+				//console.log('productview addToWishlistAfterLogin CALLBACK');
                     $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
                     $('.dnd-popup').remove();
                     $('body').css({overflow: 'auto'});
@@ -784,12 +786,12 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             $.cookie('wishlistprouct', "",{path:'/'});
         },
         addToWishlistAfterLoginPersonalize: function(){
-			console.log("addToWishlistAfterLoginPersonalize");
+			//console.log("addToWishlistAfterLoginPersonalize");
             Wishlist.initoWishlistPersonalize(this.model);
             $.cookie('wishlistprouct', "",{path:'/'});
         },
         setSelectedOptions: function(){
-			console.log("setSelectedOptions");
+			//console.log("setSelectedOptions");
             var me = this;
             var wishlistprouct = $.cookie('wishlistprouct');
             if(wishlistprouct && wishlistprouct!==""){
@@ -809,7 +811,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
         },
         setOptionValues: function(data){
 		// applies extras that were chosen through dnd personalization
-			console.log("setOptionValues");
+		//	console.log("setOptionValues");
             var options = this.model.get('options');
             var extraAttribute =  null;
             var extraJSON ={};
@@ -825,7 +827,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 if(options.models[i].get('attributeFQN')===productAttributes.dndToken){
                     options.models[i].set('value',data.projectToken);
                     options.models[i].set('shopperEnteredValue',data.projectToken);
-					console.log('dndtoken');
+					//console.log('dndtoken');
                 }
                 if(Object.keys(extraJSON).length>0 && extraJSON[options.models[i].get('attributeFQN').toLowerCase()]){
                     options.models[i].set('value',extraJSON[options.models[i].get('attributeFQN').toLowerCase()]);
@@ -835,9 +837,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             this.model.set('options', options);
         },
         addToCartAfterPersonalize:function(data){ // used by dndengine.js
-			console.log("addToCartAfterPersonalize");
+			//console.log("addToCartAfterPersonalize");
             var self= this;
-			console.log(data);
+		//	console.log(data);
             self.setOptionValues(data);
             if(data.quantity){
                 self.model.set('quantity', data.quantity);
@@ -858,7 +860,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 
         },
         AddToWishlistAfterPersonalize: function(data){ // used by dndengine.js
-			console.log("AddToWishlistAfterPersonalize");
+			//console.log("AddToWishlistAfterPersonalize");
             var self= this;
                 self.setOptionValues(data);
                 if(data.quantity){
@@ -867,7 +869,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 self.addToWishlistWithDesign();
         },
         afterRender: function() {
-			console.log("afterRender");
+			//console.log("afterRender");
             var me = this;
 			
             //greeting Card
@@ -877,8 +879,8 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 $('[data-mz-product-option="'+productAttributes.optionalEnvelope+'"]').each(function(){
 					if($(this).attr('value')){
                     var splitvalue = $(this).attr('value').split('_');
-						console.log(splitvalue[0]);
-						console.log(selectgreetingCardVal);
+						//console.log(splitvalue[0]);
+						//console.log(selectgreetingCardVal);
 					// this removes options in optionalEnvelope that don't match up to giantGreetingCardSize selected - envelopes are named cardSize+'_'+envelopeSkU, ex. KSCRD18_ZENVSMA
                     if(splitvalue.length>1){
                         if(splitvalue[0]!==selectgreetingCardVal && splitvalue[0].toLowerCase()!=='no'){
@@ -957,7 +959,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 		},
 		setIsPersonalized: function(){
 		// asssumption - if a product has dnd-token extra, then it's personalized (personalization can be on parent or components or extras) - we only look at parent for dnd-token
-			console.log("setIsPersonalized");
+			//console.log("setIsPersonalized");
 			this.model.set('isPersonalized',false);
 			var options = this.model.get('options');
 		 	for(var i=0; i < options.length; i++){
@@ -969,7 +971,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			
 		},
 		setAllowATC: function(){
-			console.log("setAllowATC");
+		//console.log("setAllowATC");
 			// sets model.isConfigured, model.isInStock, model.baseIsConfigured - if model.isConfigure==true  && model.isInstock==true, then allow add-to-cart action
 			// isConfigured means it's fully configured and ready to add to cart or begin personalization
 			// baseIsConfigured means a base product is selected but not necessarily all extras (if true, show delDate)
@@ -1136,17 +1138,48 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					var mfgpartnumber = this.model.get('mfgPartNumber');
 					if(configurableOptionsConfigured && (this.model.get('productUsage')==='Bundle' ||  (mfgpartnumber && mfgpartnumber.length > 0))){
 						this.model.set('baseIsConfigured',true);
+						if(productInventoryInfo && productInventoryInfo.manageStock && productInventoryInfo.onlineStockAvailable < minqty){
+							this.model.set('isConfigured',true); // in this case, there is an option unselected yet but the base is out of stock so mark as if all is configured so that it shows out of stock up front
+						}
+						else{
+							this.model.set('isConfigured',false);
+						}
 					}
 					else{
-						this.model.set('baseIsConfigured',false);
+						var variations = this.model.get('variations');
+						if(variations && variations.length > 0){
+							var allConfigurableOOS = true; // start at out of stock and set to false if we find any options in stock
+							for(inc=0; inc<variations.length; inc++){ // options includes both extras and configurable options
+								var variation = variations[inc];
+								var variationInventoryInfo = variation.inventoryInfo;
+								if(variationInventoryInfo && variationInventoryInfo.manageStock && variationInventoryInfo.onlineStockAvailable < minqty){
+									// this option is out of stock
+								}
+								else{
+									allConfigurableOOS = false;
+								}
+							}
+							if(allConfigurableOOS){
+								// mark as if they have made selections for everything so that it shows out of stock since there are no configured options in stock
+								this.model.set('baseIsConfigured',true);
+								this.model.set('isConfigured',true);
+							}
+							else{
+								this.model.set('baseIsConfigured',false);
+								this.model.set('isConfigured',false);	
+							}
+						}
+						else{
+							this.model.set('baseIsConfigured',false);
+							this.model.set('isConfigured',false);
+						}
 					}
-					this.model.set('isConfigured',false);
 					this.model.set('isInStock',false);
 				}
 			}
 		},
 		getHolidays: function(callback){
-			console.log("getHolidays");
+			//console.log("getHolidays");
 			
 			if(this.holidayList){
 				return; // exit if it's already set
@@ -1192,7 +1225,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             } */
 		},
 		getUPSHolidays: function(callback){
-			console.log("getUPSHolidays");
+			//console.log("getUPSHolidays");
 			if(this.UPSholidayList){
 				return; // exit if it's already set
 			}
@@ -1244,7 +1277,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			}
 		},
         initialize: function () {
-			console.log("initialize");
+			//console.log("initialize");
 
 			var estTime = new Date(); // time in UTC format
 			estTime.setTime(estTime.getTime()-5*60*60*1000); //subtract difference from GMT to Eastern so that when you use getUTCDay, getUTCHours, (etc) it will reflect value in Eastern timezone
@@ -1309,7 +1342,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			
 			// assign shared on(addedtocart') actions....
 			this.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-				console.log("ProductView on addedtocart");
+				//console.log("ProductView on addedtocart");
 				if (cartitem && cartitem.prop('id')) {
 					var cartitemModel = new ProductModels.Product(cartitem.data);
 					me.model.isLoading(true);
@@ -1404,7 +1437,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 						addthis.toolbox(".addthis_inline_share_toolbox"); // quickview had this
 						addthis.toolbox('.cart-over-addthis'); // product page had this
 					}
-
+/*
 					console.log(me.gaAction);
 					console.log(me.gaEvent);
 					console.log(track_price*me.model.get('quantity'));
@@ -1416,7 +1449,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					console.log(gaitem.unitPrice.extendedAmount);
 					console.log(gaitem.quantity);
 					console.log(gaoptionval);
-					console.log(gaitem.product.categories[0].id);
+					console.log(gaitem.product.categories[0].id); */
 				} else {
 					me.model.trigger("error", { message: Hypr.getLabel('unexpectedError') });
 				}
