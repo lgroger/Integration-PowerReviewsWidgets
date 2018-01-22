@@ -5,7 +5,6 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu','modules/ap
     'vendor/wishlist', 'pages/dndengine', 'modules/models-product', "modules/shared-product-info","modules/mc-cookie"], 
 function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo, McCookie) {
 	//'shim!//api.mediacliphub.com/scripts/hub.min[modules/jquery-mozu=jQuery]>jQuery'
-var mcplaceholder= "/resources/images/mcplaceholder.png";
  var productAttributes = Hypr.getThemeSetting('productAttributes');  
        var idx;var ship_default;
        var ship_flag=false;
@@ -329,10 +328,11 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
 			}); */
 
 			// do this outside of jquery each so that it only fires once if it needs to fire at all
-			if($("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").length > 0){
+			//TO DO: this can be optimized to reduce a lot of duplicate calls b/c all lineitems are currently displayed once for mobile and once for desktop plus render() fires multiple times
+			if($("img[data-mz-token-type='mc']").length > 0){
 				var mcCallback = function(){
 					console.log("cart mcCallback");
-					$("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").each(function(){ // find images that contain the mcplaceholder so we can get actual image
+					$("img[data-mz-token-type='mc']").each(function(){
 						console.log("cart img each callback");
 						var previewimg = this;
 						var projectId = $(this).attr("data-mz-token");
@@ -405,7 +405,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
 							info = DNDEngine.getTokenData(dndtoken, items.models[i].get('product').get('bundledProducts')[k].productCode);
 							items.models[i].get('product').get('bundledProducts')[k].token = info.token;
 							if(info.type ==="mc"){
-								items.models[i].get('product').get('bundledProducts')[k].imageUrl = mcplaceholder;
+								// no action, afterRender() will populate it
 							}
 							else{
 								items.models[i].get('product').get('bundledProducts')[k].imageUrl = info.src;
@@ -416,7 +416,7 @@ var mcplaceholder= "/resources/images/mcplaceholder.png";
 						// look for parent token info
 						info = DNDEngine.getTokenData(dndtoken);
 						if(info.type ==="mc"){
-							items.models[i].get('product').set('imageUrl',mcplaceholder); // if mediaclip personalization, use placeholder image for now b/c we need to make calls to mc to get actual preview image
+							// no action, afterRender() will populate it
 						}
 						else{
 							items.models[i].get('product').set('imageUrl',info.src);

@@ -1,4 +1,10 @@
-﻿<div class="checkout_ostable">
+﻿{% comment %}
+checkout.js sets these values
+item.product.imageUrl // exists by default but is overridden if personalization image exists
+item.product.token // dnd token string or mc token string
+item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
+{% endcomment %}
+<div class="checkout_ostable">
     <table class="mz-ordersummary">
         <thead>
             <tr>
@@ -14,14 +20,7 @@
                     <td class="mz-ordersummary-item-image">
                       {% if item.product.imageUrl and themeSettings.showCartItemImage %}
                         <div class="cp_image">
-                          <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
-                          {% if item.product.options && item.product.productType != "Bundle" %}
-                            {% for opt in item.product.options %}
-                              {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript - modules/my-menu.js #}
-                                  <span  data-fulldndtoken="{{opt.shopperEnteredValue|replace('"','!')|escape}}" {% if item.product.productUsage == "Bundle"%}data-prdType="bundle"{% endif %}></span>
-                              {% endif %}
-                            {% endfor %}
-                          {% endif %}
+                          <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} {% if item.product.token %}data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}"{% endif %} />
                         </div>
                       {% endif %}
                     </td>

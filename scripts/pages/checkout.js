@@ -1,7 +1,6 @@
 /* globals V: true */
 require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api",'modules/dnd-token',"modules/mc-cookie"],
 function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api,DNDToken,McCookie) {
-	var mcplaceholder= "/resources/images/mcplaceholder.png";
     var CheckoutStepView = EditableView.extend({
         getExtraVar: function () {
             return this.model.get('address.countryCode');
@@ -238,6 +237,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                 "ship_code":this.model.get("fulfillmentInfo.shippingMethodCode")
             };
             this.listenTo(this.model.get('billingInfo'), 'orderPayment', this.onOrderCreditChanged, this);
+			this.on('render', this.getMcImages);
         },
 
         editCart: function () {
@@ -260,7 +260,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
         onOrderCreditChanged: function (order, scope) {
             this.render();
         },showPersonalizeImage:function () {
-			//console.log("showPersonalizeImage");
+			console.log("showPersonalizeImage");
             var me=this;
             var items=_.pluck(this.model.get("items"),'product');
             _.each(items,function (item,i) {
@@ -271,13 +271,15 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
 							var dndTokenJSON=JSON.parse(dndTokenObj.shopperEnteredValue);
 							var info = DNDToken.getTokenData(dndTokenJSON);
 							if(info.type ==="mc"){
-								me.model.get("items")[i].product.imageUrl = mcplaceholder;
+								// no action, this.getMcImages will fill it in based off of persType being set in 
 							}
 							else{
 								if(info.src){
 									me.model.get("items")[i].product.imageUrl=info.src;
 								}
 							}
+							me.model.get("items")[i].product.token = info.token;
+							me.model.get("items")[i].product.persType = info.type;
 						}
 						catch(err){
 							console.error(err);
@@ -287,7 +289,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
 				}
             }); 
         },render:function(){
-           // console.log("render on change");
+            //console.log("render");
             this.showPersonalizeImage();
             //var me=this;
             $(".mz-pagetitle .total_pay strong").text("$"+parseFloat(this.model.get("total")).toFixed(2));
@@ -1249,11 +1251,10 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
              scope_obj.renderCustomAfterShip(scope_obj);
         }, 
 		getMcImages: function(){
-			if($("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").length > 0){
+			console.log("getMcImages");
+			if($("img[data-mz-token-type='mc']").length > 0){
 				var mcCallback = function(){
-					console.log("cart mcCallback");
-					$("img[data-mz-token-type='mc'][src*='"+mcplaceholder+"']").each(function(){ // find images that contain the mcplaceholder so we can get actual image
-						console.log("cart img each callback");
+					$("img[data-mz-token-type='mc']").each(function(){
 						var previewimg = this;
 						var projectId = $(this).attr("data-mz-token");
 						
@@ -2620,27 +2621,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
         $('.summary_edit').slideToggle();
         $('.summarybox_toggle .fa').toggleClass('fa-minus');
     });
-         $(".checkout_ostable .cp_image img").each(function(){
-			 if($(this).next().data("fulldndtoken") && $(this).next().data("prdtype")===undefined){ // prdtype will be "bundle" for bundle product usages (modules/common/order-summary.hypr.live)
-				 try{
-					// so this seems to do exactly the same thing as OrderSummaryView.showPersonalizeImage() but I'll update it anyway, just in case...
-					var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
-					var info = DNDToken.getTokenData(fulldndtoken);
-					 
-					if(info.type ==="mc"){
-						$(this).attr("src",mcplaceholder);
-					}
-					else{
-						if(info.src){
-							$(this).attr("src",info.src);
-						}
-					}
-				  }
-				catch(e){
-					console.error(e);
-				}
-            }
-         });
 
     $(document).on('click','#paypalexpress2',function(){ $('#btn_xpressPaypal').trigger('click'); });
     $(document).on('click','#paywithamazon',function(){ $('#OffAmazonPaymentsWidgets0').trigger('click'); });

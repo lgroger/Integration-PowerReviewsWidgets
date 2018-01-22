@@ -532,14 +532,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			
 			// attach actions to closing of iframe
             $(a).click(function(){
-                $('.dnd-popup').remove();
-                $('#cboxOverlay').hide();
-                $('body').css({overflow: 'auto'});
-                $('html').removeClass('dnd-active-noscroll');
-				if(me.form){
-					$(me.form).remove();
-				}
-				me.unsend();
+				me.closeDND();
 
                 //google analytics code for personlaize close
                 var gapersonalizeclose;
@@ -685,6 +678,16 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             	$(window).resize();
             });
         };
+		self.closeDND = function(){
+			$('.dnd-popup').remove();
+			$('#cboxOverlay').hide();
+			$('body').css({overflow: 'auto'});
+			$('html').removeClass('dnd-active-noscroll');
+			if(this.form){
+				$(this.form).remove();
+			}
+			this.unsend();	
+		};
 		self.doPers = function(){
 			//console.log("doPers");
 			var dndItem = this.dndArr[this.index];
@@ -700,7 +703,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 			if(this.lineitemID){
 				if(this.mcToken){
 					// re-edit with mediaclip
-					var userToken = McCookie.getToken(pageContext.user,this.doPers.bind(this));
+					var userToken = McCookie.getToken(this.doPers.bind(this));
 					if(userToken){
 						var reeditURL = "/personalize/"+this.mcToken;
 						
@@ -818,7 +821,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						// create new form that posts to mediaclip url (must be get, no post)
 						var form = $('<form action="'+url+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
 						
-						McCookie.setCookie(pageContext.user,data.userToken);
+						McCookie.setCookie(data.userToken);
 						
 						addParameter(form,"token",data.userToken);
 						// save to object so we can clean it up if needed
@@ -827,6 +830,10 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						// insert and post form
 						$("body").append(me.form);
 						me.form.submit();
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						alert('There was an error loading personalization. \n\nPlease try your request again.');
+						me.closeDND();
 					}
 				});
 			}

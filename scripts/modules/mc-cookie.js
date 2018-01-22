@@ -9,7 +9,8 @@ function ($) {
 	var cnt = 0; // so we don't get stuck in infinite loop
 	var cookieKey = "mc-user-token";
 	var userToken;
-	var setCookie = function(user){ // user is pagecontext.user object, userToken is value from mediaclip
+	var setCookie = function(newUserToken){
+		var user = require.mozuData('pagecontext').user;
 		var str,userId;
 		if(user.isAnonymous){
 			str = "1-";
@@ -20,7 +21,7 @@ function ($) {
 			userId = user.accountId;
 		}
 		str+=userId+"-";
-		str+=userToken;
+		str+=newUserToken;
 		console.log(str);
 		
 		var options = {
@@ -89,7 +90,7 @@ function ($) {
 					//console.log(data);
 					userToken = data.userToken;
 					console.log(cnt);
-					setCookie(user); // save for later
+					setCookie(userToken); // save for later
 					if(typeof callback !== "undefined" && cnt <= 999){
 						callback();
 					}
@@ -165,7 +166,8 @@ function ($) {
 	
 	return {
 		initializeHub: initializeHub,
-		getProjectThumbnailSrc: getProjectThumbnailSrc
+		getProjectThumbnailSrc: getProjectThumbnailSrc,
+		setCookie: setCookie
 	};
 	
 	
