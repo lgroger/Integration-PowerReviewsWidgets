@@ -52,7 +52,6 @@
           {% if PageContext.pageType == 'product' %}
           <meta name="twitter:card" content="summary_large_image"/>
           <meta name="twitter:site" content="@shindigz"/>
-          {% comment %}<meta name="twitter:creator" content="@echidnainc"/>{% endcomment %}
           <meta name="twitter:title" content="{{ model.content.productName }}"/>
           <meta name="twitter:description" content="{{ PageContext.MetaDescription }}"/>
           <meta name="twitter:image" content="{{ model.mainImage.src }}"/>
@@ -267,7 +266,6 @@
           </div>
       </div>
       <div id="cboxOverlay" style="display:none;"></div>
-          <!-- <div id="login-signup-container" class='overlay' style="display:none;"></div> -->
 
 
       <!--Certona & Munchkin Code Integration Start -->
@@ -455,7 +453,7 @@
           if (typeof(window.lpUnit)=='undefined') { window.lpUnit='shindigz-sales-product'; }
           </script>
       {% endif %}
-      <!-- guided search popup view container -->
+
       {% if pageContext.pageType == "product" or  pageContext.pageType == "category" or pageContext.pageType == "search" or pageContext.pageType =="my_account" %}
           <script type="text/javascript">
           var addthis_config = {
