@@ -4,8 +4,8 @@ define(['modules/backbone-mozu', 'underscore', 'modules/jquery-mozu','modules/ap
     'hyprlive', 'modules/preserve-element-through-render', 'modules/amazonPay', 
     'vendor/wishlist', 'pages/dndengine', 'modules/models-product', "modules/shared-product-info","modules/mc-cookie"], 
 function (Backbone, _, $, Api, CartModels, CartMonitor, HyprLiveContext, SoftCart,  Hypr, preserveElement, AmazonPay, Wishlist, DNDEngine, ProductModels, SharedProductInfo, McCookie) {
-	//'shim!//api.mediacliphub.com/scripts/hub.min[modules/jquery-mozu=jQuery]>jQuery'
- var productAttributes = Hypr.getThemeSetting('productAttributes');  
+
+var productAttributes = Hypr.getThemeSetting('productAttributes');  
        var idx;var ship_default;
        var ship_flag=false;
    

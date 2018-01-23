@@ -42,31 +42,27 @@
             {% endif %}
          </div>
       </div>
-   <!-- #tab-content1 -->
 
    <div id="tab-content4" class="tab-content">  
       <div class="tab-content-inner">     
          {% dropzone "shipping-tab" scope="template" %}
       </div>
    </div>
-   <!-- #tab-content4 -->
 
    <div id="tab-content3" class="tab-content">
       <div class="tab-content-inner">
-         <!-- <h3>Customer Questions & Answers</h3> -->
+         {# <h3>Customer Questions & Answers</h3> #}
          {% dropzone "qa-widget-heading" scope="template" %}
          {% dropzone "qa-widget-slot" scope="template" %}
       </div>
    </div>
-   <!-- #tab-content3 -->
 
    <div id="tab-content2" class="tab-content" >
       <div class="tab-content-inner">
-         <!-- <h3>Customer Reviews</h3> -->
+         {# <h3>Customer Reviews</h3> #}
          {% dropzone "review-zone-heading" scope="template" %}
          {% dropzone "review-zone" scope="template" %}
       </div>
    </div>
-   <!-- #tab-content2 -->
 
 </div>

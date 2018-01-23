@@ -3,7 +3,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
 	var wishlist = {
 		getTemplate: function(){
-			console.log("Wishlist getTemplate");
+			//console.log("Wishlist getTemplate");
 			var template = '<div id="wishlist-overlay">';
 			template += '<div class="wishlist-wrapper">';
 			template += '<a id="wishlist-close" class="popup-close">&times;</a>';
@@ -40,7 +40,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 
 		},
 		getSaveDesignTemplate: function(name, model, callBackFunction) {
-			console.log("Wishlist getSaveDesignTemplate");
+			//console.log("Wishlist getSaveDesignTemplate");
 			var me = this;
 			var template = '<div class="list-wrapper">';
 			template += '<div class="save-design">';
@@ -93,18 +93,18 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			});
 		},
 		saveWishlistItem: function(model,callBackFunction){
-			console.log("Wishlist saveWishlistItem");
+			//console.log("Wishlist saveWishlistItem");
 			var me = this;
 			var Successcallback = function(res,prod){
 					var dndTokenVal = prod.get('dndTokenValue');
-				console.log(dndTokenVal);
+				//console.log(dndTokenVal);
 						try{
 							$.ajax({
 								url: dndEngineUrl+dndTokenVal+'/confirmWishlist?wishlistID='+res.id,
 								type:'GET',
 								dataType:'jsonp',
 								success:function(json){
-									console.log(json);
+									//console.log(json);
 									if(typeof callBackFunction === "function"){
 										me.showAddedPopup('Item Successfully Saved To Wishlist.');
 										callBackFunction(); // should close dnd overlay
@@ -123,7 +123,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 				}
 		},
 		showAddedPopup: function(msg) {
-			console.log("Wishlist showAddedPopup");
+			//console.log("Wishlist showAddedPopup");
 	        var template = '<div style="background-color: #fff;position: fixed;top: 0;left: 0;right: 0;bottom: 0;margin: auto;border: 1px solid #cccccc;padding: 40px 30px;border-radius: 4px;width: 320px;height: 40px;text-align: center;z-index: 9999;box-shadow: 0 0 40px #666666;"><p style="font-size: 18px;color: #00b09b;">' + msg + '</p></div>';
 
 	        $(template).appendTo(document.body).fadeOut(4000, function(){
@@ -143,7 +143,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('GET', '/api/commerce/wishlists/customers/' + custId + '/' + name, {});
 		},
 		createNewWishlist: function(name, eventType, eventDate){
-			console.log("Wishlist createNewWishlist");
+			//console.log("Wishlist createNewWishlist");
 			eventType = typeof eventType !== 'undefined' ? eventType : 'No Type';
 			eventDate = typeof eventDate !== 'undefined' ? eventDate : 'No Date';
 			return Api.request("post", "/api/commerce/wishlists/", {
@@ -165,7 +165,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('DELETE', '/api/commerce/wishlists/' + id, {});
 		},
 		addItem: function(id, model){
-			console.log("Wishlist addItem");
+			//console.log("Wishlist addItem");
 			var data = {};
 			if(model.toJSON !== undefined) {
 				data.product = model.toJSON();
@@ -180,7 +180,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('post', '/api/commerce/wishlists/' + id + '/items', data);
 		},
 		updateItem: function(id,itemid,model){
-			console.log("Wishlist updateItem");
+			//console.log("Wishlist updateItem");
 			var data = {};
 			if(model.toJSON !== undefined) {
 				data.product = model.toJSON();
@@ -207,7 +207,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			return Api.request('GET', '/api/commerce/wishlists/' + wishlistId + '/items/' + wishlistItemId, {});
 		},
 		moveToWishlist: function(exWishlistId, newWishlistId, productId, callBackFunction, originalProductId) {
-			console.log("Wishlist moveToWishlist");
+			//console.log("Wishlist moveToWishlist");
 			var me = this;
 	        if(originalProductId !== false && newWishlistId !== "") {
 	        	me.createNewWishlist(newWishlistId,$('#new-events-name option:selected').val(), $("#new-event-date").val()).then(function(res) {
@@ -240,7 +240,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	        }
 		},
 		updateItemToWishlist: function(model, callBackFunction){
-			console.log("Wishlist updateItemToWishlist");
+			//console.log("Wishlist updateItemToWishlist");
 			callBackFunction = (undefined !== callBackFunction) ? callBackFunction:function(){};
 			var me= this;
 			if(model.get('updateItem')===1){
@@ -257,7 +257,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 			}
 		},
 		addItemToWishlist: function(model, callBackFunction) {
-			console.log("Wishlist addItemToWishlist");
+			//console.log("Wishlist addItemToWishlist");
 			callBackFunction = (undefined !== callBackFunction) ? callBackFunction:function(){};
 			var me =  this;
 	        var id = $("[name=wishlist-radio]:checked").val();
@@ -313,7 +313,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 
 	    },
 	    initoWishlist: function(model, callBackFunction){
-			console.log("Wishlist initoWishlist");
+			//console.log("Wishlist initoWishlist");
 	    	var ifrm = $("#homepageapicontext");
 	    	if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
 		    	var apicontext = JSON.parse(ifrm.contents().find('#data-mz-preload-apicontext').html());
@@ -379,7 +379,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
             });
 	    },
 	    initoWishlistPersonalize: function(model, callBackFunction){ // as far as I can tell, this is the function called if the item was already in the wishlist
-			console.log("Wishlist.initoWishlistPersonalize");
+			//console.log("Wishlist.initoWishlistPersonalize");
 	    	var ifrm = $("#homepageapicontext");
 	    	if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
 		    	var apicontext = JSON.parse(ifrm.contents().find('#data-mz-preload-apicontext').html());

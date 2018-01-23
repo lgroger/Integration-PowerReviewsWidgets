@@ -72,22 +72,18 @@
                     'customer.id'           : user.accountId,
                     "attributes": [
                         {
-                            "attributeDefinitionId": 34,
                             "fullyQualifiedName": isEnabledShippingRewardCustomerAttribute,
                             "values": [true]
                         },
                         {
-                            "attributeDefinitionId":30,
                             "attributeFQN":customerRewardPointAttribute,
                             "values":[new_reward_point]
                         },
                         {
-                            "attributeDefinitionId":28,
                             "attributeFQN":rewardProgramEnrolledAttribute,
                             "values":[rolledOn]
                         },
                         {
-                            "attributeDefinitionId":32,
                             "attributeFQN":postOrderSignupAttribute,
                             "values":[require.mozuData('order').id]
                         }
@@ -175,22 +171,18 @@
                 "account":{
                     "attributes":[
                         {
-                            "attributeDefinitionId":34,
                             "attributeFQN":isEnabledShippingRewardCustomerAttribute,
                             "values":[true]
                         },
                         {
-                            "attributeDefinitionId":32,
                             "attributeFQN":postOrderSignupAttribute,
                             "values":[payload.order_id]
                         },
                         {
-                            "attributeDefinitionId":30,
                             "attributeFQN":customerRewardPointAttribute,
                             "values":[new_reward_point]
                         },
                         {
-                            "attributeDefinitionId":28,
                             "attributeFQN":rewardProgramEnrolledAttribute,
                             "values":[rolledOn]
                         }

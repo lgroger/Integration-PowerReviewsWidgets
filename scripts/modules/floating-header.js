@@ -1,20 +1,6 @@
-define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
-        
-	function equalHeight(group) {
-   var tallest = 0;
-   group.each(function() {
-     var thisHeight = $(this).height();
-    /* if(thisHeight===0){
-      $(this).remove();
-     }*/
-      if(thisHeight > tallest) {
-         tallest = thisHeight;
-      }
-   });
-   if(tallest > 0){
-    group.height(tallest);    
-   }
-}
+define(['modules/jquery-mozu'], function ($) {
+       
+
     $(function() { 
 			 $('.twitter-typeahead').css('display','block');
 	        $('.tt-dropdown-menu').css('top', '52px');
@@ -32,12 +18,6 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
 	$(window).scroll(function() {
 		if ($(this).scrollTop() > 190){
 			$('.header-float').addClass("sticky");
-			/*if(window.innerWidth>1024){
-	          $(".float-mega-menu .mega-menu-container").each(function(){
-	                equalHeight($(this).find(".menu-column-block"));            
-	                $(this).find(".menu-column-block:last").addClass("last-child");
-	            });
-       		 }*/
 			$('.menu > ul > li > ul').css('margin-top','20px');
 			$('.icon-image-sprite').addClass("sticky-icons");
 			$('#searchbox').addClass("searchbox-float");
