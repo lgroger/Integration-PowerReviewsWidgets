@@ -9,10 +9,6 @@
 {% require_script "modules/quick-view" %}
 {% require_script "pages/super-page" %}
 {% preload_json model "category" %}
-{% comment %}
-{% require_script "modules/superpage" %}
-
-{% endcomment %}
 
 
 <!--[if IE]>

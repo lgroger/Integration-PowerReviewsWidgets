@@ -5,7 +5,8 @@
         hyprlive: "empty:",
         hyprlivecontext: "empty:",
         underscore: "vendor/underscore/underscore",
-        backbone: "vendor/backbone/backbone"
+        backbone: "vendor/backbone/backbone",
+		jqueryui: "empty:"
     },
     dir: "compiled/scripts/",
     locale: "en-us",
@@ -49,7 +50,8 @@
                 'modules/footer-collapse',
                 'modules/defaultScript',
                 'vendor/wishlist',
-                'modules/filters'
+                'modules/filters',
+				'modules/bloomreach.suggest'
             ],
             exclude: ['jquery'],
         },

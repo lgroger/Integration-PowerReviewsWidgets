@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','pages/colorswatch-super','vendor/wishlist',"modules/quickview-productview","hyprlive", "modules/shared-product-info"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,QuickViewProductView,Hypr,SharedProductInfo) {
+define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','modules/colorswatch','vendor/wishlist',"modules/quickview-productview","hyprlive", "modules/shared-product-info"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,QuickViewProductView,Hypr,SharedProductInfo) {
 	
 	//	NOTE: modules/quick-view.js handles the action when clicking on "Options" for products that don't have "add to cart" or "personalize" buttons
 	

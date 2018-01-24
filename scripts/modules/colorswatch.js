@@ -160,6 +160,7 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 	    		if(items[i].content.productImages.length>0){
 	    			el = $('[data-color-prdcode="'+items[i].productCode+'"]');
 	    			$(el).closest('a').attr('href', "/p/"+items[i].productCode); 
+	    			$(el).closest('a').attr('data-pro-id', items[i].productCode); 
 	    			$(el).attr('src',items[i].content.productImages[0].imageUrl+'?max=12');
 	    			$(el).closest('li').show();
 	    			swatchobj = $(el).closest('ul+span.total-color');
@@ -182,7 +183,7 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 	                    active='class="active"';
 	                }
 	                htmlcontent+='<li '+active+'>'+
-	                        '<a class="swatch-color" href="/p/'+products[i].productCode+'">';
+	                        '<a class="swatch-color" href="/p/'+products[i].productCode+'"  data-pro-id="'+products[i].productCode+'">';
 	                        if(products[i].content.productImages.length>0){
 	                        	htmlcontent+='<img src="'+products[i].content.productImages[0].imageUrl+'?max=12" height="12px"/>';
 	                    	}
@@ -203,7 +204,7 @@ define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-face
 
 	};
 	$(document).ready(function() {
-		ColorSwatch.init();
+		//ColorSwatch.init();
 	});
 	return {ColorSwatch:ColorSwatch};
 });

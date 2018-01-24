@@ -11,10 +11,9 @@ define([
     'modules/url-dispatcher',
     'modules/intent-emitter',
     'modules/get-partial-view',
-	'modules/powerreviews',
     'modules/colorswatch',
     'vendor/jQuery.selectric'
-], function($, Backbone, _, Hypr, UrlDispatcher, IntentEmitter, getPartialView, PowerReviewsWidget, ColorSwatch, Selectric) {
+], function($, Backbone, _, Hypr, UrlDispatcher, IntentEmitter, getPartialView, ColorSwatch, Selectric) {
     var list_view_checker = false;
     function factory(conf) {
 
@@ -77,8 +76,7 @@ define([
           }   
  
            _$body.removeClass('mz-loading');
-            ColorSwatch.ColorSwatch.init(); 
-			PowerReviewsWidget.writeProductListBoxes();
+            ColorSwatch.ColorSwatch.init();
             window.wishlistIni();
             $(".mz-new-ribbon").each(function(){
                 if(!$(this).is(':visible')){

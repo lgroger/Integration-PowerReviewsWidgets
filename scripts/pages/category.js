@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-faceting'], function($, CollectionViewFactory, facetingProducts) {
+define(['modules/jquery-mozu', "modules/views-collections"], function($, CollectionViewFactory) {
     $(document).ready(function() {
  		window.facetingViews = CollectionViewFactory.createFacetedCollectionViews({
             $body: $('[data-mz-category]'),
