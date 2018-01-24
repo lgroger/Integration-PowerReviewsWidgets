@@ -29,7 +29,7 @@ require(
 			
 			var product = SharedProductInfo.getProductModel(productCode,initProductInQuickview.bind(null,productCode),
 						function(){
-							alert('Error loading product');
+							console.error('Error loading product');
 							window.removePageLoader();
 							console.error(arguments);
 						} // on error, remove loader (mostly issues with sandbox of item not existing)
