@@ -1248,28 +1248,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             * in packages array. if there add new property for the line item to hold fullfilment date info
         **/
         updateShippingDateForLineItems:function(){
-            /*
-            console.log("Order updating");
-            console.log(this.model);
-            for(var i=0; i<this.model.get('items').models.length; i++){
-                for(var j=0; j<this.model.get('items').models[i].get('items').models.length; j++){
-                    var item = this.model.get('items').models[i].get('items').models[j];
-                    this.model.get('items').models[i].get('items').models[j].set('fulfillmentDateBasedOnPackage','');
-                    var productCode = item.get('product').get('productCode');
-                    for(var k=0; k<this.model.get('items').models[i].get('packages').length; k++){
-                        var package_item = this.model.get('items').models[i].get('packages')[k];
-                        for(var l=0; l<package_item.items.length; l++){
-                            if(package_item.items[l].productCode == productCode){
-                                // Add new property to the current order item in the order
-                                if(package_item.fulfillmentDate && package_item.fulfillmentDate.length >0){
-                                    this.model.get('items').models[i].get('items').models[j].set('fulfillmentDateBasedOnPackage',package_item.fulfillmentDate.split('T')[0]);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            */
             var order =  this.model.get('items'); 
             var i = 0;
             for(i = 0; i < order.length; i++){
@@ -1884,12 +1862,10 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                 // 'customer.id': customer.id,
                 "attributes": [
                     {
-                        "attributeDefinitionId": 34,
                         "fullyQualifiedName": "tenant~enable-shipping-reward-program",
                         "values": [true]
                     },
                     {
-                        "attributeDefinitionId":28,
                         "attributeFQN":"tenant~rp-enrolled-on",
                         "values":[rolledOn]
                     }

@@ -285,20 +285,7 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
                     responsive:true,   
                     disableOnMobile:true   
                 });  
-                /*$(".product-video > *").click(function(){
-                    $(".product-image > img").hide();
-                    if($(".product-image > iframe").attr('src') === undefined) {
-                        $(".product-image > iframe").attr('src', 'http://www.youtube.com/embed/' + $(this).parent().attr("video-data")).show();
-                    }else {
-                        $(".product-image > iframe").show();
-                    }
-                }); 
-                $("#video-frame").hide();
-                $('.item > img').click(function(){
-                        $(".product-image > img").show();
-                        $(".product-image > img").attr('src', $(this).attr('src'));
-                        $("#video-frame").hide();
-                 });*/
+                
 /*** OwlCarousel Apply **/
 		OwlCarouselSlider();
 
