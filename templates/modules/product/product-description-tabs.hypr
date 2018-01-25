@@ -18,7 +18,6 @@
             <p>
                <span>
                {{ labels.productCode }}</span> : {{ model.variationProductCode|default(model.productCode) }}
-               </span>
             </p>
             <p> 
                {{ model.content.productFullDescription|safe }}

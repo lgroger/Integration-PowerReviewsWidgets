@@ -15,10 +15,6 @@
 			<h3>{{components.content.productName}}</h3>
 			<h3 class="uom">{# to be filled in with javascript after api call made #}</h3>
 		</div>
-
-		{% comment %}
-		{% include_products "modules/product/bundle-item" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-		{% endcomment %}
 	{% endfor %}		
 	</div>	
 </div>

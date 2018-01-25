@@ -78,7 +78,7 @@
                     </div>
                      <div class="center">
                             <span id="prev-carousel-btn"></span>
-                            <span id{="next-carousel-btn"></span>
+                            <span id="next-carousel-btn"></span>
                         </div>
                   {% endif %}
                  {% endif %}

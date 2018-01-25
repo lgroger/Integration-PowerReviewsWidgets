@@ -71,6 +71,10 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                  window.removePageLoader();
                  $(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p>"+err.message+"</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>"); 
             }
+			else if(err.message==="Missing or invalid parameter: variationProductCode Product is configurable. Variation code must be specified"){
+               window.removePageLoader();
+              $(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p> This Product contains options that must be selected before adding to Wishlist. Please select the product to choose an option.</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>"); 
+            }
         });
     	var filter_end_limit=5;
         if($(window).width()<700){

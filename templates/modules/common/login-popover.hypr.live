@@ -1,5 +1,4 @@
-<!-- <div class="login-popup-wrapper"> -->
-    
+  
     <a id="login-popover-close" class="close" href="javascript:void(0);">&times;</a>
     <div class="mz-popover mz-popover-login mz-l-slidebox checkout-login-wrap">
         <!-- For checkout login -->
@@ -75,13 +74,3 @@
             <button class="mz-cms-col-7-12 cont-to-signup">CONTINUE TO SIGN-UP</button>
         </section>
     </div> 
-    <!-- <div class="mz-popover mz-popover-login mz-l-slidebox checkout-login-wrap">
-        <section data-mz-role="login-form" class="mz-login-form mz-l-slidebox-panel">
-            <div class="mz-cms-col-12-12 login-popover-title">
-                    <h2>CONTINUE ASS GUEST</h2>
-                    <small>You can easily create one using information used during the checkout process.</small>
-                </div> 
-        </section>
-    </div> -->
-    
-<!-- </div> -->

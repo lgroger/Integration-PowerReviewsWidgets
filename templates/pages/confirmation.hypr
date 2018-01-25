@@ -116,9 +116,6 @@
 <div class="mz-l-container order-confirmation">
     <h1 class="mz-pagetitle">
         {% if model.billingInfo.paymentType == 'Check' %}
-        {% comment %}
-          <a href="/request-quote" class="request-link">{{ labels.reuestQuoteLnk }}</a>
-          {% endcomment %}
           {{ labels.quoteConfirmation }}
           <span class="print-link" onClick="window.print()"><u>Print Receipt</u></span>
         {% else %}
@@ -151,10 +148,6 @@
         </div>
     </div>
      <div class="clear"></div>
-	<!--p>{{ labels.confirmationText }}</p>
-
-    <p>{{ labels.yourOrderNumber|string_format(model.orderNumber)|safe }}</p-->
-
      {% if model.hasDirectShip %}
     <div class="shipping-info">
       <h3 class="shipping-head">Shipping Information</h3>
@@ -167,12 +160,6 @@
           <div class="confirmation_address">
             {% include "modules/common/confirmation-address" with model=model.fulfillmentInfo.fulfillmentContact %}
           </div>
-
-            <!--span class="ship-text2" style="">Jhon Doe</span><br>
-            <span class="ship-address">12th Avenue<br>
-            Brooks Street,<br>
-            New York, NY 100007<br>
-            USA</span-->
         </div>
       </div>
       <div class="div_66">
@@ -301,19 +288,7 @@
                                     {% endif %}
                                   {% endfor %}
                                 {% endif %}
-                                  <!-- <p><span class="sd_label">Color:</span><span class="sd_color_box" style="background:#594d42;"></span></p>
-                                  <p><span class="sd_label">Type:</span><span class="sd_text">Outdoor Banner with Slits</span></p>
-                                  <p><span class="sd_label">Size:</span><span class="sd_text">lorem ipsum</span></p> -->
                                 </div>
-
-                                <!-- {% if item.product.bundledProducts.length %}
-                                  <dl class="mz-propertylist">
-                                  {% for bundledProduct in item.product.bundledProducts %}
-                                    <dt>{{ bundledProduct.productCode }}</dt>&nbsp;
-                                    <dd>{{ bundledProduct.name }} ({{ bundledProduct.quantity }})</dd>
-                                  {% endfor %}
-                                  </dl>
-                                {% endif %} -->
                             </td>
                             <td class="mz-ordersummary-item-price">
                                 {% include "modules/common/item-price" %}
@@ -351,46 +326,6 @@
                 {% endfor %}
               </table>
             </div>
-              <!-- <div class="orders-header mz-cms-col-12-12">
-                  <div class="order-blocks1">
-                      ITEMS
-                  </div>
-                  <div class="order-blocks2">
-                      DESCRIPTION
-                  </div>
-                  <div class="order-blocks3">
-                      PRICE
-                  </div>
-                  <div class="order-blocks4">
-                      QTY
-                  </div>
-                  <div class="order-blocks5">
-                      TOTAL
-                  </div>
-              </div>
-               {% for item in model.items %}
-               <div class="orders-body mz-cms-col-12-12">
-                  <div class="order-blocks1">
-                      <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}">
-                  </div>
-                  <div class="order-blocks2">
-                      <p class="product-name">{{ item.product.name }} </p>
-                     <span style="color:#777;"> Color:</span><span class="rounded-cart-color">
-                      <span style="background-color:Blue;"></span>
-                      </span>
-                  </div>
-                  <div class="order-blocks3">
-                     {% include "modules/common/item-total" %}
-                  </div>
-                  <div class="order-blocks4">
-                     {{ item.quantity }}
-                  </div>
-                  <div class="order-blocks5">
-                       {% include "modules/common/item-total" %}
-                  </div>
-                   <hr>
-              </div>
-              {% endfor %} -->
           </div>
           <div class="cart-rec mz-cms-col-4-12">
             <h2 class="cart_summary_title">Cart Summary</h2>
@@ -460,33 +395,8 @@
                     </tbody>
                 </table>
             </div>
-
-              <!-- <div class="cart-summary cart-head mz-cms-col-12-12">
-                  <h3 class="cart-head" style="margin: 0;margin-left:5%;">CART SUMMARY</h3>
-              </div>
-              <div style="background:#f0faf9;border: 1px solid rgba(128, 128, 128, 0.25">
-              <div class="cart-summary ">
-                  <h3 class="cart-label" style="margin:0;margin-left:5%;">SUB TOTAL <span class="cart-num">{{ model.discountedSubtotal|currency }}</span></h3>
-              </div>
-              <div class="cart-summary ">
-                  <h3 class="cart-label" style="margin:0;margin-left:5%;">SHIPPING <span class="cart-num">{{ model.shippingSubTotal|currency }}</span></h3>
-              </div>
-              <div class="cart-summary ">
-                  <h3 class="cart-label" style="margin:0;margin-left:5%;">SHIPPING SURCHARGE <span class="cart-num">{{ model.handlingTotal|currency }}</span></h3>
-              </div>
-              <div class="cart-summary">
-                  <h3 class="cart-label" style="margin:0;margin-left:5%;">TAX <span class="cart-num">$0</span></h3>
-              </div>
-              <hr>
-               <div class="cart-summary">
-                  <h3 style="margin-left:5%;">TOTAL <span class="cart-num">{{ model.total|currency }}</span></h3>
-              </div> -->
               <div class="help-sec">
                {% dropzone "confirmation-help-text" scope="template"%}
-               <!-- <h4>Questions about this order?</h4>
-                <hr>
-                <div class="support-text">Please call <br> Customer Support at</div>
-                <div class="support-num">1-800-314-8736</div> -->
               </div>
             </div>
           </div>

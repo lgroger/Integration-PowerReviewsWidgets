@@ -94,19 +94,6 @@
                 </div>
             </div>
 
-{% comment %}
-<script>
-ga('send', {
-  hitType: 'event',
-  eventCategory: '{{ siteContext.generalSettings.websiteName }}',
-  eventAction: 'buy',
-  eventLabel: 'addtocart'
-});
-
-</script>
-
-{% endcomment %}
-
 
   {% comment %}
   <!--div class="mz-itemlisting-quantity">{{ labels.qty }}: {{ model.quantity }}</div>

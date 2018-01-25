@@ -12,7 +12,6 @@ kajsdanskdna
 				<form method="post" class="mz-loginform mz-loginform-page" name="mz-anonymousorder">
                     <input type="hidden" name="order-returnUrl" value="{{ model.returnUrl }}"/>
                     <input name="ordernum" value="" type="text" placeholder="{{ labels.orderId }}" data-mz-order-number/>
-                	<!-- <input type="text" placeholder="{{ labels.verifyWithEmail }}" name="verifyemail" value="" data-mz-verify-with/> -->
                     <select data-mz-verify-with>
                     	<option value="">{{ labels.verifyWith }}</option>
                         {% if themeSettings.zipCodeEnabled %}<option value="zipCode">{{ labels.billingPostalCode }}</option>{% endif %}

@@ -79,28 +79,3 @@
     </p>
 </h3>
 {% dropzone "faq-store-front" scope="template" %}
-<!--button class="accordion"><span style="color:#00b09b;    font-size: 22px;
-    margin-right: 2%;">Q:</span>When will I receive my Rewardz?</button>
-<div class="panel">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-</div>
-<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
-    margin-right: 2%;">Q:</span>How much do I need to spend to receive Shindigz Rewardz ?</button>
-<div class="panel">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-</div>
-<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
-    margin-right: 2%;">Q:</span>How long do I have to redeem my Shindigz Rewardz; do they expire?</button>
-<div class="panel">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-</div>
-<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
-    margin-right: 2%;">Q:</span>How can I make sure I earn Rewardz?</button>
-<div class="panel">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-</div>
-<button class="accordion"><span style="color:#00b09b;    font-size: 22px;
-    margin-right: 2%;">Q:</span>Can I check my Rewardz balance?</button>
-<div class="panel">
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-</div-->

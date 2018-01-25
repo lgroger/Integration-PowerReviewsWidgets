@@ -142,6 +142,7 @@
             
         </div>
     </div>
+    {% comment %}
 <!--    {% if themeSettings.showAddressTypeDropdown %}
     <div class="mz-l-formfieldgroup-row mz-addressform-addresstype">
         <div class="mz-l-formfieldgroup-cell">
@@ -155,27 +156,29 @@
         </div>
     </div>
     {% endif %} -->
+    {% endcomment %}
     <div class="mz-l-formfieldgroup-row mz-addressform-checkboxes">
         <div class="mz-l-formfieldgroup-cell">
+            {% comment %}
             <!--label for="save_to_book">
                 <input type="checkbox" name="save_to_book" id="save_to_book"> Save This To My Address Book
-            </label-->
+            </label-->{% endcomment %}
         {% if pageContext.pageType == "checkout" %}
             {% if not user.isAnonymous %}
-                <!-- <div class="label-push-down acc-pref-main-sec">
+               {% comment %} <!-- <div class="label-push-down acc-pref-main-sec">
                 <input type="checkbox" {% if model.isDefaultPayMethod %}checked="true"{% endif %} data-mz-value="isSaveAddress" class="check-acc-box" {% if model.paymentType == "CreditCard" %} id="save_to_book" {% else %} id="save_to_book1" {% endif %} name="save_to_book">
                     <label class="acc-pre-che" for="{%if model.paymentType == "CreditCard" %}save_to_book{% else %}save_to_book1{% endif %}">Save This To My Address Book</label>
-                </div>  -->
+                </div>  -->{% endcomment %}
                 <div class="label-push-down acc-pref-main-sec">
                     <input type="checkbox" {% if model.isDefaultPayMethod %}checked="true"{% endif %} data-mz-value="{{ cardcontext }}isDefaultPayMethod" class="check-acc-box" id="save_to_default" name="save_to_default">
                     <label class="acc-pre-che" for="save_to_default">Make my default address</label>
                 </div>
             {% endif %}
         {% endif %}
-
+{% comment %}
             <!--label for="save_to_default">
                 <input type="checkbox" name="save_to_default" id="save_to_default"> Make my default address
-            </label-->
+            </label-->{% endcomment %}
             <label class="require_label"><span class="is-required">* </span>Required Fields</label>
         </div>
     </div>

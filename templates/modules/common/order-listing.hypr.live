@@ -30,7 +30,6 @@
                 <div class="order-blocks1">
                    <a href="/p/{{ item.product.productCode }}">
                     <img class="mz-carttable-item-image" src="{{item.product.imageUrl}}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} ></a>
-                   </a>
                    {% if item.product.options && item.product.productUsage !="Bundle" %}
                       {% for opt in item.product.options %}
                         {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript - modules/my-menu.js #}
@@ -42,10 +41,7 @@
                 {% endif %}
                 <div class="order-blocks2">
                     <p class="product-name"><a href="/p/{{ item.product.productCode }}">{{ item.product.name }} </a></p>
-                   <!--span class="order_color"> Color:</span>
-                   <span class="rounded-cart-color">
-                    <span style="background-color:Blue;"></span>
-                    </span--><br/>
+                   <br/>
                     <div class="mob-blocks">
                       <span class="order_qty">Qty: {{ item.quantity }}</span><br/><br/>
                       <span class="order-details-font account-order-number11">Order Placed:</span>
@@ -262,22 +258,6 @@
                             </span>
                         </div>
                         {% endif %}
-                        {% if admodel.billingInfo.paymentType == "CreditCard" %}
-                       
-                        {% endif %}
-                        {% if admodel.billingInfo.paymentType == "Check" %}
-                        <!--div class="block1">
-                           <span class="ship-text1">{{ labels.billingAddress }}:</span>
-                        </div>
-                        <div class="block2">
-                        <dt><strong>{{ labels.mailCheckTo }}</strong></dt>
-                        <dd class="mz-addresssummary">
-                            <span>{{ ViewData.mailCheckTo.shippingOriginContact.firstName}} {{ ViewData.mailCheckTo.shippingOriginContact.lastNameOrSurname }}</span>
-                            <span>{{ ViewData.mailCheckTo.shippingOriginContact.companyOrOrganization }}</span>
-                            {% include "modules/common/address-summary" with model=ViewData.mailCheckTo %}
-                        </dd>
-                        </div-->
-                        {% endif %}
                          {% endwith %}  
                 {% endif %}     
                 {% endfor %}
@@ -308,7 +288,7 @@
 
 
               <div class="cart-summary ">
-                  <h3 class="cart-label">SHIPPING SURCHARGE {% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ( {{ model.handlingAmount|currency }} )</span>{% endif %}</span> <span class="cart-num">{{model.handlingTotal|currency}}</span></h3>
+                  <h3 class="cart-label">SHIPPING SURCHARGE {% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ( {{ model.handlingAmount|currency }} )</span>{% endif %} <span class="cart-num">{{model.handlingTotal|currency}}</span></h3>
               </div>
                
               {% for discount in model.orderDiscounts %}

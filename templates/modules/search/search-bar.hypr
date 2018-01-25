@@ -1,5 +1,4 @@
-    <input id="category_ids" type="hidden" value="{{ themeSettings.categoryForSearchDropdown }}"/>
-    {% require_script "modules/bloomreach.suggest" %}
+{% require_script "modules/bloomreach.suggest" %}
 <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.min.css">
     <ul class="searchNav">
         <li id="search">
@@ -12,18 +11,3 @@
             </form>
         </li>
     </ul>
-
-{% comment %} 
-{% if pageContext.categoryId %}
-    {{pageContext.title }} 
-{% else %}
-{% endif %} 
-<li><a search-data="">{{ labels.all }}</a></li>
-{% partial_cache %}
-{% for node in navigation.tree %}
-{% if node.nodeType == "category" and not node.isEmpty %}
-<li><a search-data="{{node.originalId}}">{{node.name}}</a></li>
-{% endif %}
-{% endfor %}
-{% endpartial_cache %}
-{% endcomment %}

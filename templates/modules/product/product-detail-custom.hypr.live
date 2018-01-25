@@ -58,7 +58,7 @@
             <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
             {% if not model.groundOnly %}
                 <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
-                Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}</span><br>
+                <span>Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}</span><br>
             {% endif %}
           </span>
         {% endif %}
