@@ -51,15 +51,16 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
             $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
 
 			 
-		 	try{
-            	PowerReviews.writeProductListBoxes();
-			}
-			catch(e){
-				console.log(e);
-			}
+		 	
 		 };
 		 
         productView.render();
+		try{
+			PowerReviews.writeProductListBoxes(product.get('productCode'));
+		}
+		catch(e){
+			console.log(e);
+		}
 		return productView;
     };
 	

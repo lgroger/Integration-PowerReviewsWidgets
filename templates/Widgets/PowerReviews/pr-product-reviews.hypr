@@ -49,10 +49,12 @@
   
 {% endif %}
 
+{% comment %}
+product.js calls modules/powerreviews
 {% require_script "widgets/powerreviews" %}
-
 <!-- Code for implementing Tab -->
- 
+{% endcomment %}
+
 {% if model.config.isTab == true %}
 <input type="hidden" id="reviewSocialAnswerTab" value="1">
 {% endif %}
