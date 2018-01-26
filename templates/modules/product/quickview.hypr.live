@@ -122,7 +122,7 @@
                               {% endif %} 
                                 </div>
                                 <div class="product-review">
-                                    <a href="{{ model.url }}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-{{ model.productCode }}"><span id="pr-snippet-read-review-count"></span> Review(s)</a> | <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
+                                    <a href="{{ model.url }}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-{{ model.productCode }}">Read Review(s)</a> | <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
                                 </div>
                             </div>
                             {% endwith %}

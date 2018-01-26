@@ -76,7 +76,7 @@ define([
           }   
  
            _$body.removeClass('mz-loading');
-            ColorSwatch.ColorSwatch.init();
+            ColorSwatch.ColorSwatch.init(); 
             window.wishlistIni();
             $(".mz-new-ribbon").each(function(){
                 if(!$(this).is(':visible')){
