@@ -47,11 +47,6 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, addedToCart, Product
             $("#video-frame").hide();
 
             $(".custom-qty").children(".qtyminus,.qtyplus").css({"background-color":"transparent","fonts-size":"1rem"});
-
-            $('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
-
-			 
-		 	
 		 };
 		 
         productView.render();
