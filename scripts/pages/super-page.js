@@ -20,6 +20,15 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
 			'quantity': $("#qty-" + productCode).val()
 		});
 		
+		if(product.get('volumePriceBands')){
+			var minqt=_.min(_.pluck(product.get('volumePriceBands'),"minQty"));
+			if(minqt>$("#qty-" + productCode).val()){
+				window.removePageLoader();
+				$(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p>"+"Sorry! Min Qty for this product is "+minqt+"</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>");
+				return;
+			 }
+	  	}
+		
 		var productView = new QuickViewProductView({
 			model: product,
 			gaAction: 'Buysuperpages',
