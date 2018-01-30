@@ -267,16 +267,11 @@
           </div>
       </div>
       <div id="cboxOverlay" style="display:none;"></div>
-          <!-- <div id="login-signup-container" class='overlay' style="display:none;"></div> -->
 
-
-      <!--Certona & Munchkin Code Integration Start -->
+{# moving marketo to theme settings 3rd party scripts #}
+      <!--Certona Code Integration Start -->
       <script type="text/javascript">
-
-        !function(){function e(){t===!1&&(t=!0,Munchkin.init("{{ themeSettings.mktoAccNumber }}"))}var t=!1,n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src="//munchkin.marketo.net/munchkin.js",n.onreadystatechange=function(){("complete"==this.readyState||"loaded"==this.readyState)&&e()},n.onload=e,document.getElementsByTagName("head")[0].appendChild(n)}();
-
           var globalNameSpace={},page_context=require.mozuData("pagecontext"),page_type="",catFlag;
-
 
           if(page_context.pageType !== undefined){
             var recommended_div=document.getElementById("recommended_products_slot");
