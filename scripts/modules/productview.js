@@ -155,7 +155,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					var holder = $(".bundle-inside-item[productcode='"+component.productCode+"']");
 					var productImages = product.get('content.productImages');
 					//console.log(productImages[0]);
-					if(productImages.length>0 && productImages[0].imageUrl){
+					if(productImages && productImages.length>0 && productImages[0].imageUrl){
 						$(holder).find(".bundle-img").attr("src",productImages[0].imageUrl+"?max=100");
 					}
 					else{
