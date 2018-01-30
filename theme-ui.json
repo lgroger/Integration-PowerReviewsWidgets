@@ -1214,6 +1214,13 @@
 <!-- Bing webmaster -->
 <meta name="msvalidate.01" content="7138E6FA7C73609C2D10E19E61849514" />
 
+<!-- Pinterest-->
+    <meta name="p:domain_verify" content="d12c0360d6e5231e7b6ce0c3d72bf4ae"/>
+
+<!-- Transistor Webmaster Verification -->
+    <meta name="msvalidate.01" content="912C2972DBD9DAF47EF74EBF5F484E30" />
+    <meta name="google-site-verification" content="qjE1jeU9tFYGbqw2_giQfjaEXW6yhcDcuiMtK0mA-pc" />
+    <meta name="msvalidate.01" content="1C0E33D19FA5E4BCB8D21245E9CB7440" />
 <!-- GATE -->
     <script type=text/javascript>
   ;if(typeof ROIStorage === 'undefined' || typeof ROIStorage.roiq === 'undefined') {
@@ -1229,27 +1236,20 @@
 
 **allThirdPartyScriptTags**
 
-<!-- Email POPUP Tags -->
     <script type="text/javascript">
+// marketo
+    !function(){function e(){t===!1&&(t=!0,Munchkin.init("769-CKK-790"))}var t=!1,n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src="//munchkin.marketo.net/munchkin.js",n.onreadystatechange=function(){("complete"==this.readyState||"loaded"==this.readyState)&&e()},n.onload=e,document.getElementsByTagName("head")[0].appendChild(n)}();
+
+//Email POPUP Tags 
       (function() {var s = document.createElement('script');s.type = 'text/javascript';s.async = true;
       s.src = document.location.protocol + '//loader.wisepops.com/default/index/get-loader?user_id=27447';
       var s2 = document.getElementsByTagName('script')[0];s2.parentNode.insertBefore(s, s2);})();
-    </script>
 
-    <!---- Sale Cycle---->
-    <script type="text/javascript">
+// Sale Cycle
         try {var __scP=(document.location.protocol=="https:")?"https://":"http://";
         var __scS=document.createElement("script");__scS.type="text/javascript";
         __scS.async=true;__scS.src=__scP+"d16fk4ms6rqz1v.cloudfront.net/capture/Shindigz.js";
         document.getElementsByTagName("head")[0].appendChild(__scS);}catch(e){}
     </script>
-
-<!-- Pinterest-->
-    <meta name="p:domain_verify" content="d12c0360d6e5231e7b6ce0c3d72bf4ae"/>
-
-<!-- Transistor Webmaster Verification -->
-    <meta name="msvalidate.01" content="912C2972DBD9DAF47EF74EBF5F484E30" />
-    <meta name="google-site-verification" content="qjE1jeU9tFYGbqw2_giQfjaEXW6yhcDcuiMtK0mA-pc" />
-    <meta name="msvalidate.01" content="1C0E33D19FA5E4BCB8D21245E9CB7440" />
 
 ************************************/
