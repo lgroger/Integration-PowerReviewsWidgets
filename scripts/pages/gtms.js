@@ -9,6 +9,7 @@ var ShindigzGTM = {
     dataLayer:"",
     pageContext: "",
     jQuery: "",
+//    Hypr: require('hyprlive'),
     
     getPreloadJSON: function(context) {
          var f = document.getElementById("data-mz-preload-"+context);
@@ -21,18 +22,29 @@ var ShindigzGTM = {
         self.pageContext = self.getPreloadJSON('pagecontext');
         self.jQuery = require('jquery');
         self.LoadGTM();
-    },
+    }, 
     
     LoadGTM: function(){
         var self = this;
+        self.jQuery = require('jquery');
         self.dataLayer = Object.assign(self.generalDataLayers(), self.checkPage());
         dataLayer.push(self.dataLayer);
-        this.jQuery('body').append(this.buildGTMtag());
+        self.jQuery = require('jquery');
+        self.jQuery('body').append(this.buildGTMtag());
+       
     },
     
+//    getCriteoContent: function(){
+//        var self = this;
+//        if(self.pageContext.crawlerInfo.canonicalUrl === "/homepage" || self.pageContext.cmsContext.template.path === "main-page" || self.pageContext.pageType === "product" || self.pageContext.pageType === "cart" || self.pageContext.pageType === "confirmation"){
+//        
+//        }
+//    },
+//    
     checkPage: function(){
         var self = this;
         var returnVal, price; 
+        var Hypr = require('hyprlive');
         console.log('self context', self.pageContext);
         if(self.pageContext.pageType === 'product'){ 
 //            if(self.getPreloadJSON('product').price.price !== 'undefined'){
@@ -41,6 +53,7 @@ var ShindigzGTM = {
 //                price = self.getPreloadJSON('product').priceRange.lower.price + "-" + self.getPreloadJSON('product').priceRange.upper.price;
 //            }
         }
+        var deviceType = /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(navigator.userAgent) ? "m" : "d";
         switch(self.pageContext.pageType) {
             case 'category':
                 returnVal = Object.assign({},{
@@ -70,8 +83,16 @@ var ShindigzGTM = {
                     'transactionTotal': self.getPreloadJSON('order').total,
                     'transactionTax': self.getPreloadJSON('order').taxTotal,
                     'transactionShipping': self.getPreloadJSON('order').shippingTotal,
-                    'transactionProducts': self.buildTransProducts() 
-                    });
+                    'transactionProducts': self.buildTransProducts(),
+                    //Commission Junction specific
+                    'Qty': self.getOrderedProducts().length,
+                    'Amt': self.getPreloadJSON('order').total,
+                    'CID': '473140',//cid
+                    'CURRENCY':'USD',
+                    'TYPE': (self.pageContext.user.isAnonymous)? Hypr.getThemeSetting("aidAnonymous") : Hypr.getThemeSetting("aidExist"), // {{themeSettings.aidAnonymous}}: {{themeSettings.aidExist}}
+                    'ITEM': self.getOrderedProducts(),
+                    'containerTagId': (self.pageContext.user.isAnonymous)? Hypr.getThemeSetting("aidExist") : 15733 // self.Hypr.getThemeSetting('containerTagIdAnonymous'): self.Hypr.getThemeSetting('containerTagIdLoggedIn')
+                });
                 break;
             default: 
                 returnVal = {};
@@ -83,6 +104,9 @@ var ShindigzGTM = {
     getOrderedProducts : function() {
         var self = this;
         var orderItems = self.getPreloadJSON('order').items;
+        if(!orderItems || orderItems === ""){
+            return ; 
+        }
         var product_list = [];
         for( var k=0; k < orderItems.length; k++ ) {
             product_list.push({
@@ -133,6 +157,9 @@ var ShindigzGTM = {
     
     generalDataLayers: function() {
         var pageContext = this.getPreloadJSON('pagecontext');
+        var deviceType = pageContext.isDesktop ? "m" : "d";
+        var Hypr = require('hyprlive');
+        var hyper = require('hypr');
         return {
             'email' : pageContext.user.email,
             'firstName' : pageContext.user.firstName,
@@ -140,6 +167,9 @@ var ShindigzGTM = {
             'isAnonymous': pageContext.user.isAnonymous,
             'customerId': pageContext.user.userId,
             'kiboPageType': pageContext.pageType,
+            'deviceType': deviceType,
+            'pageType': pageContext.crawlerInfo.canonicalUrl,
+            "test": hyper.getThemeSetting("aidAnonymous"),
             'accountId': (pageContext.user.isAuthenticated) ? pageContext.user.accountId : ''
         };
     },
@@ -153,4 +183,7 @@ var ShindigzGTM = {
     }
 };
 
-ShindigzGTM.registerEvents(); 
+setTimeout(function () {
+    ShindigzGTM.registerEvents(); 
+    //do something once
+}, 3000);
