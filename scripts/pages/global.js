@@ -1,39 +1,40 @@
-require(['modules/jquery-mozu','underscore', 'modules/api','hyprlive' ,'vendor/jQuery.selectric'], function ($, _, api, Hypr) {
+require(['modules/jquery-mozu','underscore', 'modules/api','hyprlive','modules/marketo-subscribe' ,'vendor/jQuery.selectric'], function ($, _, api, Hypr, Marketo) {
 var pageContext = require.mozuData('pagecontext');
-    var form_marketo_submit = function(e,f,$b,$email,tr,fa){
+	var form_marketo_submit = function(e,$b,$email,tr,fa){
         //set values of form
-        f.vals({"Email":e,"subscribeShindigz":tr,"unsubscribeShindigz":fa});
-        window.subscribeEmailId += ";"+e;
-
         if(e !== ''){
             $b.next().hide();
-            if (f.submittable()) {
-                // Set it to be non submittable
-                //window.email_pre.submittable(false);
-                f.submit();
-                f.onSuccess(function(values, followUpUrl) {
-                    // Return false to prevent the submission handler continuing with its own processing
+			
+			var callback = function(){
+				    // Return false to prevent the submission handler continuing with its own processing
                     if($('.compare-full-error-container').length === 0){
                         //add overlay, close overlay & remove on click of "OK" button
-                        var closeBtn = $("<button />").text("OK").attr("id","session-btn-rd").click(function(){
-                            $(this).parent().parent().fadeOut(500,function(){
-                                $(this).remove();
-                            });
-                        });
-                        var popupOuter = $("<div />").attr("class","compare-full-error-container");
-                        var popupInner = $("<div />").attr("class","compare-error-container");
-                    	$(document.body).append($(popupOuter).append($(popupInner).append("<div>Thanks for subscribing</div>").append(closeBtn)));
+                       resultOverlay("Thanks for subscribing");
                     }
                     $email.val("");
-                    return false;
-                });
-            }
+			};
+			
+            Marketo.subscription(e,tr,fa,callback);
         }else{
             $b.next().show();
         }
-
+    
         //upon not selecting any option show error message, if selected any option hide the error message and send data to the marketo
     };
+	
+	var resultOverlay = function(message,reload){
+		 var closeBtn = $("<button />").text("OK").attr("id","session-btn-rd").click(function(){
+			$(this).parent().parent().fadeOut(500,function(){
+				$(this).remove();
+				if(reload){
+					window.location.reload();
+				}
+			});
+		});
+		var popupOuter = $("<div />").attr("class","compare-full-error-container");
+		var popupInner = $("<div />").attr("class","compare-error-container");
+		$(document.body).append($(popupOuter).append($(popupInner).append("<div>"+message+"</div>").append(closeBtn)));
+	};
 
     var validateEmail = function(email) {
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -66,7 +67,7 @@ var pageContext = require.mozuData('pagecontext');
 
                     if(isVisible){
                         // If image is updated with src attribute, donot process again
-                        if(!$(el).attr('src')){
+                        if(!($(el).attr('src') && $(el).attr('src') === $(el).attr('data-src'))){
                                 $(el).attr('src',$(el).attr('data-src'));
                         }
                     }
@@ -89,7 +90,6 @@ var pageContext = require.mozuData('pagecontext');
 
 		      var errCtr=0,now=0,chg=0,
             themeSettings = require('hyprlivecontext').locals.themeSettings;
-       	    window.subscribeEmailId = "";
         //live person code
         if(pageContext.pageType === 'checkout'){
             $('.mz-messagebar').bind("DOMSubtreeModified",function(e){
@@ -126,7 +126,6 @@ var pageContext = require.mozuData('pagecontext');
         var obj_subscribe = {
             "attributes": [
                 {
-                 "attributeDefinitionId": Hypr.getThemeSetting('emailSubscription'),
                  "fullyQualifiedName": "tenant~email-subscription",
                  "values": [true]
                 }
@@ -140,7 +139,6 @@ var pageContext = require.mozuData('pagecontext');
         var obj_unsubscribe = {
             "attributes": [
                 {
-                 "attributeDefinitionId": Hypr.getThemeSetting('emailSubscription'),
                  "fullyQualifiedName": "tenant~email-subscription",
                  "values": [false]
                 }
@@ -164,7 +162,7 @@ var pageContext = require.mozuData('pagecontext');
             }
         
         });
-		if(pageContext.pageType === "my_account"){
+		if(pageContext.pageType === "my_account"){ // can't we move this to my-account.js??
 
 			 var customer_attrib = require.mozuData('customer'),
 			 	uniqueList,
@@ -189,44 +187,32 @@ var pageContext = require.mozuData('pagecontext');
                     function(res){
                         //console.log(res);
                     });
-                    //set values of form
-                    window.email_signup.vals({"Email":pageContext.user.email,"subscribeShindigz":"no","unsubscribeShindigz":"yes"});
-
-                    if (window.email_signup.submittable()) {
-
-                        window.email_signup.submit();
-                        window.email_signup.onSuccess(function(values, followUpUrl) {
-                        	if(window.location.hash !== '#mz-drop-zone-holiday-preferences'){
+					var unsubscribeCallback = function(){
+							if(window.location.hash.indexOf("#mz-drop-zone-holiday-preferences") === -1){
 								window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
 							}
 							if($('.compare-full-error-container').length === 0){
-                            	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Unsubscribed<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+								resultOverlay("Unsubscribed");
                             }
-                            return false;
-                        });
-                    }
-                }else if(subscription && !unsubscribe){   //if not subscribed, on checking the field user will be subscribed for email
+					};
+					Marketo.unsubscribe(pageContext.user.email,unsubscribeCallback); // removed the window reload
 
+                }else if(subscription && !unsubscribe){   //if not subscribed, on checking the field user will be subscribed for email
+					var subscribeCallback = function(){
+							if(window.location.hash.indexOf("#mz-drop-zone-holiday-preferences") === -1){
+								window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
+							}
+                        	if($('.compare-full-error-container').length === 0){
+								resultOverlay("Thanks for subscribing"); // removed the window reload
+                        	}
+					};
                     api.request('PUT','/api/commerce/customer/accounts/'+pageContext.user.accountId+'',obj_subscribe).then(
                     function(res){
                         //console.log(res);
                     });
-                    //set values of form
-                    window.email_signup.vals({"Email":pageContext.user.email,"subscribeShindigz":"yes","unsubscribeShindigz":"no"});
+					
+					Marketo.subscribe(pageContext.user.email,subscribeCallback);
 
-                    if (window.email_signup.submittable()) {
-
-                        window.email_signup.submit();
-                        window.email_signup.onSuccess(function(values, followUpUrl) {
-                        	if(window.location.hash !== '#mz-drop-zone-holiday-preferences'){
-								window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
-							}
-                        	if($('.compare-full-error-container').length === 0){
-                        		$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();window.location.reload();'>OK</button></div></div>");
-                        	}
-                            return false;
-                        });
-                    }
 
                 }
             });
@@ -327,7 +313,6 @@ var pageContext = require.mozuData('pagecontext');
 					var obj = {
 	                    "attributes": [
 	                        {
-	                         "attributeDefinitionId": Hypr.getThemeSetting('holidayPreferences'),
 	                         "fullyQualifiedName": "tenant~preferences",
 	                         "values": [uniqueList]
 	                        }
@@ -342,28 +327,24 @@ var pageContext = require.mozuData('pagecontext');
 	                    //console.log(res);
 	                });
 
-	                //set values of form
-	                window.email_pre.vals({ "emailPreferncesSZ": uniqueList, "Email": pageContext.user.email });
+	                
 
 	                //upon not selecting any option show error message, if selected any option hide the error message and send data to the marketo
 	                if(preferences !== ''){
 	                    $(btn).next().hide();
-	                    if (window.email_pre.submittable()) {
-	                        // Set it to be non submittable
-	                        //window.email_pre.submittable(false);
-	                        window.email_pre.submit();
-	                        window.email_pre.onSuccess(function(values, followUpUrl) {
-	                        	if(window.location.hash !== '#mz-drop-zone-holiday-preferences'){
+						
+						var callback = function(){
+								if(window.location.hash.indexOf("#mz-drop-zone-holiday-preferences") === -1){
 									window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
 								}
 	                            // Return false to prevent the submission handler continuing with its own processing
 	                            if($('.compare-full-error-container').length === 0){
-	                            	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();window.location.reload();'>OK</button></div></div>");
+									resultOverlay("Thanks for subscribing");
 	                            }
+						};
+						Marketo.setPreferences(uniqueList,pageContext.user.email,callback);
+						
 
-	                            return false;
-	                        });
-	                    }
 	                }else{
 	                    $(btn).next().show();
 	                }
@@ -371,6 +352,7 @@ var pageContext = require.mozuData('pagecontext');
            }
             //user holiday email preferences - marketo - end
             
+			Marketo.loadSubscribe(); // begin preloading marketo javascript
         }
 
         var btn_email_signup = document.getElementById('subscribe_email');
@@ -381,6 +363,8 @@ var pageContext = require.mozuData('pagecontext');
 				$('#subscribe_email').click();
 			}
 			e.stopPropagation();
+		}).focus(function(){
+			Marketo.loadSubscribe(); // begin preloading marketo javascript
 		});
 
         if(btn_email_signup !== null){
@@ -409,27 +393,27 @@ var pageContext = require.mozuData('pagecontext');
 	                        //console.log(res);
 	                    });
 
-	                    if(window.subscribeEmailId.indexOf(email)>=0){
-	                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>You're Email Id Already Registered<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+	                    if(Marketo.subscribeEmailId.indexOf(email)>=0){
+							resultOverlay("Your Email Id Already Registered");
 	                    	$("#signUpEmail").val("");
 	                    }else{
-	                    	form_marketo_submit(email,window.email_signup,$(btn_email_signup),$("#signUpEmail"),"yes","no");
+	                    	form_marketo_submit(email,$(btn_email_signup),$("#signUpEmail"),"yes","no");
 	                    }
 
 	                }else if(x){
-	                	if(window.subscribeEmailId.indexOf(email)>=0){
-	                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>You're Email Id Already Registered<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+	                	if(Marketo.subscribeEmailId.indexOf(email)>=0){
+							resultOverlay("Your Email Id Already Registered");
 	                    	$("#signUpEmail").val("");
 	                    }else{
-	                    	form_marketo_submit(email,window.email_signup,$(btn_email_signup),$("#signUpEmail"),"yes","no");
+	                    	form_marketo_submit(email,$(btn_email_signup),$("#signUpEmail"),"yes","no");
 	                    }
 	                }
 	            }else if(pageContext.user.isAnonymous && x){
-	            	if(window.subscribeEmailId.indexOf(email)>=0){
-                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>You're Email Id Already Registered<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+	            	if(Marketo.subscribeEmailId.indexOf(email)>=0){
+						resultOverlay("Your Email Id Already Registered");
                     	$("#signUpEmail").val("");
                     }else{
-	                	form_marketo_submit(email,window.email_signup,$(btn_email_signup),$("#signUpEmail"),"yes","no");
+	                	form_marketo_submit(email,$(btn_email_signup),$("#signUpEmail"),"yes","no");
 	                }
 	            }
         	};
@@ -592,7 +576,7 @@ var pageContext = require.mozuData('pagecontext');
     }
 
     function add_breadcrumb_item (path,lvl,title_tag) {
-        console.log("add new path "+path);
+        //console.log("add new path "+path);
         var previous_url=document.referrer;
         previous_url=previous_url.substr(previous_url.indexOf("/",8));
         var tmp= JSON.parse(sessionStorage.getItem('breadcrumb'));

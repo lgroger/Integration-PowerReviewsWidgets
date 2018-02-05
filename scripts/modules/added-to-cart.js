@@ -5,9 +5,10 @@ define(
     'modules/backbone-mozu',
     "hyprlive",
     "modules/api",
-    'hyprlivecontext'
-], function ($, _, Backbone, Hypr, Api, HyprLiveContext) {
-
+    'hyprlivecontext',
+	"modules/dnd-token"
+], function ($, _, Backbone, Hypr, Api, HyprLiveContext,DNDToken) {
+	var productAttributes = Hypr.getThemeSetting('productAttributes');
     var AddedToCartOverlay = Backbone.MozuView.extend({
         templateName: 'modules/product/added-to-cart-overlay',
         additionalEvents: {
@@ -49,45 +50,32 @@ define(
             //$('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
         },
         showPersonalizeImage: function(){
-            var self = this, imgsrc,dndToken,personslizeIds = null, personslizeJson=null;
-            var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
+            var self = this;
             var product = this.model.get('product');
-             personslizeIds = null;
-                personslizeJson = null;
-                for(var j =0 ; j < product.options.length; j++){
-                        if(product.options[j].attributeFQN.toLowerCase() ==='tenant~dnd-token'){
-                            if(product.options[j].shopperEnteredValue && product.options[j].shopperEnteredValue!==""){
-                                personslizeIds = JSON.parse(product.options[j].shopperEnteredValue);
-                            }
-                        }
-                }
-                if(personslizeIds!==null && personslizeIds!==undefined){
-                    personslizeJson={};
-                    for(var eku in personslizeIds){
-                        if(eku.indexOf('@')!==-1){
-                            var prdCode = eku.split('@')[0];
-                            personslizeJson[prdCode]=personslizeIds[eku];
-                        }else{
-                            personslizeJson[eku]=personslizeIds[eku];
-                        }
-                    }
-                    product.personslizeIds=personslizeJson;
-                }
-                if(product.productUsage !== 'Bundle'){
-                    var dndTokenList = product.personslizeIds;
-                    for (var prop in dndTokenList) {
-                        if (dndTokenList.hasOwnProperty(prop)) {
-                            //alert(dndToken[prop]);
-                            dndToken = dndTokenList[prop];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                product.imageUrl=imgsrc;
-                            }  
-                        } 
-                    }
-
-                     
-                }
+			if(product.productUsage !== 'Bundle'){
+				var dndTokenJSON = null;
+				for(var j =0 ; j < product.options.length; j++){
+					if(product.options[j].attributeFQN === productAttributes.dndToken){
+						if(product.options[j].shopperEnteredValue && product.options[j].shopperEnteredValue!==""){
+							try{
+								dndTokenJSON = JSON.parse(product.options[j].shopperEnteredValue);
+							}
+							catch(e){
+								console.log(e);
+							}
+						}
+					}
+				}
+				if(dndTokenJSON){
+					var info = DNDToken.getTokenData(dndTokenJSON);
+					if(info.type ==="mc"){
+						// no action for now
+					}
+					else{
+						product.imageUrl = info.src;
+					}
+				}
+			}
         },
         initialize: function () {
             var me = this;

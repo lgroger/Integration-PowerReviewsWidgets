@@ -96,7 +96,9 @@
                     </div>  
                 
                 </div>
-            </div> 
+            </div>
+
+            {% comment %} <!-- LG 01/12/18 moved this to modules/marketo-subscribe.js -->
             <script src="//app-sj14.marketo.com/js/forms2/js/forms2.min.js"></script>
             <form id="mktoForm_{{ themeSettings.mktoHolidayEmailPreferences }}" style="display:none;"></form>
             <script>
@@ -106,6 +108,7 @@
             });
             
             </script>
+            {% endcomment %}
 
             <!-- #my profile div ends here -->
             <!-- #saved cards div starts here-->

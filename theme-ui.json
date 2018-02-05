@@ -1203,3 +1203,53 @@
         }
     ]
 }
+
+/****** theme settings to note/track ******
+
+**ThirdPartyHeadTag**
+
+<!-- BEGIN LivePerson Monitor -->
+    <script type="text/javascript"> window.lpTag=window.lpTag||{};if(typeof window.lpTag._tagCount==='undefined'){window.lpTag={site:'38420605'||'',section:lpTag.section||'',autoStart:lpTag.autoStart===false?false:true,ovr:lpTag.ovr||{},_v:'1.6.0',_tagCount:1,protocol:'https:',events:{bind:function(app,ev,fn){lpTag.defer(function(){lpTag.events.bind(app,ev,fn);},0);},trigger:function(app,ev,json){lpTag.defer(function(){lpTag.events.trigger(app,ev,json);},1);}},defer:function(fn,fnType){if(fnType==0){this._defB=this._defB||[];this._defB.push(fn);}else if(fnType==1){this._defT=this._defT||[];this._defT.push(fn);}else{this._defL=this._defL||[];this._defL.push(fn);}},load:function(src,chr,id){var t=this;setTimeout(function(){t._load(src,chr,id);},0);},_load:function(src,chr,id){var url=src;if(!src){url=this.protocol+'//'+((this.ovr&&this.ovr.domain)?this.ovr.domain:'lptag.liveperson.net')+'/tag/tag.js?site='+this.site;}var s=document.createElement('script');s.setAttribute('charset',chr?chr:'UTF-8');if(id){s.setAttribute('id',id);}s.setAttribute('src',url);document.getElementsByTagName('head').item(0).appendChild(s);},init:function(){this._timing=this._timing||{};this._timing.start=(new Date()).getTime();var that=this;if(window.attachEvent){window.attachEvent('onload',function(){that._domReady('domReady');});}else{window.addEventListener('DOMContentLoaded',function(){that._domReady('contReady');},false);window.addEventListener('load',function(){that._domReady('domReady');},false);}if(typeof(window._lptStop)=='undefined'){this.load();}},start:function(){this.autoStart=true;},_domReady:function(n){if(!this.isDom){this.isDom=true;this.events.trigger('LPT','DOM_READY',{t:n});}this._timing[n]=(new Date()).getTime();},vars:lpTag.vars||[],dbs:lpTag.dbs||[],ctn:lpTag.ctn||[],sdes:lpTag.sdes||[],ev:lpTag.ev||[]};lpTag.init();}else{window.lpTag._tagCount+=1;} </script>
+
+<!-- Bing webmaster -->
+<meta name="msvalidate.01" content="7138E6FA7C73609C2D10E19E61849514" />
+
+<!-- Pinterest-->
+    <meta name="p:domain_verify" content="d12c0360d6e5231e7b6ce0c3d72bf4ae"/>
+
+<!-- Transistor Webmaster Verification -->
+    <meta name="msvalidate.01" content="912C2972DBD9DAF47EF74EBF5F484E30" />
+    <meta name="google-site-verification" content="qjE1jeU9tFYGbqw2_giQfjaEXW6yhcDcuiMtK0mA-pc" />
+    <meta name="msvalidate.01" content="1C0E33D19FA5E4BCB8D21245E9CB7440" />
+<!-- GATE -->
+    <script type=text/javascript>
+  ;if(typeof ROIStorage === 'undefined' || typeof ROIStorage.roiq === 'undefined') {
+    (function(g,a,t,e){function setUpQueues(){g[a].realGa=g[t];g[a].analyticsJsNotLoaded=false;g[t]=function(){if(typeof arguments[0]==="function"){g[a].realGa(arguments)}else{g[a].q.push(arguments)}};g[a].roiq.push=function(){g[a].realGa.apply(g,arguments)};for(e=0;e<g[a].roiq.length;e+=1){g[a].realGa.call(g,g[a].roiq[e])}}g[a]=g[a]||{};g[a].windowName=g.name;g[a].GoogleAnalyticsObject=t;g[a].analyticsJsNotLoaded=true;g[a].roiq=[];g[a].q=(g[a].q||[]).concat((g[t]||{}).q||[]);if(g[t]&&!g[t].q){g[t](setUpQueues)}else{g[t]=function(){g[a].q.push(arguments)};g[t].q=[];g[t].q.unshift([setUpQueues])}})(window,"ROIStorage","ga");
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://9cec88481a9d4a5a5228-d5581c4555b84d59052278c10b305400.ssl.cf2.rackcdn.com/gate.js' : 'http://c62daddb2a6502283f07-d5581c4555b84d59052278c10b305400.r68.cf2.rackcdn.com/gate.js');
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(ga, s);
+    })();
+  }
+</script>
+
+**allThirdPartyScriptTags**
+
+    <script type="text/javascript">
+// marketo
+    !function(){function e(){t===!1&&(t=!0,Munchkin.init("769-CKK-790"))}var t=!1,n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src="//munchkin.marketo.net/munchkin.js",n.onreadystatechange=function(){("complete"==this.readyState||"loaded"==this.readyState)&&e()},n.onload=e,document.getElementsByTagName("head")[0].appendChild(n)}();
+
+//Email POPUP Tags 
+      (function() {var s = document.createElement('script');s.type = 'text/javascript';s.async = true;
+      s.src = document.location.protocol + '//loader.wisepops.com/default/index/get-loader?user_id=27447';
+      var s2 = document.getElementsByTagName('script')[0];s2.parentNode.insertBefore(s, s2);})();
+
+// Sale Cycle
+        try {var __scP=(document.location.protocol=="https:")?"https://":"http://";
+        var __scS=document.createElement("script");__scS.type="text/javascript";
+        __scS.async=true;__scS.src=__scP+"d16fk4ms6rqz1v.cloudfront.net/capture/Shindigz.js";
+        document.getElementsByTagName("head")[0].appendChild(__scS);}catch(e){}
+    </script>
+
+************************************/

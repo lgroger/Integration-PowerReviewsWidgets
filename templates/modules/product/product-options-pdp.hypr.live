@@ -1,3 +1,8 @@
+{% comment %}
+  these will be populated by modules/productview.js
+  -model.options[].isVisibleOption;   // (true/false)
+  -model.options[].isOptionForDND;    // (true/false)
+{% endcomment %}
 <div class="mz-productoptions">
 {% with themeSettings.bannerProductTypes|split(',') as ProductTypesArr %}
 {% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}
@@ -11,9 +16,6 @@
                 {% endif %} 
             {% endfor %}
         </select><br/> 
-        {% comment %}
-            dummy selectbox for UX
-        {% endcomment %}
         <div class="selction-size-caption">
              <span class="sl-no">2</span> 
              <select class="mz-productlable-options" disabled>
@@ -35,40 +37,10 @@
         {% endif %}
     </div>
 {% else %}
-    {% if model.productType == "CandyBar" and model.options|findwhere("attributeFQN","tenant~cdyper-choice") %}
+
         {% for option in model.options %}
-            {% if option.isHideExtra == "show" %}
+            {% if option.isVisibleOption %}
                 <div class="mz-productoptions-container">
-                    {% if option.attributeDetail.name != "dnd-token" %}
-                        {% if option.attributeFQN|lower == "tenant~cdyper-choice" %}
-                         <form>
-                            {% for value in option.values %}
-                                <label>
-                                    <input type="radio" value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}" usageType="{{option.attributeDetail.usageType}}" name="{{ option.attributeFQN }}" {% if value.isSelected %} checked {% endif %}> 
-                                    <span></span>
-                                    {{value.stringValue|default(value.value)}} 
-                                </label><br>
-                            {% endfor %}
-                        </form>           
-                        {% else %}
-                            <form>
-                                <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option hide" data-mz-product-option="{{ option.attributeFQN }}" usageType={{option.attributeDetail.usageType}}>
-                                    {% if not option.isMultiValue %}<option value="">Select {{ option.attributeDetail.name }}</option>{% endif %}
-                                    {% for value in option.values %}
-                                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
-                                    {% endfor %}
-                                </select>                
-                            </form>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        {% for option in model.options %}
-            {% if option.isHideExtra == "show" %}
-                <div class="mz-productoptions-container">
-                    {% if option.attributeDetail.name != "dnd-token" %}
                     <label class="mz-productoptions-optionlabel">{{ option.attributeDetail.name }}{% if option.isRequired %}<strong class="is-required">*</strong>{% endif %}</label>
                     <div class="mz-productoptions-valuecontainer">
                         {% if option.attributeDetail.inputType == "List" %}
@@ -79,14 +51,14 @@
                                 <select {% if option.isMultiValue %}multiple{% endif %} class="mz-productoptions-option" data-mz-product-option="{{ option.attributeFQN }}" usageType={{option.attributeDetail.usageType}}>
                                     {% if not option.isMultiValue %}<option value="">Select {{ option.attributeDetail.name }}</option>{% endif %}
                                     {% for value in option.values %}
-                                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}">{{value.stringValue|default(value.value)}}</option>
+                                    <option {% if not value.isEnabled %} class="is-disabled" {% endif %} {% if value.isSelected %}selected="true"{% endif %} value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}">{{value.stringValue|default(value.value)}}</option>
                                     {% endfor %}
                                 </select>
                             {% else %}
                                 <form>
                                 {% for value in option.values %}
                                     <label class="{% if not value.isEnabled %} is-disabled {% endif %}">
-                                        <input type="radio" value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}" usageType="{{option.attributeDetail.usageType}}" name="{{ option.attributeFQN }}" {% if value.isSelected %} checked {% endif %} {% if not value.isEnabled %} disabled {% endif %}> 
+                                        <input {% if option.isRequired %}type="radio"{% else %}type="checkbox"{% endif %} value="{{value.value}}" data-mz-product-option="{{ option.attributeFQN }}" usageType="{{option.attributeDetail.usageType}}" name="{{ option.attributeFQN }}" {% if value.isSelected %} checked {% endif %} {% if not value.isEnabled %} disabled {% endif %}> 
                                         <span></span>
                                         {{value.stringValue|default(value.value)}} 
                                     </label><br>
@@ -118,12 +90,11 @@
                               {% endfor %}
                             {% endif %}
                         {% endif %}
-                        </div>
-                    {% endif %}    
+                        </div>  
                 </div>
             {% endif %}
         {% endfor %}
-    {% endif %}
+
 {% endif %}
 {% endwith %}
 {% endwith %}

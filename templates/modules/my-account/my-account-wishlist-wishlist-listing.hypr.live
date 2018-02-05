@@ -1,0 +1,67 @@
+{#  LG 01/12/18 - our wishlist templates differ from cor theme b/c whereas model.items for core contains products, our model.items contains wishlists which then contain products. b/c of this I added new template modules/my-account/my-account-wishlist-item-listing  #}
+<div class="mz-itemlisting wishlist-item {% block module-classes %}{% endblock module-classes %}">
+<button class="accordion">
+<span class="wishlist_name">{{model.name}}</span>
+{% for eventdates in model.extendedProperties %}
+{% if eventdates.key=="eventDate" %}
+<span class="wishlist_date"><i><span>Event Date:</span>
+{% with eventdates.value|split("-") as dateEve %}
+  {% if dateEve[0].length == 4 %}
+      {% if dateEve[2].length > 2 %}
+        {% with dateEve[2]|split(' ') as day %}
+          {{ dateEve[1] }}-{{ day[0] }}-{{ dateEve[0] }}
+        {% endwith %}
+      {% else %}
+          {{ dateEve[2] }}-{{ dateEve[1] }}-{{ dateEve[0] }}
+      {% endif %}
+  {% else %}
+      {{ eventdates.value }}
+  {% endif %}
+{% endwith %}
+</i></span>
+{% endif %}
+{% if eventdates.key=="eventType" %}
+  <span class="wishlist_type"><i>Event Type: {{eventdates.value}} 
+  </i></span> 
+{% endif %}
+{% endfor %}
+<span class="wishlist_total">SUBTOTAL: {{model.total}}</span>
+<i class="fa fa-plus" aria-hidden="true"></i>
+<i class="fa fa-minus" aria-hidden="true"></i>
+</button>
+<div class="panel" wishlist-id="{{model.id}}">
+  <div class="orders-sec">
+  <div class="clear">
+  </div>
+       <div class="orders mz-cms-col-8-12">
+            <div class="orders-header mz-cms-col-12-12">
+              {% if model.items.length > 0 %}
+                <div class="order-blocks1">
+                    ITEM(S)/DESIGN
+                </div>
+                <div class="order-blocks2">&nbsp;</div>
+                <div class="order-blocks3">
+                    QUANTITY
+                </div>
+                <div class="order-blocks4">
+                    Price
+                </div>
+                <div class="order-blocks5">&nbsp;</div>
+              {% else %}
+                <p>No items were added to this wishlist.</p>
+              {% endif %}
+            </div>
+            <div class="delete-wishlist">
+              <a class="deleteWishlist" id="{{ model.id }}">Delete This Wishlist</a>
+            </div>
+            {% for products in model.items %}
+
+{% include "modules/my-account/my-account-wishlist-item-listing" with model=products %}
+
+      {% endfor %}
+       </div>
+   <div class="clear"></div>
+       </div>
+
+</div>
+</div>

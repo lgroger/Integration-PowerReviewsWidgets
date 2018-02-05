@@ -91,7 +91,7 @@
             </div>
         </div>
         <div class="clear"></div>
-        <div class="mz-quick-veiw-close-btn">
+        <div class="mz-quick-view-close-btn">
             <a href="#" class="popup-close fa fa-remove" data-popup-close="popup-{{model.productCode}}"></a>
         </div>
     </div>

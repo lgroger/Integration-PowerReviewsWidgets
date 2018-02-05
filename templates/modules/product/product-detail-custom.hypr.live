@@ -1,5 +1,84 @@
+{% comment %}
+  these will be populated by modules/productview.js
+  -model.isPersonalized;    // (true/false) whether to show personalize button instead of add to cart
+  -model.isInStock;         // display in stock if (if isConfigured == true)
+  -model.isConfigured;      // all necessary options are selected by customer, if isConfigured == true && isInStokc == true, you can enable add to cart or personalization
+  -model.baseIsConfigured;  // 
+  -model.productionTime;    // production time to display (selected extras are factored in)
+  -model.minQty;            // minimum qty
+  -model.uom;               // unit of measure to display
+  -model.groundOnly;        // (true/false)
+  -model.enableSlitoption;  // (true/false)
+  -model.delDate;           // standard shipping delivery date
+  -model.expressDate;       // express shipping delivery date
+  -model.overnightDate;     // premium shipping delivery date
+  -model.shipDate;          // shipping date
+  -model.options[].isVisibleOption;   // (true/false)
+  -model.options[].isOptionForDND;    // (true/false)
+
+// for easier troubleshooting...
+<div style="border:solid 1px black;font-size:10px;margin:5px;padding:5px;position:fixed;top:0;left:0;background-color:white;z-index:2000;">
+        isInStock: {{model.isInStock}}<br>
+        isPersonalized: {{model.isPersonalized}}<br>
+        isConfigured: {{model.isConfigured}}<br>
+        baseIsConfigured: {{model.baseIsConfigured}}<br>
+  {% if not model.purchasableState.isPurchasable %}
+    {% dump model.purchasableState %}
+  {% endif %}
+</div>
+{% endcomment %}
  <p>
+
         <span class="color-blue">Availability</span> :
+        {% if model.isConfigured %}
+          {% if model.isInStock %}
+            <span class="highlight-green">In Stock</span>
+          {% else %}
+            <span class="product-pdp-oos">Out of Stock</span>
+          {% endif %}
+        {% else %}
+          <span class="product-pdp-incomplete"> Please select an option</span>
+        {% endif %}
+
+        {% if model.isConfigured and not model.isInStock %}
+        {% else %}
+
+            {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
+                <div class="prod-time">
+                   {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                   <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                </div>
+            {% else %}
+              {% comment %}
+              {% if model|get_product_attribute_values(themeSettings.productAttributes.productionTime) %}
+               {% with model|get_product_attribute(themeSettings.productAttributes.productionTime) as prod_time %}
+                  {% with prod_time.values|first|prop("value") as productionTime %}
+                  {% if productionTime !=0 and productionTime != "0" %}
+                     {{  prod_time.values|first|prop("value") }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                     <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
+                 {% endif %}
+                 {% endwith %}
+               {% endwith %}
+              {% endif %}
+              {% endcomment %}
+            {% endif %}
+
+
+        {% if model.delDate %}
+          <span class="delivery-date">
+{# for troubleshooting            <span>Ships on <strong> {{ model.shipDate|safe }}</strong></span><br> #}
+            <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
+            {% if not model.groundOnly %}
+                <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
+                Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}</span><br>
+            {% endif %}
+          </span>
+        {% endif %}
+        {% endif %}
+
+
+{% comment %}
+
         {% if model.inventoryInfo.manageStock == true %}
           {% if model.inventoryInfo.onlineStockAvailable > 0 %}
              <span class="highlight-green"> In Stock </span> <br>
@@ -34,7 +113,6 @@
           {% else %}
           <span class="highlight-pink"> {% if not model.purchasableState.isPurchasable %}
             <span class="product-status">
-                {% if not model.purchasableState.isPurchasable %}
                 <span class="mz-productdetail-notpurchasable">
                 {% for message in model.purchasableState.messages %}
                   {% if message.validationType == "IncompleteProductConfiguration" %}
@@ -46,7 +124,7 @@
                           <span>Product is out of stock</span>
                         {% endif %}
                       {% else %}
-                        {% if model.isConfigure %}
+                        {% if model.isConfigured %}
                             <span> Product is out of stock</span>
                         {% else %}
                             <span> Please select an option</span>
@@ -58,7 +136,6 @@
                   {% endif %}
                 {% endfor %}
                 </span>
-                {% endif %}
               </span>
            {% else %} Out of Stock {% endif %} </span>
           {% endif%}
@@ -78,6 +155,7 @@
             {% endwith %}
           {% endif %}
         {% endif%}
+{% endcomment %}
   </p>
      <div class="product-description">
         <span class="color-blue">Product Details : </span>
@@ -114,7 +192,7 @@
                     <span class="is-crossedout">
                        {{model.price.price|currency}}
                     </span>
-                    <span class="highlight-pink">You Save {{ perAmt|floatformat(2) }}%</span>
+                    <span class="highlight-pink">You Save {{ perAmt|floatformat(0) }}%</span>
                   </div>
               {% endwith %}
             {% endwith %}
@@ -150,69 +228,26 @@
           <div class="mz-productdetail-conversion-controls">
               <span class="mz-qty-label">{{ labels.qty }} </span>
               <span class="custom-qty">
-                  <input type="button" value="-" class="qtyminus" field="quantity" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>
-                  <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
-                  <input type="button" value="+" class="qtyplus" field="quantity" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>
+                  <input type="button" value="-" class="qtyminus" field="quantity" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %}>
+                  <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                  <input type="button" value="+" class="qtyplus" field="quantity" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %}>
               </span>
               <span class="mz-validationmessage" data-mz-validationmessage-for="quantity"></span>
           </div>
       </div>
       <div class="product-cart-wishlist">
-          {% if model|get_product_attribute(themeSettings.productAttributes.dndCode) or model.enablePersonalise %}
-              {% with model|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
-                  {% if isPersonalize.values|first|prop("value") != "" or model.enablePersonalise %}
-                          {% if model.inventoryInfo.manageStock == true %}
-                            {% if model.productUsage == 'Configurable' %}
-                                 <button class="personalize mz-productdetail-addtocart mz-button mz-button-large" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>PERSONALIZE</button>
-                            {% else %}
-                              {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>PERSONALIZE</button>
-                              {% else %}
-                                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">PERSONALIZE</button>
-                              {% endif %}
-                            {% endif %}
-                          {% else %}
-                              <button {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} class="personalize mz-productdetail-addtocart mz-button mz-button-large">PERSONALIZE</button>
-                          {% endif %}
-                  {% else %}
-                      {% if model.inventoryInfo.manageStock == true %}
-                          {% if model.inventoryInfo.onlineStockAvailable > 0 %}
-
-                              <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %}>{{ labels.addToCart }}</button>
-                          {% else %}
-                              <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled">{% if not model.purchasableState.isPurchasable %} {{ labels.addToCart }} {% else %} Out of Stock {% endif %}</button>
-                          {% endif %}
-                      {% else %}
-                          <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
-                      {% endif %}
-                  {% endif %}
-              {% endwith %}
+          {% if model.isPersonalized %}
+                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} disabled="disabled"{% endif %}>{% if not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}PERSONALIZE{% endif %}</button>
           {% else %}
-              {% if model.inventoryInfo.manageStock == true %}
-                {% if model.inventoryInfo.onlineStockAvailable > 0 %}
                   {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
                         {% if user.isAuthenticated ==false and user.isAnonymous ==false %}
                           <p>Session expired please click <a href="/user/login">here</a> to login</p>
                         {% else %}
-                           <p>This product is available only for login users. Please register or login to your account. </p><br>
+                           <p>This product is available only for logged-in users. Please register or login to your account. </p><br>
                           {% endif %}
-                    {% else %}
-                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
-                    {% endif %}
-                {% else %}
-                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large is-disabled" disabled="disabled" >{% if not model.purchasableState.isPurchasable %} {{ labels.addToCart }} {% else %} Out of Stock {% endif %}</button>
-                {% endif %}
-            {% else %}
-             {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
-                        {% if user.isAuthenticated ==false and user.isAnonymous ==false %}
-                          <p>Session expired please click <a href="/user/login">here</a> to login</p>
-                        {% else %}
-                           <p>This product is available only for login users. Please register or login to your account. </p><br>
-                          {% endif %}
-                    {% else %}
-                <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if not model.purchasableState.isPurchasable %}is-disabled{% endif %}" {% if not model.purchasableState.isPurchasable %} disabled="disabled" {% endif %} >{{ labels.addToCart }}</button>
-                {% endif %}
-            {% endif %}
+                  {% else %}
+                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %}is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} {% endif %} >{% if  not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}{{ labels.addToCart }}{% endif %}</button>
+                  {% endif %}
           {% endif %}
           {% if siteContext.generalSettings.isWishlistCreationEnabled %}
               <button id="add-to-wishlist" data-mz-action="addToWishlist">

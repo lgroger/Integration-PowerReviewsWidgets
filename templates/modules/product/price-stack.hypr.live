@@ -10,7 +10,7 @@
         {% include "modules/common/price" with model=model.price %}
     {% endif %} 
     {% if model.uom %}
-        {{model.uom}}
+        {{model.uom}} {# set in product.js#}
     {% else %}
       {% with model|get_product_attribute("tenant~uom") as prdValue %}
         {% for value in prdValue.values %}

@@ -1,10 +1,10 @@
 define(['modules/jquery-mozu', 'vendor/jQuery.selectric'], function ($) {
 	$(function(){
 		$(".faq-main-wrap").parent().css("padding","0 10px");
-		console.log("init faq ");
-		console.log($(".faq-category-section .faq-list-item>h3"));
+		//console.log("init faq ");
+		//console.log($(".faq-category-section .faq-list-item>h3"));
 		$(".faq-category-section .faq-list-item>h3").click(function(){
-			console.log("click faq");
+			//console.log("click faq");
 			if($(this).hasClass('show-faq')){
 				$(this).removeClass('show-faq');
 			}else{
@@ -27,7 +27,7 @@ define(['modules/jquery-mozu', 'vendor/jQuery.selectric'], function ($) {
 			$(".faq-category-section:eq('"+$(this).index()+"')").addClass("show-section");
 				if($(window).scrollTop()>160){
 					var offset = $(".faq-page-title").offset();
-					console.log("animate");
+					//console.log("animate");
 					$('html, body').animate({
 					    scrollTop: offset.top
 					},'slow');

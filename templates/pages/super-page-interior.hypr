@@ -1,7 +1,7 @@
 <div class="prod-list clearfix" id="cat-{{ child.content.slug }}">
 {% with "SHINDIGZ-VM-STR-{0}"|string_format(model.categoryId) as vmstr %}
   {% with chil as newVa %}
-  		{% include_products "templates/pages/super-page-view" with pageSize=200 and responseFields="facets,items(productCode,productSequence,productUsage,fulfillmentTypesSupported,goodsType,content, purchasableState,isActive, price,priceRange, pricingBehavior,productType,productTypeId,isTaxable,inventoryInfo ,upc,upcs,measurements,mfgPartNumber,isPackagedStandAlone,properties,createDate,options,categories(categoryId))" and enableSearchTuningRules=true and searchTuningRuleCode=vmstr and includeFacets=themeSettings.showCategoryFacets as_parameter %}
+  		{% include_products "templates/pages/super-page-view" with pageSize=200 and responseFields="facets,items(productCode,productSequence,productUsage,fulfillmentTypesSupported,goodsType,content(productName,seoFriendlyUrl,productImages), purchasableState,isActive, price,priceRange, pricingBehavior,productType,productTypeId,isTaxable,inventoryInfo ,mfgPartNumber,isPackagedStandAlone,properties,createDate,options,categories(categoryId))" and enableSearchTuningRules=true and searchTuningRuleCode=vmstr and includeFacets=themeSettings.showCategoryFacets as_parameter %}
   {% endwith %}
  {% endwith %}
 </div>

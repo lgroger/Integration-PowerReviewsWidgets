@@ -1,8 +1,12 @@
 {% if model.items.length > 0 %}
 {% with model.items|first as product %}
+	<div class="bundle-inside-item" productcode="{{product.productCode}}">
+			<div class="item-highlight">
+				<div class="block-img-sec">
+
 	<a href='{{product.url}}'><img class="bundle-img" style="" src="{{product.mainImage.src}}?max=100" alt="{{product.content.productName}}" /></a>
 	<input type="hidden" name="productUsage" value="{{product.productUsage}}"/>
-	{% if product|get_product_attribute('Tenant~dndcode') %}
+	{% if product|get_product_attribute('tenant~dndcode') %}
 		{% with  product|get_product_attribute_values('tenant~dndcode') as dndValues %}
 		<input type="hidden" class="bundleItemDndCode" value="{{dndValues|first}}"/>
 		<input type="hidden" class="bundleItemMfgPartNumber" value="{{product.mfgPartNumber}}"/>
@@ -13,5 +17,22 @@
 			<input type="hidden" class="bundleItemDesignCode" value="{{dndValues|first}}"/>
 		{% endwith %} 
 	{% endif %}
+
+				</div>
+				<div class="bundle-count">
+					x {{components.quantity}}
+				</div>
+			</div>
+			<h3>{{product.content.productName}}</h3>
+			<h3 class="uom">
+				{% if product|get_product_attribute('tenant~uom') %}
+					{% with  product|get_product_attribute_values('tenant~uom') as uom %}
+						{{uom|first}}
+					{% endwith %}
+				{% endif %}
+
+			</h3>
+		</div>
+
 {% endwith %}
 {% endif %}

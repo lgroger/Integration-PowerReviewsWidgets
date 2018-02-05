@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/api','hyprlive', 'vendor/jQuery.selectric'], function ($,api,Hypr) {
+define(['modules/jquery-mozu', 'modules/api','hyprlive', 'modules/dnd-token', 'vendor/jQuery.selectric'], function ($,api,Hypr,DNDToken) {
 	
 	 function setCookie(cname, cvalue, exdays) {
 	    var d = new Date();
@@ -218,10 +218,20 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
 			    $(this).prev().addClass("diplayprint");
 			}
 		 	$(this).toggleClass('active');
+			
 			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
 				$(this).next().find("img").each(function() {
-					if($(this).parent().next().data("dndtoken")){
-						$(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"/preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
+					if($(this).parent().next().data("fulldndtoken")){//order-listing.hypr.live
+						try{
+							var fulldndtoken = JSON.parse($(this).parent().next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
+							var info = DNDToken.getTokenData(fulldndtoken);
+							if(info.src){
+								$(this).attr("src",info.src);
+							}
+						  }
+						catch(e){
+							console.error(e);
+						}
 					}
 				});
 			}
@@ -313,16 +323,13 @@ $( ".menu-sec-2 div:first-child" ).addClass("current");
 		$('.link-active a').removeAttr('id');	
 	});
 
-$(".menu-sec-1 li a").on('mouseover', function() {
+	 $(".menu-sec-1 li a").on('mouseover', function() {
  		var link = $(this).attr('class');  
  		//alert(link);   
  	//	alert($(".loop-"+link).get());
  		  $(".adSlideBox.current").removeClass("current");
            	$(".loop-"+link).addClass("current");
         //   alert(".menu-sec-2.adSlideBox.loop [class="+link+"]");
-		});
-$(".menu-sec-1 li a").on('mouseout', function() {
-		
 		});
 
 
@@ -335,28 +342,6 @@ $(".menu-sec-1 li a").on('mouseout', function() {
 	    $(this).closest('.container-des-rev').toggleClass('collapsed');
 	  		});
 
-     $(document).on("click",".bundle-page-qty .qtyplus",function(e){
-                e.preventDefault();
-                var plusVal = parseInt($(this).parent().find('input[data-mz-value="quantity"]').val(),10);
-                if(plusVal >= 1){
-                	$(this).parent().find('input[data-mz-value="quantity"]').val(plusVal+1);
-                }else if(plusVal<=0){
-                	$(this).parent().find('input[data-mz-value="quantity"]').val(1);
-                }
-                $('.bundle-page-qty input[data-mz-value="quantity"]').trigger('change');
-            }); 
-            $(document).on("click",".bundle-page-qty .qtyminus",function(e){ 	 
-                e.preventDefault();
-                var qntyVal = $('.mz-productdetail-conversion-controls input[data-mz-value="quantity"]').val();
-                var currentVal = parseInt($(this).parent().find('input[data-mz-value="quantity"]').val(),10);
-                if (!isNaN(currentVal) && currentVal > 1) {
-                    $(this).parent().find('input[data-mz-value="quantity"]').val(currentVal - 1);
-                } else if(currentVal<=0){
-                    $(this).parent().find('input[data-mz-value="quantity"]').val(1);
-                }
-                $('.bundle-page-qty input[data-mz-value="quantity"]').trigger('change');
-            });
-     
 	});
 	
 });
