@@ -1,3 +1,7 @@
+{% comment %}
+added-to-cart.js sets these value(s)
+model.product.imageUrl // exists by default but is overridden if personalization image exists
+{% endcomment %}
 <div class="popup" data-popup="popup-{{model.productCode}}">
    <div class="mz-quick-view-wrapper add-cart">
       <header>
@@ -85,7 +89,7 @@
       
    </div>
    </div>
-   <div class="mz-quick-veiw-close-btn">
+   <div class="mz-quick-view-close-btn">
       <a id="mz-added-to-cart-close" class="popup-close fa fa-remove cursor-pointer">&times;</a>
    </div>
 </div>

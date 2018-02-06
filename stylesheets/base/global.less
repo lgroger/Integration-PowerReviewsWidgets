@@ -60,7 +60,15 @@ input[type="color"],
   padding: 4px 6px;
   margin-bottom: 22px;
   font-family: @fontFamily;
+  color: @textColor;
 }
+
+/* override Chrome input defaults */
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px @secondaryWhite inset;
+    -webkit-text-fill-color: @textColor !important;
+}
+
 
 // Reset appearance properties for textual inputs and textarea
 // Reset height since textareas have rows
@@ -142,7 +150,7 @@ button {
 // TODO: JBZ: file these
 
 .mz-placeholder {
-    color: #aaaaaa;
+    color: @textColor;
 }
 
 .mz-page-headernote {

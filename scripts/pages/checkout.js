@@ -1,5 +1,5 @@
 /* globals V: true */
-require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api"], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api) {
+require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu", "modules/models-checkout", "modules/views-messages", "modules/cart-monitor", 'hyprlivecontext', 'modules/editable-view', 'modules/preserve-element-through-render','modules/amazonpay',"modules/api",'modules/dnd-token'], function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor, HyprLiveContext, EditableView, preserveElements,AmazonPay, api,DNDToken) {
     var CheckoutStepView = EditableView.extend({
         getExtraVar: function () {
             return this.model.get('address.countryCode');
@@ -226,7 +226,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             /* window.usa_48=_.filter(order_item_list, function(obj) {
                 return  _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').usa48})[0].values[0].value===true;
             });
-            console.log("US ship : "+window.usa_48.length);*/
+           // console.log("US ship : "+window.usa_48.length);*/
             window.order_obj_win=require.mozuData("checkout").items;
             var tmp_address=this.model.get("fulfillmentInfo.fulfillmentContact.address").toJSON();
             window.address_obj={
@@ -258,56 +258,26 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         onOrderCreditChanged: function (order, scope) {
             this.render();
         },showPersonalizeImage:function () {
-            var me=this,imgsrc,dndToken;
-            var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
-            var personslizeIds = null, personslizeJson=null;
+			//console.log("showPersonalizeImage");
+            var me=this;
             var items=_.pluck(this.model.get("items"),'product');
             _.each(items,function (item,i) {
-
                 if(item.productType !== "Bundle"){
-                personslizeIds = null;
-                personslizeJson = null;
-                var dndCode=_.findWhere(item.options,{'attributeFQN': Hypr.getThemeSetting('productAttributes').dndToken});
-                if(dndCode!==undefined){
-                    personslizeIds=JSON.parse(dndCode.shopperEnteredValue);
-                }
-                if(personslizeIds!==null && personslizeIds!==undefined){
-                personslizeJson={};
-                for(var eku in personslizeIds){
-                    if(eku.indexOf('@')!==-1){
-                        var prdCode = eku.split('@')[0];
-                        personslizeJson[prdCode]=personslizeIds[eku];
-                    }else{
-                        personslizeJson[eku]=personslizeIds[eku];
-                    }
-                }
-                    me.model.get("items")[i].personslizeIds=personslizeJson;
-                }
-                    /*for(var k=0;k<me.model.get("items")[i].product.bundledProducts.length;k++){
-                        if(me.model.get("items")[i].personslizeIds){
-                            dndToken = me.model.get("items")[i].personslizeIds[me.model.get("items")[i].product.bundledProducts[k].productCode];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                me.model.get("items")[i].product.bundledProducts[k].dndToken= dndToken;
-                                me.model.get("items")[i].product.bundledProducts[k].imageUrl = imgsrc;
-                            }else
-                            {
-                                //imgsrc = $('[componentimageid="'+items.models[i].get('id')+'-'+items.models[i].get('product').get('bundledProducts')[k].productCode+'"]').attr('src');
-                            }
-                        }
-                    }*/
-                    var dndTokenList = me.model.get("items")[i].personslizeIds;
-                    for (var prop in dndTokenList) {
-                        if (dndTokenList.hasOwnProperty(prop)) {
-                            //alert(dndToken[prop]);
-                            dndToken = dndTokenList[prop];
-                            if(dndToken){
-                                imgsrc=dndEngineUrl+'preview/'+dndToken;
-                                me.model.get("items")[i].product.imageUrl=imgsrc;
-                            }  
-                        } 
-                    }
-                }
+                	var dndTokenObj=_.findWhere(item.options,{'attributeFQN': Hypr.getThemeSetting('productAttributes').dndToken});
+					if(typeof dndTokenObj!=="undefined"){
+						try{
+							var dndTokenJSON=JSON.parse(dndTokenObj.shopperEnteredValue);
+							var info = DNDToken.getTokenData(dndTokenJSON);
+							if(info.src){
+								me.model.get("items")[i].product.imageUrl=info.src;
+							}
+						}
+						catch(err){
+							console.error(err);
+
+						}
+					}
+				}
             }); 
         },render:function(){
            // console.log("render on change");
@@ -348,7 +318,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                                     var dl=((res.dstOffset/60)/60);
                                     estTime.setDate(tmp.getDate());
                                     estTime.setHours(utcTime-(timeOffset-dl));
-                                    console.log(estTime);
+                                    //console.log(estTime);
                                     if(estTime.getHours()>=15){
                                         if( estTime.getHours()==15 && estTime.getMinutes()<30){
                                             //scope_obj.checkProductionTime(scope_obj,isUSA,estTime);
@@ -491,16 +461,19 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
              var est_delivery_dates=_.pluck(scope_obj.model.get("items"),'est_date');
              if(scope_obj.model.get("fulfillmentInfo.availableShippingMethods")){
                  scope_obj.model.get("fulfillmentInfo.availableShippingMethods").forEach(function(ship_method,i) {
-                     var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
-                     if(min_day.toString()!=="Invalid Date"){                        
-                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
-                        var date_str=window.dateFormatArr[0];
-                         if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
-                            date_str=window.dateFormatArr[min_day.getDate()%10];
-                         }
-                         scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
-                     }
-
+                    var min_day=new Date(_.min(_.pluck(est_delivery_dates,ship_method.shippingMethodCode+"_shipMethod")));
+                    var prevDate = scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate;
+                        
+                        if(min_day.toString()!=="Invalid Date" ){
+                            if(prevDate && min_day > prevDate || prevDate === undefined){
+                                scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDate=min_day;
+                                var date_str=window.dateFormatArr[0];
+                                if(min_day.getDate()<=3 || min_day.getDate()>=21 && window.dateFormatArr[min_day.getDate()%10]){
+                                   date_str=window.dateFormatArr[min_day.getDate()%10];
+                                }
+                                scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[i].minDelivery=window.weekdayArr[min_day.getDay()]+", "+window.monthArr[min_day.getMonth()]+" "+min_day.getDate()+"<sup>"+date_str+"</sup>";
+                            }
+                        }
                  });
              }
             scope_obj.model.set("fulfillmentInfo.drop_items",[]);
@@ -513,9 +486,13 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                             prodDate=scope_obj.model.get("items")[idx].product.name+": Delivered by <strong>"+window.monthArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getMonth()]+" "+scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()+"<sup>"+window.dateFormatArr[scope_obj.model.get("items")[idx].est_date[selected_shipping].getDate()%10]+"</sup></strong>";
                          }
                         
-                        if(scope_obj.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) && ele[ship_key].toString()!==scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
-                            scope_obj.model.get("fulfillmentInfo.drop_items").push(prodDate);
-                        } 
+                        var ship_zip=_.findWhere(scope_obj.model.get("items")[idx].product.properties, {'attributeFQN':  Hypr.getThemeSetting('productAttributes').shipZip});
+                        
+                        if(scope_obj.model.get("fulfillmentInfo.drop_items").indexOf(prodDate)===-1 && ele.hasOwnProperty(ship_key) ){//&& ele[ship_key].toString()!==scope_obj.model.get("fulfillmentInfo.availableShippingMethods")[0].minDate.toString()){
+                            if(ship_zip && ship_zip.values.length && ship_zip.values[0].value.toString() != '46787'){
+                               scope_obj.model.get("fulfillmentInfo.drop_items").push(prodDate);
+                            }
+                        }  
                     }
                  });
             }
@@ -708,11 +685,12 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                 }
                  //console.log(obj.productCode+" - "+prod_time);
                 if(ship_zip!==undefined){
-                    if(ship_zip.values[0].stringValue==="46787"){
+                    var zipCode = ship_zip.values[0];
+                    if(zipCode.stringValue.trim() ==="46787"){
                         indiana_package.push(obj);
                         window.indina_idx_arr.push(i);
-                        if(prod_time>=indiana_max_prod_days){
-                            indiana_max_prod_days=prod_time;
+                        if(prod_time === 0 || prod_time>=indiana_max_prod_days){
+                            indiana_max_prod_days = (prod_time > 0) ? prod_time:indiana_max_prod_days;
                             indiana_prd_idx=i;
                         }
                     }
@@ -1210,6 +1188,8 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
                scope_obj.skip_holidays(ship_start,1,shipping_holidays_list,scope_obj.setShippingStartDate,idx,scope_obj);
             }
         },USADeliveryDate:function(ship_date,idx,holidays,scope_obj,add_day,isIndiana){
+            //Switched Shipping Holidays to UPS Holidays
+            holidays =  _.pluck(_.pluck(require.mozuData("shipUPSDate"),'properties'),'holiday');
             try{
                 if(add_day){
                     scope_obj.skip_holidays(ship_date,1,holidays,function(est_ups) {
@@ -1260,7 +1240,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
             scope_obj.model.get("items")[idx].est_date=("0" + (ship_date.getMonth() + 1)).slice(-2)+"/"+("0" + ship_date.getDate()).slice(-2)+"/"+ship_date.getFullYear();
              //scope_obj.model.get("items")[idx].est_date=ship_date.toISOString().slice(0,10).replace(/\-/g,"/");
              scope_obj.renderCustomAfterShip(scope_obj);
-        },
+        }, 
         // override loading button changing at inappropriate times
         handleLoadingChange: function () { }
     });
@@ -2236,7 +2216,7 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
 
                                 api.request('PUT','/api/commerce/customer/accounts/'+pageContext.user.accountId+'',obj).then(
                                 function(res){
-                                    console.log(res);
+                                   // console.log(res);
                                 });
 
           							        self_me.model.addCoupon();
@@ -2614,15 +2594,22 @@ require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/backbone-mozu
         $('.summary_edit').slideToggle();
         $('.summarybox_toggle .fa').toggleClass('fa-minus');
     });
-     try{
          $(".checkout_ostable .cp_image img").each(function(){
-            if($(this).next().data("dndtoken") && $(this).next().data("prdtype")===undefined){
-                $(this).attr("src",Hypr.getThemeSetting('dndEngineUrl')+"preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+			 if($(this).next().data("fulldndtoken") && $(this).next().data("prdtype")===undefined){ // prdtype will be "bundle" for bundle product usages (modules/common/order-summary.hypr.live)
+				 try{
+					// so this seems to do exactly the same thing as OrderSummaryView.showPersonalizeImage() but I'll update it anyway, just in case...
+					var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
+					var info = DNDToken.getTokenData(fulldndtoken);
+					if(info.src){
+						$(this).attr("src",info.src);
+					}
+				  }
+				catch(e){
+					console.error(e);
+				}
             }
          });
-     }catch(err){
-        console.log(err);
-     }
+
     $(document).on('click','#paypalexpress2',function(){ $('#btn_xpressPaypal').trigger('click'); });
     $(document).on('click','#paywithamazon',function(){ $('#OffAmazonPaymentsWidgets0').trigger('click'); });
 

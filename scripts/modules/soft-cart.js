@@ -2,13 +2,14 @@ define([
     'modules/jquery-mozu',
     'modules/backbone-mozu',
     'modules/models-cart',
-    'hyprlive'
+    'hyprlive',
+	'modules/dnd-token'
   ],
-function($, Backbone, CartModels,Hypr) {
+function($, Backbone, CartModels,Hypr,DNDToken) {
   // declare a MozuView that can rewrite its contents with a Hypr template
   // var cartUpdate = this.model.apiGet();
   function setLoginForCheckout(){
-          console.log("setLoginForCheckout function called..");
+          //console.log("setLoginForCheckout function called..");
           $('a#login').trigger('click'); 
           $('#cboxOverlay').show().css('height',$(document).height());
           $('.mz-cms-col-12-12.login-popover-title').hide();
@@ -48,8 +49,18 @@ function($, Backbone, CartModels,Hypr) {
     render:function() {
       Backbone.MozuView.prototype.render.call(this);
       $(".soft-cart-items .soft-cart-item img").each(function() {
-          if($(this).next().data("dndtoken")){
-            $(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+$(this).next().data("dndtoken").replace(/"/g, ""));
+          if($(this).next().data("fulldndtoken")){
+			  try{
+				var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
+				//console.log(fulldndtoken);
+				var info = DNDToken.getTokenData(fulldndtoken);
+				if(info.src){
+					$(this).attr("src",info.src);
+				}
+			  }
+			  catch(err) {
+				  console.error(err);
+			  }
           }
       });
     },
@@ -75,6 +86,7 @@ function($, Backbone, CartModels,Hypr) {
   // accessors for other modules
   var SoftCartInstance = {
     update: function() {
+		this.isLoaded = true;
         // populate the cart model asynchronously from the api
         return this.model.apiGet();
     },
@@ -99,12 +111,17 @@ function($, Backbone, CartModels,Hypr) {
     },*/
     highlightItem: function(itemid) {
       this.view.$('.soft-cart-item[data-mz-cart-item="' + itemid + '"]').removeClass('highlight').addClass('highlight');
-    }
+    },
+	loadIt: function(){
+		if(!this.isLoaded){
+			return(this.update());
+		}
+	},
+	isLoaded: false
   };
  
  
 
-  $(document).ready(function() {
     //Global variable for sign-up checkout redirection.
     window.checkoutflag = 0;
     // create a blank cart model
@@ -116,7 +133,21 @@ function($, Backbone, CartModels,Hypr) {
     });
     // bind a method we'll be using for the promise
     SoftCartInstance.show = $.proxy(SoftCartInstance.show, SoftCartInstance);
-    SoftCartInstance.update();
+    //SoftCartInstance.update();
+	  // don't load soft cart until someone tries to interact with it (css hover makes soft cart show on hovering of items)
+	$(".soft-cart-wrap").each(function(){
+		var thedropdown = this;
+		$(this).parent().mouseover(function(){
+			//console.log("mouseover \/api\/commerce\/carts");
+			SoftCartInstance.loadIt();
+		}).hover(function(){
+			$(thedropdown).show();
+		},function(){
+			$(thedropdown).hide();
+		});
+		
+	});
+	//console.log('event added \/api\/commerce\/carts');
     // bind cart links to open the softcart instead 
 /*    $(document.body).on('mouseover', 'a[href="/cart"],.soft-cart-wrap', function(e) {
         e.preventDefault();
@@ -128,20 +159,14 @@ function($, Backbone, CartModels,Hypr) {
         else{
           SoftCartInstance.show();  
         }
-    }); */
-  });  
+    }); */ 
 
   $(function(){
       // Hiding by default  
         $('.chkout-login-action').hide();
         $('.default-hide').hide(); 
       
-        /*
-        cart-form submit functionality.
-        */
-        if($(this).parent().next().data("dndtoken")){
-            $(this).attr("src",Hypr.getThemeSetting("dndEngineUrl")+"preview/"+$(this).parent().next().data("dndtoken").replace(/"/g, ""));
-          }
+        //cart-form submit functionality.
         $(document).on('click', '.soft-cart-btn.chkout-minicart-btn', function() {
           $('#cartform').submit(); 
         });
@@ -187,7 +212,7 @@ function($, Backbone, CartModels,Hypr) {
             // $(document).scrollTop(0);
             $('#cboxOverlay').show(); 
         });
-        $('.icon-image-sprite.icon-3.sticky-icons,.soft-cart-wrap.is-active::before').on('mouseover',function(e){ 
+        $('.icon-image-sprite.icon-3.sticky-icons,.soft-cart-wrap::before').on('mouseover',function(e){ 
             var top = $(this).position();
             $('.soft-cart-wrap.is-active').css('top',top);
         });

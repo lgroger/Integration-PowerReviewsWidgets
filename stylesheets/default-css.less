@@ -77,6 +77,7 @@
 .br-aslowas, .br-aslowas-range, .mz-pricestack {
 	display: inline-block;
 	color: @textColor;
+	text-transform: lowercase;
 }
 .mz-pricestack-range, .mz-pricestack-price-lower .is-crossedout, .mz-pricestack-price-lower .is-crossedout:after, .mz-pricestack-price-upper .is-crossedout {
 	font-size: 12px;
@@ -101,7 +102,7 @@
 	font-size:13px;
 }
 .br-seo-mobile-heading {
-	color: #0D3762;
+	color: @textColor;
 	font-family: @fontFamily;
 	font-size: 16px;
 }
@@ -640,7 +641,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	box-sizing: border-box;
 }
 .br-facet-color.br-color-selected .mz-facetingform-valuelabel {
-	border: 2px solid #666;	
+	border: 2px solid @textColor;	
 }
 .mz-filter-mobile-options .br-facet-color .mz-facetingform-valuelabel {
 	float: left;	
@@ -737,8 +738,8 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
 	color: rgba(255, 255, 255, 0);		
 }
 .br-facet-color.br-color-navy-blue .mz-facetingform-valuelabel {
-	background-color: #0D3762;
-	color: #0D3762;		
+	background-color: @primaryDarkBlue;
+	color: @primaryDarkBlue;		
 }
 .br-facet-color.br-color-orange .mz-facetingform-valuelabel {
 	background-color: #fa8125;
@@ -862,7 +863,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
     display: none;
 }
 .mz-address-heading{
-    color: #999;
+    color: @textHeaderColor;
     font-family: @fontGTWalsheimBold;
 }
 .item{
@@ -1134,7 +1135,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
     display:none;
 }
     .megamu-wrapper ul{
-        background-color: #0D3762;
+        background-color: @primaryDarkBlue;
         text-align: center;
         position: relative;
     }
@@ -1532,10 +1533,10 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
         color:@dark-grey !important;
     }
     .final_third_list li a:hover{
-        color: #0d3762 !important;
+        color: @linkHoverColor !important;
     }
     .final_third_list p{
-        color: #0d3762 !important;
+        color: @textColor !important;
         font-size: 15px;
         margin-top: 9px;
         margin-bottom: 9px;
@@ -1846,7 +1847,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
             z-index: 99999;
             width: 100%;
             height: 100vh;
-            background: #0d3762;
+            background: @primaryDarkBlue;
             overflow-y: auto;
         }
         #mz-drop-zone-megamenu .mz-cms-col-12-12{
@@ -2036,7 +2037,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
         margin-left: 0% !important;
     }
     .mktoButton{
-        background-color: #0971CE !important;
+        background-color: @primaryBlue !important;
         background-image: none !important;
         border: 0px !important;
         border-radius: 5px !important;
@@ -2047,7 +2048,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
         color: #fff !important;
     }
     .mktoForm fieldset legend{
-        color: inherit;
+        color: @textHeaderColor;
         font-size: 23px;
         margin: 0px 0 10px;
         padding-left: 10px;
@@ -2065,7 +2066,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
     pre{
         font-family: @fontFamily !important;
         font-size: 15px;
-        color: #666;
+        color: @textColor;
     }
     .mktoOffset{
         width:0px !important;
@@ -2189,7 +2190,7 @@ i.nostar.fa.fa-star-o, i.ratestar.fa.fa-star {
             width:100%;
             content:attr(placeholder);
             line-height: 38px;
-            color:#999;
+            color: @textColor;
         }
 
         #dateofEvent.placeholderclass:hover::before{
@@ -2344,6 +2345,7 @@ input::-webkit-inner-spin-button {
 	display: inline-block;
 	height: inherit;
 	float: none;
+	vertical-align: middle;
 	@media (min-width: 1025px) {
 		height: 80px;
 		display: block;
@@ -2361,7 +2363,7 @@ input::-webkit-inner-spin-button {
 	}
 }
 /* for new branding so we can have different brandmarks for mob vs desktop */
-.mob-header-logo #mz-drop-zone-logo_upload a {
+.mob-header-logo a {
     background: url(../resources/images/ShindigzBrandmark.png) center center no-repeat;
     display: block;
     height: 50px;
@@ -2476,7 +2478,7 @@ input::-webkit-inner-spin-button {
         .order-blocks5{
             width: 140px;
             font-size: 1.4em;
-            color: #0d3762;
+            color: @textColor;
             font-family: @fontFamily;
         }
     }
@@ -2490,12 +2492,12 @@ input::-webkit-inner-spin-button {
         .account-order-number{
             font-size: 15px;
             height: 50px;
-            font-family:MonstserratLight;
+            font-family: @fontGTWalsheimLight;
                 width: 10%;
         }
         .account-order-number11{
             font-size:13px;
-            font-family:MonstserratLight;
+            font-family: @fontGTWalsheimLight;
         }
         .final-total-val{
             font-size:18px;
@@ -3067,10 +3069,8 @@ a{
     background-color: #fff;
 }
 .my-new-class{
-    background-color: #F1F1F2;
     width: 100%;
     margin: 0 auto;
-    padding: 26px 0px 0px;
 }
 h2.promo-slide-title{
     position: relative;
@@ -3325,7 +3325,7 @@ searchNav .option{
     cursor: pointer;
     font-size: 12px;
     line-height: 36px;
-    color: #666;
+    color: @textColor;
 }
 .searchNav form{
     width: 100%;
@@ -3429,7 +3429,7 @@ searchNav .option{
         background-color: #697C93;
     }
     .owl-dot.active {
-        background-color: #00B09B;
+        background-color: @secondaryBlue;
     }
 }  
 .login-popover-title{
@@ -3462,7 +3462,7 @@ searchNav .option{
     transition: 0.3s ease-in-out;
 }
 #btn_show_all:hover{
-    background-color: #0D3762;
+    background-color: @primaryCTAhover;
 }
 .ech-shi-homeSlider{
     .imagevideocaraousel .vt-slider .slider-caption{
@@ -3478,6 +3478,11 @@ searchNav .option{
     }
     .ech-shi-top-header{
         display:none;
+    }
+    .mz-productlisting-image .mz-sales-ribbon{
+        padding: 0.3em 12px;
+        font-size: 13px;
+        left: -5px;
     }
 }
 @media only screen and (min-width:1500px){
@@ -3535,16 +3540,16 @@ searchNav .option{
         padding: 0px;
         text-align: center; 
     }
-    .catg_list_name{
-        color: #093863;
+    .catg_list_name {
+        color: @textColor;
         font-family: @fontFamily;
         font-size: 16px;
         padding: 10px 0px;
     }
-    .catg_list_name_p{
+    .catg_list_name_p {
     	margin: 9.5px 0;
     }
-   #mz-drop-zone-home-promo-1 .promo-banner{
+    #mz-drop-zone-home-promo-1 .promo-banner{
         min-height: 410px;
         .text-stripe{
             text-align: center;  
@@ -3585,7 +3590,7 @@ searchNav .option{
                 display: inline-block;
                 text-align: center;
                 .promo-banner-style{
-                    color: #666;
+                    color: @textColor;
                     font-family: @fontFamily;
                     font-size: 1.5rem;
                     line-height: 0;
@@ -3596,7 +3601,7 @@ searchNav .option{
                      font-size: 2.5rem;
                  }
                 .promo-banner-style2{
-                    color: #888;
+                    color: @textColor;
                     font-family: @fontFamily;
                     font-size: 1rem;
                 }
@@ -3755,7 +3760,7 @@ searchNav .option{
     .echi-shi-bottom-promo1{
         padding: 2% 1%;
         background: #f0f8ff;
-        border: 6px solid #0d3762;
+        border: 6px solid @primaryDarkBlue;
         max-width: 1100px;
         margin: 0 auto;
         margin-bottom: 30px;
@@ -3774,7 +3779,7 @@ searchNav .option{
             .small-heading{
                 font-family: @fontFamily;
                 font-size: 14px;
-                color: #666;
+                color: @textColor;
                 margin:0px; 
             }
         }
@@ -3783,18 +3788,18 @@ searchNav .option{
             width: 30%;
             button{
                 margin-right: 5%;
-                background: #0d3762;
+                background: @textColor;
                 color: #fff;
                 padding: 6px 12px;
                 font-size: 1.2rem;
                 border-radius: 3px;
                 font-family: @fontFamily; 
                 margin-top: 16px;
-                 border:2px solid #0D3762;
+                 border:2px solid @primaryDarkBlue;
                 &:hover{
                      background-color: #fff;
-                        color: #0D3762;
-                        border: 2px solid #0D3762; 
+                        color: @textColor;
+                        border: 2px solid @primaryDarkBlue; 
                 } 
             }
         } 
@@ -3823,10 +3828,10 @@ searchNav .option{
     transition: 0.3s ease-in-out;
 }
 .search-dropdown-container{
-    color:#666;
+    color: @textColor;
 }
 .search-dropdown-container a:hover{
-    color:#000 !important;
+    color: @textColor !important;
 }
 #search_button{
     transition: 0.3s ease-in-out; 
@@ -3849,7 +3854,7 @@ searchNav .option{
     border: 0px;
     padding: 6px 12px;
     border-radius: 3px;
-    background-color: #00B09B;
+    background-color: @primaryCTA;
     color: #fff;
     margin-bottom: 5px;
     transition: 0.2s ease-in-out;
@@ -3858,7 +3863,7 @@ searchNav .option{
     padding:0px !important;
 }
 .mz-apply-btn:hover{
-    background-color: #0D3762;
+    background-color: @primaryCTAhover;
 }
 .mz-filter-options .mz-l-sidebaritem-footer .mz-facetingform-clearall {
     text-decoration: none;
@@ -3894,7 +3899,7 @@ searchNav .option{
     overflow: inherit;
 } 
 .mz-apply-btn:hover{
-    background-color: #0D3762;
+    background-color: @primaryCTAhover;
 }
 .mz-instagram-slot .ech-shi-newletter{
     float: inherit;
@@ -4186,12 +4191,12 @@ searchNav .option{
     color: white !important;
 }
 .button_promo-sty button.default_offer_btn:hover, .btn-stripe button:hover, #mz-drop-zone-home-promo-5 .button_promo-sty button:hover{
-    background-color: #0D3762 !important;
+    background-color: @primaryCTAhover !important;
     border:0px !important;
 }
 .ech-shi-newletter1 button:hover{
-    background-color: #0D3762 !important;
-    border-color: #0D3762;
+    background-color: @primaryCTAhover !important;
+    border-color: @primaryCTAhover;
 }
 .ech-shi-developed a{
     color: #6b88a1;
@@ -4347,7 +4352,7 @@ searchNav .option{
     margin-top:0px !important;
 }
 .stumps-party-font{
-    font-family: MonstserratLight;
+    font-family: @fontGTWalsheimLight;
     font-size: 15px;
     text-transform: capitalize;
 }
@@ -4478,7 +4483,7 @@ searchNav .option{
         background: #fff;
     }
     .mz-filters-bar::-webkit-scrollbar-thumb {
-        background: #00B09B;
+        background: @secondaryBlue;
     }
     .mz-filters-bar::-webkit-scrollbar {
         width: 8px;
@@ -4621,7 +4626,7 @@ searchNav .option{
     background-color: #f30061 !important;
 }
 .ech-shi-homeSlider .imagevideocaraousel .vt-slider .third-line:hover{
-     background-color: #0d3762 !important;
+     background-color: @primaryDarkBlue !important;
 }
 .mz-filters-bar .mz-sort{
         .mz-sort-btn{
@@ -5120,7 +5125,7 @@ searchNav .option{
 	 	width: 100%;
 	 }
     .mz-quick-view-wrapper{
-        width:730px;
+        width:100%;
     }
     .popup-close{
         right:0px; 
@@ -5177,12 +5182,11 @@ searchNav .option{
         padding: 15px 10px;
     }
     .cat-pg-head-container.border-bottom-dotted{
-        padding: 14px 0px 5px;
         border-bottom: 2px solid #ccc;
-        background-color: #f1f1f1 !important;
+        background-color: #FFF !important;
     }
-    .border-bottom-dotted p{
-        font-size: 13px;
+    .border-bottom-dotted .read-more-container > p {
+        font-size: 14px;
     }
     .service-title{
         font-size: 1.5rem !important;
@@ -5326,6 +5330,7 @@ searchNav .option{
             margin: 0;
             float: left;
             margin-right: 8px;
+            color: @textColor;
         }
     }
     .category-editor-list{
@@ -5333,11 +5338,15 @@ searchNav .option{
         float: none;
         clear: both;
     }  
+    .read-more-container p {
+    	font-size: 14px;
+    }
     .readmore-btn, {
         text-decoration: underline;
         cursor: pointer;
         display: inline;
         color: @linkColor;
+        font-size: 14px;
         &:hover {
         	color: @linkHoverColor;
         }
@@ -5471,7 +5480,7 @@ searchNav .option{
         margin:0px;
     }
     .active_mob_filter > a{
-        color:#00B09B !important;
+        color: @linkColor !important;
     }
     .mz-mobile-filter .mz-filter-mobile-options header i{
         margin-right: 0px !important;
@@ -5492,10 +5501,6 @@ searchNav .option{
     .no-search h1{
         padding: 0.16em;
         margin:0px 0px 1em !important;
-    }
-    .mz-productlisting-image .mz-sales-ribbon{
-        padding: 0.3em 12px;
-        font-size: 13px;
     }
     .cat-pg-head-container .echi-shi-products_slider .popular-cat-heading::before, .cat-pg-head-container .echi-shi-products_slider .popular-cat-heading::after{
         width: 7%; 
@@ -5619,7 +5624,6 @@ searchNav .option{
         position: relative;
         min-height: 68px !important;
     }
-
     .ech-shi-footer{
         margin-bottom:-20px;
     }
@@ -5627,7 +5631,7 @@ searchNav .option{
         margin-top:3px;
     } 
     .catg_list_name{
-        font-size:16px !important;
+        font-size:15px !important;
     }
     .img.brand_logo{
         height:100% !important;
@@ -5948,6 +5952,9 @@ searchNav .option{
         font-size: 10px;
         display: block;
         top: -35px;
+        .sz-super-page-template & {
+        	display: none;
+        }
     }
 }
 .product-mainname{
@@ -6148,7 +6155,7 @@ searchNav .option{
   padding: 8px;
   border-top: 1px solid @secondaryWhite;
   border-bottom: 1px solid @secondaryWhite;
-  color: #666;
+  color: @textColor;
   cursor: pointer;
 }
 .selectric-items li.selected {
@@ -6157,14 +6164,14 @@ searchNav .option{
 }
 .selectric-items li:hover {
   background: #F0F0F0;
-  color: #444;
+  color: @textColor;
 }
 .selectric-items .disabled {
   filter: alpha(opacity=50);
   opacity: 0.5;
   cursor: default !important;
   background: none !important;
-  color: #666 !important;
+  color: @textColor !important;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -6465,6 +6472,9 @@ searchNav .option{
         padding: 0 4%;
         display: table;
         margin: 0 auto 0;
+        @media (min-width: 1025px) {
+        	padding: 0;
+        }
     }
     .megamu-wrapper ul li ul li{
         width: 19%;
@@ -6635,10 +6645,6 @@ right: 0;
 	}
     }
      @media only screen and (min-width: 768px) {
-    .LPMcontainer {
-        height: 120px !important;
-         width: 27px !important;
-    }  
     .nighttoshine {
           margin: 0;
           display: flex;
@@ -6702,9 +6708,6 @@ right: 0;
     width: auto !important;
 }
 /* END STYLE FOR POPOPUP */
-}
-.LPMcontainer.LPMoverlay {
-    bottom: 250px !important;
 }
 /* STYLES ARE FOR MOBILE PDP */
 .mz-product-rating .pr-snippet-stars .pr-stars-small, .pr-modal-container .pr-stars {
@@ -6802,7 +6805,11 @@ right: 0;
 	height: auto !important;		
 } 
 #mz-drop-zone-category-landing-images .mz-cms-image-cover, #mz-drop-zone-category-page-top .mz-cms-image-cover {
-	padding-top: 71%;	
+	padding-top: 55%;
+	margin: 0;
+	@media (min-width: 480px) {
+		padding-top: 20%;
+	}	
 }	
 #mz-drop-zone-category-page-top .mz-cms-image-maintain, #mz-drop-zone-parent-category-page-top .mz-cms-image-maintain, #mz-drop-zone-super-page-top-seo .mz-cms-image-maintain {
 	width: 260%;
@@ -6957,6 +6964,12 @@ right: 0;
         margin-top: 7px;
     }
 }
+@media (min-width: 1025px) and (max-width: 1235px) {
+    .super-page-product-wrap .personalize.mz-productdetail-addtocart.mz-button.mz-button-large {
+    	float: none;
+    	width: 90%;
+    }
+}
 @media only screen and (min-width:1200px) {
     .super-page-section-list .party_packs_btns .btn-cart, .echi-shi-party-packs button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large {
         margin-left: 10px;
@@ -6965,11 +6978,11 @@ right: 0;
 /* END STYLE FOR THEME PAGES */
 /* RELOAD MY QUOTE BUTTON */
 #account-quoteorderhistory .orders-sec .cart-rec a {
-    background-color: #00b09b;
+    background-color: @primaryCTA;
     color: #fff;
     padding: 15px 3px 15px 3px;
     text-transform: uppercase;
-    border: 1px solid #00b09b;
+    border: 1px solid @primaryCTA;
     border-radius: 3px;
     margin: 0 auto 10px auto;
     text-decoration: none !important;
@@ -6979,8 +6992,8 @@ right: 0;
     max-width: 250px;
 }
 #account-quoteorderhistory .orders-sec .cart-rec a:hover {
-background-color: #0d3762 !important;
-    border-color: #0d3762;
+background-color: @primaryCTAhover !important;
+    border-color: @primaryCTAhover;
 }
 /* END RELOAD MY QUOTE BUTTON */
 

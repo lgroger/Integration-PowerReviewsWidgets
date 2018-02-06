@@ -6,11 +6,11 @@
 		margin: 0; 
 		padding: 15px 40px;
 		cursor: pointer;
-		font: 16px/1.2 @fontMontserratRegular;
-		color: #333;
+		font: 16px/1.2 @fontFamily;
+		color: @textColor;
 		border-radius: 10px;
 		font-weight: 400;
-		border: 1px dashed #d7d7d7;
+		border: 1px dashed @secondaryWhite;
 		transition:background 0.4s ease-in-out;
 		&:after{
 			content: "";
@@ -25,18 +25,14 @@
 		&+div{
 			display: none;
 			padding: 20px 40px;
-			border: 1px solid #f9f9f9;
+			border: 1px solid @secondaryWhite;
 			border-bottom-right-radius: 10px;
 			border-bottom-left-radius: 10px;
-			font: 16px/1.4 @fontMontserratRegular;
-			color: #333;
-			background: #f9f9f9;
+			font: 16px/1.4 @fontFamily;
+			color: @textColor;
+			background: @secondaryWhite;
 			a{
-				color: #00af9a;
 				text-decoration: none;
-				&:hover,&:focus{
-					color: #0d3762;
-				}
 			}
 			iframe,img{
 				margin: 15px;
@@ -46,7 +42,7 @@
 			border-bottom-right-radius: 0;
 			border-bottom-left-radius: 0;
 			color: #fff;
-			background: #848484;
+			background: @primaryBlue;
 			&:after{
 				width: 25px;
 				height: 25px;
@@ -62,14 +58,10 @@
 }
 .default-faq-contact{
 	margin-top: 30px;
-	font:italic 16px/1.3 @fontMontserratLight;
-	color: #000;
+	font:italic 16px/1.3 @fontGTWalsheimLight;
+	color: @textColor;
 	a{
-		color: #018af8;
 		text-decoration: underline;
-		&:hover,&:focus{
-			 color: #00b09b;
-		}
 	}
 }
 .btn-fn{
@@ -89,7 +81,7 @@
 				font-size: 24px;
 				left: 10px;
 				top: 24%;
-				color: #00af9a;
+				color: @textHeaderColor;
 			}
 		}
 	}

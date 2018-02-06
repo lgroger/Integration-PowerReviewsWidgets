@@ -27,11 +27,14 @@ select::-ms-expand {
 	float: right;
     padding: 10px 20px; 
     background: #fff;
-    color: #00af9a;
-    border: 1px solid #00af9a;
+    color: @primaryCTA;
+    border: 1px solid @primaryCTA;
     border-radius: 5px;
-    font-weight: bold;
     margin-top: -12%;
+    &:hover {
+    	color: @primaryCTAhover;
+    	border: 1px solid @primaryCTAhover;
+    }
 }
 .child-add:nth-child(2n+1) {
     clear: both;
@@ -48,12 +51,15 @@ select::-ms-expand {
 }
 
 .mz-paymentmethod-edit{
-	    color: #00af9a;
+	color: @linkColor;
     padding: 0 15px 0 0;
     margin-right: 15px;
-        text-decoration: underline;
+    text-decoration: underline;
     margin-top: 13px;
     position: relative;
+    &:hover {
+    	color: @linkHoverColor;
+    }
 }
 .my_account_left{
 	.mz-cms-content{
@@ -165,10 +171,10 @@ select::-ms-expand {
 				margin-bottom: 5px;
 				.occ-block{
 					span{
-						color:#666;
+						color: @textColor;
 					}
 					.ocassion-label{
-						color:#222;
+						color: @textColor;
 						margin-left: 5px;
 						word-wrap: break-word;
 					}
@@ -197,10 +203,10 @@ select::-ms-expand {
 					padding: 2px 0%;
     				font-size: 16px;
 					span{
-						color:#666;
+						color: @textColor;
 					}
 					span.ocassion-label{
-						color:#222;
+						color: @textColor;
 					}
 				}
 				.acc-edit{
@@ -210,7 +216,7 @@ select::-ms-expand {
 			}
 	        .add-another {
 	            background-color: #fff;
-	            color: #00b09b;
+	            color: @primaryCTA;
 	            border: 0px;
 	            font-size: 13px;
 	            text-transform: uppercase;
@@ -218,7 +224,7 @@ select::-ms-expand {
 	            width: 100px;
 	            margin-right: 10px;
 	            margin-top: 15px;
-	            border: 1px solid #00b09b;
+	            border: 1px solid @primaryCTA;
 	        }
 			 .delete-block{
 		        padding:0 0px 0px 15px;
@@ -253,11 +259,11 @@ select::-ms-expand {
 	.account-preference-sec{
 		p.acc-sub-sub-heading {
 		    font-size: 16px !important;
-		    color: #666 !important;
+		    color: @textColor !important;
 		    margin: 0px 0px 15px;
 		}
 		.acc-pref-main-sec .label-push-down .check-acc-box:checked+.acc-pre-che{
-			color:#222;
+			color: @textColor;
 		}
 	}
 }
@@ -294,7 +300,7 @@ select::-ms-expand {
         top: 2px;
         width: 15px;
         height: 15px;
-        border: 1px solid #0d3762;
+        border: 1px solid @primaryDarkBlue;
         border-radius: 2px;
     }
     [type="checkbox"]:not(:checked) + label:after, [type="checkbox"]:checked + label:after {
@@ -305,7 +311,7 @@ select::-ms-expand {
         left: 0px;
         font-size: 16px;
         line-height: 0.8;
-        color: #0d3762;
+        color: @textColor;
         transition: all .2s;
     } 
     [type="checkbox"]:not(:checked) + label:after {
@@ -318,14 +324,14 @@ select::-ms-expand {
     }
     [type="checkbox"]:disabled:not(:checked) + label:before, [type="checkbox"]:disabled:checked + label:before {
         box-shadow: none;
-        border-color: #bbb;
-        background-color: #ddd;
+        border-color: #ccc;
+        background-color: #ccc;
     }
     [type="checkbox"]:disabled:checked + label:after {
-        color: #999;
+        color: @textColor;
     }
     [type="checkbox"]:disabled + label {
-        color: #aaa;
+        color: #ccc;
     }
     [type="checkbox"]:checked:focus + label:before, [type="checkbox"]:not(:checked):focus + label:before {
         border: 1px dotted blue;
@@ -350,7 +356,7 @@ select::-ms-expand {
             top: 2px;
             width: 15px;
             height: 15px;
-            border: 1px solid #0d3762;
+            border: 1px solid @primaryDarkBlue;
             border-radius: 2px;
         }
         [type="checkbox"]:not(:checked) + label:after, [type="checkbox"]:checked + label:after {
@@ -361,7 +367,7 @@ select::-ms-expand {
             left: 0px;
             font-size: 16px;
             line-height: 0.8;
-            color: #0d3762;
+            color: @primaryDarkBlue;
             transition: all .2s;
         }
         [type="checkbox"]:not(:checked) + label:after {
@@ -374,29 +380,29 @@ select::-ms-expand {
         }
         [type="checkbox"]:disabled:not(:checked) + label:before, [type="checkbox"]:disabled:checked + label:before {
             box-shadow: none;
-            border-color: #bbb;
-            background-color: #ddd;
+            border-color: #ccc;
+            background-color: #ccc;
         }
         [type="checkbox"]:disabled:checked + label:after {
-            color: #999;
+            color: #ccc;
         }
         [type="checkbox"]:disabled + label {
-            color: #aaa;
+            color: #ccc;
         }
         [type="checkbox"]:checked:focus + label:before, [type="checkbox"]:not(:checked):focus + label:before {
             border: 1px dotted blue;
         }
     }
     .card-head {
-        background-color: #eff5fb;
+        background-color: @secondaryWhite;
         width: 100%;
         text-transform: uppercase;
         padding: 10px 15px;
         font-weight: normal;
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-size: 16px;
 		box-sizing: border-box;
-		color:#222;
+		color: @textColor;
 		min-height: inherit;
     }
 	.mz-accountpaymentmethods .mz-accountpaymentmethods-list{
@@ -438,7 +444,7 @@ select::-ms-expand {
 		}
 	}
     .mz-creditcard-save {
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         color: #fff;
         border: 0px;
         font-size: 16px;
@@ -450,7 +456,7 @@ select::-ms-expand {
         margin-top: 15px;
     }
     .mz-creditcard-save:hover {
-        background-color: #0d3762;
+        background-color: @primaryCTAhover;
     }
     .mz-creditcard-cancel {
         background-color: #b7b7b7;
@@ -526,7 +532,7 @@ select::-ms-expand {
 .new-card-btn {
     padding: 2% 8%;
     border-radius: 5px;
-    background: #0971ce;
+    background: @primaryCTA;
     color: #fff;
     font-size: 16px;
     text-transform: uppercase;
@@ -536,17 +542,17 @@ select::-ms-expand {
     }
 }
 .new-card-btn:hover {
-    background-color: #0d3762;
+    background-color: @primaryCTAhover;
 }
 .address-blocks-head {
-    background-color: #eff5fb;
+    background-color: @secondaryWhite;
     width: 100%;
     text-transform: uppercase;
     padding: 10px 15px;
     font-weight: normal;
-    font-family: ArvoRegular;
+    font-family: @fontFamily;
     font-size: 16px;
-	color:#222;
+	color: @textColor;
 	box-sizing: border-box;
 }
 .address-sec-block { 
@@ -580,7 +586,7 @@ select::-ms-expand {
 	}
     .add-new-address {
         border-radius: 5px;
-        background: #0971ce;
+        background: @primaryCTA;
         color: #fff;
         font-size: 16px;
         text-transform: uppercase;
@@ -595,7 +601,7 @@ select::-ms-expand {
         }
     }
 	.add-new-address:hover{
-    	background-color: #0d3762;
+    	background-color: @primaryCTAhover;
 	}
     .mz-accountaddressbook-actions {
         float: none;
@@ -603,14 +609,17 @@ select::-ms-expand {
         padding-top: 5%;
         .mz-accountaddressbook-edit {
             padding-right: 5%;
-            color: #00af9a;
+            color: @linkColor;
+			&:hover {
+				color: @linkHoverColor;
+			}
         }
         .mz-accountaddressbook-delete {
             padding-left: 5%;
         }
     }
     .mz-contact-save {
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         color: #fff;
         border: 0px;
         font-size: 16px;
@@ -620,6 +629,9 @@ select::-ms-expand {
 		box-sizing: border-box;
         margin-right: 10px;
         margin-top: 15px;
+		&:hover {
+			background-color: @primaryCTAhover;
+		}
     }
     .mz-contact-cancel {
         background-color: #b7b7b7;
@@ -647,7 +659,7 @@ select::-ms-expand {
     }
     label {
         text-align: left !important;
-        font-family: @fontMontserratLight;
+        font-family: @fontGTWalsheimLight;
         font-size: 14px;
     }
     select {
@@ -706,7 +718,7 @@ select::-ms-expand {
 }
 .support-text, .support-num{
 	display:inline-block;
-	font-family:ArvoRegular;
+	font-family: @fontFamily;
 	width:49%; 
 }
 .support_tollfree{ 
@@ -714,18 +726,18 @@ select::-ms-expand {
     height: 50px;
     vertical-align: top;
     line-height: 40px;
-    color: #FF9E39;
+    color:  @textColor;
 } 
 .question_abt_order{
-	font-family: MonstserratLight;
+	font-family: @fontGTWalsheimLight;
     margin: 2% 0%;
     font-weight: normal;
     border-bottom: 1px solid #f3ede6;
     padding-bottom: 2px;
 }
 .rewards-sec .rewards-top-block h3{
-	font-family:ArvoRegular;
-	color: #666;
+	font-family: @fontFamily;
+	color: @textColor;
     font-size: 16px;
 }
 .add-card {
@@ -741,9 +753,12 @@ select::-ms-expand {
             float: none;
             margin: 0;
             .mz-paymentmethod-edit {
-                color: #00af9a;
+                color: @linkColor;
                 padding: 0 15px 0 0;
     			margin-right: 10px;
+    			&:hover {
+    				color: @linkHoverColor;
+    			}
             }
             a {
                 padding: 0;
@@ -787,7 +802,7 @@ select::-ms-expand {
 		}
         label {
             text-align: left !important;
-            font-family: @fontMontserratLight;
+            font-family: @fontGTWalsheimLight;
             font-size: 14px;
         }
         select {
@@ -914,7 +929,7 @@ select::-ms-expand {
     		word-wrap: break-word;
     		span{
     			margin:0 0 7px;
-    			color: #222;
+    			color: @textColor;
     		}
     		span.address_name{
     			margin:0 0 10px;
@@ -933,15 +948,18 @@ select::-ms-expand {
 	}
 	.mz-accountaddressbook-actions{
 		a:hover{
-			text-decoration:none !important;
+			color: @linkHoverColor;
 		}
 		a{
 		    text-decoration: underline !important;
 		}
 		.mz-accountaddressbook-edit {
-		    color: #00af9a;
+		    color: @linkColor;
 		    padding: 0 15px 0 0;
 		    margin-right: 15px;
+		    &:hover {
+		    	color: @linkHoverColor;		
+		    }
 		}
 	    .mz-accountaddressbook-delete{
 	    	padding: 0px;
@@ -980,20 +998,20 @@ select::-ms-expand {
         display: none;
     } 
     .order-head {
-        background-color: #eff5fb;
+        background-color: @secondaryWhite;
         width: 100%;
         text-transform: uppercase;
         padding: 10px 15px;
         font-weight: normal;
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-size: 16px;
-		color: #222222;
+		color: @textColor;
     	box-sizing: border-box;
     	margin-bottom: 0px;
     }
     button.accordion {
-        background-color: #eff5fb;
-        color: black;
+        background-color: @secondaryWhite;
+        color: @textColor;
         cursor: pointer;
         padding: 14px 15px;
         width: 100%;
@@ -1006,6 +1024,7 @@ select::-ms-expand {
 		box-sizing: border-box;
 		strong{
 			text-transform: uppercase;
+			font-weight: normal;
 		}
         .fa-minus {
             display: none;
@@ -1017,7 +1036,7 @@ select::-ms-expand {
         }
     }
     button.accordion.active{
-        background-color: #00b09b;
+        background-color: @primaryBlue;
         color: #fff;
         .fa-plus {
             display: none;
@@ -1044,26 +1063,26 @@ select::-ms-expand {
 			    margin: 0;
 				.orders-header{
 					font-size:14px;
-					font-family: MonstserratLight !important;
+					font-family: @fontGTWalsheimLight !important;
 					margin-bottom: 15px;
 					.order-blocks1{
 						width: 19%;
-						font-family: MonstserratLight;
+						font-family: @fontGTWalsheimLight;
 					}
 					.order-blocks2{
 						width: 10%;
-						font-family: MonstserratLight;
+						font-family: @fontGTWalsheimLight;
 						.order_color{
-							color:#666;
+							color: @textColor;
 						}
 					}
 					.order-blocks3{
 						width: 15%;
-						font-family: MonstserratLight;
+						font-family: @fontGTWalsheimLight;
 					}
 					.order-blocks5{
 						width: 20%;
-						font-family: MonstserratLight;
+						font-family: @fontGTWalsheimLight;
 					}
 				}
 				.orders-body{
@@ -1077,7 +1096,7 @@ select::-ms-expand {
 						width:15%;
 					}
 					.order_color{
-						color:#666;
+						color: @textColor;
 						font-size: 13px;
 					}
 					.order-blocks1{
@@ -1097,7 +1116,7 @@ select::-ms-expand {
 			.orders.orders-ord{
 				.acc-sub-main-heading{
 					font-size: 16px !important;
-				    color: #666!important;
+				    color: @textColor !important;
     				padding-bottom: 10px;
 				}
 				.acc-billing-heading{
@@ -1105,23 +1124,22 @@ select::-ms-expand {
     				border-top: 1px solid #f5f5f5;
 				}
 				.block1{
-					color: #222;
+					color: @textColor;
 				}
 			}
 			.cart-rec{
 				.cart-head{
-					background: #dceaf6;
+					background: @primaryBlue;
 				    height: auto !important;
 				    line-height: 45px !important;
-				    color: #222;
-				    font-weight: bold;
+				    color: #fff;
 				    font-size: 16px;
 				    padding: 0 15px;
 				    margin: 0;
 				}
 				.ordersummary_box{
-					background:#f0faf9;
-					border: 1px solid #eee;
+					background: @secondaryWhite;
+					border: 1px solid @primaryBlue;
 					padding-top:10px;
 					display: inline-block;
 					width:100%;
@@ -1130,8 +1148,8 @@ select::-ms-expand {
 						height: auto;
 						.cart-label{
 						    font-weight: normal;
-						    font-family: MontserratRegular;
-						    color: #666666;
+						    font-family: @fontFamily;
+						    color: @textColor;
 						    margin: 0;
     						padding: 0 15px;
     						font-size: 14px;
@@ -1139,15 +1157,15 @@ select::-ms-expand {
 					    	    position: relative;
 							    right: auto;
 							    font-size: 18px;
-							    color: #222;
-							    font-family: ArvoRegular;
+							    color: @textColor;
+							    font-family: @fontFamily;
 							    float: right;
 						    }
 						}
 					    .cart-label-total{
 						    font-weight: normal;
-						    font-family: MontserratRegular;
-						    color: #666666;
+						    font-family: @fontFamily;
+						    color: @textColor;
 						    margin: 0;
     						padding: 10px 15px;
     						font-size: 16px;
@@ -1155,8 +1173,8 @@ select::-ms-expand {
 					    	    position: relative;
 							    right: auto;
 							    font-size: 21px;
-							    color: #0d3762;
-							    font-family: ArvoRegular;
+							    color: @textColor;
+							    font-family: @fontFamily;
 							    float: right;
 					    	}
 					    }
@@ -1168,10 +1186,10 @@ select::-ms-expand {
 					}
 				}
 				.help-sec{
-					background:#fff9f2;
-					border:1px dotted #ff8300;
+					background:#fff;
+					border:1px dotted @primaryBlue;
 					font-size:14px;
-					font-family:arvo, arial;
+					font-family: @fontFamily;
 					font-weight:400;
 					text-align:center;
 					margin: 0px;
@@ -1180,7 +1198,7 @@ select::-ms-expand {
 					.support-text{
 						text-align: right;
 					    font-size: 13px;
-					    color: #222;
+					    color: @textColor;
 					}
 					.support_tollfree{
 						text-align: left;
@@ -1208,19 +1226,18 @@ select::-ms-expand {
         }
     }
     .acc-sub-main-heading {
-		  font-family: MonstserratLight !important;
+		  font-family: @fontGTWalsheimLight !important;
 		  font-size: 14px !important;
-		  color: #666666 !important;
 		  text-transform: inherit;
 		  margin-top: 35px;
 		  border-bottom: 1px solid #f5f5f5;
-		  color:#999 !important;
+		  color: @textColor !important;
     }
     .block1 { 
         width: 200px;
         display: inline-block;
         font-size: 1.1em;
-        font-family: MonstserratLight;
+        font-family: @fontGTWalsheimLight;
         vertical-align: top;
     }
 	.ship-text2{
@@ -1228,7 +1245,7 @@ select::-ms-expand {
 	}
 	.ship-address{
 		color:#888;
-		font-family: MonstserratLight;
+		font-family: @fontGTWalsheimLight;
 		.address_phone{
 			display: none;
 		}
@@ -1258,9 +1275,9 @@ select::-ms-expand {
     .mz-accountsettings-label {
         float: left;
         font-size: 1em !important;
-        color: black !important;
+        color: @textColor !important;
         font-weight: normal;
-        font-family: MonstserratLight;
+        font-family: @fontGTWalsheimLight;
         padding-right: 25px;
         width: 91px;
         padding-right: 1%;
@@ -1271,7 +1288,7 @@ select::-ms-expand {
     }
 }
 .prof-save {
-    background-color: #0971ce;
+    background-color: @primaryCTA;
     color: white;
     border: 0px; 
     font-size: 16px;
@@ -1286,7 +1303,7 @@ select::-ms-expand {
 	background-color: #e3e3e3 !important;
 }    
 .prof-save:hover, .mz-accountsettings-passworddone:hover, .mz-contact-save:hover{
-    background-color: #0d3762;
+    background-color: @primaryCTAhover;
 }
 span.field-error{
 	display: none;
@@ -1295,7 +1312,7 @@ span.field-error{
 }
 .my-account-require-fileds{
 	font-size:12px;
-	color:#666;
+	color: @textColor;
 }
 .prof-cancel {
     background-color: #b7b7b7;
@@ -1331,32 +1348,29 @@ span.field-error{
 }
 .order-blocks1 img{
 	width: 35px !important;
-    border: 2px solid #e4e4e4;
-    border-radius: 5px;
     margin: 5px 10px 5px 5px;
-    padding: 5px;
+    padding: 0 5px;
 }
 .order-items-list{
 	border-bottom:1px solid #ccc; 
 }
 .reward-head p span{
 	font-size: 18px !important;
-    font-weight: bold !important;
-    font-family:ArvoRegular;
-    color: #333;
+    font-family: @fontFamily;
+    color: @textColor;
 }
 .btn-save:hover{
 	background-color:#073863;
 }
 .rewards-sec {
     .reward-head {
-        background-color: #eff5fb;
+        background-color: @secondaryWhite;
         width: 100%;
         padding: 10px 15px;
         font-weight: normal;
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-size: 18px;
-		color:#222;
+		color: @textColor;
 		box-sizing: border-box;
 		text-transform: uppercase;
 		margin-top: 0;
@@ -1370,17 +1384,13 @@ span.field-error{
 		div{
 			padding-bottom: 20px;
 			label{
-				color: #222;
-			    font-weight: bold;
+				color: @textColor;
 			    padding-left: 0;
 			}
 		}
-        h3 {
-            font-weight: bold;
-        }
         p {
             font-size: 20px !important;
-    		color: #666 !important;
+    		color: @textColor !important;
         }
     }
 	.reward_signup_div{
@@ -1390,7 +1400,7 @@ span.field-error{
 		margin-bottom: 30px;
 	}
     .refer-btn, .reward_signup {
-        background-color: #0971ce;
+        background-color: @primaryCTA;
         color: white;
         border: 0px;
         font-size: 16px;
@@ -1401,11 +1411,10 @@ span.field-error{
         margin-right: 10px;
         margin-top: 15px;
         border-radius: 5px;
-        font-weight: bold;
     }
     .like-btn {
         background-color: #fff;
-        color: #0971ce;
+        color: @primaryCTA;
         border: 0px;
         font-size: 16px;
         text-transform: uppercase;
@@ -1413,16 +1422,15 @@ span.field-error{
 	    min-width: 250px;
         margin-right: 10px;
         margin-top: 15px;
-        border: 1px solid #0971ce;
+        border: 1px solid @primaryCTA;
         border-radius: 5px;
-        font-weight: bold;
     }
 	.like-btn:hover{
-		border-color:#0d3762;
-		color:#0d3762;
+		border-color: @primaryCTAhover;
+		color: @primaryCTAhover;
 	}
 	.refer-btn:hover, .reward_signup:hover{
-		background-color:#0d3762;
+		background-color: @primaryCTAhover;
 	}
 	.store-credit {
 	    margin-left: 2%;
@@ -1431,29 +1439,29 @@ span.field-error{
 			p{
 				font-weight: 600;
 			    font-size: 14px;
-			    color: #666;
-			    font-family: @fontMontserratRegular;
+			    color: @textColor;
+			    font-family: @fontFamily;
 			}
 		}
 	    h3 {
 		    font-weight: 400;
 		    font-size: 17px;
-		    color: #666;
-		    font-family: @fontMontserratRegular;
+		    color: @textColor;
+		    font-family: @fontFamily;
 		    margin-top: 10px;
 		    margin-bottom: 0px;
 	    }
 		h3.account_storebalance{
-			font-weight: 600;
+			font-weight: normal;
 			span{
-				color:#d91a60;
+				color: @textColor;
 			}
 		}
 	}
 	.mz-accountstorecredit-form.credit-form{
 		margin-top:30px;
 		.mz-accountstorecredit-title{
-			color: #666;
+			color: @textColor;
 		    font-weight: 400;
 		    font-size: 16px;
 		    margin:0px 0px 10px;
@@ -1463,24 +1471,23 @@ span.field-error{
 		}
 	}
     .faq-head {
-        background-color: #eff5fb;
+        background-color: @secondaryWhite;
         width: 100%;
         padding: 10px 15px;
         font-weight: normal;
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-size: 18px;
 		color:#888;
 		box-sizing: border-box;
 		margin-top: 0;
         p {
             font-size: 15px !important;
-    		color: #545353 !important;
+    		color: @textColor !important;
     		margin:0px;
     		span{
     			font-size: 17px;
-    			color:#222;
-    			font-weight: 600;
-    			font-family: ArvoRegular;
+    			color:@textColor;
+    			font-family: @fontFamily;
     		}
         }
     }
@@ -1494,18 +1501,21 @@ span.field-error{
         background: none;
     }
     .mz-accountstorecredit-add {
-        padding: 15px 3%;
-        background: #00b09b;
+        padding: 12px 3%;
+        background: @primaryCTA;
         color: #fff;
         font-size: 20px;
 		border:0px;
+		&:hover {
+			background-color: @primaryCTAhover;
+		}
     }
 }
 #tab_6 {
     button.accordion {
         background-color: #fff;
-        color: black;
-        border: 1px solid #00b09b !important;
+        color: @textColor;
+        border: 1px solid @primaryCTA !important;
         border-radius: 5px;
         cursor: pointer;
         padding: 16px 0px;
@@ -1523,8 +1533,8 @@ span.field-error{
     }
     button.accordion.active, button.accordion:hover {
         background-color: #fff;
-        color: black;
-        border: 1px solid #00b09b;
+        color: @primaryCTAhover;
+        border: 1px solid @primaryCTAhover;
         border-radius: 5px;
         .fa-caret-down {
             display: none;
@@ -1549,10 +1559,10 @@ span.field-error{
 	.mz-accountstorecredit-table{
 		padding: 0px 2% 20px;
 		.mz-table{
-			font-family:MonstserratLight;
+			font-family: @fontGTWalsheimLight;
 			thead{
 				th{
-				    color: #666;
+				    color: @textColor;
 				    background-color: #fff;
 				    font-weight: 400;
 				    text-align: center;
@@ -1617,20 +1627,20 @@ span.field-error{
 		    width: 89%;
 	}
     .head {
-        background-color: #eff5fb;
+        background-color: @secondaryWhite;
         width: 100%;
         text-transform: uppercase;
         padding: 10px;
         font-weight: normal;
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-size: 18px;
     }
 	.order_color{
-		color:#666;
+		color: @textColor;
 	}
     button.accordion {
-        background-color: #eff5fb;
-        color: black;
+        background-color: @secondaryWhite;
+        color: @textColor;
         cursor: pointer;
         padding: 14px 15px;
         width: 100%;
@@ -1640,7 +1650,7 @@ span.field-error{
         font-size: 16px;
         transition: 0.4s;
         margin-top: 0;
-		font-family: ArvoRegular;
+		font-family: @fontFamily;
 		box-sizing: border-box;
         .fa-minus {
             display: none;
@@ -1663,12 +1673,12 @@ span.field-error{
 		    font-size: 15px;
 		}
 		.wishlist_date{
-			font-family: ArvoRegular;
+			font-family: @fontFamily;
 			font-size: 15px;
 			span{
 				min-width:inherit;
 				margin:0px;
-				font-family: MonstserratLight;
+				font-family: @fontGTWalsheimLight;
 			}
 		}
 		.wishlist_total{
@@ -1677,8 +1687,8 @@ span.field-error{
 		}
     }
     button.accordion.active {
-        background-color: #00b09b;
-        color: #fff;
+        background-color: @secondaryWhite;
+        color: @textColor;
         .fa-plus {
             display: none;
             float: right;
@@ -1715,19 +1725,19 @@ span.field-error{
 				margin-bottom: 10px;
 				.order-blocks1{
 					width: 20%;
-					font-family: MonstserratLight;
+					font-family: @fontGTWalsheimLight;
 				}
 				.order-blocks2{
 					width: 14%;
-				    font-family: MonstserratLight;
+				    font-family: @fontGTWalsheimLight;
 				}
 				.order-blocks3{
 					width: 18%;
-				    font-family: MonstserratLight;
+				    font-family: @fontGTWalsheimLight;
 				}
 				.order-blocks4{
 					width: 15%;
-				    font-family: MonstserratLight;
+				    font-family: @fontGTWalsheimLight;
 				    text-transform: uppercase;
 				}
 			}
@@ -1769,7 +1779,7 @@ span.field-error{
         padding: 12px 12px;
     	min-width: 160px;
         border-radius: 5px;
-        background: #0971ce;
+        background: @primaryCTA;
         color: #fff;
         font-size: 15px;
         text-transform: uppercase;
@@ -1787,25 +1797,24 @@ span.field-error{
         padding: 10px 0px; 
         border-radius: 5px;
         width: 140px;
-        color: #0971ce;
+        color: @primaryCTA;
         background: #fff;
         font-size: 10px;
         text-transform: uppercase;
- 		font-weight: bold;
         min-height: 0;
-        border: 1px solid #0971ce;
+        border: 1px solid @primaryCTA;
     }
 	.add-wishlist:hover{
 		color:#073863;
 		border-color:#073863;
 	}
     .remove-item {
-        color: #00b09b;
+        color: @primaryCTA;
 		cursor:pointer;
 		font-size: 13px;
     }
 	.remove-item:hover{
-		color:#073863;
+		color: @primaryCTAhover;
 	}
     .delete-wishlist {
         padding:0 15px 15px;
@@ -1817,12 +1826,12 @@ span.field-error{
 		box-sizing: border-box;
     	display: inline-block;
     	a:hover{
-    		color:#222;
+    		color: @linkHoverColor;
     	}
     }
     .mz-item-rowtotal {
         font-size: 16px;
-        color: #0d3762;
+        color: @textColor;
     }
     .custom-qty {
         background-color: #f7f7f7;
@@ -2219,19 +2228,15 @@ span.field-error{
         background: none !important;
         width: 100% !important;
     }
-    .account_tab-content {
-        display: block;
-        padding: 0 !important;
-    }
     .my_acc_ri {
         padding-left: 0 !important;
         .accordion1 {
             display: block !important;
         }
         button.accordion1 {
-            background-color: #0d3762;
-            color: #fff;
-            cursor: poiblacknter;
+            background-color: @secondaryWhite;
+            color: @textColor;
+            cursor: pointer;
             padding: 15px 5px 15px 15px;
     		box-sizing: border-box;
             width: 100%;
@@ -2254,7 +2259,7 @@ span.field-error{
             }
         }
         button.accordion1.active {
-            background-color: #00b09b;
+            background-color: @primaryBlue;
             color: #fff;
             .fa-caret-down {
                 display: none;
@@ -2398,10 +2403,10 @@ span.field-error{
 						padding: 3px 0%;
 						font-size: 14px;
 						span{
-							color:#666;
+							color: @textColor;
 						}
 						span.ocassion-label{
-							color:#222;
+							color: @textColor;
 						}
 					}
 					.acc-edit{
@@ -2466,8 +2471,7 @@ span.field-error{
 				.mz-accountsettings-password{
 					.change-password-head{
 						font-size: 15px;
-					    color: #666;
-					    font-weight: bold;
+					    color: @textColor;
 					    margin-top: 0;
 					    margin-bottom: 15px;
 					}
@@ -2657,7 +2661,7 @@ span.field-error{
 				    text-align: right;
 				    bottom: 0;
 				    right: 0;
-				    font-family: MontserratRegular;
+				    font-family: @fontFamily;
 				    margin-top: 0;
 				}
 			}
@@ -2739,7 +2743,7 @@ span.field-error{
 			padding: 0 15px;
 			.mz-addresssummary span {
 			    margin: 0 0 4px;
-			    color: #222;
+			    color: @textColor;
 			    font-size: 14px;
 			}
 		}
@@ -2829,7 +2833,7 @@ span.field-error{
 				    text-align: right;
 				    bottom: 0;
 				    right: 0;
-				    font-family: MontserratRegular;
+				    font-family: @fontFamily;
 				    margin-top:0;
 				}
     		}
@@ -2855,7 +2859,7 @@ span.field-error{
 	}
 	#tab_4 .order-head, #tab_7 .order-head, #tab_6 .rewards-sec .reward-head, #tab_1 .account_heading span, #tab_2 .card-head, .address-blocks-head{
 		font-weight: 600;
-	    font-family: ArvoRegular;
+	    font-family: @fontFamily;
 	    font-size: 15px;
 	}
     #tab_4, #tab_7, .orderstatus_page{
@@ -2866,7 +2870,7 @@ span.field-error{
 			padding-left: 5px;
 		}
 		.order_qty{
-			color:#666;
+			color: @textColor;
 		}
         .cart-num {
             width: auto;
@@ -2899,14 +2903,14 @@ span.field-error{
         }
         .price-tag {
             font-size: 1.2em;
-            color: #0d3762;
-            font-family: MontserratRegular;
+            color: @textColor;
+            font-family: @fontFamily;
             position: absolute;
             padding-left: 0%;
         }
         .track-order {
             font-size: 1em;
-            font-family: MontserratRegular;
+            font-family: @fontFamily;
 		    width: 50%;
     		display: inline-block;
     		a{
@@ -2961,7 +2965,7 @@ span.field-error{
 					.cart-head{
 						line-height: 40px !important;
 						font-size: 14px;
-						font-family: ArvoRegular;
+						font-family: @fontFamily;
 					}
 					.ordersummary_box{
 					    padding-top: 0px;
@@ -3082,9 +3086,8 @@ span.field-error{
 						text-align: left;
 						.custom-qty:before{
 							content:'Qty:';
-							color:#666;
+							color: @textColor;
 							font-size: 13px;
-							font-weight: bold;
 							position: absolute;
 						    left: -35px;
 						    top: 10px;
@@ -3106,9 +3109,8 @@ span.field-error{
 							}
 						}
 						.order_color{
-							color:#666;
+							color: @textColor;
 							font-size: 13px;
-							font-weight: bold;
 						}
 					}
 					.order-blocks4{
@@ -3263,20 +3265,23 @@ span.field-error{
 				}
 				.mz-accountstorecredit-add {
 				    padding: 10px 3%;
-				    background: #00b09b;
+				    background: @primaryCTA;
 				    color: white;
 				    font-size: 16px;
 				    border: 0px;
 				    width: 35%;
 				    box-sizing: border-box;
 				    height: 45px;
+				    &:hover {
+				    	background-color: @primaryCTAhover;
+				    }
 				}
 			}
 		}
 		.mz-accountstorecredit-table{
 			padding: 0px 2% 15px;
 			.mz-table{
-				font-family:MonstserratLight;
+				font-family: @fontGTWalsheimLight;
 				thead{
 					th{
 						font-size: 13px;
@@ -3304,7 +3309,7 @@ span.field-error{
 				font-size: 14px !important;
 				span{
 					font-size:15px !important;
-					background-color: #eff5fb;
+					background-color: @secondaryWhite;
 				    margin-left: -15px;
 				    margin-right: -15px;
 				    padding: 10px 15px;
@@ -3329,9 +3334,9 @@ span.field-error{
     	}
     }
     .mz-pagetitle{
-        font-family: ArvoRegular;
+        font-family: @fontFamily;
         font-weight: normal;
-        color: #0d3762;
+        color: @textColor;
         font-size: 1.8rem;
         border-bottom: 1px solid #d4d4d4;
         vertical-align: top;
@@ -3360,7 +3365,7 @@ span.field-error{
                 .order-blocks2{
                     font-size: 14px;
                     color: #080808;
-                    font-family: MontserratRegular;
+                    font-family: @fontFamily;
                 }
                 .order-blocks1 img{
                     max-width: 90%;
@@ -3408,11 +3413,11 @@ span.field-error{
 }
 .cart-rec{
 	.order-print-btn{
-		background-color: #00b09b;
+		background-color: @primaryCTA;
 		color: #fff;
 		padding: 15px 3px 15px 3px;
 		text-transform: uppercase;
-		border: 1px solid #00b09b;
+		border: 1px solid @primaryCTA;
 		border-radius: 3px;
 		margin: 0 auto 10px auto;
 		text-decoration: none !important;
@@ -3420,6 +3425,10 @@ span.field-error{
 		text-align: center;
 		width: 60%;
 		max-width: 250px;
+		&:hover {
+			background-color: @primaryCTAhover;
+			border: 1px solid @primaryCTAhover;
+		}
 	}
 }
 .mz-orderhistory-section {
@@ -3869,7 +3878,6 @@ span.field-error{
         margin : 0;
         padding: 0;
         page-break-before: avoid;
-        /* border: 1px solid #000; */
     }
     body{
     	line-height: normal !important;

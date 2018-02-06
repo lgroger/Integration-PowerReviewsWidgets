@@ -17,10 +17,8 @@
                           <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
                           {% if item.product.options && item.product.productType != "Bundle" %}
                             {% for opt in item.product.options %}
-                              {% if opt.name == "dnd-token" %}
-                                {%  with opt.shopperEnteredValue |split(":") as token %}
-                                  <span data-dndtoken={{ token|last|replace("}","") }} {% if item.product.productType == "Bundle"%}data-prdType="bundle"{% endif %}></span>
-                                 {% endwith %}
+                              {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript - modules/my-menu.js #}
+                                  <span  data-fulldndtoken="{{opt.shopperEnteredValue|replace('"','!')|escape}}" {% if item.product.productUsage == "Bundle"%}data-prdType="bundle"{% endif %}></span>
                               {% endif %}
                             {% endfor %}
                           {% endif %}
@@ -52,6 +50,7 @@
 
                 <tr class="mz-ordersummary-item-shipping-info">
                   <td colspan="4" class="mz-ordersummary-item-availability">
+                  {% comment %}
                   {% if item.product.productUsage == 'Bundle' %}
                       <h3><span class="toggle_components" data-container-id="{{ item.id }}">Show Components <i class="fa fa-caret-down"></i></span></h3>
                       <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;">
@@ -67,6 +66,7 @@
                           </div>               
                       </div>
                   {% endif %}
+                  {% endcomment %}
                    <span class="availability_highlight_{{ item.product.productCode }}">
                     {% if item.productionTime %}
                       {% if item.productionTime > 1 %}

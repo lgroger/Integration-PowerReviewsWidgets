@@ -1,13 +1,8 @@
 <div class="ech-shi-top-header mz-pageheader">
-	{% comment %}
-	<div class="mz-cms-col-4-12 mob sb-desktop-only">
-		 {% dropzone "prmo-text" scope="site" %}
-	</div>
-	{% endcomment %}
 	<div class="mz-cms-col-8-12 ech-shi-tollfree">
 		{% block utility-nav %} 
-        {% include "modules/page-header/utility-nav" %}
-    {% endblock utility-nav %}
+        	{% include "modules/page-header/utility-nav" %}
+    	{% endblock utility-nav %}
 	</div>
 </div>
 

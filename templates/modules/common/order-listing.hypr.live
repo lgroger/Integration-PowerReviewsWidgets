@@ -33,10 +33,8 @@
                    </a>
                    {% if item.product.options && item.product.productUsage !="Bundle" %}
                       {% for opt in item.product.options %}
-                        {% if opt.name == "dnd-token" %}
-                          {%  with opt.shopperEnteredValue |split(":") as token %}
-                            <span data-dndtoken={{ token|last|replace("}","") }}></span>
-                           {% endwith %}
+                        {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript - modules/my-menu.js #}
+                            <span data-fulldndtoken="{{opt.shopperEnteredValue|replace('"','!')|escape}}"></span>
                         {% endif %}
                       {% endfor %}
                     {% endif %}

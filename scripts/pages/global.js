@@ -1,39 +1,40 @@
-require(['modules/jquery-mozu','underscore', 'modules/api','hyprlive' ,'vendor/jQuery.selectric'], function ($, _, api, Hypr) {
+require(['modules/jquery-mozu','underscore', 'modules/api','hyprlive','modules/marketo-subscribe' ,'vendor/jQuery.selectric'], function ($, _, api, Hypr, Marketo) {
 var pageContext = require.mozuData('pagecontext');
-    var form_marketo_submit = function(e,f,$b,$email,tr,fa){
+	var form_marketo_submit = function(e,$b,$email,tr,fa){
         //set values of form
-        f.vals({"Email":e,"subscribeShindigz":tr,"unsubscribeShindigz":fa});
-        window.subscribeEmailId += ";"+e;
-
         if(e !== ''){
             $b.next().hide();
-            if (f.submittable()) {
-                // Set it to be non submittable
-                //window.email_pre.submittable(false);
-                f.submit();
-                f.onSuccess(function(values, followUpUrl) {
-                    // Return false to prevent the submission handler continuing with its own processing
+			
+			var callback = function(){
+				    // Return false to prevent the submission handler continuing with its own processing
                     if($('.compare-full-error-container').length === 0){
                         //add overlay, close overlay & remove on click of "OK" button
-                        var closeBtn = $("<button />").text("OK").attr("id","session-btn-rd").click(function(){
-                            $(this).parent().parent().fadeOut(500,function(){
-                                $(this).remove();
-                            });
-                        });
-                        var popupOuter = $("<div />").attr("class","compare-full-error-container");
-                        var popupInner = $("<div />").attr("class","compare-error-container");
-                    	$(document.body).append($(popupOuter).append($(popupInner).append("<div>Thanks for subscribing</div>").append(closeBtn)));
+                       resultOverlay("Thanks for subscribing");
                     }
                     $email.val("");
-                    return false;
-                });
-            }
+			};
+			
+            Marketo.subscription(e,tr,fa,callback);
         }else{
             $b.next().show();
         }
-
+    
         //upon not selecting any option show error message, if selected any option hide the error message and send data to the marketo
     };
+	
+	var resultOverlay = function(message,reload){
+		 var closeBtn = $("<button />").text("OK").attr("id","session-btn-rd").click(function(){
+			$(this).parent().parent().fadeOut(500,function(){
+				$(this).remove();
+				if(reload){
+					window.location.reload();
+				}
+			});
+		});
+		var popupOuter = $("<div />").attr("class","compare-full-error-container");
+		var popupInner = $("<div />").attr("class","compare-error-container");
+		$(document.body).append($(popupOuter).append($(popupInner).append("<div>"+message+"</div>").append(closeBtn)));
+	};
 
     var validateEmail = function(email) {
       var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -66,123 +67,14 @@ var pageContext = require.mozuData('pagecontext');
 
                     if(isVisible){
                         // If image is updated with src attribute, donot process again
-                        if(!$(el).attr('src')){
+                        if(!($(el).attr('src') && $(el).attr('src') === $(el).attr('data-src'))){
                                 $(el).attr('src',$(el).attr('data-src'));
                         }
                     }
         });
     };
 
-var getDateTime = function() {
-
-    var date = new Date();
-
-    var hour = date.getUTCHours();
-    hour = (hour < 10 ? "0" : "") + hour;
-
-    var min  = date.getUTCMinutes();
-    min = (min < 10 ? "0" : "") + min;
-
-    var sec  = date.getUTCSeconds();
-    sec = (sec < 10 ? "0" : "") + sec;
-
-    var year = date.getUTCFullYear();
-
-    var month = date.getUTCMonth() + 1;
-    month = (month < 10 ? "0" : "") + month;
-
-    var day  = date.getUTCDate();
-    day = (day < 10 ? "0" : "") + day;
-
-    return year + "-" + month + "-" + day + " " + hour + ":" + min + ":" + sec;
-
-};
-
-if(pageContext.pageType==="confirmation"){
-            var order = require.mozuData('order');
-            var orderId = order.Id;
-            api.request('GET', '/api/platform/entitylists/abtestlist@shindigz/entities?filter=userSessionId eq '+pageContext.visit.visitId).then(function(res){
-                var items = res.items;
-                //console.log(items);
-                if(items.length>0){
-                    var item = {
-                        "orderNumber": order.orderNumber,
-                        "orderStatus": order.status,
-                        "shipTableReference": items[0].shipTableReference,
-                        "userSessionId":items[0].userSessionId,
-                        "createDate": getDateTime()
-                    };
-                    $(".abtestcontent-"+items[0].shipTableReference.toLowerCase()).show();
-                    api.request('POST', '/api/platform/entitylists/abtestlistorders@shindigz/entities', item).then(function(res){
-                       // console.log("Abtesview updated successfully");
-                       // console.log(res);
-                    });
-
-                    /*api.request('POST','/api/commerce/orders/'+orderId+'/attributes', [{"fullyQualifiedName": "tenant~STR","values": [items[0].shipTableReference]}]).then(function(res){ 
-                        console.log(res); 
-                    });*/
-                }
-            });
-
-}
-
-/* Insert entity/Update entity for ABTestView */    
-
-        /** update custom schema entity for ABTestview only in confirmation page **/
-        /*if(pageContext.pageType!=="confirmation"){
-             api.get('entityList', {
-                        listName: 'abtestlist@shindigz',
-                        filter:'userSessionId eq '+pageContext.visit.visitId
-                    }).then(function(res){
-                var items = res.data.items;
-                console.log(items);
-                var item;
-                if(items.length>0){
-                    item = items[0];
-                    $(".abtestcontent-"+items[0].shipTableReference.toLowerCase()).show();
-                        $.cookie('shiptableref',items[0].shipTableReference,{path:'/',expires:7});
-                        item.userId = pageContext.user.userId;
-                        var requestConfigure = {"url":pageContext.secureHost+"/api/platform/entitylists/abtestlist@shindigz/entities/"+item.userSessionId,"iframeTransportUrl":pageContext.secureHost+"/receiver?receiverVersion=2"};
-                        api.request('PUT',requestConfigure, item).then(function(res){
-                            console.log("Abtesview updated successfully");
-                            console.log(res);
-                        });
-                }else{
-                     api.get('entityList', {
-                        listName: 'abtestlist@shindigz',
-                        sortBy:'createDate desc',
-                        pageSize:2
-                    }).then(function(res){
-                        items = res.data.items;
-                        var shipType = "A";
-                        if(items.length>0){
-                            if(items[0].shipTableReference==="A"){
-                                shipType ="B";
-                            }else{
-                                shipType ="A";
-                            }
-                        }
-                        $.cookie('shiptableref',shipType,{path:'/',expires:7});
-                       
-                        $(".abtestcontent-"+shipType.toLowerCase()).show();
-                        item = {
-                                "shipTableReference": shipType,
-                                "userSessionId":pageContext.visit.visitId,
-                                "createDate": getDateTime(),
-                                "accountId":pageContext.user.accountId?pageContext.user.accountId:"",
-                                "userId": pageContext.user.userId
-                            };
-                        var requestConfigure = {"url":pageContext.secureHost+"/api/platform/entitylists/abtestlist@shindigz/entities/","iframeTransportUrl":pageContext.secureHost+"/receiver?receiverVersion=2"};
-                        api.request('POST',requestConfigure, item).then(function(res){
-                            console.log("Abtesview inserted successfully");
-                            console.log(res);
-                        });
-                    });
-                }
-              });
-
-        }*/
-
+    
     //Ready Start
 
 	$(document).ready(function(){
@@ -198,7 +90,6 @@ if(pageContext.pageType==="confirmation"){
 
 		      var errCtr=0,now=0,chg=0,
             themeSettings = require('hyprlivecontext').locals.themeSettings;
-       	    window.subscribeEmailId = "";
         //live person code
         if(pageContext.pageType === 'checkout'){
             $('.mz-messagebar').bind("DOMSubtreeModified",function(e){
@@ -235,7 +126,6 @@ if(pageContext.pageType==="confirmation"){
         var obj_subscribe = {
             "attributes": [
                 {
-                 "attributeDefinitionId": Hypr.getThemeSetting('emailSubscription'),
                  "fullyQualifiedName": "tenant~email-subscription",
                  "values": [true]
                 }
@@ -249,7 +139,6 @@ if(pageContext.pageType==="confirmation"){
         var obj_unsubscribe = {
             "attributes": [
                 {
-                 "attributeDefinitionId": Hypr.getThemeSetting('emailSubscription'),
                  "fullyQualifiedName": "tenant~email-subscription",
                  "values": [false]
                 }
@@ -273,7 +162,7 @@ if(pageContext.pageType==="confirmation"){
             }
         
         });
-		if(pageContext.pageType === "my_account"){
+		if(pageContext.pageType === "my_account"){ // can't we move this to my-account.js??
 
 			 var customer_attrib = require.mozuData('customer'),
 			 	uniqueList,
@@ -298,44 +187,32 @@ if(pageContext.pageType==="confirmation"){
                     function(res){
                         //console.log(res);
                     });
-                    //set values of form
-                    window.email_signup.vals({"Email":pageContext.user.email,"subscribeShindigz":"no","unsubscribeShindigz":"yes"});
-
-                    if (window.email_signup.submittable()) {
-
-                        window.email_signup.submit();
-                        window.email_signup.onSuccess(function(values, followUpUrl) {
-                        	if(window.location.hash !== '#mz-drop-zone-holiday-preferences'){
+					var unsubscribeCallback = function(){
+							if(window.location.hash.indexOf("#mz-drop-zone-holiday-preferences") === -1){
 								window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
 							}
 							if($('.compare-full-error-container').length === 0){
-                            	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Unsubscribed<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+								resultOverlay("Unsubscribed");
                             }
-                            return false;
-                        });
-                    }
-                }else if(subscription && !unsubscribe){   //if not subscribed, on checking the field user will be subscribed for email
+					};
+					Marketo.unsubscribe(pageContext.user.email,unsubscribeCallback); // removed the window reload
 
+                }else if(subscription && !unsubscribe){   //if not subscribed, on checking the field user will be subscribed for email
+					var subscribeCallback = function(){
+							if(window.location.hash.indexOf("#mz-drop-zone-holiday-preferences") === -1){
+								window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
+							}
+                        	if($('.compare-full-error-container').length === 0){
+								resultOverlay("Thanks for subscribing"); // removed the window reload
+                        	}
+					};
                     api.request('PUT','/api/commerce/customer/accounts/'+pageContext.user.accountId+'',obj_subscribe).then(
                     function(res){
                         //console.log(res);
                     });
-                    //set values of form
-                    window.email_signup.vals({"Email":pageContext.user.email,"subscribeShindigz":"yes","unsubscribeShindigz":"no"});
+					
+					Marketo.subscribe(pageContext.user.email,subscribeCallback);
 
-                    if (window.email_signup.submittable()) {
-
-                        window.email_signup.submit();
-                        window.email_signup.onSuccess(function(values, followUpUrl) {
-                        	if(window.location.hash !== '#mz-drop-zone-holiday-preferences'){
-								window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
-							}
-                        	if($('.compare-full-error-container').length === 0){
-                        		$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();window.location.reload();'>OK</button></div></div>");
-                        	}
-                            return false;
-                        });
-                    }
 
                 }
             });
@@ -436,7 +313,6 @@ if(pageContext.pageType==="confirmation"){
 					var obj = {
 	                    "attributes": [
 	                        {
-	                         "attributeDefinitionId": Hypr.getThemeSetting('holidayPreferences'),
 	                         "fullyQualifiedName": "tenant~preferences",
 	                         "values": [uniqueList]
 	                        }
@@ -451,28 +327,24 @@ if(pageContext.pageType==="confirmation"){
 	                    //console.log(res);
 	                });
 
-	                //set values of form
-	                window.email_pre.vals({ "emailPreferncesSZ": uniqueList, "Email": pageContext.user.email });
+	                
 
 	                //upon not selecting any option show error message, if selected any option hide the error message and send data to the marketo
 	                if(preferences !== ''){
 	                    $(btn).next().hide();
-	                    if (window.email_pre.submittable()) {
-	                        // Set it to be non submittable
-	                        //window.email_pre.submittable(false);
-	                        window.email_pre.submit();
-	                        window.email_pre.onSuccess(function(values, followUpUrl) {
-	                        	if(window.location.hash !== '#mz-drop-zone-holiday-preferences'){
+						
+						var callback = function(){
+								if(window.location.hash.indexOf("#mz-drop-zone-holiday-preferences") === -1){
 									window.location.href = location.href + "#mz-drop-zone-holiday-preferences";
 								}
 	                            // Return false to prevent the submission handler continuing with its own processing
 	                            if($('.compare-full-error-container').length === 0){
-	                            	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>Thanks for subscribing<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();window.location.reload();'>OK</button></div></div>");
+									resultOverlay("Thanks for subscribing");
 	                            }
+						};
+						Marketo.setPreferences(uniqueList,pageContext.user.email,callback);
+						
 
-	                            return false;
-	                        });
-	                    }
 	                }else{
 	                    $(btn).next().show();
 	                }
@@ -480,6 +352,7 @@ if(pageContext.pageType==="confirmation"){
            }
             //user holiday email preferences - marketo - end
             
+			Marketo.loadSubscribe(); // begin preloading marketo javascript
         }
 
         var btn_email_signup = document.getElementById('subscribe_email');
@@ -490,6 +363,8 @@ if(pageContext.pageType==="confirmation"){
 				$('#subscribe_email').click();
 			}
 			e.stopPropagation();
+		}).focus(function(){
+			Marketo.loadSubscribe(); // begin preloading marketo javascript
 		});
 
         if(btn_email_signup !== null){
@@ -518,27 +393,27 @@ if(pageContext.pageType==="confirmation"){
 	                        //console.log(res);
 	                    });
 
-	                    if(window.subscribeEmailId.indexOf(email)>=0){
-	                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>You're Email Id Already Registered<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+	                    if(Marketo.subscribeEmailId.indexOf(email)>=0){
+							resultOverlay("Your Email Id Already Registered");
 	                    	$("#signUpEmail").val("");
 	                    }else{
-	                    	form_marketo_submit(email,window.email_signup,$(btn_email_signup),$("#signUpEmail"),"yes","no");
+	                    	form_marketo_submit(email,$(btn_email_signup),$("#signUpEmail"),"yes","no");
 	                    }
 
 	                }else if(x){
-	                	if(window.subscribeEmailId.indexOf(email)>=0){
-	                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>You're Email Id Already Registered<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+	                	if(Marketo.subscribeEmailId.indexOf(email)>=0){
+							resultOverlay("Your Email Id Already Registered");
 	                    	$("#signUpEmail").val("");
 	                    }else{
-	                    	form_marketo_submit(email,window.email_signup,$(btn_email_signup),$("#signUpEmail"),"yes","no");
+	                    	form_marketo_submit(email,$(btn_email_signup),$("#signUpEmail"),"yes","no");
 	                    }
 	                }
 	            }else if(pageContext.user.isAnonymous && x){
-	            	if(window.subscribeEmailId.indexOf(email)>=0){
-                    	$(document.body).append("<div class='compare-full-error-container'><div class='compare-error-container'>You're Email Id Already Registered<br><button id='session-btn-rd' onclick='$(this).parent().parent().fadeOut(500);$(this).parent().parent().remove();'>OK</button></div></div>");
+	            	if(Marketo.subscribeEmailId.indexOf(email)>=0){
+						resultOverlay("Your Email Id Already Registered");
                     	$("#signUpEmail").val("");
                     }else{
-	                	form_marketo_submit(email,window.email_signup,$(btn_email_signup),$("#signUpEmail"),"yes","no");
+	                	form_marketo_submit(email,$(btn_email_signup),$("#signUpEmail"),"yes","no");
 	                }
 	            }
         	};

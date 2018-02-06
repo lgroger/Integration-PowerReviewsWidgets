@@ -2,7 +2,7 @@
 <div class="mz-accountwishlist-list">
   {% if model.hasItems %}
     {% for item in model.items %}
-      {% include "modules/my-account/my-account-wishlist-item-listing" with model=item %}
+      {% include "modules/my-account/my-account-wishlist-wishlist-listing" with model=item %}
     {% endfor %}
   {% else %}
     <p class="mz-accountwishlist-empty">{{ labels.accountNoWishlists }}</p>

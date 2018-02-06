@@ -18,6 +18,9 @@
    }
 </style>
 <[endif]-->
+{% include_documents "widgets/cms/ups_ship" with view="holidayView" and listFQN="UPSholidayList@shindigz" and pageSize=40 as_parameter %}
+{% include_documents "widgets/cms/holiday_preload" with view="holidayView" and listFQN="ShippingholidayList@shindigz" and pageSize=100 as_parameter %} 
+
 <div class="mz-breadcrumbs">   
    <a href="../../" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
    <span class="mz-breadcrumb-separator"> / </span> 
@@ -173,7 +176,7 @@
                {% endif %}
             </div>
                <div class="product-share">
-                 <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                 {# Go to www.addthis.com/dashboard to customize your tools #}
                  <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_button_compact addthis_default_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
                      <a class="addthis_button_facebook">
                       <i class="fa fa-facebook-square"></i>
@@ -196,22 +199,7 @@
             </div>
                </div>
                {% include "modules/common/message-bar" %}
-               {% with model|get_product_attribute("tenant~hasconfigurablechild") as obj %}
-               {% for value in obj.values %}
-               {% if value.value %}
-               {% if model|get_product_attribute_values("tenant~productcodes") %}
-               {% with model|get_product_attribute("tenant~productcodes") as prdValue %}
-               {% for value in prdValue.values %}
-               {% if value.stringValue %}
-               {{value.stringValue}}
-               {% include_products "modules/product/product-configurable" with productCodes=value.stringValue and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-               {% endif %}
-               {% endfor %}
-               {% endwith %}
-               {% endif %}
-               {% endif %}
-               {% endfor %}
-               {% endwith %}
+
                 {% if model.hasPriceRange and not model.volumePriceRange %}
                   <div class="starting-price">
                     <span class="color-blue">{{ labels.price }} : </span>
@@ -293,11 +281,13 @@
       </div>
    {% endif %}
 {% endif %}
+{% comment %} TO DO: this should be loaded via ajax when needed or include all necessary info within it such as dnd code & uom so we don't have to repeat api calls in product.js{% endcomment %}
 {% if model.productUsage == "Bundle"  %}
   <div class="bundle-items-wrap-pdp">
     {% include "modules/product/pdp-bundle-products" %}                 
   </div>   
 {% endif %}
+
 {% include "modules/product/pdp-shop-widget" %}
 {% include "modules/product/product-description-tabs" %}
 {% include "modules/product/product-description-inspiration" %}   
