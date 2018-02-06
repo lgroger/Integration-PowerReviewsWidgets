@@ -22,7 +22,6 @@
                 'modules/api',
                 'modules/backbone-mozu',
                 'modules/cart-monitor',
-                'modules/contextify',
                 'modules/jquery-mozu',
                 'modules/login-links',
                 'modules/models-address',

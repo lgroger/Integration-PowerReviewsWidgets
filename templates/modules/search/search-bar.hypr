@@ -3,9 +3,7 @@
     <ul class="searchNav">
         <li id="search">
             <form name="search_form" action="/search" method="get">
-                 <input type="hidden" name="categoryId" value="{{ themeSettings.allProductsCategoryCode }}" data-mz-contextify='[value="{{ pageContext.categoryId }}"]'
-            data-mz-contextify-attr='selected'
-            data-mz-contextify-val='selected'>
+                 <input type="hidden" name="categoryId" value="{{ themeSettings.allProductsCategoryCode }}">
                 <input placeholder="{{ labels.search }}" required type="text" value="{{ pageContext.search.query }}" class="mz-searchbox-input" autocomplete="off" name="query" data-mz-role="searchquery" id="search_text" />
                 <input type="submit" value="" id="search_button">
             </form>

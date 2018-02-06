@@ -3,7 +3,8 @@ require([
 	'hyprlive',
 	'underscore',
 	"modules/api", 
-	"modules/backbone-mozu"
+	"modules/backbone-mozu",
+	"modules/contextify"
 	],function($, Hypr, _, api, Backbone){
 		$(function(){
 			var str = '('; 
