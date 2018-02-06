@@ -18,7 +18,7 @@ function equalHeight(group) {
    }
 }
 $(document).ready(function () {
-
+/* it looks like this was used for NextTag checkout conversion which is now disabled
     var pagecontext = [];
 
      if($.cookie('pageurlclick') !== undefined){
@@ -34,7 +34,7 @@ $(document).ready(function () {
             $.cookie('pageurlclick',pagecontext,{path: '/', expires: 1 });
         }
 
-
+*/
         
 
     /* Code for floating header mega menu content */
