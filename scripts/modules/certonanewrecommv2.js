@@ -121,10 +121,8 @@ var certonaRecommendations = function(response){
 
 }; 
 
-		var recommendedProductSearch = function(recomm){
+		var recommendedProductSearch = function(recomms){
 
-			
-            var recomms = window.rec;
 			response.items=[];
 			var resp = [];
 			for(var x =0;x<recomms.resonance.schemes.length;x++){
@@ -187,40 +185,10 @@ var certonaRecommendations = function(response){
 
 
 		};
-
-
-    function triggerLogin(){
-        $('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-        $('#mz-quick-view-container').fadeOut(350);
-        $('#mz-quick-view-container').empty();
-    }
-
-		
-
-		var pageContext = require.mozuData('pagecontext');
-		var pageType = pageContext.pageType;
-
 	
-		var overlay_flag = 0;
-
-			globalNameSpace.callRecomm = function(recomm){
-				//console.log("CallBackFunction Trigger");
-					
-					
-	    		if(recomm){
-				var rec = recomm;
-				window.rec = rec;
-				recommendedProductSearch(recomm);
-		    		
-		    	}
-			};   
-			setTimeout(function(){
-				globalNameSpace.callRecomm(window.recommendedproducts);
-			},3500);
-			
-
- 
+	if(window.recommendedproducts){
+				recommendedProductSearch(window.recommendedproducts);	
+			}
 };
 window.certonaRecommendations=certonaRecommendations;
 });
