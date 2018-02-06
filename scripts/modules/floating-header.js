@@ -110,8 +110,8 @@ function validateEmail(email) {
 $(document).ready(function() {
 	var dd = new DropDown( $('#dd') );
 
-		var logo_img_src = $('.mob-header-logo img').attr('src');
-		$('.header-float-logo img').attr('src', logo_img_src);
+		/*var logo_img_src = $('.mob-header-logo img').attr('src');
+		$('.header-float-logo img').attr('src', logo_img_src);*/
 	
 
         $('form[name=newsletter-form]').submit(function(){
