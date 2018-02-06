@@ -31,6 +31,7 @@ require(
 						function(){
 							console.error('Error loading product');
 							window.removePageLoader();
+							$('body').css({overflow : 'auto'});
 							console.error(arguments);
 						} // on error, remove loader (mostly issues with sandbox of item not existing)
 					);

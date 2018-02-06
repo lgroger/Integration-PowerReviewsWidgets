@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', "modules/views-collections", 'modules/models-faceting', 'modules/api', 'underscore'], function($, CollectionViewFactory, facetingProducts, Api,_) {
+define(['modules/jquery-mozu', 'modules/api', 'underscore'], function($, Api,_) {
 	var ColorSwatch = {
 	    init: function(){
 	    	var self = this;
