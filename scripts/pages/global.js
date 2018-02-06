@@ -67,7 +67,7 @@ var pageContext = require.mozuData('pagecontext');
 
                     if(isVisible){
                         // If image is updated with src attribute, donot process again
-                        if(!$(el).attr('src')){
+                        if(!($(el).attr('src') && $(el).attr('src') === $(el).attr('data-src'))){
                                 $(el).attr('src',$(el).attr('data-src'));
                         }
                     }

@@ -1,10 +1,14 @@
+{% comment %}
+  these will be populated by modules/productview.js
+  -model.isConfigured;      // all necessary options are selected by customer, if isConfigured == true && isInStokc == true, you can enable
+{% endcomment %}
 <div class="quantity-price-break-point">
   {% if model.volumePriceBands.length > 0 %}
       <p>Minimum Order Quantity: {{model.minQty}}</p>
   {% endif %}
 
   {% if model.productUsage == "Configurable" %}
-    {% if model.isConfigure %}
+    {% if model.isConfigured %}
       {% for priceBand in model.volumePriceBands %}
         {% if priceBand.maxQty != priceBand.minQty %}
           <p>Qty of 
