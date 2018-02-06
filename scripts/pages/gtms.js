@@ -8,7 +8,7 @@ var ShindigzGTM = {
     pagesArray : ['web_page','category', 'search', 'cart', 'checkout', 'confirmation'],
     dataLayer:"",
     pageContext: "",
-    jQuery: "",
+    jQuery: "", 
 //    Hypr: require('hyprlive'),
     
     getPreloadJSON: function(context) {
@@ -44,8 +44,6 @@ var ShindigzGTM = {
     checkPage: function(){
         var self = this;
         var returnVal, price; 
-        var Hypr = require('hyprlive');
-        console.log('self context', self.pageContext);
         if(self.pageContext.pageType === 'product'){ 
 //            if(self.getPreloadJSON('product').price.price !== 'undefined'){
 //                price = self.getPreloadJSON('product').price.price;
@@ -58,47 +56,130 @@ var ShindigzGTM = {
             case 'category':
                 returnVal = Object.assign({},{
                     'PageType': 'ListingPage',
-                    'ProductIDList': self.buildListingProducts()
+                    'ProductIDList': self.buildListingProducts(),
+                    'criteo_q': self.getCriteoData()
                     });
                  break;
             case 'product':
                 returnVal = Object.assign({},{
                     'PageType': 'ProductPage',
-                    'ProductID': self.getPreloadJSON('product').productCode || ''
+                    'ProductID': self.getPreloadJSON('product').productCode || '',
+                    'criteo_q': self.getCriteoData()
 //                    'Price' :price 
                     }); 
                 break;
             case 'cart': 
                 returnVal = Object.assign({},{
                     'PageType': 'BasketPage',
-                    'ProductBasketProducts': self.buildBasketProducts()
+                    'ProductBasketProducts': self.buildBasketProducts(),
+                    'criteo_q': self.getCriteoData()
                     });
                 break;
             case "confirmation":
                 if(self.getPreloadJSON('order').status === "Errored") return {};
                 returnVal = Object.assign({},{
-                    'PageType': 'TransactionPage',
+                    'PageType': 'Confirmation',
                     'transactionId': self.getPreloadJSON('order').orderNumber || '',
                     'ProductTransactionProducts': self.getOrderedProducts(),
                     'transactionTotal': self.getPreloadJSON('order').total,
                     'transactionTax': self.getPreloadJSON('order').taxTotal,
                     'transactionShipping': self.getPreloadJSON('order').shippingTotal,
                     'transactionProducts': self.buildTransProducts(),
-                    //Commission Junction specific
-                    'Qty': self.getOrderedProducts().length,
-                    'Amt': self.getPreloadJSON('order').total,
-                    'CID': '473140',//cid
-                    'CURRENCY':'USD',
-                    'TYPE': (self.pageContext.user.isAnonymous)? Hypr.getThemeSetting("aidAnonymous") : Hypr.getThemeSetting("aidExist"), // {{themeSettings.aidAnonymous}}: {{themeSettings.aidExist}}
-                    'ITEM': self.getOrderedProducts(),
-                    'containerTagId': (self.pageContext.user.isAnonymous)? Hypr.getThemeSetting("aidExist") : 15733 // self.Hypr.getThemeSetting('containerTagIdAnonymous'): self.Hypr.getThemeSetting('containerTagIdLoggedIn')
+                    "surveyType":  'pos',
+                    "deviceType": deviceType,
+                    'adwordValue': self.getPreloadJSON('order').total,
+                    'adwordOrderId': self.getPreloadJSON('order').orderNumber || '',
+                    'adwordCurrencyCode': 'USD', // TODO: Should get it from theme.json 
+                    'orderId': self.getPreloadJSON('order').orderNumber || '',
+                    //Commission Junction specific starts
+                    'CJ Amt': self.getPreloadJSON('order').total, 
+                    'CJ CID': '473140',//cid
+                    'CJ CURRENCY':'USD',
+                    'CJ TYPE': (self.pageContext.user.isAnonymous)? 366140 : 302015,  // {{themeSettings.aidAnonymous}}: {{themeSettings.aidExist}}
+                    'CJ ITEM': self.getOrderedProducts(),
+                    'CJ DISCOUNT': self.getPreloadJSON('order').discountedTotal,
+                    'CJ containerTagId': (self.pageContext.user.isAnonymous)? 15734 : 15733, // self.Hypr.getThemeSetting('containerTagIdAnonymous'): self.Hypr.getThemeSetting('containerTagIdLoggedIn')
+                    //Commission Junction specific ends
+                    'criteo_q': self.getCriteoData()
+                    
                 });
-                break;
+            break;
             default: 
                 returnVal = {};
                 
         }
         return returnVal;
+    },
+    
+    getCriteoData: function(){
+        var self = this;
+        var deviceType = self.pageContext.isDesktop? 'Desktop': 'Mobile';
+        var returnVal = [];
+        if(self.pageContext.crawlerInfo.canonicalUrl === "/homepage" || self.pageContext.cmsContext.template.path === "main-page" || self.pageContext.pageType === "product" || self.pageContext.pageType === "cart" || self.pageContext.pageType === "confirmation"  ){
+            if(self.pageContext.crawlerInfo.canonicalUrl == "/homepage" || self.pageContext.cmsContext.template.path == "main-page" ){
+                returnVal = [{
+                    'event': 'setAccount', 
+                    'account': 17770
+                }, {
+                    'event': 'setSiteType',
+                    'type': deviceType
+                }, {
+                    'event': "setEmail", 
+                    'email': (self.pageContext.user.email)? [self.pageContext.user.email]: ""
+                }, { 
+                    event: "viewHome"
+                }]; 
+            }else if(self.pageContext.pageType === "product"){
+                 returnVal = [{
+                    'event': 'setAccount', 
+                    'account': 17770
+                }, {
+                    'event': 'setSiteType',
+                    'type': deviceType
+                }, {
+                    'event': "setEmail", 
+                    'email': (self.pageContext.user.email)? [self.pageContext.user.email]: ""
+                }, { 
+                    event: "viewHome",
+                    item: self.getPreloadJSON('product').productCode
+                }
+                ]; 
+            } else if(self.pageContext.pageType == "cart"){
+                returnVal = [{
+                    'event': 'setAccount', 
+                    'account': 17770
+                }, {
+                    'event': 'setSiteType',
+                    'type': deviceType
+                }, {
+                    'event': "setEmail", 
+                    'email': (self.pageContext.user.email)? [self.pageContext.user.email]: ""
+                }, { 
+                    event: "viewBasket",
+                    item: self.getOrderedProducts()
+                }
+                ]; 
+                
+            }else if(self.pageContext.pageType == "confirmation" ){
+                returnVal = [{
+                    'event': 'setAccount', 
+                    'account': 17770
+                }, {
+                    'event': 'setSiteType',
+                    'type': deviceType
+                }, {
+                    'event': "setEmail", 
+                    'email': (self.pageContext.user.email)? [self.pageContext.user.email]: ""
+                }, { 
+                    event: "trackTransaction",
+                    id: self.getPreloadJSON('order').orderNumber,
+                    item: self.getOrderedProducts()
+                }
+                ]; 
+            }
+        }
+        return returnVal;
+        
     },
     
     getOrderedProducts : function() {
@@ -157,9 +238,10 @@ var ShindigzGTM = {
     
     generalDataLayers: function() {
         var pageContext = this.getPreloadJSON('pagecontext');
-        var deviceType = pageContext.isDesktop ? "m" : "d";
-        var Hypr = require('hyprlive');
-        var hyper = require('hypr');
+        var deviceType = pageContext.isDesktop ? "d" : "m";
+        var siteType = pageContext.isDesktop ? "Desktop" : "Mobile";
+//        var Hypr = require('hyprlive');
+//        var hyper = require('hypr');
         return {
             'email' : pageContext.user.email,
             'firstName' : pageContext.user.firstName,
@@ -168,8 +250,11 @@ var ShindigzGTM = {
             'customerId': pageContext.user.userId,
             'kiboPageType': pageContext.pageType,
             'deviceType': deviceType,
+            'siteType' : siteType,
             'pageType': pageContext.crawlerInfo.canonicalUrl,
-            "test": hyper.getThemeSetting("aidAnonymous"),
+            'mktoAccNumber': "769-CKK-790", //Todo: read from themesettings.
+//            'wisePopsId': 27447, //TODO: read it from themesettings
+//            "livePersonId": 38420605,
             'accountId': (pageContext.user.isAuthenticated) ? pageContext.user.accountId : ''
         };
     },

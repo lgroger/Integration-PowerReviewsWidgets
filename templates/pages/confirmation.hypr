@@ -212,18 +212,24 @@
       </div>
       <div class="div_33">
         <div class="block1">
-            <span class="ship-text1">Payment Method:</span>
+            <span class="ship-text1 ">Payment Method:</span>
         </div>
          <div class="block2">
-            <span class="ship-text2" style="">
-            <span>
-              {% for payment in model.payments %}
-              {% if payment.status != "Voided" and payment.status != "Declined" %}
-              {% include "modules/checkout/checkout-payment" with model=payment %}
-              {% endif %}
-              {% endfor %}
-              </span>
-              </span>
+            <span class="ship-text2 " style="">
+                <span>
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.status != "Declined" %}
+                            {%if payment.billingInfo.paymentType == 'Check'%}
+                                <span class="paymentstatus">
+                                    {% include "modules/checkout/checkout-payment" with model=payment %}
+                                </span>
+                            {% else %}
+                                {% include "modules/checkout/checkout-payment" with model=payment %}
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </span>
         </div>
 
 
