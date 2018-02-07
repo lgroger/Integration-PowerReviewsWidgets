@@ -151,7 +151,7 @@
 
 
           {%header_content%}
-        {% require_script "pages/gtms" %}  
+        {% require_script "pages/gtms" %}
       </head>
       {% endblock head-tag %}
       {% block body-tag %}
@@ -323,7 +323,7 @@
       {% endif %}
 
       <!-- Certona Integration End -->
-
+  	{%comment%}
   	{% if pageContext.crawlerInfo.canonicalUrl == "/homepage" or pageContext.cmsContext.template.path == "main-page" or pageContext.pageType == "product" or pageContext.pageType == "cart" or pageContext.pageType == "confirmation" %}
       <!-- Criteo Integration Start-->
           <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js"></script> <script type="text/javascript"> window.criteo_q = window.criteo_q || []; var deviceType = /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(navigator.userAgent) ? "m" : "d";
@@ -366,8 +366,8 @@
 
         </script>
        {% endif %}
-
-      <!-- Bloom reach integration start -->
+        {%endcomment%}
+        <!-- Bloom reach integration start -->
 
       {% if pageContext.pageType != 'login' and pageContext.pageType != 'undefined' %}
       <script type="text/javascript">

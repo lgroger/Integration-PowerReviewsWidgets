@@ -96,7 +96,7 @@ var ShindigzGTM = {
                     'CJ CID': '473140',//cid
                     'CJ CURRENCY':'USD',
                     'CJ TYPE': (self.pageContext.user.isAnonymous)? 366140 : 302015,  // {{themeSettings.aidAnonymous}}: {{themeSettings.aidExist}}
-                    'CJ ITEM': self.getOrderedProducts(),
+                    'CJ ITEM': self.getStringofProducts(),
                     'CJ DISCOUNT': self.getPreloadJSON('order').discountedTotal,
                     'CJ containerTagId': (self.pageContext.user.isAnonymous)? 15734 : 15733, // self.Hypr.getThemeSetting('containerTagIdAnonymous'): self.Hypr.getThemeSetting('containerTagIdLoggedIn')
                     //Commission Junction specific ends
@@ -198,6 +198,21 @@ var ShindigzGTM = {
         }
         return product_list;
     },
+    // Below function specifically written for Commission junction
+    getStringofProducts: function(){
+        var self = this;
+        var orderItems = self.getPreloadJSON('order').items;
+        if(!orderItems || orderItems === ""){
+            return ; 
+        }
+        var product_list = '';
+        for( var k=0; k < orderItems.length; k++ ) {
+            product_list += "&ITEM"+k+"="+orderItems[k].product.productCode;
+            product_list += "&AMT"+k+"="+orderItems[k].product.price.price;
+            product_list += "&QTY"+k+"="+orderItems[k].quantity;
+        }
+        return product_list;
+    },
     
     buildTransProducts: function() {
         var self = this;
@@ -252,6 +267,7 @@ var ShindigzGTM = {
             'deviceType': deviceType,
             'siteType' : siteType,
             'pageType': pageContext.crawlerInfo.canonicalUrl,
+            'bizrateId': 29028,
             'mktoAccNumber': "769-CKK-790", //Todo: read from themesettings.
 //            'wisePopsId': 27447, //TODO: read it from themesettings
 //            "livePersonId": 38420605,
@@ -270,5 +286,4 @@ var ShindigzGTM = {
 
 setTimeout(function () {
     ShindigzGTM.registerEvents(); 
-    //do something once
-}, 3000);
+}, 1000);
