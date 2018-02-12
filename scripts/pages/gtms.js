@@ -3,6 +3,9 @@
  * Author : Syed Khadeer
  */
 
+define(["modules/jquery-mozu"],
+function ($) {
+
 var dataLayer = window.dataLayer = window.dataLayer || [];
 var ShindigzGTM = {
     pagesArray : ['web_page','category', 'search', 'cart', 'checkout', 'confirmation'],
@@ -87,17 +90,13 @@ var ShindigzGTM = {
                     'transactionProducts': self.buildTransProducts(),
                     "surveyType":  'pos',
                     "deviceType": deviceType,
-                    'adwordValue': self.getPreloadJSON('order').total,
-                    'adwordOrderId': self.getPreloadJSON('order').orderNumber || '',
-                    'adwordCurrencyCode': 'USD', // TODO: Should get it from theme.json 
-                    'orderId': self.getPreloadJSON('order').orderNumber || '',
+                    'OrderTotalValue': self.getPreloadJSON('order').total,
+                    'OrderId': self.getPreloadJSON('order').orderNumber || '',
+                    'OrderDiscount': self.getPreloadJSON('order').discountedTotal,
+                    'OrderItems': self.getStringofProducts(),
                     //Commission Junction specific starts
-                    'CJ Amt': self.getPreloadJSON('order').total, 
                     'CJ CID': '473140',//cid
-                    'CJ CURRENCY':'USD',
                     'CJ TYPE': (self.pageContext.user.isAnonymous)? 366140 : 302015,  // {{themeSettings.aidAnonymous}}: {{themeSettings.aidExist}}
-                    'CJ ITEM': self.getStringofProducts(),
-                    'CJ DISCOUNT': self.getPreloadJSON('order').discountedTotal,
                     'CJ containerTagId': (self.pageContext.user.isAnonymous)? 15734 : 15733, // self.Hypr.getThemeSetting('containerTagIdAnonymous'): self.Hypr.getThemeSetting('containerTagIdLoggedIn')
                     //Commission Junction specific ends
                     'criteo_q': self.getCriteoData()
@@ -267,10 +266,6 @@ var ShindigzGTM = {
             'deviceType': deviceType,
             'siteType' : siteType,
             'pageType': pageContext.crawlerInfo.canonicalUrl,
-            'bizrateId': 29028,
-            'mktoAccNumber': "769-CKK-790", //Todo: read from themesettings.
-//            'wisePopsId': 27447, //TODO: read it from themesettings
-//            "livePersonId": 38420605,
             'accountId': (pageContext.user.isAuthenticated) ? pageContext.user.accountId : ''
         };
     },
@@ -284,6 +279,10 @@ var ShindigzGTM = {
     }
 };
 
-setTimeout(function () {
+//setTimeout(function () {
     ShindigzGTM.registerEvents(); 
-}, 1000);
+//}, 1000);
+
+	return ShindigzGTM;
+	
+});
