@@ -418,7 +418,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
         },
         renderConfigure: function(){
 			//console.log("renderConfigure");
-                var  me = this, id, newValue,option;//,dndCode,mfgPartNumber,mcCode;
+                var  me = this, id, newValue,option;
                 var objj=me.model.getConfiguredOptions();
                 //me.setOptionTitle();
                 me.model.set('minQty', me.model._minQty);

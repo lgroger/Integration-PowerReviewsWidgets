@@ -116,11 +116,13 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		var p = C.prototype;
 		
 		//construct
-		function constructor(productID, itemDescription, ecometrySku, mcCode, dndCode, designCode, quantity, price, volumePricing, minQty, maxQty, unitOfMeasure, lineitemID, parentProductID, isBundle){
+		function constructor(productID, itemDescription, ecometrySku, mcTheme, mcProduct, mcProductSuffix, dndCode, designCode, quantity, price, volumePricing, minQty, maxQty, unitOfMeasure, lineitemID, parentProductID, isBundle){
 			this.productID = productID;
 			this.itemDescription = itemDescription;
 			this.ecometrySku = ecometrySku;
-			this.mcCode = mcCode;
+			this.mcTheme = mcTheme;
+			this.mcProduct = mcProduct;
+			this.mcProductSuffix = mcProductSuffix;
 			this.dndCode = dndCode;
 			this.designCode = designCode;
 			this.quantity = quantity;
@@ -261,13 +263,14 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
         self.getParameters=function(callback){
             var me = this;
 			var dndArr = []; // array of personalized item info
-			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMC,childMC,newItem,inventoryInfo;
+			var mfgpartnumber,parentDND,parentDesign,childDND,childDesign,options,i,productCode,attributeFQN,option,product,parentUOM,childUOM,parentMCTheme,parentMcProduct,childMcTheme,childMcProduct,childMcProductSuffix,newItem,inventoryInfo;
 
 			// parent info
 			mfgpartnumber = this.model.get('mfgPartNumber');
 			parentDND = getPropteryValueByAttributeFQN(this.model, this.productAttributes.dndCode);
 			parentDesign = getPropteryValueByAttributeFQN(this.model, this.productAttributes.designCode);
-			parentMC = getPropteryValueByAttributeFQN(this.model, this.productAttributes.mcCode, true);
+			parentMCTheme = getPropteryValueByAttributeFQN(this.model, this.productAttributes.mcTheme, true);
+			parentMcProduct = getPropteryValueByAttributeFQN(this.model, this.productAttributes.mcProduct, true);
 			parentUOM = getPropteryValueByAttributeFQN(this.model, this.productAttributes.unitOfMeasure);
 			
 			if(this.lineitemID){
@@ -281,7 +284,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					newItem.itemDescription = this.model.get('content.productName');
 					newItem.isBundle = true;
 					newItem.dndCode = parentDND;
-					newItem.mcCode = parentMC;
+					newItem.mcTheme = parentMCTheme;
+					newItem.mcProduct = parentMcProduct;
 					newItem.ecometrySku = mfgpartnumber;
 					newItem.unitOfMeasure = parentUOM;
 				}
@@ -292,8 +296,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					if(mfgpartnumber && mfgpartnumber.length > 0){
 						// add parent info
 						newItem.dndCode = parentDND;
-						newItem.mcCode = parentMC;
-						if(newItem.dndCode || newItem.mcCode){
+						newItem.mcTheme = parentMCTheme;
+						newItem.mcProduct = parentMcProduct;
+						if(newItem.dndCode || newItem.mcTheme){
 							newItem.ecometrySku = mfgpartnumber;
 							newItem.designCode = parentDesign;
 							newItem.unitOfMeasure = parentUOM;
@@ -313,7 +318,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 									if(bundledProducts[j].productCode === option.value){
 										product = SharedProductInfo.getExtraProduct(bundledProducts[j].productCode,callback);
 										if(product){
-											childMC = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode, true);
+											childMcTheme = getPropteryValueByAttributeFQN(product, me.productAttributes.mcTheme, true);
 											childDND = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
 											childDesign = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
 											childUOM = getPropteryValueByAttributeFQN(product ,me.productAttributes.unitOfMeasure);
@@ -321,9 +326,10 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 											// note: we don't allow customer to change quantity when editting personalization which is good b/c the inventory info isn't available here...
 											
 											newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;	
-											newItem.mcCode = (childMC && childMC.length)?childMC:parentMC;
-											
-											if(newItem.dndCode || newItem.mcCode){
+											newItem.mcTheme = (childMcTheme && childMcTheme.length)?childMcTheme:parentMCTheme;
+											newItem.mcProduct = (childMcProduct && childMcProduct.length)?childMcProduct:parentMcProduct;
+											newItem.mcProductSuffix = getPropteryValueByAttributeFQN(product ,me.productAttributes.mcProductSuffix);
+											if(newItem.dndCode || newItem.mcTheme){
 												newItem.ecometrySku = product.get('mfgPartNumber');
 												newItem.designCode = (childDesign && childDesign.length)?childDesign:parentDesign;
 												newItem.unitOfMeasure = (childUOM && childUOM.length)?childUOM:parentUOM;
@@ -354,8 +360,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					if(product){
 						newItem = new dndItem();
 						newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
-						newItem.mcCode = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode, true);
-						if(newItem.dndCode || newItem.mcCode){
+						newItem.mcTheme = getPropteryValueByAttributeFQN(product, me.productAttributes.mcTheme, true);
+						newItem.mcProduct = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProduct, true);
+						if(newItem.dndCode || newItem.mcTheme){
 							newItem.isBundle = true;
 							newItem.ecometrySku = product.get('mfgPartNumber');
 							newItem.designCode = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
@@ -383,14 +390,15 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						if(product){
 							newItem = new dndItem();
 							newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);		
-							newItem.mcCode = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode);
+							newItem.mcTheme = getPropteryValueByAttributeFQN(product, me.productAttributes.mcTheme);
+							newItem.mcProduct = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProduct, true);
 
 							inventoryInfo = findOptionValue(option.get('values'),productCode);
 							if(inventoryInfo && inventoryInfo.manageStock){
 								newItem.maxQty = inventoryInfo.onlineStockAvailable;
 							}
 							
-							if(newItem.dndCode || newItem.mcCode){
+							if(newItem.dndCode || newItem.mcTheme){
 								newItem.isBundle = true;
 								newItem.ecometrySku = product.get('mfgPartNumber');
 								newItem.designCode = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
@@ -408,13 +416,14 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
                     }
                 }
 			}
-			else{	
+			else{
 				if(mfgpartnumber && mfgpartnumber.length > 0){
 					// add parent info
 					newItem = new dndItem();
 					newItem.dndCode = parentDND;
-					newItem.mcCode = parentMC;
-					if(newItem.dndCode || newItem.mcCode){
+					newItem.mcTheme = parentMCTheme;
+					newItem.mcProduct = parentMcProduct;
+					if(newItem.dndCode || newItem.mcTheme){
 						newItem.isBundle = false;
 						newItem.ecometrySku = mfgpartnumber;
 						newItem.designCode = parentDesign;
@@ -439,16 +448,20 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							product = SharedProductInfo.getExtraProduct(productCode,callback);
 							if(product){
 								// look for dnd/mediaclip code on extra first. if none, fall back to parent's
-								childMC = getPropteryValueByAttributeFQN(product, me.productAttributes.mcCode, true);
+								childMcTheme = getPropteryValueByAttributeFQN(product, me.productAttributes.mcTheme, true);
+								childMcProduct = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProduct, true);
+								childMcProductSuffix = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProductSuffix, true);
 								childDND = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
 								childDesign = getPropteryValueByAttributeFQN(product, me.productAttributes.designCode);
 								childUOM = getPropteryValueByAttributeFQN(product ,me.productAttributes.unitOfMeasure);
 								
 								newItem = new dndItem();
 								newItem.dndCode = (childDND && childDND.length)?childDND:parentDND;								
-								newItem.mcCode = (childMC && childMC.length)?childMC:parentMC;
-								
-								if(newItem.dndCode || newItem.mcCode){
+								newItem.mcTheme = (childMcTheme && childMcTheme.length)?childMcTheme:parentMCTheme;
+								newItem.mcProduct = (childMcProduct && childMcProduct.length)?childMcProduct:parentMcProduct;
+								newItem.mcProductSuffix = childMcProductSuffix;
+
+								if(newItem.dndCode || newItem.mcTheme){
 									newItem.isBundle = false;
 									newItem.ecometrySku = product.get('mfgPartNumber');
 									newItem.designCode = (childDesign && childDesign.length)?childDesign:parentDesign;
@@ -784,9 +797,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					$("body").append(this.form);
 					this.form.submit();
 			}
-			else if(dndItem.mcCode){
+			else if(dndItem.mcTheme){
 				// launch media clip window
-				//console.log(dndItem.mcCode);
+				//console.log(dndItem.mcTheme);
 				
 			//	console.log(me.model.getConfiguredOptions());
 				
@@ -800,18 +813,19 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					fulfillmentLocationCode: payload.fulfillmentLocationCode,
 					fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
 				*/
-				
+				//console.log(dndItem);
 				$.ajax({
 					url: "/get-personalization",
 					method:"POST",
 					data: {
-						mcCode: dndItem.mcCode,
+						themeUrl: dndItem.mcTheme,
 						productCode:  me.model.get('productCode'),
 						variationProductCode: me.model.get('variationProductCode'),
 						options: me.model.getConfiguredOptions(),
 						quantity: me.model.get("quantity"),
 						tokenPrefix:	dndItem.productID+"@"+dndItem.ecometrySku,
-						returnTo: window.location.href
+						returnTo: window.location.href,
+						productId: dndItem.mcProduct+(dndItem.mcProductSuffix?dndItem.mcProductSuffix:"")
 					},
 					dataType:"json",
 					success:function(data){
