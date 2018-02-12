@@ -126,7 +126,7 @@
                                          {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as productCodes %}
                                             {% for imgid in productCodes %}
                                             {% if forloop.counter0 < 5 %}
-                                            <li><img alt="PL7PER-PT002-HDR" src="//cdn-tp2.mozu.com/16647-25302/cms/25302/files/{{imgid}}?max=12" /></li>
+                                            <li><img src="//cdn-tp2.mozu.com/16647-25302/cms/25302/files/{{imgid}}?max=12" /></li>
                                             {% endif %}
                                             {% endfor%}
                                         {% endwith %}
