@@ -1,6 +1,8 @@
 {% comment %}
 added-to-cart.js sets these value(s)
 model.product.imageUrl // exists by default but is overridden if personalization image exists
+model.product.persType // will be "mc" or "dnd" for dragndrop
+model.product.token// dnd token string or mc token string for component
 {% endcomment %}
 <div class="popup" data-popup="popup-{{model.productCode}}">
    <div class="mz-quick-view-wrapper add-cart">
@@ -19,7 +21,7 @@ model.product.imageUrl // exists by default but is overridden if personalization
       <div class="container-left">
          <div class="product-image"> 
             {% if model.product.imageUrl %}
-            <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.product with max=themeSettings.productImagesContainerWidth as_parameters %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% else %}alt="{{model.product.name}}"{% endif %} />
+            <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.product with max=themeSettings.productImagesContainerWidth as_parameter %}" {% if model.product.imageAlternateText %}alt="{{ model.product.imageAlternateText }}"{% else %}alt="{{model.product.name}}"{% endif %} {% if model.product.token %}data-mz-token-type="{{model.product.persType}}" data-mz-token="{{model.product.token}}"{% endif %} />
             {% else %}
             <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
             {% endif %}
@@ -72,7 +74,7 @@ model.product.imageUrl // exists by default but is overridden if personalization
 
                    
                  </div>
-               <!-- Go to www.addthis.com/dashboard to customize your tools -->
+               {# Go to www.addthis.com/dashboard to customize your tools #}
               
             </div>
          </div>

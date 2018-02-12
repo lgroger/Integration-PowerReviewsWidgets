@@ -5,8 +5,9 @@ define(
     'modules/backbone-mozu',
     "hyprlive",
 	"modules/dnd-token",
-	"modules/cart-monitor"
-], function ($, _, Backbone, Hypr,DNDToken, CartMonitor) {
+	"modules/cart-monitor",
+	"modules/mc-cookie"
+], function ($, _, Backbone, Hypr,DNDToken, CartMonitor,McCookie) {
 	var productAttributes = Hypr.getThemeSetting('productAttributes');
     var AddedToCartOverlay = Backbone.MozuView.extend({
         templateName: 'modules/product/added-to-cart-overlay',
@@ -42,11 +43,8 @@ define(
             }
             $('#mz-added-to-cart, .popup').fadeIn(300); 
 
-            /*$("#mz-added-to-cart").on('click', function(e){
-                me.closeview(e);
-            });*/
             $("#mz-added-to-cart:empty").remove();
-            //$('#addThis-conainer').attr('data-url', window.location.origin + $('#addThis-conainer').attr('data-url'));
+			McCookie.getMcImages();
         },
         showPersonalizeImage: function(){
             var self = this;
@@ -68,11 +66,13 @@ define(
 				if(dndTokenJSON){
 					var info = DNDToken.getTokenData(dndTokenJSON);
 					if(info.type ==="mc"){
-						// no action for now
+						// no action for now McCookie.getMcImages will handle it
 					}
 					else{
 						product.imageUrl = info.src;
 					}
+					product.token = info.token;
+					product.persType = info.type;
 				}
 			}
         },
