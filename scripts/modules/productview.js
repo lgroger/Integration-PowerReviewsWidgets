@@ -1,5 +1,5 @@
-define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/soft-cart"],
-function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, SoftCart) {
+define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/soft-cart", "modules/atc-cookie"],
+function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, SoftCart, atcCookie) {
 
 	// Global variables for Banner Types
 	var bannerProductTypes = Hypr.getThemeSetting('bannerProductTypes');
@@ -1371,12 +1371,23 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
     });
 	
 	// show add to cart popup (when adding mediaclip item tocart, we are redirecting back to pdp with atc url parmeter of cartlineitem ID)
-	var url = new URL(window.location.href);
-	var atc = url.searchParams.get("atc");
-	console.log(atc);
-	if(atc){
+	var qs = (function(a) { // based on https://stackoverflow.com/a/3855394/814299
+    	if (a === "") return {};
+		var b = {};
+		for (var i = 0; i < a.length; ++i){
+			var p=a[i].split('=', 2);
+			if (p.length == 1)
+				b[p[0]] = "";
+			else
+				b[p[0]] = decodeURIComponent(p[1].replace(/\+/g, " "));
+		}
+		return b;
+	})(window.location.search.substr(1).split('&'));
+	
+	//console.log(atc);
+	if(qs.atc && qs.atc.length > 0 && atcCookie.needToFire(qs.atc)){
 		//fire all of the events that normally happen on this.model.on('addedtocart') if it hasn't fired yet
- 		Api.request('get',"/api/commerce/carts/current/items/"+atc).then(function(res){
+ 		Api.request('get',"/api/commerce/carts/current/items/"+qs.atc).then(function(res){
 			//console.log(res);
 			var cartitemModel = new ProductModels.Product(res);
 			cartitemModel.set('url','p/'+cartitemModel.get('product').productCode); // this always seems to be '/p/undefined' unless we set it to something else, full url with seo slug isn't available
