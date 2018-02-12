@@ -329,23 +329,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 
 			// do this outside of jquery each so that it only fires once if it needs to fire at all
 			//TO DO: this can be optimized to reduce a lot of duplicate calls b/c all lineitems are currently displayed once for mobile and once for desktop plus render() fires multiple times
-			if($("img[data-mz-token-type='mc']").length > 0){
-				var mcCallback = function(){
-					console.log("cart mcCallback");
-					$("img[data-mz-token-type='mc']").each(function(){
-						console.log("cart img each callback");
-						var previewimg = this;
-						var projectId = $(this).attr("data-mz-token");
-						
-						var imgCallback = function(newsrc){
-							$(previewimg).attr("src",newsrc);
-						};
-						
-						McCookie.getProjectThumbnailSrc(projectId,imgCallback);
-					});
-				};
-				McCookie.initializeHub(mcCallback);
-			}
+			McCookie.getMcImages();
         },
         removeCoupon : function(e){
 		/* coupon code and zip code buttons aren't on cart page currently...

@@ -237,7 +237,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                 "ship_code":this.model.get("fulfillmentInfo.shippingMethodCode")
             };
             this.listenTo(this.model.get('billingInfo'), 'orderPayment', this.onOrderCreditChanged, this);
-			this.on('render', this.getMcImages);
+			this.on('render', McCookie.getMcImages);
         },
 
         editCart: function () {
@@ -271,7 +271,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
 							var dndTokenJSON=JSON.parse(dndTokenObj.shopperEnteredValue);
 							var info = DNDToken.getTokenData(dndTokenJSON);
 							if(info.type ==="mc"){
-								// no action, this.getMcImages will fill it in based off of persType being set in 
+								// no action, McCookie.getMcImages will fill it in based off of persType being set in 
 							}
 							else{
 								if(info.src){
@@ -1250,24 +1250,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
              //scope_obj.model.get("items")[idx].est_date=ship_date.toISOString().slice(0,10).replace(/\-/g,"/");
              scope_obj.renderCustomAfterShip(scope_obj);
         }, 
-		getMcImages: function(){
-			console.log("getMcImages");
-			if($("img[data-mz-token-type='mc']").length > 0){
-				var mcCallback = function(){
-					$("img[data-mz-token-type='mc']").each(function(){
-						var previewimg = this;
-						var projectId = $(this).attr("data-mz-token");
-						
-						var imgCallback = function(newsrc){
-							$(previewimg).attr("src",newsrc);
-						};
-						
-						McCookie.getProjectThumbnailSrc(projectId,imgCallback);
-					});
-				};
-				McCookie.initializeHub(mcCallback);
-			}
-		},
         // override loading button changing at inappropriate times
         handleLoadingChange: function () { }
     });

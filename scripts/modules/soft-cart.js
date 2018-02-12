@@ -3,9 +3,10 @@ define([
     'modules/backbone-mozu',
     'modules/models-cart',
     'hyprlive',
-	'modules/dnd-token'
+	'modules/dnd-token',
+	"modules/mc-cookie"
   ],
-function($, Backbone, CartModels,Hypr,DNDToken) {
+function($, Backbone, CartModels,Hypr,DNDToken,McCookie) {
   // declare a MozuView that can rewrite its contents with a Hypr template
   // var cartUpdate = this.model.apiGet();
   function setLoginForCheckout(){
@@ -54,16 +55,27 @@ function($, Backbone, CartModels,Hypr,DNDToken) {
 				var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
 				//console.log(fulldndtoken);
 				var info = DNDToken.getTokenData(fulldndtoken);
-				if(info.src){
-					$(this).attr("src",info.src);
+				if(info.type ==="mc"){
+					// no action, this.getMcImages will fill it in based off of persType being set in 
 				}
+				else{
+					if(info.src){
+						$(this).attr("src",info.src);
+					}
+				}
+				$(this).attr("data-mz-token-type",info.type);
+				$(this).attr("data-mz-token",info.token);
 			  }
 			  catch(err) {
 				  console.error(err);
 			  }
           }
       });
+	  McCookie.getMcImages();
     },
+	getMcImages: function(){
+		
+	},
     removeItem: function(e) {
       var $removeButton = $(e.currentTarget),
           id = $removeButton.data('mz-cart-item');

@@ -221,12 +221,30 @@ function ($) {
 			// problem...
 		}
 	};
-	
+
+	var getMcImages = function(){
+		if($("img[data-mz-token-type='mc']").length > 0){
+			var mcCallback = function(){
+				$("img[data-mz-token-type='mc']").each(function(){
+					var previewimg = this;
+					var projectId = $(this).attr("data-mz-token");
+
+					var imgCallback = function(newsrc){
+						$(previewimg).attr("src",newsrc);
+					};
+
+					getProjectThumbnailSrc(projectId,imgCallback);
+				});
+			};
+			initializeHub(mcCallback);
+		}
+	};
 	return {
 		initializeHub: initializeHub,
 		getProjectThumbnailSrc: getProjectThumbnailSrc,
 		setCookie: setCookie,
-		getToken:getToken
+		getToken:getToken,
+		getMcImages: getMcImages
 	};
 	
 	
