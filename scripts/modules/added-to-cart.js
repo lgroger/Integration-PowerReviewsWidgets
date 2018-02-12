@@ -4,10 +4,9 @@ define(
     "underscore",
     'modules/backbone-mozu',
     "hyprlive",
-    "modules/api",
-    'hyprlivecontext',
-	"modules/dnd-token"
-], function ($, _, Backbone, Hypr, Api, HyprLiveContext,DNDToken) {
+	"modules/dnd-token",
+	"modules/cart-monitor"
+], function ($, _, Backbone, Hypr,DNDToken, CartMonitor) {
 	var productAttributes = Hypr.getThemeSetting('productAttributes');
     var AddedToCartOverlay = Backbone.MozuView.extend({
         templateName: 'modules/product/added-to-cart-overlay',
@@ -94,7 +93,96 @@ define(
         });
         addedToCartOverlay.render();
     };
+	
+	var atcActions = function(cartitemModel, gaAction, gaEvent){
+		//console.log('atcActions');
+		var qty = cartitemModel.get('quantity');
+					CartMonitor.addToCount(qty);
+					proFunction(cartitemModel);
+
+					//google analytics code for add to cart event
+					var gaitem = cartitemModel.apiModel.data;
+					var proID = gaitem.product.productCode;
+
+					var gaoptionval; 
+						if(gaitem.product.productUsage == "Configurable" ){
+						  proID = gaitem.product.variationProductCode; 
+						}
+
+					if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
+						_.each(gaitem.product.options,function(opt,i){
+							if(opt.name=="dnd-token"){
+
+							}
+							else if(opt.name == 'Color'){
+								gaoptionval = opt.value;
+							}
+							else{
+								gaoptionval =  opt.value;
+							}
+						});  
+					}
+
+					if(typeof ga!=="undefined"){
+						ga('ec:addProduct', {
+							'id': proID,
+							'name': gaitem.product.name,
+							'category': gaitem.product.categories[0].id,
+							'brand': 'shindigz',
+							'variant': gaoptionval,
+							'price': gaitem.unitPrice.extendedAmount,
+							'quantity': gaitem.quantity
+						});
+						ga('ec:setAction', gaAction);
+						ga('send', 'event', 'buy', gaEvent, gaitem.product.name);
+					} 
+
+					 //Facebook pixel add to cart event
+					 var track_price=cartitemModel.get('product').price.price;
+					 if(cartitemModel.get('product').price.salePrice){
+						track_price=cartitemModel.get('product').price.salePrice;
+					 }
+		console.log(track_price);
+		console.log(cartitemModel.get('url'));
+		console.log(qty);
+
+					 var track_product_code=[];
+					 track_product_code.push(gaitem.product.productCode);
+					 if(typeof fbq!=="undefined"){
+						 fbq('track', 'AddToCart', {
+							content_ids:track_product_code,
+							content_type:'product',
+							value: parseFloat(track_price*qty).toFixed(2),
+							currency: 'USD'
+						});
+					 }
+
+					 //Pinterest tracking
+					 if(typeof pintrk !== "undefined"){
+						 pintrk('track','addtocart',{
+							value:parseFloat(track_price*qty),
+							order_quantity:parseInt(qty,10),
+							currency:"USD",
+							line_items:[{
+								product_name:gaitem.product.name,
+								product_id:track_product_code[0],
+								product_price:parseFloat(track_price),
+								product_quantity:parseInt(qty,10)
+							}]
+						});
+					}
+
+					if(typeof addthis !== "undefined"){
+						//Rerender addthis buttons
+						addthis.update('share', 'url',window.location.origin+cartitemModel.get('url') );
+						addthis.update('share', 'title',gaitem.product.name); 
+						addthis.toolbox(".addthis_inline_share_toolbox"); // quickview had this
+						addthis.toolbox('.cart-over-addthis'); // product page had this
+					}
+	};
+	
     return {
-        proFunction : proFunction
+        proFunction : proFunction,
+		atcActions: atcActions
     };
 });

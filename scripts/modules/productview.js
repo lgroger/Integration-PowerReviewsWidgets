@@ -1,5 +1,5 @@
-define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/cart-monitor", "modules/soft-cart"],
-function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, CartMonitor, SoftCart) {
+define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/soft-cart"],
+function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, SoftCart) {
 
 	// Global variables for Banner Types
 	var bannerProductTypes = Hypr.getThemeSetting('bannerProductTypes');
@@ -1350,7 +1350,6 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					$('body').css({overflow: 'auto'});
 					$('html').removeClass('dnd-active-noscroll');
 					$('#cboxOverlay').hide();
-					CartMonitor.addToCount(me.model.get('quantity'));
 					SoftCart.update();
 					window.removePageLoader();
 					//SoftCart.update().then(SoftCart.show).then(function() {
@@ -1358,104 +1357,35 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 						//SoftCart.highlightItem(cartitem.prop('id'));
 					//});
 					me.model.isLoading(false);
-					cartitemModel.set('quantity',me.model.get('quantity'));
-					addedToCart.proFunction(cartitemModel);
-
-					//google analytics code for add to cart event
-					var gaitem = cartitemModel.apiModel.data;
-					var proID = gaitem.product.productCode;
-
-					var gaoptionval; 
-						if(gaitem.product.productUsage == "Configurable" ){
-						  proID = gaitem.product.variationProductCode; 
-						}
-
-					if(gaitem.product.options.length > 0 && gaitem.product.options !== undefined){
-						_.each(gaitem.product.options,function(opt,i){
-							if(opt.name=="dnd-token"){
-
-							}
-							else if(opt.name == 'Color'){
-								gaoptionval = opt.value;
-							}
-							else{
-								gaoptionval =  opt.value;
-							}
-						});  
-					}
-
-					if(typeof ga!=="undefined"){
-						ga('ec:addProduct', {
-							'id': proID,
-							'name': gaitem.product.name,
-							'category': gaitem.product.categories[0].id,
-							'brand': 'shindigz',
-							'variant': gaoptionval,
-							'price': gaitem.unitPrice.extendedAmount,
-							'quantity': gaitem.quantity
-						});
-						ga('ec:setAction', me.gaAction);
-						ga('send', 'event', 'buy', me.gaEvent, gaitem.product.name);
-					} 
-
-					 //Facebook pixel add to cart event
-					 var track_price=me.model.get("price").toJSON().price;
-					 if(me.model.get("price").toJSON().salePrice){
-						track_price=me.model.get("price").toJSON().salePrice;
-					 }
-
-					 var track_product_code=[];
-					 track_product_code.push(me.model.toJSON().productCode);
-					 if(typeof fbq!=="undefined"){
-						 fbq('track', 'AddToCart', {
-							content_ids:track_product_code,
-							content_type:'product',
-							value: parseFloat(track_price*me.model.get('quantity')).toFixed(2),
-							currency: 'USD'
-						});
-					 }
-
-					 //Pinterest tracking
-					 if(typeof pintrk !== "undefined"){
-						 pintrk('track','addtocart',{
-							value:parseFloat(track_price*me.model.get('quantity')),
-							order_quantity:parseInt(me.model.get('quantity'),10),
-							currency:"USD",
-							line_items:[{
-								product_name:gaitem.product.name,
-								product_id:track_product_code[0],
-								product_price:parseFloat(track_price),
-								product_quantity:parseInt(me.model.get('quantity'),10)
-							}]
-						});
-					}
-
-					if(typeof addthis !== "undefined"){
-						//Rerender addthis buttons
-						addthis.update('share', 'url',window.location.origin+me.model.toJSON().url );
-						addthis.update('share', 'title',gaitem.product.name); 
-						addthis.toolbox(".addthis_inline_share_toolbox"); // quickview had this
-						addthis.toolbox('.cart-over-addthis'); // product page had this
-					}
-/*
-					console.log(me.gaAction);
-					console.log(me.gaEvent);
-					console.log(track_price*me.model.get('quantity'));
-					console.log(gaitem.product.name);
-					console.log(track_product_code);
-					console.log(track_price);
-					console.log(me.model.get('quantity'));
-					console.log(window.location.origin+me.model.toJSON().url);
-					console.log(gaitem.unitPrice.extendedAmount);
-					console.log(gaitem.quantity);
-					console.log(gaoptionval);
-					console.log(gaitem.product.categories[0].id); */
+					cartitemModel.set('quantity',me.model.get('quantity')); // show amount just added to cart rather than including what may have already been in cart
+					cartitemModel.set('url',me.model.get('url'));
+					
+					console.log( cartitemModel.toJSON());
+					console.log( me.model.toJSON());
+					addedToCart.atcActions(cartitemModel, me.gaAction, me.gaEvent);
 				} else {
 					me.model.trigger("error", { message: Hypr.getLabel('unexpectedError') });
 				}
 			});
 		}
     });
+	
+	// show add to cart popup (when adding mediaclip item tocart, we are redirecting back to pdp with atc url parmeter of cartlineitem ID)
+	var url = new URL(window.location.href);
+	var atc = url.searchParams.get("atc");
+	console.log(atc);
+	if(atc){
+		//fire all of the events that normally happen on this.model.on('addedtocart') if it hasn't fired yet
+ 		Api.request('get',"/api/commerce/carts/current/items/"+atc).then(function(res){
+			//console.log(res);
+			var cartitemModel = new ProductModels.Product(res);
+			cartitemModel.set('url','p/'+cartitemModel.get('product').productCode); // this always seems to be '/p/undefined' unless we set it to something else, full url with seo slug isn't available
+			addedToCart.atcActions(cartitemModel, 'BuyMc', 'buymc');
+        },function(e){
+			console.error(e);
+		});
+	}
+	
 	return ProductView;
 	
 	

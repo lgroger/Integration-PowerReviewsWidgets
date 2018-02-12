@@ -700,24 +700,24 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				$(this.form).remove();
 			}
 
-			if(this.lineitemID){
-				if(this.mcToken){
-					// re-edit with mediaclip
-					var userToken = McCookie.getToken(this.doPers.bind(this));
-					if(userToken){
-						var reeditURL = "/personalize/"+this.mcToken;
+			if(me.lineitemID){
+				if(me.mcToken){
+					var mcReEditCallback = function(storeUserToken){
+						// re-edit with mediaclip
+						var reeditURL = "/personalize/"+me.mcToken;
 						
 						// create new form that posts to mediaclip url (must be get, no post)
 						form = $('<form action="'+reeditURL+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
-						addParameter(form,"token",userToken);
+						addParameter(form,"token",storeUserToken);
 						// save to object so we can clean it up if needed
 						me.form = form;
 
 						// insert and post form
 						$("body").append(me.form);
 						me.form.submit();
-						
-					}
+					};
+					McCookie.getToken(mcReEditCallback);
+					
 					return;  // exit doPers will be called again once we get a userToken
 				}
 				else{
@@ -810,20 +810,21 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						variationProductCode: me.model.get('variationProductCode'),
 						options: me.model.getConfiguredOptions(),
 						quantity: me.model.get("quantity"),
-						tokenPrefix:	dndItem.productID+"@"+dndItem.ecometrySku
+						tokenPrefix:	dndItem.productID+"@"+dndItem.ecometrySku,
+						returnTo: window.location.href
 					},
 					dataType:"json",
 					success:function(data){
 					//	console.log(data);
-						var url = "/personalize/"+data.id;
+						var url = "/personalize/"+data.projectId;
 					//	console.log(url);
 						
 						// create new form that posts to mediaclip url (must be get, no post)
 						var form = $('<form action="'+url+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
 						
-						McCookie.setCookie(data.userToken);
+						McCookie.setCookie(data.token,data.expirationUtc);
 						
-						addParameter(form,"token",data.userToken);
+						addParameter(form,"token",data.token);
 						// save to object so we can clean it up if needed
 						me.form = form;
 

@@ -43,10 +43,10 @@ define(['modules/jquery-mozu', 'modules/api'], function ($, api) {
         CartMonitor.update();
     }
 
-    $document.ready(function () {
+    //$document.ready(function () {
         CartMonitor.$el = $('[data-mz-role="cartmonitor"]').text(savedCount || 0);
         $('.floating-cart-badge').text(savedCount || 0);
-    });
+   // });
 
     return CartMonitor;
 

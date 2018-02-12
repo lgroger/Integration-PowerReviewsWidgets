@@ -21,6 +21,9 @@ custom route settings
 			"canonical": true,
 			"validators": {}
 		}
+
+**** must create a new page using "mediaclip" template and name it "personalize"****
+
 {% endcomment %}
 {% set_var usertoken="" %}
 {% with pageContext.url|split("?") as qstring %}
