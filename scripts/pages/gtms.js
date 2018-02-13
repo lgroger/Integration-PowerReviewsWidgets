@@ -92,10 +92,11 @@ var ShindigzGTM = {
                     "deviceType": deviceType,
                     'OrderTotalValue': self.getPreloadJSON('order').total,
                     'OrderId': self.getPreloadJSON('order').orderNumber || '',
-                    'OrderDiscount': self.getPreloadJSON('order').discountedTotal,
-                    'OrderItems': self.getStringofProducts(),
+                    'OrderDiscount': self.getPreloadJSON('order').discountTotal,
+                    'DiscountedOrderTotal': self.getPreloadJSON('order').discountedTotal,
                     //Commission Junction specific starts
                     'CJ CID': '473140',//cid
+                    'CJ Items': self.getStringofProducts(),
                     'CJ TYPE': (self.pageContext.user.isAnonymous)? 366140 : 302015,  // {{themeSettings.aidAnonymous}}: {{themeSettings.aidExist}}
                     'CJ containerTagId': (self.pageContext.user.isAnonymous)? 15734 : 15733, // self.Hypr.getThemeSetting('containerTagIdAnonymous'): self.Hypr.getThemeSetting('containerTagIdLoggedIn')
                     //Commission Junction specific ends
