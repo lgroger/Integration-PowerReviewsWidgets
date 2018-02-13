@@ -44,6 +44,7 @@
 {% block body-content %}
 {% require_script "pages/post_order_signup" %}
 {% require_script "modules/quick-view" %}
+{% require_script "pages/confirmation" %}
 {% preload_json model "order" %}
 <style type="text/css">
 @media print
@@ -246,17 +247,16 @@
                                     {% set_var hasDND=false %}
                                     {% for option in item.product.options %}
                                       {% if option.attributeFQN == themeSettings.productAttributes.dndToken %}
-                                          {%  with option.shopperEnteredValue |split(":") as token %}
                                           {% set_var hasDND=true %}
-                                            <img src="{{themeSettings.dndEngineUrl}}/preview/{{ token|last|replace("\"","")|replace("}","")}}?max=80" alt="">
-                                          {% endwith %}
+                                          {# trying to escape quote with single quote of dndtoken but I can only seem to replace it with ! for some reason so we'll have to undo it in javscript #}
+                                            <img src="{% make_url "image" item.product with max=80 as_parameter %}" alt="{{item.product.name}}" data-fulldndtoken='{{option.shopperEnteredValue|replace('"','!')|escape}}'>
                                       {% endif %}
                                     {% endfor %}
                                     {% if hasDND==false %}
-                                       <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
+                                       <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameter %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
                                     {% endif %}
                                   {% else %}
-                                  <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameters %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
+                                  <img class="mz-carttable-item-image" src="{% make_url "image" item.product with max=80 as_parameter %}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} />
                                   {% endif %}
                                 </div>
                               {% endif %}
@@ -303,7 +303,25 @@
                           <td colspan="5" class="mz-ordersummary-item-availability">
                           {% if item.product.productUsage == 'Bundle' %}
                               <h3><span class="toggle_components" data-parent-id="{{ item.id }}">Show Components <i class="fa fa-caret-down"></i></span></h3>
-                              <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;">
+                               {% if item.product.options %}
+                                    {% set_var hasDND=false %}
+                                    {% for option in item.product.options %}
+                                      {% if option.attributeFQN == themeSettings.productAttributes.dndToken %}
+                                          {% set_var hasDND=true %}
+                                          {# trying to escape quote with single quote of dndtoken but I can only seem to replace it with ! for some reason so we'll have to undo it in javscript #}
+                                          <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;" data-fulldndtoken-bundle='{{option.shopperEnteredValue|replace('"','!')|escape}}'>
+                                      {% endif %}
+                                    {% endfor %}
+                                    {% if hasDND==false %}
+                                       <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;">
+                                    {% endif %}
+                                {% else %}
+                                    <div class="hide_bundle_products"  data-parent-id="{{ item.id }}" style="display:none;">
+                                {% endif %}
+
+
+
+                              
                                   <div class="bundle_lists">
                                       {% for components in item.product.bundledProducts %}
                                         <div class="mz-cms-col-4-12 bundle_box">
@@ -313,7 +331,7 @@
                                                 </h3>
                                                 <h3 class="bundle_quantity"><span>X</span>{{components.quantity}}</h3>
                                             </div>
-                                            <img src="{% include_products "modules/product/bundle-component" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}" alt="{{components.name}}"/>
+                                            <img src="{% include_products "modules/product/bundle-component" with productCodes=components.productCode and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}" alt="{{components.name}}" data-productcode="{{components.productCode}}" />
                                         </div>
                                       {% endfor %}
                                   </div>
