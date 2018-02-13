@@ -224,7 +224,7 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
 					if($(this).parent().next().data("fulldndtoken")){//order-listing.hypr.live
 						try{
 							var fulldndtoken = JSON.parse($(this).parent().next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
-							var info = DNDToken.getTokenData(fulldndtoken);
+							var info = DNDToken.getTokenData(fulldndtoken,null,true);
 							if(info.src){
 								$(this).attr("src",info.src);
 							}

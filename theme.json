@@ -630,6 +630,7 @@
     "daysForNewRibbon": 25,
     "powerReviewsFQNID": "@mzint",
     "dndEngineUrl": "//pers.shindigz.com/dnd/",
+    "mcImageLocation": "/mcpreview/",
     "iframeloadurlafterlogin": "/about-us",
     "backofficeDateTimeFormat": "m/d/Y H:i:s O",
     "extendedPropertiesEnabled": false,
