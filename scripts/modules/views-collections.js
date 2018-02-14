@@ -200,6 +200,10 @@ define([
                 elm = elm.options[elm.selectedIndex];
             }
             url = elm.getAttribute('data-mz-url') || elm.getAttribute('href') || '';
+            if(url === ""){
+                // handle elements inside <a> tag
+                 url = $(elm).parents("a").attr('data-mz-url') || $(elm).parents("a").attr('href') || '';
+            }
             if (url && url[0] != "/") {
                 var parser = document.createElement('a');
                 parser.href = url;  
