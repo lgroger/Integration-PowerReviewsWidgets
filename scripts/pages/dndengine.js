@@ -9,6 +9,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					result= properties[i].values[j].stringValue;
 					if(useStringValue){
 						result= properties[i].values[j].stringValue;
+						if(!result && properties[i].values[j].content){
+							result= properties[i].values[j].content.stringValue;
+						}
+						if(!result){
+							result= properties[i].values[j].value;
+						}
 					}
 					else{
 						result= properties[i].values[j].value;
