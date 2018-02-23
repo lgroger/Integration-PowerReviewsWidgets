@@ -22,11 +22,6 @@
                 },*/
                 {
                     "xtype":"mz-input-text",
-                    "name":"userListForDndTotenAccess",
-                    "fieldLabel":"Users List for DND Token access<br>(Values should be comma separated)"
-                },
-                {
-                    "xtype":"mz-input-text",
                     "name":"QuoteOrderAttributeId",
                     "fieldLabel":"Quote Order Id"
                 },
@@ -50,6 +45,11 @@
                     "name":"allThirdPartyScriptTags",
                     "width":"60%",
                     "fieldLabel":"Third party script tags common to all pages"
+                },
+                {
+                    "xtype":"mz-input-text",
+                    "name":"userListForDndTotenAccess",
+                    "fieldLabel":"Users List for DND Token access<br>(Values should be comma separated)"
                 },
                 {
                     "xtype":"mz-input-text",
@@ -190,6 +190,19 @@
                     "name": "noSearchSubText",
                     "fieldLabel": "Text for no search results page",
                     "width":"60%"
+                },
+                {
+                    "fieldLabel":"Category For Search Dropdown",
+                    "xtype":"boxselect",
+                    "name":"categoryForSearchDropdown",
+                    "width": 500,
+                    "displayField": "name",
+                    "valueField": "id",
+                    "queryMode": "local",
+                    "store": {
+                        "type": "Taco.store.Categories"
+                    }
+
                 }
             ]
         },
@@ -253,24 +266,6 @@
                 }
             ]
         },
-		{
-            "xtype": "panel",
-            "title": "Instagram Config",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-text",
-                    "name": "instaAcountID",
-                    "fieldLabel": "Paste Your Instagram Access Token Here"
-                },
-                {
-                    "xtype": "mz-input-number",
-                    "name": "instaImageCount",
-                    "value":"10",
-                    "fieldLabel": "Paste Your Instagram Access Token Here"
-                }
-            ]
-        },
         {
             "xtype": "panel",
             "title": "Layout",
@@ -289,40 +284,6 @@
                         "30px",
                         "35px"
                     ]
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Suppress CVV During Express Checkout",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "isCvvSuppressed",
-                    "fieldLabel": "CVV Suppressed"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Anonymous Account Verification Options",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "zipCodeEnabled",
-                    "fieldLabel": "Billing Zip Code"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "phoneNumberEnabled",
-                    "fieldLabel": "Billing Phone Number"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "billingEmailEnabled",
-                    "fieldLabel": "Billing Email"
                 }
             ]
         },
@@ -377,62 +338,7 @@
         },
         {
             "xtype": "panel",
-            "title": "Navigation",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Maximum Items In Main Nav",
-                    "xtype": "mz-input-number",
-                    "name": "maxTopLevelNavItems",
-                    "hideTrigger": false,
-                    "allowDecimal": false,
-                    "minValue": 1
-                },
-                {
-                    "fieldLabel": "Maximum Nav Item Label Length",
-                    "xtype": "mz-input-number",
-                    "name": "maxTopLevelNavLabelLength",
-                    "hideTrigger": false,
-                    "allowDecimal": false,
-                    "minValue": 4,
-                    "allowBlank": false
-                },
-				{
-                    "fieldLabel":"Category For Search Dropdown",
-                    "xtype":"boxselect",
-                    "name":"categoryForSearchDropdown",
-                    "width": 500,
-                    "displayField": "name",
-                    "valueField": "id",
-                    "queryMode": "local",
-                    "store": {
-                        "type": "Taco.store.Categories"
-                    }
-
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Custom Settings",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-textarea",
-                    "name":"CVVtooltipText",
-                    "fieldLabel":"Checkout page ccv popup",
-                    "width":"60%"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "couponCodeMultiple",
-                    "fieldLabel": "Enable/Disable Multiple Coupon Code"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Login Layover Links",
+            "title": "Header",
             "collapsed": false,
             "items": [
                 {
@@ -440,93 +346,63 @@
                     "xtype": "mz-input-textarea",
                     "name": "layoverlinks",
                     "width":"60%"
+                },
+                {
+                    "fieldLabel": "Maximum Items In Main Navigation",
+                    "xtype": "mz-input-number",
+                    "name": "maxTopLevelNavItems",
+                    "hideTrigger": false,
+                    "allowDecimal": false,
+                    "minValue": 1
+                },
+                {
+                    "fieldLabel": "Maximum Navigation Item Label Length",
+                    "xtype": "mz-input-number",
+                    "name": "maxTopLevelNavLabelLength",
+                    "hideTrigger": false,
+                    "allowDecimal": false,
+                    "minValue": 4,
+                    "allowBlank": false
                 }
             ]
         },
         {
             "xtype": "panel",
-            "title": "WishList Event Types",
+            "title": "Container Headings",
             "collapsed": false,
             "items": [
                 {
-                    "fieldLabel": "Event Types",
-                    "xtype": "mz-input-textarea",
-                    "name": "wishlisteventtypes",
-                    "width":"100%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Custom Login Session Message",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Login Session Message",
-                    "xtype": "mz-input-textarea",
-                    "name": "loginSessionMessage",
-                    "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Related Products Heading",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Enter text for related products heading",
+                    "fieldLabel": "Text for Related Products heading",
                     "xtype": "mz-input-text",
                     "name": "relatedProductHeading",
                     "width":"60%"
                 },
                 {
-                    "fieldLabel": "Enter text for similar products heading",
+                    "fieldLabel": "Text for Similar Products heading",
                     "xtype": "mz-input-text",
                     "name": "similarProductHeading",
                     "width":"60%"
                 },
                 {
-                    "fieldLabel": "Enter text for recommended products heading",
+                    "fieldLabel": "Text for Recommended Products heading",
                     "xtype": "mz-input-text",
                     "name": "recommendedProductHeading",
                     "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Mini Cart Heading",
-            "collapsed": false,
-            "items": [
+                },
                 {
-                    "fieldLabel": "Enter text for mini cart heading",
+                    "fieldLabel": "Text for Mini Cart heading",
                     "xtype": "mz-input-text",
                     "name": "miniCartHeading",
                     "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Our Other Sites Heading",
-            "collapsed": false,
-            "items": [
+                },
                 {
-                    "fieldLabel": "Enter text for no search heading",
+                    "fieldLabel": "Text for Our Other Sites heading",
                     "xtype": "mz-input-textarea",
                     "name": "ourOtherSite",
                     "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Suggested Products Heading",
-            "collapsed": false,
-            "items": [
+                },
                 {
-                    "fieldLabel": "Enter text for suggested Products Heading",
+                    "fieldLabel": "Text for Suggested Products heading",
                     "xtype": "mz-input-textarea",
                     "name": "suggestedProductsHeading",
                     "width":"60%"
@@ -535,396 +411,32 @@
         },
         {
             "xtype": "panel",
-            "title": "My Account Page Tabs",
+            "title": "My Account",
             "collapsed": false,
             "items": [
                 {
-                    "fieldLabel": "My Account Tabs",
+                    "fieldLabel": "My Account Page Tabs Desktop",
                     "xtype": "mz-input-textarea",
                     "name": "myaccounttabs",
                     "width":"60%"
                 },
                 {
-                    "fieldLabel": "My Account Tabs Mobile",
+                    "fieldLabel": "My Account Page Tabs Mobile",
                     "xtype": "mz-input-textarea",
                     "name": "myaccounttabsmobile",
                     "width":"100%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Customer Support on Order Status & History page",
-            "collapsed": false,
-            "items": [
+                },
                 {
-                    "fieldLabel": "Customer Support on Order Status & History page",
+                    "fieldLabel": "Login Session Message",
                     "xtype": "mz-input-textarea",
-                    "name": "supportsection",
+                    "name": "loginSessionMessage",
                     "width":"60%"
-                }
-            ]
-        },
-        
-        {
-            "xtype" : "panel",
-            "title" : "Cart Page Content",
-            "collapsed" : false,
-            "items" : [
-                {
-                    "fieldLabel" : "Please Enter Text For Continue Shopping Link",
-                    "xtype" : "mz-input-text",
-                    "name" : "continueShoppingLink",
-                    "width" : "60%"
                 },
                 {
-                    "fieldLabel" : "Please Enter Text desired promo in Cart",
-                    "xtype" : "mz-input-textarea",
-                    "name" : "cartpagePromo",
-                    "width" : "60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Confirmation page Rewards text",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Enter text for Anonymous user",
+                    "fieldLabel": "Event Types",
                     "xtype": "mz-input-textarea",
-                    "name": "rewardAnonymous",
-                    "width":"60%"
-                },
-                {
-                    "fieldLabel": "Enter text for Logged in user",
-                    "xtype": "mz-input-textarea",
-                    "name": "rewardLoggedin",
-                    "width":"60%"
-                },
-                {
-                    "fieldLabel": "Enter text for Logged in user Join button",
-                    "xtype": "mz-input-text",
-                    "name": "rewardLoggedinJoin",
-                    "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Attributes Definition ID",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Email Subscription",
-                    "xtype": "mz-input-number",
-                    "name": "emailSubscription",
-                    "width":"60%",
-                    "allowBlank": false
-                },
-                {
-                    "fieldLabel": "Email Preferences",
-                    "xtype": "mz-input-number",
-                    "name": "holidayPreferences",
-                    "width":"60%",
-                    "allowBlank": false
-                },
-                {
-                    "fieldLabel": "Occasions",
-                    "xtype": "mz-input-number",
-                    "name": "ocassions",
-                    "width":"60%",
-                    "allowBlank": false
-                },
-                {
-                    "fieldLabel": "Customer Type",
-                    "xtype": "mz-input-number",
-                    "name": "customerType",
-                    "width":"60%",
-                    "allowBlank": false
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Third Party Config",
-            "collapsed": false,
-            "items": [
-                {
-                  "xtype": "panel",
-                  "title": "Marketo Form Id's and Account Number",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                          "fieldLabel": "Holiday Email Preferences",
-                          "xtype": "mz-input-number",
-                          "name": "mktoHolidayEmailPreferences",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "fieldLabel": "Email Subscription",
-                          "xtype": "mz-input-number",
-                          "name": "mktoEmailSubscription",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "fieldLabel": "Party Planner",
-                          "xtype": "mz-input-number",
-                          "name": "mktoPartyPlanner",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "fieldLabel": "Party Directory",
-                          "xtype": "mz-input-number",
-                          "name": "mktoPartyDirectory",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "fieldLabel": "Wholesale Program",
-                          "xtype": "mz-input-text",
-                          "name": "mktoWholesaleProgram",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "fieldLabel": "Contact Us",
-                          "xtype": "mz-input-number",
-                          "name": "mktoContactUs",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "fieldLabel": "Account Number",
-                          "xtype": "mz-input-text",
-                          "name": "mktoAccNumber",
-                          "width":"20%",
-                          "allowBlank": false
-                      },
-                      {
-                          "xtype": "mz-input-number",
-                          "name": "numberOfDaysMarketo",
-                          "fieldLabel": "Enter # of days for quote orders to be sent to Marketo",
-                          "allowBlank": false
-                      }
-                  ]
-                },
-                {
-                  "xtype": "panel",
-                  "title": "Certona",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                          "xtype": "mz-input-checkbox",
-                          "name": "certonaRecomm",
-                          "fieldLabel": "Enable/Disable Certona Recommendations"
-                      },
-                      {
-                          "xtype": "mz-input-checkbox",
-                          "name": "certonaRecommSimilarProducts",
-                          "fieldLabel": "Enable/Disable Similar Products"
-                      },
-                      {
-                          "xtype": "mz-input-checkbox",
-                          "name": "certonaRecommRelatedProducts",
-                          "fieldLabel": "Enable/Disable Related Recommendations"
-                      }
-                    ]
-                },
-                {
-                  "xtype": "panel",
-                  "title": "Bloomreach",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                        "fieldLabel" : "Account Number",
-                        "xtype" : "mz-input-text",
-                        "name" : "brtrkAccNum",
-                        "width" : "20%",
-                        "allowBlank": false
-                      }
-                  ]
-                },
-                {
-                  "xtype": "panel",
-                  "title": "Biz Rate Connexity",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                        "fieldLabel" : "Merchant ID",
-                        "xtype" : "mz-input-text",
-                        "name" : "bizAccNumber",
-                        "width" : "20%",
-                        "allowBlank": false
-                      }
-                  ]
-                },
-                /*
-                {
-                  "xtype": "panel",
-                  "title": "NexTag ROI Optimizer",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                        "fieldLabel" : "ID",
-                        "xtype" : "mz-input-text",
-                        "name" : "nexttag",
-                        "width" : "20%",
-                        "allowBlank": false
-                      }
-                  ]
-                },
-                */
-                {
-                  "xtype": "panel",
-                  "title": "Criteo",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                        "fieldLabel" : "Account Number",
-                        "xtype" : "mz-input-text",
-                        "name" : "criteoAccNum",
-                        "width" : "20%",
-                        "allowBlank": false
-                      }
-                  ]
-                },
-                {
-                  "xtype": "panel",
-                  "title": "Sheer ID",
-                  "collapsed": false,
-                  "flex": "1",
-                  "items": [
-                      {
-                          "xtype":"mz-input-text",
-                          "name":"sheerIDAuthUrl",
-                          "fieldLabel":"Sheer ID Authroization URL (AWS Server Machine 1)",
-                          "allowBlank": false
-                      }
-                  ]
-                },
-                {
-                    "xtype": "panel",
-                    "title": "Commisson Junction",
-                    "collapsed": false,
-                    "items": [
-                        {
-                            "fieldLabel": "Container Tag Id - Anonymous user",
-                            "xtype": "mz-input-text",
-                            "name": "containerTagIdAnonymous",
-                            "width":"20%",
-                            "allowBlank": false
-                        },
-                        {
-                            "fieldLabel": "Container Tag Id - Existing User",
-                            "xtype": "mz-input-text",
-                            "name": "containerTagIdLoggedIn",
-                            "width":"20%",
-                            "allowBlank": false
-                        },
-                        {
-                            "fieldLabel": "Action ID - Anonymous user",
-                            "xtype": "mz-input-text",
-                            "name": "aidAnonymous",
-                            "width":"20%",
-                            "allowBlank": false
-                        },
-                        {
-                            "fieldLabel": "Action ID - Existing User",
-                            "xtype": "mz-input-text",
-                            "name": "aidExist",
-                            "width":"20%",
-                            "allowBlank": false
-                        },
-                        {
-                            "fieldLabel": "Enterprise ID",
-                            "xtype": "mz-input-text",
-                            "name": "cid",
-                            "width":"20%",
-                            "allowBlank": false
-                        }
-                    ]
-                },
-                {
-		    "xtype":"panel",
-                    "title":"Facebook Pixel Account ID",
-                    "collapsed":false,
-                    "flex":"1",
-                    "items":[{
-                        "fieldLabel":"Facebook Pixel ID",
-                        "xtype":"mz-input-text",
-                        "name":"facebookPixel",
-                        "width":"30%",
-                        "allowBlank":false
-                    }
-                    ]
-                },{
-                    "xtype":"panel",
-                    "title":"Pinterest tag",
-                    "collapsed":false,
-                    "flex":"1",
-                    "items":[{
-                        "fieldLabel":"Pinterest tag ID",
-                        "xtype":"mz-input-text",
-                        "name":"pinterestTagID",
-                        "width":"30%",
-                        "allowBlank":false
-                    }
-                    ]
-                }
-            ]
-        },
-        {
-            "xtype" : "panel",
-            "title" : "Custom Labels and Data",
-            "collapsed" : false,
-            "items" : [
-
-                 {
-                    "fieldLabel" : "Cart page Coupon Label",
-                    "xtype" : "mz-input-text",
-                    "name" : "cartCouponLabel",
-                    "width" : "50%"
-                },{
-                    "fieldLabel" : "Cart page Coupon Placeholder text",
-                    "xtype" : "mz-input-text",
-                    "name" : "cartCouponPlaceholder",
-                    "width" : "50%"
-                },{
-                    "fieldLabel" : "Single PromoCode Text",
-                    "xtype" : "mz-input-text",
-                    "name" : "singleCouponCodeLabel",
-                    "width" : "50%"
-                },
-                {
-                    "fieldLabel" : "Multiple PromoCode Text",
-                    "xtype" : "mz-input-text",
-                    "name" : "multipleCouponCodeLabel",
-                    "width" : "50%"
-                },{
-                    "fieldLabel" : "Cart Page Zip Code Label ",
-                    "xtype" : "mz-input-text",
-                    "name" : "cartZipLabel",
-                    "width" : "50%"
-                },{
-                    "fieldLabel" : "Cart Page Zip Code Placeholder text ",
-                    "xtype" : "mz-input-text",
-                    "name" : "cartZipPlaceholder",
-                    "width" : "50%"
-                },{
-                    "fieldLabel" : "Cart Page Zip code description Text",
-                    "xtype" : "mz-input-text",
-                    "name" : "cartZipDesc",
-                    "width" : "50%"
+                    "name": "wishlisteventtypes",
+                    "width":"100%"
                 },
                 {
                     "fieldLabel" : "Occasion Relationship List(Seperate each by semicolon';' Note: Sentence Case)",
@@ -949,6 +461,352 @@
                     "xtype" : "mz-input-textarea",
                     "name" : "storeCreditFAQinfo",
                     "width" : "50%"
+                }
+            ]
+        },
+        {
+            "xtype" : "panel",
+            "title" : "Cart",
+            "collapsed" : false,
+            "items" : [
+                {
+                    "fieldLabel" : "Text for Continue Shopping Link",
+                    "xtype" : "mz-input-text",
+                    "name" : "continueShoppingLink",
+                    "width" : "60%"
+                },
+                {
+                    "fieldLabel" : "Text for Desired Promo in Cart",
+                    "xtype" : "mz-input-textarea",
+                    "name" : "cartpagePromo",
+                    "width" : "60%"
+                },
+                {
+                            "fieldLabel" : "Cart page Coupon Label",
+                            "xtype" : "mz-input-text",
+                            "name" : "cartCouponLabel",
+                            "width" : "50%"
+                        },
+                        {
+                            "fieldLabel" : "Cart page Coupon Placeholder text",
+                            "xtype" : "mz-input-text",
+                            "name" : "cartCouponPlaceholder",
+                            "width" : "50%"
+                        },
+                        {
+                            "fieldLabel" : "Single PromoCode Text",
+                            "xtype" : "mz-input-text",
+                            "name" : "singleCouponCodeLabel",
+                            "width" : "50%"
+                        },
+                        {
+                            "fieldLabel" : "Multiple PromoCode Text",
+                            "xtype" : "mz-input-text",
+                            "name" : "multipleCouponCodeLabel",
+                            "width" : "50%"
+                        },
+                        {
+                            "fieldLabel" : "Cart Page ZipCode Label ",
+                            "xtype" : "mz-input-text",
+                            "name" : "cartZipLabel",
+                            "width" : "50%"
+                        },
+                        {
+                            "fieldLabel" : "Cart Page ZipCode Placeholder text ",
+                            "xtype" : "mz-input-text",
+                            "name" : "cartZipPlaceholder",
+                            "width" : "50%"
+                        },
+                        {
+                            "fieldLabel" : "Cart Page ZipCode Description Text",
+                            "xtype" : "mz-input-text",
+                            "name" : "cartZipDesc",
+                            "width" : "50%"
+                        }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Checkout",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-textarea",
+                    "name":"CVVtooltipText",
+                    "fieldLabel":"Checkout page ccv popup",
+                    "width":"60%"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "couponCodeMultiple",
+                    "fieldLabel": "Enable/Disable Multiple Coupon Code"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "isCvvSuppressed",
+                    "fieldLabel": "CVV Suppressed"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Order Status",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "zipCodeEnabled",
+                    "fieldLabel": "Anonymous Order Status Verification - Billing Zip Code"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "phoneNumberEnabled",
+                    "fieldLabel": "Anonymous Order Status Verification - Billing Phone Number"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "billingEmailEnabled",
+                    "fieldLabel": "Anonymous Order Status Verification - Billing Email"
+                },
+                {
+                    "fieldLabel": "Customer Support on Order Status & History page",
+                    "xtype": "mz-input-textarea",
+                    "name": "supportsection",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Confirmation Page",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Rewards Text for Anonymous user",
+                    "xtype": "mz-input-textarea",
+                    "name": "rewardAnonymous",
+                    "width":"60%"
+                },
+                {
+                    "fieldLabel": "Rewards Text for Logged in user",
+                    "xtype": "mz-input-textarea",
+                    "name": "rewardLoggedin",
+                    "width":"60%"
+                },
+                {
+                    "fieldLabel": "Rewards Text for Logged in user Join button",
+                    "xtype": "mz-input-text",
+                    "name": "rewardLoggedinJoin",
+                    "width":"60%"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "3rd Party",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Email Subscription attributes",
+                    "xtype": "mz-input-number",
+                    "name": "emailSubscription",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Email Preferences attributes",
+                    "xtype": "mz-input-number",
+                    "name": "holidayPreferences",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Occasions attributes",
+                    "xtype": "mz-input-number",
+                    "name": "ocassions",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Customer Type attributes",
+                    "xtype": "mz-input-number",
+                    "name": "customerType",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Holiday Email Preferences",
+                    "xtype": "mz-input-number",
+                    "name": "mktoHolidayEmailPreferences",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Email Subscription",
+                    "xtype": "mz-input-number",
+                    "name": "mktoEmailSubscription",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Party Planner",
+                    "xtype": "mz-input-number",
+                    "name": "mktoPartyPlanner",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Party Directory",
+                    "xtype": "mz-input-number",
+                    "name": "mktoPartyDirectory",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Wholesale Program",
+                    "xtype": "mz-input-text",
+                    "name": "mktoWholesaleProgram",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Contact Us",
+                    "xtype": "mz-input-number",
+                    "name": "mktoContactUs",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Marketo Account Number",
+                    "xtype": "mz-input-text",
+                    "name": "mktoAccNumber",
+                    "width":"20%",
+                    "allowBlank": false
+                },
+                {
+                    "xtype": "mz-input-number",
+                    "name": "numberOfDaysMarketo",
+                    "fieldLabel": "Enter # of days for quote orders to be sent to Marketo",
+                    "allowBlank": false
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "certonaRecomm",
+                    "fieldLabel": "Enable/Disable Certona Recommendations"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "certonaRecommSimilarProducts",
+                    "fieldLabel": "Enable/Disable Certona Similar Products"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "certonaRecommRelatedProducts",
+                    "fieldLabel": "Enable/Disable Certona Related Recommendations"
+                },
+                      {
+                        "fieldLabel" : "Bloomreach Account Number",
+                        "xtype" : "mz-input-text",
+                        "name" : "brtrkAccNum",
+                        "width" : "20%",
+                        "allowBlank": false
+                },
+                      {
+                        "fieldLabel" : "Bizrate Merchant ID",
+                        "xtype" : "mz-input-text",
+                        "name" : "bizAccNumber",
+                        "width" : "20%",
+                        "allowBlank": false
+                },
+                /*
+                {
+                  "xtype": "panel",
+                  "title": "NexTag ROI Optimizer",
+                  "collapsed": false,
+                  "flex": "1",
+                  "items": [
+                      {
+                        "fieldLabel" : "ID",
+                        "xtype" : "mz-input-text",
+                        "name" : "nexttag",
+                        "width" : "20%",
+                        "allowBlank": false
+                      }
+                  ]
+                },
+                */
+                {
+                        "fieldLabel" : "Criteo Account Number",
+                        "xtype" : "mz-input-text",
+                        "name" : "criteoAccNum",
+                        "width" : "20%",
+                        "allowBlank": false
+                },
+                {
+                          "xtype":"mz-input-text",
+                          "name":"sheerIDAuthUrl",
+                          "fieldLabel":"Sheer ID Authroization URL (AWS Server Machine 1)",
+                          "allowBlank": false
+                },
+                {
+                            "fieldLabel": "CJ Container Tag Id - Anonymous user",
+                            "xtype": "mz-input-text",
+                            "name": "containerTagIdAnonymous",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "CJ Container Tag Id - Existing User",
+                            "xtype": "mz-input-text",
+                            "name": "containerTagIdLoggedIn",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "CJ Action ID - Anonymous user",
+                            "xtype": "mz-input-text",
+                            "name": "aidAnonymous",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "CJ Action ID - Existing User",
+                            "xtype": "mz-input-text",
+                            "name": "aidExist",
+                            "width":"20%",
+                            "allowBlank": false
+                        },
+                        {
+                            "fieldLabel": "CJ Enterprise ID",
+                            "xtype": "mz-input-text",
+                            "name": "cid",
+                            "width":"20%",
+                            "allowBlank": false
+                },
+                {
+                        "fieldLabel":"Facebook Pixel ID",
+                        "xtype":"mz-input-text",
+                        "name":"facebookPixel",
+                        "width":"30%",
+                        "allowBlank":false
+                },
+                {
+                        "fieldLabel":"Pinterest tag ID",
+                        "xtype":"mz-input-text",
+                        "name":"pinterestTagID",
+                        "width":"30%",
+                        "allowBlank":false
+        },
+                {
+                    "xtype": "mz-input-text",
+                    "name": "instaAcountID",
+                    "fieldLabel": "Instagram Access Token Here"
+                },
+                {
+                    "xtype": "mz-input-number",
+                    "name": "instaImageCount",
+                    "value":"10",
+                    "fieldLabel": "Instagram Image Count"
                 }
             ]
         },
@@ -1094,7 +952,7 @@
         },
         {
             "xtype": "panel",
-            "title": "Reward Program Config",
+            "title": "Rewards Program",
             "collapsed": false,
             "items": [
                 {
