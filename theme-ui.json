@@ -14,15 +14,16 @@
                     "xtype": "mz-input-checkbox",
                     "name": "enablePartialCaching",
                     "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
-                },{
+                },/* This is no longer used and commented out in cart.hypr
+                {
                     "xtype":"mz-input-text",
                     "name":"googleMapApiKey",
                     "fieldLabel":"Google Map Api Key"
-                },
+                },*/
                 {
                     "xtype":"mz-input-text",
                     "name":"userListForDndTotenAccess",
-                    "fieldLabel":"Users List for DND Token access(Values should be comma seperated)"
+                    "fieldLabel":"Users List for DND Token access<br>(Values should be comma separated)"
                 },
                 {
                     "xtype":"mz-input-text",
@@ -43,12 +44,12 @@
                     "xtype":"mz-input-textarea",
                     "name":"ThirdPartyHeadTag",
                     "width":"80%",
-                    "fieldLabel":"Third party scripts with in head tag(All Pages)"
+                    "fieldLabel":"Third party scripts within head tag (All Pages)"
                 },{
                     "xtype":"mz-input-textarea",
                     "name":"allThirdPartyScriptTags",
                     "width":"60%",
-                    "fieldLabel":"Third party script tags which is common to all pages"
+                    "fieldLabel":"Third party script tags common to all pages"
                 },
                 {
                     "xtype":"mz-input-text",
@@ -93,25 +94,73 @@
         },
 		{
             "xtype": "panel",
-            "title": "Social Share in QuickView",
+            "title": "Social Share",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-text",
                     "name": "socialShareAddThis",
-                    "fieldLabel": "Paste Your Add This Acount Code"
+                    "fieldLabel": "Paste Your AddThis Account Code"
                 }
             ]
         },
 		{
             "xtype": "panel",
-            "title": "Guided Search Configuration",
+            "title": "Search Configuration",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-text",
                     "name": "allProductsCategoryCode",
-                    "fieldLabel": "Category Id for Party Supplies"
+                    "fieldLabel": "Category Id for Search"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Search",
+            "collapsed": false,
+            "items": [/* these don't do anything b/c this theme using bloomreach search suggest only
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "showChildCategoriesInFaceting",
+                    "fieldLabel": "Show two levels of the category hierarchy in faceting"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "useSearchAutocomplete",
+                    "fieldLabel": "Show search suggestions"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "suggestPriorSearchTerms",
+                    "fieldLabel": "Show search terms others used on this site in search suggestions",
+                    "enableIf": "useSearchAutocomplete"
+                }, */
+                {
+                    "xtype": "mz-input-dropdown",
+                    "name": "searchVersion",
+                    "fieldLabel": "<strong>Bloom Reach</strong><br>To enable BloomReach, you have to enable arcjs shindigz.BloomReachArcJS app & specify the correct configuration values.  Once you add these values, it will always use bloomreach for search so you need to select BloomReachSearchOnly or AllBloomReach so results render correctly. \"configuration\": {\"s26978\": {\"domainKey\":\"Shindigz\"}}",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        "AllKiboOOTB",
+                        "BloomReachSearchOnly",
+                        "AllBloomReach"
+                    ]
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Search Heading",
+            "collapsed": false,
+            "items": [
+                {
+                    "fieldLabel": "Enter text for search heading",
+                    "xtype": "mz-input-textarea",
+                    "name": "searchPageHeading",
+                    "width":"60%"
                 }
             ]
         },
@@ -238,41 +287,6 @@
         },
         {
             "xtype": "panel",
-            "title": "Search",
-            "collapsed": false,
-            "items": [/* these don't do anything b/c this theme using bloomreach search suggest only
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "showChildCategoriesInFaceting",
-                    "fieldLabel": "Show two levels of the category hierarchy in faceting"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "useSearchAutocomplete",
-                    "fieldLabel": "Show search suggestions"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "suggestPriorSearchTerms",
-                    "fieldLabel": "Show search terms others used on this site in search suggestions",
-                    "enableIf": "useSearchAutocomplete"
-                }, */
-                {
-                    "xtype": "mz-input-dropdown",
-                    "name": "searchVersion",
-                    "fieldLabel": "<strong>Bloom Reach</strong><br>To enable BloomReach, you have to enable arcjs shindigz.BloomReachArcJS app & specify the correct configuration values.  Once you add these values, it will always use bloomreach for search so you need to select BloomReachSearchOnly or AllBloomReach so results render correctly. \"configuration\": {\"s26978\": {\"domainKey\":\"Shindigz\"}}",
-                    "allowBlank": false,
-                    "forceSelection": true,
-                    "store": [
-                        "AllKiboOOTB",
-                        "BloomReachSearchOnly",
-                        "AllBloomReach"
-                    ]
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
             "title": "Layout",
             "collapsed": false,
             "items": [
@@ -377,7 +391,7 @@
         },
         {
             "xtype": "panel",
-            "title": "Paging",
+            "title": "Pagination",
             "collapsed": false,
             "items": [
 
@@ -514,19 +528,6 @@
                     "fieldLabel": "Login Session Message",
                     "xtype": "mz-input-textarea",
                     "name": "loginSessionMessage",
-                    "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Search Heading",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Enter text for search heading",
-                    "xtype": "mz-input-textarea",
-                    "name": "searchPageHeading",
                     "width":"60%"
                 }
             ]
