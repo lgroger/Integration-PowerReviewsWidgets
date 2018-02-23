@@ -53,11 +53,6 @@
                 },
                 {
                     "xtype":"mz-input-text",
-                    "name":"bannerProductTypes",
-                    "width":"60%",
-                    "fieldLabel":"Banner Product Types"
-                },{
-                    "xtype":"mz-input-text",
                     "name":"dndEngineUrl",
                     "width":"60%",
                     "fieldLabel":"DND URL"
@@ -94,13 +89,48 @@
         },
 		{
             "xtype": "panel",
-            "title": "Social Share",
+            "title": "Category",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-text",
                     "name": "socialShareAddThis",
-                    "fieldLabel": "Paste Your AddThis Account Code"
+                    "fieldLabel": "AddThis Social Sharing Account Code"
+                },
+                {
+                    "xtype": "mz-input-number",
+                    "name": "daysForNewRibbon",
+                    "value":"25",
+                    "fieldLabel": "Number of Days The Product Should Display New Flag"
+                },
+                {
+                    "fieldLabel": "Show these Page Size options",
+                    "xtype": "mz-input-selectmulti",
+                    "name": "pageSizeOptions",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "store": [
+                        20,
+                        40,
+                        60,
+                        80,
+                        100
+                    ]
+                },
+                {
+                    "fieldLabel": "Default Number of Items per page",
+                    "xtype": "mz-input-dropdown",
+                    "name": "defaultPageSize",
+                    "allowBlank": false,
+                    "forceSelection": true,
+                    "storeFrom": "pageSizeOptions"
+                },
+                {
+                    "fieldLabel": "Default Sort Order",
+                    "xtype": "mz-input-text",
+                    "name": "defaultSort",
+                    "allowBlank": true      ,
+                    "allowOnlyWhitespace":true
                 }
             ]
         },
@@ -146,32 +176,80 @@
                 {
                     "xtype": "mz-input-textarea",
                     "name": "searchPageHeading",
-                    "fieldLabel": "Enter text for search heading",
+                    "fieldLabel": "Text for search heading",
                     "width":"60%"
                 },
                 {
                     "xtype": "mz-input-textarea",
                     "name": "noSearchPageHeading",
-                    "fieldLabel": "Enter text for no search results heading",
+                    "fieldLabel": "Text for no search results heading",
                     "width":"60%"
                 },
                 {
                     "xtype": "mz-input-textarea",
                     "name": "noSearchSubText",
-                    "fieldLabel": "Enter text for no search results page",
+                    "fieldLabel": "Text for no search results page",
                     "width":"60%"
-                },
+                }
             ]
         },
         {
             "xtype": "panel",
-            "title": "Product CrossSell Swatch",
+            "title": "Products",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-text",
                     "name": "swatchProperty",
                     "fieldLabel": "Tenant Property For Color/Image Swatch"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "listProductCode",
+                    "fieldLabel": "Show product code in product lists"
+                },
+                {
+                    "xtype": "mz-input-checkbox",
+                    "name": "listProductShortDesc",
+                    "fieldLabel": "Show product short description in product lists"
+                },
+                {
+                    "fieldLabel": "Shipping Tooltip Info",
+                    "xtype": "mz-input-textarea",
+                    "name": "shippingTooltipInfo",
+                    "width":"60%"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                   "name":"productTypeDefaultImg",
+                   "fieldLabel":"Enable Default Image for product type. Product type name in lower case and separated by comma:<br>Example for banner (banner:Show Chart). Image name should be saved as producttype-default-pdp.jpg in file manager",
+                   "width":"60%"
+               }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Product-Types",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype":"mz-input-text",
+                    "name":"bannerProductTypes",
+                    "width":"60%",
+                    "fieldLabel":"Banner Product Types"
+                },
+                {
+                    "fieldLabel": "Theme Page - Number of Items per page",
+                    "xtype": "mz-input-number",
+                    "name": "superpageitems",
+                    "width":"60%",
+                    "allowBlank": false
+                },
+                {
+                    "fieldLabel": "Bundle Product Type Id",
+                    "xtype": "mz-input-number",
+                    "name": "bundleBroductTypeId",
+                    "width":"60%"
                 }
             ]
         },
@@ -190,36 +268,6 @@
                     "name": "instaImageCount",
                     "value":"10",
                     "fieldLabel": "Paste Your Instagram Access Token Here"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "New Flag Ribbon Days",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-number",
-                    "name": "daysForNewRibbon",
-                    "value":"25",
-                    "fieldLabel": "For How Many Days The Product Should Display As New"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Product Lists",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "listProductCode",
-                    "fieldLabel": "Show product code in product lists"
-                },
-                {
-                    "xtype": "mz-input-checkbox",
-                    "name": "listProductShortDesc",
-                    "fieldLabel": "Show product short description in product lists"
                 }
             ]
         },
@@ -329,43 +377,6 @@
         },
         {
             "xtype": "panel",
-            "title": "Pagination",
-            "collapsed": false,
-            "items": [
-
-                {
-                    "fieldLabel": "Show these page size options",
-                    "xtype": "mz-input-selectmulti",
-                    "name": "pageSizeOptions",
-                    "allowBlank": false,
-                    "forceSelection": true,
-                    "store": [
-                        20,
-                        40,
-                        60,
-                        80,
-                        100
-                    ]
-                },
-                {
-                    "fieldLabel": "Default items per page",
-                    "xtype": "mz-input-dropdown",
-                    "name": "defaultPageSize",
-                    "allowBlank": false,
-                    "forceSelection": true,
-                    "storeFrom": "pageSizeOptions"
-                },
-                {
-                    "fieldLabel": "Default Sort Order",
-                    "xtype": "mz-input-text",
-                    "name": "defaultSort",
-                    "allowBlank": true      ,
-                    "allowOnlyWhitespace":true
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
             "title": "Navigation",
             "collapsed": false,
             "items": [
@@ -407,12 +418,6 @@
             "collapsed": false,
             "items": [
                 {
-                    "fieldLabel": "Shipping Tooltip Info",
-                    "xtype": "mz-input-textarea",
-                    "name": "shippingTooltipInfo",
-                    "width":"60%"
-                },
-                {
                     "xtype": "mz-input-textarea",
                     "name":"CVVtooltipText",
                     "fieldLabel":"Checkout page ccv popup",
@@ -422,13 +427,7 @@
                     "xtype": "mz-input-checkbox",
                     "name": "couponCodeMultiple",
                     "fieldLabel": "Enable/Disable Multiple Coupon Code"
-                },{
-                     "xtype": "mz-input-textarea",
-                    "name":"productTypeDefaultImg",
-                    "fieldLabel":"Enable default Image for product type.Proudct type name in lower case and seperated by comma: Example for banner(banner:Show Chart). Image name should be saved as producttype-default-pdp.jpg in file manager",
-                    "width":"60%"
                 }
-
             ]
         },
         {
@@ -566,33 +565,7 @@
                 }
             ]
         },
-        {
-            "xtype": "panel",
-            "title": "Superpage Items",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Super page Items per page",
-                    "xtype": "mz-input-number",
-                    "name": "superpageitems",
-                    "width":"60%",
-                    "allowBlank": false
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Bundle Product Type Id",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Bundle Product Type Id",
-                    "xtype": "mz-input-number",
-                    "name": "bundleBroductTypeId",
-                    "width":"60%"
-                }
-            ]
-        },
+        
         {
             "xtype" : "panel",
             "title" : "Cart Page Content",
@@ -657,7 +630,7 @@
                     "allowBlank": false
                 },
                 {
-                    "fieldLabel": "Occassions",
+                    "fieldLabel": "Occasions",
                     "xtype": "mz-input-number",
                     "name": "ocassions",
                     "width":"60%",
