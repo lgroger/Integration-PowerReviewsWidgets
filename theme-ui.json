@@ -14,7 +14,7 @@
                     "xtype": "mz-input-checkbox",
                     "name": "enablePartialCaching",
                     "fieldLabel": "Enable partial caching using the Hypr {% partial_cache %} tag"
-                },/* This is no longer used and commented out in cart.hypr
+                },/* This is no longer used in cart
                 {
                     "xtype":"mz-input-text",
                     "name":"googleMapApiKey",
@@ -106,21 +106,15 @@
         },
 		{
             "xtype": "panel",
-            "title": "Search Configuration",
+            "title": "Search",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-text",
                     "name": "allProductsCategoryCode",
                     "fieldLabel": "Category Id for Search"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Search",
-            "collapsed": false,
-            "items": [/* these don't do anything b/c this theme using bloomreach search suggest only
+                },
+            /* these don't do anything b/c this theme uses bloomreach search suggest only
                 {
                     "xtype": "mz-input-checkbox",
                     "name": "showChildCategoriesInFaceting",
@@ -148,92 +142,36 @@
                         "BloomReachSearchOnly",
                         "AllBloomReach"
                     ]
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Search Heading",
-            "collapsed": false,
-            "items": [
+                },
                 {
-                    "fieldLabel": "Enter text for search heading",
                     "xtype": "mz-input-textarea",
                     "name": "searchPageHeading",
+                    "fieldLabel": "Enter text for search heading",
                     "width":"60%"
-                }
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name": "noSearchPageHeading",
+                    "fieldLabel": "Enter text for no search results heading",
+                    "width":"60%"
+                },
+                {
+                    "xtype": "mz-input-textarea",
+                    "name": "noSearchSubText",
+                    "fieldLabel": "Enter text for no search results page",
+                    "width":"60%"
+                },
             ]
         },
         {
             "xtype": "panel",
-            "title": "Image/Color Swatch Property",
+            "title": "Product CrossSell Swatch",
             "collapsed": false,
             "items": [
                 {
                     "xtype": "mz-input-text",
                     "name": "swatchProperty",
-                    "fieldLabel": "Paste Your Tenent Property For Color/Image Swatch"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "Reward Program Config",
-            "collapsed": false,
-            "items": [
-                {
-                    "xtype": "mz-input-text",
-                    "value": "rewardConfigurationDocumentType",
-                    "name": "shippingRewardConfigurationDocumentType",
-                    "fieldLabel": "shippingRewardConfigurationDocumentType"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "rewardHistoryDocumentType",
-                    "name": "shippingRewardHistoryDocumentType",
-                    "fieldLabel": "shippingRewardHistoryDocumentType"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "rewardConfigurationDocumentList",
-                    "name": "shippingRewardConfigurationDocumentList",
-                    "fieldLabel": "shippingRewardConfigurationDocumentList"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "rewardHistoryDocumentList",
-                    "name": "shippingRewardHistoryDocumentList",
-                    "fieldLabel": "shippingRewardHistoryDocumentList"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "shindigz",
-                    "name": "namespace",
-                    "fieldLabel": "namespace"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "tenant~enable-shipping-reward-program",
-                    "name": "isEnabledShippingRewardCustomerAttribute",
-                    "fieldLabel": "isEnabledShippingRewardCustomerAttribute"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "tenant~shipping-reward-point-1",
-                    "name": "customerRewardPointAttribute",
-                    "fieldLabel": "customerRewardPointAttribute"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "tenant~rp-enrolled-on",
-                    "name": "rewardProgramEnrolledAttribute",
-                    "fieldLabel": "rewardProgramEnrolledAttribute"
-                },
-                {
-                    "xtype": "mz-input-text",
-                    "value": "tenant~post-order-signup",
-                    "name": "postOrderSignupAttribute",
-                    "fieldLabel": "postOrderSignupAttribute"
+                    "fieldLabel": "Tenant Property For Color/Image Swatch"
                 }
             ]
         },
@@ -572,19 +510,6 @@
         },
         {
             "xtype": "panel",
-            "title": "No Search Heading",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Enter text for no search heading",
-                    "xtype": "mz-input-textarea",
-                    "name": "noSearchPageHeading",
-                    "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
             "title": "Our Other Sites Heading",
             "collapsed": false,
             "items": [
@@ -605,19 +530,6 @@
                     "fieldLabel": "Enter text for suggested Products Heading",
                     "xtype": "mz-input-textarea",
                     "name": "suggestedProductsHeading",
-                    "width":"60%"
-                }
-            ]
-        },
-        {
-            "xtype": "panel",
-            "title": "No Search sub text",
-            "collapsed": false,
-            "items": [
-                {
-                    "fieldLabel": "Enter text for no search heading",
-                    "xtype": "mz-input-textarea",
-                    "name": "noSearchSubText",
                     "width":"60%"
                 }
             ]
@@ -1069,7 +981,7 @@
         },
         {
             "xtype" : "panel",
-            "title" : "Satety Flags",
+            "title" : "Safety Flags",
             "collapsed" : false,
             "items" : [
                 {
@@ -1204,6 +1116,67 @@
                     "width": "100%",
                     "xtype": "mz-input-text",
                     "name": "safety-m"
+                }
+            ]
+        },
+        {
+            "xtype": "panel",
+            "title": "Reward Program Config",
+            "collapsed": false,
+            "items": [
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardConfigurationDocumentType",
+                    "name": "shippingRewardConfigurationDocumentType",
+                    "fieldLabel": "shippingRewardConfigurationDocumentType"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardHistoryDocumentType",
+                    "name": "shippingRewardHistoryDocumentType",
+                    "fieldLabel": "shippingRewardHistoryDocumentType"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardConfigurationDocumentList",
+                    "name": "shippingRewardConfigurationDocumentList",
+                    "fieldLabel": "shippingRewardConfigurationDocumentList"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "rewardHistoryDocumentList",
+                    "name": "shippingRewardHistoryDocumentList",
+                    "fieldLabel": "shippingRewardHistoryDocumentList"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "shindigz",
+                    "name": "namespace",
+                    "fieldLabel": "namespace"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~enable-shipping-reward-program",
+                    "name": "isEnabledShippingRewardCustomerAttribute",
+                    "fieldLabel": "isEnabledShippingRewardCustomerAttribute"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~shipping-reward-point-1",
+                    "name": "customerRewardPointAttribute",
+                    "fieldLabel": "customerRewardPointAttribute"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~rp-enrolled-on",
+                    "name": "rewardProgramEnrolledAttribute",
+                    "fieldLabel": "rewardProgramEnrolledAttribute"
+                },
+                {
+                    "xtype": "mz-input-text",
+                    "value": "tenant~post-order-signup",
+                    "name": "postOrderSignupAttribute",
+                    "fieldLabel": "postOrderSignupAttribute"
                 }
             ]
         }
