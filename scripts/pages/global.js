@@ -104,22 +104,23 @@ var pageContext = require.mozuData('pagecontext');
         }
 
 
-        //criteo tagging for category page
-		if(pageContext.pageType === "category" && $("#recommended_products_slot").length>=1){
-			$('div.mz-productlist-item').each(function(k,v){
-				if(k<=2){
-				}
-			});
-
-			//first three products of plp page - category page
-			var prod1 = $('div.mz-l-tiles div.mz-productlist-item').eq(0).attr("data-mz-product");
-			var prod2 = $('div.mz-l-tiles div.mz-productlist-item').eq(1).attr("data-mz-product");
-			var prod3 = $('div.mz-l-tiles div.mz-productlist-item').eq(2).attr("data-mz-product");
-
-			//criteo tagging for category page - plp page
-			$('body').append(' <!-- Criteo Integration Start--> <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js"></script> <script type="text/javascript"> window.criteo_q = window.criteo_q || []; var deviceType = /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(navigator.userAgent) ? "m" : "d"; window.criteo_q.push( { event: "setAccount", account: "'+ Hypr.getThemeSetting('criteoAccNum') +'"}, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["'+require.mozuData('user').email+'"]}, { event: "viewList", item: ['+
-				'"'+prod1+'", "'+prod2+'", "'+prod3+'"] }); </script> <!-- Criteo Integration End--> ');
-		}
+        //criteo tagging for category page 
+        //Commented below code as we've moved to google tag manager - Syed
+//		if(pageContext.pageType === "category" && $("#recommended_products_slot").length>=1){
+//			$('div.mz-productlist-item').each(function(k,v){
+//				if(k<=2){
+//				}
+//			});
+//
+//			//first three products of plp page - category page
+//			var prod1 = $('div.mz-l-tiles div.mz-productlist-item').eq(0).attr("data-mz-product");
+//			var prod2 = $('div.mz-l-tiles div.mz-productlist-item').eq(1).attr("data-mz-product");
+//			var prod3 = $('div.mz-l-tiles div.mz-productlist-item').eq(2).attr("data-mz-product");
+//
+//			//criteo tagging for category page - plp page
+//			$('body').append(' <!-- Criteo Integration Start--> <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js"></script> <script type="text/javascript"> window.criteo_q = window.criteo_q || []; var deviceType = /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(navigator.userAgent) ? "m" : "d"; window.criteo_q.push( { event: "setAccount", account: "'+ Hypr.getThemeSetting('criteoAccNum') +'"}, { event: "setSiteType", type: deviceType}, { event: "setEmail", email: ["'+require.mozuData('user').email+'"]}, { event: "viewList", item: ['+
+//				'"'+prod1+'", "'+prod2+'", "'+prod3+'"] }); </script> <!-- Criteo Integration End--> ');
+//		}
 
 
 		//object to subcribe for email
