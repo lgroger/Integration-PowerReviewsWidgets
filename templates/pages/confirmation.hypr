@@ -165,10 +165,10 @@
       </div>
       <div class="div_66">
         <div class="block1">
-            <span class="ship-text1" style=""> {{ labels.shippingMethod }}:</span>
+            <span class="ship-text1"> {{ labels.shippingMethod }}:</span>
         </div>
         <div class="block2">
-            <span class="ship-text2" style="">{{ model.fulfillmentInfo.shippingMethodName }}</span>
+            <span class="ship-text2">{{ model.fulfillmentInfo.shippingMethodName }}</span>
         </div>
       </div>
       <div class="clear"></div>
@@ -184,7 +184,7 @@
            <span class="ship-text1" >{{ labels.billingEmail }}:</span>
         </div>
         <div class="block2">
-            <span class="ship-text2" style="">{{ model.billingInfo.billingContact.email }}</span>
+            <span class="ship-text2">{{ model.billingInfo.billingContact.email }}</span>
         </div>
       </div>
       <div class="div_33 billing-block">
@@ -200,18 +200,20 @@
       </div>
       <div class="div_33">
         <div class="block1">
-            <span class="ship-text1">Payment Method:</span>
+            <span class="ship-text1 ">Payment Method:</span>
         </div>
          <div class="block2">
-            <span class="ship-text2" style="">
-            <span>
-              {% for payment in model.payments %}
-              {% if payment.status != "Voided" and payment.status != "Declined" %}
-              {% include "modules/checkout/checkout-payment" with model=payment %}
-              {% endif %}
-              {% endfor %}
-              </span>
-              </span>
+            <span class="ship-text2 ">
+                <span>
+                    {% for payment in model.payments %}
+                        {% if payment.status != "Voided" and payment.status != "Declined" %}
+                                <span class="paymentstatus" id="GTMpaymentstatus"> {# mapped to PaymentStatusInConfirmationPage in GTM #}
+                                    {% include "modules/checkout/checkout-payment" with model=payment %}
+                                </span>
+                        {% endif %}
+                    {% endfor %}
+                </span>
+            </span>
         </div>
 
 
@@ -434,7 +436,7 @@ var qty=0,url="";
 {% for i in model.items %}
 qty += {{i.quantity}};
 {% endfor %}
-  / Performance Tracking Data / 
+  /* Connexity Performance Tracking Data */ 
   var mid            = '{{ themeSettings.bizAccNumber }}';
   var cust_type      = '{% if pageContext.user.isAnonymous %}1{% else %}0{% endif %}';
   var order_value    = '{{ model.total }}';
@@ -481,6 +483,7 @@ qty += {{i.quantity}};
   {% endblock Nextag %}
   {% endcomment %}
 
+{% comment %}
   {% block Google-Conversion-Tag %}
 {% if model.billingInfo.paymentType != "check"%}
   <!-- Google Code for Conversion Conversion Page -->
@@ -521,4 +524,5 @@ qty += {{i.quantity}};
 </script>
 <!-- end BizRate Survey -->
 {% endif %}
+{% endcomment %}
 {% endblock trailing-scripts %}

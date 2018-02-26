@@ -150,9 +150,7 @@
 
 
           {%header_content%}
-
-
-
+        {% require_script "pages/gtms" %}
       </head>
       {% endblock head-tag %}
       {% block body-tag %}
@@ -160,7 +158,7 @@
       {% block open-body-tag %}
       <body class="{% block body-tag-classes %}{% endblock body-tag-classes %}">
       {% endblock open-body-tag %}
-
+        
           <div id="page-wrapper" class="mz-l-pagewrapper">
 
               {% block page-header %}
@@ -283,7 +281,7 @@
       </script> 
       {% if themeSettings.certonaRecomm %}
           <script type="text/javascript">
-          var certona = {
+          var certona = {   
               "pagetype" : page_type, //type of page
               "devicetype" : "{% if not pageContext.isDesktop %}Mobile{% else %}Desktop{% endif %}", //type of device isMobile or isDesktop
               {% if pageContext.pageType ==  'category' %}
@@ -324,7 +322,7 @@
       {% endif %}
 
       <!-- Certona Integration End -->
-
+  	{%comment%}
   	{% if pageContext.crawlerInfo.canonicalUrl == "/homepage" or pageContext.cmsContext.template.path == "main-page" or pageContext.pageType == "product" or pageContext.pageType == "cart" or pageContext.pageType == "confirmation" %}
       <!-- Criteo Integration Start-->
           <script type="text/javascript" src="//static.criteo.net/js/ld/ld.js"></script> <script type="text/javascript"> window.criteo_q = window.criteo_q || []; var deviceType = /Mobile|iP(hone|od|ad)|Android|BlackBerry|IEMobile/.test(navigator.userAgent) ? "m" : "d";
@@ -367,8 +365,8 @@
 
         </script>
        {% endif %}
-
-      <!-- Bloom reach integration start -->
+        {%endcomment%}
+        <!-- Bloom reach integration start -->
 
       {% if pageContext.pageType != 'login' and pageContext.pageType != 'undefined' %}
       <script type="text/javascript">
