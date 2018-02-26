@@ -194,12 +194,6 @@
   ],
   "emailTemplates": [
     {
-      "id": "order.shipped",
-      "properties": {},
-      "template": "email/order-shipped",
-      "title": "Your Order Has Shipped"
-    },
-    {
       "id": "order.changed",
       "customEditor": "email-orderconfirmation",
       "properties": {},
@@ -207,10 +201,34 @@
       "title": "Order Confirmation"
     },
     {
+      "id": "order.shipped",
+      "properties": {},
+      "template": "email/order-shipped",
+      "title": "Ship Confirmation"
+    },
+    {
       "id": "refund.created",
       "properties": {},
       "template": "email/order-refund-issued",
       "title": "Refund Issued"
+    },
+    {
+      "id": "return.closed",
+      "properties": {},
+      "template": "email/product-return-received",
+      "title": "Return Item Received"
+    },
+    {
+      "id": "user.passwordreset",
+      "properties": {},
+      "template": "email/password-reset",
+      "title": "Password Reset"
+    },
+    {
+      "id": "product.instock",
+      "properties": {},
+      "template": "email/product-instock",
+      "title": "Back in Stock"
     },
     {
       "id": "return.created",
@@ -231,12 +249,6 @@
       "title": "Return Request Rejected"
     },
     {
-      "id": "return.closed",
-      "properties": {},
-      "template": "email/product-return-received",
-      "title": "Return Item Received"
-    },
-    {
       "id": "return.changed",
       "properties": {},
       "template": "email/product-return-changed",
@@ -247,18 +259,6 @@
       "properties": {},
       "template": "email/new-user",
       "title": "Welcome"
-    },
-    {
-      "id": "user.passwordreset",
-      "properties": {},
-      "template": "email/password-reset",
-      "title": "Password Reset"
-    },
-    {
-      "id": "product.instock",
-      "properties": {},
-      "template": "email/product-instock",
-      "title": "Back in Stock"
     },
     {
       "id": "giftcard.created",
@@ -282,6 +282,130 @@
     }
   ],
   "pageTypes": [
+    {
+      "entityType": "siteTemplate",
+      "id": "site_page",
+      "template": "page",
+      "title": "Default Site Template"
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "main-page",
+      "template": "main-page",
+      "title": "Home Page",
+      "userCreatable": true
+    },
+    {
+      "entityType": "category",
+      "id": "category",
+      "template": "category",
+      "title": "Category",
+      "userCreatable": false
+    },
+    {
+      "entityType": "category",
+      "id": "categorylanding",
+      "template": "categorylanding",
+      "title": "Landing Page",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
+      "entityType": "category",
+      "id": "parent-category",
+      "template": "parent-category",
+      "title": "Parent Category",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
+      "entityType": "category",
+      "id": "super-page",
+      "template": "super-page",
+      "title": "Theme Page",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
+      "entityType": "category",
+      "id": "category-html",
+      "template": "category-html",
+      "title": "Top Level HTML",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
+      "entityType": "product",
+      "id": "product",
+      "template": "product",
+      "title": "Product",
+      "userCreatable": false,
+      "customEditor": "productContent@mozu"
+    },
+    {
+      "entityType": "cart",
+      "id": "cart",
+      "template": "cart",
+      "title": "Cart",
+      "userCreatable": false
+    },
+    {
+      "entityType": "order",
+      "id": "checkout",
+      "template": "checkout",
+      "title": "Checkout",
+      "userCreatable": false
+    },
+    {
+      "entityType": "order",
+      "id": "confirmation",
+      "template": "confirmation",
+      "title": "Confirmation",
+      "userCreatable": false
+    },
+    {
+      "entityType": "login",
+      "id": "login",
+      "template": "login",
+      "title": "Login",
+      "userCreatable": false
+    },
+    {
+      "entityType": "customer",
+      "id": "my_account",
+      "template": "my-account",
+      "title": "My Account",
+      "userCreatable": false
+    },
+    {
+      "entityType": "anonymous_account",
+      "id": "my_anonymous_account",
+      "template": "my-anonymous-account",
+      "title": "Order Status Anonymous",
+      "userCreatable": false
+    },
+    {
+      "entityType": "forgotpassword",
+      "id": "forgotpassword",
+      "template": "forgot-password",
+      "title": "Password Forgot",
+      "userCreatable": false
+    },
+    {
+      "entityType": "resetPasswordConfirmDetails",
+      "id": "reset_password",
+      "template": "reset-password",
+      "title": "Password Reset",
+      "userCreatable": false
+    },
+    {
+      "entityType": "signup",
+      "id": "signup",
+      "template": "signup",
+      "title": "Sign Up",
+      "userCreatable": false
+    },
     {
       "documentType": "web_page",
       "entityType": "webpage",
@@ -315,12 +439,7 @@
         }
       ]
     },
-    {
-      "entityType": "siteTemplate",
-      "id": "site_page",
-      "template": "page",
-      "title": "Default Site Template"
-    },
+    
     {
       "documentType": "web_page",
       "entityType": "webpage",
@@ -331,10 +450,120 @@
     },
     {
       "documentType": "web_page",
+      "editor": "landing-page",
+      "entityType": "webpage",
+      "id": "landing",
+      "template": "blank-page",
+      "title": "Blank Landing Page",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "blank-splash-page",
+      "template": "blank-splash-page",
+      "title": "Blank Splash Page",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "blog-home",
+      "template": "blog-main",
+      "title": "Blog Home",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "blog-post",
+      "template": "blog-post",
+      "title": "Blog Post",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "mediaclip",
+      "template": "mediaclip",
+      "title": "MediaClip",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "requestQuote",
+      "template": "request-quote",
+      "title": "Quote Information",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "party-directory",
+      "template": "party-directory",
+      "title": "Party Directory",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
       "entityType": "webpage",
       "id": "party-planner",
       "template": "party-planner",
       "title": "Party Planner",
+      "userCreatable": true
+    },
+    {
+      "entityType": "product-bundle",
+      "id": "product-bundle",
+      "template": "product-bundle",
+      "title": "Product Bundle",
+      "userCreatable": false
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "promo-page",
+      "template": "promo-page",
+      "title": "Promo Page",
+      "userCreatable": true
+    },
+    {
+      "entityType": "searchresult",
+      "id": "search-results",
+      "template": "search-results",
+      "title": "Search Results",
+      "userCreatable": false
+    },
+    {
+      "entityType": "nosearchresult",
+      "id": "no-search-results",
+      "template": "no-search-results",
+      "title": "Search Results None",
+      "userCreatable": false
+    },
+    {
+      "documentType":"web_page",
+      "entityType":"webpage",
+      "id":"ShippingInfo",
+      "template":"shipping-info",
+      "title":"Shipping Info",
+      "userCreatable":true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "location",
+      "template": "location",
+      "title": "Store Locator",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "wholesaleProgram",
+      "template": "wholesale-program",
+      "title": "Wholesale Program",
       "userCreatable": true
     },
     {
@@ -348,234 +577,10 @@
     {
       "documentType": "web_page",
       "entityType": "webpage",
-      "id": "blank-splash-page",
-      "template": "blank-splash-page",
-      "title": "Blank Splash Page",
-      "userCreatable": true
-    },
-    {
-      "documentType": "web_page",
-      "editor": "landing-page",
-      "entityType": "webpage",
-      "id": "landing",
-      "template": "blank-page",
-      "title": "Landing Page",
-      "userCreatable": true
-    },
-    {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "main-page",
-      "template": "main-page",
-      "title": "Home Page",
-      "userCreatable": true
-    },
-    {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "promo-page",
-      "template": "promo-page",
-      "title": "Promo Page",
-      "userCreatable": true
-    },
-    {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "location",
-      "template": "location",
-      "title": "Store Locator",
-      "userCreatable": true
-    },{
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "party-directory",
-      "template": "party-directory",
-      "title": "Party Directory",
-      "userCreatable": true
-    },{
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "blog-home",
-      "template": "blog-main",
-      "title": "Blog Home",
-      "userCreatable": true
-    },{
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "mediaclip",
-      "template": "mediaclip",
-      "title": "MediaClip",
-      "userCreatable": true
-    },{
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "blog-post",
-      "template": "blog-post",
-      "title": "Blog Post",
-      "userCreatable": true
-    },
-    {
-      "entityType": "category",
-      "id": "category",
-      "template": "category",
-      "title": "Category",
-      "userCreatable": false
-    },
-    {
-      "entityType": "category",
-      "id": "parent-category",
-      "template": "parent-category",
-      "title": "ParentCategory",
-      "userCreatable": false,
-      "customEditor": "categoryContent@mozu"
-    },
-    {
-      "entityType": "category",
-      "id": "category-html",
-      "template": "category-html",
-      "title": "Category HTML",
-      "userCreatable": false,
-      "customEditor": "categoryContent@mozu"
-    },
-    {
-      "entityType": "product",
-      "id": "product",
-      "template": "product",
-      "title": "Product",
-      "userCreatable": false,
-      "customEditor": "productContent@mozu"
-    },
-    {
-      "entityType": "product-bundle",
-      "id": "product-bundle",
-      "template": "product-bundle",
-      "title": "Product Bundle",
-      "userCreatable": false
-    },
-    {
-      "entityType": "category",
-      "id": "super-page",
-      "template": "super-page",
-      "title": "Super Page",
-      "userCreatable": false,
-      "customEditor": "categoryContent@mozu"
-    },
-    {
-      "entityType": "category",
-      "id": "categorylanding",
-      "template": "categorylanding",
-      "title": "Category Landing Page",
-      "userCreatable": false,
-      "customEditor": "categoryContent@mozu"
-    },
-    {
-      "entityType": "searchresult",
-      "id": "search-results",
-      "template": "search-results",
-      "title": "Search Results",
-      "userCreatable": false
-    },
-    {
-      "entityType": "nosearchresult",
-      "id": "no-search-results",
-      "template": "no-search-results",
-      "title": "Empty Search Results",
-      "userCreatable": false
-    },
-    {
-      "documentType": "web_page",
-      "entityType": "webpage",
       "id": "404",
       "template": "404",
       "title": "404 Not Found",
       "userCreatable": false
-    },
-    {
-      "entityType": "cart",
-      "id": "cart",
-      "template": "cart",
-      "title": "Cart",
-      "userCreatable": false
-    },
-    {
-      "entityType": "order",
-      "id": "checkout",
-      "template": "checkout",
-      "title": "Checkout",
-      "userCreatable": false
-    },
-    {
-      "entityType": "order",
-      "id": "confirmation",
-      "template": "confirmation",
-      "title": "Confirmation",
-      "userCreatable": false
-    },
-    {
-      "entityType": "customer",
-      "id": "my_account",
-      "template": "my-account",
-      "title": "My Account",
-      "userCreatable": false
-    },
-    {
-      "entityType": "login",
-      "id": "login",
-      "template": "login",
-      "title": "Login",
-      "userCreatable": false
-    },
-    {
-      "entityType": "resetPasswordConfirmDetails",
-      "id": "reset_password",
-      "template": "reset-password",
-      "title": "Reset Password",
-      "userCreatable": false
-    },
-    {
-      "entityType": "anonymous_account",
-      "id": "my_anonymous_account",
-      "template": "my-anonymous-account",
-      "title": "Anonymous Order Status",
-      "userCreatable": false
-    },
-    {
-      "entityType": "signup",
-      "id": "signup",
-      "template": "signup",
-      "title": "Sign Up",
-      "userCreatable": false
-    },
-    {
-      "entityType": "forgotpassword",
-      "id": "forgotpassword",
-      "template": "forgot-password",
-      "title": "Forgot Password",
-      "userCreatable": false
-    },
-    {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "wholesaleProgram",
-      "template": "wholesale-program",
-      "title": "Wholesale Program",
-      "userCreatable": true
-    },
-    {
-      "documentType":"web_page",
-      "entityType":"webpage",
-      "id":"ShippingInfo",
-      "template":"shipping-info",
-      "title":"Shipping Info",
-      "userCreatable":true
-    },
-    {
-      "documentType": "web_page",
-      "entityType": "webpage",
-      "id": "requestQuote",
-      "template": "request-quote",
-      "title": "Shindigz Quote Information",
-      "userCreatable": true
     }
   ],
   "settings": {
@@ -1181,17 +1186,54 @@
   "widgets": [
     {
       "defaultConfig": {
-        "title": "Ouer Services"
+        "body": ""
       },
-      "displayName": "Our Services",
-      "customEditor": "our-services-widget",
-      "displayTemplate": "misc/ourServices",
-      "icon": "",
-      "id": "our_services_widget",
+      "displayName": "HTML",
+      "displayTemplate": "cms/content",
+      "editViewFields": [
+        {
+          "fieldLabel": "Enter HTML - Use {{CDN}} for CDN location. ex. src=\"{{CDN}}/d0d40678-e391-4eca-9b44-793890e976c1?max=475\" <br>Set value of {{CDN}} in theme settings",
+          "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%",
+          "height": 400,
+          "name": "body",
+          "width": "100%",
+          "mode": "html",
+          "xtype": "mz-input-code"
+        }
+      ],
+      "icon": "/resources/admin/widgets/07_code.png",
+      "id": "html",
       "validPageTypes": [
         "*"
       ]
     },
+    {
+      "defaultConfig": {
+        "height": 400,
+        "heightResizable": true,
+        "imageHeight": 400,
+        "imageSource": "file",
+        "linkSource": "externalUrl",
+        "borderStyle": "None"
+      },
+      "displayName": "Image",
+      "displayTemplate": "cms/image",
+      "customEditor": "image",
+      "icon": "/resources/admin/widgets/00_photo.png",
+      "id": "cms-image",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "Theme Page Buttons",
+      "displayTemplate": "misc/super-page-widget",
+      "customEditor": "super-page-filter",
+      "id": "super-page-filter",
+      "validPageTypes": [
+        "*"
+      ]
+      },
     {
       "displayName": "FAQ",
       "displayTemplate": "misc/faq",
@@ -1202,31 +1244,41 @@
       "validPageTypes": [
         "*"
       ]
-    },{
-      "displayName": "Image editor New",
-      "displayTemplate": "misc/image-new",
-      "customEditor": "image-new",
-      "id": "image-new",
+    },
+    {
+      "defaultConfig": {
+        "hrBorderColor": "#000",
+        "hrBorderStyle": "solid",
+        "hrBorderWidth": "1px",
+        "hrMarginBottom": "0px",
+        "hrMarginTop": "0px"
+      },
+      "displayName": "Horizontal Rule",
+      "displayTemplate": "cms/horizontalrule",
+      "customEditor": "horizontalrule",
+      "icon": "/resources/admin/widgets/05_horizontal_divider.png",
+      "id": "horizontal_rule",
       "validPageTypes": [
         "*"
       ]
-    },{
-      "displayName": "Category HTML widget",
-      "customEditor": "category-html",
-      "id": "category-html",
-      "displayTemplate": "misc/category-edit-html",
+    },
+    {
+      "displayName": "Mega Menu",
+      "displayTemplate": "misc/megaMenuNew",
+      "customEditor": "menu-editNew",
+      "id": "menu-editNew",
       "validPageTypes": [
         "*"
       ]
-    },{
-      "displayName": "Add New QA Section",
-      "customEditor": "QAEditor",
-      "displayTemplate": "misc/QASection",
-      "id": "QAWidget",
-      "validPageTypes": [
-        "*"
-      ]
-    },{
+    },
+    {
+      "displayName": "Opening Job Position",
+      "displayTemplate": "misc/Careers-Opening",
+      "id": "job-opening",
+      "stylesheet": "careers.less",
+      "customEditor": "careers-edit-view"
+    },
+    {
       "displayName": "Shoppable Imagery",
       "displayTemplate": "misc/shopableimageEditor",
       "customEditor": "shopableimage",
@@ -1236,113 +1288,140 @@
       ]
     },
     {
-      "displayName": "Instagramme",
-      "displayTemplate": "misc/instagramme",
-      "icon": "/resources/admin/widgets/faq.jpg",
-      "id": "instagramme",
+      "displayName": "Add New QA Section",
+      "customEditor": "QAEditor",
+      "displayTemplate": "misc/QASection",
+      "id": "QAWidget",
       "validPageTypes": [
         "*"
-      ],
+      ]
+    },
+    {
+      "category": "social",
+      "defaultConfig": {
+        "style": "1"
+      },
+      "displayName": "Add This",
+      "displayTemplate": "social/addthis",
       "editViewFields": [
         {
-          "fieldLabel": "Instagramme Main Heading ",
-          "name": "instagrammemainheading",
-          "xtype": "textfield",
-          "width": 500
+          "xtype": "mz-input-dropdown",
+          "name": "style",
+          "fieldLabel": "AddThis Button Style",
+          "store": [
+            [
+              "1",
+              "small"
+            ],
+            [
+              "2",
+              "medium"
+            ],
+            [
+              "3",
+              "large"
+            ],
+            [
+              "4",
+              "compact"
+            ]
+          ]
         },
         {
-          "fieldLabel": "Instagramme Sub Heading",
-          "name": "instagrammeSubHeading",
-          "xtype": "textfield",
-          "width": 500
+          "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic.",
+          "xtype": "box"
         },
         {
-          "fieldLabel": "Instagramme Account Id ",
-          "name": "instagrammeAccountId",
-          "xtype": "textfield",
-          "width": 500
-        },
-        {
-          "fieldLabel": "Image Count ",
-          "name": "instagrammeImageCount",
-          "xtype": "textfield",
-          "width": 500
+          "allowBlank": true,
+          "fieldLabel": "AddThis<br/> profile ID",
+          "name": "profileId",
+          "xtype": "mz-input-text"
         }
-      ]
-    },
-    {
-      "displayName": "Mega Menu New",
-      "displayTemplate": "misc/megaMenuNew",
-      "customEditor": "menu-editNew",
-      "id": "menu-editNew",
-      "validPageTypes": [
-        "*"
-      ]
-    },{
-      "displayName": "Theme Page Buttons",
-      "displayTemplate": "misc/super-page-widget",
-      "customEditor": "super-page-filter",
-      "id": "super-page-filter",
-      "validPageTypes": [
-        "*"
-      ]
-
-      },{
-      "displayName": "Press/News page",
-      "displayTemplate": "misc/press",
-      "customEditor": "press-edit",
-      "id": "press-edit",
-      "stylesheet": "press.less",
-        "validPageTypes":["*"]
-      },{
-      "displayName": "Opening Job Position",
-      "displayTemplate": "misc/Careers-Opening",
-      "id": "job-opening",
-      "stylesheet": "careers.less",
-      "customEditor": "careers-edit-view"
-    },
-    {
-      "id": "popular_category",
-      "icon": "/resources/admin/widgets/category.png",
-      "displayName": "Popular Category Listings",
-      "validPageTypes": [
-        "*"
       ],
-      "displayTemplate": "catalog/jb-popular-categories",
-      "customEditor": "popular-editor"
-    },
-    {
-      "id": "similar_themes",
-      "icon": "/resources/admin/widgets/category.png",
-      "displayName": "Similar Themes",
+      "icon": "/resources/admin/widgets/13_social.png",
+      "id": "addthis",
       "validPageTypes": [
         "*"
-      ],
-      "displayTemplate": "catalog/similar-themes",
-      "editViewFields": [
-        {
-          "fieldLabel": "Similar Themes",
-          "name": "similarthemes",
-          "xtype": "boxselect",
-          "width": 500,
-          "displayField": "name",
-          "valueField": "id",
-          "queryMode": "local",
-          "store": {
-            "type": "Taco.store.Categories"
-          }
-        }
+      ]
+    },
+    {
+      "displayName": "Category HTML",
+      "customEditor": "category-html",
+      "id": "category-html",
+      "displayTemplate": "misc/category-edit-html",
+      "validPageTypes": [
+        "*"
       ]
     },
     {
       "defaultConfig": {
-        "title": "promo large layout"
+        "body": "<h2>Insert Title</h2><p>Insert Content</p>"
       },
-      "displayName": "Offer Promo Large Layout",
-      "customEditor": "offer_promo_layout_1_edit",
-      "displayTemplate": "misc/offer_promo_layout_1",
-      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
-      "id": "offer_promo_layout_1",
+      "displayName": "Content",
+      "displayTemplate": "cms/content",
+      "icon": "/resources/admin/widgets/03_heading_p.png",
+      "id": "content",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "defaultConfig": {
+        "attributeId": "tenant~product-crosssell",
+        "count": "4",
+        "template": "modules/product/product-list-carousel",
+        "title": "Related Items"
+      },
+      "displayName": "Cross Sells",
+      "displayTemplate": "catalog/related-products",
+      "editViewFields": [
+        {
+          "anchor": "100%",
+          "fieldLabel": "Title",
+          "name": "title",
+          "xtype": "mz-input-text"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Template",
+          "name": "template",
+          "store": [
+            [
+              "modules/product/product-list-carousel",
+              "carousel"
+            ],
+            [
+              "modules/product/product-list-tiled",
+              "tiled"
+            ],
+            [
+              "modules/product/product-list",
+              "list"
+            ]
+          ],
+          "xtype": "mz-input-dropdown"
+        },
+        {
+          "anchor": "100%",
+          "fieldLabel": "Number to display",
+          "name": "count",
+          "xtype": "mz-input-number"
+        }
+      ],
+      "icon": "/resources/admin/widgets/23_cross_sells.png",
+      "id": "crosssells",
+      "validPageTypes": [
+        "product",
+        "cart"
+      ]
+    },
+    {
+      "category": "catalog",
+      "displayName": "Deal of the Day",
+      "displayTemplate": "catalog/deal-of-the-day",
+      "editView": "taco-dealoftheday-widgeteditor",
+      "icon": "/resources/admin/widgets/28_deal_of_the_day.png",
+      "id": "deal-of-the-day",
       "validPageTypes": [
         "*"
       ]
@@ -1356,32 +1435,6 @@
       ],
       "displayTemplate": "catalog/jb-featured-brands",
       "customEditor": "dynamic-cat-edit"
-    },
-    {
-      "defaultConfig": {
-        "title": "Offer Promo"
-      },
-      "displayName": "Offer Promo",
-      "customEditor": "offer_promo_edit",
-      "displayTemplate": "misc/offer_promo",
-      "icon": "/resources/images/error-exclamation.png",
-      "id": "offer_promo",
-      "validPageTypes": [
-        "*"
-      ]
-    },
-    {
-      "defaultConfig": {
-        "title": "Video Promo"
-      },
-      "displayName": "Video Promo",
-      "displayTemplate": "misc/vid_promo",
-      "customEditor": "vid_promo_edit",
-      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
-      "id": "vid_promo",
-      "validPageTypes": [
-        "*"
-      ]
     },
     {
       "defaultConfig": {
@@ -1434,23 +1487,66 @@
       ]
     },
     {
+      "displayName": "Image Size Editor",
+      "displayTemplate": "misc/image-new",
+      "customEditor": "image-new",
+      "id": "image-new",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "displayName": "Instagram",
+      "displayTemplate": "misc/instagramme",
+      "icon": "/resources/admin/widgets/faq.jpg",
+      "id": "instagramme",
+      "validPageTypes": [
+        "*"
+      ],
+      "editViewFields": [
+        {
+          "fieldLabel": "Instagramme Main Heading ",
+          "name": "instagrammemainheading",
+          "xtype": "textfield",
+          "width": 500
+        },
+        {
+          "fieldLabel": "Instagramme Sub Heading",
+          "name": "instagrammeSubHeading",
+          "xtype": "textfield",
+          "width": 500
+        },
+        {
+          "fieldLabel": "Instagramme Account Id ",
+          "name": "instagrammeAccountId",
+          "xtype": "textfield",
+          "width": 500
+        },
+        {
+          "fieldLabel": "Image Count ",
+          "name": "instagrammeImageCount",
+          "xtype": "textfield",
+          "width": 500
+        }
+      ]
+    },
+    {
       "defaultConfig": {
-        "heightResizable": false
+        "title": "Related Items"
       },
-      "displayName": "Video",
-      "displayTemplate": "cms/video",
+      "displayName": "Instock Request",
+      "displayTemplate": "misc/instock-request",
       "editViewFields": [
         {
           "anchor": "100%",
-          "fieldLabel": "Video URL",
-          "name": "url",
+          "fieldLabel": "Title",
           "xtype": "mz-input-text"
         }
       ],
-      "icon": "/resources/admin/widgets/08_video.png",
-      "id": "video",
+      "icon": "/resources/admin/widgets/25_instock_requests.png",
+      "id": "instockrequest",
       "validPageTypes": [
-        "*"
+        "product"
       ]
     },
     {
@@ -1508,12 +1604,123 @@
     },
     {
       "defaultConfig": {
-        "attributeId": "tenant~product-crosssell",
+        "title": "Offer Promo"
+      },
+      "displayName": "Offer Promo",
+      "customEditor": "offer_promo_edit",
+      "displayTemplate": "misc/offer_promo",
+      "icon": "/resources/images/error-exclamation.png",
+      "id": "offer_promo",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "defaultConfig": {
+        "title": "Ouer Services"
+      },
+      "displayName": "Our Services",
+      "customEditor": "our-services-widget",
+      "displayTemplate": "misc/ourServices",
+      "icon": "",
+      "id": "our_services_widget",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "id": "popular_category",
+      "icon": "/resources/admin/widgets/category.png",
+      "displayName": "Popular Category Listings",
+      "validPageTypes": [
+        "*"
+      ],
+      "displayTemplate": "catalog/jb-popular-categories",
+      "customEditor": "popular-editor"
+    },
+    {
+      "displayName": "Press/News page",
+      "displayTemplate": "misc/press",
+      "customEditor": "press-edit",
+      "id": "press-edit",
+      "stylesheet": "press.less",
+        "validPageTypes":["*"]
+      },
+    {
+      "category": "catalog",
+      "id": "pr_product_review",
+      "displayName": "PowerReviews Product Reviews",
+      "displayTemplate": "PowerReviews/pr-product-reviews",
+      "editViewFields": [
+        {
+          "name": "widgetType",
+          "fieldLabel": "Widget Type",
+          "xtype": "combo",
+          "store": [
+            [
+              "reviewSnippet",
+              "Review Snippet"
+            ],
+            [
+              "socialAnswerSnippet",
+              "Q&A Snippet"
+            ],
+            [
+              "reviewDisplay",
+              "Review Display"
+            ],
+            [
+              "socialAnswerDisplay",
+              "Q&A Display"
+            ]
+          ]
+        },
+        {
+          "name": "isTab",
+          "fieldLabel": "Is Tab Enabled?",
+          "xtype": "checkbox"
+        },
+        {
+          "name": "tabCode",
+          "fieldLabel": "Tab Code"
+        }
+      ],
+      "icon": "/resources/admin/widgets/power_review_icon.png",
+      "validPageTypes": [
+        "product"
+      ]
+    },
+    {
+      "category": "catalog",
+      "id": "pr_roibeacon",
+      "displayName": "PowerReviews ROI Beacon",
+      "displayTemplate": "PowerReviews/pr-roi-beacon",
+      "icon": "/resources/admin/widgets/icon-powerreview-beacone.png",
+      "validPageTypes": [
+        "order"
+      ]
+    },
+    {
+      "defaultConfig": {
+        "title": "promo large layout"
+      },
+      "displayName": "Offer Promo Large Layout",
+      "customEditor": "offer_promo_layout_1_edit",
+      "displayTemplate": "misc/offer_promo_layout_1",
+      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
+      "id": "offer_promo_layout_1",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "defaultConfig": {
+        "attributeId": "tenant~product-related",
         "count": "4",
         "template": "modules/product/product-list-carousel",
-        "title": "Related Items"
+        "title": "Other Items"
       },
-      "displayName": "Cross Sells",
+      "displayName": "Related Products",
       "displayTemplate": "catalog/related-products",
       "editViewFields": [
         {
@@ -1549,11 +1756,34 @@
           "xtype": "mz-input-number"
         }
       ],
-      "icon": "/resources/admin/widgets/23_cross_sells.png",
-      "id": "crosssells",
+      "icon": "/resources/admin/widgets/26_related_products.png",
+      "id": "relatedproducts",
       "validPageTypes": [
         "product",
         "cart"
+      ]
+    },
+    {
+      "id": "similar_themes",
+      "icon": "/resources/admin/widgets/category.png",
+      "displayName": "Similar Themes",
+      "validPageTypes": [
+        "*"
+      ],
+      "displayTemplate": "catalog/similar-themes",
+      "editViewFields": [
+        {
+          "fieldLabel": "Similar Themes",
+          "name": "similarthemes",
+          "xtype": "boxselect",
+          "width": 500,
+          "displayField": "name",
+          "valueField": "id",
+          "queryMode": "local",
+          "store": {
+            "type": "Taco.store.Categories"
+          }
+        }
       ]
     },
     {
@@ -1608,253 +1838,35 @@
     },
     {
       "defaultConfig": {
-        "attributeId": "tenant~product-related",
-        "count": "4",
-        "template": "modules/product/product-list-carousel",
-        "title": "Other Items"
+        "heightResizable": false
       },
-      "displayName": "Related Products",
-      "displayTemplate": "catalog/related-products",
+      "displayName": "Video",
+      "displayTemplate": "cms/video",
       "editViewFields": [
         {
           "anchor": "100%",
-          "fieldLabel": "Title",
-          "name": "title",
-          "xtype": "mz-input-text"
-        },
-        {
-          "anchor": "100%",
-          "fieldLabel": "Template",
-          "name": "template",
-          "store": [
-            [
-              "modules/product/product-list-carousel",
-              "carousel"
-            ],
-            [
-              "modules/product/product-list-tiled",
-              "tiled"
-            ],
-            [
-              "modules/product/product-list",
-              "list"
-            ]
-          ],
-          "xtype": "mz-input-dropdown"
-        },
-        {
-          "anchor": "100%",
-          "fieldLabel": "Number to display",
-          "name": "count",
-          "xtype": "mz-input-number"
-        }
-      ],
-      "icon": "/resources/admin/widgets/26_related_products.png",
-      "id": "relatedproducts",
-      "validPageTypes": [
-        "product",
-        "cart"
-      ]
-    },
-    {
-      "defaultConfig": {
-        "title": "Related Items"
-      },
-      "displayName": "Instock Request",
-      "displayTemplate": "misc/instock-request",
-      "editViewFields": [
-        {
-          "anchor": "100%",
-          "fieldLabel": "Title",
+          "fieldLabel": "Video URL",
+          "name": "url",
           "xtype": "mz-input-text"
         }
       ],
-      "icon": "/resources/admin/widgets/25_instock_requests.png",
-      "id": "instockrequest",
-      "validPageTypes": [
-        "product"
-      ]
-    },
-    {
-      "defaultConfig": {
-        "body": "<h2>Insert Title</h2><p>Insert Content</p>"
-      },
-      "displayName": "Content",
-      "displayTemplate": "cms/content",
-      "icon": "/resources/admin/widgets/03_heading_p.png",
-      "id": "content",
+      "icon": "/resources/admin/widgets/08_video.png",
+      "id": "video",
       "validPageTypes": [
         "*"
       ]
     },
     {
       "defaultConfig": {
-        "height": 400,
-        "heightResizable": true,
-        "imageHeight": 400,
-        "imageSource": "file",
-        "linkSource": "externalUrl"
+        "title": "Video Promo"
       },
-      "displayName": "Image",
-      "displayTemplate": "cms/image",
-      "customEditor": "image",
-      "icon": "/resources/admin/widgets/00_photo.png",
-      "id": "cms-image",
+      "displayName": "Video Promo",
+      "displayTemplate": "misc/vid_promo",
+      "customEditor": "vid_promo_edit",
+      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
+      "id": "vid_promo",
       "validPageTypes": [
         "*"
-      ]
-    },
-    {
-      "defaultConfig": {
-        "hrBorderColor": "#000",
-        "hrBorderStyle": "solid",
-        "hrBorderWidth": "1px",
-        "hrMarginBottom": "0px",
-        "hrMarginTop": "0px"
-      },
-      "displayName": "Horizontal Rule",
-      "displayTemplate": "cms/horizontalrule",
-      "customEditor": "horizontalrule",
-      "icon": "/resources/admin/widgets/05_horizontal_divider.png",
-      "id": "horizontal_rule",
-      "validPageTypes": [
-        "*"
-      ]
-    },
-    {
-      "defaultConfig": {
-        "body": "<h2>Insert Markup</h2>"
-      },
-      "displayName": "HTML",
-      "displayTemplate": "cms/content",
-      "editViewFields": [
-        {
-          "fieldLabel": "Enter HTML - Use {{CDN}} for CDN location. ex. src=\"{{CDN}}/d0d40678-e391-4eca-9b44-793890e976c1?max=475\" <br>Set value of {{CDN}} in theme settings",
-          "fieldStyle": "resize:both;font-family:Monaco, Menlo, Consolas, 'Droid Sans Mono', Inconsolata, 'Courier New', monospace;height:100%",
-          "height": 400,
-          "name": "body",
-          "width": "100%",
-          "mode": "html",
-          "xtype": "mz-input-code"
-        }
-      ],
-      "icon": "/resources/admin/widgets/07_code.png",
-      "id": "html",
-      "validPageTypes": [
-        "*"
-      ]
-    },
-    {
-      "category": "social",
-      "defaultConfig": {
-        "style": "1"
-      },
-      "displayName": "Add This",
-      "displayTemplate": "social/addthis",
-      "editViewFields": [
-        {
-          "xtype": "mz-input-dropdown",
-          "name": "style",
-          "fieldLabel": "AddThis Button Style",
-          "store": [
-            [
-              "1",
-              "small"
-            ],
-            [
-              "2",
-              "medium"
-            ],
-            [
-              "3",
-              "large"
-            ],
-            [
-              "4",
-              "compact"
-            ]
-          ]
-        },
-        {
-          "html": "Register with <a target=\"_blank\" href=\"https://www.addthis.com\">AddThis</a> for a free in-depth analytics reports and better understand your site's social traffic.",
-          "xtype": "box"
-        },
-        {
-          "allowBlank": true,
-          "fieldLabel": "AddThis<br/> profile ID",
-          "name": "profileId",
-          "xtype": "mz-input-text"
-        }
-      ],
-      "icon": "/resources/admin/widgets/13_social.png",
-      "id": "addthis",
-      "validPageTypes": [
-        "*"
-      ]
-    },
-    {
-      "category": "catalog",
-      "displayName": "Deal of the Day",
-      "displayTemplate": "catalog/deal-of-the-day",
-      "editView": "taco-dealoftheday-widgeteditor",
-      "icon": "/resources/admin/widgets/28_deal_of_the_day.png",
-      "id": "deal-of-the-day",
-      "validPageTypes": [
-        "*"
-      ]
-    },
-    {
-      "category": "catalog",
-      "id": "pr_product_review",
-      "displayName": "PowerReviews Product Reviews",
-      "displayTemplate": "PowerReviews/pr-product-reviews",
-      "editViewFields": [
-        {
-          "name": "widgetType",
-          "fieldLabel": "Widget Type",
-          "xtype": "combo",
-          "store": [
-            [
-              "reviewSnippet",
-              "Review Snippet"
-            ],
-            [
-              "socialAnswerSnippet",
-              "Q&A Snippet"
-            ],
-            [
-              "reviewDisplay",
-              "Review Display"
-            ],
-            [
-              "socialAnswerDisplay",
-              "Q&A Display"
-            ]
-          ]
-        },
-        {
-          "name": "isTab",
-          "fieldLabel": "Is Tab Enabled?",
-          "xtype": "checkbox"
-        },
-        {
-          "name": "tabCode",
-          "fieldLabel": "Tab Code"
-        }
-      ],
-      "icon": "/resources/admin/widgets/power_review_icon.png",
-      "validPageTypes": [
-        "product"
-      ]
-    },
-    {
-      "category": "catalog",
-      "id": "pr_roibeacon",
-      "displayName": "PowerReviews ROI Beacon",
-      "displayTemplate": "PowerReviews/pr-roi-beacon",
-      "icon": "/resources/admin/widgets/icon-powerreview-beacone.png",
-      "validPageTypes": [
-        "order"
       ]
     }
   ]
