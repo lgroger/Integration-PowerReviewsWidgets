@@ -418,7 +418,7 @@
           brtrk.async = true;
           brtrk.src = 'https:' == document.location.protocol ? "https://cdns.brsrvr.com/v1/br-trk-{{ themeSettings.brtrkAccNum }}.js" : "http://cdn.brcdn.com/v1/br-trk-{{ themeSettings.brtrkAccNum }}.js";
           var s = document.getElementsByTagName('script')[0];
-          
+          s.parentNode.insertBefore(brtrk, s);
           })();
       </script>
 

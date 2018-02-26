@@ -11,7 +11,6 @@ var ShindigzGTM = {
     pagesArray : ['web_page','category', 'search', 'cart', 'checkout', 'confirmation'],
     dataLayer:"",
     pageContext: "",
-    jQuery: "", 
 //    Hypr: require('hyprlive'),
     
     getPreloadJSON: function(context) {
@@ -23,17 +22,14 @@ var ShindigzGTM = {
     registerEvents: function(){
         var self = this;
         self.pageContext = self.getPreloadJSON('pagecontext');
-        self.jQuery = require('jquery');
         self.LoadGTM();
     }, 
     
     LoadGTM: function(){
         var self = this;
-        self.jQuery = require('jquery');
         self.dataLayer = Object.assign(self.generalDataLayers(), self.checkPage());
         dataLayer.push(self.dataLayer);
-        self.jQuery = require('jquery');
-        self.jQuery('body').append(this.buildGTMtag());
+        $('body').append(this.buildGTMtag());
        
     },
     
@@ -242,11 +238,11 @@ var ShindigzGTM = {
     
     buildListingProducts: function() {
         var self = this;
-        var listItems = self.jQuery('.mz-productlist-item');
+        var listItems = $('.mz-productlist-item');
         
         var productArray = [];
         for(var i=0; i<listItems.length; i++) {
-            productArray.push(self.jQuery(listItems[i]).data('mz-product'));
+            productArray.push($(listItems[i]).data('mz-product'));
         }
         return productArray;
     },
