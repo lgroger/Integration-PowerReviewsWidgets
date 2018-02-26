@@ -1617,6 +1617,19 @@
     },
     {
       "defaultConfig": {
+        "title": "promo large layout"
+      },
+      "displayName": "Offer Promo Large Layout",
+      "customEditor": "offer_promo_layout_1_edit",
+      "displayTemplate": "misc/offer_promo_layout_1",
+      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
+      "id": "offer_promo_layout_1",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "defaultConfig": {
         "title": "Ouer Services"
       },
       "displayName": "Our Services",
@@ -1698,19 +1711,6 @@
       "icon": "/resources/admin/widgets/icon-powerreview-beacone.png",
       "validPageTypes": [
         "order"
-      ]
-    },
-    {
-      "defaultConfig": {
-        "title": "promo large layout"
-      },
-      "displayName": "Offer Promo Large Layout",
-      "customEditor": "offer_promo_layout_1_edit",
-      "displayTemplate": "misc/offer_promo_layout_1",
-      "icon": "http://cdn-sb.mozu.com/15849-m1/cms/files/bffc25fd-03a7-4071-9a2d-95fe5e9ee1e4",
-      "id": "offer_promo_layout_1",
-      "validPageTypes": [
-        "*"
       ]
     },
     {

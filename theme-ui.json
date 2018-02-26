@@ -439,13 +439,13 @@
                     "width":"100%"
                 },
                 {
-                    "fieldLabel" : "Occasion Relationship List(Seperate each by semicolon';' Note: Sentence Case)",
+                    "fieldLabel" : "Occasion Relationship List (Separate each by semicolon';' Note: Sentence Case)",
                     "xtype" : "mz-input-textarea",
                     "name" : "occasionRel",
                     "width" : "50%"
                 },
                 {
-                    "fieldLabel" : "Occasion Type List(Seperate each by semicolon';' Note: Sentence Case)",
+                    "fieldLabel" : "Occasion Type List (Separate each by semicolon';' Note: Sentence Case)",
                     "xtype" : "mz-input-textarea",
                     "name" : "occasionType",
                     "width" : "50%"
@@ -533,7 +533,7 @@
                 {
                     "xtype": "mz-input-textarea",
                     "name":"CVVtooltipText",
-                    "fieldLabel":"Checkout page ccv popup",
+                    "fieldLabel":"Checkout page CVV popup",
                     "width":"60%"
                 },
                 {
