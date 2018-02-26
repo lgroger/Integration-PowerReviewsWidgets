@@ -65,7 +65,7 @@
         {% else %}
         <div class="facet-heading">
             {% set_var hideToStart=0 %}
-            {% if facet.label == "Collection" or facet.label == "Holiday" or facet.label == "Sport/College" %}
+            {% if facet.label == "Holiday" or facet.label == "Sport/College" %}
                 {% set_var hideToStart=1 %}
                 {% for fval in facet.values %}
                     {% if fval.isApplied %}
@@ -121,7 +121,7 @@
                         {% else %}
                             {# show different numbers by default for different filters - scripts/modules/filters.js had to be updated to look for .facetsclick[show-count] #}
                             {% set_var showNum=6 %}
-                            {% if facet.label == "event/occasion" %}
+                            {% if facet.label == "event/occasion" or facet.label == "Collection" %}
                                 {% set_var showNum=3 %}
                             {% else %}
                                 {% if facet.label == "Color" %}
