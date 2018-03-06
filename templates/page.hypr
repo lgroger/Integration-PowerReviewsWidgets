@@ -57,6 +57,8 @@
           <meta name="twitter:image" content="{{ model.mainImage.src }}"/>
           {% endif %}
           {% endblock meta-tags %}
+          {% block top-head-script %}{% endblock top-head-script %} {# for the third party scripts that insist on being first on the page #}
+
           {% include "modules/json-required-for-hyprlive" %} 
           <link rel="shortcut icon" type="image/ico" href="{{themeSettings.favicon}}"/>
           <title>{% block title-tag-content %}{{ siteContext.generalSettings.websiteName }} {% endblock title-tag-content %}</title>

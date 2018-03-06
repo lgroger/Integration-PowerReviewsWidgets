@@ -9,6 +9,10 @@
    {% endblock trackingscript %}
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.checkout %} - {% parent %}{% endblock title-tag-content %}
 
+{% block top-head-script %}
+    {% include "modules/common/moov-checkout" %}
+{% endblock top-head-script %} 
+
 {% block head-tag-scripts %}
 {% parent %}
 {% if siteContext.checkoutSettings.visaCheckout.isEnabled and not pageContext.isEditMode %}
