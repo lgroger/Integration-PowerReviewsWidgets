@@ -50,4 +50,24 @@ function ($,DNDToken,McCookie) {
 			McCookie.getMcImages();
 		}
 	});
+
+    $(document).on('click','.toggle_components',function(e){
+        var toggleLinkId = $(this).data('parent-id');
+        var targetId = $(e.target).parent().parent().find('.hide_bundle_products').data('parent-id');
+        if(toggleLinkId == targetId){
+            $('.hide_bundle_products[data-parent-id="'+targetId+'"]').slideToggle();
+            $('.toggle_components').toggleClass('show_box');
+        }
+        if($(this).hasClass('show_box')){
+            $(this).html('Hide Components <i class="fa fa-caret-up"></i>');
+        } else {
+            $(this).html('Show Components <i class="fa fa-caret-down"></i>');
+        }
+       $('.print-link').click(function(){
+        $(".order-confirmation").show();
+        window.print();
+
+       });
+     });
+
 });

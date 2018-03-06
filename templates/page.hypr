@@ -206,6 +206,7 @@
                   {% require_script "modules/my-menu" %}
                   {% require_script "modules/floating-header" %}
                   {% require_script "modules/footer-collapse" %}
+                  {% require_script "modules/certonanewrecommv2" %}
               {% endif %}
               {% require_script "pages/global" %}
               {% require_script "modules/login-links" %}
@@ -229,29 +230,11 @@
               $('.se-pre-con').remove();
               // $("html, body").animate({ scrollTop: 0 });
           }
-           {% if pageContext.pageType == 'checkout' %}
+    {% if pageContext.pageType == 'checkout' %}
               window.showPageLoader();
            {% endif %}
-           $(document).ready(function(){
-                   $('.ech-shi-footer-links ul li ul li:first-child').click(function(){
-                    if($(this).hasClass('footer_open_color') === false){
-                        $(this).addClass('footer_open_color');
-                        $(this).parent().children().not(':first').toggle();
-                        $(this).find('i').toggleClass('fa-caret-down fa-caret-up');
-                    }else{
-                         $(this).removeClass('footer_open_color');
-                         $(this).parent().children().not(':first').hide();
-                         $(this).find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
-                     }
-                      $(this).parent().parent().siblings().find('ul li:first-child').each(function(){
-                      $(this).removeClass('footer_open_color');
-                      $(this).parent().children().not(':first').hide();
-                      $(this).find('i').removeClass('fa-caret-up').addClass('fa-caret-down');
-                      });
-                   });
-              });
         });
-           </script>
+        </script>
 
       <div id="popup1" class="overlay">
           <div class="popups">
@@ -314,11 +297,6 @@
              certona.recommendations = true;
           }
       </script>
-      {% if pagecontext.pageType != "checkout" %}
-          {% with themeSettings.useDebugScripts|default:pageContext.isDebugMode as debugMode %}
-              <script src="{{siteContext.cdnPrefix}}{% if not debugMode %}/compiled{% endif %}/scripts/modules/certonanewrecommv2.js"></script>              
-          {% endwith %}    
-      {% endif %}
       {% endif %}
 
       <!-- Certona Integration End -->
@@ -466,30 +444,6 @@
          </script>
      {% endif %}
 
-  {% if pageContext.pageType == "confirmation" %}
-     <script type="text/javascript">
-    requirejs(['jquery'], function( $ ) {
-    $(document).on('click','.toggle_components',function(e){
-        var toggleLinkId = $(this).data('parent-id');
-        var targetId = $(e.target).parent().parent().find('.hide_bundle_products').data('parent-id');
-        if(toggleLinkId == targetId){
-            $('.hide_bundle_products[data-parent-id="'+targetId+'"]').slideToggle();
-            $('.toggle_components').toggleClass('show_box');
-        }
-        if($(this).hasClass('show_box')){
-            $(this).html('Hide Components <i class="fa fa-caret-up"></i>');
-        } else {
-            $(this).html('Show Components <i class="fa fa-caret-down"></i>');
-        }
-       $('.print-link').click(function(){
-        $(".order-confirmation").show();
-        window.print();
-
-       });
-     });
-  });
-  </script>
-  {% endif %}
   {{themeSettings.allThirdPartyScriptTags|safe}}
 
       {% include "modules/common/google-dynamic-remarketing-tags" %}

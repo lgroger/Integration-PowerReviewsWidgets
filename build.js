@@ -1,3 +1,7 @@
+/* DOCUMENTATION:
+    http://requirejs.org/docs/optimization.html
+    https://github.com/requirejs/r.js/blob/master/build/example.build.js/
+*/
 ({
     paths: {
         jquery: "empty:",
@@ -42,7 +46,7 @@
 				'modules/quickview-productview',
                 'modules/quick-view',
                 'modules/added-to-cart',
-				'pages/global',
+                'pages/global',
 				'modules/floating-header',
                 'pages/dndengine',
                 'widgets/footer-links',
@@ -50,7 +54,8 @@
                 'modules/defaultScript',
                 'vendor/wishlist',
                 'modules/filters',
-				'modules/bloomreach.suggest'
+                'modules/bloomreach.suggest',
+                'pages/gtms'
             ],
             exclude: ['jquery'],
         },
@@ -84,6 +89,10 @@
         },
         {
             name: 'pages/search',
+            exclude: ["modules/common"]
+        },
+        {
+            name: 'pages/confirmation',
             exclude: ["modules/common"]
         }
     ]
