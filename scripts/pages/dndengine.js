@@ -514,7 +514,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             var dummyurl = me.dndEngineUrl+"ajax/nosession/loading.html"; // url of static html page that demonstrates that that loading is in progress
             var dndpopup = $('<div>').addClass('dnd-popup');
             var a = $('<a>').attr('href','#').addClass('personalize-close').html('&times;');
-            var iframe = $('<iframe data-time="'+me.time+'" src="'+dummyurl+'" id="iframe'+me.time+'" name="iframe'+me.time+'" width="750" height="689"></iframe>');
+            var iframe = $('<iframe data-time="'+me.time+'" src="'+dummyurl+'" id="iframe'+me.time+'" name="iframe'+me.time+'" width="750" height="689"></iframe>').css("border","0px");
             dndpopup.append(a);
             dndpopup.append(iframe);
             $("body").append(dndpopup);
