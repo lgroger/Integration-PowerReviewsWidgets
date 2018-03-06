@@ -48,14 +48,29 @@ custom route settings
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale = 1.0, user-scalable=no" />
     <style>
         .mediaclip-designer-wrapper {
-            top: 50px; /* Your header height */
+            top: 0px;
         }
+
+        #dndLoading {
+            position:fixed;
+            top:0;
+            left:0;
+            width:100%;
+            height:100%;
+            background:#000;
+            opacity:0.4;
+            filter:alpha(opacity=40);
+            z-index:1499;
+            background-image:url('//pers.shindigz.com/graphics/oo/dragndropcustomization/loading.gif');
+            background-repeat: no-repeat;
+            background-position: center center;
+    }
     </style>
 </head>
 <body>
     {# Mediaclip Designer placeholder #}
     <div id="designer" class="mediaclip-designer-wrapper">
-        <div style="text-align: center;">Loading...</div>
+        <div id="dndLoading"></div>
     </div>
 
     {# Mediaclip Hub API script (jQuery is required) #}
@@ -64,7 +79,14 @@ custom route settings
     <script type="text/javascript">
 	    function onErrorHandler(error, details) {
             // your custom function to handle errors
-            console.log("An error occurred.", error, details);
+            console.error("An error occurred.", error, details);
+            jQuery.getJSON('//home.shindigz.com/api/personalization/error.cfm?callback=?',
+                {
+                    projectId: "{{routeData.id}}",
+                    error: error,
+                    details: details
+                }
+            );
         }
         window.mediaclip.hub.launch({
             projectId: "{{routeData.id}}",
