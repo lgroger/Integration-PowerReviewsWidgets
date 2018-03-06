@@ -1,25 +1,2 @@
 {% dropzone "why-shop-wdgt" scope="template"%} 
-<!--div class="mz-cms-col-12-12 why-shop-wdgt">
-<div class="shop-fixed">
-<h3>WHY SHOP WITH SHINDIGZ?</h3>	
-</div>
-<div class="shop-wd">
-	<div class="shop-wd-1">
-		<img class="shop-icons" src="../../resources/images/van.svg"/>
-		<h3>FREE SHIPPING</h3>
-	</div>
-	<div class="shop-wd-1">
-	<img class="shop-icons" src="../../resources/images/Dollor.svg"/>
-	<h3>110% PRICE GUARANTEE</h3>	
-	</div>
-	<div class="shop-wd-1">
-		<img class="shop-icons" src="../../resources/images/Free_Party.svg"/>
-		<h3>FREE PARTY PLANNING</h3>
-	</div>
-	<div class="shop-wd-1">
-<img class="shop-icons" src="../../resources/images/satisfaction.svg"/>
-		<h3>SATISFACTION GUARANTEE</h3>
-	</div>
-</div>
-</div>-->
 <div class="clear"></div>

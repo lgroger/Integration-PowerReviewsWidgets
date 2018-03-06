@@ -1,3 +1,4 @@
+{% spaceless %}
 <div class="megamu-wrapper megamenu-wrapper-new" {% data_attributes Model %}>
 	<p class="back-direction-icon"><span class="megamenu_cat"><span class="back-to-main-cat">&#10094; Back</span> | <span class="menu_category_heading"></span></span><span class="megamenu-close-btn">&times;</span></p>
 
@@ -81,4 +82,5 @@
 		{% endif %}
 	</div>
 </div>
+{% endspaceless %}
 {% require_script "modules/megamenuNew" %}

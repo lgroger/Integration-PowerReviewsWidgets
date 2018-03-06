@@ -1,4 +1,5 @@
 <!-- Tabs -->
+{% spaceless %}
 <div class="tabs" id="description">
    <!-- Radio button and lable for #tab-content1 -->
    <input type="radio" name="tabs" id="tab1" checked >
@@ -65,3 +66,4 @@
    </div>
 
 </div>
+{% endspaceless %}
