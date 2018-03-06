@@ -375,6 +375,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);
 						newItem.mcTheme = getPropteryValueByAttributeFQN(product, me.productAttributes.mcTheme, true);
 						newItem.mcProduct = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProduct, true);
+						newItem.mcProductSuffix = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProductSuffix, true);
 						if(newItem.dndCode || newItem.mcTheme){
 							newItem.isBundle = true;
 							newItem.ecometrySku = product.get('mfgPartNumber');
@@ -405,6 +406,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							newItem.dndCode = getPropteryValueByAttributeFQN(product, me.productAttributes.dndCode);		
 							newItem.mcTheme = getPropteryValueByAttributeFQN(product, me.productAttributes.mcTheme);
 							newItem.mcProduct = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProduct, true);
+							newItem.mcProductSuffix = getPropteryValueByAttributeFQN(product, me.productAttributes.mcProductSuffix, true);
 
 							inventoryInfo = findOptionValue(option.get('values'),productCode);
 							if(inventoryInfo && inventoryInfo.manageStock){
@@ -816,7 +818,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					$("body").append(this.form);
 					this.form.submit();
 			}
-			else if(dndItem.mcTheme && me.mcEnabled){
+			else if(dndItem.mcTheme && this.mcEnabled && this.dndArr.length == 1){ // don't use mediaclip if there are multiple items to be personalized
 				/* mediaclip will add to cart by making a server-side api call - we'll need to provide it with the same info that mozu-storefront-sdk product addtocart does
 				    product: {
 						productCode: this.data.productCode,
