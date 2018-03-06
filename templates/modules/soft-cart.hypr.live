@@ -36,12 +36,8 @@
                 </div>
                 <div class="item-custom-attr mz-cms-col-12-12">
                   {% for prop in item.product.options %}
-                    {% if prop.name !='dnd-token' %}
-                      {% if prop.name == 'Color' %}
-                        <div class="soft-cart-item-quantity">{{ prop.name }} : <span class="rounded"><span style="background-color:{{prop.value}};"></span></span></div>
-                      {% else %}  
+                    {% if prop.name !='dnd-token' && prop.attributeFQN != 'tenant~misc.-favor-with-design' %}   {# tenant~misc.-favor-with-design is for inventory purposes mostly, no need to show to customer #}
                         <div class="soft-cart-item-quantity">{{ prop.name }} : {{ prop.stringValue }}</div>
-                      {% endif %}
                     {% endif %}
                   {% endfor %}
                 </div>

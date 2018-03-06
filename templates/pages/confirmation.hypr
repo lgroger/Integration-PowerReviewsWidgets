@@ -280,13 +280,10 @@
                                 <div class="item_small_description">
                                 {% if item.product.options.length > 0 %}
                                   {% for opt in item.product.options %}
-                                    {% if opt.name=="dnd-token" %}
+                                    {% if opt.name=="dnd-token" && opt.attributeFQN =="tenant~misc.-favor-with-design" %}
+                                      {# tenant~misc.-favor-with-design is for inventory purposes mostly, no need to show to customer #}
                                     {% else %}
-                                        {% if opt.name == 'Color' %}
-                                          <p><span class="sd_label">Color:</span><span class="sd_color_box" style="background:{{ opt.value }};"></span></p>
-                                        {% else %}
                                           <p><span class="sd_label">{{ opt.name }}:</span><span class="sd_text">{{ opt.value }}</span></p>
-                                        {% endif %}
                                     {% endif %}
                                   {% endfor %}
                                 {% endif %}

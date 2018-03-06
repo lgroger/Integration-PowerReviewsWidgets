@@ -8,35 +8,29 @@
 
                 <div class="order-blocks2">
                     <a href="/p/{{ model.product.productCode }}"><p class="product-name">{% if model.designName %}{{model.designName}}{% else %}{{model.product.name}}{% endif %}</p></a>
-
-{% if model.product.options and themeSettings.showCartItemOptions %}
+{% if model.product.options.length > 0 and themeSettings.showCartItemOptions %}
                         <dl class="mz-propertylist">
                             {% for option in model.product.options %}
-                                {% if option.name=="dnd-token" %}
+                                {% if option.attributeFQN=="tenant~dnd-token" %}
                                     {% if themeSettings.userListForDndTotenAccess %}
                                     {% with themeSettings.userListForDndTotenAccess|split(',') as userList %}
                                         {% for userId in userList %}
                                             {% if userId == user.accountId %}
-                                                <dt class="sd_label" style="color:#b3282d;">{{ option.name }}</dt>
+                                                <dt class="sd_label" style="color:#b3282d;">dnd-token</dt>
                                                 <dd class="sd_text" style="color: #b3282d;font-size:11px;font-weight:normal;">{{ option.shopperEnteredValue }}</dd>
                                             {% endif %}
                                         {% endfor %}
                                     {% endwith %}
                                     {% endif %}
                                 {% else %}
-                                 {% if option.name %}
+                                 {% if option.name.length > 0 and option.attributeFQN != 'tenant~misc.-favor-with-design' %} {# this extra is for inventory purposes mostly, no need to show to customer #}
                                     <dt class="sd_label">{{ option.name }}</dt>
                                     <dd class="sd_text">
-                                        {% if option.name == 'Color' %}
-                                            <span class="color-val">{{option.stringValue}}
-                                            </span>
-                                        {% else %}
                                             {% if option.stringValue %}
                                                 {{ option.stringValue }}
                                             {% else %}
                                                 {{ option.shopperEnteredValue }}
                                             {% endif %}
-                                        {% endif %}
                                     </dd>
                                     {% endif %}
                                 {% endif %}

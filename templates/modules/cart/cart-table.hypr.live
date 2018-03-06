@@ -100,19 +100,16 @@ item.product.prodTime // if over 0, then we have production time
                                     {% endwith %}
                                     {% endif %}
                                 {% else %}
+                                    {% if option.attributeFQN != 'tenant~misc.-favor-with-design' %} {# this extra is for inventory purposes mostly, no need to show to customer #}
                                     <dt class="sd_label">{{ option.name }}</dt>
                                     <dd class="sd_text">
-                                        {% if option.name == 'Color' %}
-                                            <span class="color-val">{{option.stringValue}}
-                                            </span>
-                                        {% else %}
                                             {% if option.stringValue %}
                                                 {{ option.stringValue }}
                                             {% else %}
                                                 {{ option.shopperEnteredValue }}
                                             {% endif %}
-                                        {% endif %}
                                     </dd>
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </dl>
