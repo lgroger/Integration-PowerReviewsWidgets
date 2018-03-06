@@ -713,6 +713,8 @@
     "instaAcountID": "",
     "instaImageCount": 10,
     "socialShareAddThis": "",
+    "enableMediaclip":false,
+    "mediaclipUserList": "",
     "productAttributes": {
       "displayCrossSell": "tenant~displaycrosssells",
       "productCrossSell": "tenant~product-crosssell",

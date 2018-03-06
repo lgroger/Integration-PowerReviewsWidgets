@@ -57,9 +57,17 @@
                     "width":"60%",
                     "fieldLabel":"DND URL"
                 },{
+                    "xtype":"mz-input-checkbox",
+                    "name":"enableMediaclip",
+                    "fieldLabel":"Enable Mediaclip"
+                },{
+                    "xtype":"mz-input-text",
+                    "name":"mediaclipUserList",
+                    "fieldLabel":"Users allowed Mediaclip Access even if Mediaclip is disabled<br>(Values should be comma separated)"
+                },{
                     "xtype":"mz-input-text",
                     "name":"mcImageLocation",
-                    "width":"60%",
+                    "width":"30%",
                     "fieldLabel":"Mediaclip Image Url"
                 }
 

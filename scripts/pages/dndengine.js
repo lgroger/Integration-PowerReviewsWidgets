@@ -6,15 +6,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		for(var i=0;i<properties.length;i++){
 			if(properties[i].attributeFQN.toLowerCase()===attributeFQN.toLowerCase()){
 				for(var j=0;j<properties[i].values.length; j++){
-					result= properties[i].values[j].stringValue;
 					if(useStringValue){
 						result= properties[i].values[j].stringValue;
-						if(!result && properties[i].values[j].content){
-							result= properties[i].values[j].content.stringValue;
-						}
-						if(!result){
-							result= properties[i].values[j].value;
-						}
 					}
 					else{
 						result= properties[i].values[j].value;
@@ -223,7 +216,21 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		self.isComponent = isComponent; // for use in cart - if lineitem being personalized is a bundledItem
 		
         self.productAttributes = Hypr.getThemeSetting('productAttributes');
-        self.dndEngineUrl= Hypr.getThemeSetting('dndEngineUrl');
+		self.dndEngineUrl= Hypr.getThemeSetting('dndEngineUrl');
+
+		// whether mediaclip is enabled sitewide or for sepecific user
+		self.mcEnabled = Hypr.getThemeSetting('enableMediaclip');
+
+		if(!self.mcEnabled){
+			// see if userID is authorized for mediaclip
+			var user = require.mozuData('pagecontext').user;
+			if(!user.isAnonymous){
+				var mcList = Hypr.getThemeSetting('mediaclipUserList').split(",");
+				if(mcList.indexOf(user.accountId.toString()) > -1){
+					self.mcEnabled = true;
+				}
+			}
+		}
         self.time = new Date().getTime(); // id for iframe
 		
 		self.getDNDExtras = function(callback){
@@ -736,6 +743,12 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						me.form.submit();
 					};
 					McCookie.getToken(mcReEditCallback);
+
+					// make ajax call to endpoint that will make sure this projectId is in mzdb so atc callback knows to update cart rather than adding new lineitem (this is safety net in case the original add to cart event failed to create mzdb record for some reason)
+					$.ajax({
+						url: '/personalize-reedit/'+me.mcToken,
+						data:{"lineitemID": me.lineitemID}
+					});
 					
 					return;  // exit doPers will be called again once we get a userToken
 				}
@@ -803,12 +816,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					$("body").append(this.form);
 					this.form.submit();
 			}
-			else if(dndItem.mcTheme){
-				// launch media clip window
-				//console.log(dndItem.mcTheme);
-				
-			//	console.log(me.model.getConfiguredOptions());
-				
+			else if(dndItem.mcTheme && me.mcEnabled){
 				/* mediaclip will add to cart by making a server-side api call - we'll need to provide it with the same info that mozu-storefront-sdk product addtocart does
 				    product: {
 						productCode: this.data.productCode,
@@ -819,7 +827,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					fulfillmentLocationCode: payload.fulfillmentLocationCode,
 					fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
 				*/
-				//console.log(dndItem);
+				// launch media clip window
 				$.ajax({
 					url: "/get-personalization",
 					method:"POST",
