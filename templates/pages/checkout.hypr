@@ -23,6 +23,7 @@
 
 {% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %}
 
+{% block page-header %}{% include "modules/page-header-checkout" %}{% endblock page-header %}
 {% block site-nav %}{% endblock site-nav %}
 
 {% block body-content %}

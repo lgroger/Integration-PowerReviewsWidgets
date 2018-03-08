@@ -526,9 +526,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             // Resize the iframes when the window is resized
             $( window ).resize( function () {
                 // Find all iframes
-                var $iframes = $( ".dnd-popup iframe");// LG change - moved from before window.resize
-                if($iframes.length)// LG change - added if statement
-                     $('html').addClass('dnd-active-noscroll'); // LG change - changed from removeClass to addClass
+            	var $iframes = $( ".dnd-popup iframe");// LG change - moved from before window.resize
 
               $iframes.each( function() {
                 var screenWidth = window.innerWidth,
@@ -554,9 +552,11 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
             // Resize to fix all iframes on page load.
             }).resize();
 			
-			$('#cboxOverlay').show();
-            $(dndpopup).show();
-            $('body').css({overflow: 'hidden'});
+			window.showPageLoader();
+
+			//$('#cboxOverlay').show();
+           // $(dndpopup).show();
+            //$('body').css({overflow: 'hidden'});
 			
 			// attach actions to closing of iframe
             $(a).click(function(){
@@ -709,12 +709,21 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		self.closeDND = function(){
 			$('.dnd-popup').remove();
 			$('#cboxOverlay').hide();
+			window.removePageLoader();
+			
 			$('body').css({overflow: 'auto'});
 			$('html').removeClass('dnd-active-noscroll');
 			if(this.form){
 				$(this.form).remove();
 			}
 			this.unsend();	
+		};
+		self.showOverlay = function(){
+			$('html').addClass('dnd-active-noscroll');
+			$('body').css({overflow: 'hidden'});
+			$('#cboxOverlay').show();
+			$('.dnd-popup').show();
+			window.removePageLoader();
 		};
 		self.doPers = function(){
 			//console.log("doPers");
@@ -755,13 +764,15 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					return;  // exit doPers will be called again once we get a userToken
 				}
 				else{
+					me.showOverlay();
+
 					// re-edit with dnd
 					url = this.dndEngineUrl+this.dndToken+"/edit";
 					//console.log(url);
 					//console.log(dndItem);
 
 					// create new form
-					form = $('<form action="'+url+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
+					form = $('<form action="'+url+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>'); // notice it's not posting to iframe
 					addParameter(form,"productID",dndItem.productID);
 					addParameter(form,"itemDescription",dndItem.itemDescription);
 					addParameter(form,"ecometrySku",dndItem.ecometrySku);
@@ -789,7 +800,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				}
 			}
 			else if(this.wishlistID){
-				
+				me.showOverlay();
 				url = this.dndEngineUrl+this.dndToken+"/wishlist?wishlistID="+this.wishlistID;
 				// create new form
 					form = $('<form action="'+url+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
@@ -850,7 +861,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					//	console.log(url);
 						
 						// create new form that posts to mediaclip url (must be get, no post)
-						var form = $('<form action="'+url+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
+						var form = $('<form action="'+url+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice there is no target of iframe like in dnd - will post to new page
 						
 						McCookie.setCookie(data.token,data.expirationUtc);
 						
@@ -869,6 +880,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				});
 			}
 			else{
+				me.showOverlay();
 				// create new form
 				form = $('<form action="'+this.dndEngineUrl+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
 				addParameter(form,"productID",dndItem.productID);

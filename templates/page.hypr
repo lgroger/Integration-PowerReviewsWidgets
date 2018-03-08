@@ -204,7 +204,7 @@
 
           </div>
           {% block trailing-scripts %}
-              {% if pageContext.pageType != 'checkout' %}
+              {% if pageContext.pageType != 'checkout' and  pageContext.pageType != 'mediaclip' %}
                   {% require_script "modules/my-menu" %}
                   {% require_script "modules/floating-header" %}
                   {% require_script "modules/footer-collapse" %}

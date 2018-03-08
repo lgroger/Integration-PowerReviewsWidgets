@@ -1,4 +1,5 @@
-﻿{% comment %}
+﻿{% extends "page" %}
+{% comment %}
 {% dump model %}
 {% dump routeData %}
 {% dump pageContext %} 
@@ -25,30 +26,26 @@ custom route settings
 **** must create a new page using "mediaclip" template and name it "personalize"****
 
 {% endcomment %}
-{% set_var usertoken="" %}
-{% with pageContext.url|split("?") as qstring %}
-	{% with qstring.1|split("&") as params %}
-		{% for param in params %}
-			{% with param|split("=") as splitparams %}
-				{% if splitparams.0|lower == "token" %}
-					{% set_var usertoken=splitparams.1 %}
-				{% endif %}
-			{% endwith %}
-		{% endfor %}
-	{% endwith %}
-{% endwith %}
 
-<!DOCTYPE html>
-<html>
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="msapplication-tap-highlight" content="no" />
-    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-    <meta content="utf-8" http-equiv="encoding">
+{% block meta-tags %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale = 1.0, user-scalable=no" />
-    <style>
+{% endblock meta-tags %}
+
+{% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %} {# so styles of limited header matches checkout since css requires .mz-checkout #}
+{% block site-nav %}{% endblock site-nav %}
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+{% block page-footer %}{% endblock page-footer %}
+{% block page-header %}{% include "modules/page-header-checkout" %}{% endblock page-header %}
+
+{% block trackingscript %}
+    <style type="text/css">
         .mediaclip-designer-wrapper {
             top: 0px;
+        }
+        @media screen and (min-width: 961px) {
+            .mediaclip-designer-wrapper {
+                top: 95px;
+            }
         }
 
         #dndLoading {
@@ -66,16 +63,24 @@ custom route settings
             background-position: center center;
     }
     </style>
-</head>
-<body>
-    {# Mediaclip Designer placeholder #}
-    <div id="designer" class="mediaclip-designer-wrapper">
-        <div id="dndLoading"></div>
-    </div>
 
     {# Mediaclip Hub API script (jQuery is required) #}
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://api.mediacliphub.com/scripts/hub.min.js" crossorigin="anonymous"></script>
+{% endblock trackingscript %} 
+
+{% block body-content %}
+
+    {# Mediaclip Designer placeholder #}
+    <div id="designer" class="mediaclip-designer-wrapper">
+            <div id="dndLoading"></div>
+    </div>
+
+{% with pageContext.url|split("?") as qstring %}
+	{% with qstring.1|split("&") as params %}
+        {% for param in params %}
+            {% with param|split("=") as splitparams %}
+				{% if splitparams.0|lower == "token" %}
     <script type="text/javascript">
 	    function onErrorHandler(error, details) {
             // your custom function to handle errors
@@ -90,7 +95,7 @@ custom route settings
         }
         window.mediaclip.hub.launch({
             projectId: "{{routeData.id}}",
-            storeUserToken: "{{usertoken}}",
+            storeUserToken: "{{splitparams.1}}",
             container: document.getElementById('designer'),
             keepAliveUrl: '/renew-personalization',
             onError: onErrorHandler
@@ -98,5 +103,13 @@ custom route settings
 
         
     </script>
-</body>
-</html>
+
+    {% else %}
+
+    {% endif %}
+    {% endwith %}
+{% endfor %}
+{% endwith %}
+{% endwith %}
+
+{% endblock body-content %}

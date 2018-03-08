@@ -1,6 +1,4 @@
-﻿<meta name="viewport" content="width=device-width, maximum-scale=1, user-scalable=no" />
-
-{% if pageContext.pageType != "checkout" %} 
+﻿
 
 	<div class="header-block-container">
 		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} ">
@@ -396,49 +394,3 @@
 		</div>
 	</div>
 	<div style="clear:both;"></div>
-
-{%else%}
-
-	<div class="header-block-container">
-		<header class="header-block floatheader mz-pageheader{% if themeSettings.bannerImageEnabled %} mz-pageheader-hasbanner {% endif %} " style="">
-
-			<div style="display:block;">
-				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
-				<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
-					<div class="mob-header-logo">
-							{% include "modules/page-header/logo" %}
-					</div>
-				</div> 
-				<div class="mz-cms-col-9-12 checkout-header-links ech-shi-tollfree">
-					<nav class="mz-utilitynav">
-					    <ul class="mz-utilitynav-list">
-							<li class="mz-utilitynav-item">
-								{% dropzone "customer-care" scope="site" %}
-							</li>
-							<li class="mz-utilitynav-item promoslot-customer">
-								{% dropzone "customer-support" scope="site" %}
-							</li>
-							<li class="mz-utilitynav-item sb-desktop-only" >			
-								{% dropzone "faq" scope="site" %}
-							</li> 
-							<li class="mz-utilitynav-item user_log">
-			        			{% if not user.isAnonymous %}
-			        				<a href="/logout" data-mz-action="logout" class="mz-utilitynav-link">Logout</a>
-			        			{%else%}
-			        				<a href="/user/signup" data-mz-action="signup" class="mz-utilitynav-link">Signup</a>
-			        			{% endif %}
-							</li>      
-					    </ul>
-					</nav>
-				</div>
-				<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
-			</div>		
-		</header>
-		{% comment %}		
-		<div class="custom_margin"></div>
-		{% endcomment %}
-	</div>  
-
-{% endif %}
-
-
