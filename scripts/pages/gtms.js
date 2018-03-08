@@ -227,12 +227,12 @@ var ShindigzGTM = {
     buildBasketProducts: function() {
         var self = this;
         var cartItems = self.getPreloadJSON('cart').items;
-        console.log('Cart items.', cartItems);
+        //console.log('Cart items.', cartItems);
         var product_list = [];
         for( var j=0; j<cartItems.length; j++ ) {
             product_list.push({ id: cartItems[j].product.variationProductCode || cartItems[j].product.productCode, price: cartItems[j].product.price.price, quantity: cartItems[j].quantity  });
         }
-        console.log(product_list);
+        //console.log(product_list);
         return product_list;
     },
     

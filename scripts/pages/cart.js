@@ -360,7 +360,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             // "keypress .code_input_box" : "enableZipCode",
            // "click .code_input_btn" : "estimateShippingCost",
             "click a.move-to-wishlist-link" : "moveToWishList",
-            'click .toggle_components':"toggleComponets",
+            'click .toggle_components':"toggleComponents",
             "click .editPersonalizeBundleItem": "editPersonalizeBundleItem",
             "click #triggerAmazon":"triggerAmazonPay"
         },triggerAmazonPay:function(){
@@ -411,7 +411,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 				}
             }
         },
-        toggleComponets: function(e){
+        toggleComponents: function(e){
             var target = $(e.currentTarget);
             var toggleLinkId = $(target).data('parent-id');
             var targetId = $(e.target).parent().parent().next('.mz-carttable-item-shipping-info').find('.hide_bundle_products').data('parent-id');

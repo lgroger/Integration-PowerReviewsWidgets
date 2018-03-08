@@ -1,12 +1,12 @@
 {% comment %}
 cart.js sets these values
-item.product.imageUrl // exists by default but is overridden if personalization image exists
-item.product.token // dnd token string or mc token string
-item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
-item.product.bundledProducts[x].imageUrl
-item.product.bundledProducts[x].token // dnd token string or mc token string for component
-item.product.bundledProducts[x].persType // will be "mc" or "dnd" for dragndrop
-item.product.prodTime // if over 0, then we have production time
+    item.product.imageUrl // exists by default but is overridden if personalization image exists
+    item.product.token // dnd token string or mc token string
+    item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
+    item.product.bundledProducts[x].imageUrl
+    item.product.bundledProducts[x].token // dnd token string or mc token string for component
+    item.product.bundledProducts[x].persType // will be "mc" or "dnd" for dragndrop
+    item.product.prodTime // if over 0, then we have production time
 {% endcomment %}
 <div class="mz-cms-col-4-12 cart-items-summary shopcart_top">
     <div class="cart-estimate-total">
@@ -89,6 +89,7 @@ item.product.prodTime // if over 0, then we have production time
                         <dl class="mz-propertylist">
                             {% for option in item.product.options %}
                                 {% if option.name=="dnd-token" %}
+                                {# show DND token value for anyone in the user list (for CSR use) #}
                                     {% if themeSettings.userListForDndTotenAccess %}
                                     {% with themeSettings.userListForDndTotenAccess|split(',') as userList %}
                                         {% for userId in userList %}
@@ -161,7 +162,7 @@ item.product.prodTime // if over 0, then we have production time
             <td class="mz-carttable-item-remove">
                 <a id="{{item.id}}" href="javascript:void(0);" class="move-to-wishlist-link cart_wishlist"> Move to Wishlist</a>
               	<a href="javascript:;" data-mz-cart-item="{{ item.id }}" class="mz-icon mz-icon-close">&times;</a>
-               <!-- data-mz-action="removeItem" -->
+               {# <!-- data-mz-action="removeItem" --> #}
             </td>
         </tr>
         <tr class="mz-carttable-item-shipping-info">
@@ -171,7 +172,7 @@ item.product.prodTime // if over 0, then we have production time
                         <div class="bundle_lists">
                             {% for bundledProduct in item.product.bundledProducts %}
                                 <div class="mz-cms-col-4-12 {{ item.id }}-{{ bundledProduct.productCode }} bundle_box">
-                                    {% if bundledProduct.imageUrl %}<img src="{{bundledProduct.imageUrl}}" alt="{{bundledProduct.name}}" {% if bundledProduct.token %}data-mz-token-type="{{bundledProduct.persType}}" data-mz-token="{{bundledProduct.token}}"{% endif%}/>{% endif %}
+                                    {% if bundledProduct.imageUrl or bundledProduct.token %}<img src="{{bundledProduct.imageUrl}}" alt="{{bundledProduct.name}}" {% if bundledProduct.token %}data-mz-token-type="{{bundledProduct.persType}}" data-mz-token="{{bundledProduct.token}}"{% endif%}/>{% endif %}
                                     <div class="bb_labels">
                                         <h3 class="bundle_heading">{{ bundledProduct.name }}</h3>
                                         <h3 class="bundle_quantity"><span>X</span>{{ bundledProduct.quantity }}</h3>
@@ -203,7 +204,6 @@ item.product.prodTime // if over 0, then we have production time
                 </div>
                 {% if item.productDiscounts.length > 0 %}
                     <div class="item-offer-stripe">
-                <!-- Spend another US $19.80 in this theme and get US $5.00 OFF.  : {{ disc.impact | currency }} -->
                             {% for disc in item.productDiscounts %}
                                 Discount applicable : {{ disc.discount.name }}
                             {% endfor %}
@@ -253,10 +253,7 @@ item.product.prodTime // if over 0, then we have production time
                                         {% else %}
                                             <dt class="sd_label">{{ option.name }}</dt>
                                             <dd class="sd_text">
-                                                {% if option.name == 'Color' %}
-                                                    <span class="color-val">{{option.stringValue}}</span>
-                                                    </span>
-                                                {% else %}
+                                                {% if option.attributeFQN != 'tenant~misc.-favor-with-design' %} {# this extra is for inventory purposes mostly, no need to show to customer #}
                                                     {% if option.value %}
                                                         {{ option.value }}
                                                     {% else %}
