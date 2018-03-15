@@ -7,7 +7,7 @@
              <span><i class="fa fa-minus" aria-hidden="true"></i></span></button>
         {% endif %}
 
-	        <div class="panel" data-mz-ordernumber="{{order.ordernumber}}">
+	        <div class="panel">
 	        	{% include "modules/my-account/order-history-order-listing" with model=order %}
 	        </div>
         {% endfor %}

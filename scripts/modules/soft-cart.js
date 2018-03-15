@@ -106,7 +106,6 @@ function($, Backbone, CartModels,Hypr,DNDToken,McCookie) {
         }
     },
     initialize: function(){
-        this.getPersonalizationInfo();
         this.listenTo(this.model, 'sync', this.getPersonalizationInfo, this);
     }
   });

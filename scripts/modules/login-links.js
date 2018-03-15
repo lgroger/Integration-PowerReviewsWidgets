@@ -2,7 +2,7 @@
  * Adds a login popover to all login links on a page.
  */
 define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'modules/marketo-subscribe',"modules/mc-cookie", 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _, Marketo, McCookie) {
-console.log('login-links');
+//console.log('login-links');
     var usePopovers = function() {
         // return !Modernizr.mq('(max-width: 480px)');
          return !Modernizr.mq('(max-width: 315px)');  
@@ -282,7 +282,7 @@ console.log('login-links');
             }
         },  
         handleLoginComplete: function (e) {
-            console.log("handleLoginComplete");
+            //console.log("handleLoginComplete");
             var me = this;
             var mcCallback = function(){
                 var wishlistproduct = $.cookie('wishlistproduct');
@@ -546,7 +546,7 @@ console.log('login-links');
     });//document.ready
 
     var triggerLogin = function(){
-        console.log("triggerLogin");
+        //console.log("triggerLogin");
         $('[data-mz-action="login"]').trigger('click');
        // $('#cboxOverlay').show();
         $('#mz-quick-view-container').fadeOut(350);
