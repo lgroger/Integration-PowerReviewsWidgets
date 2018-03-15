@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','modules/colorswatch','vendor/wishlist',"modules/quickview-productview","hyprlive", "modules/shared-product-info"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,QuickViewProductView,Hypr,SharedProductInfo) {
+define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu", 'modules/models-product', "modules/soft-cart", "modules/cart-monitor", 'modules/added-to-cart','modules/colorswatch','vendor/wishlist',"modules/quickview-productview","hyprlive", "modules/shared-product-info","modules/login-links"], function($,_,api,Backbone,ProductModels, SoftCart, CartMonitor, addedToCart,ColorSwatch,Wishlist,QuickViewProductView,Hypr,SharedProductInfo,LoginLinks) {
 	
 	//	NOTE: modules/quick-view.js handles the action when clicking on "Options" for products that don't have "add to cart" or "personalize" buttons
 	
@@ -160,7 +160,7 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                 var productCode = $(e.currentTarget).data('product_id');
 				initProductForWishlist(productCode);
             } else {
-                triggerLogin();
+                LoginLinks.triggerLogin();
             }
         });
         var ulWidth=0;
@@ -324,13 +324,6 @@ define(['modules/jquery-mozu','underscore', 'modules/api',"modules/backbone-mozu
                 
         });
         });
-      
-         var triggerLogin = function() {
-            $('.trigger-login').trigger('click');
-            $('#cboxOverlay').show();
-            $('#mz-quick-view-container').fadeOut(350);
-            $('#mz-quick-view-container').empty();
-        };
         
         function initialize_owl(el) {
             window.owlFixed=el.owlCarousel({

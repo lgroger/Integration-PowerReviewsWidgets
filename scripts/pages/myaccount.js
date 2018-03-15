@@ -1,7 +1,7 @@
 define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', 'modules/jquery-mozu', 'underscore', 'modules/models-customer', 'modules/views-paging', 'modules/editable-view',
-    'vendor/wishlist', 'modules/models-product', 'modules/added-to-cart', 'pages/dndengine',"modules/soft-cart","modules/cart-monitor","modules/models-orders", "modules/productview","modules/shared-product-info","modules/quickview-productview"],
+    'vendor/wishlist', 'modules/models-product', 'modules/added-to-cart', 'pages/dndengine',"modules/soft-cart","modules/cart-monitor","modules/models-orders", "modules/productview","modules/shared-product-info","modules/quickview-productview","modules/login-links", "modules/mc-cookie"],
     function(Backbone, Api, Hypr, HyprLiveContext, $, _, CustomerModels, PagingViews,
-        EditableView, Wishlist, ProductModels, addedToCart, DNDEngine, SoftCart, CartMonitor, OrderModel, ProductView,SharedProductInfo,QuickViewProductView){
+        EditableView, Wishlist, ProductModels, addedToCart, DNDEngine, SoftCart, CartMonitor, OrderModel, ProductView,SharedProductInfo,QuickViewProductView,LoginLinks,McCookie){
     
     Hypr.engine.setFilter("contains",function(obj,k){ 
             return obj.indexOf(k) > -1;
@@ -11,12 +11,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
     var bannerProductsArr = bannerProductTypes.split(',');
 
     var productAttributes = Hypr.getThemeSetting('productAttributes');
-    function triggerLogin(){
-        $('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-        $('#mz-quick-view-container').fadeOut(350);
-        $('#mz-quick-view-container').empty();
-    }
 
     var loopcounter=0, loopcount=0;
         window.personalizeBundleProducts=[];
@@ -196,18 +190,18 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 						produtDetailToStoreInCookie.productCode=this.model.get('productCode');
 						 var objj=me.model.getConfiguredOptions();
 						produtDetailToStoreInCookie.options=objj;
-						$.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
+						$.cookie('wishlistproduct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
 						var ifrm = $("#homepageapicontext");
 						if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
 							Wishlist.initoWishlistPersonalize(this.model,callback);
 						}else{
-							triggerLogin();
+							LoginLinks.triggerLogin();
 							$('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
 						}
 					}
 				},
-				AddToWishlistAfterPersonalize: function(data){ // this version differs from version in ProductView
-					//console.log("WishListProductView AddToWishlistAfterPersonalize");
+				addToWishlistAfterPersonalize: function(data){ // this version differs from version in ProductView
+					//console.log("WishListProductView addToWishlistAfterPersonalize");
 					var self= this;
 					var option = this.model.get('options').get(productAttributes.dndToken);
 					 var oldValue = option.get('value');
@@ -1199,7 +1193,10 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.myAccountChangePageSize, this.model));
             //this.listenTo(this.model, "change:pageSize", _.bind(this.model.myAccountChangePageSize, this.model));
             this.model.set('pageSize',10);
-
+            if(this.model.get('items').length>0){
+                this.getPersonalizationInfo();
+            }
+            this.listenTo(this.model, 'sync', this.getPersonalizationInfo, this);
         },
         getRenderContext: function () {
             var context = Backbone.MozuView.prototype.getRenderContext.apply(this, arguments);
@@ -1268,6 +1265,39 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         render: function(){
             this.updateShippingDateForLineItems();
             Backbone.MozuView.prototype.render.apply(this);
+        },
+        getPersonalizationInfo: function(){
+			//console.log("order history getPersonalizationInfo");
+            var orders = this.model.get('items');
+            var info;
+            for(var oi=0; oi < orders.models.length; oi++){
+                var items = orders.models[oi].get('items');
+                for(var i=0; i < items.length; i++){
+                    var product = items.models[i].get('product');
+                    var options = product.get('options');
+                    var dndStr = null;
+                    for(var o=0;o< options.models.length;o++){
+                        if(options.models[o].get('attributeFQN') === productAttributes.dndToken){
+                            if(options.models[o].get('shopperEnteredValue') !== ""){
+                                dndStr = options.models[o].get('shopperEnteredValue');
+                            }
+                            break;
+                        }
+                    }
+                    if(dndStr){
+                        var dndtoken = JSON.parse(dndStr);
+                        if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
+                            // look for parent token info
+                            info = DNDEngine.getTokenData(dndtoken,null,true); // notice that useLocal (3rd parameter) is true
+                            if(info){
+                                items.models[i].get('product').set('imageUrl',info.src);
+                            }
+                            items.models[i].get('product').set('token',info.token);
+                            items.models[i].get('product').set('persType',info.type);
+                        }
+                    }
+                }
+            }
         }
     }),
     QuoteOrderHistoryView = Backbone.MozuView.extend({
@@ -1309,6 +1339,10 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             //this.listenTo(this.model, "change:pageSize", _.bind(this.model.changePageSize, this.model));
             this.listenTo(this.model, "change:pageSize", _.bind(this.model.myAccountQuoteChangePageSize, this.model));
 
+            if(this.model.get('items').length>0){
+                this.getPersonalizationInfo();
+            }
+            this.listenTo(this.model, 'sync', this.getPersonalizationInfo, this);
         },
         reloadThisQuote: function(e){
             window.showPageLoader();
@@ -1412,6 +1446,51 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         render: function(){
             this.updateShippingDateForLineItems();
             Backbone.MozuView.prototype.render.apply(this);
+            McCookie.getMcImagesFromCache();
+        },
+        getPersonalizationInfo: function(){
+			//console.log("quote getPersonalizationInfo");
+            var orders = this.model.get('items');
+            var info;
+            var projectList = [];
+            for(var oi=0; oi < orders.models.length; oi++){
+                var items = orders.models[oi].get('items');
+                for(var i=0; i < items.length; i++){
+                    var product = items.models[i].get('product');
+                    var options = product.get('options');
+                    var dndStr = null;
+                    for(var o=0;o< options.models.length;o++){ 
+                        if(options.models[o].get('attributeFQN') === productAttributes.dndToken){
+                            if(options.models[o].get('shopperEnteredValue') !== ""){
+                                dndStr = options.models[o].get('shopperEnteredValue');
+                            }
+                            break;
+                        }
+                    }
+                    if(dndStr){
+                        var dndtoken = JSON.parse(dndStr);
+                    if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
+                            // look for parent token info
+                            info = DNDEngine.getTokenData(dndtoken);
+                            if(info){
+                                if(info.type === "mc"){
+                                    if(projectList.indexOf(info.token) === -1){
+                                        projectList.push(info.token);
+                                    }
+                                }
+                                else{
+                                    items.models[i].get('product').set('imageUrl',info.src);
+                                }
+                            }
+                            items.models[i].get('product').set('token',info.token);
+                            items.models[i].get('product').set('persType',info.type);
+                        }
+                    }
+                }
+            }
+            if(projectList.length){
+                McCookie.getMcImages(projectList);
+            }
         }
     }),
     ReturnHistoryView = Backbone.MozuView.extend({
@@ -1947,7 +2026,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 
 
       $(document).on("click",".occassionbtn",function(){
-         //   console.log("hi");
             $( ".relation" ).show();
             $( "#other-relation" ).prop( "checked", true );
             $('.personal_others').show();

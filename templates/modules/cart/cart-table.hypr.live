@@ -67,6 +67,7 @@ cart.js sets these values
         <tr class="mz-carttable-item">
             <!-- product image -->
             <td class="mz-carttable-item-product">
+                <a name="{{item.id}}"></a>
                 {% if item.product.imageUrl and themeSettings.showCartItemImage %}
                 <div class="cp_image">
                     <a href="{{item.product.url}}">
@@ -251,16 +252,16 @@ cart.js sets these values
                                     {% for option in item.product.options %}
                                         {% if option.name=="dnd-token" %}
                                         {% else %}
-                                            <dt class="sd_label">{{ option.name }}</dt>
-                                            <dd class="sd_text">
-                                                {% if option.attributeFQN != 'tenant~misc.-favor-with-design' %} {# this extra is for inventory purposes mostly, no need to show to customer #}
+                                            {% if option.attributeFQN != 'tenant~misc.-favor-with-design' %} {# this extra is for inventory purposes mostly, no need to show to customer #}
+                                                <dt class="sd_label">{{ option.name }}</dt>
+                                                <dd class="sd_text">
                                                     {% if option.value %}
                                                         {{ option.value }}
                                                     {% else %}
                                                         {{ option.shopperEnteredValue }}
                                                     {% endif %}
-                                                {% endif %}
-                                            </dd>
+                                                </dd>
+                                            {% endif %}
                                         {% endif %}
                                     {% endfor %}
                                 </dl>

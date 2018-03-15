@@ -44,7 +44,7 @@ define(
             $('#mz-added-to-cart, .popup').fadeIn(300); 
 
             $("#mz-added-to-cart:empty").remove();
-			McCookie.getMcImages();
+			McCookie.getMcImagesFromCache();
         },
         showPersonalizeImage: function(){
             var self = this;
@@ -66,7 +66,8 @@ define(
 				if(dndTokenJSON){
 					var info = DNDToken.getTokenData(dndTokenJSON);
 					if(info.type ==="mc"){
-						// no action for now McCookie.getMcImages will handle it
+						//getMcImages will request image from mediaclip, getMcImagesFromCache in afterRender will display the image saved to cache
+						McCookie.getMcImages([info.token]);
 					}
 					else{
 						product.imageUrl = info.src;
@@ -79,7 +80,8 @@ define(
         initialize: function () {
             var me = this;
             me.showPersonalizeImage();
-            this.on('render', this.afterRender);
+			this.on('render', this.afterRender);
+			this.listenTo(this.model, 'sync', this.showPersonalizeImage, this);
         }
     });
 
@@ -142,9 +144,9 @@ define(
 					 if(cartitemModel.get('product').price.salePrice){
 						track_price=cartitemModel.get('product').price.salePrice;
 					 }
-		console.log(track_price);
-		console.log(cartitemModel.get('url'));
-		console.log(qty);
+		//console.log(track_price);
+		//console.log(cartitemModel.get('url'));
+		//console.log(qty);
 
 					 var track_product_code=[];
 					 track_product_code.push(gaitem.product.productCode);

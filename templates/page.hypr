@@ -348,7 +348,7 @@
         {%endcomment%}
         <!-- Bloom reach integration start -->
 
-      {% if pageContext.pageType != 'login' and pageContext.pageType != 'undefined' %}
+      {% if pageContext.pageType != 'login' and typeof pageContext.pageType != 'undefined' %}
       <script type="text/javascript">
           var page_type_br="",bc,k="";
           "CART"===page_type||"CHECKOUT"===page_type?page_type_br="other":"CATEGORYLANDING"===page_type||"CATEGORY"===page_type?page_type_br="category":"NOSEARCH"===page_type||"SEARCH"===page_type?page_type_br="search":"PURCHASE"===page_type?page_type_br="other":"HOME"===page_type?page_type_br="homepage":"PRODUCT"===page_type?page_type_br="product":page_type_br='other';

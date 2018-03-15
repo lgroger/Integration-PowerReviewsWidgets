@@ -1,3 +1,9 @@
+{% comment %}
+soft-cart.js sets these values
+    item.product.imageUrl // exists by default but is overridden if personalization image exists
+    item.product.token // dnd token string or mc token string
+    item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
+{% endcomment %}
 <div class="pointer"></div>
 <div class="soft-cart{% if model.items.length == 0 %} is-empty{% endif %}">
   <div class="soft-cart-items-label"> 
@@ -19,16 +25,8 @@
                   </span>
                 </div>
               {% else %}
-
-                <img class="soft-cart-item-image" src="{{ item.product.imageUrl }}?max=80" alt="{{ item.product.name }}" />
-                 {% if item.product.options && item.product.productType != "Bundle" %}
-                            {% for opt in item.product.options %}
-                              {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript#}
-                                  <span data-fulldndtoken='{{opt.shopperEnteredValue|replace('"','!')|escape}}' {% if item.product.productType == "Bundle"%}data-prdType="bundle"{% endif %}></span>
-                              {% endif %}
-                            {% endfor %}
-                          {% endif %}
-                {% endif %}
+                <img class="soft-cart-item-image" src="{{ item.product.imageUrl }}?max=80" alt="{{ item.product.name }}" {% if item.product.token %}data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}"{% endif %} />
+              {% endif %}
             </div>
             <section class="item-name-qty-ops mz-cms-col-8-12">
                 <div class="item-name mz-cms-col-12-12">

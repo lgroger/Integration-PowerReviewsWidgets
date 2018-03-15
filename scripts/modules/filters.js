@@ -1,4 +1,4 @@
-define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-product', 'vendor/wishlist', 'vendor/jQuery.selectric'], function ($, api, Hypr, ProductModels, Wishlist, Selectric) {    
+define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-product', 'vendor/wishlist', 'vendor/jQuery.selectric',"modules/login-links"], function ($, api, Hypr, ProductModels, Wishlist, Selectric,LoginLinks) {    
     function initSelectedFilters() {
         if($(".mz-facetingform-value:checked").length > 0) {
             $(".mz-facetingform-value:checked").each(function(i, el) {
@@ -39,12 +39,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
             return false;
         });
     }
-    function triggerLogin(){
-        $('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-        $('#mz-quick-view-container').fadeOut(350);
-        $('#mz-quick-view-container').empty();
-    }
+
     window.wishlistSelected = function () {
         var newPromise = api.get('wishlist').then(function(wishlist) {
         var wishlistItems = wishlist.data.items;
@@ -72,7 +67,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
                     window.removePageLoader();
                 });
             }else {
-                triggerLogin();
+                LoginLinks.triggerLogin();
             }
         });
         /*
@@ -83,7 +78,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
                 var product = facetingModel.get("items").where({'productCode':productCode});
                 Wishlist.initoWishlist(product[0]);
             }else {
-                triggerLogin();
+                LoginLinks.triggerLogin();
             }
         });
         */

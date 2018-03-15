@@ -73,6 +73,11 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
                 me.calEstimatedCost("usa");              
             }
 
+            if(me.model.get('items').length>0){
+                me.getPersonalizationInfo();
+            }
+            this.listenTo(this.model, 'sync', this.getPersonalizationInfo, this);
+
             /*Coupon cookie code*/
 /* coupon code isn't on cart page currently...          
             //Coupon code validation starts here
@@ -136,7 +141,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 
             AmazonPay.init(true);
             
-			this.on('render', this.afterRender);
+            this.on('render', this.afterRender);
         },
         getProductionTime:function() {
             var mozu_order_obj=this.model.toJSON().items;
@@ -168,11 +173,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 			var me = this;
             //Get Production time & zip for extra products usign api call append result zip,production time in property ext_prop
             if(ext_arr.length===0){
-                if(window.product_withExtra!==undefined){
-                    this.setProductionTime(products_production,window.product_withExtra);
-                }else{
-                    this.setProductionTime(products_production,ext_prop);
-                }
+                this.setProductionTime(products_production,ext_prop);
             }else{
                 try{
 					var product = SharedProductInfo.getExtraProduct(ext_arr[idx],this.getExtraProductType.bind(this,ext_prop,products_production,idx,ext_arr),
@@ -238,6 +239,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             try{
                 var self = this;
                 var totalSurAmount=0;
+                // TO DO - need optimized - this is really confusing... why do we need to make extra api call to get cart again?
                 Api.request("GET","/api/commerce/carts/current",{}).then(function(res) {
                     if(res.handlingTotal && res.handlingTotal!==null  &&(self.model.get("enableSurChargeCustom")===undefined || !self.model.get("enableSurChargeCustom"))){
                         self.model.set("enableSurCharge",true);
@@ -278,7 +280,6 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
           //  console.log("Change "+this.model.hasChanged("discountedTotal"));
             var me= this;
             if(me.model.get('items').length>0){
-                me.getPersonalizationInfo();
                 me.getProductionTime();
                 me.calculateShippingSurcharge();
             }
@@ -326,10 +327,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 			uniqueList=arr.filter(function(item,i,allItems){
 			    return i==allItems.indexOf(item);
 			}); */
-
-			// do this outside of jquery each so that it only fires once if it needs to fire at all
-			//TO DO: this can be optimized to reduce a lot of duplicate calls b/c all lineitems are currently displayed once for mobile and once for desktop plus render() fires multiple times
-			McCookie.getMcImages();
+			McCookie.getMcImagesFromCache();
         },
         removeCoupon : function(e){
 		/* coupon code and zip code buttons aren't on cart page currently...
@@ -368,7 +366,8 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
         },getPersonalizationInfo: function(){
 			//console.log("getPersonalizationInfo");
             var items = this.model.get('items');
-			var info;
+            var info;
+            var projectList = [];
             for(var i=0; i < items.length; i++){
 				var product = items.models[i].get('product');
 				var options = product.get('options');
@@ -389,7 +388,10 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 							info = DNDEngine.getTokenData(dndtoken, items.models[i].get('product').get('bundledProducts')[k].productCode);
 							items.models[i].get('product').get('bundledProducts')[k].token = info.token;
 							if(info.type ==="mc"){
-								// no action, afterRender() will populate it
+                                // add to projectList array which will get passed into getMcImages() to get actual image data from mediaclip
+                                if(projectList.indexOf(info.token) === -1){
+                                    projectList.push(info.token);
+                                }
 							}
 							else{
 								items.models[i].get('product').get('bundledProducts')[k].imageUrl = info.src;
@@ -400,7 +402,10 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 						// look for parent token info
 						info = DNDEngine.getTokenData(dndtoken);
 						if(info.type ==="mc"){
-							// no action, afterRender() will populate it
+                             // add to projectList array which will get passed into getMcImages() to get actual image data from mediaclip
+                            if(projectList.indexOf(info.token) === -1){
+                                projectList.push(info.token);
+                            }
 						}
 						else{
 							items.models[i].get('product').set('imageUrl',info.src);
@@ -409,6 +414,9 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 						items.models[i].get('product').set('persType',info.type);
                 	}
 				}
+            }
+            if(projectList.length){
+                McCookie.getMcImages(projectList);
             }
         },
         toggleComponents: function(e){
@@ -439,7 +447,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
                 Wishlist.initoWishlist(mod);
             }
         },
-        estimateShippingCost:function(e){
+        estimateShippingCost:function(e){/* zipcode currently disabled
             var self = this;
             var zip = $('[name="zipcode"]').val();
             var zipCode = self.model.get('estimateZipValue');
@@ -460,10 +468,10 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
                     },4000); 
                     
                 }
-            
+            */
         },
         getZipCodeInfo:function(zipcd){
-        },getEstimate:function(ent){ 
+        },getEstimate:function(ent){ /* not referenced anywhere...
             var self = this;
             //Api.request('GET','/api/platform/entitylists/'+ent+'/entities')
             Api.action('entityList','entityList',{listName:"countryus@shindigz"}).then(function(resp){
@@ -481,7 +489,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             },function(err){
                 console.log("Error on ship method ");
                 console.log(err);
-            });  
+            });  */
         },updateShippingAmount:function(){
             if(ship_default===undefined){
                   this.calEstimatedCost("usa");
@@ -740,7 +748,7 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
                 $('body').css({overflow: 'auto'});
                 $('#cboxOverlay').hide();
                 SoftCart.update();
-            });     
+            });
         },
         removeItem: function(e) {
             var self = this;

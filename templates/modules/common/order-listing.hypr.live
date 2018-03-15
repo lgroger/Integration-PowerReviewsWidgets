@@ -1,4 +1,9 @@
-﻿
+﻿{% comment %}
+myaccount.js sets these values
+    item.product.imageUrl // exists by default but is overridden if personalization image exists
+    item.product.token // dnd token string or mc token string
+    item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
+{% endcomment %}
 <div class="orders-sec"> 
        <div class="orders mz-cms-col-12-12">
             <div class="orders-header mz-cms-col-12-12 {% if pageContext.pageType == 'my_anonymous_account'%}remove-extra-margin{% endif %}">
@@ -29,14 +34,7 @@
                 {% if item.product.imageUrl %}
                 <div class="order-blocks1">
                    <a href="/p/{{ item.product.productCode }}">
-                    <img class="mz-carttable-item-image" src="{{item.product.imageUrl}}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} ></a>
-                   {% if item.product.options && item.product.productUsage !="Bundle" %}
-                      {% for opt in item.product.options %}
-                        {% if opt.name == "dnd-token" %}{# trying to escape quote with single quote of dndtoken but I can only seem to replace ut with ! for some reason so we'll have to undo it in javscript - modules/my-menu.js #}
-                            <span data-fulldndtoken="{{opt.shopperEnteredValue|replace('"','!')|escape}}"></span>
-                        {% endif %}
-                      {% endfor %}
-                    {% endif %}
+                    <img class="mz-carttable-item-image" src="{{item.product.imageUrl}}" {% if item.product.imageAlternateText %}alt="{{ item.product.imageAlternateText }}"{% else %}alt="{{item.product.name}}"{% endif %} {% if item.product.token %}data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}"{% endif %} ></a>
                 </div>
                 {% endif %}
                 <div class="order-blocks2">

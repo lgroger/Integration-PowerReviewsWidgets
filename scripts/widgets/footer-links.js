@@ -1,29 +1,27 @@
-define(['modules/jquery-mozu'],function($){
-	$(function(){     
+define(['modules/jquery-mozu',"modules/login-links"],function($,LoginLinks){
+	$(function(){
 		//Login-link  
 		if(!require.mozuData('user').isAnonymous){
+			// already logged in
 			$('.footer-binding-link-login a').text('Log Out')
-				.prop('href','/logout');
+				.prop('href','/logout').attr('data-mz-action',"logout");
 		}
-		$('.footer-binding-link-login a').on('click',function(){
-			if(require.mozuData('user').isAnonymous)
-			{ //not logged in				
-				triggerLoginPop();			
+		else{
+			$('.footer-binding-link-login a').on('click',function(e){
+				console.log('isAnonymous click');
+				e.preventDefault();
+				LoginLinks.triggerLogin();			
 				if($( window ).width() <=1024 ){
-				$("html, body").animate({ scrollTop: 0 }, "slow");
+					$("html, body").animate({ scrollTop: 0 }, "slow");
 				}
-			}
-			else
-			{	//logged-in
-				$(this).text('Log Out')
-				.prop('href','/logout');
-			}
-		});   
+			});
+		}
 		//My-wishlist link
-		$('.footer-binding-link-wishlist a').on('click',function(){
+		$('.footer-binding-link-wishlist a').on('click',function(e){
 			if(require.mozuData('user').isAnonymous)
-			{ //not logged in				
-				triggerLoginPop();
+			{ //not logged in
+				e.preventDefault();			
+				LoginLinks.triggerLogin();
 			}
 			else
 			{
@@ -33,8 +31,4 @@ define(['modules/jquery-mozu'],function($){
 		});
 
 	});
-	function triggerLoginPop(){
-		$('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-	}
 });

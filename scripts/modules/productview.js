@@ -1,17 +1,12 @@
-define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/soft-cart", "modules/atc-cookie"],
-function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, SoftCart, atcCookie) {
+define(["modules/jquery-mozu", "underscore", "hyprlive", "modules/api", "modules/backbone-mozu", "modules/models-product",  'modules/added-to-cart', "vendor/wishlist", "hyprlivecontext","pages/dndengine","modules/shared-product-info", "modules/soft-cart", "modules/atc-cookie","modules/login-links"],
+function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, HyprLiveContext, DNDEngine, SharedProductInfo, SoftCart, AtcCookie,LoginLinks) {
 
 	// Global variables for Banner Types
 	var bannerProductTypes = Hypr.getThemeSetting('bannerProductTypes');
     var bannerProductsArr = bannerProductTypes.split(',');
 	
     var productAttributes = Hypr.getThemeSetting('productAttributes');
-	var triggerLogin = function(){
-        $('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-        $('#mz-quick-view-container').fadeOut(350);
-        $('#mz-quick-view-container').empty();
-    };
+
 	
 	 var getPropteryValueByAttributeFQN = function(product, attributeFQN){
             var result = null;
@@ -69,7 +64,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 				this.gaAction = conf.gaAction || this.gaAction;
 				this.gaEvent = conf.gaEvent || this.gaEvent;
 				this.dndEngineObj = conf.dndEngineObj || this.dndEngineObj;
-				this.AddToWishlistAfterPersonalize = conf.AddToWishlistAfterPersonalize || this.AddToWishlistAfterPersonalize;
+				this.addToWishlistAfterPersonalize = conf.addToWishlistAfterPersonalize || this.addToWishlistAfterPersonalize;
 				this.addToWishlist = conf.addToWishlist || this.addToWishlist;
 				this.initialize = conf.initialize || this.initialize;
 				this.personalizeProduct = conf.personalizeProduct || this.personalizeProduct;
@@ -726,76 +721,62 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     produtDetailToStoreInCookie.productCode=this.model.get('productCode');
                      var objj=this.model.getConfiguredOptions();
                     produtDetailToStoreInCookie.options=objj;
-                    $.cookie('wishlistprouct','direct',{path:'/'});
+                    $.cookie('wishlistproduct','direct',{path:'/'});
                     var ifrm = $("#homepageapicontext");
                     if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
                         this.model.set('moveToWishList', 1);
                         Wishlist.initoWishlist(this.model);
                     }else{
-                        triggerLogin();
+						window.productView = this; // needed for code in login-links.js to work correctly
+                        LoginLinks.triggerLogin();
                     }
             }
         },
         addToWishlistWithDesign: function(){// I think this is adding a personalized item to wishlist
-			//console.log("addToWishlistWithDesign");
+			console.log("addToWishlistWithDesign");
             var me = this;
-                var callback = function () {
-                    $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                    $('.dnd-popup').remove();
-                    $('body').css({overflow: 'auto'});
-                    $('html').removeClass('dnd-active-noscroll');
-                    $('#cboxOverlay').hide();
-					if(me.dndEngineObj){
-						me.dndEngineObj.unsend();
-					}
-					window.location.href=location.href;
-                };
                 if(!require.mozuData('user').isAnonymous) {
-                        Wishlist.initoWishlistPersonalize(this.model,callback);
+                        Wishlist.initoWishlistPersonalize(this.model,this.addToWishlistCallback.bind(this));
                 }else {
                     var produtDetailToStoreInCookie ={};
                     produtDetailToStoreInCookie.productCode=this.model.get('productCode');
                      var objj=me.model.getConfiguredOptions();
                     produtDetailToStoreInCookie.options=objj;
-                    $.cookie('wishlistprouct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
+                    $.cookie('wishlistproduct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
                     var ifrm = $("#homepageapicontext");
                     if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                        Wishlist.initoWishlistPersonalize(this.model,callback);
+                        Wishlist.initoWishlistPersonalize(this.model,this.addToWishlistCallback.bind(this));
                     }else{
-                        triggerLogin();
+						window.productView = this; // needed for code in login-links.js to work correctly
+                        LoginLinks.triggerLogin();
                         $('.popoverLoginForm .popover-wrap').css({'border':'1px solid #000'});
                     }
                 }
         },
         addToWishlistAfterLogin: function(){
-			//console.log("addToWishlistAfterLogin");
+			console.log("addToWishlistAfterLogin");
 			var me = this;
-			var callback = function () {
-				//console.log('productview addToWishlistAfterLogin CALLBACK');
-                    $('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
-                    $('.dnd-popup').remove();
-                    $('body').css({overflow: 'auto'});
-                    $('html').removeClass('dnd-active-noscroll');
-                    $('#cboxOverlay').hide();
-					if(me.dndEngineObj){
-						me.dndEngineObj.unsend();
-					}
-					window.location.href=location.href;
-                };
-             Wishlist.initoWishlist(this.model,callback);
-            $.cookie('wishlistprouct', "",{path:'/'});
-        },
+             Wishlist.initoWishlist(this.model,this.addToWishlistCallback.bind(this));
+            $.cookie('wishlistproduct', "",{path:'/'});
+		},
+		addToWishlistCallback: function(){
+			//$('#add-to-wishlist').prop('disabled', 'disabled').text(Hypr.getLabel('addedToWishlist'));
+			if(this.dndEngineObj){
+				this.dndEngineObj.closeDND();
+			}
+			window.location.href=location.href;
+		},
         addToWishlistAfterLoginPersonalize: function(){
 			//console.log("addToWishlistAfterLoginPersonalize");
-            Wishlist.initoWishlistPersonalize(this.model);
-            $.cookie('wishlistprouct', "",{path:'/'});
+            Wishlist.initoWishlistPersonalize(this.model,this.addToWishlistCallback.bind(this));
+            $.cookie('wishlistproduct', "",{path:'/'});
         },
         setSelectedOptions: function(){
 			//console.log("setSelectedOptions");
             var me = this;
-            var wishlistprouct = $.cookie('wishlistprouct');
-            if(wishlistprouct && wishlistprouct!==""){
-                var wishlistobj = JSON.parse(wishlistprouct);
+            var wishlistproduct = $.cookie('wishlistproduct');
+            if(wishlistproduct && wishlistproduct!==""){
+                var wishlistobj = JSON.parse(wishlistproduct);
                 var objj = wishlistobj.options;
                 if(objj){
                     _.each(objj, function(objoptions) {
@@ -804,7 +785,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                     });
                 }
                 setTimeout(function(){
-                    $.cookie('wishlistprouct', "",{path:'/'});
+                    $.cookie('wishlistproduct', "",{path:'/'});
                     me.addToWishlist();
                 },500);
             }
@@ -859,8 +840,8 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             //end
 
         },
-        AddToWishlistAfterPersonalize: function(data){ // used by dndengine.js
-			//console.log("AddToWishlistAfterPersonalize");
+        addToWishlistAfterPersonalize: function(data){ // used by dndengine.js
+			//console.log("addToWishlistAfterPersonalize");
             var self= this;
                 self.setOptionValues(data);
                 if(data.quantity){
@@ -1385,7 +1366,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 	})(window.location.search.substr(1).split('&'));
 	
 	//console.log(atc);
-	if(qs.atc && qs.atc.length > 0 && atcCookie.needToFire(qs.atc)){
+	if(qs.atc && qs.atc.length > 0 && AtcCookie.needToFire(qs.atc)){
 		//fire all of the events that normally happen on this.model.on('addedtocart') if it hasn't fired yet
  		Api.request('get',"/api/commerce/carts/current/items/"+qs.atc).then(function(res){
 			//console.log(res);

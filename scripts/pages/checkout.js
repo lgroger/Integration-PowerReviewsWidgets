@@ -237,9 +237,8 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                 "ship_code":this.model.get("fulfillmentInfo.shippingMethodCode")
             };
             this.listenTo(this.model.get('billingInfo'), 'orderPayment', this.onOrderCreditChanged, this);
-			this.on('render', McCookie.getMcImages);
+            // don't put this.showPersonalizeImage() here like we do on cart/softcart/myaccount b/c other backbone views are making changes to model on load which would cause duplicate calls to mediaclip very close together timewise
         },
-
         editCart: function () {
             window.location = "/cart";
         },
@@ -260,7 +259,8 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
         onOrderCreditChanged: function (order, scope) {
             this.render();
         },showPersonalizeImage:function () {
-			console.log("showPersonalizeImage");
+            //console.log("showPersonalizeImage");
+            var projectList=  [];
             var me=this;
             var items=_.pluck(this.model.get("items"),'product');
             _.each(items,function (item,i) {
@@ -271,7 +271,10 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
 							var dndTokenJSON=JSON.parse(dndTokenObj.shopperEnteredValue);
 							var info = DNDToken.getTokenData(dndTokenJSON);
 							if(info.type ==="mc"){
-								// no action, McCookie.getMcImages will fill it in based off of persType being set in 
+                                // add to projectList array which will get passed into getMcImages() to get actual image data from mediaclip
+                                if(projectList.indexOf(info.token) === -1){
+                                    projectList.push(info.token);
+                                }
 							}
 							else{
 								if(info.src){
@@ -279,7 +282,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
 								}
 							}
 							me.model.get("items")[i].product.token = info.token;
-							me.model.get("items")[i].product.persType = info.type;
+                            me.model.get("items")[i].product.persType = info.type;
 						}
 						catch(err){
 							console.error(err);
@@ -287,7 +290,10 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
 						}
 					}
 				}
-            }); 
+            });
+            if(projectList.length){
+                McCookie.getMcImages(projectList);
+            }
         },render:function(){
             //console.log("render");
             this.showPersonalizeImage();
@@ -463,6 +469,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
             }
             window.checkoutViews.steps.shippingInfo.render();
             Backbone.MozuView.prototype.render.call(this);
+            McCookie.getMcImagesFromCache();
         },renderCustomAfterShip:function(scope_obj){
             try{
              var cus_ele="";

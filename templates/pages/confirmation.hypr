@@ -285,7 +285,7 @@
                                 <div class="item_small_description">
                                 {% if item.product.options.length > 0 %}
                                   {% for opt in item.product.options %}
-                                    {% if opt.name=="dnd-token" && opt.attributeFQN =="tenant~misc.-favor-with-design" %}
+                                    {% if opt.name=="dnd-token" or opt.attributeFQN =="tenant~misc.-favor-with-design" %}
                                       {# tenant~misc.-favor-with-design is for inventory purposes mostly, no need to show to customer #}
                                     {% else %}
                                           <p><span class="sd_label">{{ opt.name }}:</span><span class="sd_text">{{ opt.value }}</span></p>

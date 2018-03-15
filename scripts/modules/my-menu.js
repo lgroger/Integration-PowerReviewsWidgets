@@ -154,20 +154,9 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
     }, 2000);
 });
 	$('.signup-link').click(function(){
-		//triggerLogin();
 		$('.trigger-signup').trigger('click'); 
 		$("html, body").animate({ scrollTop: 0 }, "slow");
 		}); 
-	$('.footer-binding-link-login').click(function(){
-		triggerLogin();
-		$("html, body").animate({ scrollTop: 0 }, "slow");
-	});
-	var triggerLogin = function(){
-        $('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-        $('#mz-quick-view-container').fadeOut(350);
-        $('#mz-quick-view-container').empty();
-    };
 		     
          $(document).on("click","#det-btn",function(){           	
         	$('#tab1').prop('checked', true); 
@@ -218,23 +207,6 @@ $(document).on("click",".mz-accountaddressbook-edit",function() {
 			    $(this).prev().addClass("diplayprint");
 			}
 		 	$(this).toggleClass('active');
-			
-			if($(this).hasClass("account-order-history") && $(this).hasClass("active")){
-				$(this).next().find("img").each(function() {
-					if($(this).parent().next().data("fulldndtoken")){//order-listing.hypr.live
-						try{
-							var fulldndtoken = JSON.parse($(this).parent().next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
-							var info = DNDToken.getTokenData(fulldndtoken,null,true);
-							if(info.src){
-								$(this).attr("src",info.src);
-							}
-						  }
-						catch(e){
-							console.error(e);
-						}
-					}
-				});
-			}
 		 });
 
  		$('.mz-productdetail-qty').on('change keyup', function() { 			

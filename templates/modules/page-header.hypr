@@ -265,7 +265,7 @@
 									 		<p id="logged-user-name"> 									 		
 									 	Hi {{ user.firstname|truncatechars(15)  }}  
 									 		</p>
-									 		<a href="/logout">Sign Out</a>
+									 		<a href="/logout" data-mz-action="logout">Sign Out</a>
 									 	</li>
 									 </ul>
 										

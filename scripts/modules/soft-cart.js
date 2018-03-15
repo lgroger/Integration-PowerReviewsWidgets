@@ -7,6 +7,8 @@ define([
 	"modules/mc-cookie"
   ],
 function($, Backbone, CartModels,Hypr,DNDToken,McCookie) {
+
+    var productAttributes = Hypr.getThemeSetting('productAttributes');  
   // declare a MozuView that can rewrite its contents with a Hypr template
   // var cartUpdate = this.model.apiGet();
   function setLoginForCheckout(){
@@ -49,40 +51,52 @@ function($, Backbone, CartModels,Hypr,DNDToken,McCookie) {
     },
     render:function() {
       Backbone.MozuView.prototype.render.call(this);
-      $(".soft-cart-items .soft-cart-item img").each(function() {
-          if($(this).next().data("fulldndtoken")){
-			  try{
-				var fulldndtoken = JSON.parse($(this).next().data("fulldndtoken").replace(/!/gi,'"'));// in hyprlive, couldn't figure out how to escape quote with single quote but I could replace it with !
-				//console.log(fulldndtoken);
-				var info = DNDToken.getTokenData(fulldndtoken);
-				if(info.type ==="mc"){
-					// no action, this.getMcImages will fill it in based off of persType being set in 
-				}
-				else{
-					if(info.src){
-						$(this).attr("src",info.src);
-					}
-				}
-				$(this).attr("data-mz-token-type",info.type);
-				$(this).attr("data-mz-token",info.token);
-			  }
-			  catch(err) {
-				  console.error(err);
-			  }
-          }
-      });
-	  McCookie.getMcImages();
+      McCookie.getMcImagesFromCache();
     },
-	getMcImages: function(){
-		
-	},
+    getPersonalizationInfo: function(){
+        //console.log("getPersonalizationInfo");
+        var items = this.model.get('items');
+        var info;
+        var projectList = [];
+        for(var i=0; i < items.length; i++){
+            var product = items.models[i].get('product');
+            var options = product.get('options');
+            var dndStr = null;
+            for(var o=0;o< options.length;o++){
+                if(options[o].attributeFQN === productAttributes.dndToken){
+                    if(options[o].shopperEnteredValue !== ""){
+                        dndStr = options[o].shopperEnteredValue;
+                    }
+                    break;
+                }
+            }
+            if(dndStr){
+                var dndtoken = JSON.parse(dndStr);
+                if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
+                    // look for parent token info
+                    info = DNDToken.getTokenData(dndtoken);
+                    if(info.type ==="mc"){
+                         // add to projectList array which will get passed into getMcImages() to get actual image data from mediaclip
+                        if(projectList.indexOf(info.token) === -1){
+                            projectList.push(info.token);
+                        }
+                    }
+                    else{
+                        items.models[i].get('product').set('imageUrl',info.src);
+                    }
+                    items.models[i].get('product').set('token',info.token);
+                    items.models[i].get('product').set('persType',info.type);
+                }
+            }
+        }
+        McCookie.getMcImages(projectList);
+    },
     removeItem: function(e) {
       var $removeButton = $(e.currentTarget),
           id = $removeButton.data('mz-cart-item');
       this.model.removeItem(id);
       return false;
     },
-
     gotoCheckout: function () {
         if(!require.mozuData('user').isAnonymous) {
             window.location=require.mozuData('pagecontext').secureHost+"/cart/checkout";   
@@ -90,9 +104,11 @@ function($, Backbone, CartModels,Hypr,DNDToken,McCookie) {
             $('.trigger-login').trigger('click');
             $('#cboxOverlay').show();
         }
+    },
+    initialize: function(){
+        this.getPersonalizationInfo();
+        this.listenTo(this.model, 'sync', this.getPersonalizationInfo, this);
     }
-
-
   });
 
   // accessors for other modules

@@ -1,8 +1,8 @@
 /**
  * Adds a login popover to all login links on a page.
  */
-define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'modules/marketo-subscribe', 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _, Marketo) {
-
+define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modules/jquery-mozu=jQuery]>jQuery=jQuery]>jQuery', 'modules/api', 'hyprlive', 'underscore', 'modules/marketo-subscribe',"modules/mc-cookie", 'vendor/jquery-placeholder/jquery.placeholder'], function ($, api, Hypr, _, Marketo, McCookie) {
+console.log('login-links');
     var usePopovers = function() {
         // return !Modernizr.mq('(max-width: 480px)');
          return !Modernizr.mq('(max-width: 315px)');  
@@ -282,50 +282,55 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             }
         },  
         handleLoginComplete: function (e) {
-            var wishlistprouct = $.cookie('wishlistprouct');
-            if(wishlistprouct && wishlistprouct!==""){
-                $.cookie('wishlistprouct', "",{path:'/'});
-                var iframe = document.createElement('iframe');
-                    iframe.id="homepageapicontext";
-                    iframe.onload = function() {
-                        $('#login-popover-close').trigger('click');
-                        if(wishlistprouct==='direct'){
-                            window.productView.addToWishlistAfterLogin();
-                        }else{
-                            window.productView.addToWishlistAfterLoginPersonalize();
-                        }
-                        
-                     }; // before setting 'src'
-                    var iframeloadurlafterlogin = Hypr.getThemeSetting('iframeloadurlafterlogin');
-                    iframe.src = iframeloadurlafterlogin; //Simply loading Home page in iframe;
-                    document.body.appendChild(iframe); // add it to wherever you need it in the document
+            console.log("handleLoginComplete");
+            var me = this;
+            var mcCallback = function(){
+                var wishlistproduct = $.cookie('wishlistproduct');
+                if(wishlistproduct && wishlistproduct!==""){
+                    $.cookie('wishlistproduct', "",{path:'/'});
+                    var iframe = document.createElement('iframe');
+                        iframe.id="homepageapicontext";
+                        iframe.onload = function() {
+                            $('#login-popover-close').trigger('click');
+                            if(wishlistproduct==='direct'){
+                                window.productView.addToWishlistAfterLogin();
+                            }else{
+                                window.productView.addToWishlistAfterLoginPersonalize();
+                            }
+                            
+                        }; // before setting 'src'
+                        var iframeloadurlafterlogin = Hypr.getThemeSetting('iframeloadurlafterlogin');
+                        iframe.src = iframeloadurlafterlogin; //Simply loading Home page in iframe;
+                        document.body.appendChild(iframe); // add it to wherever you need it in the document
 
-                return;
-            }
-            if(e){
-                var checkoutFlag = $(e.currentTarget).parents('section').find('.checkoutflag').val();
-                if(checkoutFlag !== "0"){
-                    window.location='/cart/checkout';   
+                    return;
                 }
-                else{
-                   window.location.reload();     
-                }
-            }else{
-                if(this.pageType==='login'){
-                 if($(".mz-loginform-page input[name='returnUrl']").attr("value") !== ""){
-                        window.location.href=$(".mz-loginform-page input[name='returnUrl']").attr("value");
-                    }else{
-                      window.location.href='/myaccount';
-                 }
+                else if(e){
+                    var checkoutFlag = $(e.currentTarget).parents('section').find('.checkoutflag').val();
+                    if(checkoutFlag !== "0"){
+                        window.location='/cart/checkout';   
+                    }
+                    else{
+                        window.location.reload();     
+                    }
                 }else{
-                    window.location.reload();
+                    if(me.pageType==='login'){
+                        if($(".mz-loginform-page input[name='returnUrl']").attr("value") !== ""){
+                            window.location.href=$(".mz-loginform-page input[name='returnUrl']").attr("value");
+                        }else{
+                            window.location.href='/myaccount';
+                        }
+                    }else{
+                        window.location.reload();
+                    }
                 }
-                
-            }
+            };
             
+            McCookie.onUserLogin(mcCallback);
+/*
             setTimeout(function(){
             	$('#cboxOverlay').hide().removeClass('page-loading'); //hide page loader
-            },4000);
+            },4000); */
         },
         displayResetPasswordMessage: function () {
             this.displayMessage(Hypr.getLabel('resetEmailSent')); 
@@ -442,12 +447,14 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
             this.$parent.find('[data-mz-role="popover-message"]').html('<span class="mz-validationmessage">' + msg + '</span>');
             //setTimeout(function(){$('.mz-validationmessage').fadeOut();},4000);
             $('[data-mz-role="popover-message"]').bind('click', function(){
-            	setTimeout(function(){$('.mz-validationmessage').fadeOut();},4000); //hide error message after click on error message
+            	//setTimeout(function(){
+                    $('.mz-validationmessage').fadeOut();
+                //},4000); //hide error message after click on error message
             });
             
-            setTimeout(function(){
+           // setTimeout(function(){
             	$('#cboxOverlay').hide().removeClass('page-loading'); //hide page loader
-            },100);
+          //  },100);
 
         }
     });
@@ -505,24 +512,24 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
                 $('#cboxOverlay').hide();
                 $('body').trigger('click'); 
         });
-
-        $('[data-mz-action="logout"]').each(function(){
-            var el = $(this);
-
+        if (require.mozuData('pagecontext').isEditMode) {
+            $("[data-mz-action='logout']").on('click', function(e){
             //if were in edit mode, we override the /logout GET, to preserve the correct referrer/page location | #64822
-            if (require.mozuData('pagecontext').isEditMode) {
- 
-                 el.on('click', function(e) {
-                    e.preventDefault();
-                    $.ajax({
-                        method: 'GET',
-                        url: '../../logout',
-                        complete: function() { location.reload();} 
-                    });
+                e.preventDefault();
+                $.ajax({
+                    method: 'GET',
+                    url: '../../logout',
+                    complete: function() { location.reload();} 
                 });
-            }
-            
-        });    
+            }); 
+        }
+        else{
+            $("[data-mz-action='logout']").on('click', function(e){
+                McCookie.deleteCookie(); // delete mediaclip user token cookie
+                return(true); // do default action
+            });
+        }  
+           
         $(document).on('click','.cont-to-signup',function(e){ 
             $('.trigger-signup').trigger('click'); 
             // $(document).scrollTop(0);
@@ -532,18 +539,20 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
         $(document).on('click','.forgot-password-container a, .cancel-reset-container a',function(){
             $('.mz-validationmessage').hide();
         });
-        /*$(document).on('click','#back_to_login_link',function(){ 
-            $('.trigger-login').trigger('click');
-            $('#cboxOverlay').show();
-            $('body').addClass('lock-verflow');
-        });*/
-        $(document).on('click','.float-login',function(){
-            //$('.trigger-login').trigger('click');
-            //$('#cboxOverlay').show(); 
-        });
         //mz-validationmessage  mz-popover-message
         $(document).on('click','.login-back',function(){
             $('.default-hide').hide();
         });
     });//document.ready
+
+    var triggerLogin = function(){
+        console.log("triggerLogin");
+        $('[data-mz-action="login"]').trigger('click');
+       // $('#cboxOverlay').show();
+        $('#mz-quick-view-container').fadeOut(350);
+        $('#mz-quick-view-container').empty();
+    };
+    return({
+        "triggerLogin": triggerLogin
+    });
 });

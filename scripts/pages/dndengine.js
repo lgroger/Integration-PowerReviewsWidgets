@@ -641,7 +641,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							me.view.updateCartItemPersonalize(responseData); //cartview
 							break;
 						case 'AddToWishlist':
-							me.view.AddToWishlistAfterPersonalize(responseData); //productview
+							me.view.addToWishlistAfterPersonalize(responseData); //productview
 							break;    
 					}
 
@@ -744,7 +744,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						var reeditURL = "/personalize/"+me.mcToken;
 						
 						// create new form that posts to mediaclip url (must be get, no post)
-						form = $('<form action="'+reeditURL+'" target="iframe'+me.time+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>');
+						form = $('<form action="'+reeditURL+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice it's not posting to iframe
 						addParameter(form,"token",storeUserToken);
 						// save to object so we can clean it up if needed
 						me.form = form;
@@ -772,7 +772,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					//console.log(dndItem);
 
 					// create new form
-					form = $('<form action="'+url+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>'); // notice it's not posting to iframe
+					form = $('<form action="'+url+'" method="post"target="iframe'+me.time+'" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
 					addParameter(form,"productID",dndItem.productID);
 					addParameter(form,"itemDescription",dndItem.itemDescription);
 					addParameter(form,"ecometrySku",dndItem.ecometrySku);
@@ -840,44 +840,49 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					fulfillmentLocationCode: payload.fulfillmentLocationCode,
 					fulfillmentMethod: payload.fulfillmentMethod || (this.data.fulfillmentTypesSupported && catalogToCommerceFulfillmentTypeConstants[this.data.fulfillmentTypesSupported[0]]) || (this.data.goodsType === CONSTANTS.GOODS_TYPES.PHYSICAL ? CONSTANTS.COMMERCE_FULFILLMENT_METHODS.SHIP : CONSTANTS.COMMERCE_FULFILLMENT_METHODS.DIGITAL)
 				*/
-				// launch media clip window
-				$.ajax({
-					url: "/get-personalization",
-					method:"POST",
-					data: {
-						themeUrl: dndItem.mcTheme,
-						productCode:  me.model.get('productCode'),
-						variationProductCode: me.model.get('variationProductCode'),
-						options: me.model.getConfiguredOptions(),
-						quantity: me.model.get("quantity"),
-						tokenPrefix:	dndItem.productID+"@"+dndItem.ecometrySku,
-						returnTo: window.location.href,
-						productId: dndItem.mcProduct+(dndItem.mcProductSuffix?dndItem.mcProductSuffix:"")
-					},
-					dataType:"json",
-					success:function(data){
-					//	console.log(data);
-						var url = "/personalize/"+data.projectId;
-					//	console.log(url);
-						
-						// create new form that posts to mediaclip url (must be get, no post)
-						var form = $('<form action="'+url+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice there is no target of iframe like in dnd - will post to new page
-						
-						McCookie.setCookie(data.token,data.expirationUtc);
-						
-						addParameter(form,"token",data.token);
-						// save to object so we can clean it up if needed
-						me.form = form;
+				
+				var mcCallback = function(token){
+					// launch media clip window
+					$.ajax({
+						url: "/get-personalization",
+						method:"POST",
+						data: {
+							themeUrl: dndItem.mcTheme,
+							productCode:  me.model.get('productCode'),
+							variationProductCode: me.model.get('variationProductCode'),
+							options: me.model.getConfiguredOptions(),
+							quantity: me.model.get("quantity"),
+							tokenPrefix:	dndItem.productID+"@"+dndItem.ecometrySku,
+							returnTo: window.location.href,
+							productId: dndItem.mcProduct+(dndItem.mcProductSuffix?dndItem.mcProductSuffix:""),
+							token: token
+						},
+						dataType:"json",
+						success:function(data){
+						//	console.log(data);
+							var url = "/personalize/"+data.projectId;
+						//	console.log(url);
+							
+							// create new form that posts to mediaclip url (must be get, no post)
+							var form = $('<form action="'+url+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice there is no target of iframe like in dnd - will post to new page
+							
+							addParameter(form,"token",token);
+							// save to object so we can clean it up if needed
+							me.form = form;
 
-						// insert and post form
-						$("body").append(me.form);
-						me.form.submit();
-					},
-					error: function(jqXHR, textStatus, errorThrown){
-						alert('There was an error loading personalization. \n\nPlease try your request again.');
-						me.closeDND();
-					}
-				});
+							// insert and post form
+							$("body").append(me.form);
+							me.form.submit();
+						},
+						error: function(jqXHR, textStatus, errorThrown){
+							alert('There was an error loading personalization. \n\nPlease try your request again.');
+							me.closeDND();
+						}
+					});
+				};
+
+				McCookie.getToken(mcCallback);
+
 			}
 			else{
 				me.showOverlay();
