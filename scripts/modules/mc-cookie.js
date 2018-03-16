@@ -17,7 +17,7 @@ function ($) {
 	var setCookie = function(newUserToken,expirationUtc){
 		var user = require.mozuData('pagecontext').user;
 		var str,userId;
-		if(user.isAnonymous){
+		if(user.isAnonymous || user.accountId === 0){
 			str = "1|";
 			userId = user.userId;
 		}
@@ -78,7 +78,7 @@ function ($) {
 		//console.log(cookie);
 		//console.log(user);
 		
-		if(user.isAnonymous){
+		if(user.isAnonymous || user.accountId === 0){
 			userId = user.userId;
 		}
 		else{
@@ -86,7 +86,7 @@ function ($) {
 		}
 		
 		if(cookie){
-			if(user.isAnonymous === cookie.anon && cookie.userId === userId){
+			if((user.isAnonymous || user.accountId === 0) === cookie.anon && cookie.userId === userId){
 				//console.log(user);
 				//console.log(cookie);
 				// see if it's still valid
@@ -112,7 +112,7 @@ function ($) {
 					renewToken(callback);
 				}
 			}
-			else if(!user.isAnonymous && cookie.anon){
+			else if(!(user.isAnonymous || user.accountId === 0) && cookie.anon){
 				// anonymous user was converted to logged in user
 				convertToken(cookie,callback);
 			}
@@ -244,7 +244,7 @@ function ($) {
 					// need to get userId of original project and convert to migrate anonymous user to logged in user
 
 					var user = require.mozuData('pagecontext').user;
-					if(!user.isAnonymous && errorThrown == "Forbidden"){
+					if(!(user.isAnonymous || user.accountId === 0) && errorThrown == "Forbidden"){
 						//console.log(textStatus);
 						//console.log(errorThrown);
 						//console.log('isAnonymous false');
@@ -322,7 +322,7 @@ function ($) {
 		var cookie = getValues();
 		if(cookie){
 			var user = require.mozuData('pagecontext').user;
-			if(!user.isAnonymous && cookie.anon){
+			if(!(user.isAnonymous || user.accountId === 0) && cookie.anon){
 				// anonymous user was converted to logged in user
 				convertToken(cookie,callback);
 			}
