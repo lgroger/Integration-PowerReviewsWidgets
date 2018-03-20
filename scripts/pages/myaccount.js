@@ -2136,6 +2136,30 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         });
         */
 
+        var callback = function(res){
+            var $projects = $('<div id="mcProjects"></div>');
+            var loopArray = function(arr){
+                for(var i=0;i<arr.length;i++){
+                    var p = arr[i];
+                    $projects.append('<img src="'+p.urlThumb+'" />');
+                }
+            };
+
+            $("body").append($projects);
+            if(res && res.projects && res.projects.length){
+                loopArray(res.projects);
+            }
+            $projects.append("<hr>");
+            if(res && res.inCart && res.inCart.length){
+                loopArray(res.inCart);
+            }
+            $projects.append("<hr>");
+            if(res && res.mcOnly && res.mcOnly.length){
+                loopArray(res.mcOnly);
+            }
+        };
+        McCookie.getProjects(callback);
+
         Wishlist.getAllWishlistData().then(function(res){
             if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled){
                 //console.log(res);

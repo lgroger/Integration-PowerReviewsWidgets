@@ -283,7 +283,7 @@ function ($) {
 
 	};
 	var getMcImages = function(projectList){
-		console.trace('getMcImages');
+		//console.trace('getMcImages');
 		//console.log(projectList);
 		if($("img[data-mz-token-type='mc']").length > 0 || (projectList && projectList.length)){
 			if(!projectList){
@@ -342,13 +342,37 @@ function ($) {
 			$.cookie(cookieKey,"",options);
 		}
 	};
+
+	var getProjects = function(callback){
+		var user = require.mozuData('pagecontext').user;
+		var userId;
+		if(user.isAnonymous || user.accountId === 0){
+			userId = user.userId;
+		}
+		else{
+			userId = user.accountId.toString(); // numeric value must be converted to string so we can compare string to string below
+		}
+
+		$.post({
+			url: "/get-personalized-projects",
+			dataType:"json",
+			data:{"userId": userId}
+		}).done(function(data){
+			if(typeof callback === "function"){
+				callback(data);
+			}
+			console.log(data);
+		});
+	};
+
 	return {
 		setCookie: setCookie,
 		getToken:getToken,
 		getMcImages: getMcImages,
 		deleteCookie: deleteCookie,
 		onUserLogin: onUserLogin,
-		getMcImagesFromCache: getMcImagesFromCache
+		getMcImagesFromCache: getMcImagesFromCache,
+		getProjects: getProjects
 	};
 	
 	
