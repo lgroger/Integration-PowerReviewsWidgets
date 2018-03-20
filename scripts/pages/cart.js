@@ -1050,6 +1050,67 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             $('#cboxOverlay').show(); 
         });
 
+        var callback = function(res){
+            var $projects = $("#mcProjects");
+            
+            var loopArray = function(arr,html){
+                var $projectHolder = $("<div />");
+                for(var i=0;i<arr.length;i++){
+                    var p = arr[i];
+                    var $project = $("<div />").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').css({"max-width":"200px","max-height":"200px","display":"block"})).css({"float":"left","width":"250px"});
+                    if(p.entityContainer){
+                        $project.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>'));
+                    }
+                    
+                    if(html){
+                        $project.append($(html).clone());
+                    }
+                    $projectHolder.append($project);
+                }
+                $projectHolder.append($('<div style="clear:both" />'));
+                $projects.append($projectHolder);
+            };
+
+            if(res && res.projects && res.projects.length){
+                loopArray(res.projects,$('<button class="mc-project-atc">Edit &amp Add to Cart</button>'));
+            }
+            
+            if(res && res.inCart && res.inCart.length){
+                loopArray(res.inCart, $('<button class="delete-mc-project">Delete</button>'));
+            }
+            if(res && res.mcOnly && res.mcOnly.length){
+                loopArray(res.mcOnly, $('<button class="delete-mc-project">Delete</button>'));
+            }
+            $(document).on('click','.delete-mc-project',function(e){
+                var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+                console.log(this);
+                console.log(projectId);
+
+                var mcCallback = function(storeUserToken){
+                    $.post({
+                        url: "/delete-mc-project",
+                        dataType:"json",
+                        data:{"token": storeUserToken,"projectId":projectId}
+                    }).done(function(data){
+                        console.log(data);
+                    });
+                };
+
+                McCookie.getToken(mcCallback);
+            });
+            $(document).on('click','.mc-project-atc',function(e){
+                var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+                if(projectId){
+                    var mcCallback = function(storeUserToken){
+                        document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
+                    };
+
+                    McCookie.getToken(mcCallback);
+                }
+            });
+        };
+        McCookie.getProjects(callback);
+
         /*$('#triggerAmazon').click(function(){
             $('#OffAmazonPaymentsWidgets1').trigger('click'); 
         }); */

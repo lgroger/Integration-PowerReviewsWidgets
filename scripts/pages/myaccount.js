@@ -2141,7 +2141,8 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             var loopArray = function(arr){
                 for(var i=0;i<arr.length;i++){
                     var p = arr[i];
-                    $projects.append('<img src="'+p.urlThumb+'" />');
+                    var $project = $("<div />").append($('<img src="'+p.urlThumb+'" />').css({"max-width":"200px","max-height":"200px"}));
+                    $projects.append($project);
                 }
             };
 
