@@ -904,7 +904,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 							me.form.submit();
 						},
 						error: function(jqXHR, textStatus, errorThrown){
-							alert('There was an error loading personalization. \n\nPlease try your request again.');
+//							alert('There was an error loading personalization. \n\nPlease try your request again.');
 							me.closeDND();
 						}
 					});
