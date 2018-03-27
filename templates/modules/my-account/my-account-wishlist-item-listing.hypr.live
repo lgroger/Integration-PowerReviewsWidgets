@@ -1,9 +1,16 @@
+{% comment %}
+myaccount.js sets these values
+    model.designName
+    model.product.imageUrl // exists by default but is overridden if personalization image exists
+    model.product.token // dnd token string or mc token string
+    model.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
+{% endcomment %}
 {# LG added .wishlist-item-listing and [data-sz-wishlistitem] to parent div so we can easily grab wishlist item id #}
              <div class="orders-body mz-cms-col-12-12 wishlist-item-listing" data-mz-item="{{model.product.productCode}}" data-sz-wishlistitem="{{ model.id }}">
                 <p class="product-name mob_show">{% if model.designName %}{{model.designName}}{% else %}{{model.product.name}}{% endif %}</p>
 
                 <div class="order-blocks1">
-                    <a href="/p/{{ model.product.productCode }}"><img class="mz-carttable-item-image" src="{{model.product.imageUrl}}" alt="{% if model.designName %}{{model.designName}}{% else %}{{model.product.name}}{% endif %}"></a>
+                    <a href="/p/{{ model.product.productCode }}"><img class="mz-carttable-item-image" src="{{model.product.imageUrl}}" alt="{% if model.designName %}{{model.designName}}{% else %}{{model.product.name}}{% endif %}"  {% if model.product.token %}data-mz-token-type="{{model.product.persType}}" data-mz-token="{{model.product.token}}"{% endif %}></a>
                 </div>
 
                 <div class="order-blocks2">
@@ -83,7 +90,7 @@
                     {% endif %}
                      <div>
                        <button class="add-wishlist moveToWishlist" id="{{ model.id }}" original-id="{{ model.product.productCode }}">Move to Another Wishlist</button>
-                       <a class="remove-item" id="{{ model.id }}" removeWishlistItem="{{ model.id }}">Remove</a>
+                       <a class="remove-item" id="{{ model.id }}">Remove</a>
                      </div>
                 </div>
             </div>

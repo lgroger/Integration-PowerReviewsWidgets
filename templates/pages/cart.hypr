@@ -38,7 +38,7 @@
 		</form>
 	</div>
 
-	<div id="mcProjects"></div>
+	<div id="mcProjects" class="mz-cms-col-12-12"></div>
   <div class="confiramtion-slider mz-cms-col-12-12">
 	  {% dropzone "cart-theme-slider" scope="template" %}
 	<div data-mz-recommendedProducts id="recommended_products_slot">

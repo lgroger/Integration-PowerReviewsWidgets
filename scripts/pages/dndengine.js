@@ -194,8 +194,9 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		return C;
 	})();
 	
-    var DNDEngine = function(model,view,lineitemid,dndToken,mcToken,isComponent,wishlistid)
+    var DNDEngine = function(model,view,lineitemid,dndToken,mcToken,isComponent,wishlistitemid,wishlistid)
     {
+		console.log(arguments);
 		var pageContext = require.mozuData('pagecontext');
         var self = {};
 		self.index = 0; // current index of dndArr
@@ -210,7 +211,8 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 		
 		// for cart use
 		self.lineitemID = lineitemid; // lineitem to update if used in cart
-		self.wishlistID = wishlistid; // wishlist itemid
+		self.wishlistItemID = wishlistitemid; // wishlist itemid
+		self.wishlistID = wishlistid; // wishlist id
 		self.dndToken = dndToken; // existing dnd token
 		self.mcToken = mcToken; // existing mediaclip token
 		self.isComponent = isComponent; // for use in cart - if lineitem being personalized is a bundledItem
@@ -363,7 +365,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 				}
 				newItem.setFromModel(me);
 				dndArr.push(newItem);
-			} // wishlistid product model will match pdp
+			} // wishlistitemid product model will match pdp
 			else if(me.model.get('productUsage') === "Bundle"){
 				// loop over components
 				var bp = me.model.get('bundledProducts');
@@ -799,10 +801,36 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					this.form.submit();
 				}
 			}
-			else if(this.wishlistID){
-				me.showOverlay();
-				url = this.dndEngineUrl+this.dndToken+"/wishlist?wishlistID="+this.wishlistID;
-				// create new form
+			else if(this.wishlistItemID){
+				if(me.mcToken){
+					var mcReEditCallbackWishlist = function(storeUserToken){
+						// re-edit with mediaclip
+						var reeditURL = "/personalize/"+me.mcToken;
+						
+						// create new form that posts to mediaclip url (must be get, no post)
+						form = $('<form action="'+reeditURL+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice it's not posting to iframe
+						addParameter(form,"token",storeUserToken);
+						// save to object so we can clean it up if needed
+						me.form = form;
+
+						// insert and post form
+						$("body").append(me.form);
+						me.form.submit();
+					};
+					McCookie.getToken(mcReEditCallbackWishlist);
+
+					// make ajax call to endpoint that will make sure this projectId is in mzdb so atc callback knows to add to cart and remove from wishlist rather than adding new lineitem
+					$.ajax({
+						url: '/personalize-reedit/'+me.mcToken,
+						data:{"wishlistStr": me.wishlistItemID+"|"+me.wishlistID}
+					});
+					
+					return;  // exit doPers will be called again once we get a userToken
+				}
+				else{
+					me.showOverlay();
+					url = this.dndEngineUrl+this.dndToken+"/wishlist?wishlistID="+this.wishlistItemID;
+					// create new form
 					form = $('<form action="'+url+'" target="iframe'+this.time+'" method="post" id="form'+this.time+'_'+this.index+'" name="form'+this.time+'"></form>');
 					addParameter(form,"productID",dndItem.productID);
 					addParameter(form,"itemDescription",dndItem.itemDescription);
@@ -828,6 +856,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 					// insert and post form
 					$("body").append(this.form);
 					this.form.submit();
+				}
 			}
 			else if(dndItem.mcTheme && this.mcEnabled && this.dndArr.length == 1){ // don't use mediaclip if there are multiple items to be personalized
 				/* mediaclip will add to cart by making a server-side api call - we'll need to provide it with the same info that mozu-storefront-sdk product addtocart does

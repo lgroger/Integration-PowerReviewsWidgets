@@ -89,7 +89,9 @@ function($, Backbone, CartModels,Hypr,DNDToken,McCookie) {
                 }
             }
         }
-        McCookie.getMcImages(projectList);
+        if(projectList.length){
+            McCookie.getMcImages(projectList);
+        }
     },
     removeItem: function(e) {
       var $removeButton = $(e.currentTarget),

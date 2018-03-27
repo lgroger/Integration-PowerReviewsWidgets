@@ -3,28 +3,14 @@
 {% block title-tag-content %}{% firstof pageContext.metaTitle labels.yourAccount %} - {% parent %}{% endblock title-tag-content %}
 
 {% block body-tag-classes %} mz-myaccount {% endblock body-tag-classes %}
-
 {% block body-content %}
- <style type="text/css"> 
-[role="main"] > .mz-breadcrumbs:first-child {
-    display: none;
-}  
-</style>  
-
+{% block breadcrumbs %}{% endblock breadcrumbs %}
 {% require_script "pages/myaccount" %}
 {% require_script "modules/defaultScript" %}
 
 {% preload_json model "customer" %}
 
-<div class="mz-l-container echi-shi-my-acc">
-    <div class="my_account_page_breadcrumbs mz-cms-col-12-12">
-        <div class="mz-breadcrumbs">
-            <a href="/" class="mz-breadcrumb-link">Home</a>
-            <span class="mz-breadcrumb-separator"> / </span>
-            <span class="mz-breadcrumb-current">{{pageContext.cmsContext.template.path|safe}}</span>
-        </div>
-    </div>    
-    
+<div class="mz-l-container echi-shi-my-acc">   
     <div class="my-account-body-content">        
 
         <h1 class="mz-pagetitle my_account_heading">
@@ -49,11 +35,10 @@
             <div id="account-messages">
                 {% include "modules/common/message-bar" with model=model.messages %}
             </div>
-            <!-- #my profile div starts here-->     
            
 
             {% with themeSettings.myaccounttabsmobile|split(",") as val %}
-          
+            <!-- #myprofile div starts here -->
             <div id="tab_1" class="account_tab-content acc-pref-main-sec">
                 <button class="accordion1 {% if val.0 == " " %} myaccountmob_noval {% endif %}">{{val.0}}<span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
                 <span><i class="fa fa-caret-up" aria-hidden="true"></i></span>
@@ -109,9 +94,9 @@
             
             </script>
             {% endcomment %}
+            <!-- #myprofile div ends here -->
 
-            <!-- #my profile div ends here -->
-            <!-- #saved cards div starts here-->
+            <!-- #savedcards div starts here-->
             <div id="tab_2" class="account_tab-content">
                 <button class="accordion1 {% if val.1 == " " %} myaccountmob_noval {% endif %}">{{val.1}}<span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
                 <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
@@ -123,8 +108,9 @@
                     </div>
                 </div> 
             </div>
-            <!-- #saved cards div ends here -->
-            <!-- #address book div starts here-->
+            <!-- #savedcards div ends here -->
+
+            <!-- #addressbook div starts here-->
             <div id="tab_3" class="account_tab-content">
                 <button class="accordion1 {% if val.2 == " " %} myaccountmob_noval {% endif %}">{{val.2}}<span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
                 <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
@@ -136,9 +122,9 @@
                     </div>
                 </div>
             </div>
+            <!-- #addressbook div ends here -->
 
-            <!-- #address book div ends here -->
-            <!-- #my orders div starts here-->
+            <!-- #myorders div starts here-->
             <div id="tab_4" class="account_tab-content">
                  <button class="accordion1 {% if val.3 == " " %} myaccountmob_noval {% endif %}">{{val.3}} <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
                  <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
@@ -147,8 +133,9 @@
                     {% include "modules/my-account/my-account-orderhistory" with model=model.orderHistory showPaging=true %}
                 </div>
             </div>
-            <!-- #my orders div ends here -->  
-            <!-- #my wishlist div starts here-->
+            <!-- #myorders div ends here -->  
+
+            <!-- #wishlist div starts here-->
             <div id="tab_5" class="account_tab-content">
                 <button class="accordion1 {% if val.4 == " " %} myaccountmob_noval {% endif %}">{{val.4}} <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
                  <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
@@ -158,12 +145,13 @@
                     {% if siteContext.generalSettings.isWishlistCreationEnabled %}
                         <a id="wishlist"></a>
                         <div class="mz-l-stack-section mz-accountwishlist" id="account-wishlist">
-                            Please wait loading... 
+                            Your wishlist(s) are loading.
                         </div> 
                     {% endif %}
                 </div> 
             </div>
-            <!-- #my wishlist div ends here -->
+            <!-- #wishlist div ends here -->
+{% comment %}
             <!-- #shindigz rewards div starts here-->
             <div id="tab_6" class="account_tab-content">
                 <button class="accordion1 {% if val.5 == " " %} myaccountmob_noval {% endif %}" >{{val.5}} <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
@@ -177,7 +165,9 @@
                     </div>
                 </div>  
             </div>
-             <!-- #my orders div starts here-->
+{% endcomment %}
+
+             <!-- #myorders div starts here-->
             <div id="tab_7" class="account_tab-content">
                  <button class="accordion1 {% if val.6 == " " %} myaccountmob_noval {% endif %} " >{{val.6}} <span><i class="fa fa-caret-down" aria-hidden="true"></i></span> 
                  <span><i class="fa fa-caret-up" aria-hidden="true"></i></span></button>
@@ -186,8 +176,14 @@
                 {% include "modules/my-account/my-account-quoteorderhistory" showPaging=true %}
                 </div>
             </div>
-          {% endwith %} 
-            <!-- #shindigz rewards div ends here -->
+            <!-- #myorders div starts here-->
+
+            <!-- #myprojects div starts here-->
+            <div id="tab_8" class="account_tab-content">
+                <div id="mcProjects"></div>
+           </div>
+           <!-- #myprojects div ends here-->
+          {% endwith %}
         </div>
         </div>
         <div class="clear"></div>       

@@ -35,18 +35,19 @@ custom route settings
 {% block site-nav %}{% endblock site-nav %}
 {% block breadcrumbs %}{% endblock breadcrumbs %}
 {% block page-footer %}{% endblock page-footer %}
-{% block page-header %}{% include "modules/page-header-checkout" %}{% endblock page-header %}
+{% block page-header %}{% endblock page-header %}
 
 {% block trackingscript %}
     <style type="text/css">
         .mediaclip-designer-wrapper {
             top: 0px;
         }
+        /*
         @media screen and (min-width: 961px) {
             .mediaclip-designer-wrapper {
                 top: 95px;
             }
-        }
+        }*/
 
         #dndLoading {
             position:fixed;
@@ -93,12 +94,17 @@ custom route settings
                 }
             );
         }
+        function onSaveCompleteHandler(data){
+           // alert('saved');
+            console.log(data);
+        };
         window.mediaclip.hub.launch({
             projectId: "{{routeData.id}}",
             storeUserToken: "{{splitparams.1}}",
             container: document.getElementById('designer'),
             keepAliveUrl: '/renew-personalization',
-            onError: onErrorHandler
+            onError: onErrorHandler,
+            onSaveComplete: onSaveCompleteHandler
         });
 
         

@@ -763,8 +763,47 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             id = $removeButton.data('mz-cart-item');
             
             $('#btn-yes-removeitem').data('item-id',id).unbind("click").click(function(e){
+                
+                var li = self.model.get('items').get(id);
+                
+                // see if it was a mediaclip item (must do this before we delete the item from model
+                var options = li.get('product').get('options');
+                var dndTokenJSON;
+                for(var o=0;o<options.length;o++){
+                    if(options[o].attributeFQN === productAttributes.dndToken){
+                        var dndtokenvalue = options[o].shopperEnteredValue;
+                        if(dndtokenvalue!==""){
+                            try{
+                                dndTokenJSON=JSON.parse(dndtokenvalue);
+                            }
+                            catch(err){
+                                console.log(err);
+                            }
+                        }
+                        break;
+                    }
+                }
+                
                 self.model.removeItem($(this).data('item-id'));
                 $(".compare-full-error-container").hide();
+
+                //delete in mediaclip
+                if(dndTokenJSON){
+                    var info = DNDEngine.getTokenData(dndTokenJSON);
+                    console.log(info);
+                    if(info.type ==="mc"){
+                        var onDeleteCallback = function(data){
+                            console.log(data);
+                            if(data.projectId){
+                                //successful
+
+                            }
+                        };
+                        McCookie.deleteProject(info.token, onDeleteCallback);
+                    }
+                }
+
+
                 self.setestimateShipping();
                 return false;
             }); 
@@ -1002,13 +1041,12 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
 
     $(document).ready(function() {
      
-
-
-
     /* $(document).on('click','.sz_paypal_button',function(){
         window.location.href = "/cart/checkout";   
         //$.cookie('szpaypaloption',true,{path:'/'});   
      });*/
+
+        McCookie.getProjects(true);
 
         var cartModel = CartModels.Cart.fromCurrent(),
             // cartModel.chkoutFlag = 'chcked',
@@ -1049,67 +1087,6 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             // $(document).scrollTop(0);
             $('#cboxOverlay').show(); 
         });
-
-        var callback = function(res){
-            var $projects = $("#mcProjects");
-            
-            var loopArray = function(arr,html){
-                var $projectHolder = $("<div />");
-                for(var i=0;i<arr.length;i++){
-                    var p = arr[i];
-                    var $project = $("<div />").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').css({"max-width":"200px","max-height":"200px","display":"block"})).css({"float":"left","width":"250px"});
-                    if(p.entityContainer){
-                        $project.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>'));
-                    }
-                    
-                    if(html){
-                        $project.append($(html).clone());
-                    }
-                    $projectHolder.append($project);
-                }
-                $projectHolder.append($('<div style="clear:both" />'));
-                $projects.append($projectHolder);
-            };
-
-            if(res && res.projects && res.projects.length){
-                loopArray(res.projects,$('<button class="mc-project-atc">Edit &amp Add to Cart</button>'));
-            }
-            
-            if(res && res.inCart && res.inCart.length){
-                loopArray(res.inCart, $('<button class="delete-mc-project">Delete</button>'));
-            }
-            if(res && res.mcOnly && res.mcOnly.length){
-                loopArray(res.mcOnly, $('<button class="delete-mc-project">Delete</button>'));
-            }
-            $(document).on('click','.delete-mc-project',function(e){
-                var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-                console.log(this);
-                console.log(projectId);
-
-                var mcCallback = function(storeUserToken){
-                    $.post({
-                        url: "/delete-mc-project",
-                        dataType:"json",
-                        data:{"token": storeUserToken,"projectId":projectId}
-                    }).done(function(data){
-                        console.log(data);
-                    });
-                };
-
-                McCookie.getToken(mcCallback);
-            });
-            $(document).on('click','.mc-project-atc',function(e){
-                var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-                if(projectId){
-                    var mcCallback = function(storeUserToken){
-                        document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
-                    };
-
-                    McCookie.getToken(mcCallback);
-                }
-            });
-        };
-        McCookie.getProjects(callback);
 
         /*$('#triggerAmazon').click(function(){
             $('#OffAmazonPaymentsWidgets1').trigger('click'); 

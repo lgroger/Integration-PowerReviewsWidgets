@@ -403,19 +403,23 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
 					Marketo.subscribe(email,callback);
 				}
 				
-                return api.action('customer', 'createStorefront', payload).then(function () {
-                    if (self.redirectTemplate) {
-                        window.location.pathname = self.redirectTemplate;
-                    }
-                    else {
-                        if(window.checkoutflag !== 0){
-                            window.location.href = "/cart/checkout";
+                return api.action('customer', 'createStorefront', payload).then(function (signupres) {
+                    var mcCallback = function(res){
+                        if (self.redirectTemplate) {
+                            window.location.pathname = self.redirectTemplate;
                         }
-                        else{
-                            //window.location.reload();
-                            window.location.href = "/myaccount";
+                        else {
+                            if(window.checkoutflag !== 0){
+                                window.location.href = "/cart/checkout";
+                            }
+                            else{
+                                //window.location.reload();
+                                window.location.href = "/myaccount";
+                            }
                         }
-                    }
+                    };
+            
+                    McCookie.onUserLogin(mcCallback);
                 }, self.displayApiMessage);
             }
         },
@@ -546,7 +550,7 @@ define(['shim!vendor/bootstrap/js/popover[shim!vendor/bootstrap/js/tooltip[modul
     });//document.ready
 
     var triggerLogin = function(){
-        //console.log("triggerLogin");
+        console.log("login-links triggerLogin");
         $('[data-mz-action="login"]').trigger('click');
        // $('#cboxOverlay').show();
         $('#mz-quick-view-container').fadeOut(350);

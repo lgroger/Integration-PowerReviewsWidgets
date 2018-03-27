@@ -14,8 +14,10 @@ function ($) {
 		secure:	false,
 		path: "/"
 	};
-	var setCookie = function(newUserToken,expirationUtc){
-		var user = require.mozuData('pagecontext').user;
+	var setCookie = function(newUserToken,expirationUtc,user){
+		if(!user){
+			user = require.mozuData('pagecontext').user;
+		}
 		var str,userId;
 		if(user.isAnonymous || user.accountId === 0){
 			str = "1|";
@@ -127,7 +129,7 @@ function ($) {
 	};
 	
 	var renewToken = function(callback,expirationUtc){
-		console.log("renewToken");
+		//console.log("renewToken");
 		$.post({
 			url: '/renew-personalization',
 			data:{"token":token,"expirationUtc":expirationUtc} // this is just so that request is unique by expirationUc since Promises are not supposed to repeat the exact requests (?)
@@ -146,7 +148,8 @@ function ($) {
 		});
 	};
 	var convertToken = function(cookie,callback){
-		console.log("convertToken");
+		//console.log("convertToken");
+		//NOTE: this can be called upon login/signup where pagecontext.user may not have been reloaded yet - ajax call to kibo custom routes endpoint will have the updated user context though
 		$.ajax({
 			url: "/get-personalization-usertoken",
 			dataType:"json",
@@ -155,7 +158,7 @@ function ($) {
 			//console.log(data);
 			token = data.token;
 			//console.log(cnt);
-			setCookie(token,data.expirationUtc); // save for later
+			setCookie(token,data.expirationUtc,data.user); // save for later - data.user should be returned since this function may be called upon login/signup before user has reloaded page to have new user info as part of pagecontext.user
 			if(typeof callback !== "undefined" && cnt <= 999){
 				callback(token);
 			}
@@ -320,9 +323,9 @@ function ($) {
 	var onUserLogin = function(callback){
 		console.log('onUserLogin');
 		var cookie = getValues();
-		if(cookie){
-			var user = require.mozuData('pagecontext').user;
-			if(!(user.isAnonymous || user.accountId === 0) && cookie.anon){
+		console.log(cookie);
+		if(cookie){ // only continue if user already has a mediaclip user token string
+			if(cookie.anon){
 				// anonymous user was converted to logged in user
 				convertToken(cookie,callback);
 			}
@@ -343,36 +346,200 @@ function ($) {
 		}
 	};
 
-	var getProjects = function(callback){
+	var projectsCallback = function(res,carousel){
+        var $projects = $("#mcProjects");
+        
+        var loopArray = function(arr,html,label){
+            if(arr.length){
+                var $projectHolder = $("<div />").attr("class","pdp-related-products");
+                if(label){
+                    $projects.append($("<h2>"+label+"</h2>"));
+                }
+                for(var i=0;i<arr.length;i++){
+					var p = arr[i];
+					var $project,date = new Date(p.createdDateUtc);
+					if(carousel){
+						$project = $("<div />").attr("class","mz-productlist-item").attr("data-mc-project",p.id);
+					
+						var $projectInner = $("<div />").attr("class","mz-productlisting mz-productlist-tiled");
+						$project.append($projectInner);
+						var $productImage = $("<a />").attr("href","/p/"+p.entityContainer.item.productCode).append($('<img src="'+p.urlThumb+'" />').attr("title",p.id).css({"max-width":"210px","max-height":"210px"}));
+						$projectInner.append($("<div />").attr("class","mz-productlisting-image").append($productImage));
+						var $productInfo = $("<div />").attr("class","mz-productlisting-info");
+						$projectInner.append($productInfo);
+						$productInfo.append($('<div />').text(date.toDateString()+' '+date.toLocaleTimeString()).attr("class","mc-create-date"));
+
+						if(p.entityContainer){
+							$productInfo.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
+						}
+						
+						if(html){
+							$productInfo.append($(html).clone());
+						}
+					}
+					else{
+						$project = $("<div />").attr("class","mz-productlist-item").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').css({"max-width":"200px","max-height":"200px","display":"block"}).attr("title",p.id)).css({"float":"left","width":"250px"});
+						$project.append($('<div />').text(date.toDateString()+' '+date.toLocaleTimeString()).attr("class","mc-create-date"));
+	
+						if(p.entityContainer){
+							$project.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
+						}
+						
+						if(html){
+							$project.append($(html).clone());
+						}
+					}
+
+                    $projectHolder.append($project);
+                }
+               // $projectHolder.append($('<div style="clear:both" />'));
+				$projects.append($projectHolder);
+				//setTimeout(function(){
+				if(carousel){
+					$projectHolder.owlCarousel({
+						loop:true, margin:10, nav:true, responsive:{0:{items:2}, 600:{items:2}, 1000:{items:4}}
+					});
+				}
+				//}, 50);
+            }
+        };
+
+        var loopRecords = function(arr,html,label){
+            if(arr.length){
+                var $projectHolder = $("<div />");
+                if(label){
+                    $projectHolder.append($("<h1>"+label+"</h1>"));
+                }
+                for(var i=0;i<arr.length;i++){
+                    var p = arr[i];
+                    var $project = $("<div />").attr("data-mc-project",p.id).attr("class","mc-saved-project").append("<div>"+p.id+"</div>").css({"float":"left","width":"350px","height":"75px"});
+					$project.append($('<a href="/p/'+p.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
+                    
+                    if(html){
+                        $project.append($(html).clone());
+                    }
+                    $projectHolder.append($project);
+                }
+                $projectHolder.append($('<div style="clear:both" />'));
+				$projects.append($projectHolder);
+            }
+        };
+
+        if(res && res.projects && res.projects.length){
+            loopArray(res.projects,$("<div/>").append($('<button class="mc-project-atc">Edit / Add to Cart</button>')).append($('<button class="delete-mc-project">Delete</button>')),"My Projects");
+        }
+        /*
+        if(res && res.inCart && res.inCart.length){
+            loopArray(res.inCart, $('<button class="delete-mc-project">Delete</button>'),"In Cart/Orders");
+        }
+        if(res && res.mcOnly && res.mcOnly.length){
+            loopArray(res.mcOnly, $('<button class="delete-mc-project">Delete</button>'),"Not in Entity List");
+        }
+        if(res && res.mzdbOnly && res.mzdbOnly.length){
+            loopRecords(res.mzdbOnly, $('<button class="ondelete-mc-project">Delete Entity</button>'),"Not in Meidaclip");
+        } 
+        $(document).on('click','.ondelete-mc-project',function(e){
+            var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+            console.log(this);
+            console.log(projectId);
+
+            var self = this;
+            // call on delete endpoint
+            var mcCallback = function(storeUserToken){
+                $.post({
+                    url: "/on-mc-project-delete",
+                    dataType:"json",
+                    data:{"projectId":projectId} // mimic what mediaclip passes to us
+                }).done(function(data){
+                    if(data.projectId){
+                        console.log(data);
+                        // successful
+                        $(self).parents("[data-mc-project='"+data.projectId+"']").remove();
+                    }
+                });
+            };
+
+            getToken(mcCallback);
+        });*/
+
+        $(document).on('click','.delete-mc-project',function(e){
+			if(confirm("Are you sure you want to delete your work?")){
+				var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+				//console.log(this);
+				//console.log(projectId);
+			
+				var self = this;
+				var onDeleteCallback = function(data){
+					if(data.projectId){
+						//successful
+						$(self).parents("[data-mc-project='"+data.projectId+"']").remove();
+					}
+					else{
+						console.log('error deleting project');
+						console.log(data);
+					}
+				};
+				deleteProject(projectId,onDeleteCallback);
+			}
+        });
+        $(document).on('click','.mc-project-atc',function(e){
+            var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+            if(projectId){
+                var mcCallback = function(storeUserToken){
+                    document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
+                };
+
+                getToken(mcCallback);
+            }
+        });
+    };
+
+	var deleteProject = function(projectId,callback){
+		var mcCallback = function(storeUserToken){
+			$.post({
+				url: "/delete-mc-project",
+				dataType:"json",
+				data:{"token": storeUserToken,"projectId":projectId}
+			}).done(function(data){
+				callback(data);
+			});
+		};
+
+		getToken(mcCallback);
+	};
+	var getProjects = function(carousel){
 		var user = require.mozuData('pagecontext').user;
-		var userId;
+		var userId,token;
 		if(user.isAnonymous || user.accountId === 0){
 			userId = user.userId;
 		}
 		else{
 			userId = user.accountId.toString(); // numeric value must be converted to string so we can compare string to string below
 		}
+		var cookie = getValues();
+		if(cookie && cookie.token){
+			// TO DO - need to get check to see if it's still valid
+			token = cookie.token;
+		}
 
 		$.post({
 			url: "/get-personalized-projects",
 			dataType:"json",
-			data:{"userId": userId}
+			data:{"userId": userId,"token": token}
 		}).done(function(data){
-			if(typeof callback === "function"){
-				callback(data);
-			}
+			projectsCallback(data,carousel);
 			console.log(data);
 		});
 	};
 
 	return {
-		setCookie: setCookie,
 		getToken:getToken,
 		getMcImages: getMcImages,
 		deleteCookie: deleteCookie,
 		onUserLogin: onUserLogin,
 		getMcImagesFromCache: getMcImagesFromCache,
-		getProjects: getProjects
+		getProjects: getProjects,
+		deleteProject: deleteProject
 	};
 	
 	
