@@ -45,7 +45,10 @@ define(
 
             $("#mz-added-to-cart:empty").remove();
 			McCookie.getMcImagesFromCache();
-        },
+			if(window.recommendedproducts){
+				window.certonaRecommendations(window.recommendedproducts); // this is automatically fired by certona on add to cart but we need to retrigger it if we re-render, variable & function are both set in certonanewrecommv2.js
+			}
+		},
         showPersonalizeImage: function(){
             var self = this;
             var product = this.model.get('product');
