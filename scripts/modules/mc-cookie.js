@@ -127,7 +127,7 @@ function ($) {
 	};
 	
 	var renewToken = function(callback,expirationUtc){
-		console.log("renewToken");
+		//console.log("renewToken");
 		$.post({
 			url: '/renew-personalization',
 			data:{"token":token,"expirationUtc":expirationUtc} // this is just so that request is unique by expirationUc since Promises are not supposed to repeat the exact requests (?)
@@ -146,7 +146,7 @@ function ($) {
 		});
 	};
 	var convertToken = function(cookie,callback){
-		console.log("convertToken");
+		//console.log("convertToken");
 		$.ajax({
 			url: "/get-personalization-usertoken",
 			dataType:"json",
@@ -283,7 +283,7 @@ function ($) {
 
 	};
 	var getMcImages = function(projectList){
-		console.trace('getMcImages');
+		//console.trace('getMcImages');
 		//console.log(projectList);
 		if($("img[data-mz-token-type='mc']").length > 0 || (projectList && projectList.length)){
 			if(!projectList){
@@ -318,7 +318,7 @@ function ($) {
 	};
 
 	var onUserLogin = function(callback){
-		console.log('onUserLogin');
+		//console.log('onUserLogin');
 		var cookie = getValues();
 		if(cookie){
 			var user = require.mozuData('pagecontext').user;
