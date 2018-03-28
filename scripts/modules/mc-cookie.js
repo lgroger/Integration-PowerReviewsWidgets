@@ -69,7 +69,7 @@ function ($) {
 			return null;
 		}
 	};
-	
+
 	var getToken = function(callback){ // user is pagecontext.user object
 		//console.log("getToken");
 		
@@ -531,6 +531,14 @@ function ($) {
 			console.log(data);
 		});
 	};
+	var setWishlistToken = function(token, wishlistItemID, wishlistID){
+		// update entity for token with wishlist info
+		$.ajax({
+			url: '/personalize-reedit/'+token,
+			data:{"wishlistStr": wishlistItemID+"|"+wishlistID},
+			async: false
+		});
+	};
 
 	return {
 		getToken:getToken,
@@ -539,7 +547,8 @@ function ($) {
 		onUserLogin: onUserLogin,
 		getMcImagesFromCache: getMcImagesFromCache,
 		getProjects: getProjects,
-		deleteProject: deleteProject
+		deleteProject: deleteProject,
+		setWishlistToken: setWishlistToken
 	};
 	
 	

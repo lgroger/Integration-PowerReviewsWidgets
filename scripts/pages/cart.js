@@ -763,47 +763,8 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
             id = $removeButton.data('mz-cart-item');
             
             $('#btn-yes-removeitem').data('item-id',id).unbind("click").click(function(e){
-                
-                var li = self.model.get('items').get(id);
-                
-                // see if it was a mediaclip item (must do this before we delete the item from model
-                var options = li.get('product').get('options');
-                var dndTokenJSON;
-                for(var o=0;o<options.length;o++){
-                    if(options[o].attributeFQN === productAttributes.dndToken){
-                        var dndtokenvalue = options[o].shopperEnteredValue;
-                        if(dndtokenvalue!==""){
-                            try{
-                                dndTokenJSON=JSON.parse(dndtokenvalue);
-                            }
-                            catch(err){
-                                console.log(err);
-                            }
-                        }
-                        break;
-                    }
-                }
-                
                 self.model.removeItem($(this).data('item-id'));
                 $(".compare-full-error-container").hide();
-
-                //delete in mediaclip
-                if(dndTokenJSON){
-                    var info = DNDEngine.getTokenData(dndTokenJSON);
-                    console.log(info);
-                    if(info.type ==="mc"){
-                        var onDeleteCallback = function(data){
-                            console.log(data);
-                            if(data.projectId){
-                                //successful
-
-                            }
-                        };
-                        McCookie.deleteProject(info.token, onDeleteCallback);
-                    }
-                }
-
-
                 self.setestimateShipping();
                 return false;
             }); 

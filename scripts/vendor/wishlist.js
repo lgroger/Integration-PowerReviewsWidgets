@@ -1,6 +1,39 @@
-define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-product', 'vendor/bootstrap-datetimepicker'], function($, Api, Hypr, ProductModels, SimpleDateTimePicker){
+define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-product', 'vendor/bootstrap-datetimepicker',"modules/dnd-token","modules/mc-cookie"], function($, Api, Hypr, ProductModels, SimpleDateTimePicker,DNDToken,McCookie){
 	var productAttributes = Hypr.getThemeSetting('productAttributes');
 	var dndEngineUrl = Hypr.getThemeSetting('dndEngineUrl');
+
+	var getMcProjectsFromModel = function(model){ // cart lineitem model
+		var projectList = [];
+		// see if it contains mediaclip personalization
+		var options = model.get('options');
+		if(options && options.length){
+			var dndTokenJSON;
+			for(var o=0;o<options.length;o++){
+				if(options[o].attributeFQN === productAttributes.dndToken){
+					var dndtokenvalue = options[o].shopperEnteredValue;
+					if(dndtokenvalue!==""){
+						try{
+							dndTokenJSON=JSON.parse(dndtokenvalue);
+						}
+						catch(err){
+							console.log(err);
+						}
+					}
+					break;
+				}
+			}
+
+			//delete in mediaclip
+			if(dndTokenJSON){
+				var info = DNDToken.getTokenData(dndTokenJSON);
+				if(info.type ==="mc"){
+					projectList.push(info.token);
+				}
+			}
+		}
+		return(projectList);
+	};
+
 	var wishlist = {
 		getTemplate: function(){
 			//console.log("Wishlist getTemplate");
@@ -264,7 +297,19 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	        if(id === "new-list") {
 	            if($("#new-wishlist-name").val() !== "") {
 	                me.createNewWishlist($("#new-wishlist-name").val(), $('#new-events-name option:selected').val(), $("#new-event-date").val()).then(function(res){
-	                    me.addItem(res.id, model).then(function(res){
+	                    me.addItem(res.id, model).then(function(addItemRes){
+							console.log(res.id);
+							console.log(addItemRes);
+
+							// update mediaclip entity record if needed to show wishlistID
+							var mcProjects = getMcProjectsFromModel(model);
+							console.log(mcProjects);
+							if(mcProjects.length){
+								for(var p = 0; p<mcProjects.length;p++){
+									McCookie.setWishlistToken(mcProjects[p],addItemRes.id,res.id);
+								}
+							}
+
 	                        /*$("#wishlist-overlay").hide();
 	                        $($wishlist).remove();*/
 	                         me.showAddedPopup('Item Successfully Added To Wishlist.');
@@ -275,12 +320,23 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	                        	}
 	                        	$("#wishlist-close").trigger('click');
 	                    	}
-	                        callBackFunction(res,model);
+	                        callBackFunction(addItemRes,model);
 	                    });
 	                });
 	            }
 	        }else {
 	            me.addItem(id, model).then(function(res){
+					console.log(id);
+					console.log(res);
+					// update mediaclip entity record if needed to show wishlistID
+					var mcProjects = getMcProjectsFromModel(model);
+					console.log(mcProjects);
+					if(mcProjects.length){
+						for(var p = 0; p<mcProjects.length;p++){
+							McCookie.setWishlistToken(mcProjects[p],addItemRes.id,res.id);
+						}
+					}
+
 	                /*$("#wishlist-overlay").hide();
 	                $($wishlist).remove();*/
 	                me.showAddedPopup('Item Successfully Added To Wishlist.');
