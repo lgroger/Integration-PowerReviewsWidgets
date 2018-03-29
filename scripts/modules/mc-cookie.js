@@ -321,7 +321,7 @@ function ($) {
 	};
 
 	var onUserLogin = function(callback){
-		console.log('onUserLogin');
+		//console.log('onUserLogin');
 		var cookie = getValues();
 		console.log(cookie);
 		if(cookie){ // only continue if user already has a mediaclip user token string
