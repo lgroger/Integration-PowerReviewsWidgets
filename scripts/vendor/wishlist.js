@@ -298,12 +298,11 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	            if($("#new-wishlist-name").val() !== "") {
 	                me.createNewWishlist($("#new-wishlist-name").val(), $('#new-events-name option:selected').val(), $("#new-event-date").val()).then(function(res){
 	                    me.addItem(res.id, model).then(function(addItemRes){
-							console.log(res.id);
-							console.log(addItemRes);
+							//console.log(res.id);
+							//console.log(addItemRes);
 
 							// update mediaclip entity record if needed to show wishlistID
 							var mcProjects = getMcProjectsFromModel(model);
-							console.log(mcProjects);
 							if(mcProjects.length){
 								for(var p = 0; p<mcProjects.length;p++){
 									McCookie.setWishlistToken(mcProjects[p],addItemRes.id,res.id);
@@ -326,14 +325,13 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	            }
 	        }else {
 	            me.addItem(id, model).then(function(res){
-					console.log(id);
-					console.log(res);
+					//console.log(id);
+					//console.log(res);
 					// update mediaclip entity record if needed to show wishlistID
 					var mcProjects = getMcProjectsFromModel(model);
-					console.log(mcProjects);
 					if(mcProjects.length){
 						for(var p = 0; p<mcProjects.length;p++){
-							McCookie.setWishlistToken(mcProjects[p],addItemRes.id,res.id);
+							McCookie.setWishlistToken(mcProjects[p],res.id,id);
 						}
 					}
 

@@ -817,11 +817,11 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						$("body").append(me.form);
 						me.form.submit();
 					};
-					McCookie.getToken(mcReEditCallbackWishlist);
 
 					// make ajax call to endpoint that will make sure this projectId is in mzdb so atc callback knows to add to cart and remove from wishlist rather than adding new lineitem
-					McCookie.setWishlistToken(me.mcToken,me.wishlistItemID,me.wishlistID);
-					
+					McCookie.setWishlistToken(me.mcToken,me.wishlistItemID,me.wishlistID); // synchronous call
+					McCookie.getToken(mcReEditCallbackWishlist);
+
 					return;  // exit doPers will be called again once we get a userToken
 				}
 				else{
