@@ -21,6 +21,18 @@
       "id": "offer_promo_layout_1_edit",
       "path": "offer_promo_layout_1_edit.js"
     },{
+      "id": "lp-category-html-widget",
+      "path": "lp-category-html-widget.js"
+    },{
+      "id": "lp-leftnav",
+      "path": "lp-leftnav.js"
+    },{ 
+      "id": "lp-category-3x",
+      "path": "lp-category-3x.js" 
+    },{
+      "id": "partyideas",
+      "path": "partyideas.js"
+    },{
       "id": "menu-edit",
       "path": "menu-edit.js"
     },{
@@ -305,8 +317,8 @@
     },
     {
       "entityType": "category",
-      "id": "categorylanding",
-      "template": "categorylanding",
+      "id": "lp-cat-page",
+      "template": "lp-cat-page",
       "title": "Landing Page",
       "userCreatable": false,
       "customEditor": "categoryContent@mozu"
@@ -1226,7 +1238,7 @@
       "validPageTypes": [
         "*"
       ]
-    },
+    }, 
     {
       "displayName": "Theme Page Buttons",
       "displayTemplate": "misc/super-page-widget",
@@ -1356,6 +1368,38 @@
       ]
     },
     {
+      "customEditor": "lp-category-html-widget",
+      "displayName": "LP Category HTML",
+      "id": "lp-category-html-widget",
+      "displayTemplate": "misc/lp-category-html-widget", 
+      "validPageTypes": [
+        "*"
+      ]
+    },{
+      "customEditor": "lp-leftnav",
+      "displayName": "LP Category Nav",
+      "id": "lp-leftnav",
+      "displayTemplate": "misc/lp-leftnavW",
+      "validPageTypes": [
+        "*"
+      ]
+    },{
+      "customEditor": "lp-category-3x",
+      "displayName": "LP 3xL",
+      "id": "lp-category-3x",
+      "displayTemplate": "misc/lp-category-3xL",
+      "validPageTypes": [
+        "*"
+      ]
+    },{
+      "customEditor": "partyideas",
+      "displayName": "Party Ideas",
+      "id": "partyideas",
+      "displayTemplate": "misc/partyideas",
+      "validPageTypes": [
+        "*"
+      ]
+    },{
       "defaultConfig": {
         "body": "<h2>Insert Title</h2><p>Insert Content</p>"
       },

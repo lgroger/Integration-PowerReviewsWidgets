@@ -1,0 +1,58 @@
+{% extends "page" %}
+
+{% block title-tag-content %}{% firstof pageContext.metaTitle model.name %} - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-lp-category {% endblock body-tag-classes %}
+
+{% block body-content %}
+	{% require_script "pages/lp-category" %}
+<div class="landing-page">
+    <h1 class="landing-page-title">{{model.content.name}}</h1>
+	{% dropzone "lp-category-top" scope="page" %} 
+
+	<div id="LP-wrapper"> 
+		<div id="left-nav">  
+			{% if pageContext.isEditMode %}Left Nav Slot{% endif %}
+			{% dropzone "lp-category-left" scope="page" %}
+		{% if pageContext.isMobile or pageContext.isTablet %}
+		</div>
+		{% endif %}
+
+			<div id="img-widgets">
+				<div id="img-widget1">
+					{% if pageContext.isEditMode %}Image Widget Slot1{% endif %}
+						{% dropzone "lp-category-img-widget1" scope="page" %}
+				</div>
+				<div id="img-widget2">
+					{% if pageContext.isEditMode %}Image Widget Slot2{% endif %}
+					{% dropzone "lp-category-img-widget2" scope="page" %}
+				</div>
+				<div id="img-widget3n4">
+					<div id="img-widget3">
+						{% if pageContext.isEditMode %}Image Widget Slot3{% endif %}
+						{% dropzone "lp-category-img-widget3" scope="page" %}
+					</div>
+					<div id="img-widget4">
+						{% if pageContext.isEditMode %}Image Widget Slot4{% endif %}
+						{% dropzone "lp-category-img-widget4" scope="page" %}
+					</div>
+				</div>
+			</div>
+		{% if pageContext.isDesktop %}
+		</div>
+		{% endif %}
+		<div id="right-content">
+			{% if pageContext.isEditMode %}Widget Slot{% endif %}
+			{% dropzone "lp-category-right" scope="page" %}
+		</div>
+		<div class="clear"></div>
+	</div>
+
+	{% dropzone "lp-category-bottom" scope="page" %} 
+</div>
+    
+
+{% endblock body-content %}
+
+{% block body-below-content %} 
+{% endblock body-below-content %}
