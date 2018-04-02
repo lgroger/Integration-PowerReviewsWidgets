@@ -1,0 +1,66 @@
+.LP-cat-2x{
+	.content{
+		position: relative;
+                min-height: 100px;
+		span{
+			position: absolute;
+			padding: 10px 0;
+			left: 0;
+			text-indent: 10px !important;
+			color: #fff;
+			margin: 0;
+			color: @white;
+			font-size: 30px;
+			@media screen and (max-width: 678px) and (min-width: 320px) {
+				font-size: 22px;
+			}
+			font-family: @fontFamily;
+			font-weight: 300;
+			width: 100%;
+			display: block;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+			opacity: 0.9;
+			bottom: 0;
+			background: linear-gradient(to bottom, rgba(15,0,0,0), rgb(8, 8, 8));  
+		}
+	}
+	.small-image{ 
+		width: 100%;
+		display: block;
+		.content{
+		    display: inline-block;
+		    vertical-align: top;
+		}
+	}
+}
+@media @smallmobile{
+	.LP-cat-2x{
+		padding: 0 10px 25px 10px;
+		.small-image{ 
+			.content{
+			    width: 45%;
+			    &:first-child{
+			    	margin: 0 12.5px 0 0;
+			    }
+			    &:last-child{
+			    	margin: 0 0 0 12.5px; 
+			    	span{
+                        text-indent: 22.5px;
+			    	}
+			    }
+			}
+		}
+	}
+}
+@media @desktop{
+	.LP-cat-2x{
+		padding: 0 0 25px 0;
+		.small-image{ 
+			.content{
+				width: 48%;
+			}
+		}
+	}
+}

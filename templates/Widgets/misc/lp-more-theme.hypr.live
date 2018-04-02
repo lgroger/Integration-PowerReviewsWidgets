@@ -1,0 +1,11 @@
+
+<div class="more-widget">
+	<h3 class="title"><span>{{model.config.hdrname|truncatewords(5)}}</span></h3>
+	<div class="more-themes">
+		<div class="links">
+			{% for data in model.config.data|dictsort("mcap") %}
+				<div><a {% if data.mlink %}href="{{data.mlink}}"{% else %} href="javascript:void(0);"{% endif %}><span>{{data.mcap|truncatewords(3)}}</span></a></div>
+			{% endfor %}
+		</div>
+	</ul>
+</div>

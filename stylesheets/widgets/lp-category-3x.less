@@ -12,12 +12,10 @@
             left: 0;
             color: #fff;
             margin: 0;
-            /*color: @white;*/ 
             font-size: 30px;
             @media screen and (max-width: 678px) and (min-width: 320px) {
                 font-size: 22px;
             }
-            /*font-family: @fontScript !important;*/
             font-weight: 300;
             width: 100%;
             display: block;
@@ -27,10 +25,9 @@
             opacity: 0.8;
             bottom: 15px;
             background: white;
-            color: @primaryBlue;
+            color: @primaryColor;
         }
     }
-    
     &.leftlayout{
         .left{
             display: inline-block;
@@ -51,10 +48,8 @@
             display: inline-block;
             vertical-align: top;
         }
-        
     }
 }
-
 @media @smallmobile{
     .LP-cat-3xl{
         padding: 0 10px 25px 10px;
@@ -66,10 +61,8 @@
             .right{
                 width: 100%;
                 padding: 12.5px 0 0 0;
-                
                 .content{
                     width: 45%; 
-                    
                     &:first-child{
                         margin: 0 12.5px 0 0;
                         span{
@@ -78,36 +71,25 @@
                     }
                     &:last-child{
                         margin: 0 0 0 12.5px;
-                        span{
-                            /*							text-indent: 22.5px;*/
-                        }
                     }
                 }
                 
             }
-            
         }
         &.rightlayout{
             .left{
                 width: 100%;
                 padding: 0 0 12.5px 0;
-                
                 .content{
                     width: 45%;
-                    
                     &:first-child{
                         margin: 0 12.5px 0 0;
-                        
                         span{
                             bottom: 0; 
-                            
                         }
                     }
                     &:last-child{
                         margin: 0 0 0 12.5px;
-                        span{
-                            /*text-indent: 22.5px;*/
-                        }
                     }
                 }
             }
@@ -115,11 +97,9 @@
                 width: 100%;
                 padding: 12.5px 0 0 0;
             }
-            
         }
     }
 }
-
 @media @desktop{
     .LP-cat-3xl{
         padding: 0 0 27px 0;
@@ -131,10 +111,8 @@
             .right{
                 width: 33%;
                 padding: 0 0 0 21px;
-                
                 .content{
                     width: 100%;
-                    
                     &:first-child{
                         padding: 0 0 13px 0;
                         span{
@@ -151,16 +129,13 @@
                     }
                 }
             }
-            
         }
         &.rightlayout{
             .left{
                 width: 33%;
                 padding: 0 21px 0 0;
-                
                 .content{
                     width: 100%;
-                    
                     &:first-child{
                         padding: 0 0 13px 0;
                         span{
@@ -180,8 +155,6 @@
                 width: 66%;
                 padding-left: 6px;
             }
-            
         }
     }
 }
-
