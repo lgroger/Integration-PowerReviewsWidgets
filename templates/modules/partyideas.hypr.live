@@ -1,0 +1,153 @@
+<!-- HTML for Party Ideas Widget -->
+
+<div class="LP-cat-pi">
+    <div class="left">
+        <div class="logoContainer">
+            <div class="party">
+            </div>
+            {%if pageContext.isDesktop %}
+                <span class="desc">Great ideas come from great party throwers like you</span>
+            {%else%}
+                <div class="horizontalLine"><hr/></div>
+            {% endif %}
+        </div>
+        <div class="large-image">
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.lgcatselectA) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.lgoverrideA %}
+                                <img src="{{model.data.lgimageurlA}}" alt="{{model.data.lgcatnameA}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatnameA}}"/>
+                                {% endwith %}
+                            {% endif %}
+                        </a>
+                        {% if model.data.lgcatnameA %}
+                            <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                {{model.data.lgcatnameA}}
+                            </a> 
+                        {% endif %}
+                    {% endif %}
+                {% endwith %} 
+            </div>
+             <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.lgcatselectB) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.lgoverrideB %}
+                                <img src="{{model.data.lgimageurlB}}" alt="{{model.data.lgcatnameB}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatnameB}}"/>
+                                {% endwith %}
+                            {% endif %}
+
+                        </a>
+                        {% if model.data.lgcatnameB %}
+                        <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {{model.data.lgcatnameB}}
+                        </a>
+                        {%endif%}
+                    {% endif %} 
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        {%if pageContext.isDesktop %}
+            <div class="horizontalLineContainer">
+                <hr/>
+            </div>
+        {%endif%}
+        <div class="smallImageContainer">
+            <div class="small-image">
+                <div class="content">
+                    {% with model.categories|findwhere("categoryId",model.data.smcatselectC) as category %}
+                        {% if category %}
+                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                {% if model.data.smoverrideC %}
+                                    <img src="{{model.data.smimageurlC}}" alt="{{model.data.smcatnameC}}"/>
+                                {% else %}
+                                    {% with category.content.categoryImages|first as catimage %}
+                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameC}}"/>
+                                    {% endwith %}
+                                {% endif %}
+                            </a>
+                            {% if model.data.smcatnameC %}
+                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                    {{model.data.smcatnameC}}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="content">
+                    {% with model.categories|findwhere("categoryId",model.data.smcatselectD) as category %}
+                        {% if category %}
+                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                {% if model.data.smoverrideD %}
+                                    <img src="{{model.data.smimageurlD}}" alt="{{model.data.smcatnameD}}"/>
+                                {% else %}
+                                    {% with category.content.categoryImages|first as catimage %}
+                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameD}}"/>
+                                    {% endwith %}
+                                {% endif %}
+                            </a>
+                            {% if model.data.smcatnameD %}
+                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                    {{model.data.smcatnameD}}
+                                </a>
+                            {%endif%}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+            <div class="small-image">
+                <div class="content">
+                    {% with model.categories|findwhere("categoryId",model.data.smcatselectE) as category %}
+                        {% if category %}
+                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                {% if model.data.smoverrideE %}
+                                    <img src="{{model.data.smimageurlE}}" alt="{{model.data.smcatnameE}}"/>
+                                {% else %}
+                                    {% with category.content.categoryImages|first as catimage %}
+                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameE}}"/>
+                                    {% endwith %}
+                                {% endif %}
+                            </a>
+                            {% if model.data.smcatnameE %}
+                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                    {{model.data.smcatnameE}}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+                <div class="content">
+                    {% with model.categories|findwhere("categoryId",model.data.smcatselectF) as category %}
+                        {% if category %}
+                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                {% if model.data.smoverrideF %}
+                                    <img src="{{model.data.smimageurlF}}" alt="{{model.data.smcatnameF}}"/>
+                                {% else %}
+                                    {% with category.content.categoryImages|first as catimage %}
+                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameF}}"/>
+                                    {% endwith %}
+                                {% endif %}
+                            </a>
+                            {% if model.data.smcatnameF %}
+                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                    {{model.data.smcatnameF}} 
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<!-- HTML for Party Ideas Widget --> 
