@@ -426,7 +426,7 @@ function ($) {
         };
 
         if(res && res.projects && res.projects.length){
-            loopArray(res.projects,$("<div/>").append($('<button class="mc-project-atc">Edit / Add to Cart</button>')).append($('<button class="delete-mc-project">Delete</button>')),"My Projects");
+            loopArray(res.projects,$("<div/>").append($('<button class="mc-project-atc">Edit / Add to Cart</button>')).append($('<button class="delete-mc-project">Delete</button>')).append($('<button class="copy-mc-project">Copy</button>')),"My Projects");
         }
         /*
         if(res && res.inCart && res.inCart.length){
@@ -461,7 +461,10 @@ function ($) {
 
             getToken(mcCallback);
         });*/
-
+		$(document).on('click','.copy-mc-project',function(e){
+			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+			copyProject(projectId);
+        });
         $(document).on('click','.delete-mc-project',function(e){
 			if(confirm("Are you sure you want to delete your work?")){
 				var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
@@ -493,13 +496,32 @@ function ($) {
             }
         });
     };
+	var copyProject = function(projectId){
+		var mcCallback = function(storeUserToken){
+			$.post({
+				url: "/copy-mc-project/"+projectId,
+				dataType:"json",
+				data:{"token": storeUserToken}
+			}).done(function(data){
+				if(data.projectId){
+					document.location.href=  "/personalize/"+data.projectId+"?token="+storeUserToken;
+				}
+				else{
+					alert('Something went wrong :-(');
+					console.log('error copying project');
+					console.log(data);
+				}
+			});
+		};
 
+		getToken(mcCallback);
+	};
 	var deleteProject = function(projectId,callback){
 		var mcCallback = function(storeUserToken){
 			$.post({
-				url: "/delete-mc-project",
+				url: "/delete-mc-project/"+projectId,
 				dataType:"json",
-				data:{"token": storeUserToken,"projectId":projectId}
+				data:{"token": storeUserToken}
 			}).done(function(data){
 				callback(data);
 			});
