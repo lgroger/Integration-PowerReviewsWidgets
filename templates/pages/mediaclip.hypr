@@ -35,19 +35,17 @@ custom route settings
 {% block site-nav %}{% endblock site-nav %}
 {% block breadcrumbs %}{% endblock breadcrumbs %}
 {% block page-footer %}{% endblock page-footer %}
-{% block page-header %}{% endblock page-header %}
+{% block body-below-content %}{% endblock body-below-content %}
+{% block page-header %}
+{% dropzone "mc-header" scope="template" %}
+{% endblock page-header %}
 
 {% block trackingscript %}
     <style type="text/css">
         .mediaclip-designer-wrapper {
             top: 0px;
         }
-        /*
-        @media screen and (min-width: 961px) {
-            .mediaclip-designer-wrapper {
-                top: 95px;
-            }
-        }*/
+
 
         #dndLoading {
             position:fixed;
@@ -74,7 +72,11 @@ custom route settings
 
     {# Mediaclip Designer placeholder #}
     <div id="designer" class="mediaclip-designer-wrapper">
+        {% if pageContext.isEditMode %}
+            {# hide loading spinner in editor so we can edit dropzones #}
+        {% else %}
             <div id="dndLoading"></div>
+        {% endif %}
     </div>
 
 {% with pageContext.url|split("?") as qstring %}
