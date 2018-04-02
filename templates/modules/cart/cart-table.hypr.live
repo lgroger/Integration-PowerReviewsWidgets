@@ -401,7 +401,7 @@ cart.js sets these values
                             {% comment %}{% dropzone "continue-shopping-link" scope="template" %}{% endcomment %}
                         </div>
                         <div class="mz-cms-col-2-12">
-                            <a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty" style="display:none;">Empty Cart</a>
+                            <a class="mz-carttable-emptylink" href="javascript:;" data-mz-action="empty">Empty Cart</a>
 
                             {% if siteContext.checkoutSettings.visaCheckout.isEnabled %}
                                 <div>
