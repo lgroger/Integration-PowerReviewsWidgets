@@ -28,10 +28,10 @@ function ($,DNDToken,McCookie) {
 			
 			$(this).find("img[data-productcode]").each(function(){
 				var productCode = $(this).attr("data-productcode");
-				console.log(productCode);
+				//console.log(productCode);
 
 				var info = DNDToken.getTokenData(fulldndtoken,productCode);
-				console.log(info);
+				//console.log(info);
 				if(info.type ==="mc"){
 					// no action, this.getMcImages will fill it in based off of persType being set in 
 					haveMc = true;
