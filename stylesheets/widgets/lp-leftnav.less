@@ -34,12 +34,18 @@
                 @media screen and (max-width: 699px) and (min-width: 320px) {
                     margin-bottom: 5px;
                 }
-                @media screen and (min-width: 700px) and (max-width: 1920px)  {
+                @media @tablet {
+                    margin: 0;
+                }
+                @media @desktop {
                     margin: 5px;
                 }
                 border-radius: 5px;
                 a{
                     width: 92%;
+                    @media @tablet{
+                        width: 97.1%
+                    }
                     display: inline-block;
                     text-overflow: ellipsis;
                     overflow: hidden;
@@ -185,6 +191,15 @@
     }
 }
 
+@media @tablet{
+    .categories{
+        .parent-category{
+            .sub-category1{
+                margin: 0;
+            }
+        }
+    }
+}
 
 @media @desktop{
     #mz-drop-zone-lp-category-left{ 

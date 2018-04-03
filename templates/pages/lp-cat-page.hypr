@@ -49,6 +49,9 @@
 	</div>
 
 	{% dropzone "lp-category-bottom" scope="page" %} 
+	<div id="partyIdeasSlot">
+	{% dropzone "party-ideas-slot" scope="page" %}
+	</div>
 </div>
     
 

@@ -100,6 +100,60 @@
         }
     }
 }
+@media @tablet{
+    .LP-cat-3xl{
+        margin-top: 20px;
+        padding: 0 10px 25px 10px;
+        &.leftlayout{
+            .left{
+                width: 100%;
+                padding: 0 0 12.5px 0;
+                .content{
+                    width: 100%;
+                }
+            }
+            .right{
+                width: 100%;
+                padding: 12.5px 0 0 0;
+                .content{
+                    width: 48%;  
+                    &:first-child{
+                        margin: 0 12.5px 0 0;
+                        span{
+                            bottom: 0;
+                        }
+                    }
+                    &:last-child{
+                        margin: 0 0 0 12.5px;
+                    }
+                }
+                
+            }
+        }
+        &.rightlayout{
+            .left{
+                width: 100%;
+                padding: 0 0 12.5px 0;
+                .content{
+                    width: 45%;
+                    &:first-child{
+                        margin: 0 12.5px 0 0;
+                        span{
+                            bottom: 0; 
+                        }
+                    }
+                    &:last-child{
+                        margin: 0 0 0 12.5px;
+                    }
+                }
+            }
+            .right{
+                width: 100%;
+                padding: 12.5px 0 0 0;
+            }
+        }
+    }
+}
 @media @desktop{
     .LP-cat-3xl{
         padding: 0 0 27px 0;

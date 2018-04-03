@@ -25,9 +25,12 @@
                             {% endif %}
                         </a>
                         {% if model.data.lgcatnameA %}
-                            <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                {{model.data.lgcatnameA}}
-                            </a> 
+                            <div class="contentContainer">
+                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                    {{model.data.lgcatnameA}}
+                                </a> 
+                                <span class="arrow"></span>
+                            </div>
                         {% endif %}
                     {% endif %}
                 {% endwith %} 
@@ -46,9 +49,12 @@
 
                         </a>
                         {% if model.data.lgcatnameB %}
-                        <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                            {{model.data.lgcatnameB}}
-                        </a>
+                        <div class="contentContainer">
+                            <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                {{model.data.lgcatnameB}}
+                            </a>
+                            <span class="arrow"></span>
+                        </div>
                         {%endif%}
                     {% endif %} 
                 {% endwith %}
@@ -76,9 +82,12 @@
                                 {% endif %}
                             </a>
                             {% if model.data.smcatnameC %}
-                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                    {{model.data.smcatnameC}}
-                                </a>
+                                <div class="contentContainer">
+                                    <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                        {{model.data.smcatnameC}}
+                                    </a>
+                                    <span class="arrow"></span>
+                                </div>
                             {% endif %}
                         {% endif %}
                     {% endwith %}
@@ -96,9 +105,12 @@
                                 {% endif %}
                             </a>
                             {% if model.data.smcatnameD %}
+                            <div class="contentContainer">
                                 <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                                     {{model.data.smcatnameD}}
                                 </a>
+                                <span class="arrow"></span>
+                            </div>
                             {%endif%}
                         {% endif %}
                     {% endwith %}
@@ -118,9 +130,12 @@
                                 {% endif %}
                             </a>
                             {% if model.data.smcatnameE %}
-                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                    {{model.data.smcatnameE}}
-                                </a>
+                                <div class="contentContainer">
+                                    <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                        {{model.data.smcatnameE}}
+                                    </a>
+                                    <span class="arrow"></span>
+                                </div>
                             {% endif %}
                         {% endif %}
                     {% endwith %}
@@ -138,9 +153,12 @@
                                 {% endif %}
                             </a>
                             {% if model.data.smcatnameF %}
-                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                    {{model.data.smcatnameF}} 
-                                </a>
+                                <div class="contentContainer">
+                                    <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                                        {{model.data.smcatnameF}} 
+                                    </a>
+                                    <span class="arrow"></span>
+                                </div>
                             {% endif %}
                         {% endif %}
                     {% endwith %}
