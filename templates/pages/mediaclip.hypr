@@ -31,7 +31,7 @@ custom route settings
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale = 1.0, user-scalable=no" />
 {% endblock meta-tags %}
 
-{% block body-tag-classes %} mz-checkout {% endblock body-tag-classes %} {# so styles of limited header matches checkout since css requires .mz-checkout #}
+{% block body-tag-classes %} mz-mcpers {% endblock body-tag-classes %}
 {% block site-nav %}{% endblock site-nav %}
 {% block breadcrumbs %}{% endblock breadcrumbs %}
 {% block page-footer %}{% endblock page-footer %}

@@ -289,6 +289,12 @@
       "title": "Default Site Template"
     },
     {
+      "entityType": "siteTemplate",
+      "id": "my_projects_page",
+      "template": "my-projects-template",
+      "title": "My Projects Template"
+    },
+    {
       "documentType": "web_page",
       "entityType": "webpage",
       "id": "main-page",
@@ -492,6 +498,14 @@
     {
       "documentType": "web_page",
       "entityType": "webpage",
+      "id": "my-projects",
+      "template": "my-projects",
+      "title": "My Projects",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
       "id": "requestQuote",
       "template": "request-quote",
       "title": "Quote Information",
@@ -512,13 +526,6 @@
       "template": "party-planner",
       "title": "Party Planner",
       "userCreatable": true
-    },
-    {
-      "entityType": "product-bundle",
-      "id": "product-bundle",
-      "template": "product-bundle",
-      "title": "Product Bundle",
-      "userCreatable": false
     },
     {
       "documentType": "web_page",

@@ -1,0 +1,11 @@
+﻿{% extends "page" %}
+
+{% block title-tag-content %}My Projects - {% parent %}{% endblock title-tag-content %}
+
+{% block body-tag-classes %} mz-myprojects {% endblock body-tag-classes %}
+{% block body-content %}
+{% block breadcrumbs %}{% endblock breadcrumbs %}
+    {% include "my-projects-template" %}
+{% endblock body-content %}
+{% block body-below-content %}
+{% endblock body-below-content %} 

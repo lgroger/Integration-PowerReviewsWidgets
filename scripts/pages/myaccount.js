@@ -2161,8 +2161,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
         });
         */
 
-        McCookie.getProjects();
-
         Wishlist.getAllWishlistData().then(function(res){
             if (HyprLiveContext.locals.siteContext.generalSettings.isWishlistCreationEnabled){
                 //console.log(res);

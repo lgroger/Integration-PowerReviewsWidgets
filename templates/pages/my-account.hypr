@@ -180,7 +180,7 @@
 
             <!-- #myprojects div starts here-->
             <div id="tab_8" class="account_tab-content">
-                <div id="mcProjects"></div>
+                {% include "modules/my-projects-interior" %}
            </div>
            <!-- #myprojects div ends here-->
           {% endwith %}
