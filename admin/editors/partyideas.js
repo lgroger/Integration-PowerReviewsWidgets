@@ -1,13 +1,13 @@
 Ext.widget({
     xtype   : 'mz-form-widget',
-    itemId: 'partyideas',
-    id:'partyideas',
+    itemId: 'LP-category',
+    id:'lp-category',
     anchor: "100%",
     items: [{
             xtype: "mz-input-text",
             name: "designid",
             id: "designid",
-            fieldLabel: "PI", //LP",
+            fieldLabel: "LP",
             hidden: true
         }, 
         {
