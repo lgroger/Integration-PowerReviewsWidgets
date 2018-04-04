@@ -39,15 +39,15 @@
 			width: 100%;
 			display: block;
 			.content{
-                            display: inline-block;
-                            vertical-align: top;
-                            float: left;
-                            margin-top: 25px;
+				display: inline-block;
+				vertical-align: top;
+				float: left;
+				margin-top: 12px;
 		    	&:first-child{
-		    		margin-right: 12.5px;            
+		    		padding-right: 5px;            
 		    	}
 		    	&:last-child{
-		    		margin-left: 12.5px;
+		    		padding-left: 5px;
 		    	}
 			}
 		}
@@ -67,21 +67,17 @@
 			display: block;
 		
 			.content{
-                            width: 47%;
-                            display: inline-block;
-                            vertical-align: top;
-                            float: left;
-                            margin-bottom: 25px;
+				display: inline-block;
+				vertical-align: top;
+				float: left;
+				margin-bottom: 12px;
 
-		    	&:first-child{
-		    		margin-right: 12.5px;
-		    	}
-		    	&:last-child{
-		    		margin-left: 12.5px;
-					span{
-						/*text-indent: 22.5px;*/
-					}
-		    	}
+				&:first-child{
+					padding-right: 5px;            
+				}
+				&:last-child{
+					padding-left: 5px;
+				}
 			}
 		}
 	}
@@ -115,22 +111,22 @@
 
 @media @desktop{
 	.LP-cat-6x{
-		padding: 0 0 25px 0;
+		padding: 0 0 12px 0;
 		.left{
 		    width: 49.5%;
-	     	padding: 0 12.5px 0 0;
+	     	padding-right: 5px;
                 .small-image{ 
                         .content{
-                            width: 47%;
+                            width: 49.75%;
                         }
                     }
 		}
 		.right{
 		    width: 49.5%;
-		    padding: 0 0 0 12.5px;
+		    padding-left: 5px;
                     .small-image{ 
                         .content{
-                            width: 47%;
+                            width: 49.75%;
                         }
                     }
 		}

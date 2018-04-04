@@ -2,7 +2,7 @@
     width: 98%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 1%;
+    // padding: 1%;
     .clear{
         clear: both;
     }
@@ -36,6 +36,9 @@
         font-weight: 600;
         color: @secondaryColor;
     }
+    .mz-cms-content {
+        padding: 0 !important;
+    }
 }
 #LP-wrapper{
     width: 100%;
@@ -52,7 +55,7 @@
     h1{
         font-family: @fontBold;
         font-weight: 800;
-        color: @dark-blue;
+        color: @primaryColor;
         text-transform: uppercase;
     }
     h2{
@@ -66,16 +69,16 @@
         color: @secondaryColor;
     }
     p{
-        font-family: @fontLight;
+        font-family: @fontPrimary;
         font-weight: 300;
-        color: @primaryColor;
+        color: @primaryDarkBlue;
     }
     *{
         box-sizing: border-box;
     }
-    .mz-cms-content{
+    .mz-cms-content {
         overflow: initial;
-        padding: 0; 
+        padding: 0;
     }
     img{
         max-width: 100%;
@@ -146,7 +149,7 @@
 }
 @media @desktop{
     h1{
-        font-size: 40px;
+        font-size: 45px;
     }
     h2{
         font-size: 20px;

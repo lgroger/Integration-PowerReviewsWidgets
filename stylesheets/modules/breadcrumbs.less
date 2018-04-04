@@ -1,4 +1,8 @@
 ﻿.mz-breadcrumbs {
+    width: 98%;
+    padding: 3px;
+    font-size:10px;
+    text-transform: uppercase;
     .mz-breadcrumb-link {
         .permalink(#999);
     }
@@ -9,6 +13,18 @@
     .mz-breadcrumb-separator {
         display: inline-block;
         font-size: @fontSizeSmall;
-         margin: 0 -1px;
+        margin: 0 -1px;
+    }
+    @media @largedevice {
+        padding-left: 250px;
+    }
+    @media @smallmobile {
+        display:none;
+    }
+    .breadcrumbs-cat .mz-breadcrumbs {
+        display: none;
+    }
+    :first-child, :first-child+span {
+        display:none;
     }
 }
