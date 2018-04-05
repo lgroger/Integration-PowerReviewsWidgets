@@ -22,9 +22,12 @@
             background: white;
             color: @primaryColor;
             @media @smallmobile {
-                font-size: 22px;
+                font-size: 18px;
+            }
+            @media @tablet {
+				font-size: 20px;
+			}
         }
-    }
     }
     &.leftlayout{
         .left{
@@ -49,25 +52,22 @@
 }
 @media @smallmobile{
     .LP-cat-3xl{
-        padding: 0 10px 25px 10px;
+        padding: 0 10px 12px 10px;
         &.leftlayout{
             .left{
                 width: 100%;
-                padding: 0 0 12.5px 0;
+                padding-bottom: 5px;
             }
             .right{
                 width: 100%;
-                padding: 12.5px 0 0 0;
+                padding-top: 5px;
                 .content{
-                    width: 45%; 
+                    width: 49.25%; 
                     &:first-child{
-                        margin: 0 12.5px 0 0;
-                        span{
-                            bottom: 0;
-                        }
+                        padding-right: 5px;
                     }
                     &:last-child{
-                        margin: 0 0 0 12.5px;
+                        padding-left: 5px;
                     }
                 }
             }
@@ -75,135 +75,75 @@
         &.rightlayout{
             .left{
                 width: 100%;
-                padding: 0 0 12.5px 0;
+                padding-bottom: 5px;
                 .content{
-                    width: 45%;
+                    width: 49.25%;
                     &:first-child{
-                        margin: 0 12.5px 0 0;
-                        span{
-                            bottom: 0; 
-                        }
+                        padding-right: 5px;
                     }
                     &:last-child{
-                        margin: 0 0 0 12.5px;
+                        padding-left: 5px;
                     }
                 }
             }
             .right{
                 width: 100%;
-                padding: 12.5px 0 0 0;
+                padding-top: 5px;
             }
         }
     }
 }
-@media @tablet{
-    .LP-cat-3xl{
-        margin-top: 20px;
-        padding: 0 10px 25px 10px;
-        &.leftlayout{
-            .left{
-                width: 100%;
-                padding: 0 0 12.5px 0;
-                .content{
-                    width: 100%;
-                }
-            }
-            .right{
-                width: 100%;
-                padding: 12.5px 0 0 0;
-                .content{
-                    width: 48%;  
-                    &:first-child{
-                        margin: 0 12.5px 0 0;
-                        span{
-                            bottom: 0;
-                        }
-                    }
-                    &:last-child{
-                        margin: 0 0 0 12.5px;
-                    }
-                }
-                
-            }
-        }
-        &.rightlayout{
-            .left{
-                width: 100%;
-                padding: 0 0 12.5px 0;
-                .content{
-                    width: 45%;
-                    &:first-child{
-                        margin: 0 12.5px 0 0;
-                        span{
-                            bottom: 0; 
-                        }
-                    }
-                    &:last-child{
-                        margin: 0 0 0 12.5px;
-                    }
-                }
-            }
-            .right{
-                width: 100%;
-                padding: 12.5px 0 0 0;
-            }
-        }
-    }
-}
-@media @desktop{
-    .LP-cat-3xl{
-        padding: 0 0 27px 0;
+@media @desktop, @tablet {
+    .LP-cat-3xl {
+        padding: 0 0 12px 0;
         &.leftlayout{
             .left{
                 width: 66%;
-                padding-right: 6px;
+                padding-right: 4px;
             }
             .right{
-                width: 33%;
-                padding: 0 0 0 21px;
-                .content{
-                    width: 100%;
-                    &:first-child{
-                        padding: 0 0 13px 0;
-                        span{
-                            bottom: 27.5px;
-                        }
-                    }
-                    &:last-child{
-                        padding: 0;
-                        padding-top: 13px;
-                        margin: 0;
-                        span{
-                            text-indent: 10px;
-                        }
-                    }
-                }
-            }
-        }
-        &.rightlayout{
-            .left{
-                width: 33%;
-                padding: 0 21px 0 0;
-                .content{
-                    width: 100%;
-                    &:first-child{
-                        padding: 0 0 13px 0;
-                        span{
-                            bottom: 27.5px;
-                        }
-                    }
-                    &:last-child{
-                        padding-top: 13px;  
-                        margin: 0;
-                        span{
-                            text-indent: 10px;
-                        }
-                    }
-                }
-            }
-            .right{
-                width: 66%;
+                width: 32.5%;
                 padding-left: 6px;
+                .content{
+                    width: 100%;
+                    &:first-child{
+                        padding-bottom: 6px;
+                        span{
+                            bottom: 17.5px;
+                        }
+                    }
+                    &:last-child{
+                        padding-top: 6px;
+                        span{
+                            text-indent: 10px;
+                        }
+                    }
+                }
+            }
+        }
+        &.rightlayout{
+            .left{
+                width: 32.5%;
+                padding-right: 6px;
+                .content{
+                    width: 100%;
+                    &:first-child{
+                        padding-bottom: 6px;
+                        span{
+                            bottom: 17.5px;
+                        }
+                    }
+                    &:last-child{
+                        padding-top: 6px; 
+                        span{
+                            text-indent: 10px;
+                        }
+                    }
+                }
+            }
+            .right{
+                width: 66%;
+                padding-left: 4px;
             }
         }
     }

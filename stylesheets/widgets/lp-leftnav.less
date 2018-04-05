@@ -14,30 +14,30 @@
             white-space: nowrap;
         }
     }
-	.showmorelink{
-	    padding: 5px 7px 1px 1px;
-	    text-align: center;
-	    font-size: 14px;
+	.showmorelink {
+        padding: 5px 0 5px 5px;
+        text-transform: uppercase;
+        font-size: 15px;
+        @media @tablet {
+            font-size: 16px;
+        }
 	}
 	.expandmore{
 		display: none;
 	}
     .parent-category{
         border: 1px solid rgba(167,167,212,0.15);
-        margin: 0 15px 0 0; 
+        margin: 0 15px 0 0;
         padding: 0;
         list-style: none;
         display: block;
         min-width: 250px;
-        .showmorelink{
+        .showmorelink {
                 background-color: #eeedf7;
-                @media screen and (max-width: 699px) and (min-width: 320px) {
+                @media @smallmobile {
                     margin-bottom: 5px;
                 }
-                @media @tablet {
-                    margin: 0;
-                }
-                @media @desktop {
+                @media @desktop, @tablet {
                     margin: 5px;
                 }
                 border-radius: 5px;
@@ -47,10 +47,10 @@
                         width: 97.1%
                     }
                     display: inline-block;
-                    text-overflow: ellipsis;
-                    overflow: hidden;
+                    // text-overflow: ellipsis;
+                    // overflow: hidden;
                     white-space: nowrap;
-                    font-weight: bold;
+                    font-weight: 700;
                     text-transform: uppercase;
                     text-align: left;
                 }
@@ -63,7 +63,7 @@
                         font-weight: 900;
                         &:before {
                             content: "\002B"; 
-                            top: -4px;
+                            // top: -4px;
                             left: 4px;
                             position: relative;
                             font-size: 20px;
@@ -89,6 +89,13 @@
         & > li{
             padding: 5px 0 5px 5px;
             text-transform: uppercase;
+            @media @smallmobile {
+                padding: 7px 0 7px 5px;
+            }
+            @media @tablet {
+                padding: 7px 0;
+                text-indent: 5px;
+            }
         }
 
         li.parent{
@@ -106,7 +113,7 @@
             }
             .icon{
                 position: absolute;
-                right: 5px;
+                right: 10px;
                 top: 5px;
                 width: 20px;
                 height: 20px;
@@ -129,32 +136,42 @@
             & > li{
                 list-style: none;
                 padding: 5px 0 5px 10px;
-                font-weight: 400;
+                font-weight: 400;   
+                @media @smallmobile {
+                    padding: 7px 0 7px 5px;
+                }
+                @media @tablet {
+                    padding: 7px 0;
+                    text-indent: 5px;
+                }
             }
         }
         .sub-category2{
             list-style: none;
             display: none;
             margin: 0;
+            padding: 0;
         
             & > li{
                 list-style: none;
                 padding: 0 0 5px 20px;
                 font-weight: 400;
-
-                &:last-child{
-                    padding-bottom: 10px; 
+                @media @smallmobile {
+                    padding: 7px 0 7px 5px;
+                    text-indent: 15px;
+                }
+                @media @tablet {
+                    padding: 7px 0;
+                    text-indent: 15px;
                 }
             }
         }
     }
 }
 
-
 @media @smallmobile{
-
     .categories{
-        margin: 25px 10px;
+        margin: 15px 10px;
         .parent-category{
             display: none;
             margin-right:  0;
@@ -193,7 +210,13 @@
 
 @media @tablet{
     .categories{
-        .parent-category{
+        .parent-category {
+            margin: 10px 30px;
+            & > li {
+                font-size: 16px;
+                margin: 5px;
+                border-radius: 5px;
+            } 
             .sub-category1{
                 margin: 0;
             }

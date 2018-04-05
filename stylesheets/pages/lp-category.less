@@ -2,14 +2,9 @@
     width: 98%;
     max-width: 1280px;
     margin: 0 auto;
-    padding: 1%;
+    // padding: 1%;
     .clear{
         clear: both;
-    }
-    @media @smallmobile{
-        .landing-page-title{
-            padding-left: 8px; 
-        }
     }
     h1,h2,h3,p{
         margin: 0;
@@ -36,6 +31,9 @@
         font-weight: 600;
         color: @secondaryColor;
     }
+    .mz-cms-content {
+        padding: 0 !important;
+    }
 }
 #LP-wrapper{
     width: 100%;
@@ -52,7 +50,7 @@
     h1{
         font-family: @fontBold;
         font-weight: 800;
-        color: @dark-blue;
+        color: @primaryColor;
         text-transform: uppercase;
     }
     h2{
@@ -66,16 +64,16 @@
         color: @secondaryColor;
     }
     p{
-        font-family: @fontLight;
+        font-family: @fontPrimary;
         font-weight: 300;
-        color: @primaryColor;
+        color: @primaryDarkBlue;
     }
     *{
         box-sizing: border-box;
     }
-    .mz-cms-content{
+    .mz-cms-content {
         overflow: initial;
-        padding: 0; 
+        padding: 0;
     }
     img{
         max-width: 100%;
@@ -97,16 +95,16 @@
 }
 @media @smallmobile{
     h1{
-        font-size: 30px;
+        font-size: 28px;
     }
     h2{
-        font-size: 18px;
+        font-size: 14px;
     }
     h3{
-        font-size: 16px;
+        font-size: 14px;
     }
     p{
-        font-size: 14px;
+        font-size: 12px;
     }
     #LP-wrapper{
         display: table;
@@ -116,18 +114,18 @@
             img{
                 min-width: initial;
                 padding-right: 0;
-                margin-bottom: 25px;
+                margin-bottom: 12px;
                 padding: 0 10px;
             }
             #img-widget2{
                 display: inline-block;
-                width: 50%;
+                width: 49.5%;
                 vertical-align: top;
             }
             #img-widget3n4
             {
                 display: inline-block;
-                width: 50%;
+                width: 49.5%;
             }
         } 
         #left-nav{   
@@ -144,9 +142,27 @@
         }
     }
 }
+@media @tablet{
+    h1{
+        font-size: 30px;
+    }
+    h2{
+        font-size: 16px;
+    }
+    h3{
+        font-size: 16px;
+    }
+    p{
+        font-size: 14px;
+    }
+    #LP-wrapper{
+        display: table;
+        width: 98%;
+    }
+}
 @media @desktop{
     h1{
-        font-size: 40px;
+        font-size: 45px;
     }
     h2{
         font-size: 20px;
@@ -163,7 +179,7 @@
         {
             img{
                 min-width: 250px;
-                margin-bottom: 25px;
+                margin-bottom: 12px;
                 padding: 0;
             }
             #img-widget2{

@@ -21,7 +21,7 @@
                 {% endif %}
             {% endwith %}
         </div>
-        <div class="content">
+        <div class="content image-2">
             {% with model.categories|findwhere("categoryId",model.data.smcatselectB) as category %}
                 {% if category %}
                     <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
