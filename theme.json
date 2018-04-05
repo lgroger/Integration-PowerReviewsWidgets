@@ -21,16 +21,36 @@
       "path": "offer_promo_layout_1_edit.js"
     },
     {
-      "id": "lp-category-html-widget",
-      "path": "lp-category-html-widget.js"
+      "id": "lp-category-3x",
+      "path": "lp-category-3x.js" 
+    },
+    {
+      "id": "lp-category-6x",
+      "path": "lp-category-6x.js"
+    },
+    {
+      "id": "lp-category-4x",
+      "path": "lp-category-4x.js"
+    },
+    {
+      "id": "lp-category-3xs",
+      "path": "lp-category-3xs.js"
+    },
+    {
+      "id": "lp-category-2x",
+      "path": "lp-category-2x.js"
     },
     {
       "id": "lp-leftnav",
       "path": "lp-leftnav.js"
     },
-    { 
-      "id": "lp-category-3x",
-      "path": "lp-category-3x.js" 
+    {
+      "id": "lp-more-theme",
+      "path": "lp-more-theme.js"
+    },
+    {
+      "id": "lp-category-html-widget",
+      "path": "lp-category-html-widget.js"
     },
     {
       "id": "partyideas",
@@ -1273,6 +1293,15 @@
       ]
     },
     {
+      "customEditor": "lp-category-2x",
+      "displayName": "LP 2x",
+      "id": "lp-category-2x",
+      "displayTemplate": "misc/lp-category-2xW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
       "customEditor": "lp-category-3x",
       "displayName": "LP 3xL",
       "id": "lp-category-3x",
@@ -1282,10 +1311,46 @@
       ]
     },
     {
+      "customEditor": "lp-category-3xs",
+      "displayName": "LP 3xs",
+      "id": "lp-category-3xs",
+      "displayTemplate": "misc/lp-category-3xsW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-4x",
+      "displayName": "LP 4x",
+      "id": "lp-category-4x",
+      "displayTemplate": "misc/lp-category-4xW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-6x",
+      "displayName": "LP 6x",
+      "id": "lp-category-6x",
+      "displayTemplate": "misc/lp-category-6xW",
+      "validPageTypes": [
+        "*"
+      ] 
+    },
+    {
       "customEditor": "lp-leftnav",
       "displayName": "LP Category Nav",
       "id": "lp-leftnav",
       "displayTemplate": "misc/lp-leftnavW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-more-theme",
+      "displayName": "LP More Themes",
+      "id": "lp-more-theme",
+      "displayTemplate": "misc/lp-more-theme",
       "validPageTypes": [
         "*"
       ]

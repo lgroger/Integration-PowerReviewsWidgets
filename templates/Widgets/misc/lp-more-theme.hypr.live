@@ -1,6 +1,9 @@
 
 <div class="more-widget">
-	<h3 class="title"><span>{{model.config.hdrname|truncatewords(5)}}</span></h3>
+	<div class="more-top"><img src="/resources/images/confetti2.svg">
+		<h3 class="title">{{model.config.hdrname|truncatewords(5)}}</h3>
+		<img src="/resources/images/confetti2.svg">
+	</div>
 	<div class="more-themes">
 		<div class="links">
 			{% for data in model.config.data|dictsort("mcap") %}
@@ -8,4 +11,5 @@
 			{% endfor %}
 		</div>
 	</ul>
+	<div class="confetti"><img src="/resources/images/confetti.svg"></div>
 </div>

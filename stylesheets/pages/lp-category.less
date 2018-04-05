@@ -1,10 +1,8 @@
 .landing-page{
-
     width: 98%;
     max-width: 1280px;
     margin: 0 auto;
     padding: 1%;
-
     .clear{
         clear: both;
     }
@@ -17,26 +15,26 @@
         margin: 0;
     }
     a{
-        /*color: @primaryBlue;*/
+        color: @linkColor;
         &:hover{
-            /*color: @primaryBlue;*/
+            color: @linkHoverColor;
         }
     }
     h1{
-        // font-family: @fontPrimary;
-        font-weight: 400;
-        /*color: @primaryColor;*/
+        font-family: @fontBold;
+        font-weight: 900;
+        color: @primaryColor;
         text-transform: uppercase;
     }
     h2{
-        // font-family: @fontPrimary;
-        font-weight: 700;
-        /*color: @secondaryColor;*/
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
     }
     h3{
-        // font-family: @fontPrimary;
-        font-weight: 700;
-        /*color: @secondaryColor;*/
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
     }
 }
 #LP-wrapper{
@@ -46,62 +44,57 @@
         margin: 0;
     }
     a{
-        /*color: @secondaryColor;*/
+        color: @linkColor;
         &:hover{
-            /*color: @primaryColor;*/
+            color: @linkHoverColor;
         }
     }
     h1{
-        // font-family: @fontPrimary;
-        font-weight: 400;
-        /*color: @primaryColor;*/
+        font-family: @fontBold;
+        font-weight: 800;
+        color: @dark-blue;
         text-transform: uppercase;
     }
     h2{
-        // font-family: @fontPrimary;
-        font-weight: 700;
-        /*color: @secondaryColor;*/
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
     }
     h3{
-        // font-family: @fontPrimary;
-        font-weight: 700;
-        /*color: @secondaryColor;*/
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
     }
     p{
-        // font-family: @fontPrimary;
+        font-family: @fontLight;
         font-weight: 300;
-        /*color: @primaryColor;*/
+        color: @primaryColor;
     }
     *{
         box-sizing: border-box;
     }
-
     .mz-cms-content{
         overflow: initial;
         padding: 0; 
     }
-
     img{
         max-width: 100%;
         width: 100%;
     }
-
     .show{
         display: block;
     }
     .hide{
         display: none;
     }
-
     #left-nav{
-        // font-family: @fontPrimary;
+        font-family: @fontPrimary;
+        color: @primaryColor;
         font-size: 15px;
- 
     }
     #right-content{
     }
 }
-
 @media @smallmobile{
     h1{
         font-size: 30px;
@@ -151,7 +144,6 @@
         }
     }
 }
-
 @media @desktop{
     h1{
         font-size: 40px;
