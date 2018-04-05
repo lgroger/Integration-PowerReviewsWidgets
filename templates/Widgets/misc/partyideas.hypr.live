@@ -1,5 +1,5 @@
 <div style="display: none;" class="hiddenmodelpi">{{ model.config }}</div>
 
-<div class="lp-pi"></div> 
-
-{% require_script "widgets/partyideas" %} 
+<div class="lp-pi">
+    {% include "modules/partyideas" %}
+</div> 

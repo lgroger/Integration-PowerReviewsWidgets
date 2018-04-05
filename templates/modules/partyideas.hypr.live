@@ -3,61 +3,45 @@
 <div class="LP-cat-pi">
     <div class="left">
         <div class="logoContainer">
-            <div class="party">
-            </div>
+            <a class="party" href="/party-ideas">
+                <img src="../../resources/images/Party_Ideas.svg">
+            </a>
             {%if pageContext.isDesktop %}
-                <span class="desc">Great ideas come from great party throwers like you</span>
+                <div class="desc">Great ideas come from great party throwers like you</div>
             {%else%}
                 <div class="horizontalLine"><hr/></div>
-            {% endif %}
+            {% endif %} 
         </div>
         <div class="large-image">
             <div class="content">
-                {% with model.categories|findwhere("categoryId",model.data.lgcatselectA) as category %}
-                    {% if category %}
-                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                            {% if model.data.lgoverrideA %}
-                                <img src="{{model.data.lgimageurlA}}" alt="{{model.data.lgcatnameA}}"/>
-                            {% else %}
-                                {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatnameA}}"/>
-                                {% endwith %}
-                            {% endif %}
+                {% if  model.config.lgimageurlA %}
+                        <a href="{% if model.config.lgcaturlA %}{{model.config.lgcaturlA}}{% endif %}">
+                            <img src="{{model.config.lgimageurlA}}" alt="{{model.config.lgcatnameA}}"/>
                         </a>
-                        {% if model.data.lgcatnameA %}
+                        {% if model.config.lgcatnameA %}
                             <div class="contentContainer">
-                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                    {{model.data.lgcatnameA}}
+                                <a class="contentTitle" href="{% if model.config.lgcaturlA %}{{model.config.lgcaturlA}}{% endif %}">
+                                    {{model.config.lgcatnameA}}
                                 </a> 
                                 <span class="arrow"></span>
                             </div>
                         {% endif %}
-                    {% endif %}
-                {% endwith %} 
+                {% endif %} 
             </div>
              <div class="content">
-                {% with model.categories|findwhere("categoryId",model.data.lgcatselectB) as category %}
-                    {% if category %}
-                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                            {% if model.data.lgoverrideB %}
-                                <img src="{{model.data.lgimageurlB}}" alt="{{model.data.lgcatnameB}}"/>
-                            {% else %}
-                                {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatnameB}}"/>
-                                {% endwith %}
-                            {% endif %}
-
+                {% if  model.config.lgimageurlB %}
+                         <a href="{% if model.config.lgcaturlB %}{{model.config.lgcaturlB}}{% endif %}">
+                            <img src="{{model.config.lgimageurlB}}" alt="{{model.config.lgcatnameB}}"/>
                         </a>
-                        {% if model.data.lgcatnameB %}
-                        <div class="contentContainer">
-                            <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                {{model.data.lgcatnameB}}
-                            </a>
-                            <span class="arrow"></span>
-                        </div>
-                        {%endif%}
-                    {% endif %} 
-                {% endwith %}
+                        {% if model.config.lgcatnameB %}
+                            <div class="contentContainer">
+                                <a class="contentTitle" href="{% if model.config.lgcaturlB %}{{model.config.lgcaturlB}}{% endif %}">
+                                    {{model.config.lgcatnameB}}
+                                </a> 
+                                <span class="arrow"></span>
+                            </div>
+                        {% endif %}
+                {% endif %}
             </div>
         </div>
     </div>
@@ -70,98 +54,82 @@
         <div class="smallImageContainer">
             <div class="small-image">
                 <div class="content">
-                    {% with model.categories|findwhere("categoryId",model.data.smcatselectC) as category %}
-                        {% if category %}
-                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                {% if model.data.smoverrideC %}
-                                    <img src="{{model.data.smimageurlC}}" alt="{{model.data.smcatnameC}}"/>
-                                {% else %}
-                                    {% with category.content.categoryImages|first as catimage %}
-                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameC}}"/>
-                                    {% endwith %}
-                                {% endif %}
+                    {%if model.config.smimageurlC %}
+                        
+                        {% if  model.config.smimageurlC %}
+                            <a href="{% if model.config.smcaturlC %}{{model.config.smcaturlC}}{% endif %}">
+                                <img src="{{model.config.smimageurlC}}" alt="{{model.config.smcatnameC}}"/>
                             </a>
-                            {% if model.data.smcatnameC %}
+                            {% if model.config.smcatnameC %}
                                 <div class="contentContainer">
-                                    <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                        {{model.data.smcatnameC}}
-                                    </a>
+                                    <a class="contentTitle" href="{% if model.config.smcaturlC %}{{model.config.smcaturlC}}{% endif %}">
+                                        {{model.config.smcatnameC}}
+                                    </a> 
                                     <span class="arrow"></span>
                                 </div>
                             {% endif %}
                         {% endif %}
-                    {% endwith %}
+                        
+                    {% endif %}
                 </div>
                 <div class="content">
-                    {% with model.categories|findwhere("categoryId",model.data.smcatselectD) as category %}
-                        {% if category %}
-                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                {% if model.data.smoverrideD %}
-                                    <img src="{{model.data.smimageurlD}}" alt="{{model.data.smcatnameD}}"/>
-                                {% else %}
-                                    {% with category.content.categoryImages|first as catimage %}
-                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameD}}"/>
-                                    {% endwith %}
-                                {% endif %}
+                    {%if model.config.smimageurlD %}
+                        
+                        {% if  model.config.smimageurlD %}
+                            <a href="{% if model.config.smcaturlD %}{{model.config.smcaturlD}}{% endif %}">
+                                <img src="{{model.config.smimageurlD}}" alt="{{model.config.smcatnameD}}"/>
                             </a>
-                            {% if model.data.smcatnameD %}
-                            <div class="contentContainer">
-                                <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                    {{model.data.smcatnameD}}
-                                </a>
-                                <span class="arrow"></span>
-                            </div>
-                            {%endif%}
+                            {% if model.config.smcatnameD %}
+                                <div class="contentDontainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlD %}{{model.config.smcaturlD}}{% endif %}">
+                                        {{model.config.smcatnameD}}
+                                    </a> 
+                                    <span class="arrow"></span>
+                                </div>
+                            {% endif %}
                         {% endif %}
-                    {% endwith %}
+                        
+                    {% endif %}
                 </div>
             </div>
             <div class="small-image">
                 <div class="content">
-                    {% with model.categories|findwhere("categoryId",model.data.smcatselectE) as category %}
-                        {% if category %}
-                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                {% if model.data.smoverrideE %}
-                                    <img src="{{model.data.smimageurlE}}" alt="{{model.data.smcatnameE}}"/>
-                                {% else %}
-                                    {% with category.content.categoryImages|first as catimage %}
-                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameE}}"/>
-                                    {% endwith %}
-                                {% endif %}
+                    {%if model.config.smimageurlE %}
+                        
+                        {% if  model.config.smimageurlE %}
+                            <a href="{% if model.config.smcaturlE %}{{model.config.smcaturlE}}{% endif %}">
+                                <img src="{{model.config.smimageurlE}}" alt="{{model.config.smcatnameE}}"/>
                             </a>
-                            {% if model.data.smcatnameE %}
-                                <div class="contentContainer">
-                                    <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                        {{model.data.smcatnameE}}
-                                    </a>
+                            {% if model.config.smcatnameE %}
+                                <div class="contentEontainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlE %}{{model.config.smcaturlE}}{% endif %}">
+                                        {{model.config.smcatnameE}}
+                                    </a> 
                                     <span class="arrow"></span>
                                 </div>
                             {% endif %}
                         {% endif %}
-                    {% endwith %}
+                        
+                    {% endif %}
                 </div>
                 <div class="content">
-                    {% with model.categories|findwhere("categoryId",model.data.smcatselectF) as category %}
-                        {% if category %}
-                            <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                {% if model.data.smoverrideF %}
-                                    <img src="{{model.data.smimageurlF}}" alt="{{model.data.smcatnameF}}"/>
-                                {% else %}
-                                    {% with category.content.categoryImages|first as catimage %}
-                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameF}}"/>
-                                    {% endwith %}
-                                {% endif %}
+                    {%if model.config.smimageurlF %}
+                        
+                        {% if  model.config.smimageurlF %}
+                            <a href="{% if model.config.smcaturlF %}{{model.config.smcaturlF}}{% endif %}">
+                                <img src="{{model.config.smimageurlF}}" alt="{{model.config.smcatnameF}}"/>
                             </a>
-                            {% if model.data.smcatnameF %}
-                                <div class="contentContainer">
-                                    <a class="contentTitle" href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
-                                        {{model.data.smcatnameF}} 
-                                    </a>
+                            {% if model.config.smcatnameF %}
+                                <div class="contentFontainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlF %}{{model.config.smcaturlF}}{% endif %}">
+                                        {{model.config.smcatnameF}}
+                                    </a> 
                                     <span class="arrow"></span>
                                 </div>
                             {% endif %}
                         {% endif %}
-                    {% endwith %}
+                        
+                    {% endif %}
                 </div>
             </div> 
         </div>

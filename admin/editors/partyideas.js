@@ -29,26 +29,19 @@ Ext.widget({
                             xtype: "mz-input-text",
                             name: "lgcatnameA",
                             id: "lgcatnameA",
-                            fieldLabel: "Category Name",
+                            fieldLabel: "Name",
                             margin: '0 40 20 0',
                             width: 220,
                             allowBlank: false
                         },
                         {
-                            xtype: "mz-input-category", 
-                            name: "lgcatselectA", 
-                            id: "lgcatselectA",
+                            xtype: "mz-input-text", 
+                            name: "lgcaturlA", 
+                            id: "lgcaturlA",
                             margin: "0 40 20 0",
-                            fieldLabel: "Category *",
+                            fieldLabel: "URL",
                             width: 220,
                             allowBlank: false
-                        },  
-                        {
-                            xtype: "mz-input-checkbox",
-                            name: "lgoverrideA",
-                            id: "lgoverrideA",
-                            fieldLabel: "Override Image",
-                            margin: "0 40 20 0"
                         },
                         {
                             xtype: "mz-input-text",
@@ -57,8 +50,7 @@ Ext.widget({
                             fieldLabel: "Image URL",
                             margin: "0 40 40 0",
                             width: 220,
-                            disabled: true,
-                            enableIf: "lgoverrideA"
+                            allowBlank: false
                         }]
                 },
                 {
@@ -75,26 +67,21 @@ Ext.widget({
                             xtype: "mz-input-text",
                             name: "lgcatnameB",
                             id: "lgcatnameB",
-                            fieldLabel: "Category Name",
+                            fieldLabel: "Name",
                             margin: '0 40 20 0',
                             width: 220,
                             allowBlank: false
                         },
                         {
-                            xtype: "mz-input-category",
-                            name: "lgcatselectB",
+                            xtype: "mz-input-text",
+                            name: "lgcaturlB",
+                            id: "lgcaturlB",
                             margin: "0 40 20 0",
-                            fieldLabel: "Category *",
+                            fieldLabel: "URL",
                             width: 220,
                             allowBlank: false
                         },
-                        {
-                            xtype: "mz-input-checkbox",
-                            name: "lgoverrideB",
-                            id: "lgoverrideB",
-                            fieldLabel: "Override Image",
-                            margin: "0 40 20 0"
-                        },
+                        
                         {
                             xtype: "mz-input-text",
                             name: "lgimageurlB",
@@ -102,8 +89,7 @@ Ext.widget({
                             fieldLabel: "Image URL",
                             margin: "0 40 40 0",
                             width: 220,
-                            disabled: true,
-                            enableIf: "lgoverrideB"
+                            allowBlank: false
                         }]
                 },{
                     xtype: "panel",
@@ -119,26 +105,20 @@ Ext.widget({
                             xtype: "mz-input-text",
                             name: "smcatnameC",
                             id: "smcatnameC",
-                            fieldLabel: "Category Name",
+                            fieldLabel: "Name",
                             margin: '0 40 20 0',
                             width: 220,
                             allowBlank: false
                         },
                         {
-                            xtype: "mz-input-category",
-                            name: "smcatselectC",
+                            xtype: "mz-input-text",
+                            name: "smcaturlC",
+                            id: "smcaturlC",
                             margin: "0 20 20 0",
-                            fieldLabel: "Category *",
+                            fieldLabel: "URL ",
                             width: 220,
                             allowBlank: false
                         },
-                        {
-                            xtype: "mz-input-checkbox",
-                            name: "smoverrideC",
-                            id: "smoverrideC",
-                            fieldLabel: "Override Image",
-                            margin: "0 40 20 0"
-                        }, 
                         {
                             xtype: "mz-input-text",
                             name: "smimageurlC",
@@ -146,8 +126,7 @@ Ext.widget({
                             fieldLabel: "Image URL",
                             margin: "0 40 40 0",
                             width: 220,
-                            disabled: true,
-                            enableIf: "smoverrideC"
+                            allowBlank: false
                         }]
                 }
                 ]
@@ -173,26 +152,19 @@ Ext.widget({
                             xtype: "mz-input-text",
                             name: "smcatnameD",
                             id: "smcatnameD",
-                            fieldLabel: "Category Name",
+                            fieldLabel: "Name",
                             margin: '0 40 20 0',
                             width: 220,
                             allowBlank: false
                         },
                         {
-                            xtype: "mz-input-category", 
-                            name: "smcatselectD", 
-                            id: "smcatselectD",
-                            fieldLabel: "Category *",
+                            xtype: "mz-input-text", 
+                            name: "smcaturlD", 
+                            id: "smcaturlD",
+                            fieldLabel: "URL *",
                             margin: "0 40 20 0",
                             width: 220,
                             allowBlank: false
-                        },
-                        {
-                            xtype: "mz-input-checkbox",
-                            name: "smoverrideD",
-                            id: "smoverrideD",
-                            fieldLabel: "Override Image",
-                            margin: "0 40 20 0"
                         },
                         {
                             xtype: "mz-input-text",
@@ -201,8 +173,8 @@ Ext.widget({
                             fieldLabel: "Image URL",
                             margin: "0 40 40 0",
                             width: 220,
-                            disabled: true,
-                            enableIf: "smoverrideD"
+                            allowBlank: false
+
                         }]
                 },
                 {
@@ -220,25 +192,19 @@ Ext.widget({
                             xtype: "mz-input-text",
                             name: "smcatnameE",
                             id: "smcatnameE",
-                            fieldLabel: "Category Name",
+                            fieldLabel: "Name",
                             margin: '0 40 20 0',
                             width: 220,
                             allowBlank: false
                         },
                         {
-                            xtype: "mz-input-category",
-                            name: "smcatselectE",
+                            xtype: "mz-input-text",
+                            name: "smcaturlE",
+                            id: "smcaturlE",
                             margin: "0 40 20 0",
-                            fieldLabel: "Category *",
+                            fieldLabel: "URL",
                             width: 220,
                             allowBlank: false
-                        },
-                        {
-                            xtype: "mz-input-checkbox",
-                            name: "smoverrideE",
-                            id: "smoverrideE",
-                            fieldLabel: "Override Image",
-                            margin: "0 40 20 0"
                         },
                         {
                             xtype: "mz-input-text",
@@ -247,8 +213,8 @@ Ext.widget({
                             fieldLabel: "Image URL",
                             margin: "0 40 40 0",
                             width: 220,
-                            disabled: true,
-                            enableIf: "smoverrideE"
+                            allowBlank: false
+
                         }]
                 },
                 {
@@ -265,26 +231,20 @@ Ext.widget({
                             xtype: "mz-input-text",
                             name: "smcatnameF",
                             id: "smcatnameF",
-                            fieldLabel: "Category Name",
+                            fieldLabel: "Name",
                             margin: '0 40 20 0',
                             width: 220,
                             allowBlank: false
                         },
                         {
-                            xtype: "mz-input-category",
-                            name: "smcatselectF",
+                            xtype: "mz-input-text",
+                            name: "smcaturlF",
+                            id: "smcaturlF",
                             margin: "0 20 20 0",
-                            fieldLabel: "Category *",
+                            fieldLabel: "URL",
                             width: 220,
                             allowBlank: false
                         },
-                        {
-                            xtype: "mz-input-checkbox",
-                            name: "smoverrideF",
-                            id: "smoverrideF",
-                            fieldLabel: "Override Image",
-                            margin: "0 40 20 0"
-                        }, 
                         {
                             xtype: "mz-input-text",
                             name: "smimageurlF",
@@ -292,8 +252,7 @@ Ext.widget({
                             fieldLabel: "Image URL",
                             margin: "0 40 40 0",
                             width: 220,
-                            disabled: true,
-                            enableIf: "smoverrideF"
+                            allowBlank: false
                         }]
                 }],
             listeners:{

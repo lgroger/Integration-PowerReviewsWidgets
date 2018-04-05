@@ -2,9 +2,9 @@
 .LP-cat-pi{
     .logoContainer{
         .party{
-            background-image: url(../resources/images/Party_Ideas.svg);
-            height: 112px;
-            background-repeat: no-repeat;
+            img{
+                height: 112px;
+            }
         }
         
     }
@@ -35,27 +35,7 @@
         .contentTitle:hover{
             color: @secondaryBlue;
         }
-        span{
-            position: absolute;
-            text-indent: 10px;
-            left: 0;
-            color: #fff;
-            margin: 0;
-            font-size: 30px;
-            @media screen and (max-width: 678px) and (min-width: 320px) {
-                font-size: 22px;
-            } 
-            font-weight: 300;
-            width: 100%;
-            display: block;
-            text-overflow: ellipsis;
-            overflow: hidden;
-            white-space: nowrap;
-            background: white;
-            opacity: 0.8;
-            bottom: 38px;
-            color: @primaryBlue;
-        }
+        
     }
     .left{
         display: inline-block;
@@ -122,7 +102,7 @@
             }
         }
         .logoContainer{
-            .party{
+            .party img{
                 height: 60px;
                 margin: 0 21px 10px 21px;
                 width: 55%;
@@ -189,7 +169,7 @@
         }
         .logoContainer{
             padding: 0 10%;
-            .party{
+            .party img{
                 height: 100px;
                 margin: 0 21px 10px 21px;
                 width: 48%;
@@ -254,6 +234,7 @@
     }
 }
 
+
 @media @desktop{
     .LP-cat-pi{
         .content{
@@ -264,7 +245,7 @@
         .logoContainer{
             margin-bottom: 20px;
             .desc{
-                font-size: 1.5666em;
+                font-size: 21.6px;
                 color: #201b4f;
             }
         }
@@ -280,7 +261,7 @@
                     img{
                         max-width: 100%;
                         width: 100%;
-                        min-height: 240px;
+                        height: 240px;
                     }
                     
                     &:first-child{
@@ -317,4 +298,13 @@
             }
         }
     }
+}
+@media @largedevice{
+    .LP-cat-pi {
+        .right{
+            .horizontalLineContainer {
+                margin-bottom: 48px;
+            }
+        }
+    } 
 }
