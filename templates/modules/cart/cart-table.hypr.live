@@ -81,9 +81,12 @@ cart.js sets these values
                 <div class="mz-carttable-item-info-wrap{% if not item.product.imageUrl %} mz-no-image{% endif %}">
                     <a class="mz-carttable-item-title" href="{{item.product.url}}">{{ item.product.name }}</a>
                         {% if item.product.token %}
-                            <dd class="mz-carttable-item-code">
-                                <a href="javascript:void(0)" class="editpersonalize" data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}" itemId="{{item.id}}">Edit Personalization</a>
-                            </dd>
+                            <dd class="mz-carttable-item-code" {% if item.product.persType == "mc" %}data-mc-project="{{item.product.token}}"{% endif %}>
+                                <a href="javascript:void(0)" class="editpersonalize" data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}" itemId="{{item.id}}" title="Edit this item's personalization">Edit Personalization</a>
+                                {% if item.product.persType == "mc" %}
+                                    <a href="javascript:void(0)" class="copy-mc-project" title="Start personalizing a new item based off of this item's personalization">Copy Personalization</a>
+                                {% endif %}
+                            </dd>                                    
                         {% endif %}
 
                     {% if item.product.options and themeSettings.showCartItemOptions %}

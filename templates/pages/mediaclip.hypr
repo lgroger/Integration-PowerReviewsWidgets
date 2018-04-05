@@ -29,8 +29,9 @@ custom route settings
 
 {% block meta-tags %}
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale = 1.0, user-scalable=no" />
+    <meta name="robots" content="noindex,nofollow" />
 {% endblock meta-tags %}
-
+{% block title-tag-content %}Personalization - {% parent %}{% endblock title-tag-content %}
 {% block body-tag-classes %} mz-mcpers {% endblock body-tag-classes %}
 {% block site-nav %}{% endblock site-nav %}
 {% block breadcrumbs %}{% endblock breadcrumbs %}

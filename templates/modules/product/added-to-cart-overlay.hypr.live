@@ -76,6 +76,13 @@ model.product.token// dnd token string or mc token string for component
                  </div>
                {# Go to www.addthis.com/dashboard to customize your tools #}
               
+                {% if model.product.token  and model.product.persType == "mc" %}
+                <div data-mc-project="{{model.product.token}}">
+                  <button class="copy-mc-project">Copy</button>
+                </div>
+                {% endif %}
+
+              
             </div>
          </div>
       </div>

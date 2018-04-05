@@ -1007,8 +1007,6 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
         //$.cookie('szpaypaloption',true,{path:'/'});   
      });*/
 
-        McCookie.getProjects(true);
-
         var cartModel = CartModels.Cart.fromCurrent(),
             // cartModel.chkoutFlag = 'chcked',
             cartViews = {

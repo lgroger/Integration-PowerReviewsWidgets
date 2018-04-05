@@ -345,158 +345,21 @@ function ($) {
 			$.cookie(cookieKey,"",options);
 		}
 	};
-
-	var projectsCallback = function(res,carousel){
-        var $projects = $("#mcProjects");
-        
-        var loopArray = function(arr,html,label){
-            if(arr.length){
-                var $projectHolder = $("<div />").attr("class","pdp-related-products");
-                if(label){
-                    $projects.append($("<h2>"+label+"</h2>"));
-                }
-                for(var i=0;i<arr.length;i++){
-					var p = arr[i];
-					var $project,date = new Date(p.createdDateUtc);
-					if(carousel){
-						$project = $("<div />").attr("class","mz-productlist-item").attr("data-mc-project",p.id);
-					
-						var $projectInner = $("<div />").attr("class","mz-productlisting mz-productlist-tiled");
-						$project.append($projectInner);
-						var $productImage = $("<a />").attr("href","/p/"+p.entityContainer.item.productCode).append($('<img src="'+p.urlThumb+'" />').attr("title",p.id).css({"max-width":"210px","max-height":"210px"}));
-						$projectInner.append($("<div />").attr("class","mz-productlisting-image").append($productImage));
-						var $productInfo = $("<div />").attr("class","mz-productlisting-info");
-						$projectInner.append($productInfo);
-						$productInfo.append($('<div />').text(date.toDateString()+' '+date.toLocaleTimeString()).attr("class","mc-create-date"));
-
-						if(p.entityContainer){
-							$productInfo.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
-						}
-						
-						if(html){
-							$productInfo.append($(html).clone());
-						}
-					}
-					else{
-						$project = $("<div />").attr("class","mz-productlist-item").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').css({"max-width":"200px","max-height":"200px","display":"block"}).attr("title",p.id)).css({"float":"left","width":"250px"});
-						$project.append($('<div />').text(date.toDateString()+' '+date.toLocaleTimeString()).attr("class","mc-create-date"));
 	
-						if(p.entityContainer){
-							$project.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
-						}
-						
-						if(html){
-							$project.append($(html).clone());
-						}
-					}
+	// based off of global.js
+	var errorOverlay = function(message){
+		var closeBtn = $("<button />").text("OK").attr("id","session-btn-rd").click(function(){
+		   $(this).parent().parent().fadeOut(500,function(){
+			   $(this).remove();
+		   });
+	   });
+	   var popupOuter = $("<div />").attr("class","compare-full-error-container");
+	   var popupInner = $("<div />").attr("class","compare-error-container");
+	   $(document.body).append($(popupOuter).append($(popupInner).append("<div>"+message+"</div>").append(closeBtn)));
+   };
 
-                    $projectHolder.append($project);
-                }
-               // $projectHolder.append($('<div style="clear:both" />'));
-				$projects.append($projectHolder);
-				//setTimeout(function(){
-				if(carousel){
-					$projectHolder.owlCarousel({
-						loop:true, margin:10, nav:true, responsive:{0:{items:2}, 600:{items:2}, 1000:{items:4}}
-					});
-				}
-				//}, 50);
-            }
-        };
-
-        var loopRecords = function(arr,html,label){
-            if(arr.length){
-                var $projectHolder = $("<div />");
-                if(label){
-                    $projectHolder.append($("<h1>"+label+"</h1>"));
-                }
-                for(var i=0;i<arr.length;i++){
-                    var p = arr[i];
-                    var $project = $("<div />").attr("data-mc-project",p.id).attr("class","mc-saved-project").append("<div>"+p.id+"</div>").css({"float":"left","width":"350px","height":"75px"});
-					$project.append($('<a href="/p/'+p.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
-                    
-                    if(html){
-                        $project.append($(html).clone());
-                    }
-                    $projectHolder.append($project);
-                }
-                $projectHolder.append($('<div style="clear:both" />'));
-				$projects.append($projectHolder);
-            }
-        };
-
-        if(res && res.projects && res.projects.length){
-            loopArray(res.projects,$("<div/>").append($('<button class="mc-project-atc">Edit / Add to Cart</button>')).append($('<button class="delete-mc-project">Delete</button>')).append($('<button class="copy-mc-project">Copy</button>')),"My Projects");
-        }
-        /*
-        if(res && res.inCart && res.inCart.length){
-            loopArray(res.inCart, $('<button class="delete-mc-project">Delete</button>'),"In Cart/Orders");
-        }
-        if(res && res.mcOnly && res.mcOnly.length){
-            loopArray(res.mcOnly, $('<button class="delete-mc-project">Delete</button>'),"Not in Entity List");
-        }
-        if(res && res.mzdbOnly && res.mzdbOnly.length){
-            loopRecords(res.mzdbOnly, $('<button class="ondelete-mc-project">Delete Entity</button>'),"Not in Meidaclip");
-        } 
-        $(document).on('click','.ondelete-mc-project',function(e){
-            var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-            console.log(this);
-            console.log(projectId);
-
-            var self = this;
-            // call on delete endpoint
-            var mcCallback = function(storeUserToken){
-                $.post({
-                    url: "/on-mc-project-delete",
-                    dataType:"json",
-                    data:{"projectId":projectId} // mimic what mediaclip passes to us
-                }).done(function(data){
-                    if(data.projectId){
-                        console.log(data);
-                        // successful
-                        $(self).parents("[data-mc-project='"+data.projectId+"']").remove();
-                    }
-                });
-            };
-
-            getToken(mcCallback);
-        });*/
-		$(document).on('click','.copy-mc-project',function(e){
-			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-			copyProject(projectId);
-        });
-        $(document).on('click','.delete-mc-project',function(e){
-			if(confirm("Are you sure you want to delete your work?")){
-				var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-				//console.log(this);
-				//console.log(projectId);
-			
-				var self = this;
-				var onDeleteCallback = function(data){
-					if(data.projectId){
-						//successful
-						$(self).parents("[data-mc-project='"+data.projectId+"']").remove();
-					}
-					else{
-						console.log('error deleting project');
-						console.log(data);
-					}
-				};
-				deleteProject(projectId,onDeleteCallback);
-			}
-        });
-        $(document).on('click','.mc-project-atc',function(e){
-            var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-            if(projectId){
-                var mcCallback = function(storeUserToken){
-                    document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
-                };
-
-                getToken(mcCallback);
-            }
-        });
-    };
 	var copyProject = function(projectId){
+		window.showPageLoader();
 		var mcCallback = function(storeUserToken){
 			$.post({
 				url: "/copy-mc-project/"+projectId,
@@ -507,9 +370,11 @@ function ($) {
 					document.location.href=  "/personalize/"+data.projectId+"?token="+storeUserToken;
 				}
 				else{
-					alert('Something went wrong :-(');
+					// show error message
+					errorOverlay("Something went wrong.  Please try your request again.");
 					console.log('error copying project');
 					console.log(data);
+					window.removePageLoader();
 				}
 			});
 		};
@@ -529,7 +394,7 @@ function ($) {
 
 		getToken(mcCallback);
 	};
-	var getProjects = function(carousel){
+	var getProjects = function(callback){
 		var user = require.mozuData('pagecontext').user;
 		var userId,token;
 		if(user.isAnonymous || user.accountId === 0){
@@ -538,20 +403,17 @@ function ($) {
 		else{
 			userId = user.accountId.toString(); // numeric value must be converted to string so we can compare string to string below
 		}
-		var cookie = getValues();
-		if(cookie && cookie.token){
-			// TO DO - need to get check to see if it's still valid
-			token = cookie.token;
-		}
-
-		$.post({
-			url: "/get-personalized-projects",
-			dataType:"json",
-			data:{"userId": userId,"token": token}
-		}).done(function(data){
-			projectsCallback(data,carousel);
-			console.log(data);
-		});
+		var projectCallback = function(storeUserToken){
+			$.post({
+				url: "/get-personalized-projects",
+				dataType:"json",
+				data:{"userId": userId,"token": storeUserToken}
+			}).done(function(data){
+				callback(data);
+				console.log(data);
+			});
+		};
+		getToken(projectCallback);
 	};
 	var setWishlistToken = function(token, wishlistItemID, wishlistID){
 		// update entity for token with wishlist info
@@ -561,6 +423,55 @@ function ($) {
 			async: false
 		});
 	};
+
+	// needed for added to cart overlay, cart & my projects pages
+	$(document).ready(function() {
+		$(document).on('click','.copy-mc-project',function(e){
+			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+			copyProject(projectId);
+		});
+		$(document).on('click','.delete-mc-project',function(e){
+			if(confirm("Are you sure you want to delete your work?")){
+				window.showPageLoader();
+				var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+				//console.log(this);
+				//console.log(projectId);
+			
+				var self = this;
+				var onDeleteCallback = function(data){
+					if(data.projectId){
+						//successful
+						$(self).parents("[data-mc-project='"+data.projectId+"']").remove();
+					}
+					else{
+						// show error message
+						errorOverlay("Something went wrong.  Please try your request again.");
+						console.log('error deleting project');
+						console.log(data);
+					}
+					window.removePageLoader();
+				};
+				deleteProject(projectId,onDeleteCallback);
+			}
+		});
+		$(document).on('click','.mc-project-atc',function(e){
+			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+			if(projectId){
+				window.showPageLoader();
+				var mcCallback = function(storeUserToken){
+					if(storeUserToken){
+						document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
+					}else{
+						// show error message
+						errorOverlay("Something went wrong.  Please try your request again.");
+						window.removePageLoader();
+					}
+				};
+
+				getToken(mcCallback);
+			}
+		});
+	});
 
 	return {
 		getToken:getToken,

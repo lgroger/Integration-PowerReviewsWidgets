@@ -5,7 +5,8 @@
 {% block body-tag-classes %} mz-myprojects {% endblock body-tag-classes %}
 {% block body-content %}
 {% block breadcrumbs %}{% endblock breadcrumbs %}
-    {% include "my-projects-template" %}
+{% dropzone "my-projects-page-header" scope="template" %}
+    {% include "modules/my-projects-interior" %}
 {% endblock body-content %}
 {% block body-below-content %}
-{% endblock body-below-content %} 
+{% endblock body-below-content %}

@@ -289,12 +289,6 @@
       "title": "Default Site Template"
     },
     {
-      "entityType": "siteTemplate",
-      "id": "my_projects_page",
-      "template": "my-projects-template",
-      "title": "My Projects Template"
-    },
-    {
       "documentType": "web_page",
       "entityType": "webpage",
       "id": "main-page",
@@ -492,7 +486,7 @@
       "entityType": "webpage",
       "id": "mediaclip",
       "template": "mediaclip",
-      "title": "MediaClip",
+      "title": "MediaClip Editor",
       "userCreatable": true
     },
     {
@@ -500,7 +494,7 @@
       "entityType": "webpage",
       "id": "my-projects",
       "template": "my-projects",
-      "title": "My Projects",
+      "title": "Mediaclip My Projects",
       "userCreatable": true
     },
     {
