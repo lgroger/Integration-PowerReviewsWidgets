@@ -22,7 +22,10 @@
             color: @primaryColor;
             @media @smallmobile {
                 font-size: 18px;
-            }
+			}
+			@media @tablet {
+				font-size: 20px;
+			}
         }
     }
 	.small-image{ 
@@ -49,7 +52,7 @@
 		}
 	}
 }
-@media @desktop{
+@media @desktop, @tablet {
 	.LP-cat-3xs{
 		padding: 0 0 12px 0;
 		.small-image{ 

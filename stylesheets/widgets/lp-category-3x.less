@@ -24,6 +24,9 @@
             @media @smallmobile {
                 font-size: 18px;
             }
+            @media @tablet {
+				font-size: 20px;
+			}
         }
     }
     &.leftlayout{
@@ -90,61 +93,7 @@
         }
     }
 }
-@media @tablet{
-    .LP-cat-3xl{
-        margin-top: 10px;
-        padding: 0 10px 10px 10px;
-        &.leftlayout{
-            .left{
-                width: 100%;
-                padding-bottom: 5px;
-                .content{
-                    width: 100%;
-                }
-            }
-            .right{
-                width: 100%;
-                padding-top: 5px;
-                .content{
-                    width: 48%;  
-                    &:first-child{
-                        margin: 0 5px 0 0;
-                        span{
-                            bottom: 0;
-                        }
-                    }
-                    &:last-child{
-                        margin: 0 0 0 5px;
-                    }
-                }
-                
-            }
-        }
-        &.rightlayout{
-            .left{
-                width: 100%;
-                padding: 0 0 12.5px 0;
-                .content{
-                    width: 45%;
-                    &:first-child{
-                        margin: 0 12.5px 0 0;
-                        span{
-                            bottom: 0; 
-                        }
-                    }
-                    &:last-child{
-                        margin: 0 0 0 12.5px;
-                    }
-                }
-            }
-            .right{
-                width: 100%;
-                padding: 12.5px 0 0 0;
-            }
-        }
-    }
-}
-@media @desktop {
+@media @desktop, @tablet {
     .LP-cat-3xl {
         padding: 0 0 12px 0;
         &.leftlayout{
@@ -160,7 +109,7 @@
                     &:first-child{
                         padding-bottom: 6px;
                         span{
-                            bottom: 27.5px;
+                            bottom: 17.5px;
                         }
                     }
                     &:last-child{
@@ -181,7 +130,7 @@
                     &:first-child{
                         padding-bottom: 6px;
                         span{
-                            bottom: 27.5px;
+                            bottom: 17.5px;
                         }
                     }
                     &:last-child{

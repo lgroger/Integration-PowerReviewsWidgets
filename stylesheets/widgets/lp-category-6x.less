@@ -22,7 +22,10 @@
             color: @primaryColor;
             @media @smallmobile {
                 font-size: 18px;
-            }
+			}
+			@media @tablet {
+				font-size: 20px;
+			}
         }
     }
 	.left{
@@ -107,7 +110,7 @@
 	}
 }
 
-@media @desktop{
+@media @desktop, @tablet {
 	.LP-cat-6x{
 		padding: 0 0 12px 0;
 		.left{
