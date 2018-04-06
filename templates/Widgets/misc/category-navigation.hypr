@@ -85,7 +85,7 @@
         <input type="checkbox" id="menu-custom" name="menu" class="menu-checkbox">
         <div class="menu-custom">
             <label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
-            <ul class="mob-menu-l1" style="" data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
+            <ul class="mob-menu-l1" data-mz-contextify='.mz-sitenav-link[href="{{ navigation.currentNode.url }}"]'
             data-mz-contextify-attr='class'
             data-mz-contextify-val='is-current'>
                 {% for category in model.config.mainCategory %}
@@ -107,19 +107,19 @@
                                                         BACK  
                                                     </span>
                                                     &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp; 
-                                                    <span style="color:#fff;">{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}} </span>  
+                                                    <span>{{navNode.name|truncatechars(themeSettings.maxTopLevelNavLabelLength)|safe}} </span>  
                                                 </div>
                                                 {% for sublink in navNode.items %}
                                                     {% if not sublink.isHidden and not sublink.isEmpty %}
                                                         <li>
                                                             <div>
                                                                 <a href="{{ sublink.url}}" class="level-2-link">{{ sublink.name|safe}}</a>
-                                                                <label class="toggle-plus-icon levle-2-expand" style=""><i class="fa fa-plus" aria-hidden="true"></i></label>
+                                                                <label class="toggle-plus-icon levle-2-expand"><i class="fa fa-plus" aria-hidden="true"></i></label>
 
                                                                 <ul class="my-mob-menu-third">
                                                                     {% for sublink-1 in sublink.items %}
                                                                         <li style="list-style-type:none;">
-                                                                            <span style="color:aqua;">
+                                                                            <span>
                                                                                 {{ sublink-1.name | safe }}
                                                                             </span>
                                                                         </li>
@@ -143,10 +143,7 @@
                 {% endfor %}
                 <div class="mob-promo">
                     <hr/>
-                    <li class="mob-head-promo">
-                        Save $10 -- Signup now
-                    </li>
-                    <li class="mob-head-promo mob-promo-phone" style="color:#00af9a;">
+                    <li class="mob-head-promo mob-promo-phone">
                         1-800-314-8736
                     </li>
                     <li class="mob-head-promo mob-cust-sup">
@@ -166,8 +163,6 @@
         </div>    
     </div>
 </div>
-
-
 
 {% comment %}
 <ul class="mz-categorylist" >
@@ -217,7 +212,4 @@ jQuery(document).ready(function(){
     });
                 
 });
-
-
-
 </script>

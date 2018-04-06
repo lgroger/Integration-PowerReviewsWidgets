@@ -2170,6 +2170,342 @@
 	}
 }
 
+/*Party planner css starts here */
+#mz-drop-zone-party-planner-banner .mz-cms-content{
+    padding: 1.5%;
+    }
+.planner-title-wrap{
+    min-height: 350px;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    .planner-content-section{
+        padding: 85px 0 20px 35px;
+        width: 60%;
+        h2{
+            font: 32px/1.4 @fontGTWalsheimBold;
+            color: #194369;
+            margin-bottom: 50px;
+            text-transform: uppercase;
+        }
+        p{
+            font: 22px/1.2 @fontFamily;
+            color: #d70056;
+        }
+        h3{
+            font: 22px/1.4 @fontGTWalsheimBold;
+            color: #194369;
+            text-transform: uppercase;
+        }
+    }
+}
+.party-planner {
+    .thank-you{
+        font: 20px @fontFamily !important;
+        color: #093863;
+        padding-left: 20px;
+    }
+    +div#mz-drop-zone-checkout-party-planner{
+        margin-bottom: 0;
+    }
+     .partyPlanner-captcha{
+        padding-left: 43px;
+    }
+    .mktoForm{
+    max-width:99%;
+       select.mktoField{
+            background: url('../resources/images/party-drop-select.png') no-repeat;
+            background-position: 95% 50%;
+            background-size: 16px;
+            -webkit-appearance: none;
+            -moz-appearance:none !important;
+            appearance:none !important;
+            &::-ms-expand {
+                display: none;
+            }  
+        }
+        select.ui-datepicker-month,select.ui-datepicker-year{
+            color: #000;
+        }
+        .mktoCheckboxList > input{
+            display: none;
+        }
+        .mktoButtonRow{
+            padding-left: 30px;
+            margin-bottom: 20px;
+            .mktoButton{
+                box-sizing: border-box;
+                width: 150px !important;
+                height: auto;
+                font-size: 15px !important;
+            }
+        }
+        .mktoAsterix {
+            float: left;
+            padding-right: 5px;
+        }
+    }
+    #businessType{
+        width: 635px !important;
+        height: 125px;
+        padding:10px;
+        @media only screen and (max-width:700px){
+            width: 100% !important;
+            margin:0 0%;
+        }
+    }
+    .mktoButtonWrap {
+        margin-left: 0% !important;
+    }
+    .mktoButton{
+        background-color: @primaryBlue !important;
+        background-image: none !important;
+        border: 0px !important;
+        border-radius: 5px !important;
+        height: 40px;
+        width: 154px;
+        font-size: 16px;
+        text-transform: uppercase;
+        color: #fff !important;
+    }
+    .mktoForm fieldset legend{
+        color: @textHeaderColor;
+        font-size: 23px;
+        margin: 0px 0 10px;
+        padding-left: 10px;
+    }
+    .mktoForm label{
+        font-size: 18px;
+        padding-bottom: 7px;
+        padding-top: 18px;
+        float:left;
+        display:inline-block;
+    }
+    .mktoDateButton{
+        margin-left: 10px !important;
+    }
+    pre{
+        font-family: @fontFamily !important;
+        font-size: 15px;
+        color: @textColor;
+    }
+    .mktoOffset{
+        width:0px !important;
+    }
+    .mktoFormRow{
+        padding:0 1em;
+        @media only screen and (max-width:700px){
+            padding: 0;
+        }
+    }
+    .mktoForm fieldset .mktoFieldWrap{
+        display: inline-block;
+        margin-right: 10px;
+        @media only screen and (max-width:700px){
+            margin-right: 0;
+            width: 100% !important;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select{
+            height:56px;
+            padding: 0 10px;
+            display:block;
+            font-size: 15px;
+            width:395px !important;
+            margin-right: 35px;
+            clear: both;
+            text-align: left;
+            @media only screen and (max-width:700px){
+                width: 100% !important;
+            }
+        }
+        .mktoForm .mktoOffset{
+            width:0px;
+        }
+    }
+    .mktoFormRow:nth-child(2) .mktoFormRow, .mktoFormRow:nth-child(2) .mktoHtmlText, .mktoFormRow:nth-child(2) .mktoFieldWrap{
+        
+        width:100% !important;
+    }
+    input[type=checkbox]:checked + label:before{
+            content: "\2713 ";
+    }
+
+    #mktoForm_1200 > div:nth-child(5){
+        .mktoFieldWrap{
+            position: relative;
+            padding-left: 50px;
+            height: 35px;
+        }
+        legend{
+            margin-bottom: 20px;
+        }
+        label{
+            padding-top: 5px;
+            font-family: @fontFamily;
+            font-size: 15px;
+        }
+        .mktoCheckboxList > label{
+            position: absolute;
+            margin-left: 0;
+            margin-top: 0;
+            top: -1px;
+            left: 35px;
+            line-height: 0;
+            margin-bottom: 0;
+        }
+    }
+    #mktoForm_1200 
+    {   
+        >  div:nth-child(7){
+            padding-left: 30px;
+            &+div{
+                padding: 20px 0 0px 30px;
+                font-size: 16px;
+            }
+        }
+        >  div:nth-child(6){
+            padding-left: 30px;
+            label{
+                font-size: 22px;
+                color: #222 !important;
+                padding-bottom: 15px;
+            }
+        }
+    }
+    .mktoForm fieldset .mktoLogicalField.mktoCheckboxList.mktoHasWidth{
+        max-height: 1px;
+    }
+    input[type=checkbox] + label:before, .mktoForm input[type=radio] + label:before{
+        width: 22px !important;
+        height: 22px !important;
+        font-size: 18px;
+        line-height: 1.4 !important;
+        text-align: center;
+    }
+}
+ @media only screen and (max-width:935px){
+    .party-planner .mktoForm fieldset .mktoFieldWrap{
+       input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select{
+            width: 290px !important;
+            margin-right: 17px;
+        }
+        #dateofEvent{
+            padding: 0px 20px;
+        }
+    }
+}
+@media only screen and (max-width:700px){
+    .party-planner{
+        #dateofEvent{
+             line-height: 2.3;
+        }
+        .mktoForm .mktoButtonRow{
+            width:100%;
+            padding: 0px;
+            box-sizing: border-box;
+        }
+        #dateofEvent.placeholderclass::before{
+            width:100%;
+            content:attr(placeholder);
+            line-height: 38px;
+            color: @textColor;
+        }
+
+        #dateofEvent.placeholderclass:hover::before{
+            width:0%;
+            content:"";
+        }
+        #mktoForm_1200 {
+            max-width: 100% !important;
+            padding: 0 10px;
+            box-sizing: border-box;
+            .mktoLabel{
+                display: none;
+            }
+            .mktoFormCol {
+                float: none;
+                clear: both;
+                padding: 0px !important;
+                margin-bottom: 0 !important;
+                pre{
+                    padding: 10px 0px !important;
+                    margin:0px;
+                }
+            }
+            fieldset .mktoFieldWrap{
+               input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], select{
+                    width: 100% !important;
+                    margin: 0 0px 3px;
+                    min-height: 40px !important;
+                    height: 40px;
+                    font-size:14px !important;
+                    padding: 0 10px;
+                }
+            }
+            textarea.mktoField{
+                font-size:14px !important;
+            }
+            fieldset legend{
+                padding: 0px;
+            }
+            > div:nth-child(5){
+                legend{
+                    padding: 10px 0px 0px;
+                }
+                .mktoLabel{
+                    display: block !important;
+                }
+            }
+                
+             > div:nth-child(6){
+                padding: 10px 0px 0px;
+                .mktoFieldWrap{
+                    width: 100% !important;
+                    margin:10px 0px;
+                }
+             }
+            >  div:nth-child(7){
+                padding-left: 0px;
+                &+div{
+                    padding:20px 0 0px 0px;
+                }
+                .mktoHtmlText{
+                    strong{
+                        padding: 0px;
+                    }
+                    span{
+                        font-size: 14px;
+                    }
+                }
+            }
+            button.mktoButton{
+                margin-top:5px;
+                width:100% !important;               
+            }
+        }
+        .partyPlanner-captcha{
+            small{
+                padding: 0px;
+            }
+        }
+        #captcha_container{
+            iframe{
+                height: 98px !important;
+                width: 302px;
+                padding: 15px 0px 0px;
+            }
+        }
+        .recaptcha-err-msg{
+            margin-top: 10px;
+        }
+    }
+    .party-planner-wrap #mz-drop-zone-checkout-party-planner{
+        h2{
+            margin-top:0px !important;
+        }
+    }
+ }
+
 /*--------------------About Us--------------------*/
 @media only screen and (max-width:800px){
 	.about-us{
