@@ -15,13 +15,13 @@
         font-size: @fontSizeSmall;
         margin: 0 -1px;
     }
-    @media @smallmobile {
-        display:none;
-    }
     .breadcrumbs-cat .mz-breadcrumbs {
         display: none;
     }
     :first-child, :first-child+span {
+        display:none;
+    }
+    @media @smallmobile, @tablet {
         display:none;
     }
 }
