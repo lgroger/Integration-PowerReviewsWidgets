@@ -6,6 +6,9 @@
     padding: 10px;
     width: 400px;
     font-size: 14px;
+    @media @smallmobile {
+        width: 95%;
+    }
     button {
         background: @tertiaryColor;
         color: white;
@@ -18,5 +21,8 @@
     }
     input {
         width: 200px;
+        @media @smallmobile {
+            width: 150px;
+        }
     }
 }
