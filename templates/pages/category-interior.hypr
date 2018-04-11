@@ -3,12 +3,32 @@
 {% else %}
      {% set_var useBR=0 %}
 {% endif %}
-	{% dropzone "common-category-top" scope="page" %}
-
-		<div class="mz-category-title">
-		    {% dropzone "category-page-top" scope="page" %}
-		    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
-		</div> 
+        <div class="plp-promo-widget"> 
+            <div class="promoleft">
+               {% dropzone "plp-promo-image" scope="page" %}
+             </div> 
+            <div class="promoright"> 
+                <div>
+                <h1 class='title'>{{ model.name|safe }}</h1>
+                <div>
+                    {% dropzone "plp-promo-content" scope="page" %}
+                </div>
+                </div>
+                <div class="addthissection mz-cms-push-right" {%if pageContext.isMobile%}style="display:none;"{%endif%}>
+                    <div class="addthis_button_compact addthis_default_style addthis_inline_share_toolbox_zh34" data-url="{% make_url "product" model %}" data-title="{{ model.name }}">
+                        <a  class="addthis_button_twitter">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a class="addthis_button_pinterest_share">
+                            <i class="fa fa-pinterest"></i>
+                        </a>
+                        <a class="addthis_button_facebook">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                    </div> 
+                </div>
+            </div>
+        </div>
 		{% dropzone "category-page-top-2" scope="page" %}
 		<style>.mz-breadcrumbs:first-child{display:none;}</style>
 		{% block breadcrumbs %}
@@ -51,4 +71,4 @@
 			{% endif %}
 		</p>
 	</div>
-	{% endif %} 
+{% endif %} 

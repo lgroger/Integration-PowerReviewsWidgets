@@ -17,7 +17,7 @@
     display: -webkit-flex;
     -webkit-flex-direction: column-reverse; 
     .ratestar{
-        color: #ffa500;
+        color: @secondaryYellow;
     }
     .nostar{ 
         color: #dddddd;
@@ -36,10 +36,10 @@
     }
         .facets-more,.sz-seemoretitle,.facets-less{
             display: inline-block;
-            color: @secondaryBlue;
+            color: #516db2;
             padding: 0;
             cursor: pointer;
-            font-family: @fontFamily;
+            font-family: @fontGTWalsheimMedium;
             font-size: 11px;
             text-transform: none;
         }
@@ -48,16 +48,17 @@
         }
     }
 .facet-heading,.facet-heading-single{
-    padding: 5% 2% 2% 3%; 
+    /*margin: 5% 2% 2% 3%;*/ 
     cursor: pointer;
     max-width: 225px;
     width: 225px;
     border-top: 1px solid @secondaryWhite;
     .seemorecaret{
         color: @primaryBlue;
-        font-size: 22px;
+        font-size: 12px;
         float: right;
         margin-right: 5%; 
+        padding-top: 2%;
     }
 } 
 .semorecaret{
@@ -103,10 +104,13 @@
     font-family: @fontFamily;
 }
 .mz-page-filters-controls {
-    padding-top: 1%;
+    /*padding-top: 1%;*/
     max-width: 1276px;
+    padding-top: 10px;
     margin: 0 auto;
-    padding-right: 3%;
+    padding-left: 10px;
+    text-transform: uppercase;
+    font-family: @fontGTWalsheimMedium;
     .mz-pagingcontrols-pagestate-label {
         margin-top: 12px;
         font-family: @fontLight;
@@ -114,7 +118,7 @@
         font-size: 11px;
         text-transform: uppercase;
         margin-left: 3%;
-    }    
+    }
     .mz-pagingcontrols,
     .mz-sortby {
         display: inline-block;
