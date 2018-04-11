@@ -1,0 +1,139 @@
+<!-- HTML for Party Ideas Widget -->
+
+<div class="LP-cat-pi">
+    <div class="left">
+        <div class="logoContainer">
+            <a class="party" href="/party-ideas">
+                <img src="../../resources/images/Party_Ideas.svg">
+            </a>
+            {%if pageContext.isDesktop %}
+                <div class="desc">Great ideas come from great party throwers like you</div>
+            {%else%}
+                <div class="horizontalLine"><hr/></div>
+            {% endif %} 
+        </div>
+        <div class="large-image">
+            <div class="content">
+                {% if  model.config.lgimageurlA %}
+                        <a href="{% if model.config.lgcaturlA %}{{model.config.lgcaturlA}}{% endif %}">
+                            <img src="{{model.config.lgimageurlA}}" alt="{{model.config.lgcatnameA}}"/>
+                        </a>
+                        {% if model.config.lgcatnameA %}
+                            <div class="contentContainer">
+                                <a class="contentTitle" href="{% if model.config.lgcaturlA %}{{model.config.lgcaturlA}}{% endif %}">
+                                    {{model.config.lgcatnameA}}
+                                </a> 
+                                <span class="arrow"></span>
+                            </div>
+                        {% endif %}
+                {% endif %} 
+            </div>
+             <div class="content">
+                {% if  model.config.lgimageurlB %}
+                         <a href="{% if model.config.lgcaturlB %}{{model.config.lgcaturlB}}{% endif %}">
+                            <img src="{{model.config.lgimageurlB}}" alt="{{model.config.lgcatnameB}}"/>
+                        </a>
+                        {% if model.config.lgcatnameB %}
+                            <div class="contentContainer">
+                                <a class="contentTitle" href="{% if model.config.lgcaturlB %}{{model.config.lgcaturlB}}{% endif %}">
+                                    {{model.config.lgcatnameB}}
+                                </a> 
+                                <span class="arrow"></span>
+                            </div>
+                        {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="right">
+        {%if pageContext.isDesktop %}
+            <div class="horizontalLineContainer">
+                <hr/>
+            </div>
+        {%endif%}
+        <div class="smallImageContainer">
+            <div class="small-image">
+                <div class="content">
+                    {%if model.config.smimageurlC %}
+                        
+                        {% if  model.config.smimageurlC %}
+                            <a href="{% if model.config.smcaturlC %}{{model.config.smcaturlC}}{% endif %}">
+                                <img src="{{model.config.smimageurlC}}" alt="{{model.config.smcatnameC}}"/>
+                            </a>
+                            {% if model.config.smcatnameC %}
+                                <div class="contentContainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlC %}{{model.config.smcaturlC}}{% endif %}">
+                                        {{model.config.smcatnameC}}
+                                    </a> 
+                                    <span class="arrow"></span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                    {% endif %}
+                </div>
+                <div class="content">
+                    {%if model.config.smimageurlD %}
+                        
+                        {% if  model.config.smimageurlD %}
+                            <a href="{% if model.config.smcaturlD %}{{model.config.smcaturlD}}{% endif %}">
+                                <img src="{{model.config.smimageurlD}}" alt="{{model.config.smcatnameD}}"/>
+                            </a>
+                            {% if model.config.smcatnameD %}
+                                <div class="contentDontainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlD %}{{model.config.smcaturlD}}{% endif %}">
+                                        {{model.config.smcatnameD}}
+                                    </a> 
+                                    <span class="arrow"></span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                    {% endif %}
+                </div>
+            </div>
+            <div class="small-image">
+                <div class="content">
+                    {%if model.config.smimageurlE %}
+                        
+                        {% if  model.config.smimageurlE %}
+                            <a href="{% if model.config.smcaturlE %}{{model.config.smcaturlE}}{% endif %}">
+                                <img src="{{model.config.smimageurlE}}" alt="{{model.config.smcatnameE}}"/>
+                            </a>
+                            {% if model.config.smcatnameE %}
+                                <div class="contentEontainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlE %}{{model.config.smcaturlE}}{% endif %}">
+                                        {{model.config.smcatnameE}}
+                                    </a> 
+                                    <span class="arrow"></span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                    {% endif %}
+                </div>
+                <div class="content">
+                    {%if model.config.smimageurlF %}
+                        
+                        {% if  model.config.smimageurlF %}
+                            <a href="{% if model.config.smcaturlF %}{{model.config.smcaturlF}}{% endif %}">
+                                <img src="{{model.config.smimageurlF}}" alt="{{model.config.smcatnameF}}"/>
+                            </a>
+                            {% if model.config.smcatnameF %}
+                                <div class="contentFontainer">
+                                    <a class="contentTitle" href="{% if model.config.smcaturlF %}{{model.config.smcaturlF}}{% endif %}">
+                                        {{model.config.smcatnameF}}
+                                    </a> 
+                                    <span class="arrow"></span>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+                        
+                    {% endif %}
+                </div>
+            </div> 
+        </div>
+    </div>
+</div>
+
+<!-- HTML for Party Ideas Widget --> 

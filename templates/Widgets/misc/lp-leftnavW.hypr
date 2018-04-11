@@ -1,0 +1,113 @@
+
+{% require_script "widgets/lp-leftnav" %}
+
+<div class="categories">
+	<ul class="parent-category mob-menu">
+		<li class="parent mob-menu"><span>Shop Categories</span>
+			<span class="icon"></span>
+		</li>
+	</ul>
+	<ul class="parent-category">
+		{% for data in model.config.data|dictsort("mcap") %}
+			{% if data.ndisp %}
+				<li {% if data.ntab %}{% if data.items.length > 0 %}class="parent"{% endif %}{% endif %}>
+					<a {% if data.mlink %}href="{{data.mlink}}"{% else %} href="javascript:void(0);"{% endif %}>
+						<span>{{data.mcap}}</span>
+					</a>
+					{% if data.ntab %}
+						{% if data.items.length > 0 %}
+							<span class="icon"></span>
+						{% endif %}
+					{% endif %}
+				</li>
+				{% if data.ntab %}
+					<ul class="sub-category1">
+						{% for subcat in data.items %}
+							<li {% if subcat.mcol %}{% if subcat.items.length > 0 %}class="parent"{% endif %}{% endif %}>
+								<a {% if subcat.mlink %}href="{{subcat.mlink}}"{% else %} href="javascript:void(0);"{% endif %}>
+									<span>{{subcat.mcap}}</span>
+								</a>
+								{% if subcat.mcol %}
+									{% if subcat.items.length > 0 %}
+										<span class="icon"></span>
+									{% endif %}
+								{% endif %}
+							</li>
+							{% if subcat.mcol %}
+								{% if subcat.items.length > 0 %}
+									<ul class="sub-category2">
+										{% for subsubcat in subcat.items %}
+											<li {% if subsubcat.items.length > 0 %}class="parent"{% endif %}>
+												<a {% if subsubcat.mlink %}href="{{subsubcat.mlink}}"{% else %} href="javascript:void(0);"{% endif %}>
+													<span>{{subsubcat.mcap}}</span>
+												</a>
+												{% if subsubcat.items.length > 0 %}
+													<span class="icon"></span>
+												{% endif %}
+											</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					</ul>
+				{% endif %}
+			{% else %}
+				<li  class="expandmore {% if data.ntab %}{% if data.items.length > 0 %}parent{% endif %}{% endif %}">
+					<a {% if data.mlink %}href="{{data.mlink}}"{% else %} href="javascript:void(0);"{% endif %}>
+						<span>{{data.mcap}}</span>
+					</a>
+					{% if data.ntab %}
+						{% if data.items.length > 0 %}
+							<span class="icon"></span>
+						{% endif %}
+					{% endif %}
+				</li>
+				{% if data.ntab %}
+					<ul class="sub-category1">
+						{% for subcat in data.items %}
+							<li {% if subcat.mcol %}{% if subcat.items.length > 0 %}class="parent"{% endif %}{% endif %}>
+								<a {% if subcat.mlink %}href="{{subcat.mlink}}"{% else %} href="javascript:void(0);"{% endif %}>
+									<span>{{subcat.mcap}}</span>
+								</a>
+								{% if subcat.mcol %}
+									{% if subcat.items.length > 0 %}
+										<span class="icon"></span>
+									{% endif %}
+								{% endif %}
+							</li>
+							{% if subcat.mcol %}
+								{% if subcat.items.length > 0 %}
+									<ul class="sub-category2">
+										{% for subsubcat in subcat.items %}
+											<li {% if subsubcat.items.length > 0 %}class="parent"{% endif %}>
+												<a {% if subsubcat.mlink %}href="{{subsubcat.mlink}}"{% else %} href="javascript:void(0);"{% endif %}>
+													<span>{{subsubcat.mcap}}</span>
+												</a>
+												{% if subsubcat.items.length > 0 %}
+													<span class="icon"></span>
+												{% endif %}
+											</li>
+										{% endfor %}
+									</ul>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+					</ul>
+				{% endif %}
+			{% endif %}
+		{% endfor %}
+		
+		{% set_var bool=false %}
+
+		{% for data in model.config.data %}	
+			{% if not data.ndisp %}
+				{% set_var bool=true %}	
+			{% endif %}
+		{% endfor %}
+
+		{% if bool %}
+			<div class="showmorelink"><a href="javascript:void(0);">{% if model.config.showmore %}{{model.config.showmore}}{% else %}See More{% endif %}</a></div>
+		{% endif %}
+	</ul>
+</div>

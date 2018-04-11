@@ -1,0 +1,15 @@
+
+<div class="more-widget">
+	<div class="more-top"><img src="/resources/images/confetti2.svg">
+		<h3 class="title">{{model.config.hdrname|truncatewords(5)}}</h3>
+		<img src="/resources/images/confetti2.svg">
+	</div>
+	<div class="more-themes">
+		<div class="links">
+			{% for data in model.config.data|dictsort("mcap") %}
+				<div><a {% if data.mlink %}href="{{data.mlink}}"{% else %} href="javascript:void(0);"{% endif %}><span>{{data.mcap|truncatewords(3)}}</span></a></div>
+			{% endfor %}
+		</div>
+	</ul>
+	<div class="confetti"><img src="/resources/images/confetti.svg"></div>
+</div>

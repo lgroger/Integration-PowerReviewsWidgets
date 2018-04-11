@@ -1,5 +1,4 @@
 {
-
   "about": {
     "author": "",
     "defaultLanguage": "en-US",
@@ -20,13 +19,52 @@
     {
       "id": "offer_promo_layout_1_edit",
       "path": "offer_promo_layout_1_edit.js"
-    },{
+    },
+    {
+      "id": "lp-category-3x",
+      "path": "lp-category-3x.js" 
+    },
+    {
+      "id": "lp-category-6x",
+      "path": "lp-category-6x.js"
+    },
+    {
+      "id": "lp-category-4x",
+      "path": "lp-category-4x.js"
+    },
+    {
+      "id": "lp-category-3xs",
+      "path": "lp-category-3xs.js"
+    },
+    {
+      "id": "lp-category-2x",
+      "path": "lp-category-2x.js"
+    },
+    {
+      "id": "lp-leftnav",
+      "path": "lp-leftnav.js"
+    },
+    {
+      "id": "lp-more-theme",
+      "path": "lp-more-theme.js"
+    },
+    {
+      "id": "lp-category-html-widget",
+      "path": "lp-category-html-widget.js"
+    },
+    {
+      "id": "partyideas",
+      "path": "partyideas.js"
+    },
+    {
       "id": "menu-edit",
       "path": "menu-edit.js"
-    },{
+    },
+    {
       "id": "menu-editNew",
       "path": "menu-editNew.js"
-    },{
+    },
+    {
       "id": "super-page-filter",
       "path": "super-page-filter.js"
     },
@@ -40,38 +78,45 @@
     },{
       "id": "QAEditor",
       "path": "QASection-edit.js"
-    },{
+    },
+    {
       "id": "careers-edit-view",
       "path": "careers-edit.js"
-      },{
+    },
+    {
       "id": "press-edit",
       "path": "press-edit.js"
     },
     {
       "id": "offer_promo_edit",
       "path": "offer_promo_edit.js"
-    },{
+    },
+    {
       "id": "our-services-widget",
       "path": "our-services.js"
 
-    },{
+    },
+    {
       "id": "dynamic-cat-edit",
       "path": "dynamic-cat.js"
-    },{
+    },
+    {
       "id": "popular-editor",
       "path": "popular-edit.js"
     },
     {
       "id": "vid_promo_edit",
       "path": "vid_promo_edit.js"
-    }, {
+    },
+    {
       "id": "ship_editor@mozu",
       "path": "ship_editor.js",
       "documentTypes": [
         "shippingMethod@shindigz"
       ],
       "priority": 1
-    },{
+    },
+    {
       "id": "holiday_editor@mozu",
       "path": "holiday_editor.js",
       "documentTypes": [
@@ -94,14 +139,16 @@
         "shippingMoreThen@shindigz"
       ],
       "priority": 1
-    },{
+    },
+    {
       "id": "ship_code_config@mozu",
       "path": "ship_cc_edit.js",
       "documentTypes": [
         "ShippingCodeConfig@shindigz"
       ],
       "priority": 1
-    },{
+    },
+    {
       "id": "homepagecaraousel",
       "path": "homepagecaraousel.js"
     },
@@ -140,10 +187,12 @@
     {
       "id": "image",
       "path": "image.js"
-    },{
+    },
+    {
       "id": "image-new",
       "path": "image-edit-new.js"
-    },{
+    },
+    {
       "id": "category-html",
       "path": "category-edit-html.js"
     },
@@ -305,8 +354,8 @@
     },
     {
       "entityType": "category",
-      "id": "categorylanding",
-      "template": "categorylanding",
+      "id": "lp-cat-page",
+      "template": "lp-cat-page",
       "title": "Landing Page",
       "userCreatable": false,
       "customEditor": "categoryContent@mozu"
@@ -332,6 +381,14 @@
       "id": "category-html",
       "template": "category-html",
       "title": "Top Level HTML",
+      "userCreatable": false,
+      "customEditor": "categoryContent@mozu"
+    },
+    {
+      "entityType": "category",
+      "id": "categorylanding",
+      "template": "categorylanding",
+      "title": "Category Landing Hybrid",
       "userCreatable": false,
       "customEditor": "categoryContent@mozu"
     },
@@ -439,7 +496,6 @@
         }
       ]
     },
-    
     {
       "documentType": "web_page",
       "entityType": "webpage",
@@ -1223,6 +1279,87 @@
       "customEditor": "image",
       "icon": "/resources/admin/widgets/00_photo.png",
       "id": "cms-image",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-html-widget",
+      "displayName": "LP Category HTML",
+      "id": "lp-category-html-widget",
+      "displayTemplate": "misc/lp-category-html-widget", 
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-2x",
+      "displayName": "LP 2x",
+      "id": "lp-category-2x",
+      "displayTemplate": "misc/lp-category-2xW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-3x",
+      "displayName": "LP 3xL",
+      "id": "lp-category-3x",
+      "displayTemplate": "misc/lp-category-3xL",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-3xs",
+      "displayName": "LP 3xs",
+      "id": "lp-category-3xs",
+      "displayTemplate": "misc/lp-category-3xsW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-4x",
+      "displayName": "LP 4x",
+      "id": "lp-category-4x",
+      "displayTemplate": "misc/lp-category-4xW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-category-6x",
+      "displayName": "LP 6x",
+      "id": "lp-category-6x",
+      "displayTemplate": "misc/lp-category-6xW",
+      "validPageTypes": [
+        "*"
+      ] 
+    },
+    {
+      "customEditor": "lp-leftnav",
+      "displayName": "LP Category Nav",
+      "id": "lp-leftnav",
+      "displayTemplate": "misc/lp-leftnavW",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "lp-more-theme",
+      "displayName": "LP More Themes",
+      "id": "lp-more-theme",
+      "displayTemplate": "misc/lp-more-theme",
+      "validPageTypes": [
+        "*"
+      ]
+    },
+    {
+      "customEditor": "partyideas",
+      "displayName": "Party Ideas",
+      "id": "partyideas",
+      "displayTemplate": "misc/partyideas",
       "validPageTypes": [
         "*"
       ]
