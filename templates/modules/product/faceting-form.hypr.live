@@ -1,35 +1,33 @@
 {% if pagecontext.isDesktop %}
     <section class="mz-facetingform mz-filters">
 
-{% if model.facets.length > 0 or pageModel.childrenCategories.length > 0 %}
-    <div class="br-facet-form-header">
-        Narrow by
-    </div>
-{% endif %}
+
 {% if pageModel.childrenCategories.length > 0 %}
-        <div class="facet-heading"> 
-           <span class="cate-head" containerid="category"><a>Category</a></span> <i class="seemorecaret fa fa-caret-up" aria-hidden="true"></i>
-        </div>
-        <div class="mz-l-sidebaritem sz-childcat">
-            <div>
-                <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
-                {% for l in pageModel.childrenCategories %}
-                    <li style="display:list-item;"><a href="{{l.url}}" title="{{l.content.pageTitle}}">{{l.content.pageTitle}}{# <span class="mz-facetingform-valuecount">({{l.count}})</span> #}</a></li>
-                 {% endfor %}
-                 </ul>
-             </div>
+        <div class="facet-container">
+            <div class="facet-heading"> 
+               <span class="cate-head" containerid="category"><a>Category</a></span> <i class="seemorecaret fa fa-minus" aria-hidden="true"></i>
+            </div>
+            <div class="mz-l-sidebaritem sz-childcat">
+                <div>
+                    <ul class="mz-facetingform-facet mz-facetingform-facet-hierarchy">
+                    {% for l in pageModel.childrenCategories %}
+                        <li style="display:list-item;"><a href="{{l.url}}" title="{{l.content.pageTitle}}">{{l.content.pageTitle}}{# <span class="mz-facetingform-valuecount">({{l.count}})</span> #}</a></li>
+                     {% endfor %}
+                     </ul>
+                 </div>
+            </div>
         </div>
 {% endif %}
         {% for facet in model.facets %}
           {% if facet.values and facet.facetType == "Hierarchy" %}
-         
+         <div class="facet-container">
           {% for fval in facet.values %}
-          {% if fval.childrenFacetValues.length > 0 %}
-          <div class="facet-heading">
-       <span class="cate-head"><a>Categories</a></span>
-       <i class="seemorecaret fa fa-caret-up" aria-hidden="true"></i>
-        </div> 
-        {% endif %}  
+            {% if fval.childrenFacetValues.length > 0 %}
+                <div class="facet-heading">
+                    <span class="cate-head"><a>Categories</a></span>
+                    <i class="seemorecaret fa fa-minus" aria-hidden="true"></i>
+                </div>
+            {% endif %}  
         {% endfor %}     
 
             {% if facet.values.length == 1 %}         
@@ -37,6 +35,7 @@
             {% else %}
               {% include "modules/product/hierarchy-facets" with facet=facet facetValues=facet.values %}
             {% endif %}
+            </div>
           {% endif %}
         {% endfor %}
              
@@ -55,6 +54,7 @@
             </div>
             {% endfor %}
         {% else %}
+        <div class="facet-container">
         <div class="facet-heading">
             {% set_var hideToStart=0 %}
             {% if facet.label == "Holiday" or facet.label == "Sport/College" %}
@@ -70,9 +70,9 @@
             {% endif %}
            <span class="cate-head" containerid={{facet.field|replace('~','-')}}><a>{{ facet.label }}</a></span>
             {% if hideToStart==1 %}
-                <i class="seemorecaret fa fa-caret-down" aria-hidden="true"></i>
+                <i class="seemorecaret fa fa-plus" aria-hidden="true"></i>
             {% else %}
-                <i class="seemorecaret fa fa-caret-up" aria-hidden="true"></i>
+                <i class="seemorecaret fa fa-minus" aria-hidden="true"></i>
             {% endif %}
         </div>
         <div class="mz-l-sidebaritem" {% if hideToStart==1 %}style="display:none;"{% endif %}>
@@ -158,13 +158,14 @@
                                         {% endif %}
                                     {% endif %}
                                 {% endif %}
-                                 </span> <i class=" semorecaret fa fa-caret-down {% if facet.isFaceted %} faceticon {% endif %}" aria-hidden="true"></i>
+                                 </span> 
                                 </div>
                                 </li>
                                 </ul>
                                 {% endif %}
                             
                         {% endif %}   
+                        </div>
                     </div>
         </div>
         {% endif %}

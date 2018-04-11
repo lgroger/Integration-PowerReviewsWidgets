@@ -35,6 +35,9 @@
                 {% dropzone "sidebar-below-facets" scope="template" %}
             </div>
             {% endif %}
+            {% dropzone "promodropsquare" scope="page" %}
+            {% dropzone "promodroprectangle" scope="page" %}
+            {% dropzone "promodropsquaretwo" scope="page" %}
         </div>
 <div class="mz-l-paginatedlist">
     <div class="mz-l-paginatedlist-header desktop">
