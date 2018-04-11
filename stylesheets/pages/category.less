@@ -6,6 +6,157 @@
         max-width: 1650px;
     }
 }
+.mz-category {
+    .plp-promo-widget{
+        .maxchardesktop, .maxcharmobile{
+            display: none;
+        }
+        .promoright{
+            .title{
+                text-transform: uppercase;
+                font-weight: bolder;
+                font-family: @fontGTWalsheimBold;
+                font-size: 2.5rem;
+                
+            }
+            .lp-customtext{
+                h1, h2{
+                    color: @standardPink;
+                    font-weight: bolder;
+                    margin: 0;
+                }
+            }
+        }
+    }
+    @media @desktop{
+        .plp-promo-widget{
+            
+            .promoleft{ 
+                width: 62%;
+                display: table-cell;
+            }
+            .promoright{
+                display: table-cell;
+                vertical-align: top;
+                .title{
+                    text-align: center;
+                    font-size: 40px;
+                    margin-bottom: 0;
+                    padding-top: 10px;
+                }
+                .lp-customtext{
+                    h1, h2{
+                        
+                        font-size: 19px;
+                    } 
+                    p{
+                        margin: 0;
+                        padding-top: 13px;
+                        font-size: 14px;
+                    }
+                }
+                .addthissection{
+                    float: right;
+                    padding-right: 10px;
+                    a i{
+                        font-size: 20px;
+                        color: @generic-grey; 
+                        margin: 0 5px;
+                    }
+                }
+                .mz-cms-block{
+                    padding: 40px 0;
+                }
+            }
+        }
+        .mz-breadcrumbs{
+            padding: 0 10px 10px 10px;
+        }
+        .mz-filter-options {
+            .mz-facetingform{
+                margin-top: 0 !important;
+            }
+            .mz-l-sidebar{
+                -webkit-box-shadow: 8px 6px 5px -4px rgba(0, 0, 0, 0.75);
+                -moz-box-shadow: 8px 6px 5px -4px rgba(0, 0, 0, 0.75);
+                box-shadow: 8px 6px 5px -4px rgba(0, 0, 0, 0.75);
+                border: 1px solid @breadCrumbActive;
+                .facet-container, .facet-heading-single{
+                    background: #efeaee;
+                    margin: 7px 5px;
+                    border-radius: 3px; 
+                }
+                .facet-heading {
+                    padding-top: 5px;
+                    .cate-head {
+                        color: #2736aa;
+                        text-transform: uppercase;
+                        font-family: @fontGTWalsheimBold;
+                    }
+                }
+            }
+        }
+    }
+    @media @smallmobile {
+        .plp-promo-widget {
+            .promoleft {
+                width: 100%;
+                display: block;
+                .mz-cms-content{
+                    padding: 0;
+                    .mz-cms-image-cover{
+                        margin-left: 0;
+                    }
+                }
+            }
+            .promoright{
+                padding: 0 12px;
+                vertical-align: top;
+                .addthissection{
+                    display: none;
+                }
+                .title{
+                    margin: 0;
+                }
+                .mz-cms-content{
+                    padding: 0;
+                }
+                
+                .lp-customtext{
+                    p{
+                        margin: 0;
+                        padding-top: 5px;
+                    }
+                }
+            }
+        }
+    }
+    @media @tablet {
+        .plp-promo-widget{
+            .promoleft{
+                width: 100%;
+                display: block;
+                .mz-cms-content{
+                    padding: 0;
+                }
+            }
+            .promoright{
+                padding: 0 18px;
+                vertical-align: top;
+                .addthissection{
+                    display: none;
+                }
+                .title{
+                    margin: 0;
+                }
+                .mz-cms-content{
+                    padding: 0;
+                }
+            }
+        }
+    }
+    
+}
 .mz-category, .mz-searchresults{
     .mz-l-paginatedlist{
         .mz-l-tiles{ 
