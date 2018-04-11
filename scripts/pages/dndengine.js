@@ -741,28 +741,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 
 			if(me.lineitemID){
 				if(me.mcToken){
-					var mcReEditCallback = function(storeUserToken){
-						// re-edit with mediaclip
-						var reeditURL = "/personalize/"+me.mcToken;
-						
-						// create new form that posts to mediaclip url (must be get, no post)
-						form = $('<form action="'+reeditURL+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice it's not posting to iframe
-						addParameter(form,"token",storeUserToken);
-						// save to object so we can clean it up if needed
-						me.form = form;
-
-						// insert and post form
-						$("body").append(me.form);
-						me.form.submit();
-					};
-					McCookie.getToken(mcReEditCallback);
-
-					// make ajax call to endpoint that will make sure this projectId is in mzdb so atc callback knows to update cart rather than adding new lineitem (this is safety net in case the original add to cart event failed to create mzdb record for some reason)
-					$.ajax({
-						url: '/personalize-reedit/'+me.mcToken,
-						data:{"lineitemID": me.lineitemID}
-					});
-					
+					McCookie.reEditProject(me.mcToken,me.lineitemID);
 					return;  // exit doPers will be called again once we get a userToken
 				}
 				else{

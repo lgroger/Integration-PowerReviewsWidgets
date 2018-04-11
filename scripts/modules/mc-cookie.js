@@ -423,6 +423,30 @@ function ($) {
 			async: false
 		});
 	};
+	var reEditProject = function(projectId, lineitemID){
+		// update entity for token with lineitem info, also important to make sure entity gets updated with recent userClaims in case project has been idle a while
+		var data = {};
+		if(lineitemID){
+			data.lineitemID = lineitemID;
+		}
+		$.ajax({
+			url: '/personalize-reedit/'+projectId,
+			data: data,
+			async: false
+		});
+
+		var mcCallback = function(storeUserToken){
+			if(storeUserToken){
+				document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
+			}else{
+				// show error message
+				errorOverlay("Something went wrong.  Please try your request again.");
+				window.removePageLoader();
+			}
+		};
+
+		getToken(mcCallback);
+	};
 
 	// needed for added to cart overlay, cart & my projects pages
 	$(document).ready(function() {
@@ -458,17 +482,7 @@ function ($) {
 			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
 			if(projectId){
 				window.showPageLoader();
-				var mcCallback = function(storeUserToken){
-					if(storeUserToken){
-						document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
-					}else{
-						// show error message
-						errorOverlay("Something went wrong.  Please try your request again.");
-						window.removePageLoader();
-					}
-				};
-
-				getToken(mcCallback);
+				reEditProject(projectId, null);
 			}
 		});
 	});
@@ -481,7 +495,8 @@ function ($) {
 		getMcImagesFromCache: getMcImagesFromCache,
 		getProjects: getProjects,
 		deleteProject: deleteProject,
-		setWishlistToken: setWishlistToken
+		setWishlistToken: setWishlistToken,
+		reEditProject: reEditProject
 	};
 	
 	
