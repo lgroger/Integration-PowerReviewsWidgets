@@ -215,67 +215,16 @@
     box-sizing: border-box;
     background-color: #fff;
     max-width: 238px;
-    @media (min-width: 1151px) { 
+    float: left;
+    padding-bottom: 2%;
+    box-shadow: 3px 3px 3px #e3e3e3;
+    border-radius: 5px 5px 0 0;
+    border: 1px solid #dddddd;
+    margin-left: 0.8%;
+    @media @desktop { 
         display: block;
         .mz-facetingform.mz-filters {
             display: block;
-        }
-    }
-    .mz-l-sidebar {
-        float: none;
-        position: relative;
-        padding-right: 0;
-        margin-top:7px;
-    }
-    .mz-l-sidebaritem {
-        float: none;
-        width: 235px;
-        max-width: 235px; 
-        list-style: none;
-        padding: 5px 0 0;
-        li {
-            list-style-type: none;
-            display: none;
-            min-height: 1px;
-            line-height: 1em;
-            vertical-align: middle;
-            text-transform: capitalize;
-            position: relative;
-            margin: 8px 5px 8px 12px;
-            &:hover {
-                background: #FFFFFF;
-            }
-            &:first-child{
-                display: list-item;
-            }
-            &:nth-child(2) {
-                display: list-item;
-            }
-            &:nth-child(3) {
-                display: list-item;
-            }
-            &:nth-child(4) {
-                display: list-item;
-            }
-            &:nth-child(5) {
-                display: list-item;
-            }
-              &:nth-child(6) {
-                display: list-item;
-            }
-
-            a {
-                display: block;
-                color: @linkColor;
-                text-decoration: none;
-                padding: 16px 0 16px 26px;
-                cursor: pointer;
-                font-family: @fontGTWalsheimBold;
-                font-size: 16px;
-            }
-            a:hover, a:active{
-                color: @linkHoverColor;
-            }
         }
     }
     .mz-filter-inputs {
@@ -303,23 +252,6 @@
         }
         div.mz-facetingform-facet {
             white-space: normal;
-        }
-    }
-    .mz-l-sidebaritem,
-    .mz-filter-inputs {
-        box-sizing: border-box;
-    }
-    .mz-l-sidebaritem-footer {
-        position: absolute;
-        top: 30px;
-        right: 14px;
-        text-align: left;
-        .mz-facetingform-clearall {
-            border: none;
-            background: transparent;
-            text-decoration: underline;
-            padding: 0;
-            min-width: auto;
         }
     }
 }
@@ -361,10 +293,6 @@
 	float: left;
 	position: relative;
 	margin: 0 1px;
-}
-.mz-filter-options .mz-l-sidebaritem {
-	overflow: hidden;	
-	padding-bottom: 5px;
 }
 .br-facet-color .mz-facetingform-valuelabel {
 	border: 1px solid #eee;
@@ -514,51 +442,10 @@
 	padding: 0 2%;	
 }
 /* END FACET COLOR SWATCHES */
-.mz-filter-options .mz-l-sidebaritem-footer .mz-facetingform-clearall{
-    color: #939495; 
-}
-.mz-filter-options .mz-l-sidebaritem-footer .mz-facetingform-clearall {
-    text-decoration: none;
-    background-color: #939495;
-    padding: 6px 12px;
-    color: #fff; 
-    transition: 0.3s ease-in-out; 
-} 
-.mz-facetingform-clearall.selected-filter{
-    border-color: @primaryDarkBlue !important;
-    color: @primaryDarkBlue;
-}
-.mz-filter-options .mz-l-sidebaritem-footer .mz-facetingform-clearall:hover{
-    background-color: #606161; 
-}
 .mz-filter-options .mz-facetingform.mz-filters{
     margin-top:-7px;
     width: 100%;
 }
-@media (max-width: 1176){
-    .mz-filter-options .mz-l-sidebaritem{
-        width: 20%;
-    } 
-}
-.mz-filter-options {
-    float: left;
-    padding-bottom: 2%;
-    box-shadow: 3px 3px 3px #e3e3e3;
-    border-radius: 5px 5px 0 0;
-    border: 1px solid #dddddd;
-    margin-left: 0.8%;
-}
-@media (max-width: 640px) {
-    .mz-filter-options {
-        display: none;
-    }
-}
-@media only screen and (min-width: 1900px){ 
-    .mz-filter-options {  
-        margin-left: 2%;
-    }
-}
-
 #selected-filters-collection {
     padding: 10px;
     background-color: #fff;
@@ -824,10 +711,6 @@
     .mz-page-filters-controls.desktop{
         display: none;
     }
-    .mz-l-sidebar { 
-        float: none;
-        padding-right: 0;
-    }
     .mz-filters-bar {
         padding-right: 0 !important;
     }
@@ -897,10 +780,6 @@
     }
     .mz-page-filters-controls.desktop{
         display: none;
-    }
-    .mz-l-sidebar {
-        float: none;
-        padding-right: 0;
     }
     .mz-filters-bar {
         padding-right: 0 !important;
