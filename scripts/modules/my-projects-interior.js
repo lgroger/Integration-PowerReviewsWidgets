@@ -6,18 +6,18 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
         
 		if(res && res.projects){
 			if(res.projects.length){
-                var $projectHolder = $("<div />").attr("class","pdp-related-products");
+                var $projectHolder = $("<div />").attr("class","mc-projects-list");
                 for(var i=0;i<res.projects.length;i++){
 					var p = res.projects[i];
 					var $project,date = new Date(p.createdDateUtc);
-                    $project = $("<div />").attr("class","mz-productlist-item").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').attr("title",p.id));
+                    $project = $("<div />").attr("class","mc-projects-item").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').attr("title",p.id));
                     $project.append($('<div />').text(date.toDateString()+' '+date.toLocaleTimeString()).attr("class","mc-create-date"));
 
                     if(p.entityContainer){
                         $project.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
                     }
                     
-                    $project.append($('<button class="mc-project-atc">Edit / Add to Cart</button>'));
+                    $project.append($('<button class="mc-project-atc">Edit<span> / Add to Cart</span></button>'));
                     $project.append($('<button class="delete-mc-project">Delete</button>'));
                     $project.append($('<button class="copy-mc-project">Copy</button>'));
                     $projectHolder.append($project);

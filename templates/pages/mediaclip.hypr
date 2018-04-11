@@ -41,6 +41,7 @@ custom route settings
 {% dropzone "mc-header" scope="template" %}
 {% endblock page-header %}
 
+
 {% block trackingscript %}
     <style type="text/css">
         .mediaclip-designer-wrapper {
@@ -70,16 +71,22 @@ custom route settings
 {% endblock trackingscript %} 
 
 {% block body-content %}
-
+<div id="mcOnSave" {% if pageContext.isEditMode %} title="on save popup (in production, hidden initially" {% else %}style="display:none;" {% endif %}>
+    {% dropzone "mc-onsave" scope="template" %}
+</div>
     {# Mediaclip Designer placeholder #}
     <div id="designer" class="mediaclip-designer-wrapper">
         {% if pageContext.isEditMode %}
-            {# hide loading spinner in editor so we can edit dropzones #}
+            {# hide loading spinner in editor so we can edit dropzones, display demo mediaclip content #}
+            {% comment %} can't quite get this to work right... it's not sized correctly
+            <iframe id="designerFrame" name="designerFrame" src="/resources/mediaclip-sample.html" class="mediaclip-designer" style="height: 100%;"></iframe>
+            {% endcomment %}
         {% else %}
             <div id="dndLoading"></div>
         {% endif %}
     </div>
-
+{% if pageContext.isEditMode %}
+{% else %}
 {% with pageContext.url|split("?") as qstring %}
 	{% with qstring.1|split("&") as params %}
         {% for param in params %}
@@ -98,9 +105,13 @@ custom route settings
             );
         }
         function onSaveCompleteHandler(data){
+            if(!$("#mcOnSave [data-mc-action='disableOnSave']:checked").length){
+                jQuery("#mcOnSave").show();
+            }
            // alert('saved');
             console.log(data);
         };
+        
         window.mediaclip.hub.launch({
             projectId: "{{routeData.id}}",
             storeUserToken: "{{splitparams.1}}",
@@ -110,7 +121,11 @@ custom route settings
             onSaveComplete: onSaveCompleteHandler
         });
 
-        
+        // close buttons for onsave overlay
+        $(document).on('click', '#mcOnSave [data-mc-action="close"]', function(e) {
+            e.preventDefault();
+            $("#mcOnSave").fadeOut();
+        });        
     </script>
 
     {% else %}
@@ -120,5 +135,5 @@ custom route settings
 {% endfor %}
 {% endwith %}
 {% endwith %}
-
+{% endif %}
 {% endblock body-content %}

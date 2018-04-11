@@ -545,10 +545,12 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
             //console.log( scope_obj.model.get('attributes'));
             window.checkoutViews.steps.shippingInfo.render();
             Backbone.MozuView.prototype.render.call(scope_obj);
+            McCookie.getMcImagesFromCache();
             }catch(err){
                 console.log(err);
                 window.checkoutViews.steps.shippingInfo.render();
                 Backbone.MozuView.prototype.render.call(scope_obj);
+                McCookie.getMcImagesFromCache();
             }
         },setOrderDate:function(scope_obj,isUSA){
             /*GET UST from hyper file element and making google api call to get offset and daylight
