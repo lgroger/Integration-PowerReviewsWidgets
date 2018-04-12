@@ -25,6 +25,7 @@
   }
 .andup { 
     color: @disabled-grey;
+    text-transform: lowercase;
 }  
 #recommended_products_slot{
     clear: both;
@@ -101,13 +102,9 @@
     font-family: @fontFamily;
 }
 .mz-page-filters-controls {
-    /*padding-top: 1%;*/
-    max-width: 1276px;
-    padding-top: 10px;
-    margin: 0 auto;
-    padding-left: 10px;
+    padding: 0 45px 0 10px;
     text-transform: uppercase;
-    font-family: @fontGTWalsheimMedium;
+    font-family: @fontLight;
     .mz-pagingcontrols-pagestate-label {
         margin-top: 12px;
         font-family: @fontLight;
@@ -433,6 +430,10 @@
 .br-facet-color.br-color-yellow .mz-facetingform-valuelabel {
 	background-color: #FFFF00;
 	color: #FFFF00;		
+}
+.br-facet-color.br-color-mint-green .mz-facetingform-valuelabel {
+	background-color: #98FB98;
+	color: #98FB98;		
 }
 .filter-color-list{
 	padding: 0 2%;	
@@ -931,30 +932,6 @@
 /*===================Selectric v1.9.6=========================*/
 .selectric, .selectric-items{
     font-family: @fontLight;
-}
-.color-swatch{
-    height:40px;
-    position: relative;
-    z-index: 1;
-    .total-color{
-        color: @textColor;
-        position: relative;
-        font-size: 10px;
-        display: block;
-        top: -35px;
-        .sz-super-page-template & {
-            display: none;
-        }
-    }
-}
-.product-mainname{
-    font-family:@fontFamily;
-    padding: 0px;
-    padding-bottom: 4%;
-    margin: 0px;
-    height: auto;
-    font-size:16px;
-    overflow:hidden;
 }
 .mz-pagingcontrols-pagesize-label, .mz-pagingcontrols-pagesort-label{
     span.mz-paging-title, span.mz-paging-sorttitle{
