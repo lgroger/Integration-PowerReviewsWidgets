@@ -80,7 +80,19 @@
 		{% if Model.config.data.length > 0 %}
 			{{Model.config.data.0.cta | safe }}
 		{% endif %}
-	</div>
+		<div class="mob-promos">
+			<a href="/promo-page">Promotions</a>
+		</div>
+		<div class="mob-faqs">
+			<a href="/FAQ">FAQs</a>
+		</div>
+		<div class="mob-myProjects">
+			<a href="/my-projects">My Projects</a>
+		</div>
+		<div class="mob-partyIdeas">
+			<a href="/party-ideas">Party Ideas</a>
+		</div>
+
 </div>
 {% endspaceless %}
 {% require_script "modules/megamenuNew" %}
