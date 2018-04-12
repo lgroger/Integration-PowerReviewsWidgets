@@ -32,70 +32,68 @@
                 <a href="javascript:void(0)" data-pro-id="{{model.productCode}}">QUICK VIEW</a>
             </div>
         {% endif %}
-        {% if model|get_product_attribute(themeSettings.productAttributes.dndColor) %} 
-            {% with model|get_product_attribute(themeSettings.productAttributes.dndColor) as dndColor %}
-                {% if dndColor.values|first|prop("value") == true %}
-                    <div class="mz-dnd-color-flag">
-                        <a href="{% make_url "product" model %}">COLORS</a>
-                    </div>
+        {% if model|get_product_attribute(themeSettings.productAttributes.newFlag) %} 
+            {% with model|get_product_attribute(themeSettings.productAttributes.newFlag) as isNew %}
+                {% if isNew.values|first|prop("value") == true %}
+                    <div class="mz-new-ribbon" style="display: block;" mz-new-flag-date="{{ model.createDate }}">
+                        <span class="new-ribbon">New</span>
+                    </div> 
+                {% else %}
+                    <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ model.createDate }}">
+                        <span class="new-ribbon">New</span>
+                    </div>   
                 {% endif %}
             {% endwith %}
-        {% endif %}
-        {% if model.price.onSale %}
-            <div class="mz-sales-ribbon">
-                <span itemprop="price" class="mz-price is-saleprice">
-                   {% comment %} {% if model.price.discount.discount.name %}
-                        <span class="mz-price-discountname">{{model.price.discount.discount.name}}</span>
-                    {% else %}
-                    {% endif %}
-                    {% endcomment %}
-                    {% with model.price.price|subtract(model.price.saleprice)) as disAmt %}
-                        {% with disAmt|divide(model.price.price) as discountRatio %}
-                                {% with discountRatio|multiply(100) as discountPer %}
-                                    <span class="mz-price-discountname">{{discountPer|floatformat(2)}}% off</span>
-                                {% endwith %} 
-                        {% endwith %}    
-                    {% endwith %}
-                </span>
-            </div>
-        {% endif %}
-            {% if model|get_product_attribute(themeSettings.productAttributes.newFlag) %} 
-                {% with model|get_product_attribute(themeSettings.productAttributes.newFlag) as isNew %}
-                    {% if isNew.values|first|prop("value") == true %}
-                        <div class="mz-new-ribbon" style="display: block;" mz-new-flag-date="{{ model.createDate }}">
-                            <span class="new-ribbon">New</span>
-                        </div> 
-                    {% else %}
-                        <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ model.createDate }}">
-                            <span class="new-ribbon">New</span>
-                        </div>   
-                    {% endif %}
-                {% endwith %}
-            {% else %}
-                <div class="mz-new-ribbon" style="display: none;" mz-new-flag-date="{{ model.createDate }}">
-                        <span class="new-ribbon">New</span>
-                </div> 
-        {% endif %}
 
-        {% if model|get_product_attribute(themeSettings.productAttributes.clearanceFlag) %} 
+        {% else %}
+            {% if model|get_product_attribute(themeSettings.productAttributes.clearanceFlag) %} 
                 {% with model|get_product_attribute(themeSettings.productAttributes.clearanceFlag) as clearanceFlag %}
                     {% if clearanceFlag.values|first|prop("value") == true %}
                         <div class="mz-clearance-ribbon" style="display: block;">
                             <span class="new-ribbon">Clearance</span>
                         </div> 
-                        {% endif %}
+                    {%else%}
+                        {% if model.price.onSale %}
+                            <div class="mz-sales-ribbon">
+                                <span itemprop="price" class="mz-price is-saleprice">
+                                   {% comment %} {% if model.price.discount.discount.name %}
+                                        <span class="mz-price-discountname">{{model.price.discount.discount.name}}</span>
+                                    {% else %}
+                                    {% endif %}
+                                    {% endcomment %}
+                                    {% with model.price.price|subtract(model.price.saleprice)) as disAmt %}
+                                        {% with disAmt|divide(model.price.price) as discountRatio %}
+                                                {% with discountRatio|multiply(100) as discountPer %}
+                                                    <span class="mz-price-discountname">{{discountPer|floatformat(0)}}% off</span>
+                                                {% endwith %} 
+                                        {% endwith %}    
+                                    {% endwith %}
+                                </span>
+                            </div>
+                        {%endif%}
+                    {% endif %}
                 {% endwith %}
+            {% else %}
+                {% if model.price.onSale %}
+                    <div class="mz-sales-ribbon">
+                        <span itemprop="price" class="mz-price is-saleprice">
+                           {% comment %} {% if model.price.discount.discount.name %}
+                                <span class="mz-price-discountname">{{model.price.discount.discount.name}}</span>
+                            {% else %}
+                            {% endif %}
+                            {% endcomment %}
+                            {% with model.price.price|subtract(model.price.saleprice)) as disAmt %}
+                                {% with disAmt|divide(model.price.price) as discountRatio %}
+                                        {% with discountRatio|multiply(100) as discountPer %}
+                                            <span class="mz-price-discountname">{{discountPer|floatformat(0)}}% off</span>
+                                        {% endwith %} 
+                                {% endwith %}    
+                            {% endwith %}
+                        </span>
+                    </div>
+                {%endif%}
+            {%endif%}
         {% endif %}
-        
-        {% comment %}
-        {% with model|get_product_attribute('tenant~display-new-ribbon') as isNew %}
-        {% if isNew.values|first|prop("value") == true %}
-            <div class="mz-new-ribbon">
-                <span class="new-ribbon">New</span>
-            </div>
-        {% endif %}
-        {% endwith %}
-        {% endcomment %}
     </div>
     <div class="mz-productlisting-info">
             <div class="color-swatch">    
