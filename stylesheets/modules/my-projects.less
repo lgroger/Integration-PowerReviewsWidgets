@@ -9,5 +9,72 @@
 	display: block;
 }
 #mcProjects .projects-loading{
-	
+	text-align: center;
+	margin: 0 auto;
 }
+/* START MEDIACLIP EDITOR STYLES */
+ /* start mediaclip header */
+ 	#mz-drop-zone-mc-header {
+ 		display: none;
+ 		@media (min-width: 768px) {
+ 			display: block;
+ 		}
+ 	}
+	.mediaclip-designer-wrapper {
+        top: 30px;
+    }
+    .mz-mcpers #page-wrapper {
+        margin: 0;
+    }
+    #mz-drop-zone-mc-header .mz-cms-content {
+        padding: 0;
+        margin: 0;
+    }
+    .mc-header {
+        background-color: #111125;
+        text-align: center;
+        height: auto;
+    }
+    .mc-header a {
+        color: rgba(255, 255, 255, 0.82);
+        text-decoration: none !important;
+        padding: 7px 30px 0;
+        font-size: 12px;
+        height: 23px;
+        display: inline-block;
+        letter-spacing: .5px;
+        font-family: Roboto,Verdana,sans-serif;
+        text-transform: capitalize;
+        font-weight: 500;
+    }
+    .mc-header a:visited, .mc-header a:visited {
+        color: #fff;
+    }
+    .mc-header a:hover {
+        transition: background-color 150ms ease-in;
+        background-color: #404244;
+        color: rgba(255, 255, 255, 0.9);
+    }
+ /* end mediaclip header */
+ /* start copy link in added-to-cart popup */
+ 	#mz-added-to-cart .copy-mc-project {
+	 	background: @primaryWhite;
+	    color: @tertiaryColor;
+	    border: 1px solid @tertiaryColor;
+	    font-size: 12px;
+	    padding: 9px 5px;
+	    border-radius: 3px;
+	    margin: 5px 0 4px 0;
+	    text-transform: uppercase;
+ 		&:hover {
+ 			background: @tertiaryColor;
+    		color: @primaryWhite;
+    		border: 1px solid @tertiaryColor;
+ 		}
+ 		@media (min-width: 768px) {
+ 			font-size: 14px;
+ 			margin: 0 0 12px 0;
+ 		}
+ 	}
+ /* end copy link in added-to-cart popup */
+ /* END MY PROJECTS STYLES */
