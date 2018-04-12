@@ -25,7 +25,7 @@
 
 <div class="categorylanding-promo"> 
  {% dropzone "category-landing-promo" scope="page" %}
-  {% dropzone "category-landing-promo-temp" scope="template" %}
+  {% dropzone "category-landing-promo-temp" scope="page" %}
  </div> 
 
 

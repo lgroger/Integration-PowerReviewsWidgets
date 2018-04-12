@@ -1,0 +1,134 @@
+<!-- HTML for Landing page design Layout 3XL -->
+
+{% if model.data.layout == "Left" %}
+    <div class="LP-cat-3xl leftlayout">
+        <div class="left">
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.lgcatselect) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.lgoverride %}
+                                <img src="{{model.data.lgimageurl}}" alt="{{model.data.lgcatname}}"/>
+                            {% else %}
+                                    {% with category.content.categoryImages|first as catimage %}
+                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatname}}"/>
+                                    {% endwith %}
+                            {% endif %}
+
+                            {% if model.data.lgcatname %}
+                                <span>{{model.data.lgcatname}}</span>
+                            {% endif %}
+                        </a>                
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        <div class="right">
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.smcatselectA) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.smoverrideA %}
+                                <img src="{{model.data.smimageurlA}}" alt="{{model.data.smcatnameA}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameA}}"/>
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if model.data.smcatnameA %}
+                                <span>{{model.data.smcatnameA}}</span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.smcatselectB) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.smoverrideB %}
+                                <img src="{{model.data.smimageurlB}}" alt="{{model.data.smcatnameB}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameB}}"/>
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if model.data.smcatnameB %}
+                                <span>{{model.data.smcatnameB}}</span>
+                            {% endif %} 
+                        </a>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="LP-cat-3xl rightlayout">
+        <div class="left">
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.smcatselectA) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.smoverrideA %}
+                                <img src="{{model.data.smimageurlA}}" alt="{{model.data.smcatnameA}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameA}}"/>
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if model.data.smcatnameA %}
+                                <span>{{model.data.smcatnameA}}</span>
+                            {% endif %}
+                        </a>
+                    {% endif %} 
+                {% endwith %}
+            </div>
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.smcatselectB) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.smoverrideB %}
+                                <img src="{{model.data.smimageurlB}}" alt="{{model.data.smcatnameB}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameB}}"/>
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if model.data.smcatnameB %}
+                                <span>{{model.data.smcatnameB}}</span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        <div class="right">
+            <div class="content">
+                {% with model.categories|findwhere("categoryId",model.data.lgcatselect) as category %}
+                    {% if category %}
+                        <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                            {% if model.data.lgoverride %}
+                                <img src="{{model.data.lgimageurl}}" alt="{{model.data.lgcatname}}"/>
+                            {% else %}
+                                {% with category.content.categoryImages|first as catimage %}
+                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatname}}"/>
+                                {% endwith %}
+                            {% endif %}
+
+                            {% if model.data.lgcatname %}
+                                <span>{{model.data.lgcatname}}</span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div> 
+    </div>
+{% endif %}
+
+<!-- End of HTML for Landing page design Layout 3XL -->
+

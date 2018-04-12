@@ -45,6 +45,13 @@ model.product.token// dnd token string or mc token string for component
                   {% endif %}
                </ul>
             </div>
+
+            {% if model.product.token  and model.product.persType == "mc" %}
+                <div data-mc-project="{{model.product.token}}">
+                  <button class="copy-mc-project">Copy project</button>
+                </div>
+            {% endif %} 
+
             <div class="quantity product_optionbox">
                <span class="p_label">Qty:</span> <span>{% if model.newQuantity %}{{ model.newQuantity }}{% else %}{{ model.quantity }}{% endif %} </span>
             </div>
@@ -52,7 +59,8 @@ model.product.token// dnd token string or mc token string for component
          <div class="product_bottom_box"> 
             <div class="price product_optionbox">
                   <span class="p_label">Price:</span>{% if model.product.price.salePrice %}{{model.product.price.salePrice|currency}} {% else %} {{model.product.price.price|currency}} {% endif%}
-            </div>     
+            </div> 
+              
             <div class="product-share">
                <span>Share: </span>
                 <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_default_style cart-over-addthis">
@@ -71,18 +79,8 @@ model.product.token// dnd token string or mc token string for component
                     <a class="addthis_button_email">
                       <i class="fa fa-envelope"></i>
                     </a>
-
-                   
                  </div>
                {# Go to www.addthis.com/dashboard to customize your tools #}
-              
-                {% if model.product.token  and model.product.persType == "mc" %}
-                <div data-mc-project="{{model.product.token}}">
-                  <button class="copy-mc-project">Copy</button>
-                </div>
-                {% endif %}
-
-              
             </div>
          </div>
       </div>

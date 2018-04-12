@@ -1,0 +1,31 @@
+{% require_script "widgets/lp-category-html-widget" %}
+
+<div class="lp-customtext">
+{% if model.config.layout == "multiple" %}
+	{% if model.config.h2text %}
+		<h2><span>{{model.config.h2text| safe}}</span></h2>
+    	<p class="comment more">{{model.config.ptext| safe}}</p>
+	{% else %}
+		{% if model.config.h3text %}
+			<h3><span>{{model.config.h3text| safe}}</span></h3>
+	    	<p class="comment more">{{model.config.ptext| safe}}</p>
+		{% endif %}
+	{% endif %}
+{% else %}
+	{% if model.config.h2text %}
+    	<h2 class="singleline">{{model.config.h2text| safe}}</h2> <p class="comment singleline more">{{model.config.ptext| safe}}</p>
+	{% else %}
+		{% if model.config.h3text %}
+	    	<h3 class="singleline">{{model.config.h3text| safe}}</h3> <p class="comment singleline more">{{model.config.ptext| safe}}</p>
+	    {% else %}
+	    	{% if model.config.ptext %}
+		    	<p class="comment more">{{model.config.ptext| safe}}</p>
+			{% endif %}
+		{% endif %}
+	{% endif %} 
+{% endif %}
+	<div class="maxchardesktop">{{model.config.maxchardesktop}}</div>
+	<div class="maxcharmobile">{{model.config.maxcharmobile}}</div>
+	<div class="readmoretext">{{model.config.readmoretext}}</div>
+	<div class="readlesstext">{{model.config.readlesstext}}</div>
+</div> 

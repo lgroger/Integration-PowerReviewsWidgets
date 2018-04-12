@@ -1,0 +1,66 @@
+<!-- HTML for Landing page design Layout 3XS -->
+
+<div class="LP-cat-3xs">
+    <div class="small-image">
+        <div class="content">
+            {% with model.categories|findwhere("categoryId",model.data.smcatselectA) as category %}
+                {% if category %}
+                    <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                        {% if model.data.smoverrideA %}
+                            <img src="{{model.data.smimageurlA}}" alt="{{model.data.smcatnameA}}"/>
+                        {% else %}
+                            {% with category.content.categoryImages|first as catimage %}
+                                <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameA}}"/>
+                            {% endwith %}
+                        {% endif %}
+
+                        {% if model.data.smcatnameA %}
+                            <span>{{model.data.smcatnameA}}</span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            {% endwith %}
+        </div>
+        <div class="content image-2">
+            {% with model.categories|findwhere("categoryId",model.data.smcatselectB) as category %}
+                {% if category %}
+                    <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                        {% if model.data.smoverrideB %}
+                            <img src="{{model.data.smimageurlB}}" alt="{{model.data.smcatnameB}}"/>
+                        {% else %}
+                            {% with category.content.categoryImages|first as catimage %}
+                                <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameB}}"/>
+                            {% endwith %}
+                        {% endif %}
+
+                        {% if model.data.smcatnameB %}
+                            <span>{{model.data.smcatnameB}}</span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            {% endwith %}
+        </div> 
+        <div class="content">
+            {% with model.categories|findwhere("categoryId",model.data.smcatselectC) as category %}
+                {% if category %}
+                    <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
+                        {% if model.data.smoverrideC %}
+                            <img src="{{model.data.smimageurlB}}" alt="{{model.data.smcatnameC}}"/>
+                        {% else %}
+                            {% with category.content.categoryImages|first as catimage %}
+                                <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameC}}"/>
+                            {% endwith %}
+                        {% endif %}
+
+                        {% if model.data.smcatnameC %}
+                            <span>{{model.data.smcatnameC}}</span>
+                        {% endif %}
+                    </a>
+                {% endif %}
+            {% endwith %}
+        </div> 
+    </div> 
+</div> 
+
+<!-- End of HTML for Landing page design Layout 3XS -->
+

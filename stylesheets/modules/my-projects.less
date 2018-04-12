@@ -1,13 +1,204 @@
+/* START MEDIACLIP EDITOR STYLES */
+/* start mediaclip header */
+ 	#mz-drop-zone-mc-header {
+ 		display: none;
+ 		@media (min-width: 768px) {
+ 			display: block;
+ 		}
+ 	}
+	.mediaclip-designer-wrapper {
+        top: 30px;
+    }
+    .mz-mcpers #page-wrapper {
+        margin: 0;
+    }
+    #mz-drop-zone-mc-header .mz-cms-content {
+        padding: 0;
+        margin: 0;
+    }
+    .mc-header {
+        background-color: #111125;
+        text-align: center;
+        height: auto;
+    }
+    .mc-header a {
+        color: rgba(255, 255, 255, 0.82);
+        text-decoration: none !important;
+        padding: 7px 30px 0;
+        font-size: 12px;
+        height: 23px;
+        display: inline-block;
+        letter-spacing: .5px;
+        font-family: Roboto,Verdana,sans-serif;
+        text-transform: capitalize;
+        font-weight: 500;
+    }
+    .mc-header a:visited, .mc-header a:visited {
+        color: #fff;
+    }
+    .mc-header a:hover {
+        transition: background-color 150ms ease-in;
+        background-color: #404244;
+        color: rgba(255, 255, 255, 0.9);
+    }
+/* end mediaclip header */
+/* START MEDIACLIP EDITOR STYLES */
+
+/* START MEDIACLIP MY PROJECTS PAGE & MY ACCOUNT PAGE/MY PROJECTS STYLES */
+/* start my projects header/logo */
+.my-projects-container {
+    background-image: url("http://cdn-tp2.mozu.com/16647-m1/cms/files/aab386dc-5d5a-4e70-a063-544545fe716d");
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: auto 100%;
+    height: 100px;
+    padding: 5px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    position: relative;
+    text-align: right;
+    & img {
+        width: 45%;
+        height: 100%;        	
+    }
+    @media (min-width: 768px) {
+    	padding: 30px;
+   	 	height: 200px;
+    }
+}
+.my-projects-logo {
+    height: 70px;
+    margin: 10px;
+    @media (min-width: 768px) {
+        height: 120px;
+        margin: 10px;
+    }
+}
+/* end my projects header/logo */
+/* start my projects site top & bottom */
+#mz-drop-zone-my-projects-site-top .my-projects-info {
+    display: block;
+    box-sizing: border-box;
+    margin: 0;
+    color: @primaryColor;
+    font-size: 14px;
+}
+#mz-drop-zone-my-projects-site-top .my-projects-info-not-found {
+    display:block;
+    box-sizing: border-box;
+    margin: 0;
+    color: @primaryColor;
+    font-size: 14px;
+}
+.my-projects-info .my-projects-special, .my-projects-info-not-found .my-projects-special {
+    color: @secondaryPink;
+    font-style: italic;
+}
+#mz-drop-zone-my-projects-site-bottom .my-projects-info.center, #mz-drop-zone-my-projects-site-none .my-projects-info-not-found.center {
+    text-align: center;
+    color: @primaryColor;
+    font-size: 14px;
+    margin: 0;
+}
+/* end my projects site top & bottom */
+/* start my projects - projects */
+#mcProjects h2 {
+    display: none;
+}
+.mc-projects-list {
+    text-align: center;
+    @media (min-width: 768px) {
+    	text-align: left;
+    }
+}
 /* styles for my projects on my-projects, myaccount & cart */
-#mcProjects .mz-productlist-item{
-	float: left;
-	width: 250px;
-}
-#mcProjects .mz-productlist-item img{
-	max-width: 200px;
-	max-height: 200px;
-	display: block;
-}
 #mcProjects .projects-loading{
-	
+	text-align: center;
+	margin: 0 auto;
+	color: @tertiaryColor;
+	text-transform: uppercase;
 }
+.mc-projects-item {
+    width: 45%;
+    display: inline-block;
+    margin: 10px 2.5%;
+    @media (min-width: 768px) {
+        width: 22%;
+        margin: 10px;
+    }
+    @media (min-width: 992px) {
+	    width: 17%;
+	    margin: 10px;
+	}
+	@media (min-width: 1200px) {
+	    width: 18%;
+	    margin: 10px;
+	}
+}
+.mc-projects-item img {
+    width: 100%;
+    height: auto;
+    max-width: 60px;   
+    margin: 0 auto 5px;
+    display: block;
+    @media (min-width: 768px) {
+    	max-width: 170px;
+    	margin: 0 0 5px;
+    }
+}
+.mc-create-date {
+    font-size: 8px;
+    @media and (min-width: 480px) {
+        font-size: 10px;
+		 }
+}
+.mc-projects-item a { 
+    font-size: 12px;
+    display: block;
+    @media (min-width: 480px) {
+        font-size: 14px;
+    }
+}
+.mc-project-atc, .delete-mc-project, .copy-mc-project {
+    background-color: @primaryWhite !important;
+    color: @secondaryPink;
+    border: none;
+    font-size: 8px;
+    padding: 0;
+    margin-right: 5px;
+    -webkit-appearance: initial;
+    vertical-align: super;
+    @media (min-width: 480px) {
+	    font-size: 10px;
+	    margin-right: 10px;
+	}
+}
+.mc-project-atc:hover, .delete-mc-project:hover, .copy-mc-project:hover {
+    color: rgba(204, 32, 184, .5);
+}
+/* end my projects - projects */
+/* END MEDIACLIP MY PROJECTS STYLES */
+
+/* START MEDIACLIP ADDED TO CART STYLES */
+/* start copy link in added-to-cart popup */
+ 	#mz-added-to-cart .copy-mc-project {
+	 	background: @primaryWhite;
+	    color: @tertiaryColor;
+	    border: 1px solid @tertiaryColor;
+	    font-size: 12px;
+	    padding: 9px 5px;
+	    border-radius: 3px;
+	    margin: 5px 0 4px 0;
+	    text-transform: uppercase;
+ 		&:hover {
+ 			background: @tertiaryColor;
+    		color: @primaryWhite;
+    		border: 1px solid @tertiaryColor;
+ 		}
+ 		@media (min-width: 768px) {
+ 			font-size: 14px;
+ 			margin: 0 0 12px 0;
+ 		}
+ 	}
+/* end copy link in added-to-cart popup */
+/* END MEDIACLIP ADDED TO CART STYLES */
