@@ -18,9 +18,11 @@
 </div>
  {% include "modules/product/category-landing-slider" %} 
  <div class="breadcrumbs-cat">
-	
-		{% include "modules/breadcrumbs" %}
-	{% block breadcrumbs %}{% endblock breadcrumbs %} {# hide breadcrumbs in default site template #}
+    {% block breadcrumbs %}
+    {% if themeSettings.showBreadcrumbs %}
+    {% include "modules/breadcrumbs" %}
+    {% endif %}
+    {% endblock breadcrumbs %}
  </div>
 
 <div class="categorylanding-promo"> 

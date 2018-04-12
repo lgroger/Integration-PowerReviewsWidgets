@@ -30,13 +30,15 @@
             </div>
         </div>
 		{% dropzone "category-page-top-2" scope="page" %}
-		<style>.mz-breadcrumbs:first-child{display:none;}</style>
+
+		<div class="breadcrumbs-cat">
 		{% block breadcrumbs %}
 		{% if themeSettings.showBreadcrumbs %}
 		{% include "modules/breadcrumbs" %}
-		{% endif %} 
+		{% endif %}
 		{% endblock breadcrumbs %}
-
+		</div>
+		
 	{% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy %}
 
 {% if useBR==1 %}
