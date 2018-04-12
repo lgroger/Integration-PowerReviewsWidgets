@@ -2,7 +2,7 @@
     {% if subscribed %}
     <p>{{ labels.notifyWidgetSuccess }}</p>
     {% else %}
-    <div>{{ labels.notifyWidgetHeader }}</div>
+    <div>{{ labels.notifyWidgetHeader }}</div></br>
     <div>
         {{ labels.email }}: <input type="text" data-mz-role="email" value="{{ user.email }}" class="mz-instock-request-email" />
         <button data-mz-action="widgetNotifyUserAction">{{ labels.notifyWidgetButton }}</button>

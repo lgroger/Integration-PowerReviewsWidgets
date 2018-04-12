@@ -1,0 +1,82 @@
+.LP-cat-3xs{
+	.content{
+        position: relative;
+        display: inline-block;
+        vertical-align: top;
+        min-height: 100px;
+        span{
+            position: absolute;
+            text-indent: 10px;
+            left: 0;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            width: 100%;
+            display: block;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            opacity: 0.75;
+            bottom: 10px;
+            background: white;
+            color: @primaryColor;
+            @media @smallmobile {
+                font-size: 18px;
+			}
+			@media @tablet {
+				font-size: 20px;
+			}
+        }
+    }
+	.small-image{ 
+		width: 100%;
+		display: block;
+	
+		.content{
+		    display: inline-block;
+		    vertical-align: top;
+		}
+	}
+}
+@media @smallmobile{
+	.LP-cat-3xs{
+		padding: 0 10px;
+		.small-image{ 
+			.content{
+			    width: 100%;
+			    padding-bottom: 10px;
+			    span{
+		    		bottom: 20px;
+		    	}
+			}
+		}
+	}
+}
+@media @desktop, @tablet {
+	.LP-cat-3xs{
+		padding: 0 0 12px 0;
+		.small-image{ 
+			.content{
+			    width: 32.75%;
+				span{
+		    		text-indent: 10px;
+		    	}
+			    &:first-child{
+			    	padding-right: 7px;
+			    	span{
+			    		text-indent: 10px;
+			    	}
+			    }
+			    &:last-child{
+			    	padding-left: 7px;
+			    	span{
+			    		text-indent: 10px;
+			    	}
+				}
+			}
+			.image-2 {
+				padding: 0 3px;
+			}
+		}
+	}
+}

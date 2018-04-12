@@ -20,9 +20,6 @@ select::-ms-expand {
 		}
 	}
 }
-.mz-accountsettings-attribute-yesno{
-
-}
 .occassionbtn{
 	float: right;
     padding: 10px 20px; 
@@ -49,7 +46,6 @@ select::-ms-expand {
 	    font-size: 16px; 
     color: grey;
 }
-
 .mz-paymentmethod-edit{
 	color: @linkColor;
     padding: 0 15px 0 0;
@@ -3322,7 +3318,6 @@ span.field-error{
 }
 
 /*-----------------------Order Status------------------------*/
-
 .orderstatus_page{
     padding: 0px 30px;
     .mz-l-stack-large .mz-l-stack-section{
@@ -3632,7 +3627,6 @@ span.field-error{
 			}
 		} 
     }
-	
 	#tab_4{
 	    .mz-accountorderhistory{
     	    opacity: 1;
@@ -3743,7 +3737,6 @@ span.field-error{
     		}
     	}
 	}
-	
 	#tab_7{
 	    .mz-accountorderhistory{
     	    opacity: 1;
@@ -3856,8 +3849,7 @@ span.field-error{
     			}
     		}
     	}
-	} 
-
+	}
 	.orders .orders-header .order-blocks1,
 	.orders .orders-header .order-blocks2,
 	.orders .orders-header .order-blocks3,
@@ -3869,7 +3861,6 @@ span.field-error{
 	.my_acc_ri button.accordion1{
 		display: none !important;
 		&.active,&.enable-print{
-			//display: block !important;
 		}
 	}
 	html {
@@ -3906,7 +3897,7 @@ span.field-error{
 	* {
 		height: auto !important;
 	} 
-	/* Only for Order Status page */
+/* Only for Order Status page */
 	.orderstatus_page {
 		h1.mz-pagetitle {
 			display: none;
@@ -3921,3 +3912,23 @@ span.field-error{
 		margin: 0 !important;
 	}
 }
+/* RELOAD MY QUOTE BUTTON */
+#account-quoteorderhistory .orders-sec .cart-rec a {
+    background-color: @primaryCTA;
+    color: #fff;
+    padding: 15px 3px 15px 3px;
+    text-transform: uppercase;
+    border: 1px solid @primaryCTA;
+    border-radius: 3px;
+    margin: 0 auto 10px auto;
+    text-decoration: none !important;
+    display: block;
+    text-align: center;
+    width: 60%;
+    max-width: 250px;
+}
+#account-quoteorderhistory .orders-sec .cart-rec a:hover {
+background-color: @primaryCTAhover !important;
+    border-color: @primaryCTAhover;
+}
+/* END RELOAD MY QUOTE BUTTON */

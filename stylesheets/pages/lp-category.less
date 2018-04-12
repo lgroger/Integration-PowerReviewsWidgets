@@ -1,0 +1,214 @@
+.landing-page{
+    width: 98%;
+    max-width: 1280px;
+    margin: 0 auto;
+    // padding: 1%;
+    .clear{
+        clear: both;
+    }
+    h1,h2,h3,p{
+        margin: 0;
+    }
+    a{
+        color: @linkColor;
+        &:hover{
+            color: @linkHoverColor;
+        }
+    }
+    h1{
+        font-family: @fontBold;
+        font-weight: 900;
+        color: @primaryColor;
+        text-transform: uppercase;
+    }
+    h2{
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
+    }
+    h3{
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
+    }
+    .mz-cms-content {
+        padding: 0 !important;
+    }
+}
+#LP-wrapper{
+    width: 100%;
+    margin: 0 auto;
+    h1,h2,h3,p{
+        margin: 0;
+    }
+    a{
+        color: @linkColor;
+        &:hover{
+            color: @linkHoverColor;
+        }
+    }
+    h1{
+        font-family: @fontBold;
+        font-weight: 800;
+        color: @primaryColor;
+        text-transform: uppercase;
+    }
+    h2{
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
+    }
+    h3{
+        font-family: @fontPrimary;
+        font-weight: 600;
+        color: @secondaryColor;
+    }
+    p{
+        font-family: @fontPrimary;
+        font-weight: 300;
+        color: @primaryDarkBlue;
+    }
+    *{
+        box-sizing: border-box;
+    }
+    .mz-cms-content {
+        overflow: initial;
+        padding: 0;
+    }
+    img{
+        max-width: 100%;
+        width: 100%;
+    }
+    .show{
+        display: block;
+    }
+    .hide{
+        display: none;
+    }
+    #left-nav{
+        font-family: @fontPrimary;
+        color: @primaryColor;
+        font-size: 15px;
+    }
+    #right-content{
+    }
+}
+@media @smallmobile{
+    h1{
+        font-size: 28px;
+    }
+    h2{
+        font-size: 14px;
+    }
+    h3{
+        font-size: 14px;
+    }
+    p{
+        font-size: 12px;
+    }
+    #LP-wrapper{
+        display: table;
+        #img-widgets
+        {
+            display: table-footer-group;
+            img{
+                min-width: initial;
+                padding-right: 0;
+                margin-bottom: 12px;
+                padding: 0 10px;
+            }
+            #img-widget2{
+                display: inline-block;
+                width: 49.5%;
+                vertical-align: top;
+            }
+            #img-widget3n4
+            {
+                display: inline-block;
+                width: 49.5%;
+            }
+        } 
+        #left-nav{   
+            width: 100%;
+            display: block;
+            float: none;
+            overflow: initial;
+        }
+        #right-content{
+            width: 100%;
+            display: block;
+            float: none;
+            padding-left: 0;
+        }
+    }
+}
+@media @tablet{
+    h1{
+        font-size: 30px;
+    }
+    h2{
+        font-size: 16px;
+    }
+    h3{
+        font-size: 16px;
+    }
+    p{
+        font-size: 14px;
+    }
+    #LP-wrapper{
+        display: table;
+        width: 98%;
+    }
+}
+@media @desktop{
+    h1{
+        font-size: 45px;
+    }
+    h2{
+        font-size: 20px;
+    }
+    h3{
+        font-size: 18px;
+    }
+    p{
+        font-size: 16px;
+    }
+    #LP-wrapper{
+        display: table;
+        #img-widgets
+        {
+            img{
+                min-width: 250px;
+                margin-bottom: 12px;
+                padding: 0;
+            }
+            #img-widget2{
+                display: block;
+                width: 100%;
+                vertical-align: top;
+            }
+            #img-widget3n4
+            {
+                display: block;
+                width: 100%;
+            }
+        }
+        #left-nav{
+            width: 25%;
+            float: left;
+            overflow: auto;
+        }
+        #right-content{
+            width: 75%;
+            float: left;
+            padding-left: 40px;
+        }
+    }
+}
+@media @largedevice {
+    .mz-lp-category {
+        .mz-breadcrumbs {
+            padding-left: 250px;
+        }
+    }
+}

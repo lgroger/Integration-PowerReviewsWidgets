@@ -1,0 +1,70 @@
+  .more-widget {
+    padding: 0 0 25px 0;
+
+    .more-top {
+        display: inline-flex;
+        width: 100%;
+        img {
+            width: 30% !important;
+            @media @smallmobile {
+                display: none;
+            }
+        }
+        .title{
+            color: @tertiaryColor !important;
+            text-align: center;    
+            position: relative;
+            z-index: 1;
+            background: #fff;
+            padding: 0 8px;
+            vertical-align: middle;
+            font-size: 36px;
+            width: 40%;
+            @media @smallmobile {
+                font-size: 28px;
+                width: 100%;
+            }
+            @media @tablet {
+                font-size: 28px;
+            }
+        }
+    }
+    .confetti {
+        max-width: 100%;
+    }
+    .more-themes{
+        
+        div.links{
+            display: inline-block;
+            vertical-align: top;
+            padding: 0;
+            width: 100%;
+            -webkit-column-count: 3;
+            -moz-column-count: 3;
+            column-count: 3;
+            text-align: left;
+            @media @smallmobile {
+                -webkit-column-count: 2;
+			    -moz-column-count: 2;
+			    column-count: 2;
+		        text-align: center;
+            }
+
+            div{
+                margin: 0;
+                padding: 5px 0;
+                font-size: 16px;
+                font-family: @fontFamily;
+                font-weight: 900;
+                text-transform: capitalize;
+                @media @smallmobile {
+                    font-size: 14px;
+                }
+                
+                span{
+                    color: @primaryColor; 
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,7 @@
+
+
+<div style="display: none;" class="hiddenmodel3xs">{{ model.config }}</div>
+
+<div class="lp-3xs"></div> 
+
+{% require_script "widgets/lp-category-3xs" %} 

@@ -1,0 +1,57 @@
+.lp-customtext{
+    .maxchardesktop, .maxcharmobile, .readmoretext, .readlesstext{
+        display: none;
+    }
+    h2,h3,p{
+        margin: 0;
+    }
+    h2,h3{
+        color: #b24499;
+    }
+    .morecontent a{
+        text-decoration: underline;
+    }
+    h2.singleline,h3.singleline{
+        display:inline;
+        padding-right: 5px;
+    }
+    .comment{
+        color: #2e257d;
+        font: @fontGTWalsheimMediumItalic;
+        font-size: 15px;
+    }
+    p{
+        &.singleline{
+            display:inline;
+        }
+        span.hdr{
+            font-weight: 700;
+            padding-right: 5px;
+        }
+    }
+}
+@media @smallmobile{
+    .lp-customtext{
+        padding: 0 0 10px 0;
+        p{
+            span.hdr{
+                font-size: 14px;
+            }
+        }
+    }
+}
+@media @tablet{
+    .lp-customtext{
+        padding: 0 0 10px 0;
+    }
+}
+@media @desktop{
+    .lp-customtext{
+        padding: 0 0 12px 0;
+        p{
+            span.hdr{
+                font-size: 18px;
+            }
+        }
+    }
+}
