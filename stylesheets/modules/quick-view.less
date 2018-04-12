@@ -83,7 +83,7 @@
 .mz-quick-view-wrapper {
     position: relative;
     background-color: #fff;
-    width: 930px;
+    width: 85%;
     margin: 30px auto;
     border-radius: 2px;
     font-family: @fontFamily;
@@ -204,6 +204,65 @@
     }
     .container-right {
         padding: 8px 30px;
+        .quickviewcertona{
+            border: 2px solid orange;
+            border-radius: 10px;
+            max-height: 275px;
+            .quickview-recommended-title{
+                color: green;
+                font-size: 16px; 
+                font-weight: 700;
+                text-align: center;
+            }
+            .owl-carousel .owl-item{
+                max-height: 255px;
+            }
+            #recommended_products_quickview{
+                .pdp-related-products{
+                    padding-bottom: 0;
+                    .echi-shi-related-products-slider{
+                        .owl-carousel{
+                            .item{
+                                .mz-productlist-item{
+                                    width: 90%;
+                                    .mz-productlisting{
+                                        border: none;
+                                        .mz-productlisting-image{
+                                            min-height: 0;
+                                            margin-bottom: 10px;
+                                            a{
+                                                height: 130px;
+                                            }
+                                        }
+                                        .mz-productlisting-info{
+                                            .mz-productlisting-title{
+                                                height: 35px;
+                                            }
+                                            .mz-pricestack{
+                                                margin-bottom: 0;
+                                            }
+                                        }
+                                        .mz-productlisting-is-personalize{
+                                            display: none;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .owl-controls{
+                            .owl-nav{
+                                .owl-prev{
+                                    top: 45% !important;
+                                }
+                                .owl-next{
+                                    top: 45% !important;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         .product-quantity{
             clear: both;
         }
@@ -251,6 +310,8 @@
                 }
             }
         }  
+        
+        
         .product-color-swatch {
             padding: 10px 0;
             > ul {
