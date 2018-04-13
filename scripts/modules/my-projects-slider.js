@@ -6,8 +6,9 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
         
 		if(res && res.projects){
 			if(res.projects.length){
-                var $projectsOuter = $("<div />").attr("class","mc-projects-outer");
-                var $projectHolder = $("<div />").attr("class","pdp-related-products");
+                var $projectsOuter = $("<div />").attr("class","pdp-related-products");
+                var $projectHolder = $("<div />").attr("class","echi-shi-related-products-slider");
+                var $projectCarousel = $("<div />");
                 for(var i=0;i<res.projects.length;i++){
                     var p = res.projects[i];
                     var $project,$projectOuter,date = new Date(p.createdDateUtc);
@@ -26,18 +27,19 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
                         $productInfo.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
                     }
                     
-                    $productInfo.append($('<button class="mc-project-atc">Edit / Add to Cart</button>'));
+                    $productInfo.append($('<button class="mc-project-atc">Edit<span> / Add to Cart</span></button>'));
                     $productInfo.append($('<button class="delete-mc-project">Delete</button>'));
                     $productInfo.append($('<button class="copy-mc-project">Copy</button>'));
                     $projectOuter.append($project);
-                    $projectHolder.append($projectOuter);
+                    $projectCarousel.append($projectOuter);
                 }
                 $projects.append($("<h2>My Projects</h2>"));
-                // $projectHolder.append($('<div style="clear:both" />'));
+                $projectsOuter.append($('<div class="clear" />'));
+                $projectHolder.append($projectCarousel);
                 $projectsOuter.append($projectHolder);
                 $projects.append($projectsOuter);
 
-                $projectHolder.owlCarousel({
+                $projectCarousel.owlCarousel({
                     loop:true, margin:10, nav:true, responsive:{0:{items:2}, 600:{items:2}, 1000:{items:4}}
                 });
 			}
