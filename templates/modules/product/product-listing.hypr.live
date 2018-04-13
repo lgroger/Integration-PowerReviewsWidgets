@@ -142,11 +142,13 @@
                                             {% endfor%}
                                         {% endwith %}
                                        </ul>
+                                       {% comment %}
                                        {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as colorlength %}
                                            {% if colorlength|length > 6 %}
                                            <span class="total-color">{{colorlength|length}} Colors</span> 
                                            {% endif%}
                                        {% endwith %}
+                                       {% endcomment %}
                                     </div>   
                                     {% endwith %}    
                                 {% endwith %}
@@ -157,6 +159,7 @@
             </div>
         <p class="product-mainname"><a href="{% make_url "product" model %}">{{model.content.productName}}</a></p>
         {% include "modules/product/price-stack" %}
+        {% comment %}
         {% block product-extrainfo %}
         {% if dealOfTheDay %}
           {% if dealOfTheDay.savings %}
@@ -171,6 +174,7 @@
           {% endif %}
         {% endif %}
         {% endblock product-extrainfo %}
+        {% endcomment %}
     </div>
     <div class="mz-productlisting-rating">
         {% block product-rating %}

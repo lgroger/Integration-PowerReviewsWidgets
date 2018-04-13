@@ -20,11 +20,12 @@
         color: @secondaryYellow;
     }
     .nostar{ 
-        color: #dddddd;
+        color: @disabled-grey;
     }
   }
 .andup { 
-    color: #dddddd;
+    color: @disabled-grey;
+    text-transform: lowercase;
 }  
 #recommended_products_slot{
     clear: both;
@@ -48,10 +49,7 @@
         }
     }
 .facet-heading,.facet-heading-single{
-    /*margin: 5% 2% 2% 3%;*/ 
     cursor: pointer;
-    max-width: 225px;
-    width: 225px;
     border-top: 1px solid @secondaryWhite;
     .seemorecaret{
         color: @primaryBlue;
@@ -104,13 +102,9 @@
     font-family: @fontFamily;
 }
 .mz-page-filters-controls {
-    /*padding-top: 1%;*/
-    max-width: 1276px;
-    padding-top: 10px;
-    margin: 0 auto;
-    padding-left: 10px;
+    padding: 0 45px 0 10px;
     text-transform: uppercase;
-    font-family: @fontGTWalsheimMedium;
+    font-family: @fontLight;
     .mz-pagingcontrols-pagestate-label {
         margin-top: 12px;
         font-family: @fontLight;
@@ -217,14 +211,9 @@
 .mz-filter-options {
     display: none;
     box-sizing: border-box;
-    background-color: #fff;
     max-width: 238px;
     float: left;
-    padding-bottom: 2%;
-    box-shadow: 3px 3px 3px #e3e3e3;
-    border-radius: 5px 5px 0 0;
-    border: 1px solid #dddddd;
-    margin-left: 0.8%;
+    padding-left: 10px;
     @media @desktop { 
         display: block;
         .mz-facetingform.mz-filters {
@@ -441,6 +430,10 @@
 .br-facet-color.br-color-yellow .mz-facetingform-valuelabel {
 	background-color: #FFFF00;
 	color: #FFFF00;		
+}
+.br-facet-color.br-color-mint-green .mz-facetingform-valuelabel {
+	background-color: #98FB98;
+	color: #98FB98;		
 }
 .filter-color-list{
 	padding: 0 2%;	
@@ -940,30 +933,6 @@
 .selectric, .selectric-items{
     font-family: @fontLight;
 }
-.color-swatch{
-    height:40px;
-    position: relative;
-    z-index: 1;
-    .total-color{
-        color: @textColor;
-        position: relative;
-        font-size: 10px;
-        display: block;
-        top: -35px;
-        .sz-super-page-template & {
-            display: none;
-        }
-    }
-}
-.product-mainname{
-    font-family:@fontFamily;
-    padding: 0px;
-    padding-bottom: 4%;
-    margin: 0px;
-    height: auto;
-    font-size:16px;
-    overflow:hidden;
-}
 .mz-pagingcontrols-pagesize-label, .mz-pagingcontrols-pagesort-label{
     span.mz-paging-title, span.mz-paging-sorttitle{
         float: left;
@@ -1127,7 +1096,7 @@
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: 13px;
+    font-size: 11px;
     line-height: 20px;
     min-height: 20px;
 }
@@ -1136,12 +1105,12 @@
     padding: 8px;
     border-top: 1px solid @secondaryWhite;
     border-bottom: 1px solid @secondaryWhite;
-    color: @textColor;
+    color: @disabled-grey;
     cursor: pointer;
 }
 .selectric-items li.selected {
     background: @secondaryWhite;
-    color: @textColor;
+    color: @disabled-grey;
 }
 .selectric-items li:hover {
     background: #F0F0F0;
