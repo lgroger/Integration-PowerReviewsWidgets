@@ -1,7 +1,9 @@
 ﻿ {% if model.onSale %}
+ {% comment %}
  <span class="mz-price {% if pageContext.cmsContext.template.path == "product" %} hide {% endif %} is-crossedout">
      {{model.price|currency}}
  </span>
+ {% endcomment %}
  <span itemprop="price" class="mz-price is-saleprice">  
 
      {{model.salePrice|currency}}

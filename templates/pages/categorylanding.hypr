@@ -6,35 +6,29 @@
 
 {% block body-content %}
 {% require_script "pages/category" %}
-  
+
+
 <div class="sz-categorylanding-template">
+    <div>
+     {% dropzone "category-landing-images" scope="page" %}
+    </div>
+     {% include "modules/product/category-landing-slider" %} 
+     {% dropzone "common-category-top" scope="page" %}
 
-{% dropzone "common-category-top" scope="page" %}
-<div class="mz-category-title">   
-    <h1 class="mz-pagetitle">{{ model.name|safe }}</h1>
-</div> 
-<div>
- {% dropzone "category-landing-images" scope="page" %}
-</div>
- {% include "modules/product/category-landing-slider" %} 
- <div class="breadcrumbs-cat">
-    {% block breadcrumbs %}
-    {% if themeSettings.showBreadcrumbs %}
-    {% include "modules/breadcrumbs" %}
-    {% endif %}
-    {% endblock breadcrumbs %}
- </div>
-
-<div class="categorylanding-promo"> 
- {% dropzone "category-landing-promo" scope="page" %}
-  {% dropzone "category-landing-promo-temp" scope="page" %}
- </div> 
-
-
-<div data-mz-category="{{model.categoryId}}" class="mz-l-container category-landing">
-    {% include "pages/categorylanding-interior" %}
-</div>
-
+    <div data-mz-category="{{model.categoryId}}" class="mz-l-container sz-category-template">
+        {% include "pages/category-interior" %}
+    </div>
+    {% comment %}
+    <div class="categorylanding-promo"> 
+        {% dropzone "category-landing-promo" scope="page" %}
+            {% dropzone "category-landing-promo-temp" scope="page" %}
+        </div> 
+        
+        
+        <div data-mz-category="{{model.categoryId}}" class="mz-l-container category-landing">
+            {% include "pages/categorylanding-interior" %}
+        </div>
+    {% endcomment %}
 </div>
 
 {% include "modules/bloomreach_seo" %}
@@ -42,4 +36,4 @@
 {% require_script "modules/filters" %}
 {% require_script "modules/my-menu" %}
 {% require_script "modules/quick-view" %}
-{% endblock body-content %} 
+{% endblock body-content %}

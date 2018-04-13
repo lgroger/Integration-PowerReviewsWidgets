@@ -103,22 +103,14 @@
 			        {% with item|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
 				            {% if isPersonalize.values|first|prop("value") != "" %}
 				                <div class="mz-productlisting-is-personalize">
-				                    <a href="{{ item.url }}{% if pageContext.pageType == "search" or pageContext.pageType == "category" %}?rrec=true{% endif %}">PERSONALIZE</a>
+                                        <div class="customize">
+                                            <a href="{{ item.url }}{% if pageContext.pageType == "search" or pageContext.pageType == "category" %}?rrec=true{% endif %}">
+                                                <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
+                                            </a>
+                                        </div>  
 				                </div>
 				            {% endif %}
-				        {% endwith %}
-				    {% comment %}
-				    {% else %}
-			        {% if item.options %}
-			            {% for option in item.options %}
-			                   {% if option.attributeFQN===themeSettings.productAttributes.dndToken %}
-			                    <div class="mz-productlisting-is-personalize">
-			                        <a href="{% make_url "product" item %}">PERSONALIZE</a>
-			                    </div> 
-			                   {% endif %}
-			            {% endfor %} 
-			        {% endif %}
-			    {% endcomment %}        
+				        {% endwith %}     
 			    {% endif %}
                </div>
             </div>                    

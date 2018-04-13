@@ -1,10 +1,60 @@
 ﻿.mz-pagingcontrols {
     .mz-pagingcontrols-pagestate-label {
+        font-family: @fontLight;
+        color: @disabled-grey;
+        font-size: 11px;
+        text-transform: uppercase;
         display: inline-block;
-        margin-left: @gutter;
+        float: left;
     }
     .mz-pagingcontrols-pagesize-label {
         display: inline-block;
+        float: right;
+        span.mz-paging-title, span.mz-paging-sorttitle{
+            float: left;
+            width: 50px;
+            margin-top: 8px;
+            color: @disabled-grey;
+            font-family: @fontLight;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+        .selectric-responsive{
+            display: inline-block;
+            width: 130px;
+            @media (min-width: 768px) {
+                border: 1px solid @disabled-grey;
+                border-radius: 2px;
+            }
+        }
+        select {
+            background: transparent;
+            padding: 5px;
+            border-radius: 2px;
+            width: 110px;
+            height: auto;
+            outline: none;
+            cursor: pointer;
+            color: #6c7680;
+        }
+        @media @tablet {
+            margin-right: 6px;
+            padding-top: 0px;
+            .selectric-responsive {
+                width: 114px ;
+                float: none;
+            }
+        }
+        @media @smallmobile {
+            span.mz-paging-title{
+                width:auto;
+                margin-right: 10px;
+            }
+            .selectric-responsive{
+                width:106px;
+                float: none;
+            }
+        }
     }
     .mz-pagingcontrols-pagesize-dropdown {
         width: 60px;
