@@ -284,19 +284,9 @@ span.rounded-cart-color{
             display:block;
             width:100%;
             float:none;
-            a{
-                color: @linkColor;
-                text-decoration: underline;
-                font-size: 11px;
-                text-transform: uppercase;
-            }
-            a:hover{
-                color: @linkHoverColor;
-                text-decoration: none;
-            }
         }
         dd.mz-carttable-item-code{
-            margin:0px;
+            margin: 15px 0;
         }
         .mz-propertylist{
             display:block;
@@ -951,6 +941,25 @@ span.rounded-cart-color{
                 }
             }
         }
+    }
+}
+.editpersonalize, .copy-mc-project {
+    color: @tertiaryColor;
+    text-decoration: none;
+    font-size: 11px;
+    text-transform: uppercase;
+    background-color: @primaryWhite !important;
+    border: 1px solid @tertiaryColor;
+    padding: 3px 0;
+    margin: 0 10px 0 0;
+    border-radius: 3px;
+    vertical-align: baseline;
+    display: inline-block;
+    width: 40px;
+    text-align: center;
+    &:hover {
+        color: @primaryWhite;
+        background-color: @tertiaryColor !important;
     }
 }
 tr.mz-carttable-item-shipping-info{
