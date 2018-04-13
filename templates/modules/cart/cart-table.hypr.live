@@ -317,7 +317,7 @@ cart.js sets these values
                                          {% if bundledProduct.token %}
                                         <span class="edit_component">
                                             <a class="editPersonalizeBundleItem" productCode="{{ bundledProduct.productCode }}"  data-mz-token-type="{{bundledProduct.persType}}" data-mz-token="{{bundledProduct.token}}" itemId="{{item.id}}">Edit Personalization</a>
-                      
+                                        
                                         </span>
                                         {% endif %}
                                     </div>
@@ -344,7 +344,10 @@ cart.js sets these values
                 <div class="edit_wishlist_cart">
                     <span class="f_left">
                         {% if item.product.token %}
-                            <a href="javascript:void(0)" class="editpersonalize" data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}" itemId="{{item.id}}">Edit Personalization</a>
+                            <a href="javascript:void(0)" class="editpersonalize" data-mz-token-type="{{item.product.persType}}" data-mz-token="{{item.product.token}}" itemId="{{item.id}}">Edit</a>
+                            {% if item.product.persType == "mc" %}
+                                    <a href="javascript:void(0)" class="copy-mc-project" title="Start personalizing a new item based off of this item's personalization">Copy</a>
+                            {% endif %}
                         {% endif %}
                     </span>
                     <span class="f_right"><a id="{{item.id}}" href="javascript:void(0);" class="move-to-wishlist-link"> Move to Wishlist</a></span>

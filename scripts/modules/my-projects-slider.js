@@ -6,11 +6,11 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
         
 		if(res && res.projects){
 			if(res.projects.length){
-                var $projectHolder = $("<div />").attr("class","pdp-related-products");
+                var $projectHolder = $("<div />").attr("class","mc-projects-list");
                 for(var i=0;i<res.projects.length;i++){
                     var p = res.projects[i];
                     var $project,date = new Date(p.createdDateUtc);
-                    $project = $("<div />").attr("class","mz-productlist-item").attr("data-mc-project",p.id);
+                    $project = $("<div />").attr("class","mc-projects-item").attr("data-mc-project",p.id);
                 
                     var $projectInner = $("<div />").attr("class","mz-productlisting mz-productlist-tiled");
                     $project.append($projectInner);

@@ -1,46 +1,46 @@
 /* START MEDIACLIP EDITOR STYLES */
 /* start mediaclip header */
- 	#mz-drop-zone-mc-header {
- 		display: none;
- 		@media (min-width: 768px) {
- 			display: block;
- 		}
- 	}
-	.mediaclip-designer-wrapper {
-        top: 30px;
+	#mz-drop-zone-mc-header {
+		display: none;
+		@media (min-width: 768px) {
+			display: block;
+		}
+	}
+.mediaclip-designer-wrapper {
+    top: 30px;
+}
+.mz-mcpers #page-wrapper {
+    margin: 0;
+}
+#mz-drop-zone-mc-header .mz-cms-content {
+    padding: 0;
+    margin: 0;
+}
+.mc-header {
+    background-color: #111125;
+    text-align: center;
+    height: auto;
+}
+.mz-mcpers .mc-header a {
+    color: rgba(255, 255, 255, 0.82);
+    text-decoration: none !important;
+    padding: 7px 30px 0;
+    font-size: 12px;
+    height: 23px;
+    display: inline-block;
+    letter-spacing: .5px;
+    font-family: Roboto,Verdana,sans-serif;
+    text-transform: capitalize;
+    font-weight: 500;
+    &:hover {
+    	transition: background-color 150ms ease-in;
+        background-color: #404244;
+        color: rgba(255, 255, 255, 0.9);
     }
-    .mz-mcpers #page-wrapper {
-        margin: 0;
+    &:visited {
+    	color: #fff;
     }
-    #mz-drop-zone-mc-header .mz-cms-content {
-        padding: 0;
-        margin: 0;
-    }
-    .mc-header {
-        background-color: #111125;
-        text-align: center;
-        height: auto;
-    }
-    .mz-mcpers .mc-header a {
-        color: rgba(255, 255, 255, 0.82);
-        text-decoration: none !important;
-        padding: 7px 30px 0;
-        font-size: 12px;
-        height: 23px;
-        display: inline-block;
-        letter-spacing: .5px;
-        font-family: Roboto,Verdana,sans-serif;
-        text-transform: capitalize;
-        font-weight: 500;
-        &:hover {
-        	transition: background-color 150ms ease-in;
-	        background-color: #404244;
-	        color: rgba(255, 255, 255, 0.9);
-        }
-        &:visited {
-        	color: #fff;
-        }
-    }
+}
 /* end mediaclip header */
 /* start on save header */
 #mcOnSave {
@@ -48,7 +48,7 @@
     width: 300px;
     height: auto;
     right: 20px;
-    top: 50px;
+    top: 70px;
     background-color: transparent;
     z-index: 1;
     font-family: Roboto,Verdana,sans-serif;
@@ -56,6 +56,9 @@
     font-size: 12px;
     & a {
 	    text-decoration: none !important;
+	}
+	@media (min-width: 768px) {
+		right: 320px;
 	}
 }
 .mc-save-container {
@@ -86,6 +89,21 @@
 #mcOnSave .my-projects-logo {
     width: 80%;
     margin: 0 auto;
+    height: auto;
+}
+.my-projects-access {
+	text-align: left;
+	& li {
+		margin-bottom: 10px;
+	}
+	& li:first-child {
+		margin-bottom: 0;
+	}
+	& svg {
+		height: 30px;
+		width: 30px;
+		vertical-align: middle;
+	}
 }
 .mc-save-checkbox {
     padding: 10px;
@@ -206,7 +224,7 @@
     	text-align: left;
     }
 }
-/* styles for my projects on my-projects, myaccount & cart */
+/* styles for my projects on my-projects, myaccount */
 #mcProjects .projects-loading{
 	text-align: center;
 	margin: 0 auto;
@@ -257,7 +275,7 @@
     }
 }
 .mc-project-atc, .delete-mc-project, .copy-mc-project {
-    background-color: @primaryWhite !important;
+    background-color: transparent !important;
     color: @secondaryPink;
     border: none;
     font-size: 8px;
@@ -278,24 +296,79 @@
 
 /* START MEDIACLIP ADDED TO CART STYLES */
 /* start copy link in added-to-cart popup */
- 	#mz-added-to-cart .copy-mc-project {
-	 	background: @primaryWhite;
-	    color: @tertiaryColor;
-	    border: 1px solid @tertiaryColor;
-	    font-size: 12px;
-	    padding: 9px 5px;
-	    border-radius: 3px;
-	    margin: 5px 0 4px 0;
-	    text-transform: uppercase;
- 		&:hover {
- 			background: @tertiaryColor !important;
-    		color: @primaryWhite;
-    		border: 1px solid @tertiaryColor;
- 		}
- 		@media (min-width: 768px) {
- 			font-size: 14px;
- 			margin: 0 0 12px 0;
- 		}
- 	}
+#mz-added-to-cart .copy-mc-project {
+	background: @primaryWhite;
+	color: @tertiaryColor;
+	border: 1px solid @tertiaryColor;
+	font-size: 12px;
+	padding: 9px 5px;
+	border-radius: 3px;
+	margin: 5px 0 4px 0;
+	text-transform: uppercase;
+	&:hover {
+		background: @tertiaryColor !important;
+		color: @primaryWhite;
+		border: 1px solid @tertiaryColor;
+	}
+	@media (min-width: 768px) {
+		font-size: 14px;
+		margin: 0 0 12px 0;
+	}
+}
+.mz-cart #mcProjects .owl-prev {
+    left: 0 !important;
+    margin-left: 5px !important;
+    width: 25px !important;
+    height: 25px !important;
+}
+.mz-cart #mcProjects .owl-next {
+    right: 0px !important;
+    margin-right: 8px;
+    width: 25px !important;
+    height: 25px !important;
+}
+.mz-cart #mcProjects .owl-dots {
+    display: none !important;
+}
+.mz-cart #mcProjects h2 {
+    display: block;
+    font-size: 20px;
+    @media (min-width: 768px) {
+    	font-size: 24px;
+    }
+    @media (min-width: 768px) {
+    	font-size: 1.6em;
+    }
+}
+.mz-cart .mc-projects-list.owl-carousel.owl-loaded {
+    padding: 0% 6% 0%;
+    margin: 0 auto;
+    width: auto !important;
+    max-width: 1300px;
+    @media (min-width: 641px) {
+    	padding: 0% 4% 0%;
+    }
+}
+.mz-cart .mc-projects-list .owl-stage-outer {
+	max-width: 1225px;
+    margin: 0 auto;
+    width: auto !important;
+}
+.mz-cart .mc-projects-item {
+    width: 95%;
+    margin: 10px 0;
+}
+.mz-cart .mc-projects-item a {
+	height: auto;
+}
+.mz-cart .mc-projects-item img {
+    width: auto !important;
+    max-width: 120px !important;   
+    max-height: 120px;  
+    display: block !important;
+    @media (min-width: 768px) {
+    	max-width: 170px !important;
+    }
+}
 /* end copy link in added-to-cart popup */
 /* END MEDIACLIP ADDED TO CART STYLES */

@@ -38,7 +38,7 @@
 		</form>
 	</div>
 
-	<div class="mz-cms-col-12-12">
+	<div class="confiramtion-slider mz-cms-col-12-12">
 		{% include "modules/my-projects-slider" %}
 	</div>
   <div class="confiramtion-slider mz-cms-col-12-12">
