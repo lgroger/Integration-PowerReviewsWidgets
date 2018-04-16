@@ -55,7 +55,7 @@
 	<!-- Make Product Slider Here -->
 	<div id="static" class="recommended_products">
 		{% dropzone "recommended_slot_heading" scope="template" %}
-		<!-- <h2>You Might Be Interested In</h2>  --> 
+		<h2><span class="rec-title">You Might Be Interested In</span></h2>
 	</div>
 	<div data-mz-recommendedProducts id="recommended_products_slot">
 

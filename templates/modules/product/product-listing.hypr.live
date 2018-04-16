@@ -1,13 +1,7 @@
 <div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
-    {% if pageContext.isTablet == true %}
-            <div class="wishlist-icon-tablet" id="{{ model.productCode }}" >
-                <a href="#" id="{{ model.productCode }}"></a>
-            </div>
-        {% else%}
-            <div class="wishlist-icon" id="{{ model.productCode }}" >
-                <a href="#" id="{{ model.productCode }}"></a>
-            </div>
-        {% endif%}
+        <div class="wishlist-icon" id="{{ model.productCode }}" >
+            <a href="#" id="{{ model.productCode }}"></a>
+        </div>
     <a href="{% make_url "product" model %}" class="container-link" onClick="fbq('track', 'ViewContent',{content_type:'product',content_ids:['{{model.productCode}}']});"></a>
     <div class="mz-productlisting-image">
         {% block product-image %}
@@ -25,7 +19,7 @@
         {% endblock product-image %}
         {% if model.productUsage == "Standard" and model.inventoryinfo.manageStock == "true" and model.inventoryinfo.onlineStockAvailable < 1  %}
                 <div class="out-of-stock">
-                    <a>Out Of Stock</a>
+                    <span>Temporarily Out Of Stock</span>
                 </div>
         {% else %}
             <div class="quick-view">  
@@ -110,7 +104,7 @@
                                         <li><a class="swatch-color" href="/p/{{model.productCode}}"><img data-color-prdcode='{{model.productCode}}' /></a></li>
                                     {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as productCodes %}
                                         {% for prodcode in productCodes %}
-                                        {% if forloop.counter0 < 5 %}
+                                        {% if forloop.counter0 < 2 %}
                                         <li style="display:none;"><a class="swatch-color"><img data-color-prdcode='{{prodcode}}' /></a></li>
                                         {% endif %}
                                         {% endfor%}
@@ -135,7 +129,7 @@
                                             <li><a class="swatch-color" href="/p/{{model.productCode}}"><img data-color-prdcode='{{model.productCode}}' /></a></li>
                                         {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as productCodes %}
                                             {% for prodcode in productCodes %}
-                                            {% if forloop.counter0 < 5 %}
+                                            {% if forloop.counter0 < 3 %}
                                             <li  style="display:none;"><a class="swatch-color">
                                                 <img data-color-prdcode='{{prodcode}}' alt={{prodcode}} /></a></li>
                                             {% endif %}
@@ -187,38 +181,63 @@
                 {% with model|get_product_attribute('tenant~rating') as rating %}
                     {% if rating.values|first|prop("value") != "" %}
                         {% with rating.values|first|prop("value")|floatformat as totalRating %}
-                            <div class="pr-snippet-stars">
-                                 {% if totalRating >= 4.8 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-5-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating >= 4.3 and totalRating <= 4.7 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-4_5-sm">&nbsp;</div>
-                              {% endif %}                              
-                              {% if totalRating >= 3.8 and totalRating <= 4.2 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-4-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating >= 3.3 and totalRating <= 3.7 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-3_5-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating >= 2.8 and totalRating <= 3.2 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-3-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating >= 2.3 and totalRating <= 2.7 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-2_5-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating >= 1.8 and totalRating <= 2.2 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-2-sm">&nbsp;</div>
-                              {% endif %}
-                               {% if totalRating >= 1.3 and totalRating <= 1.7 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-1_5-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating >= 0.8 and totalRating <= 1.2 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-1-sm">&nbsp;</div>
-                              {% endif %}
-                              {% if totalRating > 0 and totalRating <= 0.7 %}
-                                 <div class="pr-stars pr-stars-small pr-stars-0_5-sm">&nbsp;</div>
-                              {% endif %}  
-                            </div>
+                        <div class="starImageContainer">
+                                {% if totalRating > 4 %}
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                {% endif %}                 
+                                {% if totalRating > 3  and totalRating <= 4%}
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg""/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                {% endif %}
+                                {% if totalRating > 2 and totalRating <= 3%}
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                {% endif %}
+                                {% if totalRating > 1 and totalRating <= 2%}
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                {% endif %}
+                                {% if totalRating > 0 and totalRating <= 1%}
+                                      <div class="imgs">
+                                          <img src="../../resources/images/rating_star.svg"/>
+                                      </div>
+                                {% endif %}
+                             </div> 
                         {% endwith %}
                     {% endif %}
                 {% endwith %}
@@ -230,7 +249,11 @@
         {% with model|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
             {% if isPersonalize.values|first|prop("value") != "" %}
                 <div class="mz-productlisting-is-personalize">
-                    <a href="{% make_url "product" model %}">PERSONALIZE</a>
+                    <div class="customize">
+                    <a href="{% make_url "product" model %}">
+                                <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
+                            </a>
+                        </div>  
                 </div>
             {% endif %}
         {% endwith %}
@@ -239,7 +262,11 @@
             {% for option in model.options %}
                    {% if themeSettings.productAttributes.dndToken == option.attributeFQN  %}
                     <div class="mz-productlisting-is-personalize">
-                        <a href="{% make_url "product" model %}">PERSONALIZE</a>
+                            <div class="customize">  
+                        <a href="{% make_url "product" model %}">
+                                    <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
+                                </a>
+                            </div>  
                     </div> 
                    {% endif %}
             {% endfor %}

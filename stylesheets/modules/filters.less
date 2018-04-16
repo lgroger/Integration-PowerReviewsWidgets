@@ -101,41 +101,6 @@
 .desktop .mz-facetingform .mz-facetingform-facet li{
     font-family: @fontFamily;
 }
-.mz-page-filters-controls {
-    padding: 0 45px 0 10px;
-    text-transform: uppercase;
-    font-family: @fontLight;
-    .mz-pagingcontrols-pagestate-label {
-        margin-top: 12px;
-        font-family: @fontLight;
-        color: @disabled-grey;
-        font-size: 11px;
-        text-transform: uppercase;
-        margin-left: 3%;
-    }
-    .mz-pagingcontrols,
-    .mz-sortby {
-        display: inline-block;
-    }
-    .mz-sortby {
-        margin-left: 35px;
-    }
-    label {
-        font-family: @fontLight;
-        cursor: inherit;
-        display: inline-block;
-    }
-    select {
-        background: transparent;
-        padding: 5px !important;
-        border-radius: 2px;
-        width: 110px !important;
-        height: auto !important;
-        outline: none;
-        cursor: pointer;
-        color: #6c7680;
-    }  
-}
 .selected-filter:hover{
     background-color: #fff;
     border-color: @primaryDarkBlue;
@@ -269,9 +234,9 @@
 	clear: both;	
 }
 .mz-facetingform .mz-facetingform-valuelabel {
-	margin-top: 5px;
-	margin-bottom: 5px;
-	font-size: 13px;	
+	margin: 5px 0;
+    font-size: 14px;
+    vertical-align: middle;	
 }
 .mz-mobile-filter ul.mz-l-sidebaritem-mobile ul li.br-facet-color {
 	margin-bottom: 0;		
@@ -333,7 +298,15 @@
 }
 .br-facet-color.br-color-brown .mz-facetingform-valuelabel {
 	background-color: #663300;
-	color: #663300;		
+    color: #663300;
+}	
+.br-facet-color.br-color-pastel-yellow .mz-facetingform-valuelabel {
+	background-color: #fdfd96;
+	color: #fdfd96;		
+}
+.br-facet-color.br-color-light-pink .mz-facetingform-valuelabel {
+	background-color: #ffb6c1;
+	color: #ffb6c1;		
 }
 .br-facet-color.br-color-burgundy .mz-facetingform-valuelabel {
 	background-color: #800020;
@@ -613,14 +586,6 @@
     .mz-l-paginatedlist .mz-pagingcontrols {
         margin-left: 8px;
     }
-    .mz-pagingcontrols-pagesize-label span.mz-paging-title, .mz-pagingcontrols-pagesort-label span.mz-paging-sorttitle{
-        width:auto !important;
-        margin-right: 10px;
-    }
-    .mz-pagingcontrols-pagesize-label .selectric-responsive, .mz-pagingcontrols-pagesort-label .selectric-responsive{
-        width:106px !important;
-        float: none !important;
-    }
 }
 @media only screen and (max-width:700px){
     .mz-filter-options .mz-filter-inputs{
@@ -678,10 +643,6 @@
 @media only screen and (min-width: 768px) and (max-width: 1150px) and (orientation: landscape) {
     i.close-option {
         padding-right: 2%;
-    }
-    .mz-pagingcontrols-pagesize-label .selectric-responsive{
-        width: 126px !important;
-        float: none !important;
     }
     .mz-pagenumbers .mz-pagenumbers-prev, .mz-pagenumbers .mz-pagenumbers-next, .mz-pagenumbers .mz-pagenumbers-number {
         padding: 4px !important;
@@ -750,10 +711,6 @@
     #selected-filters-mobile-static, #selected-filters-mobile {
         background-color: #fff;
     }
-    .mz-pagingcontrols-pagesort-label .selectric-responsive {
-        width: 196px !important;
-        float: none !important;
-    }
 } 
 
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
@@ -789,10 +746,6 @@
         overflow: visible !important;
         line-height: 55px !important;
     }
-    .mz-pagingcontrols-pagesize-label .selectric-responsive{
-        width: 126px !important;
-        float: none !important;
-    }
     .mz-mobile-filter .mz-filters .mz-filters-btn {
         width: 100%;
         height: inherit;
@@ -823,10 +776,6 @@
     #selected-filters-mobile-static, #selected-filters-mobile {
         background-color: #fff;
     }
-    .mz-pagingcontrols-pagesort-label .selectric-responsive {
-        width: 196px !important;
-        float: none !important;
-    }
 }
 
 @media only screen and (min-width: 320px) and (max-width: 736px) and (orientation: landscape) {
@@ -838,10 +787,6 @@
     } 
     .mz-l-sidebaritem-mobile>li:last-child{
         margin-bottom: 65px;
-    }
-    .mz-pagingcontrols-pagesize-label .selectric-responsive{
-        width: 166px !important;
-        float: none !important;
     }
     .mz-mobile-filter .mz-filters .mz-filters-btn {
         padding: 9px 0px 0px !important;
@@ -932,24 +877,6 @@
 /*===================Selectric v1.9.6=========================*/
 .selectric, .selectric-items{
     font-family: @fontLight;
-}
-.mz-pagingcontrols-pagesize-label, .mz-pagingcontrols-pagesort-label{
-    span.mz-paging-title, span.mz-paging-sorttitle{
-        float: left;
-        width: 50px;
-        margin-top: 8px;
-        color: @disabled-grey;
-        font-size: 11px;
-        text-transform: uppercase;
-    }
-    .selectric-responsive{
-        display: inline-block;
-        width: 130px;
-        @media (min-width: 768px) {
-            border: 1px solid @disabled-grey;
-            border-radius: 2px;
-        }
-    }
 }
 .selectric-wrapper {
     position: relative;

@@ -1,13 +1,6 @@
 .mz-l-paginatedlist {
     overflow: auto;
     position: relative;
-    .mz-pagingcontrols {
-        margin-left: @gutter;
-    } 
-    .mz-pagenumbers {
-        margin-top: 5px;
-        margin-left: @gutter;
-    }
     .mz-l-tiles {
         clear: both;
     }
@@ -72,59 +65,49 @@
     }
     .mz-l-paginatedlist-footer {
         text-align: center;
-        margin: 25px auto;
-        max-width: 1300px;
+        margin: 5px 26px 5px 18px;
         .clearfix();
         .mz-pagenumbers {
-            margin-top: 0;
-            margin-left: 0;
-            float: none;
-            @media @desktop {
-                padding: 0px 6px;
-            }
-        }
-        .mz-pagingcontrols {
-            margin-left: 0;
-        }
-        .mz-pagingcontrols-pagestate-label {
-            float: left;
-            padding-top: 10px;
-            margin-left: 12px;
-            font-family: @fontFamily;
-            font-size: 12px;
-            @media @desktop {
-                width: 100%;
-                text-align: left;
-                margin-bottom: 10px;
-                box-sizing: border-box;
-                margin-left: 0px;
-                padding: 12px; 
-            }
-        }
-        .mz-pagingcontrols-pagesize-label {
-            float: right;
-            padding-top: 5px;
-            margin-right: 11px;
-            > span {
-                font-family: @fontFamily;
-            }
-            select {
-                background: transparent;
-                padding: 5px !important;
-                border-radius: 2px;
-                width: 110px !important;
-                height: auto !important;
-                outline: none;
-                cursor: pointer;
-                color: #6c7680;
-            }
-            @media @desktop {
-                display: none;
-            }
+            margin-top: -10px;
         }
     }
     .mz-l-paginatedlist-list {
         .clearfix();
+    }
+}
+.mz-page-filters-controls {
+    padding: 0 45px 0 10px;
+    text-transform: uppercase;
+    font-family: @fontLight;
+    .mz-pagingcontrols-pagestate-label {
+        margin-top: 12px;
+        font-family: @fontLight;
+        color: @disabled-grey;
+        font-size: 11px;
+        text-transform: uppercase;
+        margin-left: 3%;
+    }
+    .mz-pagingcontrols,
+    .mz-sortby {
+        display: inline-block;
+    }
+    .mz-sortby {
+        margin-left: 35px;
+    }
+    label {
+        font-family: @fontLight;
+        cursor: inherit;
+        display: inline-block;
+    }
+    select {
+        background: transparent;
+        padding: 5px !important;
+        border-radius: 2px;
+        width: 110px !important;
+        height: auto !important;
+        outline: none;
+        cursor: pointer;
+        color: #6c7680;
     }
 }
 @media @tablet {
@@ -134,19 +117,10 @@
                 margin-left: 8px !important;
                 display: inline !important;
             }
-            .mz-pagingcontrols-pagesize-label, .mz-pagingcontrols-pagesort-label {
-                margin-right: 6px !important;
-                padding-top: 0px !important;
-                .selectric-responsive {
-                    width: 114px !important;
-                }
-            }
-            .mz-pagingcontrols-pagestate-label {
-                padding-top: 10px !important;
-                margin-left: 0px !important;
-                font-size: 12px !important;
-            }
         }
+    }
+    .mz-page-filters-controls .mz-pagingcontrols, .mz-page-filters-controls .mz-sortby{
+        width: 215px;
     }
 }
 @media @smallmobile{
@@ -165,5 +139,8 @@
         .mz-l-paginatedlist-header {
             background: #fff;
         }
+    }
+    .mz-page-filters-controls .mz-pagingcontrols, .mz-page-filters-controls .mz-sortby{
+        width: 200px; 
     }
 }

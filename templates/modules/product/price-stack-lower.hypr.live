@@ -11,13 +11,13 @@
      {% if model.hasPriceRange %}
          {% if model.priceRange.lower.discount.discount %}
             <span class="discount-block">
-              <span class="mz-price-discountname">You Save &nbsp;{{model.priceRange.lower.discount.discount.name}}</span>
+              <span class="mz-price-discountname">Save &nbsp;{{model.priceRange.lower.discount.discount.name}}</span>
             </span>
         {% endif %}
      {% else %}
         {% if model.price.discount.discount.name %}      
             <span class="discount-block">
-                <span class="mz-price-discountname">  You Save &nbsp; {{model.price.discount.discount.name}}</span>
+                <span class="mz-price-discountname">Save &nbsp; {{model.price.discount.discount.name}}</span>
             </span>
         {% endif %}
      {% endif %}           
