@@ -324,6 +324,9 @@
 .mz-mobile-filter .mz-filter-mobile-options ul.filter-level-2.sz-childcat li a{
 	padding-left:15px;
 	font-size:13px;
+	@media @tablet {
+		font-size: 16px;
+	}
 }
 .br-seo-mobile-heading {
 	color: @textColor;
@@ -401,7 +404,10 @@ a.br-theme-page {
 	-moz-border-top-right-radius: 5px;
 	border-top-left-radius: 5px;	
 	-webkit-border-top-left-radius: 5px;
-	-moz-border-top-left-radius: 5px;	
+	-moz-border-top-left-radius: 5px;
+	@media @tablet {
+		display: none;
+	}
 }
 #ui-id-2,ulul#ui-id-3 {
 	z-index: 10000000 !important;
