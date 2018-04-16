@@ -2,11 +2,6 @@
     <section class="mz-facetingform mz-filters">
 
 {% if model.facets.length > 0 or pageModel.childrenCategories.length > 0 %}
-    {% comment %}
-    <div class="br-facet-form-header">
-        Narrow by
-    </div>
-    {% endcomment %}
 {% endif %}
 {% if pageModel.childrenCategories.length > 0 %}
         <div class="facet-container">

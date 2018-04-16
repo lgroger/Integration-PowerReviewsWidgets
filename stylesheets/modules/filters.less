@@ -506,9 +506,10 @@
     display: block;
     position: absolute;
     right: 15px;
-    top: 20px;
+    top: 3px;
     margin: auto;
-    @media @tablet {
+    color: @disabled-grey;
+    @media @smallmobile, @tablet {
         display: none;
     }
 }
@@ -685,15 +686,17 @@
     .selectric .label{
         margin: 0;
         font-size: 14px;
-        line-height: 2.5;
+        line-height: 19px;
+        display: block;
+        padding: 10px;
+        color: @primaryDarkBlue;
+        font-family: @fontFamily;
         @media @tablet { 
             display: inline-block;
             margin: 0;
             font-size: 24px;
             overflow: visible;
             line-height: 55px;
-            color: @primaryDarkBlue;
-            font-family: @fontFamily;
         }
     }
 }
@@ -712,11 +715,12 @@
         display: none;
         overflow: auto;
         position: fixed;
-        width: 100%;
+        width: 92%;
         top: 0;
         background-color: #fff;
-        @media @tablet {
-            width: 92%;
+        border: 1px solid @primaryDarkBlue;
+        @media @smallmobile {
+            height: 700px;
         }
         header {
             padding: 5px;
@@ -734,7 +738,9 @@
         }
         ul {
             list-style: none;
-            padding: 0; 
+            @media @tablet, @desktop {
+                padding: 0; 
+            }
         }
         ul.filter-level-2 > li > a {
             color: @primaryDarkBlue;
@@ -746,9 +752,6 @@
     }
     .mobile-filter-footer {
         text-align: center;
-        //position: absolute;
-        width: 100%;
-        //bottom: 62px;
         > .mz-apply-btn,
         > .mz-facetingform-clearall {
             font-family: @fontFamily;
@@ -770,7 +773,7 @@
     }
     ul.mz-l-sidebaritem-mobile {
         list-style: none;
-        height: 750px;
+        height: 550px;
         padding: 0;
         overflow: auto;
         ul {
@@ -827,17 +830,6 @@
             margin: 0;
             padding: 0;
         }
-    }
-}
-@media only screen and (max-width:800px) and (min-width:641px){
-    .mz-page-filters-controls{
-        font-size: 10px;
-        .mz-pagingcontrols, .mz-sortby{
-            width:auto !important;
-        }
-    }
-    .mz-l-paginatedlist .mz-pagingcontrols {
-        margin-left: 8px;
     }
 }
 @media only screen and (min-width: 1162px) and (max-width: 1251px){
@@ -999,24 +991,11 @@
     .mz-l-sidebaritem-mobile>li:last-child{
         margin-bottom: 65px;
     }
-    .mz-mobile-filter .mz-filters .mz-filters-btn {
-        padding: 9px 0px 0px !important;
-        width: 328px;
-        height: 46px;
-    }
     i.close-option{
         padding-right: 2%;
     }
     .mz-filters-bar {
         padding-right: 0 !important;
-    }
-    .mz-sort .selectric .label {
-        display: block;
-        font-size: 13px;
-        line-height: 19px !important;
-        height: 0 !important; 
-        margin: 0 !important;
-        padding: 16px !important;
     }
     .mz-mobile-filter .mz-sort {
         display: inline-block;
@@ -1075,5 +1054,34 @@
     }
     .selectric-hover .selectric .button:after{
         border-top-color: @primaryBlue; 
+    }
+    .mz-facetingform-clearall, .mz-apply-btn{
+        font-family: @fontFamily !important;
+        border-radius: 0px !important;
+        margin-right: 0px;
+        width: 48.9% !important; 
+    }
+    .mz-mobile-filter .mz-filter-mobile-options header{
+        font-family: @fontFamily;
+    }
+    .mz-filter-mobile-options .filter-level-2{
+        padding: 5px 20px;
+        margin:0px;
+    }
+    .active_mob_filter > a{
+        color: @linkColor !important;
+    }
+    .mz-mobile-filter .mz-filter-mobile-options header i{
+        margin-right: 0px !important;
+    }
+    .mz-mobile-filter .mz-filter-mobile-options header i:before{
+        width: 30px;
+        height: 30px;
+        padding: 7px;
+        font-size: 15px;
+        color: @primaryDarkBlue;
+    }
+    .hide_in_mobile{ 
+        display: none;
     }
 }

@@ -62,7 +62,9 @@
                 font-weight: bolder;
                 font-family: @fontGTWalsheimBold;
                 font-size: 2.5rem;
-                
+                @media @smallmobile {
+                    font-size: 28px;
+                }
             }
             .lp-customtext{
                 h1, h2{
@@ -153,13 +155,13 @@
                 }
             }
             .promoright{
-                padding: 0 12px;
                 vertical-align: top;
                 .addthissection{
                     display: none;
                 }
                 .title{
                     margin: 0;
+                    text-align: center;
                 }
                 .mz-cms-content{
                     padding: 0;

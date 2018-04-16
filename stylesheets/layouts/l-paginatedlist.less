@@ -66,13 +66,18 @@
     .mz-l-paginatedlist-footer {
         text-align: center;
         margin: 5px 26px 5px 18px;
+        @media @tablet {
+            margin: 5px 0;
+        }
         .clearfix();
         .mz-pagenumbers {
             margin-top: -10px;
         }
         .mz-pagingcontrols-pagesize-label {
             float: right;
-            margin-right: 20px;
+            @media @desktop {
+                margin-right: 20px;
+            }
         }
     }
     .mz-l-paginatedlist-list {
