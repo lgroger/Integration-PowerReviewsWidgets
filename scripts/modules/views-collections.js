@@ -12,8 +12,8 @@ define([
     'modules/intent-emitter',
     'modules/get-partial-view',
     'modules/colorswatch',
-    'vendor/jQuery.selectric'
-], function($, Backbone, _, Hypr, UrlDispatcher, IntentEmitter, getPartialView, ColorSwatch, Selectric) {
+    'vendor/jQuery.selectric',"modules/api", "modules/models-product"
+], function($, Backbone, _, Hypr, UrlDispatcher, IntentEmitter, getPartialView, ColorSwatch, Selectric, api, ProductModels) {
     var list_view_checker = false;
     function factory(conf) {
 
@@ -279,6 +279,53 @@ define([
         });
 
     }
+    
+    $(document).ready(function () {
+        var user = require.mozuData('user');
+        
+        $(document).on('click', '.emailwhenavailable', function(e){
+             $('#myModal .msg').addClass('hide');
+             $('#myModal .err').html('');
+            var target = e.currentTarget;
+            var productCode = $(target).data('productcode');
+            $('#myModal').show();
+            $('#myModal #productCode').val(productCode);
+            $('#myModal #email').val(user.email);
+        });
+        
+        $(document).on('click', '#myModal .close', function(){
+            $('#myModal').hide();
+        });
+        
+        $(document).on('click', '.submitNotificationEmail', function(){
+            $('#myModal .err').addClass('hide');
+            var email = $("#myModal #email").val() || user.email;
+            
+            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+                $('#myModal .err').addClass('hide');
+            }else{
+                $('#myModal .err').removeClass('hide');
+                return false;
+            }
+            var productCode = $('#myModal #productCode').val();
+                
+             api.get('product', productCode).then(function(sdkProduct) {
+                var product = new ProductModels.Product(sdkProduct.data);
+                api.create('instockrequest', {
+                    email: email, 
+                    customerId: user.accountId,
+                    productCode: product.attributes.variationProductCode || productCode,
+                    locationCode: product.get('inventoryInfo').onlineLocationCode
+                }).then(function () { 
+                    $('#myModal .err').addClass('hide');
+                    $('#myModal .msg').removeClass('hide');
+                }, function (err) { 
+                    $('#myModal .msg').addClass('hide');
+                    $('#myModal .err').text(err.message).removeClass('hide');
+                });
+            });
+        });
+    });
 
     return {
         createFacetedCollectionViews: factory

@@ -27,7 +27,7 @@
   <a href="{{model.content.seoFriendlyUrl}}" class="br-theme-page">Shop theme</a>
 </div>
 {% else %}
-<div class="mz-productlisting {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
+<div class="mz-productlisting {% if model.inventoryinfo.onlineStockAvailable < 1  %} disabledProductList {% endif %} {% block module-classes %}{% endblock module-classes %}" data-mz-product="{{ model.productCode }}">
         <div class="wishlist-icon" id="{{ model.productCode }}" >
             <a href="#" id="{{ model.productCode }}"></a>
         </div>
@@ -44,7 +44,8 @@
         {% endblock product-image %}
         {% if model.inventoryinfo.onlineStockAvailable < 1  %}
                 <div class="out-of-stock">
-                    <a>Out Of Stock</a>
+                    <a>Out Of Stock</a> 
+                    <a class="emailwhenavailable" data-productCode="{{model.productCode}}" data-mz-product-option="widgetNotifyUserAction"> Email when available </a>
                 </div>
         {% else %}
             <div class="quick-view">  
