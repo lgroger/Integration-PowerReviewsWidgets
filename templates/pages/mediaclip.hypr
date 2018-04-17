@@ -109,7 +109,7 @@ custom route settings
                 jQuery("#mcOnSave").show();
             }
            // alert('saved');
-            console.log(data);
+            //console.log(data);
         };
         
         window.mediaclip.hub.launch({

@@ -22,12 +22,12 @@ function ($) {
 			getValues();
 		}
 		if(cookieStr.indexOf(atc)>= 0){
-			console.log("already fired");
+			//console.log("already fired");
 			return(false);
 		}
 		else{
 			addAtc(atc);
-			console.log("need to fire");
+			//console.log("need to fire");
 			return(true);
 		}
 	};
@@ -37,7 +37,7 @@ function ($) {
 		if(!cookieStr){
 			cookieStr = "";
 		}
-		console.log(cookieStr);
+		//console.log(cookieStr);
 	};
 
 	return {

@@ -291,7 +291,7 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                    
 					window.removePageLoader();
                     //console.log(this.wishlistLineitemId);
-                    console.log(self.persType);
+                    //console.log(self.persType);
                     if(self.persType === "mc"){
                         this.dndEngineObj = new DNDEngine.DNDEngine(self.model,self,null,null,self.dndToken,false,this.wishlistLineitemId,this.wishlistId);
                     }

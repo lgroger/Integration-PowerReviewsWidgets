@@ -196,7 +196,6 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 	
     var DNDEngine = function(model,view,lineitemid,dndToken,mcToken,isComponent,wishlistitemid,wishlistid)
     {
-		console.log(arguments);
 		var pageContext = require.mozuData('pagecontext');
         var self = {};
 		self.index = 0; // current index of dndArr
