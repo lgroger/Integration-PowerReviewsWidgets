@@ -788,6 +788,7 @@ define(['modules/jquery-mozu','hyprlive',"modules/api","modules/models-product",
 						// create new form that posts to mediaclip url (must be get, no post)
 						form = $('<form action="'+reeditURL+'" method="get" id="form'+me.time+'_'+me.index+'" name="form'+me.time+'"></form>'); // notice it's not posting to iframe
 						addParameter(form,"token",storeUserToken);
+						addParameter(form,"wi",me.wishlistItemID);
 						// save to object so we can clean it up if needed
 						me.form = form;
 

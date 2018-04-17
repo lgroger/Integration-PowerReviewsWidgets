@@ -125,7 +125,28 @@ custom route settings
         $(document).on('click', '#mcOnSave [data-mc-action="close"]', function(e) {
             e.preventDefault();
             $("#mcOnSave").fadeOut();
-        });        
+        });
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
+        $(function(){
+            var li = getParameterByName('li');
+            var wi = getParameterByName('wi');
+            if(li && li.length){
+                $("#mcOnSave").addClass("mc-projectsaved-in-cart");
+            }
+            else if(wi && wi.length){
+                $("#mcOnSave").addClass("mc-projectsaved-in-wishlist");
+            }
+        });
     </script>
 
     {% else %}

@@ -437,7 +437,12 @@ function ($) {
 
 		var mcCallback = function(storeUserToken){
 			if(storeUserToken){
-				document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
+				if(lineitemID){
+					document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken+"&li="+lineitemID;
+				}
+				else{
+					document.location.href=  "/personalize/"+projectId+"?token="+storeUserToken;
+				}
 			}else{
 				// show error message
 				errorOverlay("Something went wrong.  Please try your request again.");
