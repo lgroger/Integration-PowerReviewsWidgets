@@ -3,7 +3,6 @@
     .mz-pagenumbers-next,
     .mz-pagenumbers-number {
         display: inline-block;
-        padding: 10px 5px;
         border: 1px solid #fff;
         border-radius: 4px;
         text-decoration: none;
@@ -11,7 +10,12 @@
         color: @disabled-grey;
         font-size: 11px;
         text-transform: uppercase;
-    } 
+        padding: 5px 5px;
+        margin: 0px 3px;
+        @media @smallmobile {
+            margin: 0;
+        }
+    }
     a{
         color: @primaryDarkBlue;
         font-size: 15px;

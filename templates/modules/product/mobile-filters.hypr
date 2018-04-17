@@ -5,7 +5,7 @@
             <div class="mz-filters-bar">
                 <div class="mz-filters">
                     <button class="mz-filters-btn">
-                     FILTERS <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                     FILTER {% comment %}<i class="fa fa-caret-down" aria-hidden="true"></i>{% endcomment %}</button>
                 </div>
                 <div class="mz-sort">
                     <select data-mz-value="sortBy" class="mz-pagingcontrols-pagesort-dropdown mz-sort-btn" autocomplete="off">

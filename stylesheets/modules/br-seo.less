@@ -24,7 +24,10 @@
         height: 10px;
         width: 25%;
         vertical-align: super;
-        margin: 0 10px;
+		margin: 0 10px;
+		@media @smallmobile {
+			width: 15%;
+		}
     }
     &:after {
         content: '';
@@ -33,7 +36,10 @@
         margin: 0 10px;
         border-bottom: 2px solid @tertiaryColor;
         height: 10px;
-        width: 25%;
+		width: 25%;
+		@media @smallmobile {
+			width: 15%;
+		}
     }
 }
 .br-related-query {

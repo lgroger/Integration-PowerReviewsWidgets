@@ -2550,12 +2550,18 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         font-size: 18px;
         font-family: @fontFamily;
         color: @primaryDarkBlue;
+        @media @smallmobile {
+            font-size: 14px;
+        }
     }
     .mz-pricestack .mz-pricestack-price-lower:after {
         content: "to";
         padding: 0 2%;
         font-size: 12px;
         color: @textColor;
+        @media @smallmobile {
+            font-size: 11px;
+        }
     }  
     .popular-cat-heading {
         color: @textColor;
@@ -3001,7 +3007,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .mz-productlisting.mz-productlist-tiled {
         height: 240px;
         width: 100%;
-        padding: 10px 10px 40px;
+        padding: 7px;
+        border-radius:4px;
+        @media @smallmobile {
+            height: 155px;
+        }
     }
     .owl-controls .owl-nav {
         position: inherit;
@@ -3548,6 +3558,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         width: 25%;
         vertical-align: super;
         margin: 0 10px;
+        @media @smallmobile {
+            width: 12%;
+        }
     }
     h2:after {
         content: '';
@@ -3557,6 +3570,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         border-bottom: 2px solid @tertiaryColor;
         height: 10px;
         width: 25%;
+        @media @smallmobile {
+            width: 12%;
+        }
     }
 }
 .recommended_products #mz-drop-zone-recommended_slot_heading h2:before, .recommended_products #mz-drop-zone-recommended_slot_heading h2:after {
@@ -3806,7 +3822,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .mz-product .pdp-related-products{
     clear: both;
 }
-@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: landscape){
+@media @tablet {
     .echi-shi-related-products-slider .mz-pricestack-price-lower, .echi-shi-related-products-slider .mz-pricestack-price-up {
         font-size: 12px;
     }
@@ -3816,16 +3832,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: @textColor;
     }
 }
-@media only screen and (min-device-width: 320px) and (max-device-width: 767px) {
-    .echi-shi-related-products-slider .cerumo {
-        margin-left: 3px;
-        font-size: 13px;
-        display: block;
-    }
-    .echi-shi-related-products-slider .mz-pricestack-price-lower, .echi-shi-related-products-slider .mz-pricestack-price-up {
-        font-size: 15px;
-    }
-} 
 @media only screen and (max-width:1024px){    
     .echi-shi-party-packs .party_packs_qty{
         float: none !important;

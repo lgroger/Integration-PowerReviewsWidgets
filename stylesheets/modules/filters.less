@@ -52,7 +52,7 @@
     cursor: pointer;
     border-top: 1px solid @secondaryWhite;
     .seemorecaret{
-        color: @primaryBlue;
+        color: @primaryColor;
         font-size: 12px;
         float: right;
         margin-right: 5%; 
@@ -137,10 +137,9 @@
     position: relative;
     >.mz-filters-btn {
         font-size: 14px;
-        padding: 0px 0 0 30px;
         color: white;
-        background: @primaryDarkBlue;
-        border: solid @primaryDarkBlue 1px;
+        background: @primaryColor;
+        border: solid @primaryColor 1px;
         text-decoration: none;
         text-align: left;
         width: 100%;
@@ -230,9 +229,6 @@
 	left: 3px;
 	top: 5px;
 }
-.mz-mobile-filter ul.mz-facetingform-facet.mz-facetingform-facet-hierarchy  {
-	overflow: hidden;	
-}
 .filter-level-1 {
 	clear: both;	
 }
@@ -244,9 +240,7 @@
 		font-size: 16px;
 	}
 }
-.mz-mobile-filter ul.mz-l-sidebaritem-mobile ul li.br-facet-color {
-	margin-bottom: 0;		
-}
+
 .br-facet-color .mz-facetingform-valuelabel:before {
 	display: none;	
 }
@@ -501,6 +495,10 @@
     color: @disabled-grey;
     height: 20px;
     text-transform: uppercase;
+    @media @smallmobile {
+        margin-top: 2px;
+        font-size: 10px;
+    }
 }
 .selectric .button {
     display: block;
@@ -577,19 +575,19 @@
 .selectric-items {
     display: none;
     position: absolute;
-    top: auto;
+    top: 0;
     left: auto;
     background: #F8F8F8;
     border: 1px solid #C4C4C4;
     z-index: -1;
     box-shadow: 0 0 10px -6px;
     width: 100% !important;
-    @media (min-width: 768px) {
-        top: 54px;
+    @media @tablet {
+        top: 18px;
         left: 0;
     }
-    @media (min-width: 1151px) {
-        top: 35px;
+    @media @desktop {
+        top: 25px;
         left: 0;
     }
 }
@@ -661,20 +659,6 @@
 .icon-final-swap:hover img{
     width:40px !important;
 }
-.mz-mobile-filter .mz-page-filters-controls{
-    .selectric{
-   background-color: inherit !important;
-   border:0px !important;
-   } 
-   .mz-paging-title{
-       margin-top: 1px;
-       width: 20px;
-   }
-}
-.mz-mobile-filter .selectric{
-    margin: 0;
-    height: inherit;
-}
 .mz-filters-bar .mz-sort{
     .mz-sort-btn{
         margin-top: 0;
@@ -689,27 +673,72 @@
         line-height: 19px;
         display: block;
         padding: 10px;
-        color: @primaryDarkBlue;
+        color: @primaryColor;
         font-family: @fontFamily;
+        border: 1px solid @primaryColor;
+        height: 24%;
+        background: white;
         @media @tablet { 
             display: inline-block;
             margin: 0;
             font-size: 24px;
             overflow: visible;
-            line-height: 55px;
+            line-height: 40px;
+            height: 62%;
+            width: 95%;
         }
     }
 }
 .mz-mobile-filter {
-    .mz-page-filters-controls {
+    .mz-filters{
+        vertical-align: top;
+        height: inherit;
+        width: 50%;
+        border: none;
+        .mz-filters-btn {
+            text-align: center;
+        }
+    }
+    .mz-sort {
+        width: 50%;
+        float: right;
+        text-align: center;
+        box-sizing: border-box;
+        background-color: @secondaryWhite;
+        height: 35px;
+        @media (min-width: 768px) {
+            height: 57px;
+        }
+        .mz-sort-btn {
+            font-family: @fontFamily;
+            font-size: 14px;
+            width: 50%;
+            color: @primaryColor;
+            background: @secondaryWhite;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            height: inherit;
+            margin: 0;
+            padding: 0;
+        }
+    }
+    .mz-page-filters-controls{
+        .selectric{
+            background-color: inherit !important;
+            border:0px !important;
+        } 
+        .mz-paging-title{
+            margin-top: 1px;
+            width: 20px;
+        }
         select {
             border: none;
         }
     }
-    .mz-sort-btn {
-        font-family: @fontFamily;
-        font-size: 14px;
-        padding: 3.5px 0;
+    .selectric{
+        margin: 0;
+        height: inherit;
     }
     .mz-filter-mobile-options {
         display: none;
@@ -720,7 +749,7 @@
         background-color: #fff;
         border: 1px solid @primaryDarkBlue;
         @media @smallmobile {
-            height: 700px;
+            height: 550px;
         }
         header {
             padding: 5px;
@@ -800,36 +829,15 @@
                 font-size: 14px;
             }
         }
+        ul li.br-facet-color {
+            margin-bottom: 0;
+        }
+    }
+    ul.mz-facetingform-facet.mz-facetingform-facet-hierarchy  {
+        overflow: hidden;	
     }
     select.mz-filters {
         width: 100%;
-    }
-    .mz-filters {
-        .mz-filters-btn {
-            text-align: center;
-        }
-    }
-    .mz-sort {
-        width: 50%;
-        float: right;
-        text-align: center;
-        box-sizing: border-box;
-        background-color: @secondaryWhite;
-        height: 35px;
-        @media (min-width: 768px) {
-            height: 57px;
-        }
-        .mz-sort-btn {
-            width: 50%;
-            color: @primaryDarkBlue;
-            background: @secondaryWhite;
-            text-decoration: none;
-            text-align: center;
-            display: inline-block;
-            height: inherit;
-            margin: 0;
-            padding: 0;
-        }
     }
 }
 @media only screen and (min-width: 1162px) and (max-width: 1251px){
@@ -1001,13 +1009,6 @@
         display: inline-block;
         width: 50%;
     }
-    .selectric .label {
-        font-size: 15px !important;
-    }
-    .mz-filter-mobile-options .mz-l-sidebar {
-        float: none;
-        padding-right: 0;
-    }
     .mz-page-filters-controls.desktop {
         display: none;
     }
@@ -1053,7 +1054,7 @@
         background: #fff;
     }
     .selectric-hover .selectric .button:after{
-        border-top-color: @primaryBlue; 
+        border-top-color: @primaryColor; 
     }
     .mz-facetingform-clearall, .mz-apply-btn{
         font-family: @fontFamily !important;

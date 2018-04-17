@@ -27,15 +27,15 @@
                 {% else %}
                     <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
                 {% endif %}
-                <iframe width="100%" height="100%" id="video-frame"></iframe>
+                {% comment %}<iframe width="100%" height="100%" id="video-frame"></iframe>{% endcomment %}
             </div>
             {% if model.properties and model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
                 <div class="product-color-swatch" id="color-swatch-elem">
                     {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
                         <span></span>
                         <ul color-swatch-data="{{ prdValue }}">
-                          {# include current product as first swatch #}
-                          <li class="swatch-image"><a href="{% make_url "product" model %}" title="{{ model.content.productName }}"><img src="{% make_url "image" model.mainImage with max=50 as_parameter %}" /></a></li></ul>
+                          {% comment %}
+                          <li class="swatch-image"><a href="{% make_url "product" model %}" title="{{ model.content.productName }}"><img src="{% make_url "image" model.mainImage with max=50 as_parameter %}" /></a></li>{% endcomment %}</ul>
                     {% endwith %}
                 </div>
             {% endif %}

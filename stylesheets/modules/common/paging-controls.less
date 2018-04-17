@@ -6,8 +6,12 @@
         text-transform: uppercase;
         display: inline-block;
         float: left;
-        @media @tablet {
-            margin-top: 7px;
+        margin-top: 7px;
+        @media @desktop {
+            margin-top: 0;
+        }
+        @media @smallmobile {
+            font-size: 10px;
         }
     }
     .mz-pagingcontrols-pagesize-label {
@@ -20,13 +24,31 @@
             font-family: @fontLight;
             font-size: 11px;
             text-transform: uppercase;
+            @media @tablet {
+                margin-right: 6px;
+                padding-top: 0px;
+            }
+            @media @smallmobile {
+                margin-top: 7px;
+                width:auto;
+                margin-right: 0;
+                font-size: 10px;
+            }
         }
         .selectric-responsive{
             display: inline-block;
             width: 130px;
-            @media (min-width: 768px) {
-                border: 1px solid @disabled-grey;
-                border-radius: 2px;
+            border: 1px solid @disabled-grey;
+            border-radius: 2px;
+            @media @tablet {
+                width: 114px;
+                float: none;
+            }
+            @media @smallmobile {
+                width: 80px;
+                float: right;
+                display: block;
+                border: none;
             }
         }
         select {
@@ -38,24 +60,6 @@
             outline: none;
             cursor: pointer;
             color: #6c7680;
-        }
-        @media @tablet {
-            margin-right: 6px;
-            padding-top: 0px;
-            .selectric-responsive {
-                width: 114px ;
-                float: none;
-            }
-        }
-        @media @smallmobile {
-            span.mz-paging-title{
-                width:auto;
-                margin-right: 10px;
-            }
-            .selectric-responsive{
-                width:106px;
-                float: none;
-            }
         }
     }
     .mz-pagingcontrols-pagesize-dropdown {

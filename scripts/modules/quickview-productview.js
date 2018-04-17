@@ -17,7 +17,7 @@ function ($,Hypr,Api,ProductView,_) {
             var i = 0, j = 0;
             
             var colorName = null, href = null, objA = null, objLI = null, temp = null, src = null;
-            var limit  = (swatchProduct.items.length > 8) ? 8: swatchProduct.items.length;
+            var limit  = (swatchProduct.items.length > 9) ? 9: swatchProduct.items.length;
 
 			if(limit > 0 && mode==="asColors"){
 				var colorText = "Colors: ";
@@ -60,17 +60,17 @@ function ($,Hypr,Api,ProductView,_) {
 						$(objA).attr("href", "/"+swatchProduct.items[i].content.seoFriendlyUrl+"/p/" + swatchProduct.items[i].productCode).attr("title",swatchProduct.items[i].content.productName);
 						$("<img/>").attr('src', src).appendTo(objA);
 						objLI = document.createElement("li");
-						$(objLI).addClass("swatch-image").css('border-radius', '50%').append(objA);
+						$(objLI).addClass("swatch-image").append(objA);
 						$('ul[color-swatch-data]').append(objLI);
 					}
                 }
             }
-            if(totalColorSwatchCount > 6) {
+            if(totalColorSwatchCount > 9) {
                 objA = document.createElement("a");
                 if(mode == "asColors") {
-                    $(objA).attr("href", product.url).attr("class", "more-link").html("See All Colors");
+                    $(objA).attr("href", product.url).attr("class", "more-link");
                 }else{
-                    $(objA).attr("href", product.url).attr("class", "more-link").html("See All Styles");
+                    $(objA).attr("href", product.url).attr("class", "more-link");
                 }
                 objLI = document.createElement("li");
                 $(objLI).addClass("more-link").append(objA);
@@ -264,8 +264,8 @@ function ($,Hypr,Api,ProductView,_) {
 					if(proCodes){
 						var procodeArray = proCodes.split(',');
 						var totalColorSwatchCount =  procodeArray.length;
-						// should already include 1 swatch for current product, add up to 7 more
-						var productCodefilter = procodeArray.slice(0,7).join(' or ProductCode eq ');
+						// should already include 1 swatch for current product, add up to 8 more
+						var productCodefilter = procodeArray.slice(0,9).join(' or ProductCode eq ');
 						if (typeof proCodes !== "undefined" && procodeArray.length>0) {
 							var mode = "asImages";
 							var properties = me.model.get('properties');

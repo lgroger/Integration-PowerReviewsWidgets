@@ -31,7 +31,6 @@
         max-height: 350px;
     }
 }
-
 #mz-added-to-cart {
     > .popup {
         position: relative;
@@ -79,40 +78,49 @@
         background: @primaryDarkBlue;
     }
 }
-
 .mz-quick-view-wrapper {
     position: relative;
     background-color: #fff;
-    width: 85%;
     margin: 30px auto;
     border-radius: 2px;
     font-family: @fontFamily;
+    width: 85%;
+    max-width: 1250px;
+    @media @tablet, @desktop {
+        line-height: normal;
+        vertical-align: middle;
+        display: inline-block;
+        text-align:left;
+        .mz-productoptions{
+            margin-bottom: 10px;
+        }
+    }
+    @media @smallmobile {
+            width:710px;
+    }
     .container-left,
     .container-right {
         box-sizing: border-box;
         float: left;
         width: 50%;
-        min-height: 550px;
     } 
     .container-left {
         padding: 20px;
         .product-image {
+            display: block;
             text-align: center;
             box-sizing: border-box;
             width: 100%;
             height: 100%;
             padding: 3%;
-            display: flex;
             align-items: center;
-            border: 1px solid rgba(128, 128, 128, 0.16);
             position: relative;  
             img {
                 max-width: 100%;
                 margin: 0 auto;
             }
             iframe {
-                border: none; 
-                
+                border: none;    
             }
             .mz-productlisting-imageplaceholder {
                 display: block;
@@ -121,6 +129,43 @@
                 padding: 80px 0;
                 margin: 100px auto;
                 text-align: center;
+            }
+        }
+        .product-color-swatch {
+            margin-top: 15px;
+            span {
+                display: none;
+            }
+            ul {
+                margin: 0;
+                list-style: none;
+                text-align: left;
+                li.swatch-image {
+                    float: left;
+                    width: 20px;
+                    height: 20px;
+                    margin: 0 5px;
+                    img {
+                        max-width: 100%;
+                    }
+                }
+                li.more-link {
+                    width: 20px;
+                    height: 20px;
+                    margin: 0;
+                    border-radius: 0;
+                    float: left;
+                }
+                li a.more-link {
+                    width: 0;
+                    height: 0;
+                    border-top: 8px solid transparent;
+                    border-left: 16px solid @primaryDarkBlue;
+                    border-bottom: 8px solid transparent;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-left: 5px;
+                }
             }
         }
         .product-image-slider {
@@ -138,7 +183,6 @@
             }
             .owl-carousel .owl-item img{
                 max-width: 100%;
-              /*  height: 70px;*/ 
                border: 1px solid rgba(128, 128, 128, 0.16);
                 border-radius: 3px;
                 cursor:pointer;
@@ -158,12 +202,10 @@
                 right: -4%;
             }
             .owl-prev:after{
-              /*  content:url('../resources/images/prev.png');*/
                 width: 50px;
                 height: 50px;
             }
             .owl-next:after{
-              /*  content:url('../resources/images/next.png');*/
                 width: 50px;
                 height: 50px;
             }
@@ -205,11 +247,11 @@
     .container-right {
         padding: 8px 30px;
         .quickviewcertona{
-            border: 2px solid orange;
+            border: 2px solid @tertiaryColor;
             border-radius: 10px;
             max-height: 275px;
             .quickview-recommended-title{
-                color: green;
+                color: @primaryColor;
                 font-size: 16px; 
                 font-weight: 700;
                 text-align: center;
@@ -277,6 +319,7 @@
                 font-size: 16px;
                 color: @textColor;
             }
+            text-align: justify;
         }
         .product-rating-review {
             .product-rating {
@@ -309,9 +352,7 @@
                     margin: 0 0px;
                 }
             }
-        }  
-        
-        
+        }
         .product-color-swatch {
             padding: 10px 0;
             > ul {
@@ -364,7 +405,6 @@
                         img {
                             width: 100%;
                             height: 100%
-
                         }
                     }
                 }
