@@ -190,25 +190,6 @@
             .owl-carousel{
                 position: relative;
             }
-            .owl-prev{
-                position: absolute;
-                top: -10px;
-                left: -8% !important;
-                margin-left: 3% !important; 
-            } 
-            .owl-next{
-                position: absolute;
-                top: -10px;
-                right: -4%;
-            }
-            .owl-prev:after{
-                width: 50px;
-                height: 50px;
-            }
-            .owl-next:after{
-                width: 50px;
-                height: 50px;
-            }
             .owl-dots{
                 display:none !important; 
             }
@@ -245,7 +226,52 @@
         }
     }
     .container-right {
-        padding: 8px 30px;
+        padding: 20px;
+        .product-title {
+            h2 {
+                font-size: 32px;
+                color: @primaryColor;
+                text-transform: uppercase;
+                font-family: @fontFamily;
+                margin: 0;
+            }
+        }
+        .left {
+            float: left;
+            width: 65%;
+        }
+        .product-description {
+            color: @primaryDarkBlue;
+            font-family: @fontLight;
+            font-size: 14px;
+        }
+        p {
+            margin-top: 15px;
+            margin-bottom: 35px;
+            font-family: @fontLight;
+            font-size: 14px;
+            color: @disabled-grey;
+        }
+        .qv-available {
+            color: @primaryDarkBlue;
+            font-size: 14px;
+            & .qv-stock-message {
+                color: @secondaryBlue;
+            }
+            & .mz-productdetail-notpurchasable {
+                color: @secondaryRed;
+            }
+        }
+        .more-details {
+            display: inline-block;
+            margin-left: 10px;
+            text-decoration: underline;
+            color: @primaryColor;
+            text-transform: lowercase;
+        }
+        .right {
+            text-align: right;
+        }
         .quickviewcertona{
             border: 2px solid @tertiaryColor;
             border-radius: 10px;
@@ -308,19 +334,6 @@
         .product-quantity{
             clear: both;
         }
-        .product-title {
-            h2 {
-                font-size: 26px;
-                color: @textColor;
-            }
-        }
-        .product-description {
-            p {
-                font-size: 16px;
-                color: @textColor;
-            }
-            text-align: justify;
-        }
         .product-rating-review {
             .product-rating {
                 display: inline-block;
@@ -328,14 +341,13 @@
                 .pr-snippet-stars {
                     float: none;
                     border: none;
-                    margin-right: 10px;
                     display: inline-block;
                     vertical-align: sub;
                     > span {
                         display: none;
                     }
                     .pr-stars {
-                        float: none;
+                        float: right;
                         height: 19px;
                         line-height: 20px;
                         width: 103px;
@@ -346,10 +358,18 @@
                 }
             }
             .product-review {
-                display: inline-block;
-                vertical-align: middle;
+                display: block;
+                margin-top: 8px;
+                font-family: @fontLight;
                 a {
-                    margin: 0 0px;
+                    display: block;
+                    color: @primaryDarkBlue;
+                }
+                #pr-write-review {
+                    margin: 0;
+                    color: @primaryColor;
+                    text-transform: lowercase;
+                    text-decoration: underline;
                 }
             }
         }
@@ -410,14 +430,11 @@
                 }
             }
         }
-        .qv-available {
-            color: @textColor;
-            & .qv-stock-message {
-                color: @secondaryBlue;
-            }
-            & .mz-productdetail-notpurchasable {
-                color: @secondaryRed;
-            }
+        .mz-productoptions-optionlabel {
+            margin-bottom: 10px;
+            display: block;
+            font-size: 14px;
+            float: none;
         }
         .product-price {
             .mz-pricestack {
@@ -485,8 +502,7 @@
                                 position: absolute;
                                 top: -7px;
                                 left: -6px;
-                        } 
-                   
+                        }
                 }
             }
                 .addthis_button_preferred_1 {}
