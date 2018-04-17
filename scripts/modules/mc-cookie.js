@@ -323,7 +323,7 @@ function ($) {
 	var onUserLogin = function(callback){
 		//console.log('onUserLogin');
 		var cookie = getValues();
-		console.log(cookie);
+		//console.log(cookie);
 		if(cookie){ // only continue if user already has a mediaclip user token string
 			if(cookie.anon){
 				// anonymous user was converted to logged in user
@@ -410,7 +410,7 @@ function ($) {
 				data:{"userId": userId,"token": storeUserToken}
 			}).done(function(data){
 				callback(data);
-				console.log(data);
+				//console.log(data);
 			});
 		};
 		getToken(projectCallback);
