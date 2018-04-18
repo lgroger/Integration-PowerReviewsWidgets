@@ -354,6 +354,9 @@ function ($,Hypr) {
 				callback();
 			}
 		}
+		else{
+			callback();
+		}
 	};
 
 	var deleteCookie = function(){
