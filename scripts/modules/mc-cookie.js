@@ -1,5 +1,5 @@
-define(["modules/jquery-mozu"],
-function ($) {
+define(["modules/jquery-mozu",'hyprlive'],
+function ($,Hypr) {
 	
 /* 
 	cookie string should be set in this format: "anon|userId|expirationUtc|token" where anon is 1 (true) or 0 (false)
@@ -14,6 +14,21 @@ function ($) {
 		secure:	false,
 		path: "/"
 	};
+
+	// see if killswitch is activated
+	var mcEnabled = Hypr.getThemeSetting('enableMediaclip');
+	if(!mcEnabled){
+		// see if userID is authorized for mediaclip
+		var user = require.mozuData('pagecontext').user;
+		if(!user.isAnonymous){
+			var mcList = Hypr.getThemeSetting('mediaclipUserList').split(",");
+			if(mcList.indexOf(user.accountId.toString()) > -1){
+				mcEnabled = true;
+			}
+		}
+	}
+	console.log("mcEnabled: "+mcEnabled);
+	
 	var setCookie = function(newUserToken,expirationUtc,user){
 		if(!user){
 			user = require.mozuData('pagecontext').user;
@@ -286,22 +301,24 @@ function ($) {
 
 	};
 	var getMcImages = function(projectList){
-		//console.trace('getMcImages');
-		//console.log(projectList);
-		if($("img[data-mz-token-type='mc']").length > 0 || (projectList && projectList.length)){
-			if(!projectList){
-				projectList = [];
-				// since we have different html for desktop vs mobile, gather up list of all tokens first to try to eliminate duplicate
-				$("img[data-mz-token-type='mc']").each(function(){
-					var projectId = $(this).attr("data-mz-token");
-		
-					if(projectList.indexOf(projectId) === -1){
-						projectList.push(projectId);
-					}
-				});
-			}
+		if(mcEnabled){
+			//console.trace('getMcImages');
+			//console.log(projectList);
+			if($("img[data-mz-token-type='mc']").length > 0 || (projectList && projectList.length)){
+				if(!projectList){
+					projectList = [];
+					// since we have different html for desktop vs mobile, gather up list of all tokens first to try to eliminate duplicate
+					$("img[data-mz-token-type='mc']").each(function(){
+						var projectId = $(this).attr("data-mz-token");
 			
-			initializeHub(loopOverImages.bind(null,projectList));
+						if(projectList.indexOf(projectId) === -1){
+							projectList.push(projectId);
+						}
+					});
+				}
+				
+				initializeHub(loopOverImages.bind(null,projectList));
+			}
 		}
 	};
 
@@ -321,20 +338,22 @@ function ($) {
 	};
 
 	var onUserLogin = function(callback){
-		//console.log('onUserLogin');
-		var cookie = getValues();
-		//console.log(cookie);
-		if(cookie){ // only continue if user already has a mediaclip user token string
-			if(cookie.anon){
-				// anonymous user was converted to logged in user
-				convertToken(cookie,callback);
+		if(mcEnabled){
+			//console.log('onUserLogin');
+			var cookie = getValues();
+			//console.log(cookie);
+			if(cookie){ // only continue if user already has a mediaclip user token string
+				if(cookie.anon){
+					// anonymous user was converted to logged in user
+					convertToken(cookie,callback);
+				}
+				else{
+					callback();
+				}
 			}
 			else{
 				callback();
 			}
-		}
-		else{
-			callback();
 		}
 	};
 
@@ -359,61 +378,73 @@ function ($) {
    };
 
 	var copyProject = function(projectId){
-		window.showPageLoader();
-		var mcCallback = function(storeUserToken){
-			$.post({
-				url: "/copy-mc-project/"+projectId,
-				dataType:"json",
-				data:{"token": storeUserToken}
-			}).done(function(data){
-				if(data.projectId){
-					document.location.href=  "/personalize/"+data.projectId+"?token="+storeUserToken;
-				}
-				else{
-					// show error message
-					errorOverlay("Something went wrong.  Please try your request again.");
-					console.log('error copying project');
-					console.log(data);
-					window.removePageLoader();
-				}
-			});
-		};
+		if(mcEnabled){
+			window.showPageLoader();
+			var mcCallback = function(storeUserToken){
+				$.post({
+					url: "/copy-mc-project/"+projectId,
+					dataType:"json",
+					data:{"token": storeUserToken}
+				}).done(function(data){
+					if(data.projectId){
+						document.location.href=  "/personalize/"+data.projectId+"?token="+storeUserToken;
+					}
+					else{
+						// show error message
+						errorOverlay("Something went wrong.  Please try your request again.");
+						console.log('error copying project');
+						console.log(data);
+						window.removePageLoader();
+					}
+				});
+			};
 
-		getToken(mcCallback);
-	};
-	var deleteProject = function(projectId,callback){
-		var mcCallback = function(storeUserToken){
-			$.post({
-				url: "/delete-mc-project/"+projectId,
-				dataType:"json",
-				data:{"token": storeUserToken}
-			}).done(function(data){
-				callback(data);
-			});
-		};
-
-		getToken(mcCallback);
-	};
-	var getProjects = function(callback){
-		var user = require.mozuData('pagecontext').user;
-		var userId,token;
-		if(user.isAnonymous || user.accountId === 0){
-			userId = user.userId;
+			getToken(mcCallback);
 		}
 		else{
-			userId = user.accountId.toString(); // numeric value must be converted to string so we can compare string to string below
+			errorOverlay("This functionality is currently unavailable");
 		}
-		var projectCallback = function(storeUserToken){
-			$.post({
-				url: "/get-personalized-projects",
-				dataType:"json",
-				data:{"userId": userId,"token": storeUserToken}
-			}).done(function(data){
-				callback(data);
-				//console.log(data);
-			});
-		};
-		getToken(projectCallback);
+	};
+	var deleteProject = function(projectId,callback){
+		if(mcEnabled){
+			var mcCallback = function(storeUserToken){
+				$.post({
+					url: "/delete-mc-project/"+projectId,
+					dataType:"json",
+					data:{"token": storeUserToken}
+				}).done(function(data){
+					callback(data);
+				});
+			};
+
+			getToken(mcCallback);
+		}
+		else{
+			errorOverlay("This functionality is currently unavailable");
+		}
+	};
+	var getProjects = function(callback){
+		if(mcEnabled){
+			var user = require.mozuData('pagecontext').user;
+			var userId,token;
+			if(user.isAnonymous || user.accountId === 0){
+				userId = user.userId;
+			}
+			else{
+				userId = user.accountId.toString(); // numeric value must be converted to string so we can compare string to string below
+			}
+			var projectCallback = function(storeUserToken){
+				$.post({
+					url: "/get-personalized-projects",
+					dataType:"json",
+					data:{"userId": userId,"token": storeUserToken}
+				}).done(function(data){
+					callback(data);
+					//console.log(data);
+				});
+			};
+			getToken(projectCallback);
+		}
 	};
 	var setWishlistToken = function(token, wishlistItemID, wishlistID){
 		// update entity for token with wishlist info
@@ -453,44 +484,46 @@ function ($) {
 		getToken(mcCallback);
 	};
 
-	// needed for added to cart overlay, cart & my projects pages
-	$(document).ready(function() {
-		$(document).on('click','.copy-mc-project',function(e){
-			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-			copyProject(projectId);
-		});
-		$(document).on('click','.delete-mc-project',function(e){
-			if(confirm("Are you sure you want to delete your work?")){
-				window.showPageLoader();
+	if(mcEnabled){
+		// needed for added to cart overlay, cart & my projects pages
+		$(document).ready(function() {
+			$(document).on('click','.copy-mc-project',function(e){
 				var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-				//console.log(this);
-				//console.log(projectId);
-			
-				var self = this;
-				var onDeleteCallback = function(data){
-					if(data.projectId){
-						//successful
-						$(self).parents("[data-mc-project='"+data.projectId+"']").remove();
-					}
-					else{
-						// show error message
-						errorOverlay("Something went wrong.  Please try your request again.");
-						console.log('error deleting project');
-						console.log(data);
-					}
-					window.removePageLoader();
-				};
-				deleteProject(projectId,onDeleteCallback);
-			}
+				copyProject(projectId);
+			});
+			$(document).on('click','.delete-mc-project',function(e){
+				if(confirm("Are you sure you want to delete your work?")){
+					window.showPageLoader();
+					var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+					//console.log(this);
+					//console.log(projectId);
+				
+					var self = this;
+					var onDeleteCallback = function(data){
+						if(data.projectId){
+							//successful
+							$(self).parents("[data-mc-project='"+data.projectId+"']").remove();
+						}
+						else{
+							// show error message
+							errorOverlay("Something went wrong.  Please try your request again.");
+							console.log('error deleting project');
+							console.log(data);
+						}
+						window.removePageLoader();
+					};
+					deleteProject(projectId,onDeleteCallback);
+				}
+			});
+			$(document).on('click','.mc-project-atc',function(e){
+				var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
+				if(projectId){
+					window.showPageLoader();
+					reEditProject(projectId, null);
+				}
+			});
 		});
-		$(document).on('click','.mc-project-atc',function(e){
-			var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-			if(projectId){
-				window.showPageLoader();
-				reEditProject(projectId, null);
-			}
-		});
-	});
+	}
 
 	return {
 		getToken:getToken,
