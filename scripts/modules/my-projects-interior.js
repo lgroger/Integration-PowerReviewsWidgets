@@ -19,7 +19,7 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
                         $project.append($('<a href="/p/'+p.entityContainer.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
                     }
                     
-                    $project.append($('<button class="mc-project-atc">Edit<span> / Add to Cart</span></button>'));
+                    $project.append($('<button class="mc-project-atc">Edit<span> &amp; Add to Cart</span></button>'));
                     $project.append($('<button class="delete-mc-project">Delete</button>'));
                     $project.append($('<button class="copy-mc-project">Copy</button>'));
                     $projectHolder.append($project);
