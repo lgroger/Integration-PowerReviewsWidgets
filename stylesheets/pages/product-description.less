@@ -1416,8 +1416,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .custom-qty {
         background-color: @secondaryWhite;
         padding: 9px 7px 7px 1px;
-        color: gray;
-        border-radius: 20px;
+        color: @white;
+        border-radius: 5px;
         border: 1px solid #e6e6e6;
         input[type="button"] {
             display: inline-block;
@@ -1565,10 +1565,18 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         &.is-crossedout + .mz-price.is-saleprice{
             margin-left: 2px;
             font-size: 12px;
+            font-family: @fontLight;
+            color: @disabled-grey;
+        }
+        &.is-crossedout {
+            margin-left: 2px;
+            font-size: 12px;
+            font-family: @fontLight;
+            color: @disabled-grey;
         }
     }
     .custom-qty {
-        margin-left: 9%;
+        margin-left: 4px;
     }
     .product-video .owl-next {
         margin-right: -32px !important;
