@@ -38,7 +38,7 @@ define([
             $(".super-page-hidden-facets li input[data-mz-facet='tenant~product-type']").parent().parent().addClass("productType clearfix");
             $('.super-page-hidden-facets .productType li input:checkbox').on("change",function() {
                     if($(this).is(":checked")) {
-                        console.log("Checked");
+                        //console.log("Checked");
                         $(".mz-facetingform input:checkbox").not($(this)).prop("checked",false);
                          $(".mobile-filter-footer .mz-apply-btn").click();
                     }
@@ -47,7 +47,7 @@ define([
        
           } 
           if($('.mz-facetingform-facet-hierarchy').hasClass('facetli')){
-            console.log('true');
+            //console.log('true');
 
             $('.facetli').each(function(i,v){
               

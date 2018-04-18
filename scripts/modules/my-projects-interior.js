@@ -31,61 +31,6 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
 				$noprojects.show();
 			}
 		}
-
-		/*
-        var loopRecords = function(arr,html,label){
-            if(arr.length){
-                var $projectHolder = $("<div />");
-                if(label){
-                    $projectHolder.append($("<h1>"+label+"</h1>"));
-                }
-                for(var i=0;i<arr.length;i++){
-                    var p = arr[i];
-                    var $project = $("<div />").attr("data-mc-project",p.id).attr("class","mc-saved-project").append("<div>"+p.id+"</div>").css({"float":"left","width":"350px","height":"75px"});
-					$project.append($('<a href="/p/'+p.item.productCode+'">View Product Information</a>').attr("class","mc-product-link"));
-                    
-                    if(html){
-                        $project.append($(html).clone());
-                    }
-                    $projectHolder.append($project);
-                }
-                $projectHolder.append($('<div style="clear:both" />'));
-				$projects.append($projectHolder);
-            }
-        };
-        
-        if(res && res.inCart && res.inCart.length){
-            loopArray(res.inCart, $('<button class="delete-mc-project">Delete</button>'),"In Cart/Orders");
-        }
-        if(res && res.mcOnly && res.mcOnly.length){
-            loopArray(res.mcOnly, $('<button class="delete-mc-project">Delete</button>'),"Not in Entity List");
-        }
-        if(res && res.mzdbOnly && res.mzdbOnly.length){
-            loopRecords(res.mzdbOnly, $('<button class="ondelete-mc-project">Delete Entity</button>'),"Not in Meidaclip");
-        } 
-        $(document).on('click','.ondelete-mc-project',function(e){
-            var projectId = $(this).parents("[data-mc-project]").attr("data-mc-project");
-            console.log(this);
-            console.log(projectId);
-
-            var self = this;
-            // call on delete endpoint
-            var mcCallback = function(storeUserToken){
-                $.post({
-                    url: "/on-mc-project-delete",
-                    dataType:"json",
-                    data:{"projectId":projectId} // mimic what mediaclip passes to us
-                }).done(function(data){
-                    if(data.projectId){
-                        console.log(data);
-                        // successful
-                        $(self).parents("[data-mc-project='"+data.projectId+"']").remove();
-                    }
-                });
-            };
-
-            getToken(mcCallback);
-        });*/
 	};
 
     $(document).ready(function () {

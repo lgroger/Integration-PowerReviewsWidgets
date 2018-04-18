@@ -399,7 +399,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	                    }
 	                });
 	            }else {
-	                console.log("Empty");
+	              //  console.log("Empty");
 	            }
 	        });
 	        $("#wishlist-overlay").click(function(e){
@@ -485,7 +485,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 		                    }
 		                });
 		            }else {
-		                console.log("Empty");
+		               // console.log("Empty");
 		            }
 		        });
 			}
@@ -552,7 +552,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 	                    }
 	                });
 	            }else {
-	                console.log("Empty");
+	               // console.log("Empty");
 	            }
 	        });
 	        $("#wishlist-overlay").click(function(e){

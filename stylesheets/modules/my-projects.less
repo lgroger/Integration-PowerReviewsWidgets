@@ -6,8 +6,10 @@
 			display: block;
 		}
 	}
+@media (min-width: 768px) {
 .mediaclip-designer-wrapper {
     top: 30px;
+}
 }
 .mz-mcpers #page-wrapper {
     margin: 0;
@@ -361,3 +363,14 @@
 }
 /* end copy link in added-to-cart popup */
 /* END MEDIACLIP ADDED TO CART STYLES */
+
+/* mc-projectsaved-in-cart & mc-projectsaved-in-wishlist are added dynamically to #mcOnSave based on query parameters */
+.mc-save-editcart,.mc-save-editwishlist{
+	display:none;
+}
+#mcOnSave.mc-projectsaved-in-cart .mc-save-intro, #mcOnSave.mc-projectsaved-in-wishlist .mc-save-intro{
+	display:none;
+}
+#mcOnSave.mc-projectsaved-in-cart .mc-save-editwishlist, #mcOnSave.mc-projectsaved-in-wishlist .mc-save-editcart{
+	display:block;
+}
