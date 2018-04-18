@@ -126,7 +126,20 @@ custom route settings
             e.preventDefault();
             $("#mcOnSave").fadeOut();
         });
-
+    {% with siteContext.domains.primary.domainName as domainName %}
+        $(document).on('click', '#mcOnSave [data-mc-action="projects"]', function(e) {
+            e.preventDefault();
+            window.mediaclip.hub.redirect('//{{ domainName }}/my-projects');
+        });
+        $(document).on('click', '#mcOnSave [data-mc-action="cart"]', function(e) {
+            e.preventDefault();
+            window.mediaclip.hub.redirect('//{{ domainName }}/cart');
+        });
+        $(document).on('click', '#mcOnSave [data-mc-action="wishlist"]', function(e) {
+            e.preventDefault();
+            window.mediaclip.hub.redirect('//{{ domainName }}/myaccount#wishlist');
+        });
+    {% endwith %}
         function getParameterByName(name, url) {
             if (!url) url = window.location.href;
             name = name.replace(/[\[\]]/g, "\\$&");
