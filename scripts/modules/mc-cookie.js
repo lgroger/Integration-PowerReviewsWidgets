@@ -27,7 +27,6 @@ function ($,Hypr) {
 			}
 		}
 	}
-	console.log("mcEnabled: "+mcEnabled);
 	
 	var setCookie = function(newUserToken,expirationUtc,user){
 		if(!user){
