@@ -419,16 +419,20 @@
             display: inline-block;
             vertical-align: middle;
             line-height: normal;
-            width: 75%;
+            width: 80%;
             margin: 0 auto; 
             padding: 10px 16px;
             text-decoration: none;
             text-transform: uppercase;
             font-family: @fontFamily;
             font-size: 14px;
-            color: #727373;
-            background-image: url('../resources/images/striped.jpg');
-            background-size: 10px;
+            color: @disabled-grey;
+            background: lightgray;
+            border-radius: 2px;
+            @media @smallmobile {
+                width: 65%;
+                font-size: 12px;
+            }
         }
     }
     .quick-view {
@@ -461,6 +465,9 @@
             @media @desktop {
                 width: 125px;
                 padding: 10px 16px;
+            }
+            @media @tablet, @smallmobile {
+                display: none;
             }
             &:before {
                 display: inline-block;
@@ -584,9 +591,16 @@
     }
     &:hover .quick-view {
         display: block;
+        @media @tablet, @smallmobile {
+            display: none;
+        }
     }
-    &:hover .compare-btn {
-        display: block;
+}
+.mz-productlisting-image .quick-view a:hover {
+    color: @primaryCTAhover;
+    border: 2px solid @primaryCTAhover; 
+    &:before {
+        background-image: url('../resources/images/quickviewhover.svg');
     }
 }
 .mz-productlisting-is-personalize {
@@ -609,33 +623,33 @@
             width: 100%;
         }
     }
-    .mz-productlisting-rating {
-        width: 100px;
-        height: 20px;
+}
+.mz-productlisting-rating {
+    width: 100px;
+    height: 20px;
+    float: right;
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    pointer-events: none;
+    display: inline-block;
+    @media @smallmobile {
+        width: 65px;
+    }
+    .mz-product-rating {
+        display: table;
+        width: 100%;
+        padding: 3px 6px 3px 0;
         float: right;
-        unicode-bidi: bidi-override;
-        direction: rtl;
-        pointer-events: none;
-        display: inline-block;
+        margin: 0;
         @media @smallmobile {
-            width: 65px;
+            padding: 4px 2px 1px 1px;
         }
-        .mz-product-rating {
-            display: table;
-            width: 100%;
-            padding: 3px 6px 3px 0;
+        .imgs {
+            width: 10px;
+            height: 10px;
+            display: inline-block;
             float: right;
-            margin: 0;
-            @media @smallmobile {
-                padding: 4px 2px 1px 1px;
-            }
-            .imgs {
-                width: 10px;
-                height: 10px;
-                display: inline-block;
-                float: right;
-                padding-left: 3px;
-            }
+            padding-left: 3px;
         }
     }
 }

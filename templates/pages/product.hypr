@@ -256,9 +256,11 @@
 <div class="mz-shi-heading-style">
    {% dropzone "recommended-products" scope="template" %}
 </div>
+{% comment %}
 {% if pagecontext.isMobile %}
   {% include "modules/product/fixed_product_desc_header" %}
 {% endif %}
+{% endcomment %}
 {% if themeSettings.certonaRecomm %}
    {% if themeSettings.certonaRecommSimilarProducts %}   
       {% if themeSettings.similarProductHeading %}

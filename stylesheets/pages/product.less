@@ -259,12 +259,12 @@ body.mz-product {
     }
     .hasSlider .product-image{
         width: 100%;
+        display: inline-block;
         @media (min-width: 768px) {
             width: 80% !important;
         }
     }
     .product-color-swatch{
-        padding: 10px 0 30px !important;
         span{
             display: block;
             margin-bottom: 10px;
@@ -275,7 +275,7 @@ body.mz-product {
     }
     .starting-price{
         font-family: @fontFamily;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
         font-size: 16px;
         span.discount-block{
             display:none;
@@ -298,7 +298,7 @@ body.mz-product {
         font-size: 14px;
        .mz-productdetail-price{
         padding: 0;
-        margin: 15px 0 15px 28px;
+        margin: 5px;
         color: @color-dark-blue;
         h4{
             text-align: left;
@@ -327,6 +327,10 @@ body.mz-product {
         display: block;
         text-align: left;
         font-size: 14px;
+        @media @smallmobile {
+            margin: 8px 0;
+            width: 85%;
+        }
     }
     .delivery-date{
         color: @textColor;
@@ -774,6 +778,9 @@ body.mz-product {
         }
         .mz-pagetitle{
             margin: 10px;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 18px !important;
         }
         .header-float.sticky{
             display: none !important;
@@ -906,9 +913,10 @@ body.mz-product {
     >span{
         display: inline-block;
     }
-}
-.add-cart #recommended_products_slot_cart .cerumo {
-    display: inline-block;
+    .cerumo {
+        display: block;
+        margin: 4px;
+    }
 }
 /* STYLES ARE FOR ADD TO CART POPUP RECOMMENDED PRODUCTS */
 #recommended_products_slot_cart .owl-item .echi-shi-related-products-slider .mz-pricestack-price-lower, #recommended_products_slot_cart .owl-item .echi-shi-related-products-slider .mz-pricestack-price-up {

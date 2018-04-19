@@ -214,7 +214,6 @@
                 background-image: url('../resources/images/play-icon.png');
                 background-position: center;
                 background-size: 50px;
-                border-radius: 50%;
             }
         }
     }
@@ -310,7 +309,7 @@
                                                     display: block;
                                                     color: @primaryDarkBlue;
                                                     font-family: @fontFamily;
-                                                    font-size: 15px;
+                                                    font-size: 14px;
                                                     line-height: 16px;
                                                     margin: 0;
                                                 }
@@ -318,7 +317,7 @@
                                                     display: inline-block;
                                                     color: @primaryDarkBlue;
                                                     font-family: @fontFamily;
-                                                    font-size: 15px;
+                                                    font-size: 14px;
                                                     line-height: 16px;
                                                     margin-right: 1px;
                                                     &:after {
@@ -330,7 +329,7 @@
                                                     display: inline-block;
                                                     color: @primaryDarkBlue;
                                                     font-family: @fontFamily;
-                                                    font-size: 15px;
+                                                    font-size: 14px;
                                                     line-height: 16px;
                                                     margin-left: 1px;
                                                 }
@@ -418,7 +417,6 @@
                 > li {
                     display: inline-block;
                     border: 1px solid transparent;
-                    border-radius: 50%;
                     padding: 2px;
                     margin: 0 4px;
                     &:hover {
@@ -429,7 +427,6 @@
                         height: 16px;
                         background-color: #121212;
                         display: block;
-                        border-radius: 50%;
                     }
                 }
                 > li.more-link {
@@ -464,7 +461,12 @@
             }
         }
         .mz-productoptions-optionlabel {
-            display: none;
+            display: block;
+            margin: 5px 0;
+            float: none;
+        }
+        .mz-productdetail-price {
+            margin: 10px 0;
         }
         .product-price {
             .mz-pricestack {

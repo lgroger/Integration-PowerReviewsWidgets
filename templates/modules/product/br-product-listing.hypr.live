@@ -44,8 +44,10 @@
         {% endblock product-image %}
         {% if model.inventoryinfo.onlineStockAvailable < 1  %}
                 <div class="out-of-stock">
-                    <a>Out Of Stock</a> 
+                    <a>Out Of Stock</a>
+                    {% comment %}
                     <a class="emailwhenavailable" data-productCode="{{model.productCode}}" data-mz-product-option="widgetNotifyUserAction"> Email when available </a>
+                    {% endcomment %}
                 </div>
         {% else %}
             <div class="quick-view">  

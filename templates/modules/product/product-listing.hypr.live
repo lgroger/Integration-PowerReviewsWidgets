@@ -19,7 +19,7 @@
         {% endblock product-image %}
         {% if model.productUsage == "Standard" and model.inventoryinfo.manageStock == "true" and model.inventoryinfo.onlineStockAvailable < 1  %}
                 <div class="out-of-stock">
-                    <span>Temporarily Out Of Stock</span>
+                    <a>Out Of Stock</a>
                 </div>
         {% else %}
             <div class="quick-view">  
@@ -170,6 +170,33 @@
         {% endblock product-extrainfo %}
         {% endcomment %}
     </div>
+    {% if model|get_product_attribute(themeSettings.productAttributes.dndCode) %}
+    {% with model|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
+        {% if isPersonalize.values|first|prop("value") != "" %}
+            <div class="mz-productlisting-is-personalize">
+                <div class="customize">
+                <a href="{% make_url "product" model %}">
+                            <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
+                        </a>
+                    </div>  
+            </div>
+        {% endif %}
+    {% endwith %}
+{% else %}
+    {% if model.options %}
+        {% for option in model.options %}
+               {% if themeSettings.productAttributes.dndToken == option.attributeFQN  %}
+                <div class="mz-productlisting-is-personalize">
+                        <div class="customize">  
+                    <a href="{% make_url "product" model %}">
+                                <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
+                            </a>
+                        </div>  
+                </div> 
+               {% endif %}
+        {% endfor %}
+    {% endif %}        
+{% endif %}
     <div class="mz-productlisting-rating">
         {% block product-rating %}
         <div class="mz-product-rating">
@@ -245,31 +272,4 @@
         </div>
         {% endblock %}
     </div>
-    {% if model|get_product_attribute(themeSettings.productAttributes.dndCode) %}
-        {% with model|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
-            {% if isPersonalize.values|first|prop("value") != "" %}
-                <div class="mz-productlisting-is-personalize">
-                    <div class="customize">
-                    <a href="{% make_url "product" model %}">
-                                <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
-                            </a>
-                        </div>  
-                </div>
-            {% endif %}
-        {% endwith %}
-    {% else %}
-        {% if model.options %}
-            {% for option in model.options %}
-                   {% if themeSettings.productAttributes.dndToken == option.attributeFQN  %}
-                    <div class="mz-productlisting-is-personalize">
-                            <div class="customize">  
-                        <a href="{% make_url "product" model %}">
-                                    <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
-                                </a>
-                            </div>  
-                    </div> 
-                   {% endif %}
-            {% endfor %}
-        {% endif %}        
-    {% endif %}
 </div> 
