@@ -17,7 +17,7 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
 
                     var $projectInner = $("<div />").attr("class","mz-productlisting mz-productlist-tiled");
                     $project.append($projectInner);
-                    var $productImage = $("<a />").attr("href","/p/"+p.entityContainer.item.productCode).append($('<img src="'+p.urlThumb+'" />').attr("title",p.id));
+                    var $productImage = $("<a />").attr("href","/p/"+p.entityContainer.item.productCode).append($('<img src="'+p.urlThumb+'" />'));
                     $projectInner.append($("<div />").attr("class","mz-productlisting-image").append($productImage));
                     var $productInfo = $("<div />").attr("class","mz-productlisting-info");
                     $projectInner.append($productInfo);

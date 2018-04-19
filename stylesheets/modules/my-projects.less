@@ -85,7 +85,7 @@
 	    color: white !important;
 	}
 }
-.mc-save-intro, .mc-save-editcart {
+div.mc-save-intro, div.mc-save-editcart, div.mc-save-editwishlist{
     padding: 10px 10px 0;
 }
 #mcOnSave .my-projects-logo {
@@ -379,12 +379,16 @@
 /* END MEDIACLIP ADDED TO CART STYLES */
 
 /* mc-projectsaved-in-cart & mc-projectsaved-in-wishlist are added dynamically to #mcOnSave based on query parameters */
-.mc-save-editcart,.mc-save-editwishlist{
+.mc-save-editcart,.mc-save-editwishlist,.mc-save-options a.mc-save-editcart,.mc-save-options a.mc-save-editwishlist{
 	display:none;
 }
+
 #mcOnSave.mc-projectsaved-in-cart .mc-save-intro, #mcOnSave.mc-projectsaved-in-wishlist .mc-save-intro{
 	display:none;
 }
-#mcOnSave.mc-projectsaved-in-cart .mc-save-editwishlist, #mcOnSave.mc-projectsaved-in-wishlist .mc-save-editcart{
+#mcOnSave.mc-projectsaved-in-wishlist div.mc-save-editwishlist, #mcOnSave.mc-projectsaved-in-cart div.mc-save-editcart{
 	display:block;
+}
+#mcOnSave.mc-projectsaved-in-wishlist a.mc-save-editwishlist, #mcOnSave.mc-projectsaved-in-cart a.mc-save-editcart{
+	display:inline-block;
 }

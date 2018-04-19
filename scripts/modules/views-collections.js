@@ -193,9 +193,7 @@ define([
                     eventAction: 'Filters',
                     eventLabel: elm.getAttribute('data-mz-facet-value')
                     });
-                 }   
-            //if(!require.mozuData('pagecontext').isMobile && !require.mozuData('pagecontext').isTablet) 
-            //{
+                 }
             if (elm.tagName.toLowerCase() === "select") {
                 elm = elm.options[elm.selectedIndex];
             }
@@ -234,7 +232,6 @@ define([
                 }
             }
             return url;
-           // }
         }   
          
         var navigationIntents = IntentEmitter(

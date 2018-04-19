@@ -10,7 +10,9 @@ define(['modules/jquery-mozu', "modules/mc-cookie"],function($,McCookie){
                 for(var i=0;i<res.projects.length;i++){
 					var p = res.projects[i];
 					var $project,date = new Date(p.createdDateUtc);
-                    $project = $("<div />").attr("class","mc-projects-item").attr("data-mc-project",p.id).append($('<img src="'+p.urlThumb+'" />').attr("title",p.id));
+                    $project = $("<div />").attr("class","mc-projects-item").attr("data-mc-project",p.id);
+                    var $productImage = $("<a />").attr("href","/p/"+p.entityContainer.item.productCode).append($('<img src="'+p.urlThumb+'" />'));
+                    $project.append($productImage);
                     $project.append($('<div />').text(date.toDateString()+' '+date.toLocaleTimeString()).attr("class","mc-create-date"));
 
                     if(p.entityContainer){
