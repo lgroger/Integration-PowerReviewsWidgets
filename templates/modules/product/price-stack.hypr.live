@@ -1,33 +1,54 @@
 ﻿<div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+
     {% if model.hasPriceRange %}
-    <span itemprop="minPrice" class="mz-pricestack-price-lower">
-        {% include "modules/common/price" with model=model.priceRange.lower %}
-    </span>
-    <span itemprop="maxPrice" class="mz-pricestack-price-upper">
-        {% include "modules/common/price" with model=model.priceRange.upper %}
-    </span>
+        <span class="productPrice">
+            <span itemprop="minPrice" class="mz-pricestack-price-lower">
+                {% include "modules/common/price" with model=model.priceRange.lower %}
+            </span>
+            <span itemprop="maxPrice" class="mz-pricestack-price-upper">
+                {% include "modules/common/price" with model=model.priceRange.upper %}
+            </span>
+        </span>
+        {% if pageContext.cmsContext.template.path != "product" %}
+            <span class="crossedoutProducts">
+                {% if model.priceRange.lower.onSale %}
+                    <span class="mz-price {% if pageContext.cmsContext.template.path == "product" %} hide {% endif %} is-crossedout">
+                        {{model.priceRange.lower.price|currency}}
+                    </span>
+                {% endif %}
+                {% if model.priceRange.upper.onSale %} &nbsp;&nbsp;&nbsp; 
+                    <span class="mz-price {% if pageContext.cmsContext.template.path == "product" %} hide {% endif %} is-crossedout">
+                        {{model.priceRange.upper.price|currency}}
+                    </span>
+                {% endif %}
+            </span>
+        {%endif%}
     {% else %}
         {% include "modules/common/price" with model=model.price %}
     {% endif %} 
-    {% if model.uom %}
-        {{model.uom}} {# set in product.js#}
-    {% else %}
-      {% with model|get_product_attribute("tenant~uom") as prdValue %}
-        {% for value in prdValue.values %}
-          {{ value.stringValue }}
-        {% endfor %}
-      {% endwith %}
-    {% endif %} 
+    {% if pageContext.pageType != "search" and pageContext.pageType != "product" and pageContext.pageType != "category" %}
+        <span>
+            {% if model.uom %}
+                {{model.uom}} {# set in product.js#}
+            {% else %}
+                {% with model|get_product_attribute("tenant~uom") as prdValue %}
+                  {% for value in prdValue.values %}
+                    {{ value.stringValue }}
+                  {% endfor %}
+                {% endwith %}
+            {% endif %}
+        </span>
+    {%endif%}
      {% if model.hasPriceRange %}
          {% if model.priceRange.lower.discount.discount %}
             <span class="discount-block">
-              <span class="mz-price-discountname">You Save &nbsp;{{model.priceRange.lower.discount.discount.name}}</span>
+              <span class="mz-price-discountname">Save &nbsp;{{model.priceRange.lower.discount.discount.name}}</span>
             </span>
         {% endif %}
      {% else %}
         {% if model.price.discount.discount.name %}      
                       <span class="discount-block">
-            <span class="mz-price-discountname">  You Save &nbsp; {{model.price.discount.discount.name}}</span></span>
+            <span class="mz-price-discountname">  Save &nbsp; {{model.price.discount.discount.name}}</span></span>
         {% endif %}
-     {% endif %}           
+    {% endif %}            
 </div>

@@ -1,8 +1,5 @@
  <section class="mz-facetingform">
     {% if model.facets.length > 0  or pageModel.childrenCategories.length > 0 %}
-    <div class="br-facet-form-header">
-        Narrow by
-    </div>
     {% endif %}
     <ul class="mz-l-sidebaritem-mobile">
         {% if pageModel.childrenCategories.length > 0 %}

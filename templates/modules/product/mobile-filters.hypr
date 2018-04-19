@@ -5,14 +5,9 @@
             <div class="mz-filters-bar">
                 <div class="mz-filters">
                     <button class="mz-filters-btn">
-                    <img style="margin-top: 6px;" src="../../resources/images/Filter.svg" width="26px" alt="Filter Products">
-                     FILTERS <i class="fa fa-caret-down" aria-hidden="true"></i></button>
+                     FILTER {% comment %}<i class="fa fa-caret-down" aria-hidden="true"></i>{% endcomment %}</button>
                 </div>
                 <div class="mz-sort">
-{% comment %}
-                    <button class="mz-sort-btn"><img src="../../resources/images/sort.svg" width="26px" alt="Sort Products"> SORT <i class="fa fa-caret-down" aria-hidden="true"></i></button>
-                    {% endcomment %}
-                    <img src="../../resources/images/sort.svg" width="26px" alt="Sort Products">
                     <select data-mz-value="sortBy" class="mz-pagingcontrols-pagesort-dropdown mz-sort-btn" autocomplete="off">
                     <option selected disabled>SORT</option>
                     {% block sort-types %}
@@ -31,7 +26,7 @@
 
             <div class="mz-filter-mobile-options">
                 <header>
-                    REFINE YOUR SEARCH <i class="close-option fa fa-remove pull-right"></i>
+                    <i class="close-option fa fa-remove pull-right"></i>
                     <div style="clear: both;"></div>
                 </header>
                 {% if model.facets %}
