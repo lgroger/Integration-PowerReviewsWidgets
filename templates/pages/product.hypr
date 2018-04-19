@@ -37,75 +37,67 @@
          <div class="container-left {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video) %} hasSlider {% endif %}">
                {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video)|first|length > 0 %}{# if has video, show thumbnail so you can get back to image after clicking on video #}
                   {% if pageContext.isDesktop %} 
+                  <div class="row">
                     <div class="slider-wrap">
-                       <div class="slideshow vertical {%  if model.content.productImages|length > 3 %} enable-slideshow {% endif %} {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and model|get_product_attribute_values(themeSettings.productAttributes.video)|first|length > 0  %}{% if model.content.productImages|length == 1 %} singleImage{% else %} hasVideo{% endif%}{% endif %}" data-cycle-log="false"  {%  if model.content.productImages|length > 3 %}  data-cycle-prev="#prev-slider-btn"
-        data-cycle-next="#next-slider-btn"  data-cycle-fx=carousel data-cycle-timeout=0 {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and model|get_product_attribute_values(themeSettings.productAttributes.video)|first|length > 0 %} data-cycle-carousel-visible=3 {% else %} data-cycle-carousel-visible=4 {% endif %} data-cycle-carousel-vertical=true {% endif %}>
+                       <div class="slideshow vertical {%  if model.content.productImages|length > 3 %} enable-slideshow {% endif %} {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %} hasVideo {% endif %}" data-cycle-log="false"  {%  if model.content.productImages|length > 3 %}  data-cycle-prev="#prev-slider-btn"
+                    data-cycle-slides="img, > div > div > img" data-cycle-next="#next-slider-btn"  data-cycle-fx=carousel data-cycle-carousel-vertical="true" data-cycle-timeout=0 {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %} data-cycle-carousel-visible=3 {% else %} data-cycle-carousel-visible=4 {% endif %} data-cycle-carousel-vertical=true {% endif %}>
                                {% for image in model.content.productImages %}
-                                     <img class="mz-productimages-thumbimage"  src="{% make_url "image" image with max=80 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
+                                     <img class="mz-productimages-thumbimage" data-zoom-image="{% make_url "image" image with max=1000 %}"  src="{% make_url "image" image with max=80 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
                                {% endfor %}
+
+
+                                {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and pageContext.isDesktop %}
+                                {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
+                                {% with videoURLs|first|split(",") as videos %}
+                                
+                                <div class="video-slider video-slider-wrap">
+                                   <div class="{% if videos.length > 1 %}enable-slideshow{% endif %} video-slider" data-cycle-log="false" data-cycle-fx=carousel data-cycle-timeout=0 data-cycle-next="#next-vdo-btn" data-cycle-prev="#prev-vdo-btn" data-cycle-carousel-visible=1 data-cycle-carousel-vertical=true>
+                                      {% for video in videos %} 
+                                      {% with video|split("=") as vCode %} 
+                                         <img class="video_icon" src="//img.youtube.com/vi/{{ vCode|last }}/0.jpg" data-video="{{ vCode|last }}">
+                                      {% endwith %}
+                                      {% endfor %}
+                                   </div>
+                                </div>
+                                {% endwith %}
+                                {% endwith %}
+                                {% endif %}
+
+                               
                              </div>
                               {%  if model.content.productImages|length > 3 %}
                              <div class="center">
-                                <span id="prev-slider-btn" class="hide"></span>
+                                <span id="prev-slider-btn"></span>
                                 <span id="next-slider-btn"></span>
                             </div>
                             {% endif %}
-                    </div>
+                        </div>
                     {% else %}
                     <div class="product-image-slider-wrap">
-                        <div class="cycle-slideshow" data-cycle-log="false" data-cycle-timeout="0" data-cycle-carousel-visible="1" data-cycle-pager="#slider-pager" data-cycle-next="#next-carousel-btn" data-cycle-prev="#prev-carousel-btn" data-cycle-swipe=true  data-cycle-fx=scrollHorz data-cycle-slides="> div">
-                             {% for image in model.content.productImages %}
-                             <div class="img-mobile-panel">
-                                <img class="mz-productimages-thumbimage"  src="{% make_url "image" image with max=360 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
-                             </div>
-                               {% endfor %}
-                                 {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %}
+                        <div class="cycle-slideshow" data-cycle-log="false" data-cycle-timeout="0" data-cycle-carousel-visible="1"  data-cycle-swipe=true data-cycle-prev=".prev" data-cycle-next=".next" data-cycle-slides="> div" data-cycle-swipe-fx="scrollHorz">
+                            {% for image in model.content.productImages %}
+                                <div class="img-mobile-panel">
+                                   <img class="mz-productimages-thumbimage"  src="{% make_url "image" image with max=360 %}" {% if image.altText %}alt="{{ image.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} data-image-url="{% make_url "image" image %}" />
+                                </div>
+                            {% endfor %}
+                            {% if model|get_product_attribute_values(themeSettings.productAttributes.video) %}
                                 {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
-                                {% if videoURLs|first|length > 0 %}
-                                {% with videoURLs|first|split(",") as videos %}
-                                {% for video in videos %} 
-                                {% with video|split("=") as vCode %}
-                                 <div class="video-panel">
-                                    <iframe width="95%" height="95%" class="video-slide" style="" src="//www.youtube.com/embed/{{ vCode|last }}"></iframe>
-                                 </div>
-                              {% endwith %}
-                              {% endfor %}
-                          {% endwith %}
-                          {% endif %}
+{% with videoURLs|first|split(",") as videos %}
+                                    {% for video in videos %} 
+                                        {% with video|split("=") as vCode %}
+                                            <div class="video-panel">
+                                               <iframe width="95%" height="95%" class="video-slide" style="" src="//www.youtube.com/embed/{{ vCode|last }}"></iframe>
+                                            </div>
+                                        {% endwith %}
+                                    {% endfor %}
+                                {% endwith %}
                           {% endwith %}
                           {% endif %}
                         </div>
                         <div class="cycle-pager" id="slider-pager"></div>
                     </div>
-                     <div class="center">
-                            <span id="prev-carousel-btn"></span>
-                            <span id="next-carousel-btn"></span>
-                        </div>
                   {% endif %}
                  {% endif %}
-               {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and pageContext.isDesktop %}
-            {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
-            {% if videoURLs|first|length > 0 %}
-            {% with videoURLs|first|split(",") as videos %}
-            <div class="video-slider-wrap">
-               <div class="{% if videos.length > 1 %}enable-slideshow{% endif %} video-slider" data-cycle-log="false" data-cycle-fx=carousel data-cycle-timeout=0 data-cycle-next="#next-vdo-btn" data-cycle-prev="#prev-vdo-btn" data-cycle-carousel-visible=1 data-cycle-carousel-vertical=true>
-                  {% for video in videos %} 
-                  {% with video|split("=") as vCode %}
-                     <img src="//img.youtube.com/vi/{{ vCode|last }}/0.jpg" data-video="{{ vCode|last }}">
-                  {% endwith %}
-                  {% endfor %}
-               </div>
-               {% if videos.length > 1 %}
-                <div class="center">
-                        <span id="prev-vdo-btn"></span>
-                        <span id="next-vdo-btn"></span>
-                    </div>
-                {% endif %}
-            </div>
-            {% endwith %}
-            {% endif %}
-            {% endwith %}
-            {% endif %}
             <div class="product-image {% if not pageContext.isDesktop and  model.content.productImages|length >1 %} hide {% endif %}">
                {% if model.mainImage.imageUrl %}
                <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=600 quality=70 as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} />
@@ -114,8 +106,17 @@
                {% endif %}
                <iframe width="100%" height="100%" id="video-frame" style="display:none;"></iframe>
             </div>
+            
          </div>
+         
+         {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video) %}
+                {%if pageContext.isDesktop %}
+                    </div>
+                {%endif %}
+        {%endif%}
+
          <div class="container-right">
+         <div class="upperProductDetails">
             <div class="product-info">
                <div class="product-title">
                   {% if pageContext.isDesktop or pageContext.isTablet %}
@@ -250,6 +251,17 @@
             <span style="display:none;" id="time-custom-now" data-date={% now "F, j, Y h:i:s A" %}>{% now "F, j, Y h:i:s A" %}</span>
             {% dropzone "instock-notice" scope="template" %}
          </div>
+        {% if pageContext.isDesktop %}
+            <div class="certonaContainer">
+                <div class="youmayalsolike">
+                    You may also like:
+                </div>
+                <div class="pdpRecommendedProductsSlot_2 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_2"  >
+
+                </div>
+            </div>
+        {%endif%}
+        </div>
       </div>
       <div class="clear"></div>
    </div>
@@ -293,6 +305,8 @@
 {% include "modules/product/product-description-tabs" %}
 {% include "modules/product/product-description-inspiration" %}   
 {% include "modules/product/pdp-related-products" %}
+
+{% require_script "vendor/jquery.elevatezoom"%} 
 
 {% include "modules/bloomreach_seo" %}
 
