@@ -843,6 +843,12 @@ Mobile style's
   @media only screen and (min-width: 1025px) {
     display: inline-block;
     float: none !important;
+    width: 30% !important;
+    left: 16px;
+  }
+  @media only screen and (min-width: 1200px) {
+    display: inline-block;
+    float: none !important;
     width: 38% !important;
     left: 16px;
   }
@@ -1196,6 +1202,15 @@ display:block;
   }
   p {
     color: @secondaryBlue !important;
+  }
+  & .mob-faqs, & .mob-promos, & .mob-partyIdeas, & .mob-myProjects {
+      padding: 10px 0;
+      & a:hover {
+        color: @linkHoverColor;
+      }
+  }
+  & .mob-promos {
+    padding: 20px 0 10px;
   }
 }
 @media only screen and (min-width:1025px){

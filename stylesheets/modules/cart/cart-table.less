@@ -284,19 +284,28 @@ span.rounded-cart-color{
             display:block;
             width:100%;
             float:none;
-            a{
-                color: @linkColor;
-                text-decoration: underline;
+            & .editpersonalize, & .copy-mc-project {
+                color: @tertiaryColor;
+                text-decoration: none;
                 font-size: 11px;
                 text-transform: uppercase;
-            }
-            a:hover{
-                color: @linkHoverColor;
-                text-decoration: none;
+                background-color: transparent !important;
+                border: 1px solid @tertiaryColor;
+                padding: 3px 0;
+                margin: 0 10px 0 0;
+                border-radius: 3px;
+                vertical-align: baseline;
+                display: inline-block;
+                width: 40px;
+                text-align: center;
+                &:hover {
+                    color: @primaryWhite;
+                    background-color: @tertiaryColor !important;
+                }
             }
         }
         dd.mz-carttable-item-code{
-            margin:0px;
+            margin: 15px 0;
         }
         .mz-propertylist{
             display:block;
@@ -1478,6 +1487,25 @@ tr.mz-carttable-item-shipping-info{
             .edit_wishlist_cart {
                 display: inline-block;
                 width: 100%;
+                & .editpersonalize, & .copy-mc-project {
+                color: @tertiaryColor;
+                text-decoration: none;
+                font-size: 11px;
+                text-transform: uppercase;
+                background-color: transparent !important;
+                border: 1px solid @tertiaryColor;
+                padding: 3px 0;
+                margin: 0 10px 0 0;
+                border-radius: 3px;
+                vertical-align: baseline;
+                display: inline-block;
+                width: 40px;
+                text-align: center;
+                &:hover {
+                    color: @primaryWhite;
+                    background-color: @tertiaryColor !important;
+                }
+            }
             }
         }
         tr.mz-carttable-item-shipping-info td{
@@ -1929,7 +1957,7 @@ tr.mz-carttable-item-shipping-info{
     }
 } 
 /*-----------------------you may like section css-------------------*/
-#mz-drop-zone-cart-theme-slider h2 {
+#mz-drop-zone-cart-theme-slider h2, #mcProjects h2 {
     text-align: center;
     color: @textColor;
     font-family: @fontGTWalsheimBold;
@@ -1937,7 +1965,7 @@ tr.mz-carttable-item-shipping-info{
     margin-bottom: 0;
     text-transform: uppercase;
 }
-#mz-drop-zone-cart-theme-slider h2:before, #mz-drop-zone-cart-theme-slider h2:after{
+#mz-drop-zone-cart-theme-slider h2:before, #mz-drop-zone-cart-theme-slider h2:after,#mcProjects h2:before, #mcProjects h2:after{
     content: '';
     display: inline-block;
     background: url('../resources/images/border-image1.png');
@@ -1949,11 +1977,11 @@ tr.mz-carttable-item-shipping-info{
     margin: 0 10px;
 }
 @media only screen and (max-width:767px){
-    #mz-drop-zone-cart-theme-slider h2{
+    #mz-drop-zone-cart-theme-slider h2,#mcProjects h2{
         margin-top:0px;
         font-size: 24px;
     }
-    #mz-drop-zone-cart-theme-slider h2:before, #mz-drop-zone-cart-theme-slider h2:after{
+    #mz-drop-zone-cart-theme-slider h2:before, #mz-drop-zone-cart-theme-slider h2:after, #mcProjects h2:before, #mcProjects h2:after{
         width:15%;
     }
 }

@@ -1340,9 +1340,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 					me.model.isLoading(false);
 					cartitemModel.set('quantity',me.model.get('quantity')); // show amount just added to cart rather than including what may have already been in cart
 					cartitemModel.set('url',me.model.get('url'));
-					
-					console.log( cartitemModel.toJSON());
-					console.log( me.model.toJSON());
+
 					addedToCart.atcActions(cartitemModel, me.gaAction, me.gaEvent);
 				} else {
 					me.model.trigger("error", { message: Hypr.getLabel('unexpectedError') });
