@@ -1376,9 +1376,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         font-size: 16px;
     }
     .mz-productdetail-price {
+        clear: left;
         h4 {
             float: left;
             min-width: 8%;
+            margin: 4px;
         }
     }
     .addToCart, .personalize{
@@ -1558,10 +1560,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .mz-price {
         margin-left: 10px;
-        color: @textHeaderColor;
+        color: @primaryDarkBlue;
         font-family: @fontFamily;
-        font-size: 1.4em;
-        line-height: 55px !important;
+        font-size: 14px;
+        line-height: 26px;
         &.is-crossedout + .mz-price.is-saleprice{
             margin-left: 2px;
             font-size: 12px;
@@ -1574,6 +1576,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             font-family: @fontLight;
             color: @disabled-grey;
         }
+    }
+    .quantity-price-break-point {
+        font-size: 13px;
+        text-transform: lowercase;
+        margin-bottom: 10px;
     }
     .custom-qty {
         margin-left: 4px;
@@ -2022,7 +2029,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     color: rgba(136,133,133,0.36) !important;
 }
 .filled {
-    color: #ff8300 !important;
+    color: @secondaryYellow;
 }
 .rev-block-1-sec1 {
     width: 17% !important;
@@ -2543,6 +2550,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         display: block;
         margin-bottom: 2px;
         font-family: @fontLight;
+        text-transform: lowercase;
+        @media @tablet {
+            margin-left: 3px;
+            color: @primaryDarkBlue;
+        }
     }
     .mz-pricestack-price-lower,.mz-pricestack-price-up {
         font-size: 18px;
@@ -2652,7 +2664,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
                 height: 44px;
             }
             @media @desktop {
-                font-size: 15px;
+                font-size: 14px;
             }
         }
         .mz-pricestack{
@@ -3823,11 +3835,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 @media @tablet {
     .echi-shi-related-products-slider .mz-pricestack-price-lower, .echi-shi-related-products-slider .mz-pricestack-price-up {
         font-size: 12px;
-    }
-    .echi-shi-related-products-slider .cerumo {
-        margin-left: 3px;
-        font-size: 12px;
-        color: @textColor;
     }
 }
 @media only screen and (max-width:1024px){    

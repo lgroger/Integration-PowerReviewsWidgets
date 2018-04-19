@@ -98,14 +98,11 @@
     @media @smallmobile {
             width:710px;
     }
-    .container-left,
-    .container-right {
-        box-sizing: border-box;
-        float: left;
-        width: 50%;
-    } 
     .container-left {
+        width: 40%;
+        box-sizing: border-box;
         padding: 20px;
+        float: left;
         .product-image {
             display: block;
             text-align: center;
@@ -169,15 +166,11 @@
             }
         }
         .product-image-slider {
-            margin:12px auto;
-            padding: 10px 30px;
-            width: 375px;
+            margin: 12px auto;
+            width: 312px;
             display: inline-block;
-            max-height: 110px;
+            max-height: 100px;
             overflow: hidden;
-            .item{
-                margin-bottom: 15px;
-            }
             .owl-carousel .owl-item{
                 text-align: center;
             }
@@ -226,6 +219,8 @@
         }
     }
     .container-right {
+        width: 55%;
+        float: right;
         padding: 20px;
         .product-title {
             h2 {
@@ -239,6 +234,9 @@
         .left {
             float: left;
             width: 65%;
+            p {
+                display: inline-block;
+            }
         }
         .product-description {
             color: @primaryDarkBlue;
@@ -247,7 +245,7 @@
         }
         p {
             margin-top: 15px;
-            margin-bottom: 35px;
+            margin-bottom: 2px;
             font-family: @fontLight;
             font-size: 14px;
             color: @disabled-grey;
@@ -268,6 +266,7 @@
             text-decoration: underline;
             color: @primaryColor;
             text-transform: lowercase;
+            font-size: 11px;
         }
         .right {
             text-align: right;
@@ -277,14 +276,14 @@
             border-radius: 10px;
             max-height: 275px;
             .quickview-recommended-title{
-                color: @primaryColor;
-                font-size: 16px; 
-                font-weight: 700;
+                color: @tertiaryColor;
+                font-size: 18px; 
                 text-align: center;
                 text-transform: lowercase;
+                margin: 2px;
             }
             .owl-carousel .owl-item{
-                max-height: 255px;
+                max-height: 235px;
             }
             #recommended_products_quickview{
                 .pdp-related-products{
@@ -293,26 +292,57 @@
                         .owl-carousel{
                             .item{
                                 .mz-productlist-item{
-                                    width: 90%;
+                                    width: 95%;
                                     .mz-productlisting{
-                                        border: none;
+                                        height:235px;
+                                        width: 130px;
                                         .mz-productlisting-image{
                                             min-height: 0;
-                                            margin-bottom: 10px;
-                                            a{
-                                                height: 130px;
-                                            }
+                                            height: 100px;
                                         }
                                         .mz-productlisting-info{
                                             .mz-productlisting-title{
-                                                height: 35px;
+                                                height: 40px;
                                             }
-                                            .mz-pricestack{
-                                                margin-bottom: 0;
+                                            .mz-pricestack {
+                                                margin: 2px 0;
+                                                .mz-price {
+                                                    display: block;
+                                                    color: @primaryDarkBlue;
+                                                    font-family: @fontFamily;
+                                                    font-size: 15px;
+                                                    line-height: 16px;
+                                                    margin: 0;
+                                                }
+                                                .mz-pricestack-price-lower {
+                                                    display: inline-block;
+                                                    color: @primaryDarkBlue;
+                                                    font-family: @fontFamily;
+                                                    font-size: 15px;
+                                                    line-height: 16px;
+                                                    margin-right: 1px;
+                                                    &:after {
+                                                        font-size: 10px;
+                                                        margin: 0 1px;
+                                                    }
+                                                }
+                                                .mz-pricestack-price-up {
+                                                    display: inline-block;
+                                                    color: @primaryDarkBlue;
+                                                    font-family: @fontFamily;
+                                                    font-size: 15px;
+                                                    line-height: 16px;
+                                                    margin-left: 1px;
+                                                }
+                                                .cerumo {
+                                                    margin: 2px 0;
+                                                }
                                             }
                                         }
                                         .mz-productlisting-is-personalize{
-                                            display: none;
+                                            display: block;
+                                            width: 80px;
+                                            margin-top: 10px;
                                         }
                                     }
                                 }
@@ -514,17 +544,15 @@
                 .addthis_button_preferred_5 {}
                 .addthis_button_preferred_6 {}
             }
-        } 
+        }
+        .prod-time {
+            font-size: 12px;
+            font-family: @fontLight;
+            display: inline-block;
+            margin-left: 5px;
+        }
     }
 }
 .qv-savings {
     color: @secondaryRed;
-}
-.product-color-swatch, .mz-productdetail-conversion-controls{
-    font-family: @fontFamily !important;
-}
-@media only screen and (max-width:480px) {
-    .mz-quick-view-wrapper .container-right{
-        padding: 8px 20px;
-    }
 }

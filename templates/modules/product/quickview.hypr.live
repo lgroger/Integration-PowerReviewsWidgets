@@ -131,7 +131,7 @@
 
                         {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
                             <div class="prod-time">
-                               {{model.productionTime }} Business Day(s) Production Time + Shipping&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
+                               {{model.productionTime }} Business Day(s) Production Time&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
                                <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
                                </span>
                             </div>
