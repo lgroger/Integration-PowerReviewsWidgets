@@ -1001,15 +1001,6 @@ var productAttributes = Hypr.getThemeSetting('productAttributes');
     /* end visa checkout */
 
     $(document).ready(function() {
-     
-
-
-
-    /* $(document).on('click','.sz_paypal_button',function(){
-        window.location.href = "/cart/checkout";   
-        //$.cookie('szpaypaloption',true,{path:'/'});   
-     });*/
-
         var cartModel = CartModels.Cart.fromCurrent(),
             // cartModel.chkoutFlag = 'chcked',
             cartViews = {

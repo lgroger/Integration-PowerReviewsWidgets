@@ -1,6 +1,7 @@
 		<div class="icon-collection">
 			<ul>
-				<li><a href="/party-ideas" id="party-ideas_icon" class="icon-image-sprite fi-icon">
+				<li>
+				 <a href="/party-ideas" id="party-ideas_icon" class="icon-image-sprite fi-icon">
 						<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 					<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 80 80" style="enable-background:new 0 0 80 80;" xml:space="preserve">
@@ -90,7 +91,8 @@
 						</g>
 					</g>
 					</svg>
-					</a></li>
+					</a>
+				</li>
 				<li class="icon-swap-1 icon-swap-search">
 					<a href="#popup1" id="search_icon"  class="icon-1">
 					<!-- Generator: Adobe Illustrator 19.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->

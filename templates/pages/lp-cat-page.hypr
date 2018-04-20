@@ -7,6 +7,14 @@
 {% block body-content %}
 	{% require_script "pages/lp-category" %}
 <div class="landing-page">
+	<div class="breadcrumbs-landing">
+			{% block breadcrumbs %}
+			{% if themeSettings.showBreadcrumbs %}
+			{% include "modules/breadcrumbs" %}
+			{% endif %}
+			{% endblock breadcrumbs %}
+	</div>
+
     <h1 class="landing-page-title">{{model.content.name}}</h1>
 	{% dropzone "lp-category-top" scope="page" %} 
 

@@ -201,7 +201,7 @@ $(function(){
 		    	$(".br-search-suggest").css("display","none");
 		    	document.activeElement.blur();
 		    }
-		    console.log($(window).width());
+		    //console.log($(window).width());
 		}, false);
 });
 

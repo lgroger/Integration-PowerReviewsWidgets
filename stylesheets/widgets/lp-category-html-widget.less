@@ -17,8 +17,11 @@
     }
     .comment{
         color: #2e257d;
-        font: @fontGTWalsheimMediumItalic;
+        font-family: @fontFamily;
         font-size: 15px;
+        @media @smallmobile {
+            font-size: 12px;
+        }
     }
     p{
         &.singleline{

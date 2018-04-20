@@ -3,10 +3,6 @@
     top:-20px;
 }
 .mz-facetingform {
-    /*
-    padding-right: @gutter/2;
-    border-right: 1px solid #eee;
-    */ 
     h4 {
         border-bottom: 1px solid #eee;
         margin: 0 0 5px;
@@ -17,64 +13,48 @@
         padding: 0;
         margin: 0;
         li {
-            margin: 8px 0;
+            margin: 6px 0;
             position: relative;
+            &:hover {
+                color: @tertiaryColor;
+            }
         }
         a {
             text-decoration: none;
         }
     }
     .mz-facetingform-valuelabel {
-        /*display: inline;
-        margin-left: 8px;
-        pointer-events: none;*/
-       display: inline-block;
-  pointer-events: none;
-  vertical-align: super;    
-}  
-
+        display: inline-block;
+        pointer-events: none;
+        vertical-align: super;    
+    }
     .mz-facetingform-facet-hierarchy {
         .mz-facetingform-facet-hierarchy {
             li {
                 margin: 0 0 4px 0.5em;
                 line-height: 1em;
-                &::before {
-                    /*
-                    display: inline-block;
-                    content: "\221F";
-                    font-size: @fontSizeLarger;
-                    */
-                }
             }
         }
     }
 }
-
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
     .mz-facetingform-valuelabel {
         display: inline;
         margin-left: 8px;
-        /*cursor: none;  */
         pointer-events: none;
     }  
 }
-
 @media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
   .mz-facetingform-valuelabel {
         display: inline;
         margin-left: 8px;
-        /*cursor: none;  */
         pointer-events: none;
     }  
 }
-
-@media only screen 
-  and (min-width: 320px) 
-  and (max-width: 736px){
+@media only screen and (min-width: 320px) and (max-width: 736px) {
     .mz-facetingform-valuelabel {
         display: inline;
         margin-left: 8px;
-        /*cursor: none;  */
         pointer-events: none;
     }  
   }

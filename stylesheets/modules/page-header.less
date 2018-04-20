@@ -260,6 +260,12 @@ height: inherit;
             display: none;
         }
     }
+    & #my-project_icon svg .st0, #my-project_icon svg .st1 {
+        fill: @linkColor;
+    }
+    & #my-project_icon:hover svg .st0, #my-project_icon:hover svg .st1 {
+        fill: @linkHoverColor;
+    }
     @media (min-width: 480px) {
         padding: 0 5px;
     }
