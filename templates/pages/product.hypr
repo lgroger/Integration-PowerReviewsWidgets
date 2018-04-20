@@ -95,31 +95,85 @@
                     </div>
                   {% endif %}
                  {% endif %}
-            <div class="product-image {% if not pageContext.isDesktop and  model.content.productImages|length >1 %} hide {% endif %}">
-               {% if model.mainImage.imageUrl %}
-               <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=600 quality=70 as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} />
-               {% else %}
-               <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
-               {% endif %}
-               <iframe width="100%" height="100%" id="video-frame" style="display:none;"></iframe>
-            </div>
-            
-         </div>
-         
-         {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video) %}
-                {%if pageContext.isDesktop %}
+
+                {% if model|get_product_attribute_values(themeSettings.productAttributes.video) and pageContext.isDesktop %}
+            {% with model|get_product_attribute_values(themeSettings.productAttributes.video) as videoURLs %}
+            {% with videoURLs|first|split(",") as videos %}
+            {% endwith %}
+            {% endwith %}
+            {% endif %}
+
+            <div class="product-image {% if not pageContext.isDesktop %}{%if model.content.productImages|length >1  or model|get_product_attribute_values(themeSettings.productAttributes.video) %} hide {% endif %}{% endif %}">
+                    <div class="imageContainer">
+                        {% if model.mainImage.imageUrl %}
+                        <img id="imagei" zoom-image="{% make_url "image" model.mainImage with max=1000 %}"  itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=600 quality=70 as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} />
+                        {% else %}
+                        <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+                        {% endif %}
+                        <iframe width="100%" height="100%" id="video-frame" style="display:none;"></iframe>
                     </div>
-                {%endif %}
-        {%endif%}
+                    <div class="productExtrasContainer ">
+                        {%if pagecontext.isDesktop %}
+                        <div class="zoomImage">
+                            <img id="zoombutton" alt="Click to zoom " src="/resources/images/zoom_icon.svg" style="height: 25px;" >
+                           
+                           <!-- zoom image container to be added here.  -->  
+                        </div>
+                        {%endif%}
+                        <div class='colorSwatchContainer ' product-color-swatch>
+                            {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
+                               {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %} 
+                                    <div class="owl-carousel owl-theme">
+                                        {% if pdcs|first == "asColors" %} 
+                                            {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
+                                                {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
+                                                   {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
+                                                      {% include_products "modules/product/color-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+                                                   {% endwith %}
+                                                {% endwith %}
+                                             {% endif %}
+                                        {% else %}
+                                            {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
+                                                {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
+                                                   {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
+                                                      {% include_products "modules/product/color-swatch-detail"  with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+                                                   {% endwith %}
+                                                {% endwith %}
+                                             {% endif %}
+                                        {% endif %}
+                                    </div>
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video) %}
+                    {%if pageContext.isDesktop %}
+                  </div>
+                  {%endif %}
+                {%endif%}
+                </div>
 
          <div class="container-right">
          <div class="upperProductDetails">
+            <div class="productDetailInfo">
             <div class="product-info">
                <div class="product-title">
-                  {% if pageContext.isDesktop or pageContext.isTablet %}
-                  <h1 class="mz-pagetitle desktop-name" itemprop="name">{{ model.content.productName }}</h1>
-                  {% endif %}
-               </div>
+                    <h1 class="mz-pagetitle desktop-name" itemprop="name">{{ model.content.productName }}</h1>
+                    {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
+                        <div class="showmoreDescription">
+                        <div class="product-short-description content hideContent">
+                          {{ model.content.productShortDescription|safe }}
+                        </div>
+
+                        {% if model.content.productShortDescription.length > 75 %}       
+                            <a class="show-more" href="#">...read more</a>
+                        {% endif %}
+                        
+                        </div>
+                    {% endif %}
+                </div>
+
                <div class="product-review-share">
                   <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating product-rating-review" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}" >
                   {% if model|get_product_attribute('tenant~rating') %}
@@ -169,120 +223,171 @@
                {% else %}
                <div class="product-rating">
                   <div class="product-review">
-                     <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Be the first to Review</a>
+                     <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
                   </div>
                </div>
                {% endif %}
             </div>
-               <div class="product-share">
-                 {# Go to www.addthis.com/dashboard to customize your tools #}
-                 <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_button_compact addthis_default_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
-                     <a class="addthis_button_facebook">
-                      <i class="fa fa-facebook-square"></i>
-                    </a>
-                    <a  class="addthis_button_twitter">
-                       <i class="fa fa-twitter-square"></i>
-                    </a>
-                    <a class="addthis_button_pinterest_share">
-                       <i class="fa fa-pinterest-square"></i>
-                    </a>
-                     <a class="addthis_button_google_plusone_share">
-                        <i class="fa fa-google-plus-square"></i>
-                    </a>
-                    <a class="addthis_button_email">
-                      <i class="fa fa-envelope"></i>
-                    </a>
+        </div>
+    </div>
 
-                   
-                 </div>
-            </div>
-               </div>
                {% include "modules/common/message-bar" %}
+               <div id="product-detail" class="mz-productdetail mz-l-stack">
+                    {% include "modules/product/product-detail-custom" %}
+                 </div>
+                 <span style="display:none;" id="time-custom-now" data-date={% now "F, j, Y h:i:s A" %}>{% now "F, j, Y h:i:s A" %}</span>
+                 {% dropzone "instock-notice" scope="template" %}
+              </div>
+             {% if pageContext.isDesktop %}
+                 <div class="certonaContainer">
+                     <div class="youmayalsolike">
+                         You may also like:
+                     </div>
+                     <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1"  >
+     
+                     </div>
+                 </div>
+             {%endif%}
+             </div>
+           </div>
+           <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
 
-                {% if model.hasPriceRange and not model.volumePriceRange %}
-                  <div class="starting-price">
-                    <span class="color-blue">{{ labels.price }} : </span>
-                    {% include "modules/product/price-stack-lower" %}
-                  </div>
-                  {% else%}
-                    {% if model.volumePriceRange  and model.volumePriceRange.lower %}
-                     <div class="starting-price">
-                        <span class="color-blue">{{ labels.price }} : </span>
-                          <div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
-                            As low as
-                            <span itemprop="minPrice">
-                              {% include "modules/product/as-low-price" with model=model.volumePriceRange.lower %}
-                            </span>
-                          </div>
-                    </div>
-                    {% endif %}
-                {% endif %}
+        <div class="row mz-quick-view-wrapper">
+                <div class="container-left">
+                     <div class='tabbableContainer'>
+                         <div class="tab">
+                             <span data-tabnames="details" class="tablinks selected" >Details</span>
+                             <span data-tabnames="shipping" class="tablinks " >Shipping</span>
+                             {% if model.bundledProducts.length > 0 %}<span data-tabnames="included" class="tablinks " >What's Included</span> {% endif %}
+                         </div>
 
-            {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
-               {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %}
-               <div class="product-color-swatch">
-                  {% if pdcs|first == "asColors" %}
-                  {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
-                     {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
-                        {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
-                           {% include_products "modules/product/color-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-                        {% endwith %}
-                     {% endwith %}
-                     {% endif %}
-                  {% else %}
-                     {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
-                        {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
-                           {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
-                              {% include_products "modules/product/image-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-                           {% endwith %}
-                        {% endwith %}
-                     {% endif %}
-                  {% endif %}
-               </div>
-               {% endwith %}
-            {% endif %}
-           
-            <div id="product-detail" class="mz-productdetail mz-l-stack">
-               {% include "modules/product/product-detail-custom" %}
-            </div>
-            <span style="display:none;" id="time-custom-now" data-date={% now "F, j, Y h:i:s A" %}>{% now "F, j, Y h:i:s A" %}</span>
-            {% dropzone "instock-notice" scope="template" %}
-         </div>
-        {% if pageContext.isDesktop %}
-            <div class="certonaContainer">
-                <div class="youmayalsolike">
-                    You may also like:
+        <div class="product-share">
+                {# Go to www.addthis.com/dashboard to customize your tools #}
+                <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_button_compact addthis_default_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
+                    <a class="addthis_button_facebook">
+                     <i class="fa fa-facebook-square"></i>
+                   </a>
+                   <a  class="addthis_button_twitter">
+                      <i class="fa fa-twitter-square"></i>
+                   </a>
+                   <a class="addthis_button_pinterest_share">
+                      <i class="fa fa-pinterest-square"></i>
+                   </a>
                 </div>
-                <div class="pdpRecommendedProductsSlot_2 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_2"  >
+           </div>
+
+           <div id="details" class="tabcontent">
+                <span class="upArrow"></span>
+                <div class="tab-content-inner">
+                    <p> 
+                        {{ model.content.productFullDescription|safe }}
+                    </p>         
+                    {% if themeSettings.safetyFlags %}
+                       {% for safetyFlg in themeSettings.safetyFlags %}
+                          {% if model|get_product_attribute(safetyFlg.code) %}
+                             {% with model|get_product_attribute(safetyFlg.code) as safetyValues %}
+                             {% with safetyValues.values|first as val %}
+                                {% if val.value %}
+                                   <span class="wrapper"><i class="fa fa-exclamation-triangle"></i>
+                                          <span id="safetywarning">
+                                            {{themeSettings|prop(safetyFlg.field)|safe}}
+                                          </span> 
+                                   </span>
+                                {% endif %}
+                             {% endwith %}   
+                             {% endwith %}
+                          {% endif %}
+                       {% endfor %}
+                    {% endif %}
+                    <p class="assemblytime">
+                        {% with model.properties|findwhere("attributeFQN", "tenant~assemblytime") as assemblytime %}
+                            {% for val in assemblytime.values %}
+                            Assembly Required - {{val.stringValue}}
+                            {% endfor %}                                       
+                        {% endwith %}
+                        
+                    </p>
+                    <p class="productCode">
+                        Product Code: {{ model.productCode }}
+                    </p>
+                </div>
+            </div> 
+
+            <div id="shipping" class="tabcontent hide">
+              <span class="upArrow"></span>  
+                <div class="tab-content-inner">
+                <p>Please allow ample time for delivery. The delivery date for this product is noted above for US shipping only. Please refer to checkout for delivery dates outside of the Contiguous 48 States.</p>
+                <p>Shipping charges are based on the value of the merchandise and not the number of shipments. For additional shipping information, please contact our Customer Service Department at 800-348-5084.</p>
+                </div>
+            </div>
+
+            <div id="included" class="tabcontent hide">
+                <span class="upArrow"></span>
+                <div class="tab-content-inner">
+                    {% include "modules/product/pdp-bundle-products" %} 
+                </div>
+            </div> 
+        </div>
+   </div> 
+
+   <div class="container-right">
+           
+        {% if model|get_product_attribute_values('tenant~product-upsell') %}
+            <div class='coordinatingProductContainer'>
+                <div class="relatedProductContainer">
+                    <div class="title"> 
+                        <span class="cordinatingProductTitleContainer" > coordinating products </span>
+                    </div>
+                    <div class="cross-sellContainer">
+                        {% comment %}
+                        {% if themeSettings.certonaRecommRelatedProducts %}
+                            <div data-mz-recommendedProducts id="recommended_products_slot_2">
+                            </div>
+                        {% endif %}
+                         {% endcomment %}
+                        <div data-mz-recommendedProducts id="recommended_products_slot_">
+                            {% for related_products in model|get_product_attribute_values('tenant~product-upsell')|make_list  %}
+                                {% include_products "modules/product/coordinating_products" with productCodes=related_products and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}   
+                            {% endfor %}
+                        </div>
+                </div>
+            </div>
+        {%endif%}
+        {% if pageContext.isMobile %}
+            <div class="youMayAlsoLikeContainer">
+                <div class="youmayalsolike">
+                    <label>you may also like</label>
+                </div>
+                <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1" >
 
                 </div>
             </div>
         {%endif%}
-        </div>
-      </div>
-      <div class="clear"></div>
-   </div>
+       </div>
+  </div>
+
+  
 </div>
 </div>
-<!-- Description Tabs-->
+</div>
+
+
 <div class="mz-shi-heading-style">
    {% dropzone "recommended-products" scope="template" %}
 </div>
-{% comment %}
-{% if pagecontext.isMobile %}
-  {% include "modules/product/fixed_product_desc_header" %}
-{% endif %}
-{% endcomment %}
 {% if themeSettings.certonaRecomm %}
    {% if themeSettings.certonaRecommSimilarProducts %}   
       {% if themeSettings.similarProductHeading %}
-      <div class="related-products-heading recom_slot-heading_1" style="display:none">
-              <h2>{{ themeSettings.similarProductHeading }}</h2>
+      <div class="related-products-heading recom_slot-heading_2" style="display:none">
+              <h2><span class='similarProducts'> you might be interested in </span></h2>
       </div>
       {% endif %}
       <div data-mz-recommendedProducts id="recommended_products_slot_1">
       </div>
    {% endif %}   
+   {% comment %}
    {% if themeSettings.certonaRecommRelatedProducts %}
       {% if themeSettings.recommendedProductHeading %}
       <div class="related-products-heading recom_slot-heading_2" style="display:none">
@@ -292,6 +397,7 @@
       <div data-mz-recommendedProducts id="recommended_products_slot_2">
       </div>
    {% endif %}
+   {% endcomment %}
 {% endif %}
 {% comment %} TO DO: this should be loaded via ajax when needed or include all necessary info within it such as dnd code & uom so we don't have to repeat api calls in product.js{% endcomment %}
 {% if model.productUsage == "Bundle"  %}

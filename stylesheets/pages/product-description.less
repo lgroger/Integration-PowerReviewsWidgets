@@ -1,11 +1,13 @@
 .pdp-detail {
     .mz-quick-view-wrapper {
         display: block;
-        margin: 0 auto;
+        margin: 0;
         width: 100%;
+        max-width: 1280px;
+        position: relative;
         .container-left {
-            width: 48%;
-            padding: 10px;
+            width: 45%;
+            padding: 0.5% 1%;
             @media @smallmobile {
                 width: 100%;
                 float: none;
@@ -13,13 +15,85 @@
             .product-image iframe {
                 min-height: 390px;
             }
+            .productExtrasContainer {
+                .zoomImage {
+                    width: 25px;
+                    margin-top: 4px;
+                    float: left;
+                    display: inline;
+                }
+                .colorSwatchContainer {
+                    width: 75%;
+                    margin: 0 25px;
+                    float: right;
+                    max-height: 45px;
+                    display: inline;
+                }
+            }
         }
         .container-right {
-            width: 48%;
-            padding-top: 10px;
+            width: 55%;
+            padding: 0.5% 1%;
+            float: left;
+            min-height: auto;
+            box-sizing: border-box;
             @media @smallmobile {
                 width: 100%;
                 float: none;
+            }
+            .upperProductDetails {
+                width: 100%;
+                display: inline-block;
+                .productDetailInfo {
+                    width: 80%;
+                    float: left;
+                    .product-info {
+                        width: 100%;
+                        padding-top: 2%;
+                        display: inline-block;
+                        .product-title {
+                            padding: 10px 0 0 0;
+                            width: 75%;
+                            float: left;
+                            .showmoreDescription {
+                                position: relative;
+                                .product-short-description {
+                                    overflow: hidden;
+                                    line-height: 1.2em;
+                                    height: 2.4em;
+                                    width: 92%;
+                                    display: inline-block;
+                                    color: @primaryDarkBlue;
+                                    font-weight: 100;
+                                }
+                            }
+                        }
+                    }
+                }
+                .certonaContainer {
+                    width: 18%;
+                    float: right;
+                    padding: 1px;
+                    margin-top: 17px;
+                    max-height: 470px;
+                    min-height: 470px;
+                    border: 2px solid @primaryDarkBlue;
+                    border-radius: 5px;
+                    .youmayalsolike {
+                        text-align: center;
+                        margin-top: 4px;
+                        color: @tertiaryColor;
+                        font-family: @fontFamily;
+                        text-transform: lowercase;
+                    }
+                    .recommended_products_slot_1 {
+                        overflow-y: scroll;
+                        max-height: 445px;
+                        .pdp-related-products {
+                            padding-bottom: 30px;
+                        }
+                    }
+                }
             }
             .product-qty-cart {
                 display: inline-block;
@@ -34,7 +108,30 @@
                 }
             }
             p {
-                margin: 2px 0;
+                margin: 1px 0;
+                padding: 1px 0;
+                font-size: 13px;
+                span {
+                    margin-top: 2px;
+                }
+            }
+            .prod-time {
+                margin-left: 2px;
+                color: @primaryDarkBlue;
+                font-size: 13px;
+            }
+            .delivery-date {
+                font-family: @fontLight;
+                font-size: 13px;
+                a.tooltip {
+                    outline: none;
+                    opacity: 1;
+                    z-index: 0;
+                    position: relative;
+                    display: inline-block;
+                    color: @primaryColor;
+                    text-decoration: underline;
+                }
             }
             .mz-productdetail-price {
                 .mz-pricestack, .mz-pricestack-range {
@@ -53,7 +150,7 @@
         }
     }
     .product-image {
-        min-height: 450px;
+        min-height: 390px;
         -webkit-user-select: none;  -khtml-user-select: none;   -moz-user-select: none; -o-user-select: none;    user-select: none;
     }
     #add-to-cart {
@@ -1612,10 +1709,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 }
 .pdp-wrapper .container-left .product-image img {
     max-width: 100%;
-}
-.product-image {
-    border: 1px solid rgba(134,120,120,0.29);
-    border-radius: 4px;
 }
 .pdp-wrapper .container-left .product-image-slider .owl-prev {
     top: 20%;
