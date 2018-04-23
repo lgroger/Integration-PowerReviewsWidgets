@@ -1,0 +1,9 @@
+{% for prod in model.items %}
+    {% if prod|get_product_attribute_values(themeSettings.productAttributes.colorHex) %}
+        <div class="item hide">
+            {% with prod|get_product_attribute_values(themeSettings.productAttributes.colorHex) as color %}
+                <a href="{% make_url "product" prod %}" alt="{{prod.content.productName}}" class="swatch-color" title="{{prod.content.productName}}" style="background-color: {{ color|first }}"></a>
+            {% endwith %}
+        </div>
+    {% endif %}
+{% endfor %} 

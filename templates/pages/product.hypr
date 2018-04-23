@@ -98,31 +98,76 @@
                     </div>
                   {% endif %}
                  {% endif %}
-            <div class="product-image {% if not pageContext.isDesktop and  model.content.productImages|length >1 %} hide {% endif %}">
-               {% if model.mainImage.imageUrl %}
-               <img itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=600 quality=70 as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} />
-               {% else %}
-               <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
-               {% endif %}
-               <iframe width="100%" height="100%" id="video-frame" style="display:none;"></iframe>
-            </div>
+            <div class="product-image {% if not pageContext.isDesktop %}{%if model.content.productImages|length >1  or model|get_product_attribute_values(themeSettings.productAttributes.video) %} hide {% endif %}{% endif %}">
+               <div class="imageContainer">
+                    {% if model.mainImage.imageUrl %}
+                    <img id="imagei" zoom-image="{% make_url "image" model.mainImage with max=1000 %}"  itemprop="image" class="mz-productimages-mainimage" data-mz-productimage-main src="{% make_url "image" model.mainImage with max=600 quality=70 as_parameter %}" {% if model.mainImage.altText %}alt="{{ model.mainImage.altText }}"{% else %}alt="{{ model.content.productName }}"{% endif %} />
+                    {% else %}
+                    <span class="mz-productlisting-imageplaceholder"><span class="mz-productlisting-imageplaceholdertext">{{ labels.productImagePlaceholder }}</span></span>
+                    {% endif %}
+                    <iframe width="100%" height="100%" id="video-frame" style="display:none;"></iframe>
+                </div>
+                <div class="productExtrasContainer ">
+                    {%if pagecontext.isDesktop %}
+                        <div class="zoomImage">
+                            <img id="zoombutton" alt=" " src="/resources/images/zoom_icon.svg" style="height: 25px;" >
+
+                           <!-- zoom image container to be added here.  -->  
+                        </div>
+                        <div class="colorSwatchContainer" product-color-swatch>
+                            {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
+                                {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %}
+                                <div class="owl-carousel owl-theme">
+                                    {% if pdcs|first == "asColors" %} 
+                                        {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
+                                            {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
+                                               {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
+                                                  {% include_products "modules/product/color-swatch-product" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+                                               {% endwith %}
+                                            {% endwith %}
+                                         {% endif %}
+                                    {% else %}
+                                        {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
+                                            {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
+                                               {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
+                                                  {% include_products "modules/product/image-swatch-product"  with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
+                                               {% endwith %}
+                                            {% endwith %}
+                                         {% endif %}
+                                    {% endif %}
+                                </div>
+
+                                {% endwith %}
+                            {% endif %}
+                        </div>
+                    {%endif%}
+                    
+                </div>
             
          </div>
-         
+         </div>
          {% if model.content.productImages|length >1 or model|get_product_attribute_values(themeSettings.productAttributes.video) %}
-                {%if pageContext.isDesktop %}
+                {% if pageContext.isDesktop %}
                     </div>
-                {%endif %}
+                {% endif %}
         {%endif%}
 
          <div class="container-right">
          <div class="upperProductDetails">
             <div class="product-info">
-               <div class="product-title">
-                  {% if pageContext.isDesktop or pageContext.isTablet %}
-                  <h1 class="mz-pagetitle desktop-name" itemprop="name">{{ model.content.productName }}</h1>
-                  {% endif %}
-               </div>
+                <div class="product-title">
+                    <h1 class="mz-pagetitle desktop-name" itemprop="name">{{ model.content.productName }}</h1>
+                    {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
+                        <div class="showmoreDescription">
+                        <div class="product-short-description content hideContent">
+                          {{ model.content.productShortDescription|safe }}
+                        </div>
+                        {% if model.content.productShortDescription.length > 100 %}       
+                            <a class="show-more" href="#">...read more</a>
+                        {% endif %}
+                        </div>
+                    {% endif %}
+                 </div>
                <div class="product-review-share">
                   <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating product-rating-review" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}" >
                   {% if model|get_product_attribute('tenant~rating') %}
@@ -180,71 +225,43 @@
                <div class="product-share">
                  {# Go to www.addthis.com/dashboard to customize your tools #}
                  <div  style="display: inline-block;vertical-align: middle;" class="addthis_inline_share_toolbox addthis_button_compact addthis_default_style" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
-                     <a class="addthis_button_facebook">
-                      <i class="fa fa-facebook-square"></i>
-                    </a>
                     <a  class="addthis_button_twitter">
                        <i class="fa fa-twitter-square"></i>
                     </a>
                     <a class="addthis_button_pinterest_share">
                        <i class="fa fa-pinterest-square"></i>
                     </a>
-                     <a class="addthis_button_google_plusone_share">
-                        <i class="fa fa-google-plus-square"></i>
+                    <a class="addthis_button_facebook">
+                      <i class="fa fa-facebook-square"></i>
                     </a>
-                    <a class="addthis_button_email">
-                      <i class="fa fa-envelope"></i>
-                    </a>
-
+                    
                    
                  </div>
             </div>
                </div>
-               {% include "modules/common/message-bar" %}
+                {%comment%}
+                    {% include "modules/common/message-bar" %}
 
-                {% if model.hasPriceRange and not model.volumePriceRange %}
-                  <div class="starting-price">
-                    <span class="color-blue">{{ labels.price }} : </span>
-                    {% include "modules/product/price-stack-lower" %}
-                  </div>
-                  {% else%}
-                    {% if model.volumePriceRange  and model.volumePriceRange.lower %}
-                     <div class="starting-price">
+                    {% if model.hasPriceRange and not model.volumePriceRange %}
+                      <div class="starting-price">
                         <span class="color-blue">{{ labels.price }} : </span>
-                          <div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
-                            As low as
-                            <span itemprop="minPrice">
-                              {% include "modules/product/as-low-price" with model=model.volumePriceRange.lower %}
-                            </span>
-                          </div>
-                    </div>
+                        {% include "modules/product/price-stack-lower" %}
+                      </div>
+                      {% else%}
+                        {% if model.volumePriceRange  and model.volumePriceRange.lower %}
+                         <div class="starting-price">
+                            <span class="color-blue">{{ labels.price }} : </span>
+                              <div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
+                                As low as
+                                <span itemprop="minPrice">
+                                  {% include "modules/product/as-low-price" with model=model.volumePriceRange.lower %}
+                                </span>
+                              </div>
+                        </div>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
+                {%endcomment%}
 
-            {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
-               {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %}
-               <div class="product-color-swatch">
-                  {% if pdcs|first == "asColors" %}
-                  {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
-                     {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
-                        {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
-                           {% include_products "modules/product/color-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-                        {% endwith %}
-                     {% endwith %}
-                     {% endif %}
-                  {% else %}
-                     {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}
-                        {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValue %}
-                           {% with "{0},{1}"|string_format(model.productCode, prdValue) as prdfilter %}
-                              {% include_products "modules/product/image-swatch-detail" with productCodes=prdfilter and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}
-                           {% endwith %}
-                        {% endwith %}
-                     {% endif %}
-                  {% endif %}
-               </div>
-               {% endwith %}
-            {% endif %}
-           
             <div id="product-detail" class="mz-productdetail mz-l-stack">
                {% include "modules/product/product-detail-custom" %}
             </div>
@@ -267,6 +284,25 @@
    </div>
 </div>
 </div>
+
+<div class="row mz-quick-view-wrapper">
+    <div class="container-left">
+    </div>
+    <div class="container-right">
+
+        {% if pageContext.isMobile %}
+             <div class="youMayAlsoLikeContainer">
+                 <div class="youmayalsolike">
+                     <label>You may also like:</label>
+                 </div>
+                 <div class="pdpRecommendedProductsSlot_2 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_2" >
+
+                 </div>
+             </div>
+         {%endif%}
+    </div>
+</div>
+
 <!-- Description Tabs-->
 <div class="mz-shi-heading-style">
    {% dropzone "recommended-products" scope="template" %}
@@ -306,7 +342,7 @@
 {% include "modules/product/product-description-inspiration" %}   
 {% include "modules/product/pdp-related-products" %}
 
-{% require_script "vendor/jquery.elevatezoom"%} 
+
 
 {% include "modules/bloomreach_seo" %}
 
