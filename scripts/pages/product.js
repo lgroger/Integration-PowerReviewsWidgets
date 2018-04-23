@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview", "widgets/powerreviews"],
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview", "modules/powerreviews"],
 function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerReviews) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
