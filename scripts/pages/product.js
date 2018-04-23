@@ -1,4 +1,4 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview", "modules/powerreviews"],
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview", "widgets/powerreviews"],
 function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerReviews) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
@@ -51,7 +51,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerRev
 			PowerReviews.writeProductListBoxes(product.get('productCode'));
 		}
 		catch(e){
-			console.log(e);
+			console.log(e); 
 		}
 		return productView;
     };
@@ -101,6 +101,15 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerRev
                 $(this).toggleClass('enabled');
                 $('.zoomContainer').hide();
             }
+        });
+        
+        $(document).on('click', '.tabbableContainer .tab span', function(e){
+            var element = e.currentTarget;
+            $('.tabbableContainer .tablinks').removeClass('selected');
+            $(element).addClass('selected');
+            var tabName = $(element).data('tabnames');
+            $('.tabbableContainer .tabcontent').addClass('hide');
+            $('.tabbableContainer #'+tabName).removeClass('hide');
         });
         
         $('.productExtrasContainer .item').removeClass('hide');
