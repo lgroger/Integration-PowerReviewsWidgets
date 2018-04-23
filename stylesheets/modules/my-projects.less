@@ -162,7 +162,7 @@ div.mc-save-intro, div.mc-save-editcart, div.mc-save-editwishlist{
 /* START MEDIACLIP MY PROJECTS PAGE & MY ACCOUNT PAGE/MY PROJECTS STYLES */
 /* start my projects header/logo */
 .my-projects-container {
-    background-image: url("http://cdn-tp2.mozu.com/16647-m1/cms/files/aab386dc-5d5a-4e70-a063-544545fe716d");
+    background-image: url("//cdn-tp2.mozu.com/16647-m1/cms/files/aab386dc-5d5a-4e70-a063-544545fe716d");
     background-repeat: no-repeat;
     background-position: center top;
     background-size: auto 100%;
@@ -240,6 +240,10 @@ div.mc-save-intro, div.mc-save-editcart, div.mc-save-editwishlist{
     @media (min-width: 768px) {
         width: 22%;
         margin: 10px;
+        max-width: 160px;
+        margin: 10px;
+        border: 1px solid #fafafa;
+        padding: 10px;
     }
     @media (min-width: 992px) {
 	    width: 17%;
@@ -258,16 +262,26 @@ div.mc-save-intro, div.mc-save-editcart, div.mc-save-editwishlist{
     margin: 0 auto 5px;
     display: block;
     @media (min-width: 768px) {
-    	max-width: 170px;
-    	max-height: 170px;
+    	max-width: 120px;
+    	max-height: 120px;
     	margin: 0 0 5px;
+    }
+    @media (min-width: 1400px) {
+        max-width: 160px;
+        max-height: 160px;
+        margin: 0 0 5px;
     }
 }
 .mc-create-date {
     font-size: 8px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     @media and (min-width: 480px) {
         font-size: 10px;
-		 }
+	}
+    @media and (min-width: 768px) {
+        text-align: center;
+    }
 }
 .mc-projects-item a { 
     font-size: 12px;
