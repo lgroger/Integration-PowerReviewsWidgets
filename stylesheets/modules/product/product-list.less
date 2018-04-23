@@ -1,13 +1,14 @@
 .mz-productlist {
     &-tiled {
         .mz-productlist-item {
-            /*
-            min-height: @productTileHeight;
-            width: @productTileWidth;
-            */
             box-sizing: border-box;
             display: -webkit-flex;
             display: flex;
+            @media @smallmobile {
+                padding: 3px;
+                width: 50%;
+                float: left;
+            }
         }
     }
 }

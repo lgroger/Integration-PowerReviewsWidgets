@@ -8,7 +8,7 @@ define(['modules/jquery-mozu',"modules/login-links"],function($,LoginLinks){
 		}
 		else{
 			$('.footer-binding-link-login a').on('click',function(e){
-				console.log('isAnonymous click');
+				//console.log('isAnonymous click');
 				e.preventDefault();
 				LoginLinks.triggerLogin();			
 				if($( window ).width() <=1024 ){
