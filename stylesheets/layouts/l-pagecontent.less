@@ -4,5 +4,13 @@
 	overflow: none;
 	padding: @gutter @gutter*1.5;
 	position: relative;
-    clear: both;
+	clear: both;
+	margin-left: auto;
+	margin-right: auto;
+	@media @desktop {
+		max-width: 1250px;
+	}
+	@media @largedevice {
+		min-width: 1480px;
+	}
 }
