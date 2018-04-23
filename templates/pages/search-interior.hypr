@@ -6,7 +6,7 @@
     	{% endwith %}
         {% endif %}
 
-      <h1 class="mz-pagetitle">{{ themeSettings.searchPageHeading }} <span class="mz-searchresults-query">&ldquo;{{ pageContext.search.query }}&ldquo;</span></h1> 
+      <h1 class="mz-pagetitle">{{ themeSettings.searchPageHeading }} <span class="mz-searchresults-query">&ldquo;{{ pageContext.search.query }}&rdquo;</span></h1> 
         {% partial_cache model.categoryId pageContext.Sorting pageContext.Pagination pageContext.query.sortBy pageContext.search.query %}
     {% include "modules/product/faceted-products" %}
     {% endpartial_cache %}
