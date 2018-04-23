@@ -11,6 +11,15 @@
 {% require_script "pages/category_listing" %}
 
 <div data-mz-category="{{model.categoryId}}" class="mz-l-container sz-parent-category-template">
+
+	<div class="breadcrumbs-parent">
+		{% block breadcrumbs %}
+		{% if themeSettings.showBreadcrumbs %}
+		{% include "modules/breadcrumbs" %}
+		{% endif %}
+		{% endblock breadcrumbs %}
+	</div>
+
 	<div class="mz-category-title">
 		{% dropzone "common-category-top" scope="page" %}
     	{% dropzone "category-page-top" scope="page" %}

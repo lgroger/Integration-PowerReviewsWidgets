@@ -1,11 +1,49 @@
 ﻿.mz-pagesort {
     .mz-pagingcontrols-pagesort-label {
+        .selectric-responsive{
+            display: inline-block;
+            width: 130px;
+            @media @tablet, @desktop {
+                border: 1px solid @disabled-grey;
+                border-radius: 2px;
+                width: 106px;
+                float: none;
+            }
+        }
         display: block;
         margin-top: 10px;
+        @media @tablet {
+            margin-right: 6px;
+            padding-top: 0;
+        }
     }
     .mz-pagingcontrols-pagesort-dropdown {
         display: inline-block;
         padding: 2px;
         margin: 0 5px;
+    }
+}
+.mz-pagingcontrols-pagesort-label {
+    span.mz-paging-title, span.mz-paging-sorttitle{
+        float: left;
+        width: 50px;
+        margin-top: 8px;
+        color: @disabled-grey;
+        font-size: 11px;
+        text-transform: uppercase;
+        @media @tablet {
+            width: auto;
+            margin-right: 10px;
+        }
+    }
+    .selectric-responsive{
+        display: inline-block;
+        width: 130px;
+        border: 1px solid @disabled-grey;
+        border-radius: 2px;
+        @media @tablet {
+            width: 106px;
+            float: none;
+        }
     }
 }

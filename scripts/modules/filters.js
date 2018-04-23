@@ -91,7 +91,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
    
         $(document).on('click','.facet-heading',function(e){
           $(this).next().slideToggle();
-          $(this).children('i').toggleClass('fa-caret-up').toggleClass('fa-caret-down');
+          $(this).children('i').toggleClass('fa-minus').toggleClass('fa-plus');
           
         });    
 
@@ -103,7 +103,7 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
                 cnt = parseInt(cnt,10)-1;
           $(this).parents().prevAll('.mz-facetingform-facet').find('li:gt('+cnt+')').slideToggle();  
           //$(this).next('i').toggleClass('fa-caret-down').toggleClass('fa-caret-up'); 
-          $(this).children('i').toggleClass('fa-caret-down').toggleClass('fa-caret-up'); 
+          $(this).children('i').toggleClass('fa-minus').toggleClass('fa-plus'); 
          var a =  $(this).find('.facets-more').text();
          var b = $.trim(a);
           var c; 

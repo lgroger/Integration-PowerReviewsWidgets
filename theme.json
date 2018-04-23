@@ -542,7 +542,15 @@
       "entityType": "webpage",
       "id": "mediaclip",
       "template": "mediaclip",
-      "title": "MediaClip",
+      "title": "MediaClip Editor",
+      "userCreatable": true
+    },
+    {
+      "documentType": "web_page",
+      "entityType": "webpage",
+      "id": "my-projects",
+      "template": "my-projects",
+      "title": "Mediaclip My Projects",
       "userCreatable": true
     },
     {
@@ -568,13 +576,6 @@
       "template": "party-planner",
       "title": "Party Planner",
       "userCreatable": true
-    },
-    {
-      "entityType": "product-bundle",
-      "id": "product-bundle",
-      "template": "product-bundle",
-      "title": "Product Bundle",
-      "userCreatable": false
     },
     {
       "documentType": "web_page",

@@ -92,8 +92,8 @@ $(document).ready(function () {
                     $('.megamenu_cat').css('visibility','visible');
                     var clicked_content = $(this).children('a').text();
                     $('.menu_category_heading').text(clicked_content);
-                    console.log("tap ");
-                    console.log("tap"+$(this).children('.main-drop-down').css('display'));
+                    //console.log("tap ");
+                    //console.log("tap"+$(this).children('.main-drop-down').css('display'));
                 }
 
             });

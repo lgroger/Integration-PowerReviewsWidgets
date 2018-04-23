@@ -8,10 +8,10 @@
                     {% if category %}
                         <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                             {% if model.data.lgoverride %}
-                                <img src="{{model.data.lgimageurl}}" alt="{{model.data.lgcatname}}"/>
+                                <img src="{{model.data.lgimageurl}}?max=643" alt="{{model.data.lgcatname}}"/>
                             {% else %}
                                     {% with category.content.categoryImages|first as catimage %}
-                                        <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatname}}"/>
+                                        <img src="{{catimage.imageUrl}}?max=643" alt="{{model.data.lgcatname}}"/>
                                     {% endwith %}
                             {% endif %}
 
@@ -29,10 +29,10 @@
                     {% if category %}
                         <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                             {% if model.data.smoverrideA %}
-                                <img src="{{model.data.smimageurlA}}" alt="{{model.data.smcatnameA}}"/>
+                                <img src="{{model.data.smimageurlA}}?max=313" alt="{{model.data.smcatnameA}}"/>
                             {% else %}
                                 {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameA}}"/>
+                                    <img src="{{catimage.imageUrl}}?max=313" alt="{{model.data.smcatnameA}}"/>
                                 {% endwith %}
                             {% endif %}
 
@@ -48,10 +48,10 @@
                     {% if category %}
                         <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                             {% if model.data.smoverrideB %}
-                                <img src="{{model.data.smimageurlB}}" alt="{{model.data.smcatnameB}}"/>
+                                <img src="{{model.data.smimageurlB}}?max=313" alt="{{model.data.smcatnameB}}"/>
                             {% else %}
                                 {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameB}}"/>
+                                    <img src="{{catimage.imageUrl}}?max=313" alt="{{model.data.smcatnameB}}"/>
                                 {% endwith %}
                             {% endif %}
 
@@ -72,10 +72,10 @@
                     {% if category %}
                         <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                             {% if model.data.smoverrideA %}
-                                <img src="{{model.data.smimageurlA}}" alt="{{model.data.smcatnameA}}"/>
+                                <img src="{{model.data.smimageurlA}}?max=313" alt="{{model.data.smcatnameA}}"/>
                             {% else %}
                                 {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameA}}"/>
+                                    <img src="{{catimage.imageUrl}}?max=313" alt="{{model.data.smcatnameA}}"/>
                                 {% endwith %}
                             {% endif %}
 
@@ -91,10 +91,10 @@
                     {% if category %}
                         <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                             {% if model.data.smoverrideB %}
-                                <img src="{{model.data.smimageurlB}}" alt="{{model.data.smcatnameB}}"/>
+                                <img src="{{model.data.smimageurlB}}?max=313" alt="{{model.data.smcatnameB}}"/>
                             {% else %}
                                 {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.smcatnameB}}"/>
+                                    <img src="{{catimage.imageUrl}}?max=313" alt="{{model.data.smcatnameB}}"/>
                                 {% endwith %}
                             {% endif %}
 
@@ -112,10 +112,10 @@
                     {% if category %}
                         <a href="{% if category.content.slug %}/{{category.content.slug}}{% endif %}/c/{{category.categoryId}}">
                             {% if model.data.lgoverride %}
-                                <img src="{{model.data.lgimageurl}}" alt="{{model.data.lgcatname}}"/>
+                                <img src="{{model.data.lgimageurl}}?max=643" alt="{{model.data.lgcatname}}"/>
                             {% else %}
                                 {% with category.content.categoryImages|first as catimage %}
-                                    <img src="{{catimage.imageUrl}}" alt="{{model.data.lgcatname}}"/>
+                                    <img src="{{catimage.imageUrl}}?max=643" alt="{{model.data.lgcatname}}"/>
                                 {% endwith %}
                             {% endif %}
 

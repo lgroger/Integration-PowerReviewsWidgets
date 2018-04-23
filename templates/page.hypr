@@ -181,12 +181,6 @@
 
               <div role="main" id="page-content" class="mz-l-pagecontent page-padding">
 
-                  {% block breadcrumbs %}
-                  {% if themeSettings.showBreadcrumbs %}
-                  {% include "modules/breadcrumbs" %}
-                  {% endif %}
-                  {% endblock breadcrumbs %}
-
                   {% block body-content %}
 
                   {% dropzone "body" scope="page" %}

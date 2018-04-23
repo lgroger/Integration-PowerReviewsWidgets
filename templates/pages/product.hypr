@@ -6,11 +6,6 @@
 {% require_script "pages/product" %}
 {% require_script "modules/quick-view" %}
 {% preload_json model "product" %}
-<style type="text/css">
-   .mz-breadcrumbs:first-child {
-   display: none;
-   }
-</style>
 <!--[if IE]>
 <style>
    .display-fixed-mob #add-to-wishlist{
@@ -22,12 +17,14 @@
 {% include_documents "widgets/cms/ups_ship" with view="holidayView" and listFQN="UPSholidayList@shindigz" and pageSize=40 as_parameter %}
 {% include_documents "widgets/cms/holiday_preload" with view="holidayView" and listFQN="ShippingholidayList@shindigz" and pageSize=100 as_parameter %} 
 
-<div class="mz-breadcrumbs">   
-   <a href="../../" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">Home</a>
-   <span class="mz-breadcrumb-separator"> / </span> 
- <a href="{{navigation.currentNode.parent.url}}" class="mz-breadcrumb-link{% if forloop.first %} is-first{% endif %}">{{navigation.currentNode.parent.name}}</a> <span class="mz-breadcrumb-separator"> / </span>
-   <span>{{navigation.currentNode.name}}</span>
-</div>
+<div class="breadcrumbs-prod">
+		{% block breadcrumbs %}
+		{% if themeSettings.showBreadcrumbs %}
+		{% include "modules/breadcrumbs" %}
+		{% endif %}
+		{% endblock breadcrumbs %}
+		</div>
+
 {% if pageContext.isMobile %}
 <h1 class="mz-pagetitle mob-tag" itemprop="name">{{ model.content.productName }}</h1>
 {% endif %}
@@ -259,9 +256,11 @@
 <div class="mz-shi-heading-style">
    {% dropzone "recommended-products" scope="template" %}
 </div>
+{% comment %}
 {% if pagecontext.isMobile %}
   {% include "modules/product/fixed_product_desc_header" %}
 {% endif %}
+{% endcomment %}
 {% if themeSettings.certonaRecomm %}
    {% if themeSettings.certonaRecommSimilarProducts %}   
       {% if themeSettings.similarProductHeading %}

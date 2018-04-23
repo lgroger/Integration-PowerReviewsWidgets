@@ -1289,7 +1289,7 @@
             /* Checking exist a picker */
             var input = this;
             if(0 < $(PickerObjects[$(input).data('pickerId')]).length) {
-                console.log('dtpicker - Already exist appended picker');
+                //console.log('dtpicker - Already exist appended picker');
                 return;
 
             }
@@ -1384,7 +1384,7 @@
                         // Call a event-hanlder
                         var func = $picker.data('onShow');
                         if (func !== null) {
-                            console.log('dtpicker- Call the onShow handler');
+                            //console.log('dtpicker- Call the onShow handler');
                             func(handler);
                         }
                     }
@@ -1414,7 +1414,7 @@
             // Call a event-handler
             var func = $picker.data('onInit');
             if (func !== null) {
-                console.log('dtpicker- Call the onInit handler');
+                //console.log('dtpicker- Call the onInit handler');
                 func(handler);
             }
         });
@@ -1512,7 +1512,7 @@
                         // Call a event-hanlder
                         var func = $picker.data('onHide');
                         if (func !== null) {
-                            console.log('dtpicker- Call the onHide handler');
+                            //console.log('dtpicker- Call the onHide handler');
                             func(handler);
                         }
                     }

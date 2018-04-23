@@ -86,10 +86,10 @@ var certonaRecommendations = function(response){
 			htmltemp += '<div class="mz-productlisting-is-personalize">';
 			htmltemp += '<a href="'+recomm[i].Detail_URL;
 			if(recs){
-				htmltemp += recs+'">PERSONALIZE</a>';
+				htmltemp += recs+'"><img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/></a>';
 			}
 			else{
-				htmltemp += '">PERSONALIZE</a>';
+				htmltemp += '"><img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/></a>';
 			}
 			htmltemp += '</div>';
 			}

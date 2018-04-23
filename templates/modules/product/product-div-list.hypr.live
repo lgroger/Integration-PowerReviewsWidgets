@@ -25,6 +25,19 @@
             {% endif %}
         {% endfor %}
         <div style="clear:both;float:none;min-height:0;margin-bottom:0;"></div>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content mz-instock-request">
+                <span class="close">&times;</span>
+                <p>Notify me when this product is back in stock</p>
+                Email: <input type='text' id='email' /> &nbsp;
+                <button class="submitNotificationEmail">Notify Me</button>
+                <div class="err hide">please enter valid email address</div>
+                <div class='msg hide'> Successfully subscribed </div>
+                <input type=hidden id="productCode" />
+            </div>
+        </div>
+
     </div>
     {% endif %}
 </div>
