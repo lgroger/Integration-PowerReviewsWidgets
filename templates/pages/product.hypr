@@ -285,6 +285,79 @@
 
 <div class="row mz-quick-view-wrapper">
     <div class="container-left">
+        <div class='tabbableContainer'>
+            <div class="tab">
+                <span data-tabnames="details" class="tablinks selected" >Details</span>
+                <span data-tabnames="shipping" class="tablinks " >Shipping</span>
+                {% if model.bundledProducts.length > 0 %}<span data-tabnames="included" class="tablinks " >What's Included</span> {% endif %}
+            </div>
+            <div class="socialIcons" >
+                <!-- Go to www.addthis.com/dashboard to customize your tools -->
+                <div  style="display: inline-block;vertical-align: middle;" class="addthis_button_compact addthis_default_style addthis_inline_share_toolbox_zh34" data-url="{% make_url "product" model %}" data-title="{{ model.content.productName }}">
+
+                   <a  class="addthis_button_twitter">
+                      <i class="fa fa-twitter"></i>
+                   </a>
+                   <a class="addthis_button_pinterest_share">
+                      <i class="fa fa-pinterest"></i>
+                   </a>
+                   <a class="addthis_button_facebook">
+                     <i class="fa fa-facebook"></i>
+                   </a>
+                </div>
+            </div>
+            <div id="details" class="tabcontent">
+                <span class="upArrow"></span>
+                <div class="tab-content-inner">
+                    <p> 
+                        {{ model.content.productFullDescription|safe }}
+                    </p>         
+                    {% if themeSettings.safetyFlags %}
+                       {% for safetyFlg in themeSettings.safetyFlags %}
+                          {% if model|get_product_attribute(safetyFlg.code) %}
+                             {% with model|get_product_attribute(safetyFlg.code) as safetyValues %}
+                             {% with safetyValues.values|first as val %}
+                                {% if val.value %}
+                                   <span class="wrapper"><i class="fa fa-exclamation-triangle"></i>
+                                          <span id="safetywarning">
+                                            {{themeSettings|prop(safetyFlg.field)|safe}}
+                                          </span> 
+                                   </span>
+                                {% endif %}
+                             {% endwith %}   
+                             {% endwith %}
+                          {% endif %}
+                       {% endfor %}
+                    {% endif %}
+                    <p class="assemblytime">
+                        {% with model.properties|findwhere("attributeFQN", "tenant~assemblytime") as assemblytime %}
+                            {% for val in assemblytime.values %}
+                            Assembly Required - {{val.stringValue}}
+                            {% endfor %}                                       
+                        {% endwith %}
+
+                    </p>
+                    <p class="productCode">
+                        Product Code: {{ model.productCode }}
+                    </p>
+                </div>
+            </div> 
+
+            <div id="shipping" class="tabcontent hide">
+              <span class="upArrow"></span>  
+                <div class="tab-content-inner">
+                <p>Please allow ample time for delivery. The delivery date for this product is noted above for US shipping only. Please refer to checkout for delivery dates outside of the Contiguous 48 States.</p>
+                <p>Shipping charges are based on the value of the merchandise and not the number of shipments. For additional shipping information, please contact our Customer Service Department at 800-348-5084.</p>
+                </div>
+            </div>
+
+            <div id="included" class="tabcontent hide">
+                <span class="upArrow"></span>
+                <div class="tab-content-inner">
+                    {% include "modules/product/pdp-bundle-products" %} 
+                </div>
+            </div> 
+        </div>
     </div>
     <div class="container-right">
 
@@ -298,6 +371,27 @@
                  </div>
              </div>
          {%endif%}
+            {% if model|get_product_attribute_values('tenant~product-upsell') %}
+                <div class='coordinatingProductContainer'>
+                    <div class="relatedProductContainer">
+                        <div class="title"> 
+                            <span class="cordinatingProductTitleContainer" > coordinating products </span>
+                        </div>
+                        <div class="cross-sellContainer">
+                            {%comment%}
+                            {% if themeSettings.certonaRecommRelatedProducts %}
+                                <div data-mz-recommendedProducts id="recommended_products_slot_2">
+                                </div>
+                            {% endif %}
+                             {%endcomment%}
+                            <div data-mz-recommendedProducts id="recommended_products_slot_">
+                                {% for related_products in model|get_product_attribute_values('tenant~product-upsell')|make_list  %}
+                                    {% include_products "modules/product/coordinating_products" with productCodes=related_products and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}   
+                                {% endfor %}
+                            </div>
+                    </div>
+                </div>
+            {%endif%}
     </div>
 </div>
 
