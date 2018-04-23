@@ -6,15 +6,6 @@
 
          <div class="item">
             <div class="mz-productlist-item" data-mz-product="{{item.productCode}}">
-              {% if pageContext.isTablet == true %}
-                  <!--<div class="wishlist-icon-tablet" id="{{ item.productCode }}" >
-                      <a href="#" id="{{ item.productCode }}"></a>
-                  </div>-->
-              {% else%}
-                  <!--<div class="wishlist-icon" id="{{ item.productCode }}" >
-                      <a href="#" id="{{ item.productCode }}"></a>
-                  </div>-->
-              {% endif%}
                <div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{item.productCode}}">
                   <div class="mz-productlisting-image">
                     <a href="{{ item.url }}{% if pageContext.pageType == "search" or pageContext.pageType == "category" %}?rrec=true{% endif %}">
@@ -92,13 +83,6 @@
                         </span>
                        </div>
                   </div>
-                  <!--<div class="mz-productlisting-rating">
-                       <div class="mz-product-rating">
-                           <div class="pr-snippet-stars">
-                               <div id="pr-snippet-star-image" title="That's good stuff" class="pr-stars pr-stars-small pr-stars-0_0-sm">&nbsp;</div>
-                           </div>
-                       </div>
-                  </div>-->
                   {% if item|get_product_attribute(themeSettings.productAttributes.dndCode) %}
 			        {% with item|get_product_attribute(themeSettings.productAttributes.dndCode) as isPersonalize %}
 				            {% if isPersonalize.values|first|prop("value") != "" %}

@@ -1,10 +1,7 @@
 define(['modules/jquery-mozu', 'vendor/jQuery.selectric'], function ($) {
 	$(function(){
 		$(".faq-main-wrap").parent().css("padding","0 10px");
-		//console.log("init faq ");
-		//console.log($(".faq-category-section .faq-list-item>h3"));
 		$(".faq-category-section .faq-list-item>h3").click(function(){
-			//console.log("click faq");
 			if($(this).hasClass('show-faq')){
 				$(this).removeClass('show-faq');
 			}else{

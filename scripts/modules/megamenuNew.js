@@ -6,9 +6,6 @@ function equalHeight(group) {
    var tallest = 0;
    group.each(function() {
      var thisHeight = $(this).height();
-    /* if(thisHeight===0){
-      $(this).remove();
-     }*/
       if(thisHeight > tallest) {
          tallest = thisHeight;
       }
@@ -17,26 +14,7 @@ function equalHeight(group) {
     group.height(tallest);    
    }
 }
-$(document).ready(function () {
-/* it looks like this was used for NextTag checkout conversion which is now disabled
-    var pagecontext = [];
-
-     if($.cookie('pageurlclick') !== undefined){
-            var recent= $.cookie('pageurlclick');  
-            pagecontext = recent.split(","); 
-            
-            
-                pagecontext.push(require.mozuData('pagecontext').url);
-                $.cookie('pageurlclick',pagecontext,{path: '/', expires: 1 }); 
-        }
-        else{ 
-            pagecontext.push(require.mozuData('pagecontext').url);
-            $.cookie('pageurlclick',pagecontext,{path: '/', expires: 1 });
-        }
-
-*/
-        
-
+$(document).ready(function () {    
     /* Code for floating header mega menu content */
     $(".menu-cols-count").each(function(){
     $(this).parent().parent().addClass($(this).attr("data-len"));
@@ -299,7 +277,6 @@ $(document).ready(function () {
                     });
                     
                 }else{
-                    //$(".megamenu-wrapper-new").css("display","block");
                     $("#mz-drop-zone-megamenu .mega-menu-container").each(function(){
                         equalHeight($(this).find(".menu-column-block"));            
                         $(this).find(".menu-column-block:last").addClass("last-child");
@@ -324,5 +301,3 @@ $(document).ready(function () {
 
 
 });
-
-

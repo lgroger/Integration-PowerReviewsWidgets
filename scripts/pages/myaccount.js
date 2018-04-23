@@ -2058,6 +2058,9 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 
     $(document).on('click','.mz-accountaddressbook-edit', function(){
         $('.mz-accountaddressbook-contact.address-block').hide();
+        $('html, body').animate({
+            scrollTop: $(".mz-accountaddressbook-form").offset().top
+        }, 2000);
     });
     $('.mz-contact-cancel').on('click', function(){
         // $('.mz-accountaddressbook-contact.address-block').show();

@@ -222,8 +222,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
         initialize: function () {
             //console.log("init order summary ");
             window.first_load=true;
-            //this.showPersonalizeImage();
-            //this.render();
             /* window.usa_48=_.filter(order_item_list, function(obj) {
                 return  _.where(obj.properties, {'attributeFQN': Hypr.getThemeSetting('productAttributes').usa48})[0].values[0].value===true;
             });
@@ -921,7 +919,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                             var melt_idx=scope_obj.model.get("items")[idx].product.bundledProducts[0].productCode+"_melt";
                              if(window.meltArr[melt_idx]!==undefined  && (result_date.getDay()>=3||result_date.getDay()===0)){
                                 scope_obj.skip_holidays(result_date,1,shipping_holidays_list,scope_obj.est_date_usa,idx,scope_obj);
-                               //scope_obj.est_date_usa(result_date,idx,holidays,scope_obj);
                             }else{
                                 if(noBusDays===0){
                                     scope_obj.USADeliveryDate(result_date,idx,shipping_holidays_list,scope_obj,true);
@@ -1694,8 +1691,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                     }
                     yrcontent+='<option '+selected+' val="' + y +'">' + y +'</option>';
                 }
-                $(yearfield).append(yrcontent);   
-            
+                $(yearfield).append(yrcontent);             
         }, 
         setQuotePaymentData: function(e){
             var paymentType = $('[data-mz-payment-type]:checked').val();
@@ -2048,7 +2044,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                 		}
                 	});
             	}
-
                 if(self.model.get('shippingDiscounts').length > 0 ){
                     $(self.model.get('shippingDiscounts')).each(function(k,v){
                         if(v.discount.couponCode !== null && v.discount.couponCode !== undefined){
@@ -2284,7 +2279,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                 $.cookie("lastCoupon","", {  path: '/',expires: 5 });
                 self.render();
             });
-
         },checkCouponStatus:function (CCode) {
             var isApplied=false;
 
@@ -2424,7 +2418,6 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                     return false;
                 }
             });
-
             this.model.on('passwordinvalid', function(message) {
                 me.$('[data-mz-validationmessage-for="password"]').text(message);
             });
@@ -2440,8 +2433,7 @@ function ($, _, Hypr, Backbone, CheckoutModels, messageViewFactory, CartMonitor,
                  this.model.set("isQuotePayment",false);
             }
             Backbone.MozuView.prototype.render.call(this);
-        },
-        submit: function () {
+        },submit: function () {
             var self = this;
             try{
                 var isQuote=_.findWhere(this.model.toJSON().payments,{"paymentType":"Check","status":"New"});

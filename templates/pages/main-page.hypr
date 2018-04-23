@@ -98,13 +98,9 @@
 		 </div>
     </div>
 	
-	<!--div>
-	{% dropzone "popular-categories" scope="template" %}
-	</div-->
 	<div class="echi-shi-testimonials">
 	{% dropzone "testimonial_widget_heading" scope="template" %}
 	</div>
-	<!--p class="testimonial-heading">What People Are Saying About Shindigz</p-->	
 		{% dropzone "testimonial_widget" scope="template" %}
 		
 		</div> <!-- cd-testimonials-wrapper -->

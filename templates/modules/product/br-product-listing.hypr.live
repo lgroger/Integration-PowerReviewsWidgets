@@ -119,24 +119,12 @@
     </div>
     <div class="mz-productlisting-info">
     <a href="{{model.content.seoFriendlyUrl}}">
-            <div class="color-swatch">    
-                {% comment %}
-                {% if model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) %}
-                    {% with model|get_product_attribute_values(themeSettings.productAttributes.displayCrossSell) as pdcs %}
-                        {% if pdcs|first == "asColors" %}
-                        
-                        {% else %}
-                        {% endcomment %}
+            <div class="color-swatch">
                             {% if model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) %}  
                               {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell)|join(",") as prdValueStr %}
                                   {% with "{0},{1}"|string_format(model.productCode, prdValueStr) as prdValue %}
                                     <div class="colorbox">
                                         <ul>
-                                         {% comment %}
-                                            {% if model.mainImage.imageUrl %}
-                                            <li><img src="{{model.mainImage.imageUrl}}?max=14" /></li>
-                                         {% endif %}
-                                         {% endcomment %}
                                          {% with model|get_product_attribute_values(themeSettings.productAttributes.productCrossSell) as productCodes %}
                                             {% for imgid in productCodes %}
                                             {% if forloop.counter0 < 4 %}
@@ -153,11 +141,6 @@
                                     </div>   
                                   {% endwith %}    
                                 {% endwith %}
-                            {% comment %}
-                                {% endif %}  
-                        {% endif %}
-                    {% endwith %}
-                                            {% endcomment %}
 
                 {% endif %}
             </div></a>
@@ -209,7 +192,7 @@
         {% if model|get_product_attribute(themeSettings.productAttributes.dndToken) %}
         <div class="customize">
             <a href="{{model.content.seoFriendlyUrl}}">
-                <img src="../../resources/images/customizeItIcon.svg?max=80" alt="Customize It!"/>
+                <img src="../../resources/images/customizeItIcon.svg" alt="Customize It!"/>
             </a>
         </div>  
         {% endif %}

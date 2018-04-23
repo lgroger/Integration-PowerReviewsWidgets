@@ -148,11 +148,7 @@ define(['modules/jquery-mozu', 'modules/api','hyprlive', 'modules/dnd-token', 'v
 	 	console.log(e);
 	 }
 }
-$(document).on("click",".mz-accountaddressbook-edit",function() {
-    $('html, body').animate({
-        scrollTop: $(".mz-accountaddressbook-form").offset().top
-    }, 2000);
-});
+
 	$('.signup-link').click(function(){
 		$('.trigger-signup').trigger('click'); 
 		$("html, body").animate({ scrollTop: 0 }, "slow");

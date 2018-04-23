@@ -733,7 +733,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
             }
         },
         addToWishlistWithDesign: function(){// I think this is adding a personalized item to wishlist
-			console.log("addToWishlistWithDesign");
+			//console.log("addToWishlistWithDesign");
             var me = this;
                 if(!require.mozuData('user').isAnonymous) {
                         Wishlist.initoWishlistPersonalize(this.model,this.addToWishlistCallback.bind(this));
@@ -754,7 +754,7 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 }
         },
         addToWishlistAfterLogin: function(){
-			console.log("addToWishlistAfterLogin");
+			//console.log("addToWishlistAfterLogin");
 			var me = this;
              Wishlist.initoWishlist(this.model,this.addToWishlistCallback.bind(this));
             $.cookie('wishlistproduct', "",{path:'/'});

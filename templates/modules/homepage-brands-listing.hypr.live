@@ -10,7 +10,7 @@
 
                         {% else %}
                         <!-- brand_logo -->
-                                <img class="brand_logo" data-src="{{modelItem.logo}}?max=330" alt="{{modelItem.name}}"> </img> 
+                                <img class="brand_logo" data-src="{{modelItem.logo}}?max=330" alt="{{modelItem.name}}" /> </img> 
                             <!-- {{modelItem.logo}} -->
                         {% endif %}
                         <div align="center" class="catg_list_name">

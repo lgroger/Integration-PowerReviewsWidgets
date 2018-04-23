@@ -35,7 +35,6 @@
 {% dropzone "category-page-bottom" scope="page" %}
 {% if model.content.description or  model.content.metaTagDescription %}
 <div class="mz-category-description">
-	<!-- <h2>{{ model.name|safe }}</h2> -->
 	<p id="mz-cat-description-hide-more" >
 		{% if model.content.description %}
 			{{ model.content.description }}
