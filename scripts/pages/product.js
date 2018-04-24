@@ -3,6 +3,13 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerRev
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
+
+    var triggerLogin = function(){
+        $('.trigger-login').trigger('click');
+        $('#cboxOverlay').show();
+        $('#mz-quick-view-container').fadeOut(350);
+        $('#mz-quick-view-container').empty();
+    };
 	
      var initProductView = function(product){
 		//console.log("initProductView");
