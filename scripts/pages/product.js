@@ -1,5 +1,5 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview", "modules/powerreviews"],
-function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerReviews) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview", "modules/powerreviews","modules/api", "vendor/wishlist", "modules/quick-view", "modules/quickview-productview"],
+function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerReviews, api, Wishlist, QuickView, QuickViewProductView) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
@@ -130,6 +130,88 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView,PowerRev
             }
         });
             
+            $(document).on('click', ".cross-sellContainer .addToCart", function(e){
+                var ele = e.currentTarget;
+                window.showPageLoader();
+                
+                var productCode = $(ele).data("productid"); 
+                var quantity = $(ele).closest('.item').find('.qtybtn input').val();
+                var gaAction = 'BuyPlp';
+                var gaEvent = 'buyquickview';
+                $('body').append('<div id="mz-quick-view-container"></div>');
+                api.get('product', productCode).then(function(sdkProduct) {
+                    var product = new ProductModels.Product(sdkProduct.data);
+                    var productView = new QuickViewProductView({
+                        model:product,
+                        gaAction: gaAction,
+                        gaEvent: gaEvent
+                    });
+                    
+                    productView.setIsPersonalized(); 
+                    if(productView.model.get('isPersonalized')){
+                        $('#mz-quick-view-container').fadeIn(350);
+                        productView.render();
+                        var sku = "";
+                        if(typeof product.attributes.variationProductCode !== "undefined"){
+                            sku = product.attributes.variationProductCode;
+                        }
+                        if(typeof BrTrk !== "undefined" && BrTrk !== 'undefined'){
+                            BrTrk.getTracker().logEvent(
+                                    'product', // event group
+                            'quickview', // event action
+                            {  // product details
+                                'prod_id' : product.attributes.productCode,
+                                'prod_name': product.attributes.content.attributes.productName,
+                                'sku': sku
+                            });
+                        }
+                        if(productView.model.get('isPersonalized')){
+                            productView.loadComponents();
+                            productView.loadExtras();
+                        }
+                        window.removePageLoader();
+                    } else {
+                        
+                        product.set('quantity', quantity);
+                        product.addToCart();
+                        window.removePageLoader();
+                    }  
+                });
+            });
+            
+            
+            $(document).on('click', ".cross-sellContainer .add-to-wishlist-pdp", function(e){
+                var ele = e.currentTarget;
+                if (!require.mozuData('user').isAnonymous) {
+                    var productCode = $(ele).data("productid");
+                    
+                    api.get('product', productCode).then(function(sdkProduct) {
+                        var PRODUT = new ProductModels.Product(sdkProduct.data);
+                        
+                        if(!require.mozuData('user').isAnonymous) {
+                            PRODUT.set('moveToWishList', 1);
+                            Wishlist.initoWishlist(PRODUT);
+                        }else {
+                            var produtDetailToStoreInCookie ={};
+                            produtDetailToStoreInCookie.productCode=PRODUT.get('productCode');
+                            var objj=PRODUT.getConfiguredOptions();
+                            produtDetailToStoreInCookie.options=objj;
+                            $.cookie('wishlistprouct','direct',{path:'/'});
+                            var ifrm = $("#homepageapicontext");
+                            if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
+                                PRODUT.set('moveToWishList', 1);
+                                Wishlist.initoWishlist(PRODUT);
+                            }else{
+                                triggerLogin();
+                            }
+                        }
+                        
+                    });
+                    
+                } else {
+                    triggerLogin();
+                }
+            });   
             
        var reviewname = $('.mz-pagetitle').text();
         $(document).on("click",'[data-pr-event="snippet-read-reviews"]',function(e){
