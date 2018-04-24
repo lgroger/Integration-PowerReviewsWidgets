@@ -360,17 +360,12 @@
                             <span class="cordinatingProductTitleContainer" > coordinating products </span>
                         </div>
                         <div class="cross-sellContainer">
-                            {%comment%}
-                            {% if themeSettings.certonaRecommRelatedProducts %}
-                                <div data-mz-recommendedProducts id="recommended_products_slot_2">
-                                </div>
-                            {% endif %}
-                             {%endcomment%}
                             <div data-mz-recommendedProducts id="recommended_products_slot_">
                                 {% for related_products in model|get_product_attribute_values('tenant~product-upsell')|make_list  %}
                                     {% include_products "modules/product/coordinating_products" with productCodes=related_products and pageWithUrl=true and sortWithUrl=true and pageSize=themeSettings.defaultPageSize as_parameter %}   
                                 {% endfor %}
                             </div>
+                        </div>
                     </div>
                 </div>
             {%endif%}

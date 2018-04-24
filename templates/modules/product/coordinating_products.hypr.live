@@ -1,0 +1,67 @@
+{%comment%}
+{% for product in model.items %}
+<div class="item">
+   <div class="mz-productlist-item" data-mz-product="{{ product.productCode }}">
+      <div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{ product.productCode }}">
+         <div class="mz-productlisting-image">
+            <a href="{{ product.url }}">
+            <img src="{{product.mainImage.imageUrl}}" alt="{{ product.content.productName }}">
+            </a>           
+         </div>
+         <div class="mz-productlisting-info">
+           
+            <a class="mz-productlisting-title" href="{{ product.url }}">{{ product.content.productName }}</a>            
+            <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+               <span itemprop="price" class="mz-price">
+               {{product.price.price | currency}}
+               </span>
+            </div>
+         </div>
+         
+         
+      </div>
+   </div>
+</div>
+{% endfor %}
+{%endcomment%}
+
+{% for product in model.items %}
+<div class="item">
+	<div class="mz-productlist-item" data-mz-product="{{ product.productCode }}">
+		<div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{ product.productCode }}">
+                    <div class="mz-productlisting-image">
+                            <a href="{{ product.url }}">
+                                <img src="{{product.mainImage.imageUrl}}" alt="{{ product.content.productName }}"></a>
+                    </div>
+                    <div class="mz-productlisting-info">
+                            <a class="mz-productlisting-title" href="{{ product.url }}">
+                                    {{ product.content.productName }}
+                            </a>
+                            <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
+                                    <span class="cerumo"> Price for each </span>
+                                    <span>
+                                        {% if product.price.maxprice > product.price.price  %}
+                                            <span itemprop="minPrice" class="mz-pricestack-price-lower">{{product.price.maxprice | currency}}</span>
+                                            <span itemprop="maxPrice" class="mz-pricestack-price-up"> {{product.price.price | currency}}</span>
+                                        {%else%}
+                                            <span class="mz-price">{{product.price.price | currency}}</span>
+                                        {%endif%}
+                                    </span>
+                            </div>
+
+                            <div class="productQuantity"> 
+                                    <div class="qty"></div>
+                                    <span class="qtybtn">
+                                    <input type="number" value="1" min="1" max="9999" maxlength="4"></span>
+                                    <span class="actionContainer">
+                                            <span class="addToCart" data-productid="{{ product.productCode }}"> 
+                                                    <img src="/resources/images/add_to_cart_icon.svg"> 
+                                            </span>
+                                            <button class="add-to-wishlist-pdp" data-productid="{{ product.productCode }}" id="add-to-wishlist-pdp" data-mz-action="addToWishlist"> </button>
+                                    </span>
+                            </div>	
+                    </div>
+ 		</div>
+	</div>
+</div>
+{% endfor %}
