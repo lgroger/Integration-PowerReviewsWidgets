@@ -55,7 +55,7 @@ $(function(){
 				}
 				
 				return $( "<li>" ).addClass("br-suggest-right").addClass(item.classname)
-					.append('<div class="ui-menu-item-wrapper br-suggest-product"><div class="br-suggest-product-image"><img src="' + item.img + '" class="autocomplete-thumb" /></div><div class="autocomplete-title">' + item.label + '</div><div class="autocomplete-priceline">'+pricediv+'<div class="autocomplete-clear"></div>'+ratingdiv+'</div><div class="autocomplete-clear"></div></div>' )
+					.append('<div class="ui-menu-item-wrapper br-suggest-product"><div class="br-suggest-product-image"><img src="' + item.img + '" class="autocomplete-thumb" /></div><div class="autocomplete-title">' + item.label + '</div><div class="autocomplete-priceline">'+pricediv+'<div class="autocomplete-clear"></div></div>' )
 					.appendTo( ul );
 			}
 			else if(item.type == "category"){

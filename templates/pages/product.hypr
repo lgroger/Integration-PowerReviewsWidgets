@@ -205,7 +205,7 @@
                               {% endif %}  
                            </div>
                   <div class="product-review">
-                     <a href="{{ model.url }}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-{{ model.productCode }}"><span id="pr-snippet-read-review-count"></span> Review(s)</a> | <a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
+                     <a href="{{ model.url }}#reviewDisplayProduct" data-pr-event="snippet-read-reviews" class="pr-snippet-link" id="pr-snippet-read-link-{{ model.productCode }}"><span id="pr-snippet-read-review-count"></span> Review(s)</a><a id="pr-write-review" href="" data-pr-event="snippet-write-review" class="pr-snippet-link">Write a Review</a>
                   </div>
                </div>
                {% endwith %}
@@ -251,7 +251,7 @@
         {% if pageContext.isDesktop %}
             <div class="certonaContainer">
                 <div class="youmayalsolike">
-                    You may also like:
+                    you may also like:
                 </div>
                 <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1"  >
 
@@ -346,9 +346,9 @@
         {% if pageContext.isMobile %}
              <div class="youMayAlsoLikeContainer">
                  <div class="youmayalsolike">
-                     <label>You may also like:</label>
+                     <label>you may also like:</label>
                  </div>
-                 <div class="pdpRecommendedProductsSlot_2 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_2" >
+                 <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1" >
 
                  </div>
              </div>
@@ -357,7 +357,7 @@
                 <div class='coordinatingProductContainer'>
                     <div class="relatedProductContainer">
                         <div class="title"> 
-                            <span class="cordinatingProductTitleContainer" > coordinating products </span>
+                            <span class="cordinatingProductTitleContainer" >coordinating products</span>
                         </div>
                         <div class="cross-sellContainer">
                             <div data-mz-recommendedProducts id="recommended_products_slot_">
@@ -379,17 +379,8 @@
 {% if themeSettings.certonaRecomm %}
    {% if themeSettings.certonaRecommSimilarProducts %}   
       {% if themeSettings.similarProductHeading %}
-      <div class="related-products-heading recom_slot-heading_1" style="display:none">
-              <h2>{{ themeSettings.similarProductHeading }}</h2>
-      </div>
-      {% endif %}
-      <div data-mz-recommendedProducts id="recommended_products_slot_1">
-      </div>
-   {% endif %}   
-   {% if themeSettings.certonaRecommRelatedProducts %}
-      {% if themeSettings.recommendedProductHeading %}
       <div class="related-products-heading recom_slot-heading_2" style="display:none">
-            <h2>{{ themeSettings.recommendedProductHeading }}</h2>
+              <h2>you might be interested in</h2>
       </div>
       {% endif %}
       <div data-mz-recommendedProducts id="recommended_products_slot_2">
@@ -402,14 +393,12 @@
     {% include "modules/product/pdp-bundle-products" %}                 
   </div>   
 {% endif %}
-
+{% comment %}
 {% include "modules/product/pdp-shop-widget" %}
-{% include "modules/product/product-description-tabs" %}
 {% include "modules/product/product-description-inspiration" %}   
+{% endcomment %}
+{% include "modules/product/product-description-tabs" %}
 {% include "modules/product/pdp-related-products" %}
-
-
-
 {% include "modules/bloomreach_seo" %}
 
 {% endblock body-content %}

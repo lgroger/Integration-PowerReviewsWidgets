@@ -46,7 +46,7 @@ body.mz-product {
         color: red;
     }
     .msg{
-        color: green;
+        color: @tertiaryColor;
     }
     
     .close:hover,
@@ -97,7 +97,6 @@ body.mz-product {
     }
 }
 .pdp-page-custom{
-    
     .mz-quick-view-wrapper {
         .container-left {
             box-sizing: border-box;
@@ -112,14 +111,13 @@ body.mz-product {
                 position: relative;
             }
             .product-image {
-                min-height: 550px;
+                //min-height: 550px;
                 padding: 0.5% 1% !important;
                 width: 84% !important;
                 padding: 1% 0;
                 float: right;
                 display: block;
             }
-            
             .productExtrasContainer {
                 .colorSwatchContainer{
                     @media @desktop{
@@ -133,7 +131,6 @@ body.mz-product {
                         max-height: 40px;
                         max-width: 40px;
                     }
-                    
                     .owl-stage-outer{
                         padding-top: 7px;
                     } 
@@ -158,21 +155,34 @@ body.mz-product {
             }
             .tabbableContainer{
                 width: 100%;
-                padding-top: 5%;
-                color: blue;
-                .tab{
-                    span{
-                        font-size: 11px;
-                        color: green;
+                .tab {
+                    width: 55%;
+                    display: inline-block;
+                    font-family: @fontFamily;
+                    span {
+                        margin: 0 10px;
+                        font-size: 14px;
+                        color: @disabled-grey;
+                        .selected {
+                            color: @primaryDarkBlue;
+                        }
                     }
                 }
                 .tab-content-inner{
-                    color: orange;
+                    color: @primaryDarkBlue;
+                    max-height: 180px;
+                    overflow-y: scroll;
+                    padding: 0 10px;
+                    color: @primaryDarkBlue;
+                    p {
+                        font-size: 14px;
+                        font-family: @fontLight;
+                    }
                 }
                 .socialIcons{
+                    width: 40%;
                     .addthis_button_compact{
                         float: right;
-                        
                         a{
                             color: #b3b4b4;
                         }
@@ -182,11 +192,9 @@ body.mz-product {
                         }
                     }
                 }
-                
                 .tab{
                     width: 70% !important; 
                     display: inline-block;
-                    
                     .tablinks{
                         cursor: pointer;
                     }
@@ -194,6 +202,21 @@ body.mz-product {
                 .socialIcons{
                     width: 30% !important;
                     float: right;
+                }
+                .tabcontent{
+                    border: 2px solid @primaryDarkBlue;
+                    border-radius: 4px;
+                    padding: 8px;
+                    margin-top: 13px;
+                    background-color: #f2f3f4;
+                    .upArrow{
+                        width: 0;
+                        height: 0;
+                        border-left: 12px solid transparent;
+                        border-right: 12px solid transparent;
+                        border-bottom: 13px solid @primaryDarkBlue;
+                        position: relative;
+                    }
                 }
                 #details .upArrow{
                     top: -38px;
@@ -206,48 +229,16 @@ body.mz-product {
                     top: -38px;
                     left: 40%  !important;
                 }
-                .tabcontent{
-                    border: 2px solid blue;
-                    border-radius: 4px;
-                    padding: 8px;
-                    margin-top: 13px;
-                    background-color: #f2f3f4;
-                    
-                    .upArrow{
-                        width: 0;
-                        height: 0;
-                        border-left: 12px solid transparent;
-                        border-right: 12px solid transparent;
-                        border-bottom: 13px solid blue;
-                        position: relative;
-                    }
-                     
-                }
-                .selected{
-                    color: blue !important;
-                }
                 .upArrow{
                     width: 0;
                     height: 0;
                     border-left: 8px solid transparent;
                     border-right: 8px solid transparent;
-                    border-bottom: 12px solid blue;
+                    border-bottom: 12px solid @primaryDarkBlue;
                     position: relative;
                 }
-                
-                /*                .details */
-                span{
-                    margin: 0 10px;
-                    font-size: 13px;
-                    font-weight: 600; 
-                    color: blue;
-                }
             }   
-            
-            
-            
         }
-        
         .container-right {
             @media @desktop{
                  width: 55%;
@@ -268,7 +259,7 @@ body.mz-product {
                         max-height: 470px;
                         min-height: 470px;
                         
-                        border: 2px solid green;
+                        border: 2px solid @primaryDarkBlue;
                         border-radius: 5px;
                         
                         .productQuantity{
@@ -315,7 +306,7 @@ body.mz-product {
                                         font-size: 16px;
                                     }
                                     .mz-pricestack-price-lower, .mz-pricestack-price-up{
-                                        color: orange;
+                                        color: @primaryDarkBlue;
                                         font-weight: bold;
                                     }
                                 } 
@@ -325,7 +316,7 @@ body.mz-product {
                         }
                         .cerumo{
                             font-size: 11px !important;
-                            color: yellow;
+                            color: @disabled-grey;
                             display: block;
                             font-weight: 100;
                         }
@@ -670,6 +661,9 @@ body.mz-product {
     }
     .starting-price .mz-pricestack-range{
         display: inline-block;
+    }
+    .mz-quick-view-wrapper {
+        margin: 5px auto;
     }
 }
 .bundle-items-wrap-pdp,.image-spec-wrap{
@@ -1081,11 +1075,21 @@ body.mz-product {
 		    border: 1px solid @primaryCTAhover;
 		}
 	}
-	.container-left{
+	.container-left {
 		width:100%;
 		padding: 10px 40px 0px;
-		.product-image{
-			margin-right:7%;
+		.product-image {
+            margin-right:7%;
+            height: 150px !important;
+            width: 150px !important;
+            float: left;
+            padding: 0 !important;
+            min-height: 100px;
+            img {
+                max-height: 94%;
+                max-width:94% !important;
+                height: auto;
+            }
 		}
 		.product-info{
 			position: inherit;
