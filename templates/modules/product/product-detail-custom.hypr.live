@@ -29,7 +29,7 @@
 {% endcomment %}
  <p>
 
-        <span class="color-blue">Availability</span> :
+        <span class="color-blue">Availability:</span>
         {% if model.isConfigured %}
           {% if model.isInStock %}
             <span class="highlight-green"> In Stock </span>
@@ -54,7 +54,7 @@
           <span class="delivery-date">
 {# for troubleshooting            <span>Ships on <strong> {{ model.shipDate|safe }}</strong></span><br> #}
             <span>
-              Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}} &nbsp;</span><br>
+              Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}} &nbsp;</span>
             {% if not model.groundOnly %}
             <a class="tooltip">
               Need it sooner?

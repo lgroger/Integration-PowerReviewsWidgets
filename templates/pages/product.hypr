@@ -223,25 +223,6 @@
             </div>
                {% comment %}{% include "modules/common/message-bar" %}{% endcomment %}
 
-                {% if model.hasPriceRange and not model.volumePriceRange %}
-                  <div class="starting-price">
-                    <span class="color-blue">{{ labels.price }} : </span>
-                    {% include "modules/product/price-stack-lower" %}
-                  </div>
-                  {% else%}
-                    {% if model.volumePriceRange  and model.volumePriceRange.lower %}
-                     <div class="starting-price">
-                        <span class="color-blue">{{ labels.price }} : </span>
-                          <div itemprop="priceSpecification" itemscope itemtype="http://schema.org/PriceSpecification" class="mz-pricestack{% if model.priceRange %} mz-pricestack-range{% endif %}">
-                            As low as
-                            <span itemprop="minPrice">
-                              {% include "modules/product/as-low-price" with model=model.volumePriceRange.lower %}
-                            </span>
-                          </div>
-                    </div>
-                    {% endif %}
-                {% endif %}
-
             <div id="product-detail" class="mz-productdetail mz-l-stack">
                {% include "modules/product/product-detail-custom" %}
             </div>
