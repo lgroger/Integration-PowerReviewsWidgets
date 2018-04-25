@@ -58,7 +58,7 @@
             {% if not model.groundOnly %}
             <a class="tooltip">
               Need it sooner?
-              <span class="tooltip" style="border: 2px solid #363fc8;" >
+              <span class="tooltip" style="border: 2px solid #211d5e;" >
                   <br/>
                   <label class="datedetails">
                       <label class="getitBy">Get it by <label class="onday">{{ model.expressDate|safe }} </label><br/> {{labels.expShippingWith}}</label><br/>
@@ -165,7 +165,7 @@
     <div class="product-qty-cart">
       <div class="product-quantity">
           <div class="mz-productdetail-conversion-controls">
-              <span class="mz-qty-label">{{ labels.qty }} </span>
+              <span class="mz-qty-label"></span>
               <span class="custom-qty">
                   <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
               </span>

@@ -49,11 +49,10 @@
                     float: left;
                     .product-info {
                         width: 100%;
-                        padding-top: 2%;
                         display: inline-block;
                         .product-title {
-                            padding: 10px 0 0 0;
-                            width: 75%;
+                            padding: 0;
+                            width: 78%;
                             float: left;
                             .showmoreDescription {
                                 position: relative;
@@ -96,12 +95,14 @@
                 }
             }
             .product-qty-cart {
-                display: inline-block;
+                width: 100%;
                 .product-quantity {
-                    width: 33%;
+                    width: 30%;
                 }
                 .product-cart-wishlist {
-                    width: 60%;
+                    width: 70%;
+                    float: left;
+                    margin: 0;
                     @media @smallmobile {
                         width: 100%;
                     }
@@ -120,18 +121,14 @@
                 color: @primaryDarkBlue;
                 font-size: 13px;
             }
-            .mz-productdetail-price {
-                .mz-pricestack, .mz-pricestack-range {
-                    display: inline-block;
-                }
-            }
             .mz-productoptions-container {
                 display: inline-block;
                 vertical-align: top;
+                margin-right: 35px;
                 .mz-productoptions-optionlabel {
                     display: inline-block;
                     width: auto;
-                    margin: 0 0 5px 15px;
+                    margin-bottom: 5px;
                 }
             }
         }
@@ -141,7 +138,7 @@
         -webkit-user-select: none;  -khtml-user-select: none;   -moz-user-select: none; -o-user-select: none;    user-select: none;
     }
     #add-to-cart {
-        width: 235px !important;
+        width: 53% !important;
     }
     #add-to-wishlist {
         width: 145px;
@@ -152,6 +149,11 @@
     .mz-productdetail-qty {
         margin: 0;
         text-align: center;
+        padding: 0;
+        line-height: 33px;
+        height: 33px;
+        width: 38px;
+        font-size: 15px;
     }
     .product-video {
         float: right;
@@ -1085,14 +1087,14 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
 }
 .wrapper .tooltip {
     background: grey;
-    width: 200px !important;
+    width: 250px !important;
     bottom: 100%;
     color: #fff;
     display: block;
-    left: -110px;
-    margin-bottom: 15px;
+    left: -130px;
+    margin-bottom: 10px;
     opacity: 0;
-    padding: 20px;
+    padding: 12px;
     pointer-events: none;
     position: absolute;
     -webkit-transform: translateY(10px);
@@ -1500,10 +1502,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             color: transparent !important;
             background-position: center !important;
             padding: 0 !important;
-            display: inline-block !important;
-            position: relative !important;
-            top: -55px;
-            left: 235px;
         }
     }
 }
@@ -1609,10 +1607,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .custom-qty {
         background-color: @secondaryWhite;
-        padding: 9px 7px 7px 1px;
-        color: @white;
-        border-radius: 5px;
-        border: 1px solid #e6e6e6;
+        padding: 3px 6px;
+        color: @primaryDarkBlue;
+        border-radius: 6px;
+        border: 1px solid @disabled-grey;
         input[type="button"] {
             display: inline-block;
             padding: 0;
@@ -2760,7 +2758,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         position: inherit;
     }
     .mz-productlist-item {
-        width: 86%;
+        width: 95%;
+        margin: 0 auto;
     }
     .echi-shi-related-products-slider .owl-item .item {
         box-shadow: inherit;
@@ -3944,7 +3943,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
 }
 .mz-product .pdp-related-products{
-    clear: both;
+    padding-bottom: 30px;
 }
 @media @tablet {
     .echi-shi-related-products-slider .mz-pricestack-price-lower, .echi-shi-related-products-slider .mz-pricestack-price-up {
