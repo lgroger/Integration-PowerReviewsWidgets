@@ -12,6 +12,7 @@ body.mz-product {
     .mz-productdetail-wrap {
         margin-left: @productImagesContainerWidth + @gutter
     }
+    
     @media (max-width: 800px) {
         .mz-productimages {
             margin: 0 auto;
@@ -27,6 +28,7 @@ body.mz-product {
         }
     }
 }
+
 .modal, #mz-drop-zone-instock-notice .mz-cms-content{
     display: none;
     position: fixed; /* Stay in place */
@@ -39,12 +41,14 @@ body.mz-product {
     overflow: auto; /* Enable scroll if needed */
     background-color: rgb(0,0,0); /* Fallback color */
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    
     .err{
         color: red;
     }
     .msg{
         color: @tertiaryColor;
     }
+    
     .close:hover,
         .close:focus {
         color: #000;
@@ -56,6 +60,7 @@ body.mz-product {
         margin: auto;
         padding: 20px;
         border: 1px solid #888;
+        
         @media @desktop{
             width: 25%;
         }
@@ -63,6 +68,7 @@ body.mz-product {
             width: 50%;
         }
     }
+    
     .close {
         color: #aaaaaa;
         float: right;
@@ -76,9 +82,10 @@ body.mz-product {
         display: inline;
     }
 }
+
 .product-review-share{
     .clearfix;
-    padding: 0 3px;
+    padding: 22px 7px 0 7px;
     margin-bottom: 0;
     width: 20%;
     float: right;
@@ -245,20 +252,109 @@ body.mz-product {
         .container-right {
             @media @desktop{
                  width: 55%;
+                 
+                 .delivery-date{
+                    color: green;
+                    span{
+                        display: inline-block;
+                        margin-bottom: 5px;
+                    }
+                     display: block;
+                     text-align: left;
+                     font-size: 14px;
+                     
+                     .tooltiptext{
+                         color: green;
+                     }
+                     
+                     .especially{
+                         color: grey;
+                         font-weight: bold;
+                         font-size: 16px;
+                         margin-bottom: 12px !important;
+                     }
+                     .paracontent{
+                         margin-bottom: 15px !important;
+                     }
+                     .datedetails{
+                         text-align: center;
+                         width: 100%;
+                         .getitBy{
+                             color: #939598;
+                             margin-left: auto;
+                             margin-right: auto;
+                             width: 100%;
+                             .onday{
+                                 color: orange;
+                                 font-weight: bold;
+                             }
+                         }
+                     }
+                     
+                     a.tooltip {
+                         outline:none; 
+                         opacity: 1;
+                         z-index: 1;
+                         position: relative;
+                         display: inline-block; 
+                         color: yellow;
+                         text-decoration: underline;
+                     }
+                     
+                     a.tooltip strong {
+                         line-height:30px;
+                     }
+                     a.tooltip:hover {
+                         text-decoration:none;
+                     } 
+                     a.tooltip span {
+                         z-index:10;
+                         display:none; 
+                         padding:5px 8px; 
+                         width:350px; 
+                         line-height:16px;
+                         label{
+                             margin-bottom: 2px;
+                         }
+                     } 
+                     a.tooltip:hover span{
+                         display:inline; 
+                         position:absolute; 
+                         border-radius: 5px;
+                         border:2px solid #FFF;  
+                         color:yellow; 
+                         background:#f2f3f4 url(cssttp/css-tooltip-gradient-bg.png) repeat-x 0 0;
+                     }
+                     .callout {
+                         z-index:20;position:absolute;border:0;top:-14px;
+                         left:120px;}
+                     
+                     /*CSS3 extras*/
+                     a.tooltip span
+                     {
+                         border-radius:2px; 
+                         /*box-shadow: 0px 0px 8px 4px #666;*/
+                         opacity: 1;
+                         right: -28px;
+                         top: 1.5rem;
+                     }
+                     
+                 }
                  .coordinatingProductContainer{
                     .relatedProductContainer{
-                        border: 2px solid @tertiaryColor;
+                        border: 2px solid blue;
                         margin-top: 12px;
                         max-height: 480px;
                         width: 100%;
                         border-radius: 4px;
                         overflow-y: auto;
+                        
                         .title{
                             text-align: center;
                             position: relative;
                             margin: 0 5%;
                             .cordinatingProductTitleContainer{
-                                background: @tertiaryColor;
+                                background: blue;
                                 margin: 6px;
                                 padding: 3px 12px;
                                 color: white;
@@ -268,13 +364,14 @@ body.mz-product {
                             span {
                                 display: inline-block;    
                             }
+                            
                             span:before,
                                 span:after {
-                                border-top: 2px solid @tertiaryColor;
+                                border-top: 2px solid green;
                                 display: block;
                                 height: 1px;
                                 content: " ";
-                                width: 25%;
+                                width: 30%;
                                 position: absolute;
                                 left: 0;
                                 top: 1.2em;
@@ -283,8 +380,10 @@ body.mz-product {
                                 right: 0;  
                                 left: auto; 
                             }
+
                         }
                     }
+                    
                     .item{
                         width: 100% !important;
                         max-width: 100% !important;
@@ -317,6 +416,7 @@ body.mz-product {
                                 text-align: left;
                                 display: inline-block;
                                 padding: 1% 0 0 2%;
+                                
                                 .mz-pricestack{
                                     margin: 10px 0;
                                 }
@@ -332,16 +432,18 @@ body.mz-product {
                                     }
                                     .qtybtn{
                                         margin: 0 14px;
+                                        
                                         input{
                                             border: 1px solid #808285;
                                             border-radius: 6px;
                                             padding: 1px 7px;
-                                            color: @disabled-grey;
-                                            font-family: @fontBold;
+                                            color: orange;
+                                            font-weight: bold;
                                         }
                                     }
                                     .actionContainer{
                                         display: inline;
+                                        
                                         .addToCart{
                                             padding: 0;
                                             &:hover{
@@ -350,9 +452,11 @@ body.mz-product {
                                             img{
                                                 height: 45px;
                                             }
+                                            
                                         }
                                         #add-to-wishlist-pdp{
                                             position: absolute;
+                                            /*width: 10% !important;*/
                                             margin: 12px 8px;
                                             padding: 12px 7px;
                                             &:after{
@@ -362,9 +466,8 @@ body.mz-product {
                                     }
                                 }
                                 .cerumo{
-                                    font-size: 12px;
-                                    color: @disabled-grey;
-                                    font-family: @fontLight;
+                                    font-size: 13px;
+                                    color: grey;
                                     margin-right: 4px;
                                     margin-left: 0;
                                     font-weight: 100;
@@ -375,21 +478,24 @@ body.mz-product {
                             }
                             .mz-productlisting-title{
                                 display: block;
-                                color: @primaryDarkBlue;
-                                font-family: @fontBold;
+                                color: blue;
+                                font-weight: bold;
                                 font-size: 20px;
                                 text-align: left;
                             }
                         }
                     }
+                    
                  }
                  .upperProductDetails{
                     width: 100%;
                     display: inline-block;
+                     
                     .product-info{
                         width: 80%;
                         float: left;
                     }
+                    
                     .certonaContainer{
                         width: 18%;
                         float: right;
@@ -397,8 +503,10 @@ body.mz-product {
                         margin-top: 17px;
                         max-height: 470px;
                         min-height: 470px;
+                        
                         border: 2px solid @primaryDarkBlue;
                         border-radius: 5px;
+                        
                         .productQuantity{
                             display:none;
                         }
@@ -417,32 +525,25 @@ body.mz-product {
                             }
                         }
                         .mz-productlisting.mz-productlist-tiled {
-                            height: 220px;
+                            height: 200px;
                             border: none;
-                            width: 100%;
                         }
                         .recommended_products_slot_pdp{
                             overflow-y: scroll;
                             max-height: 445px;
                         }
                         .mz-productlisting-info{
-                            margin: 0;
                             .mz-productlisting-title{
-                                height: 45px;
-                                font-size: 12px;
-                                display: inline-block;
-                                text-transform: capitalize;
+                                height: 38px !important;
                             }
-                            .mz-pricestack {
-                                margin-bottom: 5px;
-                                display: inline-block;
-                            }
+                            
                             .mz-pricestack-price-lower:after{
                                 margin: 0 1px;
                                 font-size: 10px;
                             }
                         }
                         .echi-shi-related-products-slider{
+                            
                             .item{
                                 max-width: 100%;
                                 .mz-pricestack{
@@ -455,6 +556,8 @@ body.mz-product {
                                     }
                                 } 
                             }
+                            
+                            
                         }
                         .cerumo{
                             font-size: 11px !important;
@@ -462,6 +565,7 @@ body.mz-product {
                             display: block;
                             font-weight: 100;
                         }
+                        
                         .mz-productlisting-is-personalize{
                             width: 71% !important;
                             margin: 0 18.5% !important;
@@ -473,6 +577,7 @@ body.mz-product {
             
         }
     }
+    
     .product-share{
         float: left;
         padding-left: 15px;
@@ -582,9 +687,9 @@ body.mz-product {
                 height: 0;
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
-                border-top: 14px solid @disabled-grey;
-            }
+                border-top: 14px solid @disabled-grey;            }
         }
+
     }
     .video-slider-wrap{
         width: 20%;
@@ -666,153 +771,59 @@ body.mz-product {
         font-size: 14px;
         border-top: none;
         p {
-            font-family: @fontLight;
+            font-family: @fontFamily;
             font-size: 14px;
-        }
-        .product-pdp-incomplete {
-            font-family: @fontLight;
-            color: @disabled-grey;
         }
        .mz-productdetail-price{
-            padding: 0;
-            margin: 5px;
-            color: @primaryDarkBlue;
-            .uom {
-                color: @disabled-grey;
-                font-family: @fontLight;
-                text-align: center;
-                display: block;    
-            }
-            h4{
-                text-align: left;
-                color: @textColor;
-                line-height: 1.5;
-                margin: 7px 10px 7px 0;
-                font-size: 14px;
-                @media (min-width: 1141px) {
-                margin: 3px 10px; 
-                }
-            }
-            .mz-pricestack{
-                color: @primaryDarkBlue;
-                font-family: @fontFamily;
-                text-align: center;
-            }
-            .is-saleprice{
-                color: @primaryDarkBlue;
-                font-family: @fontFamily;
-                text-align: center;
-            }
-            .mz-pricestack-range{
-                .mz-price{
-                    color: @primaryDarkBlue;
-                }
+        padding: 0;
+        margin: 5px;
+        color: @color-dark-blue;
+        h4{
+            text-align: left;
+            color: @textColor;
+            line-height: 1.5;
+            margin: 7px 10px 7px 0;
+            font-size: 14px;
+            @media (min-width: 1141px) {
+               margin: 3px 10px; 
             }
         }
-        .product-short-description,.starting-price>div{
-            margin: 8px 10px 0 30px;
-            display: block;
-            text-align: left;
-            font-size: 14px;
-            @media @smallmobile {
-                margin: 8px 0;
-                width: 85%;
-            }
+        .mz-pricestack{
+            color: @color-dark-blue;
         }
-        .delivery-date{
-            color: @disabled-grey;
-            font-size: 14px;
-            font-family: @fontLight;
-            display: block;
-            text-align: left;
-            span{
-                display: inline-block;
-                margin-bottom: 5px;
-            }
-            strong {
-                font-family: @fontFamily;
-                color: @primaryDarkBlue;
-                font-weight: normal;
-            }
-            a.tooltip {
-                outline: none;
-                opacity: 1;
-                z-index: 0;
-                position: relative;
-                display: inline-block;
-                color: @primaryColor;
-                text-decoration: underline;
-                @media @smallmobile {
-                    z-index: 1;
-                    float: right;
-                }
-                @media @tablet {
-                    z-index: 1;
-                }
-                span {
-                    z-index: 10;
-                    display: none;
-                    position: relative;
-                    padding: 3px 6px;
-                    width: 180px;
-                    line-height: 15px;
-                    border-radius: 2px;
-                    opacity: 1;
-                    right: -28px;
-                    top: 1.5rem;
-                    @media @smallmobile {
-                        width: 220px;
-                        right: 20px;
-                        padding: 0px 0px;
-                    }
-                }
-                :hover {
-                    text-decoration: none;
-                    span{
-                        display:inline; 
-                        position:absolute; 
-                        border-radius: 5px;
-                        border:2px solid #FFF;  
-                        color:@primaryColor;
-                        background:#f2f3f4 url(cssttp/css-tooltip-gradient-bg.png) repeat-x 0 0;
-                    }
-                }
-            }
-            .callout {
-                z-index:20;
-                position:absolute;
-                border:0;
-                top:-14px;
-                left:120px;
+        .is-saleprice{
+            color: @color-dark-blue;
+        }
+        .mz-pricestack-range{
+            .mz-price{
+                color: @textHeaderColor;
             }
         }
     }
+    .product-short-description,.starting-price>div{
+        margin: 8px 10px 0 30px;
+        display: block;
+        text-align: left;
+        font-size: 14px;
+        @media @smallmobile {
+            margin: 8px 0;
+            width: 85%;
+        }
+    }
+    
+        
+}
 }
 .pdp-page-custom .product-qty-cart{
     .product-quantity{
         float: left;
+        min-width: 160px;
         clear: none;
         text-align: center;
-        padding: 9px 0;
-        display: block;
-        position: relative;
         span.mz-qty-label{
+            display: block;
             text-align: center;
-            width: auto;
-            line-height: 1;
-            color: @disabled-grey;
-            font-family: @fontLight;
             margin-bottom: 10px;
-        }
-        @media @desktop{
-            .mz-qty-label:after{
-                content: "Quantity";
-            }
-        }
-        @media @tablet{
-            .mz-qty-label:after{
-                content: "Quantity";
-            }
         }
     }
     .product-cart-wishlist{
@@ -835,6 +846,9 @@ body.mz-product {
         border-radius: 5px;
         cursor: pointer;
         font-weight: normal;
+    }
+    .mz-qty-label{
+        text-transform: uppercase;
     }
     .options-price-wrap{
         &.align-price-left{
@@ -872,8 +886,7 @@ body.mz-product {
     }
     .product-options-container{
         padding: 10px 0 0;
-        margin-top: 10px;
-        max-width: 60%;
+        margin-top: 25px;
     }
     .product-description{
         font-size: 14px !important;
@@ -1052,7 +1065,6 @@ body.mz-product {
 }
 .color-blue{
     color: @disabled-grey;
-    font-family: @fontLight;
 }
 .highlight-green{
     color: @primaryDarkBlue;
@@ -1120,23 +1132,15 @@ body.mz-product {
 		line-height:inherit;
 	}
 	.product-rating-review .product-rating{
-        padding: 0;
-        .product-review {
-            font-size: 13px;
-            margin-top: 6px;
-            text-align: center;
-        }
+		padding-top: 5px;
+		padding-bottom: 0;
 	}
 	.product-rating-review .product-rating .pr-snippet-stars{
-	    padding: 0;
+	    padding: 0px 0px;
 	    margin-left:-4px;
 	}
 	.mz-l-stack .mz-l-stack-section{
-        margin-bottom:10px;
-        .mz-productoptions {
-            margin: 5% 0;
-            height: 100%;
-        }
+		margin-bottom:10px;
 		.mz-productoptions-optioncontainer{
 			.mz-productoptions-optionlabel{
 				text-transform: capitalize;
@@ -1167,8 +1171,7 @@ body.mz-product {
 		}
 	}
 	.mz-productdetail-conversion-controls{
-        margin-top: 0;
-        line-height: 35px;
+		margin-top:5px;
 	}
 	.mz-l-stack .mz-productdetail-price.mz-l-stack-section{
 		margin-top:10px;
@@ -1196,8 +1199,7 @@ body.mz-product {
 		    font-family: @fontFamily;
 		    position: inherit;
 		    margin-left:0px;
-            margin-bottom:5px;
-            display: inline-block;
+	    	margin-bottom:5px;
 		}
 		.addToCart:hover, .personalize:hover{
 		    background: @primaryCTAhover !important;
@@ -1580,7 +1582,7 @@ body.mz-product {
          }
      }
  }
-@media @smallmobile {
+@media only screen and (max-width:700px){
      .pdp-page-custom{
          .product-review-share{
              padding: 10px 5px;
@@ -1680,6 +1682,11 @@ body.mz-product {
     .add-cart #recommended_products_slot_cart .mz-productlisting-image{
         margin-bottom: 0 !important;
     }
+}
+@media only screen and (min-width:641px){
+	.mz-product .mz-quick-view-wrapper .container-right .product-cart-wishlist #add-to-wishlist{
+		background-position: 12px center;
+	}
 }
 @media only screen and (max-width:994px) and (min-width:768px){
 	.mz-shi-heading-style #mz-drop-zone-recommended-products h2:before, .mz-shi-heading-style #mz-drop-zone-recommended-products h2:after{
@@ -1928,7 +1935,13 @@ body.mz-product {
 		min-height:260px;
 	}
 	.pdp-page-custom .product-review{
-		font-size: 12px;
+		font-size: 14px;
+	}
+	.mz-product .mz-quick-view-wrapper .container-right #add-to-wishlist {
+	    line-height: 37px;
+	    text-indent: -9999px;
+	    width: 50px !important;
+		float: left;
 	}
 	.mz-product .fixed-mob-bottom .fixed-mob-bottom1 .fixed-mob-bottom-left .box-custom-pad .main-price span{
 		font-size: 0.8rem;
