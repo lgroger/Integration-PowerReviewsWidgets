@@ -369,11 +369,12 @@
    {% endif %}
 {% endif %}
 {% comment %} TO DO: this should be loaded via ajax when needed or include all necessary info within it such as dnd code & uom so we don't have to repeat api calls in product.js{% endcomment %}
-{% if model.productUsage == "Bundle"  %}
+{% comment %} {% if model.productUsage == "Bundle"  %}
   <div class="bundle-items-wrap-pdp">
     {% include "modules/product/pdp-bundle-products" %}                 
   </div>   
 {% endif %}
+{% endcomment %}
 {% comment %}
 {% include "modules/product/pdp-shop-widget" %}
 {% include "modules/product/product-description-inspiration" %}   

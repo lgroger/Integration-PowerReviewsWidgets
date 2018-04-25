@@ -252,6 +252,153 @@ body.mz-product {
         .container-right {
             @media @desktop{
                  width: 55%;
+                 .coordinatingProductContainer{
+                    .relatedProductContainer{
+                        border: 2px solid blue;
+                        margin-top: 12px;
+                        max-height: 480px;
+                        width: 100%;
+                        border-radius: 4px;
+                        overflow-y: auto;
+                        
+                        .title{
+                            text-align: center;
+                            position: relative;
+                            margin: 0 5%;
+                            .cordinatingProductTitleContainer{
+                                background: blue;
+                                margin: 6px;
+                                padding: 3px 12px;
+                                color: white;
+                                font-size: 19px;
+                                border-radius: 3px;
+                            }
+                            span {
+                                display: inline-block;    
+                            }
+                            
+                            span:before,
+                                span:after {
+                                border-top: 2px solid green;
+                                display: block;
+                                height: 1px;
+                                content: " ";
+                                width: 30%;
+                                position: absolute;
+                                left: 0;
+                                top: 1.2em;
+                            }
+                            span:after {
+                                right: 0;  
+                                left: auto; 
+                            }
+
+                        }
+                    }
+                    
+                    .item{
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        .mz-productlist-item{
+                            width: 95%;
+                            margin: 0 auto;
+                        }
+                        .mz-productlisting{
+                            border: 0;
+                            border-bottom: 1px solid #c2c2c5;
+                            height: 160px;
+                            .mz-productlisting-image{
+                                min-height: 145px;
+                                width: 25%;
+                                display: inline-block;
+                                img{
+                                    height: 145px;
+                                }
+                                a{
+                                    height: 145px;
+                                }
+                            }
+                            .mz-productlisting-is-personalize{
+                                display: none;
+                            }
+                            .mz-productlisting-info{
+                                padding: 4px;
+                                width: 70%;
+                                position: absolute;
+                                text-align: left;
+                                display: inline-block;
+                                padding: 1% 0 0 2%;
+                                
+                                .mz-pricestack{
+                                    margin: 10px 0;
+                                }
+                                .productQuantity{
+                                    display: block;
+                                    width: 75%;
+                                    margin-left: 30%;
+                                    .qty{
+                                        display: inline-block;
+                                    }
+                                    .qty::before {
+                                        content: "Quantity"; 
+                                    }
+                                    .qtybtn{
+                                        margin: 0 14px;
+                                        
+                                        input{
+                                            border: 1px solid #808285;
+                                            border-radius: 6px;
+                                            padding: 1px 7px;
+                                            color: orange;
+                                            font-weight: bold;
+                                        }
+                                    }
+                                    .actionContainer{
+                                        display: inline;
+                                        
+                                        .addToCart{
+                                            padding: 0;
+                                            &:hover{
+                                                background: transparent !important;
+                                            }
+                                            img{
+                                                height: 45px;
+                                            }
+                                            
+                                        }
+                                        #add-to-wishlist-pdp{
+                                            position: absolute;
+                                            /*width: 10% !important;*/
+                                            margin: 12px 8px;
+                                            padding: 12px 7px;
+                                            &:after{
+                                                content: " ";
+                                            }
+                                        }
+                                    }
+                                }
+                                .cerumo{
+                                    font-size: 13px;
+                                    color: grey;
+                                    margin-right: 4px;
+                                    margin-left: 0;
+                                    font-weight: 100;
+                                }
+                                .mz-productlisting-title{
+                                    height: 25px;
+                                }
+                            }
+                            .mz-productlisting-title{
+                                display: block;
+                                color: blue;
+                                font-weight: bold;
+                                font-size: 20px;
+                                text-align: left;
+                            }
+                        }
+                    }
+                    
+                 }
                  .upperProductDetails{
                     width: 100%;
                     display: inline-block;
