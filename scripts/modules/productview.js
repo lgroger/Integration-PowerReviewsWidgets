@@ -648,7 +648,8 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 }else{
 					option.unset('value'); // fires this.render();
 				}
-            }
+			}
+			jQuery('.delivery-date a').tooltip({html: true, placement: "bottom"}); 
         },
         configureSlitOption: function (e) {
 			//console.log("configureSlitOption");
