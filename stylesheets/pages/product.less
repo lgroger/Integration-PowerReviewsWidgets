@@ -252,6 +252,94 @@ body.mz-product {
         .container-right {
             @media @desktop{
                  width: 55%;
+                 
+                 .delivery-date{
+                    color: green;
+                    span{
+                        display: inline-block;
+                        margin-bottom: 5px;
+                    }
+                     display: block;
+                     text-align: left;
+                     font-size: 14px;
+                     
+                     .tooltiptext{
+                         color: green;
+                     }
+                     
+                     .especially{
+                         color: grey;
+                         font-weight: bold;
+                         font-size: 16px;
+                         margin-bottom: 12px !important;
+                     }
+                     .paracontent{
+                         margin-bottom: 15px !important;
+                     }
+                     .datedetails{
+                         text-align: center;
+                         width: 100%;
+                         .getitBy{
+                             color: #939598;
+                             margin-left: auto;
+                             margin-right: auto;
+                             width: 100%;
+                             .onday{
+                                 color: orange;
+                                 font-weight: bold;
+                             }
+                         }
+                     }
+                     
+                     a.tooltip {
+                         outline:none; 
+                         opacity: 1;
+                         z-index: 1;
+                         position: relative;
+                         display: inline-block; 
+                         color: yellow;
+                         text-decoration: underline;
+                     }
+                     
+                     a.tooltip strong {
+                         line-height:30px;
+                     }
+                     a.tooltip:hover {
+                         text-decoration:none;
+                     } 
+                     a.tooltip span {
+                         z-index:10;
+                         display:none; 
+                         padding:5px 8px; 
+                         width:350px; 
+                         line-height:16px;
+                         label{
+                             margin-bottom: 2px;
+                         }
+                     } 
+                     a.tooltip:hover span{
+                         display:inline; 
+                         position:absolute; 
+                         border-radius: 5px;
+                         border:2px solid #FFF;  
+                         color:yellow; 
+                         background:#f2f3f4 url(cssttp/css-tooltip-gradient-bg.png) repeat-x 0 0;
+                     }
+                     .callout {
+                         z-index:20;position:absolute;border:0;top:-14px;
+                         left:120px;}
+                     
+                     /*CSS3 extras*/
+                     a.tooltip span
+                     {
+                         border-radius:2px; 
+                         /*box-shadow: 0px 0px 8px 4px #666;*/
+                         opacity: 1;
+                         right: -28px;
+                         top: 1.5rem;
+                     }
+                     
+                 }
                  .coordinatingProductContainer{
                     .relatedProductContainer{
                         border: 2px solid blue;
@@ -722,37 +810,7 @@ body.mz-product {
             width: 85%;
         }
     }
-    .delivery-date{
-        color: @primaryColor;
-        font-size: 14px;
-        font-family: @fontFamily;
-        display: block;
-        span{
-            display: inline-block;
-            margin-bottom: 5px;
-        }
-        strong {
-            font-weight: normal;
-            color: @primaryDarkBlue;
-        }
-        a.tooltip {
-            span {
-                z-index: 10;
-                display: none;
-                position: relative;
-                padding: 3px 6px;
-                width: 180px;
-                line-height: 15px;
-                border-radius: 2px;
-                opacity: 1;
-                right: -28px;
-                top: 1.5rem;
-            }
-            :hover {
-                text-decoration: none;
-            }
-        }
-    } 
+    
         
 }
 }
