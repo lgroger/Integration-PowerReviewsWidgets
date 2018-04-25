@@ -734,6 +734,32 @@ body.mz-product {
                 color: @primaryDarkBlue;
                 font-weight: normal;
             }
+            .tooltiptext{
+                color: @primaryColor;
+            }
+            .especially{
+                color: @disabled-grey;
+                font-size: 16px;
+                margin-bottom: 12px !important;
+            }
+            .paracontent{
+                margin-bottom: 15px !important;
+            }
+            .datedetails{
+                text-align: center;
+                width: 100%;
+                .getitBy{
+                    color: @disabled-grey;
+                    margin-left: auto;
+                    margin-right: auto;
+                    width: 100%;
+                    font-family: @fontLight;
+                    .onday{
+                        color: @primaryDarkBlue;
+                        font-family: @fontFamily;
+                    }
+                }
+            }
             a.tooltip {
                 outline: none;
                 opacity: 1;
@@ -748,6 +774,9 @@ body.mz-product {
                 }
                 @media @tablet {
                     z-index: 1;
+                }
+                strong {
+                    line-height: 30px;
                 }
                 span {
                     z-index: 10;
@@ -764,6 +793,9 @@ body.mz-product {
                         width: 220px;
                         right: 20px;
                         padding: 0px 0px;
+                    }
+                    label {
+                        margin-bottom: 2px;
                     }
                 }
                 :hover {
