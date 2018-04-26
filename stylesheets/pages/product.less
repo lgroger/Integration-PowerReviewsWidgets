@@ -94,6 +94,7 @@ body.mz-product {
         .container-left {
             box-sizing: border-box;
             float: left;
+            padding: 0.5% 1% !important;
             @media @desktop{
                 width: 45%;
             }
@@ -166,24 +167,26 @@ body.mz-product {
                         margin: 0 10px;
                         font-size: 14px;
                         color: @disabled-grey;
-                        .selected {
-                            color: @primaryDarkBlue;
-                        }
                     }
+                }
+                .selected {
+                    color: @primaryDarkBlue !important;
                 }
                 .tab-content-inner{
                     color: @primaryDarkBlue;
                     max-height: 180px;
                     overflow-y: scroll;
                     padding: 0 10px;
-                    color: @primaryDarkBlue;
+                    font-family: @fontLight;
+                    font-size: 14px;
                     p {
-                        font-size: 14px;
                         font-family: @fontLight;
+                        font-size: 14px;
                     }
                 }
                 .socialIcons{
                     width: 40%;
+                    float: right;
                     .addthis_button_compact{
                         float: right;
                         a{
@@ -195,42 +198,26 @@ body.mz-product {
                         }
                     }
                 }
-                .tab{
-                    width: 70% !important; 
-                    display: inline-block;
-                    .tablinks{
-                        cursor: pointer;
-                    }
-                }
-                .socialIcons{
-                    width: 30% !important;
-                    float: right;
-                }
                 .tabcontent{
+                    height: 180px;
                     border: 2px solid @primaryDarkBlue;
                     border-radius: 4px;
                     padding: 8px;
                     margin-top: 13px;
                     background-color: #f2f3f4;
-                    .upArrow{
-                        width: 0;
-                        height: 0;
-                        border-left: 12px solid transparent;
-                        border-right: 12px solid transparent;
-                        border-bottom: 13px solid @primaryDarkBlue;
-                        position: relative;
-                    }
+                    position: relative;
                 }
                 #details .upArrow{
-                    top: -38px;
+                    top: -14px;
+                    left: 20px;
                 } 
                 #shipping .upArrow{
-                    left: 16% !important;
-                    top: -38px;
+                    left: 18%;
+                    top: -14px;
                 }
                 #included .upArrow{
-                    top: -38px;
-                    left: 40%  !important;
+                    top: -14px;
+                    left: 36%;
                 }
                 .upArrow{
                     width: 0;
@@ -238,7 +225,7 @@ body.mz-product {
                     border-left: 8px solid transparent;
                     border-right: 8px solid transparent;
                     border-bottom: 12px solid @primaryDarkBlue;
-                    position: relative;
+                    position: absolute;
                 }
             }   
         }
@@ -246,8 +233,9 @@ body.mz-product {
             @media @desktop{
                  width: 55%;
                  .coordinatingProductContainer{
+                    padding-top: 3%;
                     .relatedProductContainer{
-                        border: 2px solid @tertiaryColor;
+                        border: 2px solid @primaryDarkBlue;
                         margin-top: 12px;
                         max-height: 480px;
                         width: 100%;
@@ -258,12 +246,13 @@ body.mz-product {
                             position: relative;
                             margin: 0 5%;
                             .cordinatingProductTitleContainer{
-                                background: @tertiaryColor;
+                                background: white;
                                 margin: 6px;
                                 padding: 3px 12px;
-                                color: white;
+                                color: @tertiaryColor;
                                 font-size: 19px;
-                                border-radius: 3px;
+                                border-radius: 5px;
+                                border: 2px solid @tertiaryColor;
                             }
                             span {
                                 display: inline-block;    
@@ -274,7 +263,7 @@ body.mz-product {
                                 display: block;
                                 height: 1px;
                                 content: " ";
-                                width: 25%;
+                                width: 30%;
                                 position: absolute;
                                 left: 0;
                                 top: 1.2em;
@@ -291,15 +280,19 @@ body.mz-product {
                         .mz-productlist-item{
                             width: 95%;
                             margin: 0 auto;
+                            padding: 10px 0;
                         }
-                        .mz-productlisting{
+                        .mz-productlisting {
                             border: 0;
                             border-bottom: 1px solid #c2c2c5;
                             height: 160px;
+                            width: 100%;
+                            padding: 0;
                             .mz-productlisting-image{
                                 min-height: 145px;
                                 width: 25%;
                                 display: inline-block;
+                                height: 145px;
                                 img{
                                     height: 145px;
                                 }
@@ -371,14 +364,13 @@ body.mz-product {
                                 }
                                 .mz-productlisting-title{
                                     height: 25px;
+                                    display: block;
+                                    color: @primaryDarkBlue;
+                                    font-family: @fontFamily;
+                                    font-size: 20px;
+                                    text-align: left;
+                                    text-transform: capitalize;
                                 }
-                            }
-                            .mz-productlisting-title{
-                                display: block;
-                                color: @primaryDarkBlue;
-                                font-family: @fontBold;
-                                font-size: 20px;
-                                text-align: left;
                             }
                         }
                     }
@@ -420,6 +412,7 @@ body.mz-product {
                             height: 220px;
                             border: none;
                             width: 100%;
+                            padding: 0;
                         }
                         .recommended_products_slot_pdp{
                             overflow-y: scroll;
@@ -870,11 +863,10 @@ body.mz-product {
     }
     .options-price-wrap{
         &.align-price-left{
-            display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin: 10px 30px 30px 60px;
             .mz-productdetail-price{
-                margin: 25px 0 5px 30px !important;
+                margin: 25px 0 5px 15px !important;
                 float: left;
                 flex-grow: 2;
                 .mz-pricestack{
@@ -915,7 +907,8 @@ body.mz-product {
         display: inline-block;
     }
     .mz-quick-view-wrapper {
-        margin: 5px auto;
+        margin: 0;
+        width: 100%;
     }
 }
 .bundle-items-wrap-pdp,.image-spec-wrap{
@@ -1138,7 +1131,10 @@ body.mz-product {
 	}	
 }
 .mz-product .mz-quick-view-wrapper .container-right {
-	min-height: inherit;
+    min-height: auto;
+    padding: 0.5% 1%;
+    float: left;
+    box-sizing: border-box;
 	.mz-pagetitle{
 		font-size: 32px;
 	    font-family: @fontBold;
