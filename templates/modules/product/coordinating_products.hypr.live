@@ -1,4 +1,4 @@
-{%comment%}
+{% comment %}
 {% for product in model.items %}
 <div class="item">
    <div class="mz-productlist-item" data-mz-product="{{ product.productCode }}">
@@ -23,7 +23,7 @@
    </div>
 </div>
 {% endfor %}
-{%endcomment%}
+{% endcomment %}
 
 {% for product in model.items %}
 <div class="item">
@@ -38,14 +38,15 @@
                                     {{ product.content.productName }}
                             </a>
                             <div itemprop="priceSpecification" itemscope="" itemtype="http://schema.org/PriceSpecification" class="mz-pricestack">
-                                    <span class="cerumo"> Price for each </span>
-                                    <span>
-                                        {% if product.price.maxprice > product.price.price  %}
-                                            <span itemprop="minPrice" class="mz-pricestack-price-lower">{{product.price.maxprice | currency}}</span>
-                                            <span itemprop="maxPrice" class="mz-pricestack-price-up"> {{product.price.price | currency}}</span>
-                                        {%else%}
-                                            <span class="mz-price">{{product.price.price | currency}}</span>
-                                        {%endif%}
+                                    <span class="cerumo"> Price    
+                                        {% with product|get_product_attribute("tenant~uom") as prdValue %}
+                                                {% for value in prdValue.values %}
+                                                        for {{ value.stringValue }}
+                                                {% endfor %}
+                                        {% endwith %}
+                                </span>
+                                    <span class="coordinating-price">
+                                                {% include "modules/product/price-stack" with model=product %}
                                     </span>
                             </div>
 

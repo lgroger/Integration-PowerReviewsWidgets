@@ -311,7 +311,7 @@
               <span class="upArrow"></span>  
                 <div class="tab-content-inner">
                 <p>Please allow ample time for delivery. The delivery date for this product is noted above for US shipping only. Please refer to checkout for delivery dates outside of the Contiguous 48 States.</p>
-                <p>Shipping charges are based on the value of the merchandise and not the number of shipments. For additional shipping information, please contact our Customer Service Department at 800-348-5084.</p>
+                <p>Shipping charges are based on the value of the merchandise and not the number of shipments. For additional shipping information, please contact our Customer Service Department at 800-314-8736.</p>
                 </div>
             </div>
 
@@ -362,7 +362,7 @@
    {% if themeSettings.certonaRecommSimilarProducts %}   
       {% if themeSettings.similarProductHeading %}
       <div class="related-products-heading recom_slot-heading_2" style="display:none">
-              <h2>you might be interested in</h2>
+              <span class="related-slot-2">you might be interested in</span>
       </div>
       {% endif %}
       <div data-mz-recommendedProducts id="recommended_products_slot_2">

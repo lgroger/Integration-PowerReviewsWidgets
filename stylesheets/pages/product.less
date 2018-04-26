@@ -183,6 +183,9 @@ body.mz-product {
                         font-family: @fontLight;
                         font-size: 14px;
                     }
+                    .wrapper {
+                        color: @primaryDarkBlue;
+                    }
                 }
                 .socialIcons{
                     width: 40%;
@@ -312,6 +315,7 @@ body.mz-product {
                                 padding: 1% 0 0 2%;
                                 .mz-pricestack{
                                     margin: 10px 0;
+                                    display: inline-block;
                                 }
                                 .productQuantity{
                                     display: block;
@@ -319,6 +323,9 @@ body.mz-product {
                                     margin-left: 30%;
                                     .qty{
                                         display: inline-block;
+                                        color: @disabled-grey;
+                                        font-family: @fontLight;
+                                        font-size: 12px;
                                     }
                                     .qty::before {
                                         content: "Quantity"; 
@@ -328,29 +335,38 @@ body.mz-product {
                                         input{
                                             border: 1px solid #808285;
                                             border-radius: 6px;
-                                            padding: 1px 7px;
-                                            color: @disabled-grey;
-                                            font-family: @fontBold;
+                                            padding: 2px 7px;
+                                            color: @primaryDarkBlue;
+                                            font-family: @fontFamily;
                                         }
                                     }
                                     .actionContainer{
                                         display: inline;
                                         .addToCart{
-                                            padding: 0;
-                                            &:hover{
-                                                background: transparent !important;
-                                            }
+                                            padding: 10px 3px;
                                             img{
-                                                height: 45px;
+                                                height: 40px;
                                             }
                                         }
                                         #add-to-wishlist-pdp{
                                             position: absolute;
-                                            margin: 12px 8px;
-                                            padding: 12px 7px;
-                                            &:after{
-                                                content: " ";
-                                            }
+                                            margin: 0 8px 8px 8px;
+                                            padding: 4px 7px 12px 7px;
+                                            background: #fff;
+                                            background-image: url(../resources/images/wishListIcon.svg);
+                                            background-repeat: no-repeat;
+                                            background-position: center;
+                                            background-size: 100%;
+                                            border: none;
+                                            height: 28px;
+                                            width: 28px;
+                                        }
+                                        #add-to-wishlist-pdp:hover {
+                                            background-image: url('../resources/images/wishlistIconHover.svg');
+                                            background-size: 52%;
+                                            background-repeat: no-repeat;
+                                            background-color: #fff !important;
+                                            border: 1px solid rgba(128,128,128,0.11) !important;
                                         }
                                     }
                                 }
