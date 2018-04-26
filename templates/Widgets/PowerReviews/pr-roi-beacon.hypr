@@ -1,1 +1,23 @@
 <input type="hidden" id="prROIWidget" value="1">
+<div data-mz-pr-config="{%json_attribute model.config%}"></div>
+{% if pageContext.isEditMode == 'true' %}
+  Power Reviews ROI widget
+{% endif %}
+{% if model.config.includeWhyDidYouBuy  %}
+    {% if pageContext.isEditMode == 'true' %}
+      + Why did you buy widget
+    {% endif %}
+  <div id="pr-wyb"></div>
+{% endif %}
+
+{%if model.config.includeSellerRatings%}
+  <input type="hidden" id="includeSellerRatings" value="1" >
+  <input type="hidden" id="sellerRatingPageId" value="{{model.config.sellerRatingsPageId}}">
+{%endif%}  
+
+{% if model.config.includeWhyDidYouBuy  %}
+  <script type="text/javascript" src="//ui.powerreviews.com/stable/4.0/ui.js"></script>
+{% endif% }
+
+<script type="text/javascript" src="//static.powerreviews.com/t/v1/tracker.js"></script>
+{% require_script "widgets/powerreviews" %}
