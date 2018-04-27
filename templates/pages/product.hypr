@@ -166,6 +166,11 @@
                         </div>
                     {% endif %}
                  </div>
+                <div class="productReview">
+                    {% dropzone "productreview-snippets" scope="template" %}
+                </div>
+                 {% comment %} 
+                 Old Powerreviews replaced with new Power reviews snippet widget above
                <div class="product-review-share">
                   <div id="PRInlineRating-{{model.productCode}}" class="pr-inline-rating product-rating-review" data-mz-product-code="{{ model.productCode }}" data-mz-product-url="{{ model.url }}" >
                   {% if model|get_product_attribute('tenant~rating') %}
@@ -221,6 +226,7 @@
                {% endif %}
             </div>
                </div>
+               {%endcomment%}
             </div>
                {% comment %}{% include "modules/common/message-bar" %}{% endcomment %}
 

@@ -233,6 +233,101 @@ body.mz-product {
             }   
         }
         .container-right {
+            .productReview{
+                width: 21%;
+                float: right;
+                .pr-snippet-stars-reco-reco{
+                    display: none;
+                }
+                .pr-snippet-stars-container, .pr-snippet-read-and-write{
+                    display: block;
+                }
+            }
+            .delivery-date{
+                color: green;
+                span{
+                    display: inline-block;
+                    margin-bottom: 5px;
+                }
+                display: block;
+                text-align: left;
+                font-size: 14px;
+                
+                .tooltiptext{
+                    color: green;
+                }
+                
+                .especially{
+                    color: grey;
+                    font-weight: bold;
+                    font-size: 16px;
+                    margin-bottom: 12px !important;
+                }
+                .paracontent{
+                    margin-bottom: 15px !important;
+                }
+                .datedetails{
+                    text-align: center;
+                    width: 100%;
+                    .getitBy{
+                        color: #939598;
+                        margin-left: auto;
+                        margin-right: auto;
+                        width: 100%;
+                        .onday{
+                            color: orange;
+                            font-weight: bold;
+                        }
+                    }
+                }
+                
+                a.tooltip {
+                    outline:none; 
+                    opacity: 1;
+                    z-index: 1;
+                    position: relative;
+                    display: inline-block; 
+                    text-decoration: underline;
+                }
+                
+                a.tooltip strong {
+                    line-height:30px;
+                    color: @primaryDarkBlue;
+                }
+                a.tooltip:hover {
+                    text-decoration:none;
+                } 
+                a.tooltip span {
+                    z-index:10;
+                    display:none; 
+                    padding:5px 8px; 
+                    width:350px; 
+                    line-height:16px;
+                    label{
+                        margin-bottom: 2px;
+                    }
+                } 
+                a.tooltip:hover span{
+                    display:inline; 
+                    position:absolute; 
+                    border-radius: 5px;
+                    border:2px solid #FFF;  
+                    color:yellow; 
+                    background:#f2f3f4 url(cssttp/css-tooltip-gradient-bg.png) repeat-x 0 0;
+                }
+                .callout {
+                    z-index:20;position:absolute;border:0;top:-14px;
+                    left:120px;}
+                
+                /*CSS3 extras*/
+                a.tooltip span
+                {
+                    border-radius:2px; 
+                    opacity: 1;
+                    right: -28px;
+                    top: 1.5rem;
+                }
+            }
             @media @desktop{
                  width: 55%;
                  .coordinatingProductContainer{
@@ -726,105 +821,6 @@ body.mz-product {
             @media @smallmobile {
                 margin: 8px 0;
                 width: 85%;
-            }
-        }
-        .delivery-date{
-            color: @disabled-grey;
-            font-size: 14px;
-            font-family: @fontLight;
-            display: block;
-            text-align: left;
-            span{
-                display: inline-block;
-                margin-bottom: 5px;
-            }
-            strong {
-                font-family: @fontFamily;
-                color: @primaryDarkBlue;
-                font-weight: normal;
-            }
-            .tooltiptext{
-                color: @primaryColor;
-            }
-            .especially{
-                color: @disabled-grey;
-                font-size: 16px;
-                margin-bottom: 12px !important;
-            }
-            .paracontent{
-                margin-bottom: 15px !important;
-            }
-            .datedetails{
-                text-align: center;
-                width: 100%;
-                .getitBy{
-                    color: @disabled-grey;
-                    margin-left: auto;
-                    margin-right: auto;
-                    width: 100%;
-                    font-family: @fontLight;
-                    .onday{
-                        color: @primaryDarkBlue;
-                        font-family: @fontFamily;
-                    }
-                }
-            }
-            a.tooltip {
-                outline: none;
-                opacity: 1;
-                z-index: 0;
-                position: relative;
-                display: inline-block;
-                color: @primaryColor;
-                text-decoration: underline;
-                @media @smallmobile {
-                    z-index: 1;
-                    float: right;
-                }
-                @media @tablet {
-                    z-index: 1;
-                }
-                strong {
-                    line-height: 30px;
-                }
-                span {
-                    z-index: 10;
-                    display: none;
-                    position: relative;
-                    padding: 3px 6px;
-                    width: 180px;
-                    line-height: 15px;
-                    border-radius: 2px;
-                    opacity: 1;
-                    right: -28px;
-                    top: 1.5rem;
-                    @media @smallmobile {
-                        width: 220px;
-                        right: 20px;
-                        padding: 0px 0px;
-                    }
-                    label {
-                        margin-bottom: 2px;
-                    }
-                }
-                :hover {
-                    text-decoration: none;
-                    span{
-                        display:inline; 
-                        position:absolute; 
-                        border-radius: 5px;
-                        border:2px solid #FFF;  
-                        color:@primaryColor;
-                        background:#f2f3f4 url(cssttp/css-tooltip-gradient-bg.png) repeat-x 0 0;
-                    }
-                }
-            }
-            .callout {
-                z-index:20;
-                position:absolute;
-                border:0;
-                top:-14px;
-                left:120px;
             }
         }
     }
