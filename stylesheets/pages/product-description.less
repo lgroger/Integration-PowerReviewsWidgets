@@ -2808,13 +2808,22 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         position: inherit;
     }
     .mz-productlist-item {
-        width: 100%;
+        width: 95%;
         margin: 0 auto;
+        padding: 10px 0;
     }
     .echi-shi-related-products-slider .owl-item .item {
         box-shadow: inherit;
         img {
             width: 180px;
+        }
+        .mz-productlisting.mz-productlist-tiled {
+            height: 370px;
+            width: 100%;
+            padding: 0;
+            @media @largedevice {
+                height: 350px;
+            }
         }
         .mz-productlisting .mz-productlisting-info .mz-productlisting-title{
             text-transform: capitalize;
@@ -2850,7 +2859,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         margin: 0 auto;
     }
     .owl-stage-outer {
-        max-width: 1225px;
+        max-width: 100%;
         margin: 0 auto;
     }
     .echi-shi-related-products-slider .owl-next {
