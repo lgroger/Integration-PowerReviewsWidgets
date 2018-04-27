@@ -31,7 +31,7 @@
 		<div class="mz-productlisting mz-productlist-tiled" data-mz-product="{{ product.productCode }}">
                     <div class="mz-productlisting-image">
                             <a href="{{ product.url }}">
-                                <img src="{{product.mainImage.imageUrl}}" alt="{{ product.content.productName }}"></a>
+                                <img src="{{product.mainImage.imageUrl}}?max=150&quality=70" alt="{{ product.content.productName }}"></a>
                     </div>
                     <div class="mz-productlisting-info">
                             <a class="mz-productlisting-title" href="{{ product.url }}">

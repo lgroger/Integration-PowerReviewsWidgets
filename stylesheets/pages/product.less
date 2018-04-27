@@ -363,7 +363,7 @@ body.mz-product {
                 {
                     border-radius:2px; 
                     opacity: 1;
-                    right: -28px;
+                    right: -60px;
                     top: 1.5rem;
                 }
             }
@@ -828,13 +828,14 @@ body.mz-product {
         }
        .mz-productdetail-price{
             padding: 0;
-            margin: 5px;
+            margin: 10px 150px 20px 0;
             color: @primaryDarkBlue;
             .uom {
                 color: @disabled-grey;
                 font-family: @fontLight;
                 text-align: center;
-                display: block;    
+                display: block;
+                margin-bottom: 5px;
             }
             h4{
                 text-align: left;
@@ -951,7 +952,7 @@ body.mz-product {
             }
             .mz-volume-price-container{
                 float: left;
-                margin: 10px 0 0 0;
+                margin: 10px 0 0 20px;
             }
         }
     }
@@ -1468,7 +1469,24 @@ body.mz-product {
 		}
 	    #static h2:after, #static h2:before {
 	    	vertical-align: middle;
-	    }
+        }
+        #static h2:before {
+            border-top: 2px solid @tertiaryColor;
+            content: " ";
+            width: 32%;
+            position: absolute;
+            left: 6%;
+            top: 42%;
+        }
+        #static h2:after {
+            border-top: 2px solid @tertiaryColor;
+            content: " ";
+            width: 32%;
+            position: absolute;
+            right: 6%;
+            top: 42%;  
+            left: auto; 
+        }
 		.owl-carousel{
 			width: 98%;
 		    .owl-prev{
