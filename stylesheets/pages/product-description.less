@@ -52,7 +52,7 @@
                         display: inline-block;
                         .product-title {
                             padding: 0;
-                            width: 78%;
+                            width: 71%;
                             float: left;
                             .showmoreDescription {
                                 position: relative;
@@ -118,8 +118,8 @@
             }
             .prod-time {
                 margin-left: 2px;
-                color: @primaryDarkBlue;
-                font-size: 13px;
+                color: @disabled-grey;
+                font-size: 14px;
             }
             .mz-productoptions-container {
                 display: inline-block;
@@ -139,6 +139,7 @@
     }
     #add-to-cart {
         width: 53% !important;
+        padding: 0 50px !important;
     }
     #add-to-wishlist {
         width: 145px;
@@ -1114,7 +1115,6 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
     box-shadow: 2px 2px 6px rgba(0,0,0,0.28);
 }
 i.fa.fa-exclamation-triangle {
-    display: table-cell;
     color: @tertiaryColor;
 }
 #tab-content1 .wrapper .tooltip.warning {
@@ -1479,9 +1479,25 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         #static {
             h2 {
                 font-size: 1.3em;
+                display: inline-block;
             }
             h2:after, h2:before {
                 width: 0%;
+            }
+            h2:before {
+                border-top: 2px solid @tertiaryColor;
+                content: " ";
+                width: 35%;
+                position: absolute;
+                left: 0;
+            }
+            h2:after {
+                border-top: 2px solid @tertiaryColor;
+                content: " ";
+                width: 35%;
+                position: absolute;
+                right: 0;  
+                left: auto; 
             }
         }
         .product-share {
@@ -1899,12 +1915,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             font-size: 19px;
             border-radius: 5px;
             border: 2px solid @tertiaryColor;
-        }
-        span {
             display: inline-block;    
         }
-        span:before,
-            span:after {
+        .reviews-qa:before,
+            .reviews-qa:after {
             border-top: 2px solid @tertiaryColor;
             display: block;
             height: 1px;
@@ -1914,7 +1928,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             left: 0;
             top: 1.2em;
         }
-        span:after {
+        .reviews-qa:after {
             right: 0;  
             left: auto; 
         }
@@ -1934,12 +1948,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             font-size: 19px;
             border-radius: 5px;
             border: 2px solid @tertiaryColor;
-        }
-        span {
             display: inline-block;    
         }
-        span:before,
-            span:after {
+        .reviews-qa:before,
+            .reviews-qa:after {
             border-top: 2px solid @tertiaryColor;
             display: block;
             height: 1px;
@@ -1949,7 +1961,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             left: 0;
             top: 1.2em;
         }
-        span:after {
+        .reviews-qa:after {
             right: 0;  
             left: auto; 
         }
@@ -2784,7 +2796,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             }
             .mz-productlisting-is-personalize img {
                 height: 12px;
-                margin-top: 10px;
+                margin-top: 6px;
             }
         }
     }
@@ -2814,9 +2826,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .echi-shi-related-products-slider .owl-item .item {
         box-shadow: inherit;
-        img {
-            width: 180px;
-        }
         .mz-productlisting.mz-productlist-tiled {
             height: 370px;
             width: 100%;
@@ -3718,7 +3727,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .related-products-heading{
     text-align: center;
     position: relative;
-    margin: 0 5%;
+    margin: 1% 5%;
     h2 {
         background: white;
         margin: 6px;
@@ -3795,7 +3804,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         font-size: 1.8em;
         margin-bottom: 0;
     }
-    h2:before {
+    /*h2:before {
         content: '';
         display: inline-block;
         border-bottom: 2px solid @tertiaryColor;
@@ -3818,7 +3827,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         @media @smallmobile {
             width: 12%;
         }
-    }
+    }*/
 }
 .recommended_products #mz-drop-zone-recommended_slot_heading h2:before, .recommended_products #mz-drop-zone-recommended_slot_heading h2:after {
     @media (max-width: 768px) {
