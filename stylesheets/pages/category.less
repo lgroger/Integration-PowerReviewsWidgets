@@ -95,6 +95,25 @@
             }
         }
     }
+    .mz-pricestack-range {
+        .mz-pricestack-price-lower {
+            width: 45%;
+            float: left;
+            margin-left: 18px;
+            text-align: right;
+            @media @tablet, @smallmobile {
+                margin-left: 8px;
+            }
+            .mz-price.is-crossedout {
+                margin-right: 18px;
+            }
+        }
+        .mz-pricestack-price-upper {
+            width: 45%;
+            float: left;
+            text-align: left;
+        }
+    }
 }
 .mz-category, .mz-searchresults {
     .plp-promo-widget{
@@ -390,13 +409,11 @@
             font-size: 13px;
             color: @disabled-grey;
             font-family: @fontLight;
+            display: block;
             @media @smallmobile {
                 font-size: 11px;
             }
         }
-    }
-    .crossedoutProducts {
-        display: block;
     }
     .uom {
         font-size: 11px;

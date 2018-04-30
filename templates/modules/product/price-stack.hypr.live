@@ -9,6 +9,7 @@
                 {% include "modules/common/price" with model=model.priceRange.upper %}
             </span>
         </span>
+        {% comment %}
         {% if pageContext.cmsContext.template.path != "product" %}
             <span class="crossedoutProducts">
                 {% if model.priceRange.lower.onSale %}
@@ -23,6 +24,7 @@
                 {% endif %}
             </span>
         {%endif%}
+        {% endcomment %}
     {% else %}
         {% include "modules/common/price" with model=model.price %}
     {% endif %} 

@@ -119,7 +119,10 @@
                     float: left;
                     margin: 0;
                     @media @smallmobile {
-                        width: 100%;
+                        float: none;
+                        display: inline-block;
+                        padding: 10px 0;
+                        width: 63%;
                     }
                 }
             }
@@ -135,8 +138,8 @@
                 margin-left: 2px;
                 color: @disabled-grey;
                 font-size: 14px;
-                @media @tablet {
-                    font-size: 13px;
+                @media @tablet, @smallmobile {
+                    font-size: 11px;
                 }
             }
             .mz-productoptions-container {
@@ -161,6 +164,9 @@
         @media @tablet {
             padding: 0 30px !important;
         }
+        @media @smallmobile {
+            padding: 0 10px !important;
+        }
     }
     #add-to-wishlist {
         width: 145px;
@@ -176,6 +182,9 @@
         height: 33px;
         width: 38px;
         font-size: 15px;
+        @media @smallmobile {
+            width: 20px;
+        }
     }
     .product-video {
         float: right;
@@ -250,6 +259,44 @@
         }
         .mz-productlisting-image {
             min-height: 200px;
+        }
+        .mz-productlisting-is-personalize {
+            padding-top: 20px;
+            width: 45%;
+        }
+    }
+}
+@media @smallmobile {
+    .youMayAlsoLikeContainer {
+        .youmayalsolike {
+            text-align: center;
+            color: @tertiaryColor;
+            margin-top: 4px;
+            padding: 3% 0;
+            label {
+                padding: 1px 14px;
+                background: white;
+                border-radius: 5px;
+                border: 2px solid @tertiaryColor;
+                font-size: 18px;
+            }
+            .mz-productlist-item {
+                display: inline-block;
+            }
+        }
+        .youmayalsolike:before, .youmayalsolike:after {
+            width: 20%;
+            content: '';
+            display: inline-block;
+            height: 1px;
+            margin: 0 1%;
+            vertical-align: middle;
+            border-bottom: 2px solid @tertiaryColor;
+        }
+        .mz-productlisting-image {
+            min-height: 120px;
+            height: 120px;
+            margin: 20px 0;
         }
         .mz-productlisting-is-personalize {
             padding-top: 20px;
@@ -1325,7 +1372,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         }
         .mz-productimages-mainimage {
             margin: 0 auto !important;
-            width: 65% !important;
         }
     }
     .desktop-name {
@@ -1592,9 +1638,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         border:none;
     }
 }
-.pdp-detail button.mz-productdetail-addtocart {
-    line-height: 52px;
-}
 .container-right {
     .mz-l-stack-sectiontitle {
         font-family: @fontFamily;
@@ -1608,7 +1651,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .saveYourAmount{
         clear: left;
         display: block;
-        margin-left: 11%;
+        color: @disabled-grey;
     }
     .mz-pricestack-price-lower+.mz-pricestack-price-upper .mz-price{
         margin-left: 0px;
@@ -1623,12 +1666,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             float: left;
             min-width: 8%;
             margin: 4px;
-        }
-        .uom {
-            @media @smallmobile {
-                float: left;
-                margin: 5px 4px 0 0;
-            }
         }
     }
     .addToCart, .personalize{
@@ -1802,12 +1839,21 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         width: 65px;
         font-family: @fontFamily;
     }
+    .productPrice {
+        .mz-pricestack-price-lower {
+            width: auto;
+            margin: 0;
+        }
+    }
     .mz-price {
         margin-left: 5px;
         color: @primaryDarkBlue;
         font-family: @fontFamily;
         font-size: 16px;
         line-height: 26px;
+        &::after {
+            padding: 0 5px !important;
+        }
         &.is-crossedout + .mz-price.is-saleprice{
             margin-left: 2px;
             font-size: 12px;
@@ -1976,7 +2022,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
                 width: 30%;
             }
             @media @smallmobile {
-                width: 25%;
+                width: 12%;
             }
         }
         .reviews-qa:after {
@@ -2018,7 +2064,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
                 width: 30%;
             }
             @media @smallmobile {
-                width: 25%;
+                width: 12%;
             }
         }
         .reviews-qa:after {
@@ -2850,6 +2896,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
                     max-height: 150px;
                     margin: 20px auto;
                 }
+                @media @smallmobile {
+                    max-height: 120px;
+                    width: auto;
+                }
             }
             .item p {
                 margin-top: 0px;
@@ -2884,9 +2934,17 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         width: 95%;
         margin: 0 auto;
         padding: 10px 0;
+        @media @smallmobile {
+            display: inline-block;
+            float: none;
+        }
     }
     .echi-shi-related-products-slider .owl-item .item {
         box-shadow: inherit;
+        @media @smallmobile {
+            display: inline-block;
+            width: 100%;
+        }
         .mz-productlisting.mz-productlist-tiled {
             height: 370px;
             width: 100%;
@@ -2897,10 +2955,14 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             @media @tablet {
                 height: 325px;
             }
+            @media @smallmobile {
+                height: auto;
+                min-height: 280px;
+            }
         }
         .mz-productlisting .mz-productlisting-info .mz-productlisting-title{
             text-transform: capitalize;
-            font-size: 12px;
+            font-size: 14px;
             line-height: 20px;
             min-height: 40px;
             font-family:@fontLight;
@@ -3845,7 +3907,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
             width: 30%;
         }
         @media @smallmobile {
-            width: 25%;
+            width: 10%;
         }
     }
     span:after {
@@ -4142,6 +4204,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     padding-bottom: 30px;
     @media @tablet {
         padding-bottom: 10px;
+    }
+    @media @smallmobile {
+        padding-bottom: 20px;
     }
 }
 @media only screen and (max-width:1024px){    
