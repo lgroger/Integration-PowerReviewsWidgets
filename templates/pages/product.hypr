@@ -239,7 +239,7 @@
         {% if pageContext.isDesktop %}
             <div class="certonaContainer">
                 <div class="youmayalsolike">
-                    you may also like:
+                    you may also like
                 </div>
                 <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1"  >
 
@@ -331,17 +331,8 @@
     </div>
     <div class="container-right">
 
-        {% if pageContext.isMobile %}
-             <div class="youMayAlsoLikeContainer">
-                 <div class="youmayalsolike">
-                     <label>you may also like:</label>
-                 </div>
-                 <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1" >
-
-                 </div>
-             </div>
-         {%endif%}
-            {% if model|get_product_attribute_values('tenant~product-upsell') %}
+        
+        {% if model|get_product_attribute_values('tenant~product-upsell') %}
                 <div class='coordinatingProductContainer'>
                     <div class="relatedProductContainer">
                         <div class="title"> 
@@ -357,6 +348,16 @@
                     </div>
                 </div>
             {%endif%}
+            {% if pageContext.isMobile %}
+             <div class="youMayAlsoLikeContainer">
+                 <div class="youmayalsolike">
+                     <label>you may also like</label>
+                 </div>
+                 <div class="pdpRecommendedProductsSlot_1 recommended_products_slot_pdp"  data-mz-recommendedProducts id="recommended_products_slot_1" >
+
+                 </div>
+             </div>
+         {%endif%}
     </div>
 </div>
 

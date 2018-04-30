@@ -43,23 +43,39 @@
       top: 42%;
       width: 100%;
       .owl-prev {
-        background: url('../resources/images/greyarrow_prev.svg') no-repeat left center;
         color: transparent;
         width: 35px;
         height: 35px;
         float: left;
         background-size: contain;
-        margin-left: 30px;
-        margin-bottom: 0; 
+        margin-left: 20px;
+        margin-bottom: 0;
+        span {
+          width: 0;
+          height: 0;
+          border-top: 8px solid transparent;
+          border-right: 11px solid @disabled-grey;
+          border-bottom: 8px solid transparent;
+          display: inline-block;
+          left: 0;
+        }
       }
       .owl-next { 
-        background: url('../resources/images/greyarrow_next.svg') no-repeat right center;
         color: transparent;
         width: 32px;
         height: 35px;
         float: right;
-        margin-right: 30px;
+        margin-right: 25px;
         background-size: contain;
+        span {
+          width: 0;
+          height: 0;
+          border-top: 8px solid transparent;
+          border-left: 11px solid @disabled-grey;
+          border-bottom: 8px solid transparent;
+          display: inline-block;
+          margin-bottom: -2px;
+        }
       }
     }
     .owl-dots {
