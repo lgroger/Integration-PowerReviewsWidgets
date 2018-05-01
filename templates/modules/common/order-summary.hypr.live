@@ -31,11 +31,7 @@ item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
                           {% for opt in item.product.options %}
                             {% if opt.name=="dnd-token" %}
                             {% else %}
-                                {% if opt.name == 'Color' %}
-                                  <p><span class="sd_label">Color:</span><span class="sd_text">{{ opt.value }}</span></p>
-                                {% else %}
                                   <p><span class="sd_label">{{ opt.name }}:</span><span class="sd_text">{{ opt.value }}</span></p>
-                                {% endif %}
                             {% endif %}
                           {% endfor %}  
                         {% endif %}
