@@ -56,6 +56,25 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wi
         productView.render();
 		return productView;
     };
+
+    $(".show-more").on("click", function(e) {
+        e.preventDefault();
+        var $this = $(this); 
+        var $content = $this.parent().find("div.content");
+        var linkText = $this.text().toUpperCase();    
+        
+        if(linkText === "...READ MORE"){
+            linkText = "...read less";
+            $(this).addClass('show-less');
+            $content.switchClass("hideContent", "showContent", 400);
+        } else {
+            linkText = "...read more";
+            $(this).removeClass('show-less');
+            $content.switchClass("showContent", "hideContent", 400);
+        }
+        
+        $this.text(linkText);
+    });
 	
         var product = ProductModels.Product.fromCurrent();
         
