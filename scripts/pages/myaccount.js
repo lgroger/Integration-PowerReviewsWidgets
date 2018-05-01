@@ -1118,22 +1118,27 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 
                     for(var ind=0; ind < items.models[i].get('items')[j].product.options.length; ind++){
                         if(items.models[i].get('items')[j].product.options[ind].attributeFQN.toLowerCase()==='tenant~dnd-token'){
-                            var dndToken = JSON.parse(items.models[i].get('items')[j].product.options[ind].shopperEnteredValue);
-                            var info = DNDEngine.getTokenData(dndToken);
-                            if(info.designName){
-                                items.models[i].get('items')[j].designName = info.designName;
-                            }
-                            if(info.src){
-                                items.models[i].get('items')[j].product.imageUrl= info.src;
-                            }
-                            items.models[i].get('items')[j].product.token = info.token;
-                            items.models[i].get('items')[j].product.persType = info.type;
-                        
-                            if(info.type ==="mc"){
-                                // add to projectList array which will get passed into getMcImages() to get actual image data from mediaclip
-                                if(projectList.indexOf(info.token) === -1){
-                                    projectList.push(info.token);
+                            try{
+                                var dndToken = JSON.parse(items.models[i].get('items')[j].product.options[ind].shopperEnteredValue);
+                                var info = DNDEngine.getTokenData(dndToken);
+                                if(info.designName){
+                                    items.models[i].get('items')[j].designName = info.designName;
                                 }
+                                if(info.src){
+                                    items.models[i].get('items')[j].product.imageUrl= info.src;
+                                }
+                                items.models[i].get('items')[j].product.token = info.token;
+                                items.models[i].get('items')[j].product.persType = info.type;
+                            
+                                if(info.type ==="mc"){
+                                    // add to projectList array which will get passed into getMcImages() to get actual image data from mediaclip
+                                    if(projectList.indexOf(info.token) === -1){
+                                        projectList.push(info.token);
+                                    }
+                                }
+                            }
+                            catch(e){
+                                console.log(e);
                             }
                         }
                     }
@@ -1310,15 +1315,21 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         }
                     }
                     if(dndStr){
-                        var dndtoken = JSON.parse(dndStr);
-                        if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
-                            // look for parent token info
-                            info = DNDEngine.getTokenData(dndtoken,null,true); // notice that useLocal (3rd parameter) is true
-                            if(info){
-                                items.models[i].get('product').set('imageUrl',info.src);
+                        try{
+                            var dndtoken = JSON.parse(dndStr);
+                            if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
+                                // look for parent token info
+                                info = DNDEngine.getTokenData(dndtoken,null,true); // notice that useLocal (3rd parameter) is true
+                                if(info){
+                                    items.models[i].get('product').set('imageUrl',info.src);
+                                }
+                                items.models[i].get('product').set('token',info.token);
+                                items.models[i].get('product').set('persType',info.type);
                             }
-                            items.models[i].get('product').set('token',info.token);
-                            items.models[i].get('product').set('persType',info.type);
+                        }
+                        catch(e){
+                            console.log(e);
+                            console.log(dndStr);
                         }
                     }
                 }
@@ -1493,22 +1504,28 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                         }
                     }
                     if(dndStr){
-                        var dndtoken = JSON.parse(dndStr);
-                    if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
-                            // look for parent token info
-                            info = DNDEngine.getTokenData(dndtoken);
-                            if(info){
-                                if(info.type === "mc"){
-                                    if(projectList.indexOf(info.token) === -1){
-                                        projectList.push(info.token);
+                        try{
+                            var dndtoken = JSON.parse(dndStr);
+                            if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
+                                // look for parent token info
+                                info = DNDEngine.getTokenData(dndtoken);
+                                if(info){
+                                    if(info.type === "mc"){
+                                        if(projectList.indexOf(info.token) === -1){
+                                            projectList.push(info.token);
+                                        }
+                                    }
+                                    else{
+                                        items.models[i].get('product').set('imageUrl',info.src);
                                     }
                                 }
-                                else{
-                                    items.models[i].get('product').set('imageUrl',info.src);
-                                }
+                                items.models[i].get('product').set('token',info.token);
+                                items.models[i].get('product').set('persType',info.type);
                             }
-                            items.models[i].get('product').set('token',info.token);
-                            items.models[i].get('product').set('persType',info.type);
+                        }
+                        catch(e){
+                            console.log(e);
+                            console.log(dndStr);
                         }
                     }
                 }
