@@ -1,5 +1,5 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview","modules/api", "vendor/wishlist", "modules/quick-view", "modules/quickview-productview"],
-function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wishlist, QuickView, QuickViewProductView) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview","modules/api", "vendor/wishlist", "modules/quick-view", "modules/quickview-productview","vendor/jquery.elevatezoom"],
+function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wishlist, QuickView, QuickViewProductView,ElevateZoom) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
@@ -54,12 +54,6 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wi
 		 };
 		 
         productView.render();
-		try{
-//			PowerReviews.writeProductListBoxes(product.get('productCode'));
-		}
-		catch(e){
-			console.log(e); 
-		}
 		return productView;
     };
 	

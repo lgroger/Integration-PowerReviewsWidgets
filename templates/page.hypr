@@ -195,9 +195,6 @@
               {% block page-footer %}
               {% include "modules/page-footer" %}
               {% endblock page-footer %}
-              {% if pageContext.pageType ==  'product' %}
-                {% require_script "vendor/jquery.elevatezoom"%} 
-              {% endif %} 
 
           </div>
           {% block trailing-scripts %}

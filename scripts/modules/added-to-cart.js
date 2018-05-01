@@ -148,7 +148,12 @@ define(
 						track_price=cartitemModel.get('product').price.salePrice;
 					 }
 		//console.log(track_price);
-		//console.log(cartitemModel.get('url'));
+		var pUrl = cartitemModel.get('url');
+		if(pUrl.substr(0,1) !== "/"){
+			pUrl = "/"+pUrl;
+		}
+		pUrl = window.location.origin+pUrl;
+		//console.log(pUrl);
 		//console.log(qty);
 
 					 var track_product_code=[];
@@ -179,7 +184,7 @@ define(
 
 					if(typeof addthis !== "undefined"){
 						//Rerender addthis buttons
-						addthis.update('share', 'url',window.location.origin+cartitemModel.get('url') );
+						addthis.update('share', 'url',pUrl );
 						addthis.update('share', 'title',gaitem.product.name); 
 						addthis.toolbox(".addthis_inline_share_toolbox"); // quickview had this
 						addthis.toolbox('.cart-over-addthis'); // product page had this
