@@ -136,6 +136,27 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wi
                 }
             }
         });
+
+        
+        $(document).on('click', '.outofStock', function(e){ 
+            e.preventDefault();
+            $('[data-mz-validationmessage-for]').text('');
+            if( $('.mz-productoptions-valuecontainer').length){
+                if(jQuery('.mz-productoptions-valuecontainer form input:radio:checked').length){   
+                    console.log('checked');
+                }else{
+                    alert('Please select an option');
+                    return false;
+                }
+            }
+            
+            $("#mz-drop-zone-instock-notice .mz-cms-content").show();
+            $("#mz-drop-zone-instock-notice .mz-cms-content").next('span').show();
+        });
+        
+        $(document).on('click', '.close', function(){
+            $("#mz-drop-zone-instock-notice .mz-cms-content").hide();
+        });
             
             $(document).on('click', ".cross-sellContainer .addToCart", function(e){
                 var ele = e.currentTarget;

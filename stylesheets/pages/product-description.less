@@ -159,13 +159,21 @@
         -webkit-user-select: none;  -khtml-user-select: none;   -moz-user-select: none; -o-user-select: none;    user-select: none;
     }
     #add-to-cart {
-        width: 53% !important;
-        padding: 0 50px !important;
+        padding: 0 50px;
         @media @tablet {
             padding: 0 30px !important;
         }
         @media @smallmobile {
             padding: 0 10px !important;
+        }
+        &.outofStock {
+            @media @tablet {
+                padding: 10px 30px !important;
+            }
+            @media @smallmobile {
+                padding: 5px 10px !important;
+                margin: 5px;
+            }
         }
     }
     #add-to-wishlist {
@@ -192,7 +200,6 @@
     }
     .owl-prev {
         top: 30% !important;
-        height: 25px !important;
     }
     .echi-shi-products_slider {
         padding: 0% 2% 0% !important;
@@ -200,7 +207,6 @@
     .owl-next {
         top: 30% !important;
         right: -11% !important;
-        height: 25px !important;
     }
     .echi-shi-products_slider .owl-next {
         margin-right: -5% !important;
@@ -264,6 +270,9 @@
             padding-top: 20px;
             width: 45%;
         }
+        .mz-price, .mz-pricestack-price-lower, .mz-pricestack-price-up {
+            font-size: 16px !important;
+        }
     }
 }
 @media @smallmobile {
@@ -274,7 +283,7 @@
             margin-top: 4px;
             padding: 3% 0;
             label {
-                padding: 1px 14px;
+                padding: 3px 14px;
                 background: white;
                 border-radius: 5px;
                 border: 2px solid @tertiaryColor;
@@ -1061,17 +1070,13 @@ button.personalize.mz-productdetail-addtocart.mz-button.mz-button-large{
         }
     }
     .owl-controls .owl-nav .owl-prev{
-       width: 25px;
-       height: 25px;
        margin-left: -2% !important;
        top: 25px;
 
     }
-    .owl-controls .owl-nav .owl-next{       
-        width: 25px;
-       height: 25px;     
-       top: 25px;
-           margin-right: -1%;
+    .owl-controls .owl-nav .owl-next{          
+        top: 25px;
+        margin-right: -1%;
     } 
 }
 .fixed-bottom ul li {
@@ -1408,9 +1413,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .add-cart {
     width: 68%;
     margin: 30px 16%;
-    .owl-next {
-        background: url('../resources/images/arrow-next.svg') no-repeat !important;
-    }
     .mz-productlist-tiled .mz-productlist-item {
         width: 220px;
     }
@@ -1828,11 +1830,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .owl-next {
         top: 23px !important;
         margin-right: 1% !important;
-        height: 25px !important;
     }
     .owl-prev {
-        top: 23px !important;
-        height: 25px !important;
+        top: 23px;
     }
     label {
         display: inline-block;
@@ -1957,14 +1957,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     margin: 12px auto;
     vertical-align: initial !important;
     .owl-prev {
-        background: url('../resources/images/arrow-prev.svg') no-repeat left center!important;
-        width: 13px !important;
         margin-left: -23px !important;
         top: 30% !important;
     }
     .owl-next {
-        background: url('../resources/images/arrow-next.svg') no-repeat !important;
-        height: 25px !important;
         margin-right: -25px !important;
         top: 32% !important;
     }
@@ -2750,9 +2746,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .pdp-related-products {
         .echi-shi-related-products-slider .owl-prev {
-            margin-left: -16px !important;
-            width: 25px !important;
-            height: 25px !important;
+            margin-left: -14px !important;
         }
         .owl-stage-outer {
             width: auto !important;
@@ -2762,9 +2756,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         }
     }
     .pdp-related-products .echi-shi-related-products-slider .owl-next {
-        right: -44px !important;
-        width: 25px !important;
-        height: 25px !important;
+        right: -28px !important;
     }
 }
 @media screen and (min-width:320px) and (max-width:370px) {
@@ -2843,6 +2835,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         color: @primaryDarkBlue;
         @media @smallmobile {
             font-size: 14px;
+            display: inline;
         }
     }
     .mz-pricestack .mz-pricestack-price-lower:after {
@@ -2941,6 +2934,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .echi-shi-related-products-slider .owl-item .item {
         box-shadow: inherit;
+        @media @tablet {
+            img {
+                max-height: 120px;
+            }
+        }
         @media @smallmobile {
             display: inline-block;
             width: 100%;
@@ -3102,61 +3100,27 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .owl-prev {
         margin-left: -90px !important;
-        width: auto !important;
-        height: auto !important;
-        background: #fff !important;
-        border-radius: 0px 90px 90px 0;
-        -moz-border-radius: 90px 90px 0 0;
-        -webkit-border-radius: 0px 90px 90px 0;
-        box-shadow: 0px 5px 24px 4px #757575;
         top: 31%;
-        -moz-border-radius: 90px 00px 0px 90px;
         span {
-            background-image: url('../resources/images/Arrow.svg?max=8');
             background-size: 26px 103%; 
-            height: 87px;
-            width: 109px;
             margin-left: 0px;
-            background-repeat: no-repeat;
             top: 40%;
             display: block;
             margin: 0px 1em;
-            background-position-y: -2px;
             margin-left: 65%;
-            background-position-x: 5px;
         }
     }
     .owl-next {
-        width: 0px;
         position: absolute;
         overflow: hidden;
-        border-radius: 90px 00px 0px 90px;
-        -moz-border-radius: 90px 00px 0px 90px;
-        -webkit-border-radius: 90px 00px 0px 90px;
-        background: green;
-        height: 90px !important;
-        width: 45px !important;
         margin-right: 3.5% !important;
         background: #fff !important;
         right: -3.5%;
-        background-size: 66px 39px !important;
-        background-repeat: no-repeat;
-        box-shadow: 0px 5px 24px 4px #757575;
         top: 30%;
         span {
-            background-image: url('../resources/images/Arrow.svg?max=8');
-            background-size: 30% 125%;
-            height: 90px;
-            width: 90px;
             margin-left: -49px;
-            background-repeat: no-repeat;
             top: 35%;
             display: block;
-            transform: rotate(180deg);
-            -webkit-transform:rotate(180deg);
-            -moz-transform:rotate(180deg);
-            -ms-transform:rotate(180deg);
-            background-position-y: 60%;
         }
     }
     .owl-dots {
@@ -3303,14 +3267,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         top: 37%;
         left: -3% !important;
         margin-left: -3% !important;
-        width: 25px !important;
     }
     .owl-next {
         position: absolute;
         top: 37%;
         right: -1% !important;
         margin-right: -3% !important;
-        width: 25px !important;
     }
     .owl-dots {
         display: none !important;
@@ -3395,14 +3357,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .owl-prev {
         margin-left: 0 !important;
-        width: auto;
-        height: auto;
+
         top: 31%;
     }
     .owl-next {
         margin-right: 0 !important;
-        width: auto;
-        height: auto;
         top: 31%;
     }
     .owl-dots {
@@ -3430,9 +3389,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .echi-shi-superpage-theme-slider {
     margin: 0 auto;
     padding: 0% 5% 0%;
-    .owl-controls .owl-nav .owl-next {
-        background: url('../resources/images/arrow-next.svg') no-repeat center !important;
-    }
     .mz-productlisting.mz-productlist-tiled {
         height: auto;
         padding: 10px 10px;
@@ -3541,14 +3497,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         top: 37%;
         left: -3% !important;
         margin-left: -3% !important;
-        width: 25px !important;
     }
     .owl-next {
         position: absolute;
         top: 37%;
         right: -1% !important;
         margin-right: -3% !important;
-        width: 25px !important;
     }
     .owl-dots {
         display: none !important;
@@ -3961,13 +3915,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         }
     }*/
 }
-.recommended_products #mz-drop-zone-recommended_slot_heading h2:before, .recommended_products #mz-drop-zone-recommended_slot_heading h2:after {
-    @media (max-width: 768px) {
+@media @smallmobile {
+    .recommended_products #mz-drop-zone-recommended_slot_heading h2:before, .recommended_products #mz-drop-zone-recommended_slot_heading h2:after {
         display: none;
     }
-}
-.recommended_products #mz-drop-zone-recommended_slot_heading h2{
-    @media (max-width: 768px) {
+    .recommended_products #mz-drop-zone-recommended_slot_heading h2{
         font-size: 18px;
         text-transform: uppercase;
     }
@@ -3991,7 +3943,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     .owl-next {
         right: -7%;
         top: 40%;
-        background: url('../resources/images/arrow-next.svg') no-repeat !important;
     }
     .item {
         background-color: #fff;
@@ -4126,21 +4077,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         .owl-prev{
             margin-left: -95px !important;
             span{
-                background-size: 25px 105%;
-                height: 75px;
-                width: 40px;
                 margin-left: 68%;
             }
         }
         .owl-next{
-            height: auto!important;
-            width: 120px !important;
             margin-right: -80px !important;
             right: 0px;
             span{
-                background-size: 25px 106%;
-                height: 75px;
-                width: 40px;
                 margin-left: -5px;
             }
         }
@@ -4156,15 +4099,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
     }
     .pdp-detail .owl-next{
         right: -15% !important;
-    }
-}
-@media only screen and (max-width:375px) {
-    .pdp-detail #add-to-cart {
-         width: 210px !important;
-         font-size: 14px !important;
-    }
-    #add-to-wishlist{
-        width: 50px !important;
     }
 }
 .item {
