@@ -29,7 +29,7 @@
 {% endcomment %}
  <p>
 
-        <span class="color-blue">Availability</span> :
+        <span class="color-blue">Availability:</span>
         {% if model.isConfigured %}
           {% if model.isInStock %}
             <span class="highlight-green"> In Stock </span>
@@ -44,27 +44,36 @@
         {% else %}
 
             {% if model.productionTime and model.productionTime!=0 and model.productionTime!="0" %}
-                <div class="prod-time">
-                   {{model.productionTime }} Business Day(s) Production time&nbsp;<span class="wrapper"><i class="fa fa-question-circle-o" aria-hidden="true"></i>
-                   <span class="tooltip">{{themeSettings.shippingTooltipInfo}}</span>
-                </div>
+                <span class="prod-time">
+                   {{model.productionTime }} Business Day(s) Production time&nbsp;
+                </span>
             {% else %}
             {% endif %}
-
 
         {% if model.delDate %}
           <span class="delivery-date">
 {# for troubleshooting            <span>Ships on <strong> {{ model.shipDate|safe }}</strong></span><br> #}
-            <span>Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}}</span><br>
+            <span>
+              Get it by <strong> {{ model.delDate|safe }}</strong> {{labels.stdShippingWith}} &nbsp;</span>
             {% if not model.groundOnly %}
-                <span>Get it by <strong> {{ model.expressDate|safe }}</strong> {{labels.expShippingWith}}</span><br>
-                <span>Get it by <strong> {{ model.overnightDate|safe }}</strong> {{labels.ovrShippingWith}}</span><br>
+            <a class="tooltip">
+              Need it sooner?
+              <span class="tooltip" style="border: 2px solid #211d5e;" >
+                  <br/>
+                  <label class="datedetails">
+                      <label class="getitBy">Get it by <label class="onday">{{ model.expressDate|safe }} </label><br/> {{labels.expShippingWith}}</label><br/>
+                      <br/>
+                      <label class="getitBy">Get it by  <label class="onday">{{ model.overnightDate|safe }} </label><br/> {{labels.ovrShippingWith}}</label>
+                  </label>
+              </span>
+              </a>
             {% endif %}
           </span>
         {% endif %}
         {% endif %}
 
   </p>
+  {% comment %}
      <div class="product-description">
         <span class="color-blue">Product Details : </span>
         {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
@@ -77,6 +86,7 @@
           <span class="bundle-btn"> See What's Included </span>
         {% endif %}
      </div>
+     {% endcomment %}
      <div class="options-price-wrap clearfix {% if model.hasVolumePricing %} enabledVolumePrice {% else %} align-price-left {% endif %}">
   {% if model.options and model.options.length > 0 %}
     <div class="mz-productdetail-options mz-l-stack-section product-options-container">
@@ -121,7 +131,7 @@
                     <span class="is-crossedout">
                        {{model.price.price|currency}}
                     </span>
-                    <span class="highlight-pink">You Save {{ perAmt|floatformat(0) }}%</span>
+                    <span class="highlight-pink">Save {{ perAmt|floatformat(0) }}%</span>
                   </div>
               {% endwith %}
             {% endwith %}
@@ -155,7 +165,7 @@
     <div class="product-qty-cart">
       <div class="product-quantity">
           <div class="mz-productdetail-conversion-controls">
-              <span class="mz-qty-label">{{ labels.qty }} </span>
+              <span class="mz-qty-label"></span>
               <span class="custom-qty">
                   <input class="mz-productdetail-qty qty" type="number" value="{{ model.quantity }}" min="{{ model.quantity }}" max="9999" maxlength = "4" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% endif %} data-mz-value="quantity" oninput="maxLengthCheck(this)" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
               </span>
@@ -164,8 +174,9 @@
       </div>
       <div class="product-cart-wishlist">
           {% if model.isPersonalized %}
-                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} disabled="disabled"{% endif %}>{% if not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}PERSONALIZE{% endif %}</button>
-          {% else %}
+                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}"
+                  {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Please select an option above" disabled="disabled" {% endif %}{% endif %}>{% if not model.isInStock and model.isConfigured %}Notify me{% else %}{{ labels.personalize }}{% endif %}</button>
+                  {% else %}
                   {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
                         {% if user.isAuthenticated ==false and user.isAnonymous ==false %}
                           <p>Session expired please click <a href="/user/login">here</a> to login</p>
@@ -173,7 +184,9 @@
                            <p>This product is available only for logged-in users. Please register or login to your account. </p><br>
                           {% endif %}
                   {% else %}
-                    <button id="add-to-cart" class="addToCart mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %}is-disabled{% endif %}" {% if model.isInStock and model.isConfigured %}{% else %} disabled="disabled" {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Select an option" {% endif %} {% endif %} >{% if  not model.isInStock and model.isConfigured %}OUT OF STOCK{% else %}{{ labels.addToCart }}{% endif %}</button>
+                    <button id="add-to-cart" class="mz-button mz-button-large {% if not model.isInStock and model.isConfigured %} outofStock {%else%} addToCart mz-productdetail-addtocart {%endif%} 
+                    {% if model.isInStock and model.isConfigured %}{% else %}{% endif %}" 
+                {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Please select an option above" disabled="disabled" {% endif %}{% endif %}>{% if  not model.isInStock and model.isConfigured %}Notify me{% else %}{{ labels.addToCart }}{% endif %}</button>
                   {% endif %}
           {% endif %}
           {% if siteContext.generalSettings.isWishlistCreationEnabled %}

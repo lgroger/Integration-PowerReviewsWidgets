@@ -3,6 +3,7 @@
     margin: 0 auto;
     @media @largedevice {
         max-width: 1550px;
+        width: 100%;
     }
     @media @tablet, @smallmobile {
         width: 90%;
@@ -23,6 +24,21 @@
                 font-size: 14px;
                 padding: 2px 5px;
             }
+        }
+        .rec-title:before {
+            border-top: 2px solid @tertiaryColor;
+            content: " ";
+            width: 38%;
+            position: absolute;
+            left: 0;
+        }
+        .rec-title:after {
+            border-top: 2px solid @tertiaryColor;
+            content: " ";
+            width: 38%;
+            position: absolute;
+            right: 0;  
+            left: auto; 
         }
     }
     .pdp-related-products{
@@ -79,8 +95,27 @@
             }
         }
     }
+    .mz-pricestack-range {
+        .mz-pricestack-price-lower {
+            width: 45%;
+            float: left;
+            margin-left: 18px;
+            text-align: right;
+            @media @tablet, @smallmobile {
+                margin-left: 8px;
+            }
+            .mz-price.is-crossedout {
+                margin-right: 18px;
+            }
+        }
+        .mz-pricestack-price-upper {
+            width: 45%;
+            float: left;
+            text-align: left;
+        }
+    }
 }
-.mz-category {
+.mz-category, .mz-searchresults {
     .plp-promo-widget{
         width: 100%;
         .maxchardesktop, .maxcharmobile{
@@ -282,14 +317,6 @@
         width: 100%;
         padding: 8px 5px;
     }
-    &:hover {
-        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-        bottom:10px;
-        @media @smallmobile {
-            box-shadow: inherit !important;
-            bottom: 0 !important;
-        }
-    }
     .wishlist-icon {
         position: absolute;
         right: 1px;
@@ -382,13 +409,11 @@
             font-size: 13px;
             color: @disabled-grey;
             font-family: @fontLight;
+            display: block;
             @media @smallmobile {
                 font-size: 11px;
             }
         }
-    }
-    .crossedoutProducts {
-        display: block;
     }
     .uom {
         font-size: 11px;
@@ -788,24 +813,25 @@
         }
     }
 }
-#mz-drop-zone-category-page-top, #mz-drop-zone-parent-category-page-top, #mz-drop-zone-super-page-top-seo {
-    .mz-cms-image-maintain {
+@media @smallmobile {
+    #mz-drop-zone-category-page-top, #mz-drop-zone-parent-category-page-top, #mz-drop-zone-super-page-top-seo {
+        .mz-cms-image-maintain {
+            width: 260%;
+            margin-left: -80%;
+            height: auto;
+        }
+    }
+    .mz-cms-content .mz-cms-image-cover {
         width: 260%;
         margin-left: -80%;
-        height: auto;
+    }
+    #mz-drop-zone-parent-category-page-top .mz-cms-content {
+        padding: 0;
+    }
+    .mz-cms-col-4-12 .mz-cms-content {
+        padding: 10px !important;
     }
 }
-.mz-cms-content .mz-cms-image-cover {
-	width: 260%;
-    margin-left: -80%;
-}
-#mz-drop-zone-parent-category-page-top .mz-cms-content {
-    padding: 0;
-}
-.mz-cms-col-4-12 .mz-cms-content {
-    padding: 10px !important;
-}
-
 .rightArrow {
 	width: 0;
 	height: 0;

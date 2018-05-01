@@ -102,6 +102,9 @@ var certonaRecommendations = function(response){
    		}); 
       $(divid).html('<div class="pdp-related-products"><div class="clear"></div><div class="echi-shi-related-products-slider"><div class="owl-carousel owl-theme">'+htmltemp+'</div></div></div>');
       
+        $('.certonaContainer .echi-shi-related-products-slider .owl-carousel').removeClass('owl-carousel');
+        $('.cross-sellContainer #recommended_products_slot_2 .owl-carousel').removeClass('owl-carousel');
+        
       $('.echi-shi-related-products-slider .owl-carousel').owlCarousel({
 				loop:true, 
 				margin:10,

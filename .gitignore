@@ -18,3 +18,4 @@ mozu.config.json
 
 !node_modules/bootstrap/js/popover.js
 
+/nbproject/private/

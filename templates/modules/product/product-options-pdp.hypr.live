@@ -9,7 +9,7 @@
 {% with ProductTypesArr|contains(model.productType) as isProductTypeFlag %}
 {% if isProductTypeFlag %}
      <div class="mz-productoptions-valuecontainer">
-       <span class="sl-no">1</span> <select class="mz-productlable-options" mz-banner-type>
+       <select class="mz-productlable-options" mz-banner-type>
             <option value="">Select Type*</option>
             {% for option in model.options %}
                 {% if option.attributeFQN|lower != "tenant~outdoor-banner-with-slits"  and option.attributeFQN|lower != "tenant~dnd-token" %}
@@ -18,7 +18,6 @@
             {% endfor %}
         </select><br/> 
         <div class="selction-size-caption">
-             <span class="sl-no">2</span> 
              <select class="mz-productlable-options" disabled>
                 <option value="">Select Size*</option>
             </select>

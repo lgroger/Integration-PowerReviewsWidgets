@@ -1,6 +1,7 @@
 <!-- Tabs -->
 {% spaceless %}
 <div class="tabs" id="description">
+  {% comment %}
    <!-- Radio button and lable for #tab-content1 -->
    <input type="radio" name="tabs" id="tab1" checked >
    <label for="tab1">
@@ -48,22 +49,23 @@
          {% dropzone "shipping-tab" scope="template" %}
       </div>
    </div>
+{% endcomment %}
 
-   <div id="tab-content3" class="tab-content">
-      <div class="tab-content-inner">
-         {# <h3>Customer Questions & Answers</h3> #}
-         {% dropzone "qa-widget-heading" scope="template" %}
-         {% dropzone "qa-widget-slot" scope="template" %}
-      </div>
-   </div>
+  <div id="tab-content2" class="tab-content" >
+    <div class="tab-content-inner">
+      <span class="reviews-qa">reviews</span>
+      {% dropzone "review-zone-heading" scope="template" %}
+      {% dropzone "review-zone" scope="template" %}
+    </div>
+  </div>
 
-   <div id="tab-content2" class="tab-content" >
-      <div class="tab-content-inner">
-         {# <h3>Customer Reviews</h3> #}
-         {% dropzone "review-zone-heading" scope="template" %}
-         {% dropzone "review-zone" scope="template" %}
-      </div>
-   </div>
+  <div id="tab-content3" class="tab-content">
+    <div class="tab-content-inner">
+        <span class="reviews-qa">questions &amp; answers</span>
+        {% dropzone "qa-widget-heading" scope="template" %}
+        {% dropzone "qa-widget-slot" scope="template" %}
+    </div>
+  </div>
 
 </div>
 {% endspaceless %}

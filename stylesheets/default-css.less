@@ -99,13 +99,6 @@
         } 
     }
 }
-.mz-instagram-slot.party-section{
-    .owl-controls{
-        .owl-prev, .owl-next{
-            display:block !important;
-        }
-    }
-} 
 .popoverLoginForm h3.popover-title {
     display: none;
 }
@@ -442,19 +435,15 @@ span.tt-suggestions {
         top: 37%;
         left: -1% !important;
         margin-left: -3% !important; 
-        width: 25px !important;
     }
     .owl-next{
         position: absolute;
         top: 37%;
         right: -7% !important;
         margin-right: -3%; 
-        width: 25px !important;
-    }  
-    
-
+    }
     .owl-dots{
-        display:none !important; 
+        display: none !important; 
     }
     .owl-item .item{
         background-color: #FFF;
@@ -1261,26 +1250,6 @@ h2.promo-slide-title{
         }
     } 
 }
-.mz-instagram-slot{
-        .owl-controls .owl-nav .owl-next{
-        background-size: 17px !important;
-        background-position: 12px;
-        color: transparent;
-        width: 40px;
-        background-color: rgba(255, 255, 255, 0.43);
-        border-radius: 50%;
-        height: 40px;
-    }
-    .owl-carousel .owl-controls .owl-nav .owl-prev{
-         background-size: 17px !important;
-        background-position: 12px;
-        color: transparent;
-        width: 40px;
-        background-color: rgba(255, 255, 255, 0.43);
-        border-radius: 50%;
-        height: 40px;
-    }
-}
 .item{
     transition: 0.3s ease-in-out;
 }
@@ -1414,13 +1383,13 @@ h2.promo-slide-title{
                 p{
                     font-family: @fontFamily;
                     font-size: 1.06rem;
-                    color: gray;
+                    color: @disabled-grey;
                     margin-top: 39px;
                     margin-bottom: 0;
                     span.custom-qty{
-                        background-color: #f7f7f7;
+                        background-color: white;
                         padding: 7px 0px 7px 0px;
-                        color: gray;
+                        color: @primaryDarkBlue;
                         border-radius: 20px;
                         border: 1px solid #e6e6e6;
                         input[type="text"]{
@@ -1680,7 +1649,7 @@ h2.promo-slide-title{
     }
 }
 .mz-productlisting-image a img{
-    max-width: 100% !important;
+    max-width: 100%;
     position: absolute;
     top: 0;
     left: 0;
@@ -1891,6 +1860,9 @@ h2.promo-slide-title{
     vertical-align: middle;
     text-align: center;
     overflow-y: scroll;
+    .product-video .owl-controls {
+        display: none;
+    }
 }
 .display-fixed-mob{ 
     top:0;
@@ -3290,23 +3262,12 @@ right: 0;
 
 /* added everyones css from default site template widget #2 GW */
 @media only screen and (max-width: 375px) {
-    .pdp-detail #add-to-cart {
-        width: 200px !important;
-    }
     .pr-review-points-attr-wrapper .pr-attribute-group {
         width: 31.75% !important;
     }
     .mz-product .mz-quick-view-wrapper .container-right .product-cart-wishlist .personalize {
-        padding: 0px 30px !important;
-    }
-}
-@media only screen and (max-width: 500px) {
-    .pr-review-rating-wrapper, .pr-review-main-wrapper, .pr-review-author {
-        float: none !important;
-        width: 100% !important;
-    }
-    .echi-shi-related-products-slider .mz-pricestack-price-up {
-        display: block;
+        padding: 0px 10px !important;
+        font-size: 14px;
     }
 }
 @media screen and (max-width: 640px) {
