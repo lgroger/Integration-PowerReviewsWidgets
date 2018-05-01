@@ -160,7 +160,7 @@
                         <div class="product-short-description content hideContent">
                           {{ model.content.productShortDescription|safe }}
                         </div>
-                        {% if model.content.productShortDescription.length > 100 %}       
+                        {% if model.content.productShortDescription.length > 75 %}       
                             <a class="show-more" href="#">...read more</a>
                         {% endif %}
                         </div>
