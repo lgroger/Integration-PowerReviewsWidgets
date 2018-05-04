@@ -689,25 +689,9 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
 			//console.log("addToCart");
             var self= this;
             var $qField = $(self.el).find('[data-mz-value="quantity"]'),
-            newQuantity = parseInt($qField.val(), 10),
-            sku = "";
+            newQuantity = parseInt($qField.val(), 10);
 			
 			//console.log(newQuantity);
-
-            //Bloomreach add to cart event
-            if(this.model.attributes.variationProductCode !== undefined && this.model.attributes.variationProductCode !== 'undefined'){
-              sku = this.model.attributes.variationProductCode;
-            }
-           // console.log('BrTrk');
-           // console.log(this.model.attributes.productCode);
-         //   console.log(sku);
-            if(typeof BrTrk !== 'undefined'){
-				BrTrk.getTracker().logEvent('cart', 'click-add',{
-					'prod_id': this.model.attributes.productCode ,
-					'sku' : sku
-				});
-			}
-            //end
 
             this.model.set('quantity',newQuantity);
             this.model.addToCart();
@@ -827,18 +811,6 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 self.model.set('quantity', data.quantity);
             }
             self.model.addToCart();
-
-            //Bloomreach add to cart event
-            var productUsage = this.model.attributes.productUsage,
-                variationProductCode = this.model.attributes.variationProductCode,
-                sku = "";
-
-            if(typeof variationProductCode !== 'undefined'){
-              sku = variationProductCode;
-            }
-
-            if(typeof BrTrk !== 'undefined'){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': this.model.attributes.productCode , 'sku' : sku });}
-            //end
 
         },
         addToWishlistAfterPersonalize: function(data){ // used by dndengine.js

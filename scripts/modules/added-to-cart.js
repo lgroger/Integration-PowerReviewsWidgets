@@ -142,6 +142,20 @@ define(
 						ga('send', 'event', 'buy', gaEvent, gaitem.product.name);
 					} 
 
+
+					//Bloomreach add to cart event
+					var variationProductCode = gaitem.product.variationProductCode,sku = "";
+
+					if(typeof variationProductCode !== 'undefined'){
+						sku = variationProductCode;
+					}
+					
+					//console.log('br added-to-cart atcActions:' +sku);
+					//console.log('br added-to-cart atcActions:' +gaitem.product.productCode);
+
+					if(typeof BrTrk !== 'undefined'){BrTrk.getTracker().logEvent('cart', 'click-add', {'prod_id': gaitem.product.productCode , 'sku' : sku });}
+					//end
+
 					 //Facebook pixel add to cart event
 					 var track_price=cartitemModel.get('product').price.price;
 					 if(cartitemModel.get('product').price.salePrice){
