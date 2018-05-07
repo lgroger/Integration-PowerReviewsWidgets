@@ -1278,7 +1278,6 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
             var order =  this.model.get('items'); 
             var i = 0;
             for(i = 0; i < order.length; i++){
-                order.models[i].set('viewtype', 'quote');
                 
                 for(var j = 0; j < order.models[i].get('items').length; j++) {
                     window.currentItem = order.models[i].get('items').models[j].get('product').get('productCode');
@@ -1320,11 +1319,13 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
                             if(items.models[i].get('product').get('productUsage') !== 'Bundle'){
                                 // look for parent token info
                                 info = DNDEngine.getTokenData(dndtoken,null,true); // notice that useLocal (3rd parameter) is true
-                                if(info){
+                                if(info && info.src){
                                     items.models[i].get('product').set('imageUrl',info.src);
                                 }
-                                items.models[i].get('product').set('token',info.token);
-                                items.models[i].get('product').set('persType',info.type);
+                                else{
+                                    items.models[i].get('product').set('token',info.token);
+                                    items.models[i].get('product').set('persType',info.type);
+                                }
                             }
                         }
                         catch(e){
