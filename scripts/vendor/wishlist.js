@@ -6,30 +6,35 @@ define(['modules/jquery-mozu', 'modules/api', 'hyprlive', 'modules/models-produc
 		var projectList = [];
 		// see if it contains mediaclip personalization
 		var options = model.get('options');
-		if(options && options.length){
-			var dndTokenJSON;
-			for(var o=0;o<options.length;o++){
-				if(options[o].attributeFQN === productAttributes.dndToken){
-					var dndtokenvalue = options[o].shopperEnteredValue;
-					if(dndtokenvalue!==""){
-						try{
-							dndTokenJSON=JSON.parse(dndtokenvalue);
+		try{
+			if(options && options.length){
+				var dndTokenJSON;
+				for(var o=0;o<options.length;o++){
+					if(options[o].attributeFQN === productAttributes.dndToken){
+						var dndtokenvalue = options[o].shopperEnteredValue;
+						if(dndtokenvalue!==""){
+							try{
+								dndTokenJSON=JSON.parse(dndtokenvalue);
+							}
+							catch(err){
+								console.log(err);
+							}
 						}
-						catch(err){
-							console.log(err);
-						}
+						break;
 					}
-					break;
 				}
-			}
 
-			//delete in mediaclip
-			if(dndTokenJSON){
-				var info = DNDToken.getTokenData(dndTokenJSON);
-				if(info.type ==="mc"){
-					projectList.push(info.token);
+				//delete in mediaclip
+				if(dndTokenJSON){
+					var info = DNDToken.getTokenData(dndTokenJSON);
+					if(info.type ==="mc"){
+						projectList.push(info.token);
+					}
 				}
 			}
+		}
+		catch(err){
+			console.log(err);
 		}
 		return(projectList);
 	};

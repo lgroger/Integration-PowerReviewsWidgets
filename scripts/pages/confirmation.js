@@ -3,6 +3,7 @@ require(["modules/jquery-mozu",'modules/dnd-token',"modules/mc-cookie"],
 function ($,DNDToken,McCookie) {
 
 	$(function(){
+		var projectList = [];
 		var haveMc = false;
 		// non-bundles
 		$("img[data-fulldndtoken]").each(function(){
@@ -11,7 +12,7 @@ function ($,DNDToken,McCookie) {
 			var info = DNDToken.getTokenData(fulldndtoken);
 			if(info.type ==="mc"){
 				// no action, this.getMcImages will fill it in based off of persType being set in 
-				haveMc = true;
+				projectList.push(info.token);
 			}
 			else{
 				if(info.src){
@@ -34,7 +35,7 @@ function ($,DNDToken,McCookie) {
 				//console.log(info);
 				if(info.type ==="mc"){
 					// no action, this.getMcImages will fill it in based off of persType being set in 
-					haveMc = true;
+					projectList.push(info.token);
 				}
 				else{
 					if(info.src){
@@ -46,8 +47,8 @@ function ($,DNDToken,McCookie) {
 			});
 		});
 		
-		if(haveMc){
-			McCookie.getMcImages();
+		if(projectList.length > 0){
+			McCookie.getMcImages(projectList);
 		}
 	});
 
