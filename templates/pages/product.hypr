@@ -107,7 +107,7 @@
                 <div class="productExtrasContainer ">
                     {%if pagecontext.isDesktop %}
                         <div class="zoomImage">
-                            <img id="zoombutton" alt=" " src="/resources/images/zoom_icon.svg" style="height: 25px;" >
+                            <img id="zoombutton" alt=" " src="/resources/images/zoom_icon.svg" style="height: 25px;cursor:pointer;" title="Toggle Zoom">
 
                            <!-- zoom image container to be added here.  -->  
                         </div>

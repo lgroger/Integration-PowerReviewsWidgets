@@ -186,11 +186,11 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					if(!require.mozuData('user').isAnonymous) {
 						Wishlist.initoWishlistPersonalize(this.model,callback);
 					}else {
-						var produtDetailToStoreInCookie ={};
-						produtDetailToStoreInCookie.productCode=this.model.get('productCode');
+						var productDetailToStoreInCookie ={};
+						productDetailToStoreInCookie.productCode=this.model.get('productCode');
 						 var objj=me.model.getConfiguredOptions();
-						produtDetailToStoreInCookie.options=objj;
-						$.cookie('wishlistproduct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
+						productDetailToStoreInCookie.options=objj;
+						$.cookie('wishlistproduct', JSON.stringify(productDetailToStoreInCookie),{path:'/'});
 						var ifrm = $("#homepageapicontext");
 						if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
 							Wishlist.initoWishlistPersonalize(this.model,callback);

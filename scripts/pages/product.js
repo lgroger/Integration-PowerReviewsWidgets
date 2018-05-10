@@ -1,16 +1,9 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview","modules/api", "vendor/wishlist", "modules/quick-view", "modules/quickview-productview","vendor/jquery.elevatezoom"],
-function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wishlist, QuickView, QuickViewProductView,ElevateZoom) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview","modules/api", "vendor/wishlist", "modules/quickview-productview","modules/login-links","vendor/jquery.elevatezoom"],
+function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wishlist, QuickViewProductView,LoginLinks,ElevateZoom) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
 
-    var triggerLogin = function(){
-        $('.trigger-login').trigger('click');
-        $('#cboxOverlay').show();
-        $('#mz-quick-view-container').fadeOut(350);
-        $('#mz-quick-view-container').empty();
-    };
-	
      var initProductView = function(product){
 		//console.log("initProductView");
         product.on('error', function(){
@@ -88,6 +81,22 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wi
 	
 	$(document).ready(function () {
       
+        api.on('error',function(xhr){
+            console.log("Error");
+            console.log(xhr);
+            if(xhr.errorCode == "VALIDATION_CONFLICT" && xhr.message.indexOf('out of stock')){
+                var errMsg = xhr.message;
+                if(errMsg.indexOf("Validation Error: ") >= 0){
+                    errMsg = errMsg.substr(errMsg.indexOf("Validation Error: ")+18);
+                }
+                window.removePageLoader();
+                $(document.body).append("<div class='compare-full-error-container'><div class='remove-item-container'><p>"+errMsg+"</p><button id='btn-msg-close' class='btn-msg-close'>Okay</button></div></div>"); 
+                $(document).on("click",".compare-full-error-container .btn-msg-close",function(){
+                    $(".compare-full-error-container").remove();
+                }); 
+            }
+        });
+
         try{
             $('.enable-slideshow').cycle();
             //console.log("cycle  started");
@@ -227,30 +236,30 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wi
                     var productCode = $(ele).data("productid");
                     
                     api.get('product', productCode).then(function(sdkProduct) {
-                        var PRODUT = new ProductModels.Product(sdkProduct.data);
+                        var PRODUCT = new ProductModels.Product(sdkProduct.data);
                         
                         if(!require.mozuData('user').isAnonymous) {
-                            PRODUT.set('moveToWishList', 1);
-                            Wishlist.initoWishlist(PRODUT);
+                            PRODUCT.set('moveToWishList', 1);
+                            Wishlist.initoWishlist(PRODUCT);
                         }else {
-                            var produtDetailToStoreInCookie ={};
-                            produtDetailToStoreInCookie.productCode=PRODUT.get('productCode');
-                            var objj=PRODUT.getConfiguredOptions();
-                            produtDetailToStoreInCookie.options=objj;
+                            var productDetailToStoreInCookie ={};
+                            productDetailToStoreInCookie.productCode=PRODUCT.get('productCode');
+                            var objj=PRODUCT.getConfiguredOptions();
+                            productDetailToStoreInCookie.options=objj;
                             $.cookie('wishlistprouct','direct',{path:'/'});
                             var ifrm = $("#homepageapicontext");
                             if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
-                                PRODUT.set('moveToWishList', 1);
-                                Wishlist.initoWishlist(PRODUT);
+                                PRODUCT.set('moveToWishList', 1);
+                                Wishlist.initoWishlist(PRODUCT);
                             }else{
-                                triggerLogin();
+                                LoginLinks.triggerLogin();
                             }
                         }
                         
                     });
                     
                 } else {
-                    triggerLogin();
+                    LoginLinks.triggerLogin();
                 }
             });   
             

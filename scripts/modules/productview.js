@@ -702,10 +702,10 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                         this.model.set('moveToWishList', 1);
                         Wishlist.initoWishlist(this.model);
                 }else {
-                    var produtDetailToStoreInCookie ={};
-                    produtDetailToStoreInCookie.productCode=this.model.get('productCode');
+                    var productDetailToStoreInCookie ={};
+                    productDetailToStoreInCookie.productCode=this.model.get('productCode');
                      var objj=this.model.getConfiguredOptions();
-                    produtDetailToStoreInCookie.options=objj;
+                    productDetailToStoreInCookie.options=objj;
                     $.cookie('wishlistproduct','direct',{path:'/'});
                     var ifrm = $("#homepageapicontext");
                     if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
@@ -723,11 +723,11 @@ function ($, _, Hypr, Api, Backbone, ProductModels,  addedToCart, Wishlist, Hypr
                 if(!require.mozuData('user').isAnonymous) {
                         Wishlist.initoWishlistPersonalize(this.model,this.addToWishlistCallback.bind(this));
                 }else {
-                    var produtDetailToStoreInCookie ={};
-                    produtDetailToStoreInCookie.productCode=this.model.get('productCode');
+                    var productDetailToStoreInCookie ={};
+                    productDetailToStoreInCookie.productCode=this.model.get('productCode');
                      var objj=me.model.getConfiguredOptions();
-                    produtDetailToStoreInCookie.options=objj;
-                    $.cookie('wishlistproduct', JSON.stringify(produtDetailToStoreInCookie),{path:'/'});
+                    productDetailToStoreInCookie.options=objj;
+                    $.cookie('wishlistproduct', JSON.stringify(productDetailToStoreInCookie),{path:'/'});
                     var ifrm = $("#homepageapicontext");
                     if(ifrm.contents().find('#data-mz-preload-apicontext').html()){
                         Wishlist.initoWishlistPersonalize(this.model,this.addToWishlistCallback.bind(this));
