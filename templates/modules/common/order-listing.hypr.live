@@ -3,6 +3,7 @@ myaccount.js sets these values
     item.product.imageUrl // exists by default but is overridden if personalization image exists
     item.product.token // dnd token string or mc token string
     item.product.persType // will be "mc" for mediaclip or "dnd" for dragndrop
+  model.viewtype is set to "quote" for quote orders
 {% endcomment %}
 <div class="orders-sec"> 
        <div class="orders mz-cms-col-12-12">
@@ -42,7 +43,7 @@ myaccount.js sets these values
                    <br/>
                     <div class="mob-blocks">
                       <span class="order_qty">Qty: {{ item.quantity }}</span><br/><br/>
-                      <span class="order-details-font account-order-number11">Order Placed:</span>
+                      <span class="order-details-font account-order-number11">{% if model.viewtype=="quote" %}Quote{% else %}Order{% endif %} Placed:</span>
                       <span class="order-details-font1"> {{ model.auditInfo.createDate|date("F j, Y") }} </span><br/>
 
                      {% if pageContext.pageType == 'my_account'%}
@@ -117,8 +118,9 @@ myaccount.js sets these values
                 </div>
                 <div class="order-blocks5"> 
                     <span> 
-                        <span class="order-details-font account-order-number11">Order Placed:</span>
+                        <span class="order-details-font account-order-number11">{% if model.viewtype=="quote" %}Quote{% else %}Order{% endif %} Placed:</span>
                         <span class="order-details-font1"> {{ model.auditInfo.createDate|date("F j, Y") }} </span><br/>
+
                         {% if pageContext.pageType == 'my_account'%}
                         <span class="order-details-font account-order-number11">Status:</span>
                         <span class="order-details-font1">
@@ -161,9 +163,6 @@ myaccount.js sets these values
                                 {% for items in track.items %}
                                   {% if items.productCode == item.product.productCode %}
                                     {% include "modules/common/narvar-tracking" %}
-                                    {% comment %}
-                                    <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
-                                    {% endcomment %}
                                   {% endif %}
                                 {% endfor %}
                               {% endfor %}
@@ -171,9 +170,6 @@ myaccount.js sets these values
                                 {% if model.packages.length == 1 %}
                                     {% for track in model.packages %}
                                     {% include "modules/common/narvar-tracking" %}
-                                    {% comment %}
-                                    <a class="deleteWishlist1" target="_blank" href="http://shindigz.narvar.com/shindigz/tracking/UPS?tracking_numbers={{ track.trackingNumber }}&order_number={{ model.orderNumber }}&ozip=46787&dzip={{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}{% if track.shippingMethodCode != '' %}&service={{ track.shippingMethodCode }}{% endif %}">Track Order</a>
-                                    {% endcomment %}
                                     {% endfor %}
                                 {% endif %}
                             {% endif %}
@@ -201,8 +197,7 @@ myaccount.js sets these values
                       {{ model.fulfillmentInfo.fulfillmentContact.address.postalOrZipCode }}<br>
                       {{ model.fulfillmentInfo.fulfillmentContact.address.countryCode }}<br>
                     </span>     
-                </div>
-                <br/>
+                </div><br/>
             </div>
 
             <div  class="mz-cms-col-3-12">
@@ -214,6 +209,8 @@ myaccount.js sets these values
                     <span class="ship-text2">{{ model.fulfillmentInfo.shippingMethodName }}</span><br>
                 </div>
             </div>
+
+
             <p class="acc-sub-main-heading acc-billing-heading">Billing Information</p>
             <div  class="mz-cms-col-3-12">
                 <div class="block1">
@@ -239,8 +236,7 @@ myaccount.js sets these values
                     {% endfor %}
                   {% endif %}
                 </div>
-            </div>
-            <br/>
+            </div><br/>
         <div  class="mz-cms-col-3-12">
             <div class="">
                 {% for addresspayment in model.payments %}
@@ -265,10 +261,10 @@ myaccount.js sets these values
 
  </div>
         <div class="cart-rec"><br/>
-            <a href="javascript:print()" class="order-print-btn">Print Order</a>
+            <a href="javascript:print()" class="order-print-btn">Print {% if model.viewtype=="quote" %}Quote{% else %}Order{% endif %}</a>
             {% if model.viewtype=="quote" %} <a href="javascript:void(0)" style="text-decoration:underline;cursor:pointer" class="quote-btn-myaccount" data-mz-action="reloadThisQuote" currentOrderId="{{order.id}}">Reload this quote</a> {% endif %}
             <div class="cart-summary mz-cms-col-12-12">
-                <h3 class="cart-head">ORDER SUMMARY</h3>
+                <h3 class="cart-head">{% if model.viewtype=="quote" %}QUOTE{% else %}ORDER{% endif %} SUMMARY</h3>
             </div>
             <div class="ordersummary_box">
               <div class="cart-summary ">
@@ -284,7 +280,6 @@ myaccount.js sets these values
                 </div>
               {% endfor %}
 
-
               <div class="cart-summary ">
                   <h3 class="cart-label">SHIPPING SURCHARGE {% if model.handlingAmount > model.handlingTotal  %}<span class="is-crossedout" {% block crossedout-inline-style %}{% endblock crossedout-inline-style %}> ( {{ model.handlingAmount|currency }} )</span>{% endif %} <span class="cart-num">{{model.handlingTotal|currency}}</span></h3>
               </div>
@@ -296,6 +291,8 @@ myaccount.js sets these values
                   </div>
                         {% endif %}
                         {% endfor %}
+
+
               <div class="cart-summary">
                   <h3 class="cart-label">TAX <span class="cart-num">{{ model.itemTaxTotal|currency }}</span></h3>
               </div>
@@ -309,10 +306,5 @@ myaccount.js sets these values
             {% if themeSettings.supportsection %}    
               {{ themeSettings.supportsection | safe }}
             {% endif %}
-            <!-- <div class="help-sec">
-               <h4 class="question_abt_order">Questions about this order?</h4>
-               <div class="support-text">Please call <br> Customer Support at</div> 
-               <div class="support-num support_tollfree">1-800-314-8736</div>  
-            </div> -->
         </div> 
        </div>

@@ -25,7 +25,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
            var self = this;
               var currentProduct = require.mozuData("product");
               var productCode = self.getProductCode(config, currentProduct);
-              console.log(currentProduct);
+             // console.log(currentProduct);
               var product = {
                 name: currentProduct.content.productName,
                 url: window.location.protocol+"//"+window.location.host+currentProduct.url,
@@ -118,7 +118,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 var item = {};
 
                 order.items.forEach(function(lineItem){
-                  console.log(lineItem);
+                 // console.log(lineItem);
                   //var lineItem = order.items.models[i].attributes;
                   item.pageId = self.getProductCode(config,lineItem.product.productCode);
                   item.unitPrice = lineItem.total;
@@ -192,7 +192,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
          displayInlineRatings: function(config) {
            var self = this;
            var allInlineRatings = $('.pr-inline-rating');
-           console.log(allInlineRatings);
+           //console.log(allInlineRatings);
            var productReviews = allInlineRatings.map(function() {
               var productCode = self.getProductCode(config,$(this).data('mzProductCode'));
 
@@ -209,7 +209,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 }
               };
             }).get();
-            console.log(productReviews);
+            //console.log(productReviews);
             POWERREVIEWS.display.render(productReviews);
         },
         getPrConfig : function(config, pageId) {
