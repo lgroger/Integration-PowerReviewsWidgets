@@ -1,5 +1,5 @@
-﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/soft-cart", "modules/productview","modules/api", "vendor/wishlist", "modules/quickview-productview","modules/login-links","vendor/jquery.elevatezoom"],
-function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wishlist, QuickViewProductView,LoginLinks,ElevateZoom) {
+﻿require(["modules/jquery-mozu", "underscore", "hyprlive", "modules/cart-monitor", "modules/models-product", "modules/productview","modules/api", "vendor/wishlist", "modules/quickview-productview","modules/login-links","vendor/jquery.elevatezoom"],
+function ($, _, Hypr, CartMonitor, ProductModels, ProductView, api, Wishlist, QuickViewProductView,LoginLinks,ElevateZoom) {
     Hypr.engine.setFilter("contains",function(obj,k){ 
         return obj.indexOf(k) > -1;
     });
@@ -165,7 +165,7 @@ function ($, _, Hypr, CartMonitor, ProductModels, SoftCart, ProductView, api, Wi
             $('[data-mz-validationmessage-for]').text('');
             if( $('.mz-productoptions-valuecontainer').length){
                 if(jQuery('.mz-productoptions-valuecontainer form input:radio:checked').length){   
-                    console.log('checked');
+                    //console.log('checked');
                 }else{
                     alert('Please select an option');
                     return false;

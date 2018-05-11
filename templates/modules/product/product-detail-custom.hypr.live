@@ -173,8 +173,8 @@
           </div>
       </div>
       <div class="product-cart-wishlist">
-          {% if model.isPersonalized %}
-                  <button class="personalize mz-productdetail-addtocart mz-button mz-button-large {% if model.isInStock and model.isConfigured %}{% else %} is-disabled{% endif %}"
+          {% if model.isPersonalized %} {# .personalize controls firing of personalize process #} {# .outofStock controls firing of notify me #}
+                  <button class="mz-button mz-button-large {% if not model.isInStock and model.isConfigured %} outofStock {%else%} personalize mz-productdetail-addtocart {%endif%}"
                   {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Please select an option above" disabled="disabled" {% endif %}{% endif %}>{% if not model.isInStock and model.isConfigured %}Notify me{% else %}{{ labels.personalize }}{% endif %}</button>
                   {% else %}
                   {% if model.productCode == "SZAPT" and pageContext.user.isAnonymous %}
@@ -183,10 +183,9 @@
                         {% else %}
                            <p>This product is available only for logged-in users. Please register or login to your account. </p><br>
                           {% endif %}
-                  {% else %}
-                    <button id="add-to-cart" class="mz-button mz-button-large {% if not model.isInStock and model.isConfigured %} outofStock {%else%} addToCart mz-productdetail-addtocart {%endif%} 
-                    {% if model.isInStock and model.isConfigured %}{% else %}{% endif %}" 
-                {% if model.isInStock and model.isConfigured %}{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Please select an option above" disabled="disabled" {% endif %}{% endif %}>{% if  not model.isInStock and model.isConfigured %}Notify me{% else %}{{ labels.addToCart }}{% endif %}</button>
+                  {% else %}{# #add-to-cart controls firing of add to cart action #} {# .outofStock controls firing of notify me #}
+                    <button  class="mz-button mz-button-large {% if not model.isInStock and model.isConfigured %} outofStock {%else%} addToCart mz-productdetail-addtocart {%endif%}" 
+                {% if model.isInStock and model.isConfigured %} id="add-to-cart"{% else %} {% if model.isConfigured %} title="Product is out of stock" {% else %} title="Please select an option above" disabled="disabled" {% endif %}{% endif %}>{% if  not model.isInStock and model.isConfigured %}Notify me{% else %}{{ labels.addToCart }}{% endif %}</button>
                   {% endif %}
           {% endif %}
           {% if siteContext.generalSettings.isWishlistCreationEnabled %}
