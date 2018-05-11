@@ -166,3 +166,25 @@
         width: 200px; 
     }
 }
+.mz-l-container.mz-search-result .mz-l-paginatedlist .mz-pricestack-range {
+    & .mz-pricestack-price-lower {
+        width: 45%;
+        float: left;
+        margin-left: 18px;
+        text-align: right;
+        & .mz-price.is-crossedout {
+            margin-right: 18px;
+        }
+    }
+    & .mz-pricestack-price-upper {
+        width: 45%;
+        float: left;
+        text-align: left;
+    }
+    & .mz-price.is-crossedout {
+        font-size: 13px;
+        color: #707070;
+        font-family: 'GT-Walsheim-Light', Verdana, sans-serif;
+        display: block;
+    }
+}
