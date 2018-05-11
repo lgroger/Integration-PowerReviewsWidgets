@@ -612,8 +612,8 @@ body.mz-product {
                             }
                         }
                         .mz-productlisting-image {
-                            max-height: 120px !important;
-                            min-height: 120px !important;
+                            max-height: 111px !important;
+                            min-height: 111px !important;
                             text-align: center;
                             img{
                                 max-height: 95%;
@@ -646,10 +646,14 @@ body.mz-product {
                                 display: -webkit-box;
                                 -webkit-line-clamp: 2;
                                 -webkit-box-orient: vertical;
+                                max-height: 40px;
                             }
                             .mz-pricestack {
                                 margin-bottom: 5px;
                                 display: inline-block;
+                                overflow-x: hidden;
+                                text-overflow: ellipsis;
+                                max-width: 100%;
                             }
                             .mz-pricestack-price-lower:after{
                                 margin: 0 1px;
