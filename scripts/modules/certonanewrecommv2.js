@@ -15,15 +15,6 @@ var certonaRecommendations = function(response){
 			htmltemp += '<a href="'+recomm[i].Detail_URL+'?rrec=true">';
 			htmltemp += '<img src="'+ recomm[i].Image_URL.replace("http:","")+'?max=210" alt="'+recomm[i].Name+'">';
 			htmltemp += '</a>';
-			htmltemp += '<div class="quick-view">';
-			htmltemp += '<a href="javascript:void(0)" data-pro-id="'+recomm[i].id+'">QUICK VIEW';
-			htmltemp += '</a>';
-			htmltemp += '</div>';
-			htmltemp += '<div class="wishlist-icon" id="'+recomm[i].id+'">';
-			htmltemp +=  '<a href="#" id="'+recomm[i].id+'">';
-			htmltemp +=  '</a>';
-			htmltemp += '</div>';
-						
 			htmltemp += '</div>'; 
 			htmltemp += '<div class="mz-productlisting-info">';
 			htmltemp += '<a class="mz-productlisting-title" href="'+recomm[i].Detail_URL+'?rrec=true">'+recomm[i].Name+'</a>';
