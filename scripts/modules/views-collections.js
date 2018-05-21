@@ -179,7 +179,8 @@ define([
         function intentToUrl(e) {
             var elm = e.target; 
             var url,parserSearch;
-            if(require.mozuData('pagecontext').isDesktop && require.mozuData("pagecontext").cmsContext.template.path !=="super-page" ){
+            if(require.mozuData("pagecontext").cmsContext.template.path !=="super-page" ){
+                //var toTop = $("#scroll-to-top-onpage").offset().top;
                 $('html, body').animate({
                 scrollTop: $(".mz-l-paginatedlist").offset().top - 70 
                 }, 1000);   
