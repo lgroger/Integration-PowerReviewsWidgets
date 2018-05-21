@@ -951,29 +951,34 @@ define(['modules/backbone-mozu', 'modules/api', 'hyprlive', 'hyprlivecontext', '
 					this.showQuickViewExtra(currentItem.product.productCode,currentItem.product.options,itemid);
                 }   
             }else{
-                var productModel = new ProductModels.Product(currentItem.product);
-                productModel.on('error', function(a){
-                    //console.log(a);
-                    $('.se-pre-con').hide(); 
-                    $('.addtocart-error').remove();
-                    $(e.target).parents('.orders-body').prepend('<p class="addtocart-error" style="color:red;">'+a.message+'</p>');
-                });
-                
-				var productView = new QuickViewProductView({
-					model: productModel,
-					gaAction: 'Buywishlistproduct',
-					gaEvent: 'buywishlist',
-					el: $(e.target).parents(".wishlist-item-listing"),
-					templateName: "modules/my-account/my-account-wishlist-item-listing"
-				}); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
+                if(currentItem.product.productUsage ==="Configurable"){
+                    this.showQuickViewExtra(currentItem.product.productCode,currentItem.product.options,itemid);// QuickViewProductView.initialize was throwing error b/c model of wishlist item is different than product before added to cart
+                }
+                else{
+                    var productModel = new ProductModels.Product(currentItem.product);
+                    productModel.on('error', function(a){
+                        //console.log(a);
+                        $('.se-pre-con').hide(); 
+                        $('.addtocart-error').remove();
+                        $(e.target).parents('.orders-body').prepend('<p class="addtocart-error" style="color:red;">'+a.message+'</p>');
+                    });
+                    
+                    var productView = new QuickViewProductView({
+                        model: productModel,
+                        gaAction: 'Buywishlistproduct',
+                        gaEvent: 'buywishlist',
+                        el: $(e.target).parents(".wishlist-item-listing"),
+                        templateName: "modules/my-account/my-account-wishlist-item-listing"
+                    }); // this will run productView.initialize which will set the shared code that needs to fire for product.on('addedtocart')
 
-				// delete from wishlist when adding to cart
-				productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
-					//console.log(itemid);
-					$('.remove-item[id="'+itemid+'"]').trigger('click'); // remove from wishlist (b/c of this binding "click .remove-item": "deleteItemFromWishlist")
-				});
-				
-                productView.addToCart();
+                    // delete from wishlist when adding to cart
+                    productView.model.on('addedtocart', function (cartitem, prod) { //model-product.js triggers this event
+                        //console.log(itemid);
+                        $('.remove-item[id="'+itemid+'"]').trigger('click'); // remove from wishlist (b/c of this binding "click .remove-item": "deleteItemFromWishlist")
+                    });
+                    
+                    productView.addToCart();
+                }
             }
         },
         deleteWishlist: function(e) {
