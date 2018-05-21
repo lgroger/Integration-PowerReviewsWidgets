@@ -53,9 +53,9 @@
                     .product-info {
                         width: 100%;
                         display: inline-block;
+                        box-sizing: border-box;
                         @media @smallmobile {
-                            padding-bottom: 5%;
-                            padding-top: 2%;
+                            padding: 2% 3% 5% 3%;
                         }
                         .product-title {
                             padding: 0;
@@ -69,15 +69,10 @@
                                 .product-short-description {
                                     overflow: hidden;
                                     line-height: 1.2em;
-                                    width: 92%;
+                                    width: 100%;
                                     display: inline-block;
                                     color: @primaryDarkBlue;
                                     font-weight: 100;
-                                    @media @smallmobile {
-                                        padding-right: 0;
-                                        font-size: 12px;
-                                        padding-left: 20px;
-                                    }
                                 }
                             }
                         }

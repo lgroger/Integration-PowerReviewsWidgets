@@ -157,15 +157,15 @@
                     <h1 class="mz-pagetitle desktop-name" itemprop="name">{{ model.content.productName }}</h1>
                     {% if model.content.productShortDescription and themeSettings.showProductDetailShortDesc %}
                         <div class="showmoreDescription">
-                        <div class="product-short-description content hideContent">
-                          {{ model.content.productShortDescription|safe }}
-                        </div>
-                        {% if model.content.productShortDescription.length > 75 %}       
-                            <a class="show-more" href="#">...read more</a>
-                        {% endif %}
-                        </div>
-                    {% endif %}
-                 </div>
+                            <div class="product-short-description content hideContent">
+                                {{ model.content.productShortDescription|safe }}
+                                {% if model.content.productShortDescription.length > 75%}       
+                                    <a class="show-more" href="#">...read more</a>
+                                {% endif %}
+                            </div>
+                        </div>   
+                    {% endif %}  
+                </div>  
                 <div class="productReview">
                     {% dropzone "productreview-snippets" scope="template" %}
                 </div>
