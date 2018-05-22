@@ -55,7 +55,7 @@ define([
                 })).then(function() {
                     return me.apiGet();
                 }).then(function(order) {
-                    console.log(order);
+                    //console.log(order);
                     return me.applyPayment();
                 });
             },
@@ -101,6 +101,12 @@ define([
                     me.awsData = fulfillmentInfo.data;
                 else 
                     fulfillmentInfo.data = me.awsData;
+					
+					var user = require.mozuData('user');
+                    if (user && user.email)
+                        fulfillmentInfo.fulfillmentContact.email =  user.email; 
+                    else 
+                        fulfillmentInfo.fulfillmentContact = null;
 
                 me.apiUpdateShippingInfo( fulfillmentInfo ).then(function(result) {
                     me.set("fulfillmentInfo",result.data);
