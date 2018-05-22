@@ -10,35 +10,50 @@
     }
     .recommended_products {
         .rec-title {
-            padding: 2px 10px;
             text-align: center;
             display: inline-block;
             color: @tertiaryColor;
             font-family: @fontLight;
             text-transform: lowercase;
             font-size: 18px;
-            border: 2px solid @tertiaryColor;
             border-radius: 5px;
-            margin-bottom: 4px;
+            padding: 20px 0;
+            display: block;
             @media @smallmobile {
-                font-size: 14px;
-                padding: 2px 5px;
+                font-size: 16px;
+                width: 100%;
+                margin: 0 auto;
+                text-align: center;
+                box-sizing: border-box;
             }
         }
         .rec-title:before {
             border-top: 2px solid @tertiaryColor;
             content: " ";
-            width: 38%;
-            position: absolute;
-            left: 0;
+            width: 32%;
+            position: relative;
+            left: auto;
+            height: 10px;
+            margin: 0 10px 0 0;
+            display: inline-block;
+            vertical-align: sub;
+            @media @smallmobile {
+                width: 12%;
+            }
         }
         .rec-title:after {
             border-top: 2px solid @tertiaryColor;
             content: " ";
-            width: 38%;
-            position: absolute;
-            right: 0;  
+            width: 32%;
             left: auto; 
+            position: relative;
+            height: 10px;
+            margin: 0 0 0 10px;
+            display: inline-block;
+            vertical-align: sub;
+            @media @smallmobile {
+                width: 12%;
+            }
         }
     }
     .pdp-related-products{

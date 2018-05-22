@@ -115,6 +115,9 @@ body.mz-product {
                     height: 450px;
                     @media @smallmobile {
                         height: 365px;
+                        & img {
+                            max-height: 365px;
+                        }
                     }
                 }
             }
@@ -1323,25 +1326,11 @@ body.mz-product {
         height: auto;
     }
     .show-more {
-        padding: 0;
-        text-align: left;
-        position: absolute;
-        width: 30%;
-        right: 1%;   
-        top: 1rem;
-        width: 42%;
         font-style: italic;
         color: @primaryColor;
-        background: white;
         &:hover {
             color: @tertiaryColor;
         }
-     }
-     .show-less{
-        top: auto;
-        bottom: -3px;
-        text-align: right; 
-        background: none;
     }
     @media @smallmobile{
         .showContent {
@@ -1355,26 +1344,13 @@ body.mz-product {
             font-size: 12px; 
         }
         .show-more { 
-            right: 1px;
-            width: 30%;
-            top: 0;
-        }
-        .show-less{
-            right: 5px;
-            top: auto;
+            font-size: 12px;
         }
     }
     @media @tablet{
         .showContent {  
             width: 83%;
             font-size: 13px; 
-        }
-        .show-more {
-            right: 5px;
-        }
-        .show-less{
-            right: 5px;
-            top: auto;
         }
     }
     .bundle-btn{

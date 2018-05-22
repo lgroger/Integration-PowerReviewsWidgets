@@ -53,9 +53,9 @@
                     .product-info {
                         width: 100%;
                         display: inline-block;
+                        box-sizing: border-box;
                         @media @smallmobile {
-                            padding-bottom: 5%;
-                            padding-top: 2%;
+                            padding: 2% 3% 5% 3%;
                         }
                         .product-title {
                             padding: 0;
@@ -69,15 +69,10 @@
                                 .product-short-description {
                                     overflow: hidden;
                                     line-height: 1.2em;
-                                    width: 92%;
+                                    width: 100%;
                                     display: inline-block;
                                     color: @primaryDarkBlue;
                                     font-weight: 100;
-                                    @media @smallmobile {
-                                        padding-right: 0;
-                                        font-size: 12px;
-                                        padding-left: 20px;
-                                    }
                                 }
                             }
                         }
@@ -3968,7 +3963,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
         right: -5% !important;
     }
     .mz-productlisting-image {
-        min-height: 0;
+        min-height: 120px;
     }
     .first-promo-banner-align .default_offer_btn_lg {
         margin-top: -6% !important;
@@ -3999,6 +3994,14 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 .theme-bg-gradient {
     padding: 2% 0%;
     background: linear-gradient(#fff,#f2f2f2);
+}
+@media screen and (min-width: 641px) and (max-width: 767px) {
+    .mz-category .mz-productlisting-image {
+        min-height: 150px;
+    }
+    .mz-category .mz-productlisting-image a img {
+        max-height: 150px;
+    }
 }
 @media screen and (max-width:1280px) {
     .ech-shi-popular-cat-widget {
