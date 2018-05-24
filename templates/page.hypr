@@ -129,7 +129,7 @@
           {% if PageContext.CrawlerInfo.NextUrl  %}
           <link rel="next" href="{{PageContext.CrawlerInfo.NextUrl}}">
           {% endif %}
-            <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'>
+            <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300' rel='stylesheet' type='text/css'">
           {% block stylesheets %}
           <link rel="stylesheet" href="{% make_url "stylesheet" "/stylesheets/storefront.less" %}" title="default" />
           {% endblock stylesheets %}

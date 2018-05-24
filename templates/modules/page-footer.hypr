@@ -2,10 +2,10 @@
   
 {% if pageContext.pageType != "checkout" %} 
 
-<div class="ech-shi-footer">
+	<div class="ech-shi-footer">
 
 				{% dropzone "footer-section" scope="site" %}
-
+	</div>
  		
 {% endif %}
 			
