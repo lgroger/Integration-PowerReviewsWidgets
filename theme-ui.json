@@ -1040,7 +1040,7 @@
     <meta name="google-site-verification" content="qjE1jeU9tFYGbqw2_giQfjaEXW6yhcDcuiMtK0mA-pc" />
     <meta name="msvalidate.01" content="1C0E33D19FA5E4BCB8D21245E9CB7440" />
 <!-- GATE -->
-    <script type=text/javascript>
+    <script type="text/javascript">
   ;if(typeof ROIStorage === 'undefined' || typeof ROIStorage.roiq === 'undefined') {
     (function(g,a,t,e){function setUpQueues(){g[a].realGa=g[t];g[a].analyticsJsNotLoaded=false;g[t]=function(){if(typeof arguments[0]==="function"){g[a].realGa(arguments)}else{g[a].q.push(arguments)}};g[a].roiq.push=function(){g[a].realGa.apply(g,arguments)};for(e=0;e<g[a].roiq.length;e+=1){g[a].realGa.call(g,g[a].roiq[e])}}g[a]=g[a]||{};g[a].windowName=g.name;g[a].GoogleAnalyticsObject=t;g[a].analyticsJsNotLoaded=true;g[a].roiq=[];g[a].q=(g[a].q||[]).concat((g[t]||{}).q||[]);if(g[t]&&!g[t].q){g[t](setUpQueues)}else{g[t]=function(){g[a].q.push(arguments)};g[t].q=[];g[t].q.unshift([setUpQueues])}})(window,"ROIStorage","ga");
     (function () {
