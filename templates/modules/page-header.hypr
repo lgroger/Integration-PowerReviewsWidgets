@@ -9,10 +9,10 @@
 					<div class="mob-header-logo">
 							{% if pageContext.cmsContext.template.path == "main-page" %}
 								<h1>
-									{% include "modules/page-header/logo" %}
+									<a href="/"></a>	
 								</h1>
 							{% else %}
-									{% include "modules/page-header/logo" %}
+								<a href="/"></a>	
 							{% endif %}
 					</div>
 				</div> 
