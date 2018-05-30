@@ -6,7 +6,7 @@
 					<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
 					<div class="mz-cms-col-3-12 mob-logo-sec" style="vertical-align: middle;">
 						<div class="mob-header-logo">
-								{% include "modules/page-header/logo" %}
+							<a href="/"></a>	
 						</div>
 					</div> 
 					<div class="mz-cms-col-9-12 checkout-header-links ech-shi-tollfree">
