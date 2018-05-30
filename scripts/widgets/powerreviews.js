@@ -14,8 +14,8 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
              return result.data;
            });
          },
-         getProductCode : function(config, product) {
-           var pr_safe_code= product.productCode;
+         getProductCode : function(config, productCode) {
+           var pr_safe_code= productCode;
             if(config.regex) {
               pr_safe_code = pr_safe_code.replace(new RegExp(config.regex, "g"),"");              
            } 
@@ -24,7 +24,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
          displayReviewsAnQA: function(config) {
            var self = this;
               var currentProduct = require.mozuData("product");
-              var productCode = self.getProductCode(config, currentProduct);
+              var productCode = self.getProductCode(config, currentProduct.productCode);
               console.log(currentProduct);
               var product = {
                 name: currentProduct.content.productName,
@@ -89,6 +89,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
               prConfig.style_sheet = "/stylesheets/widgets/powerreview.css";
               prConfig.review_wrapper_url = '/write-a-review?pr_page_id='+productCode+'&locale='+config.locale+'&pr_returnUrl=' + returnUrl;
               prConfig.product = product;
+              prConfig.page_id = productCode;
               prConfig.components = components;
 
               POWERREVIEWS.display.render(prConfig);
@@ -120,20 +121,25 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 order.items.forEach(function(lineItem){
                   console.log(lineItem);
                   //var lineItem = order.items.models[i].attributes;
-                  item.pageId = self.getProductCode(config,lineItem.product.productCode);
-                  item.unitPrice = lineItem.total;
-                  item.qty = lineItem.quantity;
-                  item.name = lineItem.product.name;
+                  item.page_id = self.getProductCode(config,lineItem.product.productCode);
+                  item.unit_price = lineItem.total;
+                  item.quantity = lineItem.quantity;
+                  item.product_name = lineItem.product.name;
                   if (lineItem.product.imageUrl !== null)
                       item.imageURL = lineItem.product.imageUrl;
+                  
+                  if (lineItem.product.variationProductCode)
+                    item.page_id_variant = self.getProductCode(config,lineItem.product.variationProductCode);
                   items.push(item);
                 });
 
-                tracker.trackPageview("c", {
+                console.log(items);
+                tracker.trackCheckout({
+                    merchantGroupId: config.merchantGrpId,
                     merchantId: config.merchantId,
                     locale: config.locale,
                     merchantUserId: customerId,
-                    marketingOptIn: order.acceptsMarketing,
+                    marketingOptIn: false,
                     userEmail: order.email,
                     userFirstName: firstName,
                     userLastName: lastName,
@@ -141,7 +147,6 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                     orderSubtotal: order.total,
                     orderNumberOfItems: items.length,
                     orderItems: items
-                    //orderDate: TODO
                 });
 
               } catch(e){
