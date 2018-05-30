@@ -37,9 +37,9 @@
 	<div class="header-float menu-container float-nav" style="box-shadow: rgba(136, 136, 136, 0.34902) 0px 10px 15px;z-index: 99;    background: rgb(255, 255, 255);">
 		<!--label class="menu-toggle menu-toggle-main" for="menu-custom"><span></span></label-->
 		<label class="menu-toggle menu-toggle-main header-float-mob" for="menu-custom"><span>Toggle</span></label>
-		<div class="header-float-logo" style="">
+		<div class="header-float-logo">
 
-			<a href="/"><img class="logo" src="" style="max-width:200px" alt="Shindigz"/></a>
+			<a href="/">{# logo added with css #}</a>
 		</div> 
 		<div class="float-menu-block" style="display:inline-block;">
 	        <div class="mega-menu-wrapper">
