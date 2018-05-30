@@ -116,9 +116,9 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 }
 
                 var items = [];
-                var item = {};
 
                 order.items.forEach(function(lineItem){
+                  var item = {};
                   console.log(lineItem);
                   //var lineItem = order.items.models[i].attributes;
                   item.page_id = self.getProductCode(config,lineItem.product.productCode);
@@ -153,7 +153,7 @@ define(['modules/jquery-mozu','underscore', 'hyprlive', "modules/backbone-mozu",
                 console.log(e);
               }
 
-              if ($(".pr-wyb")) {
+              if ($(".pr-wyb").length) {
                var maxPriceItem = _.max(order.items, function(item) {
                  return item.total;
                });
